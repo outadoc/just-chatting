@@ -9,10 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.kraken.video.Video
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.visible
+import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_videos_list_item.view.*
 
 class VideosAdapter(
@@ -41,7 +38,7 @@ class VideosAdapter(
             setOnLongClickListener { showDownloadDialog(item); true }
             thumbnail.loadImage(fragment, item.preview.large, diskCacheStrategy = DiskCacheStrategy.NONE)
             date.text = TwitchApiHelper.formatTime(context, item.createdAt)
-            views.text = TwitchApiHelper.formatViewsCount(context, item.views)
+            views.text = TwitchApiHelper.formatViewsCount(context, item.views, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
             duration.text = DateUtils.formatElapsedTime(item.length.toLong())
             position.let {
                 if (it != null) {

@@ -26,7 +26,6 @@ import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.applyTheme
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
 import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.installPlayServicesIfNeeded
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.toast
 import com.github.andreyasadchy.xtra.util.visible
@@ -51,8 +50,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
         setContentView(R.layout.activity_login)
         val user = User.get(this)
         if (user is NotLoggedIn) {
-            if (intent.getBooleanExtra(C.FIRST_LAUNCH, false)) {
-                installPlayServicesIfNeeded()
+            if (intent.getBooleanExtra(C.FIRST_LAUNCH1, false)) {
                 welcomeContainer.visible()
                 login.setOnClickListener { initWebView() }
                 skip.setOnClickListener { finish() }

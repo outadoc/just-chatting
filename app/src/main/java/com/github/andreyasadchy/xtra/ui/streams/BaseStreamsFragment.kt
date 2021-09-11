@@ -11,6 +11,8 @@ import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 
 abstract class BaseStreamsFragment<VM : PagedListViewModel<Stream>> : PagedListFragment<Stream, VM, BasePagedListAdapter<Stream>>(), Scrollable {
@@ -21,7 +23,7 @@ abstract class BaseStreamsFragment<VM : PagedListViewModel<Stream>> : PagedListF
 
     override val adapter: BasePagedListAdapter<Stream> by lazy {
         val activity = requireActivity() as MainActivity
-        StreamsAdapter(this, activity, activity)
+        StreamsAdapter(this, activity, activity, activity.prefs().getBoolean(C.UI_VIEWCOUNT, false))
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {

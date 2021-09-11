@@ -9,20 +9,6 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/streamTypeImage"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:layout_marginEnd="2dp"
-            android:layout_marginRight="2dp"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="@id/viewers"
-            app:layout_constraintEnd_toStartOf="@id/viewers"
-            app:layout_constraintRight_toLeftOf="@id/viewers"
-            app:layout_constraintTop_toTopOf="@id/viewers"
-            tools:src="@drawable/baseline_fiber_manual_record_black_24"
-            tools:tint="@android:color/holo_red_dark" />
-
-        <ImageView
             android:id="@+id/userImage"
             style="@style/UserPicture"
             android:layout_marginStart="10dp"
@@ -34,43 +20,27 @@
             tools:src="@tools:sample/backgrounds/scenic" />
 
         <TextView
-            android:id="@+id/viewers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/username"
-            tools:text="13.3K" />
-
-        <TextView
-            android:id="@+id/username"
-            android:layout_width="wrap_content"
+            android:id="@+id/title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="7dp"
+            android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
             android:ellipsize="end"
             android:gravity="start"
-            android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintEnd_toStartOf="@id/streamTypeImage"
-            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toRightOf="@id/userImage"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toEndOf="@id/userImage"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@sample/streams.json/streams/channel/name" />
+            tools:text="@sample/streams.json/streams/channel/status" />
 
         <TextView
-            android:id="@+id/title"
-            android:layout_width="0dp"
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
@@ -80,13 +50,16 @@
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="1"
+            android:textColor="?attr/secondaryTextColor"
             android:textAlignment="viewStart"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintHorizontal_bias="0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintLeft_toRightOf="@id/userImage"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toEndOf="@id/userImage"
-            app:layout_constraintTop_toBottomOf="@id/username"
-            tools:text="@sample/streams.json/streams/channel/status" />
+            app:layout_constraintTop_toBottomOf="@+id/title"
+            tools:text="@sample/streams.json/streams/channel/name" />
 
         <TextView
             android:id="@+id/gameName"
@@ -95,20 +68,30 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="1dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:ellipsize="end"
             android:gravity="start"
             android:maxLines="1"
             android:paddingBottom="10dp"
             android:textAlignment="viewStart"
             android:textColor="?attr/secondaryTextColor"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/viewers"
             app:layout_constraintLeft_toRightOf="@id/userImage"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintStart_toEndOf="@id/userImage"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/username"
             tools:text="@sample/games.json/top/game/name" />
+
+        <TextView
+            android:id="@+id/viewers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/username"
+            tools:text="13.3K" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

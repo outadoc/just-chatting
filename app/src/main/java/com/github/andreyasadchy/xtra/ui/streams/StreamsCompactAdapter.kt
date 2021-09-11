@@ -5,7 +5,9 @@ import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.*
 
 class StreamsCompactAdapter(
@@ -18,7 +20,7 @@ class StreamsCompactAdapter(
     override fun bind(item: Stream, view: View) {
         super.bind(item, view)
         with(view) {
-            viewers.text = TwitchApiHelper.formatCount(item.viewers)
+            viewers.text = TwitchApiHelper.formatCount(item.viewers, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
         }
     }
 }

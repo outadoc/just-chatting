@@ -18,6 +18,7 @@ import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerHelper
 import com.github.andreyasadchy.xtra.ui.player.PlayerViewModel
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -33,7 +34,7 @@ class ClipPlayerViewModel @Inject constructor(
 
     private lateinit var clip: Clip
     private val factory: ProgressiveMediaSource.Factory = ProgressiveMediaSource.Factory(dataSourceFactory)
-    private val prefs = context.getSharedPreferences(C.USER_PREFS, Context.MODE_PRIVATE)
+    private val prefs = context.prefs()
     private val helper = PlayerHelper()
     val qualities: Map<String, String>
         get() = helper.urls
@@ -52,7 +53,9 @@ class ClipPlayerViewModel @Inject constructor(
         playbackPosition = player.currentPosition
         val quality = helper.urls.values.elementAt(index)
         play(quality)
-        prefs.edit { putString(TAG, helper.urls.keys.elementAt(index)) }
+        if (prefs.getBoolean(C.PLAYER_SAVEQUALITY, true)) {
+            prefs.edit { putString(C.PLAYER_QUALITY, helper.urls.keys.elementAt(index)) }
+        }
         qualityIndex = index
     }
 
@@ -72,7 +75,7 @@ class ClipPlayerViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     val urls = graphQLRepositoy.loadClipUrls(clip.slug)
-                    val preferredQuality = prefs.getString(TAG, null)
+                    val preferredQuality = prefs.getString(C.PLAYER_QUALITY, "720p60")
                     if (preferredQuality != null) {
                         var url: String? = null
                         for (entry in urls.entries.withIndex()) {

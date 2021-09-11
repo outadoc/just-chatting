@@ -1,8 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.player
 
 import android.app.Application
-import android.content.Context.MODE_PRIVATE
-import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
@@ -14,8 +12,6 @@ import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode.AUDIO_ONLY
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode.NORMAL
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerViewModel
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.prefs
 import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -30,7 +26,6 @@ abstract class HlsPlayerViewModel(
         context: Application,
         val repository: TwitchService) : PlayerViewModel(context), FollowViewModel {
 
-    private val userPrefs = context.getSharedPreferences(C.USER_PREFS, MODE_PRIVATE)
     protected val helper = PlayerHelper()
     val loaded: LiveData<Boolean>
         get() = helper.loaded
@@ -50,7 +45,7 @@ abstract class HlsPlayerViewModel(
             updateVideoQuality()
             qualities[index]
         }
-        userPrefs.edit { putString(TAG, quality) }
+        writeQuality(quality)
         val mode = _playerMode.value
         if (mode != NORMAL) {
             _playerMode.value = NORMAL
@@ -76,7 +71,7 @@ abstract class HlsPlayerViewModel(
         if (trackSelector.currentMappedTrackInfo != null) {
             if (helper.loaded.value != true) {
                 helper.loaded.value = true
-                val index = userPrefs.getString(TAG, "Auto").let { quality ->
+                val index = readQuality().let { quality ->
                     if (quality == "Auto") {
                         0
                     } else {

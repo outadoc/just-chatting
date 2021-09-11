@@ -23,8 +23,6 @@ import com.github.andreyasadchy.xtra.util.FetchProvider
 import com.github.andreyasadchy.xtra.util.RemoteConfigParams
 import com.github.andreyasadchy.xtra.util.TlsSocketFactory
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.gson.GsonBuilder
 import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
@@ -137,7 +135,7 @@ class XtraModule {
                 .baseUrl("https://gql.twitch.tv/gql/")
                 .client(client.newBuilder().addInterceptor { chain ->
                     val request = chain.request().newBuilder()
-                            .addHeader("Client-ID", Firebase.remoteConfig.getString(RemoteConfigParams.TWITCH_CLIENT_ID_KEY))
+                            .addHeader("Client-ID", RemoteConfigParams.TWITCH_CLIENT_ID_KEY)
                             .build()
                     chain.proceed(request)
                 }.build())
@@ -163,9 +161,9 @@ class XtraModule {
     @Provides
     fun providesOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder().apply {
-            if (BuildConfig.DEBUG) {
+/*            if (BuildConfig.DEBUG) {
                 addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
-            }
+            }*/
 
             if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
                 try {
@@ -204,7 +202,7 @@ class XtraModule {
     @Provides
     fun providesFetchConfigurationBuilder(application: Application, okHttpClient: OkHttpClient): FetchConfiguration.Builder {
         return FetchConfiguration.Builder(application)
-                .enableLogging(BuildConfig.DEBUG)
+/*                .enableLogging(BuildConfig.DEBUG)*/
                 .enableRetryOnNetworkGain(true)
                 .setDownloadConcurrentLimit(3)
                 .setHttpDownloader(OkHttpDownloader(okHttpClient))

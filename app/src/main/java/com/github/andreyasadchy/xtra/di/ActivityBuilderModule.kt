@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.di
 
-import com.github.andreyasadchy.xtra.ui.SplashActivity
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 
@@ -15,7 +14,4 @@ abstract class ActivityBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun contributeLoginActivity(): LoginActivity
-
-    @ContributesAndroidInjector
-    abstract fun contributeSplashActivity(): SplashActivity
 }

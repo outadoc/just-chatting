@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.kraken.game.GameWrapper
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.fragment_games_list_item.view.*
 
 class GamesAdapter(
@@ -28,7 +30,7 @@ class GamesAdapter(
             setOnClickListener { listener.openGame(item.game) }
             gameImage.loadImage(fragment, item.game.box.medium)
             gameName.text = item.game.name
-            viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewers)
+            viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewers, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
         }
     }
 }

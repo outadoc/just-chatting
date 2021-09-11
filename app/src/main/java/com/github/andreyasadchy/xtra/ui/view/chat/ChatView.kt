@@ -42,8 +42,9 @@ import kotlinx.android.synthetic.main.view_chat.view.*
 import kotlin.math.max
 import com.github.andreyasadchy.xtra.model.kraken.user.Emote as TwitchEmote
 
-const val MAX_ADAPTER_COUNT = 125
-const val MAX_LIST_COUNT = MAX_ADAPTER_COUNT + 1
+var MAX_ADAPTER_COUNT = 125
+var emoteQuality = "3"
+var ffzQuality = "4"
 
 class ChatView : ConstraintLayout {
 
@@ -84,7 +85,11 @@ class ChatView : ConstraintLayout {
 
     fun init(fragment: Fragment) {
         this.fragment = fragment
-        adapter = ChatAdapter(fragment, context.convertDpToPixels(29.5f), context.convertDpToPixels(18.5f), context.prefs().getBoolean(C.ANIMATED_EMOTES, true))
+        emoteQuality = context.prefs().getInt(C.CHAT_EMOTEQUALITY, 3).toString()
+        ffzQuality = context.prefs().getInt(C.CHAT_FFZEMOTEQUALITY, 4).toString()
+        MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 125)
+        adapter = ChatAdapter(fragment, context.convertDpToPixels(29.5f), context.convertDpToPixels(18.5f), context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
+            context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getInt(C.CHAT_BADGEQUALITY, 3), context.prefs().getBoolean(C.CHAT_GIFS, true))
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null
@@ -112,8 +117,8 @@ class ChatView : ConstraintLayout {
     fun notifyMessageAdded() {
         adapter.messages!!.apply {
             adapter.notifyItemInserted(lastIndex)
-            if (size >= MAX_LIST_COUNT) {
-                val removeCount = size - MAX_ADAPTER_COUNT
+            if (size >= MAX_ADAPTER_COUNT + 1) {
+                val removeCount = size - MAX_ADAPTER_COUNT + 1
                 repeat(removeCount) {
                     removeAt(0)
                 }

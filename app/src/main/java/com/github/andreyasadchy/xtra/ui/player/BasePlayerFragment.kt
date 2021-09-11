@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.ui.player
 
-import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
@@ -10,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.content.edit
@@ -34,16 +34,7 @@ import com.github.andreyasadchy.xtra.ui.player.offline.OfflinePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerFragment
 import com.github.andreyasadchy.xtra.ui.view.CustomPlayerView
 import com.github.andreyasadchy.xtra.ui.view.SlidingLayout
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.LifecycleListener
-import com.github.andreyasadchy.xtra.util.disable
-import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.hideKeyboard
-import com.github.andreyasadchy.xtra.util.isInPortraitOrientation
-import com.github.andreyasadchy.xtra.util.isKeyboardShown
-import com.github.andreyasadchy.xtra.util.prefs
-import com.github.andreyasadchy.xtra.util.toast
-import com.github.andreyasadchy.xtra.util.visible
+import com.github.andreyasadchy.xtra.util.*
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -76,7 +67,6 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
     private var resizeMode = 0
 
     protected lateinit var prefs: SharedPreferences
-    private lateinit var userPrefs: SharedPreferences
     protected abstract val channel: Channel
 
     val playerWidth: Int
@@ -95,7 +85,6 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
         super.onCreate(savedInstanceState)
         val activity = requireActivity()
         prefs = activity.prefs()
-        userPrefs = activity.getSharedPreferences(C.USER_PREFS, Context.MODE_PRIVATE)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             systemUiFlags = systemUiFlags or (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         }
@@ -115,18 +104,25 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
         slidingLayout = view as SlidingLayout
         slidingLayout.addListener(activity)
         slidingLayout.addListener(this)
-        slidingLayout.maximizedSecondViewVisibility = if (userPrefs.getBoolean(KEY_CHAT_OPENED, true)) View.VISIBLE else View.GONE //TODO
+        slidingLayout.maximizedSecondViewVisibility = if (prefs.getBoolean(C.KEY_CHAT_OPENED, true)) View.VISIBLE else View.GONE //TODO
         playerView = view.findViewById(R.id.playerView)
         chatLayout = view.findViewById(chatContainerId)
         aspectRatioFrameLayout = view.findViewById(R.id.aspectRatioFrameLayout)
         aspectRatioFrameLayout.setAspectRatio(16f / 9f)
         val isNotOfflinePlayer = this !is OfflinePlayerFragment
-        playerView.setOnDoubleTapListener {
-            if (!isPortrait && slidingLayout.isMaximized && isNotOfflinePlayer) {
-                if (chatLayout.isVisible) {
-                    hideChat()
-                } else {
-                    showChat()
+        if (this is StreamPlayerFragment && !prefs.getBoolean(C.PLAYER_VIEWERICON, true)) {
+            view.findViewById<ImageView>(R.id.viewericon).gone()
+        }
+        if (prefs.getBoolean(C.PLAYER_DOUBLETAP, true)) {
+            playerView.setOnDoubleTapListener {
+                if (!isPortrait && slidingLayout.isMaximized && isNotOfflinePlayer) {
+                    if (chatLayout.isVisible) {
+                        playerView.hideController()
+                        hideChat()
+                    } else {
+                        playerView.hideController()
+                        showChat()
+                    }
                 }
             }
         }
@@ -169,6 +165,12 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
         }
         playerView.controllerAutoShow = controllerAutoShow
         view.findViewById<ImageButton>(R.id.minimize).setOnClickListener { minimize() }
+        if (!prefs.getBoolean(C.PLAYER_MINIMIZE, true)) {
+            view.findViewById<ImageButton>(R.id.minimize).gone()
+        }
+        if (!prefs.getBoolean(C.PLAYER_CHANNEL, true)) {
+            view.findViewById<TextView>(R.id.channel).gone()
+        }
         if (this is StreamPlayerFragment) {
             if (User.get(activity) !is NotLoggedIn) {
                 slidingLayout.viewTreeObserver.addOnGlobalLayoutListener {
@@ -180,7 +182,6 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
                                 showStatusBar()
                             }
                         }
-                    } else {
                         if (isKeyboardShown) {
                             isKeyboardShown = false
                             chatLayout.clearFocus()
@@ -260,14 +261,14 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
                 }
             }
         }
-        if (this !is ClipPlayerFragment) {
+        if (this !is ClipPlayerFragment && prefs.getBoolean(C.PLAYER_SLEEP, true)) {
             viewModel.sleepTimer.observe(viewLifecycleOwner, Observer {
                 activity.closePlayer()
             })
             view.findViewById<ImageButton>(R.id.sleepTimer).setOnClickListener {
                 SleepTimerDialog.show(childFragmentManager, viewModel.timerTimeLeft)
             }
-        } else { //TODO
+        } else {
             view.findViewById<ImageButton>(R.id.sleepTimer).gone()
         }
     }
@@ -348,7 +349,11 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
                 weight = 1f
             }
             chatLayout.visible()
-            fullscreenToggle.setImageResource(R.drawable.baseline_fullscreen_black_24)
+            if (prefs.getBoolean(C.PLAYER_FULLSCREEN, true)) {
+                fullscreenToggle.setImageResource(R.drawable.baseline_fullscreen_black_24)
+            } else {
+                fullscreenToggle.gone()
+            }
             playerAspectRatioToggle.gone()
             hideChat.gone()
             showChat.gone()
@@ -376,8 +381,16 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
             } else {
                 chatLayout.gone()
             }
-            fullscreenToggle.setImageResource(R.drawable.baseline_fullscreen_exit_black_24)
-            playerAspectRatioToggle.visible()
+            if (prefs.getBoolean(C.PLAYER_FULLSCREEN, true)) {
+                fullscreenToggle.setImageResource(R.drawable.baseline_fullscreen_exit_black_24)
+            } else {
+                fullscreenToggle.gone()
+            }
+            if (prefs.getBoolean(C.PLAYER_ASPECT, true)) {
+                playerAspectRatioToggle.visible()
+            } else {
+                playerAspectRatioToggle.gone()
+            }
             slidingLayout.post {
                 if (slidingLayout.isMaximized) {
                     hideStatusBar()
@@ -392,22 +405,32 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
     }
 
     private fun setPreferredChatVisibility() {
-        if (userPrefs.getBoolean(KEY_CHAT_OPENED, true)) showChat() else hideChat()
+        if (prefs.getBoolean(C.KEY_CHAT_OPENED, true)) showChat() else hideChat()
     }
 
     private fun hideChat() {
-        hideChat.gone()
-        showChat.visible()
+        if (prefs.getBoolean(C.PLAYER_CHATTOGGLE, true)) {
+            hideChat.gone()
+            showChat.visible()
+        } else {
+            hideChat.gone()
+            showChat.gone()
+        }
         chatLayout.gone()
-        userPrefs.edit { putBoolean(KEY_CHAT_OPENED, false) }
+        prefs.edit { putBoolean(C.KEY_CHAT_OPENED, false) }
         slidingLayout.maximizedSecondViewVisibility = View.GONE
     }
 
     private fun showChat() {
-        hideChat.visible()
-        showChat.gone()
+        if (prefs.getBoolean(C.PLAYER_CHATTOGGLE, true)) {
+            hideChat.visible()
+            showChat.gone()
+        } else {
+            hideChat.gone()
+            showChat.gone()
+        }
         chatLayout.visible()
-        userPrefs.edit { putBoolean(KEY_CHAT_OPENED, true) }
+        prefs.edit { putBoolean(C.KEY_CHAT_OPENED, true) }
         slidingLayout.maximizedSecondViewVisibility = View.VISIBLE
     }
 

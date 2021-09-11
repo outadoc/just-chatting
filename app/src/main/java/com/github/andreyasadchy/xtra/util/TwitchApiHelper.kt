@@ -57,24 +57,24 @@ object TwitchApiHelper {
         return offset
     }
 
-    fun formatViewsCount(context: Context, count: Int): String {
-        return if (count > 1000) {
+    fun formatViewsCount(context: Context, count: Int, viewcount: Boolean): String {
+        return if (count > 1000 && viewcount) {
             context.getString(R.string.views, formatCountIfMoreThanAThousand(count))
         } else {
             context.resources.getQuantityString(R.plurals.views, count, count)
         }
     }
 
-    fun formatViewersCount(context: Context, count: Int): String {
-        return if (count > 1000) {
+    fun formatViewersCount(context: Context, count: Int, viewcount: Boolean): String {
+        return if (count > 1000 && viewcount) {
             context.getString(R.string.viewers, formatCountIfMoreThanAThousand(count))
         } else {
             context.resources.getQuantityString(R.plurals.viewers, count, count)
         }
     }
 
-    fun formatCount(count: Int): String {
-        return if (count > 1000) {
+    fun formatCount(count: Int, viewcount: Boolean): String {
+        return if (count > 1000 && viewcount) {
             formatCountIfMoreThanAThousand(count)
         } else {
             count.toString()

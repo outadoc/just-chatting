@@ -23,9 +23,6 @@ import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.FetchProvider
 import com.github.andreyasadchy.xtra.util.RemoteConfigParams
-import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.iheartradio.m3u8.Encoding
 import com.iheartradio.m3u8.Format
 import com.iheartradio.m3u8.ParsingMode
@@ -246,9 +243,6 @@ class DownloadService : IntentService(TAG) {
                     requests.add(FetchRequest(url + track.uri, path + track.uri).apply { groupId = offlineVideoId })
                 }
             } catch (e: IndexOutOfBoundsException) {
-                val instance = FirebaseCrashlytics.getInstance()
-                instance.log("DownloadService.enqueueNext: Playlist tracks size: ${playlist.tracks.size}. Segment to: $segmentTo. Current + ENQUEUE_SIZE: ${current + ENQUEUE_SIZE}.")
-                instance.recordException(e)
                 offlineRepository.updateVideo(offlineVideo.apply { segmentTo = tracks.lastIndex })
             }
         }
@@ -286,9 +280,6 @@ class DownloadService : IntentService(TAG) {
                     }
                     return
                 } catch (e: IndexOutOfBoundsException) {
-                    val instance = FirebaseCrashlytics.getInstance()
-                    instance.log("DownloadService.onDownloadCompleted: Playlist tracks size: ${playlist.tracks.size}. Segment from $segmentFrom. Segment to: $segmentTo.")
-                    instance.recordException(e)
                 }
                 val mediaPlaylist = MediaPlaylist.Builder()
                     .withTargetDuration(playlist.targetDuration)
@@ -343,7 +334,6 @@ class DownloadService : IntentService(TAG) {
                             activeRequests.remove(offlineVideo.id)
                             fetch.deleteAll()
                         } catch (e: Exception) {
-                            FirebaseCrashlytics.getInstance().recordException(e)
                         }
                     }
                 }

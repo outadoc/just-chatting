@@ -21,7 +21,7 @@ import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
 import com.github.andreyasadchy.xtra.ui.player.ChatReplayManager
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
-import com.github.andreyasadchy.xtra.ui.view.chat.MAX_LIST_COUNT
+import com.github.andreyasadchy.xtra.ui.view.chat.MAX_ADAPTER_COUNT
 import com.github.andreyasadchy.xtra.util.SingleLiveEvent
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
@@ -57,7 +57,7 @@ class ChatViewModel @Inject constructor(
         get() = _otherEmotes
 
     private val _chatMessages by lazy {
-        MutableLiveData<MutableList<ChatMessage>>().apply { value = Collections.synchronizedList(ArrayList(MAX_LIST_COUNT)) }
+        MutableLiveData<MutableList<ChatMessage>>().apply { value = Collections.synchronizedList(ArrayList(MAX_ADAPTER_COUNT + 1)) }
     }
     val chatMessages: LiveData<MutableList<ChatMessage>>
         get() = _chatMessages

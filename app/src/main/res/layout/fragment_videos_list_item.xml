@@ -22,6 +22,10 @@
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="2"
+            android:shadowRadius="1"
             app:layout_constraintBottom_toBottomOf="@id/thumbnail"
             app:layout_constraintEnd_toEndOf="@id/thumbnail"
             app:layout_constraintRight_toRightOf="@id/thumbnail"
@@ -32,10 +36,15 @@
             style="@style/ThumbnailItem"
             android:layout_marginStart="5dp"
             android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="2"
+            android:shadowRadius="1"
             app:layout_constraintBottom_toBottomOf="@id/thumbnail"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             tools:text="133769 views" />
 
         <TextView
@@ -44,6 +53,10 @@
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="2"
+            android:shadowRadius="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -68,16 +81,14 @@
             tools:src="@tools:sample/backgrounds/scenic" />
 
         <TextView
-            android:id="@+id/username"
+            android:id="@+id/title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="7dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="15sp"
-            android:textStyle="bold"
+            android:layout_marginTop="7dp"
             android:textAlignment="viewStart"
             android:gravity="start"
             app:layout_constraintEnd_toStartOf="@+id/options"
@@ -85,25 +96,26 @@
             app:layout_constraintLeft_toRightOf="@id/userImage"
             app:layout_constraintStart_toEndOf="@id/userImage"
             app:layout_constraintTop_toBottomOf="@id/thumbnail"
-            tools:text="@sample/videos.json/vods/channel/name" />
+            tools:text="@sample/videos.json/vods/title" />
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/username"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="1dp"
             android:layout_marginEnd="10dp"
             android:layout_marginRight="10dp"
+            android:layout_marginTop="1dp"
+            android:textColor="?attr/secondaryTextColor"
             android:textAlignment="viewStart"
             android:gravity="start"
             app:layout_constraintEnd_toStartOf="@+id/options"
             app:layout_constraintRight_toLeftOf="@+id/options"
             app:layout_constraintLeft_toRightOf="@id/userImage"
             app:layout_constraintStart_toEndOf="@id/userImage"
-            app:layout_constraintTop_toBottomOf="@id/username"
-            tools:text="@sample/videos.json/vods/title" />
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="@sample/videos.json/vods/channel/name" />
 
         <TextView
             android:id="@+id/gameName"
@@ -122,7 +134,7 @@
             app:layout_constraintRight_toLeftOf="@+id/options"
             app:layout_constraintLeft_toRightOf="@id/userImage"
             app:layout_constraintStart_toEndOf="@id/userImage"
-            app:layout_constraintTop_toBottomOf="@id/title"
+            app:layout_constraintTop_toBottomOf="@id/username"
             tools:text="@sample/videos.json/vods/game" />
 
         <ImageButton

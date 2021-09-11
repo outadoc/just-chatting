@@ -11,9 +11,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.edit
 import androidx.core.os.bundleOf
 import androidx.core.view.children
 import androidx.core.view.isVisible
@@ -24,7 +22,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.VideoDownloadInfo
 import com.github.andreyasadchy.xtra.model.kraken.video.Video
-import com.github.andreyasadchy.xtra.util.C
 import kotlinx.android.synthetic.main.dialog_video_download.*
 import javax.inject.Inject
 
@@ -118,32 +115,13 @@ class VideoDownloadDialog : BaseDownloadDialog() {
                                 }
                             })
                         }
-
-                        val preference = prefs.getString(C.DOWNLOAD_NETWORK_PREFERENCE, "3")
-                        var wifiOnly = preference == "2"
-
                         fun startDownload() {
                             val quality = spinner.selectedItem.toString()
                             val url = videoInfo.qualities.getValue(quality).substringBeforeLast('/') + "/"
-                            viewModel.download(url, downloadPath, quality, fromIndex, toIndex, wifiOnly)
+                            viewModel.download(url, downloadPath, quality, fromIndex, toIndex)
                             dismiss()
                         }
-
-                        if (preference != "3") {
                             startDownload()
-                        } else {
-                            wifiOnly = true
-                            AlertDialog.Builder(context)
-                                    .setMultiChoiceItems(arrayOf(getString(R.string.wifi_only)), BooleanArray(1) { true }) { _, _, isChecked -> wifiOnly = isChecked }
-                                    .setPositiveButton(getString(R.string.always)) { _, _ ->
-                                        prefs.edit { putString(C.DOWNLOAD_NETWORK_PREFERENCE, if (wifiOnly) "2" else "1") }
-                                        startDownload()
-                                    }
-                                    .setNegativeButton(getString(R.string.just_once)) { _, _ -> startDownload() }
-                                    .setNeutralButton(android.R.string.cancel) { dialog, _ -> dialog.dismiss() }
-                                    .setCustomTitle(LayoutInflater.from(context).inflate(R.layout.view_download_warning, null))
-                                    .show()
-                        }
                     }
                     from >= to -> {
                         timeFrom.requestFocus()

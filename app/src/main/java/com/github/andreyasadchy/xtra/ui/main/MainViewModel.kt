@@ -3,7 +3,6 @@ package com.github.andreyasadchy.xtra.ui.main
 import android.app.Activity
 import android.app.Application
 import android.content.Intent
-import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,10 +15,8 @@ import com.github.andreyasadchy.xtra.repository.AuthRepository
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
-import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.Event
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.toast
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -42,7 +39,7 @@ class MainViewModel @Inject constructor(
         private set
 
     init {
-        offlineRepository.resumeDownloads(application, application.prefs().getString(C.DOWNLOAD_NETWORK_PREFERENCE, "3") == "2")
+        offlineRepository.resumeDownloads(application, false)
     }
 
     fun onMaximize() {
@@ -98,7 +95,6 @@ class MainViewModel @Inject constructor(
                         User.set(activity, null)
                         activity.toast(R.string.token_expired)
                         activity.startActivityForResult(Intent(activity, LoginActivity::class.java), 2)
-                        activity.prefs().edit { putString(C.LAST_UPDATE_VERSION, null) }
                     }
                 }
             }

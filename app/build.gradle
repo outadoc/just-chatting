@@ -2,57 +2,46 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-apply plugin: 'com.google.firebase.crashlytics'
-
-//def keystoreProperties = new Properties()
-//keystoreProperties.load(new FileInputStream(project.file("keystore.properties")))
 
 android {
-    signingConfigs {
-        debug {
-            keyAlias 'debug'
-            keyPassword '123456'
-            storeFile file('debug-keystore.jks')
-            storePassword '123456'
-        }
-//        release {
-//            keyAlias keystoreProperties['KEY_ALIAS']
-//            keyPassword keystoreProperties['KEY_PASSWORD']
-//            storeFile file(keystoreProperties['KEYSTORE_PATH'])
-//            storePassword keystoreProperties['KEYSTORE_PASSWORD']
-//        }
-    }
     compileSdkVersion 29
     defaultConfig {
         applicationId "com.github.andreyasadchy.xtra"
         minSdkVersion 16
+        targetSdkVersion 29
         versionCode 102
         versionName "1.6.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        targetSdkVersion 29
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
-//        ndk {
-//            abiFilters "armeabi-v7a"
-//        }
     }
+
     buildTypes {
         debug {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
-            signingConfig signingConfigs.debug
             multiDexEnabled true
         }
         release {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//            signingConfig signingConfigs.release
         }
     }
+
+    // Delete large build log files from ~/.gradle/daemon/X.X/daemon-XXX.out.log
+    // Source: https://discuss.gradle.org/t/gradle-daemon-produces-a-lot-of-logs/9905
+    def gradle = project.getGradle()
+    new File("${gradle.getGradleUserHomeDir().getAbsolutePath()}/daemon/${gradle.getGradleVersion()}").listFiles().each {
+        if (it.getName().endsWith('.out.log')) {
+            // println("Deleting gradle log file: $it") // Optional debug output
+            it.delete()
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -60,7 +49,6 @@ android {
     sourceSets {
         main {
             java.srcDirs += 'src/main/kotlin'
-//            jniLibs.srcDir 'src/main/libs'
         }
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
@@ -81,14 +69,6 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-//    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.0-beta-3'
-
-    testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test:core:1.2.0'
-    androidTestImplementation 'androidx.test:runner:1.2.0'
-
-    implementation 'com.android.billingclient:billing:2.1.0'
-
     implementation 'androidx.multidex:multidex:2.0.1'
 
     //UI
@@ -107,19 +87,10 @@ dependencies {
     implementation "androidx.room:room-runtime:$room"
     implementation "androidx.room:room-ktx:$room"
     kapt "androidx.room:room-compiler:$room"
-    testImplementation "androidx.room:room-testing:$room"
     implementation 'androidx.core:core-ktx:1.2.0-rc01'
     implementation "androidx.fragment:fragment-ktx:1.2.0"
 
-    //Firebase
-//    implementation 'com.google.firebase:firebase-crashlytics:17.2.2'
-    implementation platform('com.google.firebase:firebase-bom:25.12.0')
-    implementation 'com.google.firebase:firebase-crashlytics-ktx'
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-    implementation 'com.google.firebase:firebase-config-ktx'
-
     //Misc
-    implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
     implementation 'com.ncapdevi:frag-nav:3.2.0'
     implementation 'com.iheartradio.m3u8:open-m3u8:0.2.6'
@@ -127,7 +98,6 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayer"
-//    implementation "com.google.android.exoplayer:extension-cast:$exoplayer"
 
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
@@ -148,13 +118,3 @@ dependencies {
     implementation "androidx.tonyodev.fetch2:xfetch2:$fetch"
     implementation "androidx.tonyodev.fetch2okhttp:xfetch2okhttp:$fetch"
 }
-
-repositories {
-    mavenCentral()
-}
-
-androidExtensions {
-    experimental = true
-}
-
-apply plugin: 'com.google.gms.google-services'

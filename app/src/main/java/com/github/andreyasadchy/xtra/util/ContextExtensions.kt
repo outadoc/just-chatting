@@ -9,6 +9,7 @@ import android.os.Build
 import android.util.TypedValue
 import android.widget.Toast
 import androidx.annotation.StringRes
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.github.andreyasadchy.xtra.R
 
@@ -35,10 +36,28 @@ val Context.displayDensity
 fun Activity.applyTheme(): String {
     val theme = prefs().getString(C.THEME, "0")!!
     setTheme(when(theme) {
-        "0" -> R.style.DarkTheme
         "1" -> R.style.AmoledTheme
-        else -> R.style.LightTheme
+        "2" -> R.style.LightTheme
+        "3" -> R.style.BlueTheme
+        else -> R.style.DarkTheme
     })
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && prefs().getBoolean(C.UI_STATUSBAR, true)) {
+        when (theme) {
+            "1" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)
+            "2" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryLight)
+            "3" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryBlue)
+            else -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryDark)
+        }
+    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && prefs().getBoolean(C.UI_NAVBAR, true)) {
+        when (theme) {
+            "1" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)
+            "2" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryLight)
+            "3" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryBlue)
+            else -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryDark)
+        }
+    }
     return theme
 }
 

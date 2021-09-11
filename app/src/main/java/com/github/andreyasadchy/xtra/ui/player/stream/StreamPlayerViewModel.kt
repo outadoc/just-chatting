@@ -20,8 +20,6 @@ import com.github.andreyasadchy.xtra.util.RemoteConfigParams
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.toast
 import com.google.android.exoplayer2.upstream.DefaultLoadErrorHandlingPolicy
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.remoteConfig
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -111,28 +109,24 @@ class StreamPlayerViewModel @Inject constructor(
     }
 
     private fun loadStream(stream: Stream) {
-        val remoteConfig = Firebase.remoteConfig
-        remoteConfig.fetchAndActivate()
-            .addOnCompleteListener {
-                viewModelScope.launch {
-                    try {
-                        val playerType = remoteConfig.getString(RemoteConfigParams.TWITCH_PLAYER_TYPE_KEY)
-                        val result = playerRepository.loadStreamPlaylistUrl(stream.channel.name, playerType, useAdBlock)
-                        if (useAdBlock) {
-                            if (result.second) {
-                                httpDataSourceFactory.defaultRequestProperties.set("X-Donate-To", "https://ttv.lol/donate")
-                            } else {
-                                val context = getApplication<Application>()
-                                context.shortToast(R.string.adblock_not_working)
-                            }
-                        }
-                        mediaSource = hlsMediaSourceFactory.createMediaSource(result.first)
-                        play()
-                    } catch (e: Exception) {
+        viewModelScope.launch {
+            try {
+                val playerType = RemoteConfigParams.TWITCH_PLAYER_TYPE_KEY
+                val result = playerRepository.loadStreamPlaylistUrl(stream.channel.name, playerType, useAdBlock)
+                if (useAdBlock) {
+                    if (result.second) {
+                        httpDataSourceFactory.defaultRequestProperties.set("X-Donate-To", "https://ttv.lol/donate")
+                    } else {
                         val context = getApplication<Application>()
-                        context.toast(R.string.error_stream)
+                        context.toast("TTV.LOL is offline. Disable Adblock to view streams in the meantime")
                     }
                 }
+                mediaSource = hlsMediaSourceFactory.createMediaSource(result.first)
+                play()
+            } catch (e: Exception) {
+                val context = getApplication<Application>()
+                context.toast(R.string.error_stream)
             }
+        }
     }
 }

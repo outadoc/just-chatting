@@ -4,40 +4,18 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <View
-        style="@style/PlayerShadow" />
+    <View style="@style/PlayerShadow" />
+    <ImageButton style="@style/PlayerPlay"/>
+    <ImageButton style="@style/PlayerPause"/>
 
-    <ImageButton
-        style="@style/PlayerPlay"/>
+    <ImageButton style="@style/PlayerMinimize" />
+    <TextView style="@style/PlayerChannel" />
 
-    <ImageButton
-        style="@style/PlayerPause"/>
-
-    <ImageButton
-        style="@style/PlayerMinimize" />
-
-    <TextView
-        style="@style/PlayerChannel" />
-
-    <LinearLayout
-        style="@style/PlayerTopRightPanel">
-
-        <ImageButton
-            style="@style/PlayerFollow"
-            />
-
-        <ImageButton
-            style="@style/PlayerSleep"
-            />
-
-        <ImageButton
-            style="@style/PlayerRatio"
-            />
-
-        <ImageButton
-            style="@style/PlayerSettings"
-            />
-
+    <LinearLayout style="@style/PlayerTopRightPanel">
+        <ImageButton style="@style/PlayerFollow" />
+        <ImageButton style="@style/PlayerSleep" />
+        <ImageButton style="@style/PlayerRatio" />
+        <ImageButton style="@style/PlayerSettings" />
     </LinearLayout>
 
     <ImageButton
@@ -52,10 +30,9 @@
         android:layout_centerHorizontal="true"
         android:gravity="center_vertical"
         tools:ignore="RelativeOverlap">
-
         <ImageView
+            android:id="@+id/viewericon"
             style="@style/PlayerViewers" />
-
         <TextView
             android:id="@+id/viewers"
             style="@style/PlayerText"
@@ -71,27 +48,8 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="5dp">
-
-        <ImageButton
-            style="@style/PlayerShowChat" />
-
-        <ImageButton
-            style="@style/PlayerHideChat" />
-
-        <!--<ImageButton-->
-        <!--android:id="@+id/player_hide_chat"-->
-        <!--android:visibility="gone"-->
-        <!--android:src="@drawable/baseline_speaker_notes_off_black_24" />-->
-
-
-        <!--<ImageButton-->
-        <!--android:id="@+id/player_show_chat"-->
-        <!--android:visibility="gone"-->
-        <!--android:src="@drawable/baseline_chat_black_24" />-->
-
-        <ImageButton
-            style="@style/PlayerFullscreenToggle"/>
-
+        <ImageButton style="@style/PlayerShowChat" />
+        <ImageButton style="@style/PlayerHideChat" />
+        <ImageButton style="@style/PlayerFullscreenToggle"/>
     </LinearLayout>
-
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.github.andreyasadchy.xtra.model.chat
 
+import com.github.andreyasadchy.xtra.ui.view.chat.ffzQuality
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -16,7 +17,7 @@ class FfzRoomDeserializer : JsonDeserializer<FfzEmotesResponse> {
             for (i in 0 until emotesArray.size()) {
                 val emote = emotesArray.get(i).asJsonObject
                 val urls = emote.getAsJsonObject("urls")
-                emotes.add(FfzEmote(emote.get("name").asString, "https:" + (urls.get("2").takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("1").asString)))
+                emotes.add(FfzEmote(emote.get("name").asString, "https:" + (urls.get(ffzQuality).takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("1").asString)))
             }
         }
         return FfzEmotesResponse(emotes)

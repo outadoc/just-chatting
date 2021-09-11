@@ -1,9 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.menu
 
 import android.app.Activity
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -32,14 +30,6 @@ class MenuFragment : Fragment() {
         settings.setOnClickListener {
             activity.startActivityFromFragment(this, Intent(activity, SettingsActivity::class.java), 3)
         }
-        rate.setOnClickListener {
-            try {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=${activity.packageName}")))
-            } catch (e: ActivityNotFoundException) {
-                startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=${activity.packageName}")))
-            }
-        }
-        donate.setOnClickListener { DonationDialog().show(childFragmentManager, null) }
         login.setOnClickListener {
             activity.startActivityForResult(Intent(activity, LoginActivity::class.java), if (!isLoggedIn) 1 else 2)
         }

@@ -2,6 +2,7 @@ package com.github.andreyasadchy.xtra.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
@@ -19,7 +20,6 @@ import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.github.andreyasadchy.xtra.GlideApp
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 
 fun View.visible() {
     visibility = View.VISIBLE
@@ -50,12 +50,11 @@ fun ImageView.loadImage(fragment: Fragment, url: String?, changes: Boolean = fal
                 val key = if (lastMinute < 5) minutes - lastMinute else minutes - (lastMinute - 5)
                 request.signature(ObjectKey(key))
             }
-            if (circle) {
+            if (circle && context.prefs().getBoolean(C.UI_ROUNDUSERIMAGE, true)) {
                 request.circleCrop()
             }
             request.into(this)
         } catch (e: IllegalArgumentException) {
-            FirebaseCrashlytics.getInstance().recordException(e)
         }
         return
     }
@@ -70,7 +69,6 @@ fun ImageView.loadBitmap(url: String) {
                     .transition(BitmapTransitionOptions.withCrossFade())
                     .into(this)
         } catch (e: IllegalArgumentException) {
-            FirebaseCrashlytics.getInstance().recordException(e)
         }
     }
 }

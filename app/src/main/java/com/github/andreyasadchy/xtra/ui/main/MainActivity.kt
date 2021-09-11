@@ -1,29 +1,22 @@
 package com.github.andreyasadchy.xtra.ui.main
 
 import android.app.PictureInPictureParams
-import android.content.ActivityNotFoundException
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Rect
-import android.net.ConnectivityManager
-import android.net.Uri
-import android.os.Build
-import android.os.Bundle
+import android.os.*
+import android.view.Window
 import android.view.WindowManager
 import androidx.activity.viewModels
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
-import com.github.andreyasadchy.xtra.BuildConfig
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
@@ -58,18 +51,13 @@ import com.github.andreyasadchy.xtra.ui.videos.BaseVideosFragment
 import com.github.andreyasadchy.xtra.ui.view.SlidingLayout
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.DisplayUtils
-import com.github.andreyasadchy.xtra.util.RemoteConfigParams
 import com.github.andreyasadchy.xtra.util.applyTheme
 import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.installPlayServicesIfNeeded
 import com.github.andreyasadchy.xtra.util.isNetworkAvailable
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.toast
 import com.github.andreyasadchy.xtra.util.visible
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.remoteConfig
-import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -104,13 +92,6 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     var playerFragment: BasePlayerFragment? = null
         private set
     private val fragNavController = FragNavController(supportFragmentManager, R.id.fragmentContainer)
-    private val networkReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            viewModel.setNetworkAvailable(isNetworkAvailable)
-        }
-    }
-    private val isSearchOpened
-        get() = fragNavController.currentFrag is SearchFragment
     private lateinit var prefs: SharedPreferences
 
     //Lifecycle methods
@@ -125,35 +106,23 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
             }
         }
         super.onCreate(savedInstanceState)
-        val notFirstLaunch = !prefs.getBoolean(C.FIRST_LAUNCH, true)
-        if (notFirstLaunch) {
-            applyTheme()
-        } else {
-            prefs.edit {
-                putBoolean(C.FIRST_LAUNCH, false)
-                putLong("firstLaunchDate", System.currentTimeMillis())
-                putInt(C.LANDSCAPE_CHAT_WIDTH, DisplayUtils.calculateLandscapeWidthByPercent(this@MainActivity, 25))
-            }
+        if (prefs.getBoolean(C.FIRST_LAUNCH1, true)) {
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.root_preferences, false)
-
-            var currentTheme = "0"
-            AlertDialog.Builder(this)
-                    .setSingleChoiceItems(arrayOf(getString(R.string.dark), getString(R.string.amoled), getString(R.string.light)), 0) { _, which -> currentTheme = which.toString() }
-                    .setPositiveButton(android.R.string.ok) { _, _ ->
-                        prefs.edit { putString(C.THEME, currentTheme) }
-                        if (currentTheme != "0") {
-                            recreate()
-                        }
-                    }
-                    .setTitle(getString(R.string.choose_theme))
-                    .show()
+            prefs.edit {
+                putBoolean(C.FIRST_LAUNCH1, false)
+                putInt(C.LANDSCAPE_CHAT_WIDTH, DisplayUtils.calculateLandscapeWidthByPercent(this@MainActivity, 30))
+                if (resources.getBoolean(R.bool.isTablet)) {
+                    putString(C.PORTRAIT_COLUMN_COUNT, "2")
+                    putString(C.LANDSCAPE_COLUMN_COUNT, "3")
+                }
+            }
         }
-
+        applyTheme()
         setContentView(R.layout.activity_main)
 
         val notInitialized = savedInstanceState == null
         initNavigation()
-        if (User.get(this) !is NotLoggedIn) {
+        if (User.get(this) !is NotLoggedIn && prefs.getBoolean(C.UI_STARTONFOLLOWED, false)) {
             fragNavController.initialize(INDEX_FOLLOWED, savedInstanceState)
             if (notInitialized) {
                 navBar.selectedItemId = R.id.fragment_follow
@@ -177,66 +146,6 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
                 }
             }
         })
-        if (isSearchOpened) {
-            hideNavigationBar()
-        }
-        registerReceiver(networkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
-        if (notInitialized) {
-            installPlayServicesIfNeeded()
-            handleIntent(intent)
-            val remoteConfig = Firebase.remoteConfig
-            val lastUpdateVersion = prefs.getString(C.LAST_UPDATE_VERSION, null)
-            if (lastUpdateVersion == BuildConfig.VERSION_NAME) {
-                if (prefs.getBoolean("showRateAppDialog", true)) {
-                    val launchCount = prefs.getInt("launchCount", 0) + 1
-                    val dateOfFirstLaunch = prefs.getLong("firstLaunchDate", 0L)
-                    if (System.currentTimeMillis() < dateOfFirstLaunch + 345600000L || launchCount < 7) {
-                        prefs.edit { putInt("launchCount", launchCount) }
-                    } else { //4 days passed and launched at least 8 times
-                        AlertDialog.Builder(this)
-                                .setTitle(getString(R.string.thank_you))
-                                .setMessage(getString(R.string.rate_app_message))
-                                .setPositiveButton(getString(R.string.rate)) { _, _ ->
-                                    prefs.edit { putBoolean("showRateAppDialog", false) }
-                                    try {
-                                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
-                                    } catch (e: ActivityNotFoundException) {
-                                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$packageName")))
-                                    }
-                                }
-                                .setNegativeButton(getString(R.string.remind_me_later)) { _, _ -> prefs.edit { putLong("firstLaunchDate", System.currentTimeMillis() - 172800000L) } } //remind 2 days later
-                                .setNeutralButton(getString(R.string.no_thanks)) { _, _ -> prefs.edit { putBoolean("showRateAppDialog", false) } }
-                                .show()
-                    }
-                }
-            } else {
-                remoteConfig.setDefaultsAsync(mapOf(
-                        RemoteConfigParams.TWITCH_PLAYER_TYPE_KEY to RemoteConfigParams.TWITCH_PLAYER_TYPE_DEFAULT,
-                        RemoteConfigParams.TWITCH_PLAYER_USER_AGENT_KEY to RemoteConfigParams.TWITCH_PLAYER_USER_AGENT_DEFAULT,
-                        RemoteConfigParams.TWITCH_TOKEN_LIST_KEY to RemoteConfigParams.TWITCH_TOKEN_LIST_DEFAULT,
-                        RemoteConfigParams.TWITCH_CLIENT_ID_KEY to RemoteConfigParams.TWITCH_CLIENT_ID_DEFAULT))
-                remoteConfig.setConfigSettingsAsync(remoteConfigSettings {
-                    minimumFetchIntervalInSeconds = RemoteConfigParams.FETCH_INTERVAL_SECONDS
-                    fetchTimeoutInSeconds = RemoteConfigParams.FETCH_TIMEOUT_SECONDS
-                })
-
-                prefs.edit { putString(C.LAST_UPDATE_VERSION, BuildConfig.VERSION_NAME) }
-                if (notFirstLaunch) {
-                    if (prefs.getBoolean(C.SHOW_CHANGELOGS, true)) {
-                        NewUpdateChangelogDialog().show(supportFragmentManager, null)
-                    }
-                }
-                if (resources.getBoolean(R.bool.isTablet)) { //TODO remove after updated to 1.4.5
-                    if (prefs.getString(C.PORTRAIT_COLUMN_COUNT, null) == null) {
-                        prefs.edit {
-                            putString(C.PORTRAIT_COLUMN_COUNT, resources.getString(R.string.portraitColumns))
-                            putString(C.LANDSCAPE_COLUMN_COUNT, resources.getString(R.string.landscapeColumns))
-                        }
-                    }
-                }
-            }
-            remoteConfig.fetchAndActivate()
-        }
         restorePlayerFragment()
     }
 
@@ -248,11 +157,6 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         fragNavController.onSaveInstanceState(outState)
-    }
-
-    override fun onDestroy() {
-        unregisterReceiver(networkReceiver)
-        super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -453,11 +357,6 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
             transactionListener = object : FragNavController.TransactionListener {
                 override fun onFragmentTransaction(fragment: Fragment?, transactionType: FragNavController.TransactionType) {
-                    if (isSearchOpened) {
-                        hideNavigationBar()
-                    } else {
-                        showNavigationBar()
-                    }
                 }
 
                 override fun onTabTransaction(fragment: Fragment?, index: Int) {

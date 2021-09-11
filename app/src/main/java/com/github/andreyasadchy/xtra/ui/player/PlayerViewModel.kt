@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -15,9 +16,7 @@ import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.ui.common.BaseAndroidViewModel
 import com.github.andreyasadchy.xtra.ui.common.OnQualityChangeListener
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerViewModel
-import com.github.andreyasadchy.xtra.util.isNetworkAvailable
-import com.github.andreyasadchy.xtra.util.shortToast
-import com.github.andreyasadchy.xtra.util.toast
+import com.github.andreyasadchy.xtra.util.*
 import com.google.android.exoplayer2.DefaultLoadControl
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.ExoPlayer
@@ -30,7 +29,6 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import com.google.android.exoplayer2.util.Util
-import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
@@ -102,6 +100,18 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
 
     open fun onPause() {
         player.stop()
+    }
+
+    open fun readQuality(): String? {
+        val context = getApplication<Application>()
+        return context.prefs().getString(C.PLAYER_QUALITY, "720p60")
+    }
+
+    open fun writeQuality(quality: String) {
+        val context = getApplication<Application>()
+        if (context.prefs().getBoolean(C.PLAYER_SAVEQUALITY, true)) {
+            context.prefs().edit { putString(C.PLAYER_QUALITY, quality) }
+        }
     }
 
     open fun restartPlayer() {
@@ -202,7 +212,6 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
 //                Crashlytics.log(Log.ERROR, tag, "onPlayerError ${e.message}")
 //                Crashlytics.logException(e)
             }
-            FirebaseCrashlytics.getInstance().recordException(error)
         }
     }
 

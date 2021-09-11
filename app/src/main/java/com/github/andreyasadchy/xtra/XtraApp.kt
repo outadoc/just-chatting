@@ -26,11 +26,6 @@ class XtraApp : Application(), HasAndroidInjector {
         super.onCreate()
         INSTANCE = this
         AppInjector.init(this)
-//        RxJavaPlugins.setErrorHandler { //TODO
-//            if (it !is UnknownHostException) {
-//                Crashlytics.logException(it)
-//            }
-//        }
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(appLifecycleObserver)
     }

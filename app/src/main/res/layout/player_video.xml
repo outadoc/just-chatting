@@ -3,61 +3,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <View
-        style="@style/PlayerShadow" />
+    <View style="@style/PlayerShadow" />
+    <ImageButton style="@style/PlayerPlay"/>
+    <ImageButton style="@style/PlayerPause"/>
+    <ImageButton style="@style/PlayerRewind"/>
+    <ImageButton style="@style/PlayerForward"/>
 
-    <ImageButton
-        style="@style/PlayerPlay"/>
+    <ImageButton style="@style/PlayerMinimize"/>
+    <TextView style="@style/PlayerChannel"/>
 
-    <ImageButton
-        style="@style/PlayerPause"/>
-
-    <ImageButton
-        style="@style/PlayerRewind"/>
-
-    <ImageButton
-        style="@style/PlayerForward"/>
-
-    <ImageButton
-        style="@style/PlayerMinimize"/>
-
-    <TextView
-        style="@style/PlayerChannel"/>
-
-    <LinearLayout
-        style="@style/PlayerTopRightPanel">
-
-        <ImageButton
-            style="@style/PlayerDownload"
-            />
-
-        <ImageButton
-            style="@style/PlayerFollow"
-            />
-
-        <ImageButton
-            style="@style/PlayerSleep"
-            />
-
-        <ImageButton
-            style="@style/PlayerRatio" />
-
-        <ImageButton
-            style="@style/PlayerSettings"
-            />
-
+    <LinearLayout style="@style/PlayerTopRightPanel">
+        <ImageButton style="@style/PlayerDownload" />
+        <ImageButton style="@style/PlayerFollow" />
+        <ImageButton style="@style/PlayerSleep" />
+        <ImageButton style="@style/PlayerRatio" />
+        <ImageButton style="@style/PlayerSettings" />
     </LinearLayout>
 
-    <TextView
-        style="@style/PlayerPosition"/>
-
+    <TextView style="@style/PlayerPosition"/>
     <com.google.android.exoplayer2.ui.DefaultTimeBar
         android:id="@id/exo_progress"
         style="@style/PlayerProgress"/>
-
-    <TextView
-        style="@style/PlayerDuration"
-        />
+    <TextView style="@style/PlayerDuration" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -66,16 +33,8 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="5dp"
         android:layout_above="@id/exo_progress" >
-
-        <ImageButton
-            style="@style/PlayerShowChat" />
-
-        <ImageButton
-            style="@style/PlayerHideChat" />
-
-        <ImageButton
-            style="@style/PlayerFullscreenToggle"/>
-
+        <ImageButton style="@style/PlayerShowChat" />
+        <ImageButton style="@style/PlayerHideChat" />
+        <ImageButton style="@style/PlayerFullscreenToggle"/>
     </LinearLayout>
-
 </RelativeLayout>

@@ -34,12 +34,30 @@ import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.set
+import android.util.Log
+import com.github.andreyasadchy.xtra.di.XtraComponent
+import okhttp3.*
+import okhttp3.OkHttpClient
+import android.graphics.BitmapFactory
+
+import android.graphics.Bitmap
+
+import okhttp3.ResponseBody
+
+import androidx.annotation.NonNull
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
+import java.io.IOException
+import java.util.concurrent.CountDownLatch
 
 class ChatAdapter(
         private val fragment: Fragment,
         private val emoteSize: Int,
         private val badgeSize: Int,
-        private val animateGifs: Boolean) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+        private val randomColor: Boolean,
+        private val boldNames: Boolean,
+        private val badgeQuality: Int,
+        private val gifs: Boolean) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
         set(value) {
@@ -50,6 +68,7 @@ class ChatAdapter(
             field = value
         }
     private val twitchColors = intArrayOf(-65536, -16776961, -16744448, -5103070, -32944, -6632142, -47872, -13726889, -2448096, -2987746, -10510688, -14774017, -38476, -7722014, -16711809)
+    private val noColor = -10066329
     private val random = Random()
     private val userColors = HashMap<String, Int>()
     private val savedColors = HashMap<String, Int>()
@@ -71,7 +90,6 @@ class ChatAdapter(
         var badgesCount = 0
         chatMessage.badges?.forEach { (id, version) ->
             val url: String? = when (id) {
-                "admin" -> BADGES_URL + "admin.png"
                 "bits" -> {
                     val count = version.toInt()
                     val color = when {
@@ -83,18 +101,17 @@ class ChatAdapter(
                     }
                     "https://static-cdn.jtvnw.net/bits/dark/static/$color/2" //TODO change theme based on app theme
                 }
-                "broadcaster" -> BADGES_URL + "broadcaster.png"
-                "global_mod" -> BADGES_URL + "globalmod.png"
-                "moderator" -> BADGES_URL + "mod.png"
-                "subscriber" -> chatMessage.subscriberBadge?.imageUrl2x
-                "staff" -> BADGES_URL + "staff.png"
-                "turbo" -> BADGES_URL + "turbo.png"
-                "sub-gifter" -> "https://static-cdn.jtvnw.net/badges/v1/4592e9ea-b4ca-4948-93b8-37ac198c0433/2"
-                "premium" -> "https://static-cdn.jtvnw.net/badges/v1/a1dd5073-19c3-4911-8cb4-c464a7bc1510/2"
-                "partner" -> "https://static-cdn.jtvnw.net/badges/v1/d12a2e27-16f6-41d0-ab77-b780518f00a3/2"
-                "clip-champ" -> "https://static-cdn.jtvnw.net/badges/v1/f38976e0-ffc9-11e7-86d6-7f98b26a9d79/2"
-                "vip" -> "https://static-cdn.jtvnw.net/badges/v1/b817aba4-fad8-49e2-b88a-7cc744dfa6ec/2"
-                "glhf-pledge" -> "https://static-cdn.jtvnw.net/badges/v1/3158e758-3cb4-43c5-94b3-7639810451c5/2"
+                "broadcaster" -> BADGES_URL + "5527c58c-fb7d-422d-b71b-f309dcb85cc1/" + badgeQuality
+                "moderator" -> BADGES_URL + "3267646d-33f0-4b17-b3df-f923a41db1d0/" + badgeQuality
+                "vip" -> BADGES_URL + "b817aba4-fad8-49e2-b88a-7cc744dfa6ec/" + badgeQuality
+                "subscriber" -> when (badgeQuality) {3 -> (chatMessage.subscriberBadge?.imageUrl4x) 2 -> (chatMessage.subscriberBadge?.imageUrl2x) else -> (chatMessage.subscriberBadge?.imageUrl1x)}
+                "sub-gifter" -> BADGES_URL + "f1d8486f-eb2e-4553-b44f-4d614617afc1/" + badgeQuality
+                "staff" -> BADGES_URL + "d97c37bd-a6f5-4c38-8f57-4e4bef88af34/" + badgeQuality
+                "admin" -> BADGES_URL + "9ef7e029-4cdf-4d4d-a0d5-e2b3fb2583fe/" + badgeQuality
+                "global_mod" -> BADGES_URL + "9384c43e-4ce7-4e94-b2a1-b93656896eba/" + badgeQuality
+                "turbo" -> BADGES_URL + "bd444ec6-8f34-4bf9-91f4-af1e3428d80f/" + badgeQuality
+                "premium" -> BADGES_URL + "bbbe0db0-a598-423e-86d0-f9fb98ca1933/" + badgeQuality
+                "partner" -> BADGES_URL + "d12a2e27-16f6-41d0-ab77-b780518f00a3/" + badgeQuality
                 else -> null
             }
             url?.let {
@@ -128,8 +145,10 @@ class ChatAdapter(
             }
         }
         builder.setSpan(ForegroundColorSpan(color), index, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
-        builder.setSpan(StyleSpan(Typeface.BOLD), index, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
+        builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), index, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
         try {
+            var emotename = ""
+            var ispng = true
             chatMessage.emotes?.let { emotes ->
                 val copy = emotes.map {
                     val realBegin = chatMessage.message.offsetByCodePoints(0, it.begin)
@@ -142,6 +161,7 @@ class ChatAdapter(
                 }
                 index += userNameWithPostfixLength
                 for (e in copy) {
+                    emotename = e.name
                     val begin = index + e.begin
                     builder.replace(begin, index + e.end + 1, ".")
                     builder.setSpan(ForegroundColorSpan(Color.TRANSPARENT), begin, begin + 1, SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -154,7 +174,26 @@ class ChatAdapter(
                     }
                     e.end -= length
                 }
-                copy.forEach { images.add(Image(it.url, index + it.begin, index + it.end + 1, true)) }
+                if (gifs) {
+                    var emoteurl = "https://static-cdn.jtvnw.net/emoticons/v2/$emotename/default/dark/1.0"
+                    val countDownLatch = CountDownLatch(1)
+                    OkHttpClient().newCall(Request.Builder().url(emoteurl).head().build()).enqueue(object : Callback {
+                        override fun onFailure(call: Call, e: IOException) {
+                            countDownLatch.countDown()
+                        }
+
+                        override fun onResponse(call: Call, response: Response) {
+                            try {
+                                ispng = response.header("Content-Type") != "image/gif"
+                            } catch (e: java.lang.Exception) {
+                                countDownLatch.countDown()
+                            }
+                            countDownLatch.countDown()
+                        }
+                    })
+                countDownLatch.await()
+                }
+                copy.forEach { images.add(Image(it.url, index + it.begin, index + it.end + 1, true, ispng)) }
             }
             val split = builder.split(" ")
             var builderIndex = 0
@@ -167,7 +206,7 @@ class ChatAdapter(
                 builderIndex += if (emote == null) {
                     if (!Patterns.WEB_URL.matcher(value).matches()) {
                         if (value.startsWith('@')) {
-                            builder.setSpan(StyleSpan(Typeface.BOLD), builderIndex, endIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
+                            builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), builderIndex, endIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
                         }
                         username?.let {
                             if (!wasMentioned && value.contains(it, true) && chatMessage.userName != it) {
@@ -215,7 +254,7 @@ class ChatAdapter(
 
     private fun loadImages(holder: ViewHolder, images: List<Image>, originalMessage: CharSequence, builder: SpannableStringBuilder) {
         images.forEach { (url, start, end, isEmote, isPng) ->
-            if (isPng || !animateGifs) {
+            if (isPng) {
                 GlideApp.with(fragment)
                         .load(url)
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
@@ -320,7 +359,12 @@ class ChatAdapter(
         super.onDetachedFromRecyclerView(recyclerView)
     }
 
-    private fun getRandomColor(): Int = twitchColors[random.nextInt(twitchColors.size)]
+    private fun getRandomColor(): Int =
+        if (randomColor) {
+            twitchColors[random.nextInt(twitchColors.size)]
+        } else {
+            noColor
+        }
 
     private fun calculateEmoteSize(resource: Drawable): Pair<Int, Int> {
         val widthRatio = resource.intrinsicWidth.toFloat() / resource.intrinsicHeight.toFloat()
@@ -357,6 +401,6 @@ class ChatAdapter(
     }
 
     private companion object {
-        const val BADGES_URL = "https://static-cdn.jtvnw.net/chat-badges/"
+        const val BADGES_URL = "https://static-cdn.jtvnw.net/badges/v1/"
     }
 }

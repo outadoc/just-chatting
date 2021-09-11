@@ -9,8 +9,7 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="@string/app_name">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/search"
@@ -31,46 +30,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/settings"
-            android:textAllCaps="true"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/rate"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:background="?attr/selectableItemBackground">
-
-        <ImageView
-            android:src="@drawable/baseline_thumb_up_black_24"
-            style="@style/MenuIcon"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/rate_app"
-            android:textAllCaps="true"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/donate"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center_vertical"
-        android:background="?attr/selectableItemBackground">
-
-        <ImageView
-            android:src="@drawable/baseline_favorite_black_24"
-            style="@style/MenuIcon"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/support_the_developer"
-            android:textAllCaps="true"/>
+            android:text="@string/settings"/>
 
     </LinearLayout>
 
@@ -89,9 +49,7 @@
             android:id="@+id/loginText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAllCaps="true"
             tools:text="@string/log_in"/>
 
     </LinearLayout>
-
 </LinearLayout>

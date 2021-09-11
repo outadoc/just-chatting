@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.preference.ListPreference
 import androidx.preference.Preference
@@ -67,21 +68,52 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
             }
             findPreference<ListPreference>(C.PORTRAIT_COLUMN_COUNT)!!.onPreferenceChangeListener = changeListener
             findPreference<ListPreference>(C.LANDSCAPE_COLUMN_COUNT)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.ANIMATED_EMOTES)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.COMPACT_STREAMS)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.AD_BLOCKER)!!.onPreferenceChangeListener = changeListener
             findPreference<ListPreference>("playerForward")!!.onPreferenceChangeListener = changeListener
             findPreference<ListPreference>("playerRewind")!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.AD_BLOCKER)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.COMPACT_STREAMS)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.PLAYER_DOUBLETAP)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.PLAYER_ASPECT)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.PLAYER_CHATTOGGLE)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.PLAYER_SLEEP)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.PLAYER_FULLSCREEN)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.PLAYER_VIEWERICON)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.PLAYER_DOWNLOAD)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.PLAYER_MINIMIZE)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.PLAYER_CHANNEL)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.PLAYER_SAVEQUALITY)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.CHAT_RANDOMCOLOR)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.CHAT_BOLDNAMES)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_ROUNDUSERIMAGE)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_VIEWCOUNT)!!.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_STARTONFOLLOWED)!!.onPreferenceChangeListener = changeListener
+
+            findPreference<SwitchPreferenceCompat>(C.UI_STATUSBAR)!!.apply {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    onPreferenceChangeListener = changeListener
+                } else {
+                    isEnabled = false
+                }
+            }
+
+            findPreference<SwitchPreferenceCompat>(C.UI_NAVBAR)!!.apply {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    onPreferenceChangeListener = changeListener
+                } else {
+                    isEnabled = false
+                }
+            }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
-                findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.isVisible = false
+                findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.isEnabled = false
             }
 
             findPreference<SwitchPreferenceCompat>(C.IGNORE_NOTCH)!!.apply {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     onPreferenceChangeListener = changeListener
                 } else {
-                    isVisible = false
+                    isEnabled = false
                 }
             }
 
@@ -91,6 +123,29 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                     applyTheme()
                     recreate()
                 }
+                true
+            }
+
+            findPreference<SeekBarPreference>("chat_emotequality")!!.setOnPreferenceChangeListener { _, newValue ->
+                setResult()
+                activity.prefs().edit { putInt(C.CHAT_EMOTEQUALITY, newValue as Int) }
+                if (newValue == 3){
+                    activity.prefs().edit { putInt(C.CHAT_FFZEMOTEQUALITY, 4) }
+                } else {
+                    activity.prefs().edit { putInt(C.CHAT_FFZEMOTEQUALITY, newValue as Int) }
+                }
+                true
+            }
+
+            findPreference<SeekBarPreference>("chat_badgequality")!!.setOnPreferenceChangeListener { _, newValue ->
+                setResult()
+                activity.prefs().edit { putInt(C.CHAT_BADGEQUALITY, newValue as Int) }
+                true
+            }
+
+            findPreference<SeekBarPreference>("chat_limit")!!.setOnPreferenceChangeListener { _, newValue ->
+                setResult()
+                activity.prefs().edit { putInt(C.CHAT_LIMIT, newValue as Int) }
                 true
             }
 

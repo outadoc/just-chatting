@@ -12,10 +12,7 @@ import com.github.andreyasadchy.xtra.model.offline.Request
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.util.DownloadUtils
-import com.github.andreyasadchy.xtra.util.RemoteConfigParams
 import com.github.andreyasadchy.xtra.util.toast
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.iheartradio.m3u8.Encoding
 import com.iheartradio.m3u8.Format
 import com.iheartradio.m3u8.ParsingMode
@@ -89,7 +86,7 @@ class VideoDownloadViewModel @Inject constructor(
         }
     }
 
-    fun download(url: String, path: String, quality: String, fromIndex: Int, toIndex: Int, wifiOnly: Boolean) {
+    fun download(url: String, path: String, quality: String, fromIndex: Int, toIndex: Int) {
         GlobalScope.launch {
             with(_videoInfo.value!!) {
                 val context = getApplication<Application>()
@@ -103,7 +100,7 @@ class VideoDownloadViewModel @Inject constructor(
                 val request = Request(videoId, url, directory, video.id, fromIndex, toIndex)
                 offlineRepository.saveRequest(request)
 
-                DownloadUtils.download(context, request, wifiOnly)
+                DownloadUtils.download(context, request)
             }
         }
     }

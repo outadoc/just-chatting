@@ -12,11 +12,7 @@ import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.FragmentUtils
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.disable
-import com.github.andreyasadchy.xtra.util.enable
+import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.player_stream.*
 
 class StreamPlayerFragment : BasePlayerFragment() {
@@ -63,7 +59,8 @@ class StreamPlayerFragment : BasePlayerFragment() {
             if (it) settings.enable() else settings.disable()
         })
         viewModel.stream.observe(viewLifecycleOwner, Observer {
-            viewers.text = TwitchApiHelper.formatCount(it.viewers)
+            viewers.text = TwitchApiHelper.formatCount(it.viewers, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false)
+            )
         })
         settings.setOnClickListener {
             FragmentUtils.showRadioButtonDialogFragment(childFragmentManager, viewModel.qualities, viewModel.qualityIndex)

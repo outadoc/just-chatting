@@ -5,14 +5,8 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.content.edit
-import androidx.preference.ListPreference
-import androidx.preference.Preference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.PreferenceScreen
-import androidx.preference.SeekBarPreference
-import androidx.preference.SwitchPreferenceCompat
+import androidx.preference.*
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.util.C
@@ -84,7 +78,6 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
             findPreference<SwitchPreferenceCompat>(C.PLAYER_SAVEQUALITY)!!.onPreferenceChangeListener = changeListener
             findPreference<SwitchPreferenceCompat>(C.CHAT_RANDOMCOLOR)!!.onPreferenceChangeListener = changeListener
             findPreference<SwitchPreferenceCompat>(C.CHAT_BOLDNAMES)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.onPreferenceChangeListener = changeListener
             findPreference<SwitchPreferenceCompat>(C.UI_ROUNDUSERIMAGE)!!.onPreferenceChangeListener = changeListener
             findPreference<SwitchPreferenceCompat>(C.UI_VIEWCOUNT)!!.onPreferenceChangeListener = changeListener
             findPreference<SwitchPreferenceCompat>(C.UI_STARTONFOLLOWED)!!.onPreferenceChangeListener = changeListener
@@ -109,12 +102,52 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.isEnabled = false
             }
 
-            findPreference<SwitchPreferenceCompat>(C.IGNORE_NOTCH)!!.apply {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    onPreferenceChangeListener = changeListener
-                } else {
-                    isEnabled = false
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.isEnabled = false
+            }
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.isEnabled = false
+            } else {
+                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.setOnPreferenceChangeListener { preference: Preference, any: Any ->
+                    changed = true
+                    activity.apply {
+                        recreate()
+                    }
+                    true
                 }
+
+                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS2)!!.setOnPreferenceChangeListener { preference: Preference, any: Any ->
+                    changed = true
+                    activity.apply {
+                        recreate()
+                    }
+                    true
+                }
+
+                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.isEnabled =
+                    context?.prefs()?.getBoolean(C.CHAT_GIFS2, false) != true
+
+                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS2)!!.isEnabled =
+                    context?.prefs()?.getBoolean(C.CHAT_GIFS, true) != true
+            }
+
+            findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.setOnPreferenceChangeListener { _, _ ->
+                changed = true
+                activity.apply {
+                    applyTheme()
+                    recreate()
+                }
+                true
+            }
+
+            findPreference<ListPreference>(C.UI_LANGUAGE)!!.setOnPreferenceChangeListener { _, _ ->
+                changed = true
+                activity.apply {
+                    applyTheme()
+                    recreate()
+                }
+                true
             }
 
             findPreference<ListPreference>(C.THEME)!!.setOnPreferenceChangeListener { _, _ ->
@@ -129,11 +162,6 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
             findPreference<SeekBarPreference>("chat_emotequality")!!.setOnPreferenceChangeListener { _, newValue ->
                 setResult()
                 activity.prefs().edit { putInt(C.CHAT_EMOTEQUALITY, newValue as Int) }
-                if (newValue == 3){
-                    activity.prefs().edit { putInt(C.CHAT_FFZEMOTEQUALITY, 4) }
-                } else {
-                    activity.prefs().edit { putInt(C.CHAT_FFZEMOTEQUALITY, newValue as Int) }
-                }
                 true
             }
 
@@ -149,10 +177,12 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 true
             }
 
+            findPreference<SeekBarPreference>("chatWidth")!!.summary = "width: " + activity.prefs().getInt(C.LANDSCAPE_CHAT_WIDTH, 30).toString()
             findPreference<SeekBarPreference>("chatWidth")!!.setOnPreferenceChangeListener { _, newValue ->
                 setResult()
                 val chatWidth = DisplayUtils.calculateLandscapeWidthByPercent(activity, newValue as Int)
                 activity.prefs().edit { putInt(C.LANDSCAPE_CHAT_WIDTH, chatWidth) }
+                findPreference<SeekBarPreference>("chatWidth")!!.summary = "width: " + activity.prefs().getInt(C.LANDSCAPE_CHAT_WIDTH, 30).toString()
                 true
             }
         }

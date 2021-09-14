@@ -3,6 +3,7 @@ package com.github.andreyasadchy.xtra.ui.common
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -17,6 +18,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.core.text.getSpans
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
@@ -30,25 +32,14 @@ import com.github.andreyasadchy.xtra.model.chat.ChatMessage
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.chat.Image
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import okhttp3.*
+import java.io.IOException
 import java.util.*
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.CountDownLatch
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.set
-import android.util.Log
-import com.github.andreyasadchy.xtra.di.XtraComponent
-import okhttp3.*
-import okhttp3.OkHttpClient
-import android.graphics.BitmapFactory
-
-import android.graphics.Bitmap
-
-import okhttp3.ResponseBody
-
-import androidx.annotation.NonNull
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.prefs
-import java.io.IOException
-import java.util.concurrent.CountDownLatch
 
 class ChatAdapter(
         private val fragment: Fragment,
@@ -57,7 +48,8 @@ class ChatAdapter(
         private val randomColor: Boolean,
         private val boldNames: Boolean,
         private val badgeQuality: Int,
-        private val gifs: Boolean) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+        private val gifs: Boolean,
+        private val gifs2: Boolean) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
         set(value) {
@@ -174,7 +166,18 @@ class ChatAdapter(
                     }
                     e.end -= length
                 }
-                if (gifs) {
+                if (gifs && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    var emoteurl = "https://static-cdn.jtvnw.net/emoticons/v2/$emotename/default/dark/1.0"
+                    val future = CallbackFuture()
+                    OkHttpClient().newCall(Request.Builder().url(emoteurl).head().build()).enqueue(future)
+                    val response = future.get()
+                    if (response != null) {
+                        ispng = response.header("Content-Type") != "image/gif"
+                    } else {
+                        ispng = true
+                    }
+                }
+                if (gifs2) {
                     var emoteurl = "https://static-cdn.jtvnw.net/emoticons/v2/$emotename/default/dark/1.0"
                     val countDownLatch = CountDownLatch(1)
                     OkHttpClient().newCall(Request.Builder().url(emoteurl).head().build()).enqueue(object : Callback {
@@ -191,7 +194,7 @@ class ChatAdapter(
                             countDownLatch.countDown()
                         }
                     })
-                countDownLatch.await()
+                    countDownLatch.await()
                 }
                 copy.forEach { images.add(Image(it.url, index + it.begin, index + it.end + 1, true, ispng)) }
             }
@@ -251,6 +254,17 @@ class ChatAdapter(
     }
 
     override fun getItemCount(): Int = messages?.size ?: 0
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    internal class CallbackFuture : CompletableFuture<Response?>(), Callback {
+        override fun onResponse(call: Call?, response: Response?) {
+            super.complete(response)
+        }
+
+        override fun onFailure(call: Call?, e: IOException?) {
+            super.completeExceptionally(e)
+        }
+    }
 
     private fun loadImages(holder: ViewHolder, images: List<Image>, originalMessage: CharSequence, builder: SpannableStringBuilder) {
         images.forEach { (url, start, end, isEmote, isPng) ->

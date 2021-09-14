@@ -6,11 +6,8 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.os.*
-import android.view.Window
-import android.view.WindowManager
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -49,20 +46,13 @@ import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
 import com.github.andreyasadchy.xtra.ui.top.TopFragment
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosFragment
 import com.github.andreyasadchy.xtra.ui.view.SlidingLayout
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.DisplayUtils
-import com.github.andreyasadchy.xtra.util.applyTheme
-import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.isNetworkAvailable
-import com.github.andreyasadchy.xtra.util.prefs
-import com.github.andreyasadchy.xtra.util.shortToast
-import com.github.andreyasadchy.xtra.util.toast
-import com.github.andreyasadchy.xtra.util.visible
+import com.github.andreyasadchy.xtra.util.*
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 import javax.inject.Inject
 
 
@@ -97,15 +87,21 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     //Lifecycle methods
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        prefs = prefs()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            window.attributes.layoutInDisplayCutoutMode = if (prefs.getBoolean(C.IGNORE_NOTCH, true)) {
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            } else {
-                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
-            }
-        }
         super.onCreate(savedInstanceState)
+        prefs = prefs()
+        val lang = prefs.getString(C.UI_LANGUAGE, null)
+        if (lang != null) {
+            val config = resources.configuration
+            val locale = Locale(lang)
+            Locale.setDefault(locale)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1)
+                config.setLocale(locale)
+            else
+                config.locale = locale
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                createConfigurationContext(config)
+            resources.updateConfiguration(config, resources.displayMetrics)
+        }
         if (prefs.getBoolean(C.FIRST_LAUNCH1, true)) {
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.root_preferences, false)
             prefs.edit {

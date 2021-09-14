@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Build
 import android.util.TypedValue
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -56,6 +57,13 @@ fun Activity.applyTheme(): String {
             "2" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryLight)
             "3" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryBlue)
             else -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryDark)
+        }
+    }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        window.attributes.layoutInDisplayCutoutMode = when (prefs().getString(C.UI_CUTOUTMODE, "DEFAULT")) {
+            "1" -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            "2" -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
+            else -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
         }
     }
     return theme

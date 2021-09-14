@@ -61,6 +61,7 @@
 
     <string-array name="playerQuality">
         <item>Auto</item>
+        <item>Source</item>
         <item>1080p60 (source)</item>
         <item>720p60 (source)</item>
         <item>720p60</item>
@@ -68,5 +69,24 @@
         <item>480p</item>
         <item>360p</item>
         <item>160p</item>
+    </string-array>
+
+    <string-array name="language">
+        <item>en</item>
+        <item>ar</item>
+        <item>es</item>
+        <item>ru</item>
+    </string-array>
+
+    <string-array name="cutoutmodeEntries">
+        <item>DEFAULT</item>
+        <item>SHORT_EDGES</item>
+        <item>NEVER</item>
+    </string-array>
+
+    <string-array name="cutoutmodeValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
     </string-array>
 </resources>

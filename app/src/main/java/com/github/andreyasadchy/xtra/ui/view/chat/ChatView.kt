@@ -20,22 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.chat.BttvEmote
-import com.github.andreyasadchy.xtra.model.chat.ChatMessage
-import com.github.andreyasadchy.xtra.model.chat.Chatter
-import com.github.andreyasadchy.xtra.model.chat.Emote
-import com.github.andreyasadchy.xtra.model.chat.FfzEmote
-import com.github.andreyasadchy.xtra.model.chat.RecentEmote
+import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.convertDpToPixels
-import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.hideKeyboard
-import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.prefs
-import com.github.andreyasadchy.xtra.util.showKeyboard
-import com.github.andreyasadchy.xtra.util.toggleVisibility
-import com.github.andreyasadchy.xtra.util.visible
+import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
 import kotlinx.android.synthetic.main.view_chat.view.*
@@ -44,7 +31,6 @@ import com.github.andreyasadchy.xtra.model.kraken.user.Emote as TwitchEmote
 
 var MAX_ADAPTER_COUNT = 125
 var emoteQuality = "3"
-var ffzQuality = "4"
 
 class ChatView : ConstraintLayout {
 
@@ -86,10 +72,9 @@ class ChatView : ConstraintLayout {
     fun init(fragment: Fragment) {
         this.fragment = fragment
         emoteQuality = context.prefs().getInt(C.CHAT_EMOTEQUALITY, 3).toString()
-        ffzQuality = context.prefs().getInt(C.CHAT_FFZEMOTEQUALITY, 4).toString()
         MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 125)
         adapter = ChatAdapter(fragment, context.convertDpToPixels(29.5f), context.convertDpToPixels(18.5f), context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
-            context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getInt(C.CHAT_BADGEQUALITY, 3), context.prefs().getBoolean(C.CHAT_GIFS, true))
+            context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getInt(C.CHAT_BADGEQUALITY, 3), context.prefs().getBoolean(C.CHAT_GIFS, true), context.prefs().getBoolean(C.CHAT_GIFS2, false))
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null

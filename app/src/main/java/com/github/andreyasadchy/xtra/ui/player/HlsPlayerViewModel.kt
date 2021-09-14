@@ -72,10 +72,10 @@ abstract class HlsPlayerViewModel(
             if (helper.loaded.value != true) {
                 helper.loaded.value = true
                 val index = readQuality().let { quality ->
-                    if (quality == "Auto") {
-                        0
-                    } else {
-                        qualities.indexOf(quality).let { if (it != -1) it else 0 }
+                    when (quality) {
+                        "Auto" -> 0
+                        "Source" -> 1
+                        else -> qualities.indexOf(quality).let { if (it != -1) it else 0 }
                     }
                 }
                 qualityIndex = index

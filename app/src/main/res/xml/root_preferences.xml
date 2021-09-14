@@ -3,6 +3,23 @@
 
     <PreferenceCategory android:title="ui" app:iconSpaceReserved="false"/>
     <ListPreference
+        android:entries="@array/language"
+        android:entryValues="@array/language"
+        android:key="ui_language"
+        android:summary="%s"
+        android:title="language"
+        app:iconSpaceReserved="false"/>
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/cutoutmodeEntries"
+        android:entryValues="@array/cutoutmodeValues"
+        android:key="ui_cutoutmode"
+        android:summary="%s"
+        android:title="display cutout mode"
+        app:iconSpaceReserved="false"/>
+
+    <ListPreference
         android:defaultValue="0"
         android:entries="@array/themeEntries"
         android:entryValues="@array/themeValues"
@@ -68,16 +85,17 @@
         android:summary="@string/compact_streams_description"
         app:iconSpaceReserved="false"/>
 
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="ignoreNotch"
-        android:title="@string/ignore_notch"
-        app:iconSpaceReserved="false"/>
-
     <PreferenceCategory android:title="chat" app:iconSpaceReserved="false" />
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="chat_gifs"
+        android:summary="animated sub emotes"
+        android:title="chat_gifs (api 24+)"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="chat_gifs2"
         android:summary="animated sub emotes"
         android:title="chat_gifs"
         app:iconSpaceReserved="false"/>
@@ -213,7 +231,7 @@
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="player_viewericon"
         android:title="player_viewericon"
         app:iconSpaceReserved="false"/>

@@ -60,93 +60,73 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 setResult()
                 true
             }
-            findPreference<ListPreference>(C.PORTRAIT_COLUMN_COUNT)!!.onPreferenceChangeListener = changeListener
-            findPreference<ListPreference>(C.LANDSCAPE_COLUMN_COUNT)!!.onPreferenceChangeListener = changeListener
-            findPreference<ListPreference>("playerForward")!!.onPreferenceChangeListener = changeListener
-            findPreference<ListPreference>("playerRewind")!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.AD_BLOCKER)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.COMPACT_STREAMS)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.PLAYER_DOUBLETAP)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.PLAYER_ASPECT)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.PLAYER_CHATTOGGLE)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.PLAYER_SLEEP)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.PLAYER_FULLSCREEN)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.PLAYER_VIEWERICON)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.PLAYER_DOWNLOAD)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.PLAYER_MINIMIZE)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.PLAYER_CHANNEL)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.PLAYER_SAVEQUALITY)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.CHAT_RANDOMCOLOR)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.CHAT_BOLDNAMES)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.UI_ROUNDUSERIMAGE)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.UI_VIEWCOUNT)!!.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.UI_STARTONFOLLOWED)!!.onPreferenceChangeListener = changeListener
 
-            findPreference<SwitchPreferenceCompat>(C.UI_STATUSBAR)!!.apply {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    onPreferenceChangeListener = changeListener
-                } else {
-                    isEnabled = false
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                findPreference<SwitchPreferenceCompat>(C.UI_STATUSBAR)!!.isEnabled = false
+                findPreference<SwitchPreferenceCompat>(C.UI_STATUSBAR)!!.summary = "Android 5 required"
+                findPreference<SwitchPreferenceCompat>(C.UI_NAVBAR)!!.isEnabled = false
+                findPreference<SwitchPreferenceCompat>(C.UI_NAVBAR)!!.summary = "Android 5 required"
+            } else {
+                findPreference<SwitchPreferenceCompat>(C.UI_STATUSBAR)!!.setOnPreferenceChangeListener { _, _ ->
+                    changed = true
+                    activity.apply {
+                        applyTheme()
+                        recreate()
+                    }
+                    true
                 }
-            }
-
-            findPreference<SwitchPreferenceCompat>(C.UI_NAVBAR)!!.apply {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    onPreferenceChangeListener = changeListener
-                } else {
-                    isEnabled = false
+                findPreference<SwitchPreferenceCompat>(C.UI_NAVBAR)!!.setOnPreferenceChangeListener { _, _ ->
+                    changed = true
+                    activity.apply {
+                        applyTheme()
+                        recreate()
+                    }
+                    true
                 }
-            }
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
-                findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.isEnabled = false
-            }
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.isEnabled = false
             }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                 findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.isEnabled = false
+                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.summary = "Android 7 required"
             } else {
-                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.setOnPreferenceChangeListener { preference: Preference, any: Any ->
+                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.setOnPreferenceChangeListener { _, _ ->
                     changed = true
-                    activity.apply {
-                        recreate()
-                    }
+                    activity.apply { recreate() }
                     true
                 }
-
-                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS2)!!.setOnPreferenceChangeListener { preference: Preference, any: Any ->
+                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS2)!!.setOnPreferenceChangeListener { _, _ ->
                     changed = true
-                    activity.apply {
-                        recreate()
-                    }
+                    activity.apply { recreate() }
                     true
                 }
-
                 findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.isEnabled =
                     context?.prefs()?.getBoolean(C.CHAT_GIFS2, false) != true
-
                 findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS2)!!.isEnabled =
                     context?.prefs()?.getBoolean(C.CHAT_GIFS, true) != true
             }
 
-            findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.setOnPreferenceChangeListener { _, _ ->
-                changed = true
-                activity.apply {
-                    applyTheme()
-                    recreate()
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+                findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.isEnabled = false
+                findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.summary = "not supported"
+            }
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.isEnabled = false
+                findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.summary = "Android 9 required"
+            } else {
+                findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.setOnPreferenceChangeListener { _, _ ->
+                    changed = true
+                    activity.apply {
+                        applyTheme()
+                        recreate()
+                    }
+                    true
                 }
-                true
             }
 
             findPreference<ListPreference>(C.UI_LANGUAGE)!!.setOnPreferenceChangeListener { _, _ ->
                 changed = true
-                activity.apply {
-                    applyTheme()
-                    recreate()
-                }
+                activity.apply { recreate() }
                 true
             }
 
@@ -156,24 +136,6 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                     applyTheme()
                     recreate()
                 }
-                true
-            }
-
-            findPreference<SeekBarPreference>("chat_emotequality")!!.setOnPreferenceChangeListener { _, newValue ->
-                setResult()
-                activity.prefs().edit { putInt(C.CHAT_EMOTEQUALITY, newValue as Int) }
-                true
-            }
-
-            findPreference<SeekBarPreference>("chat_badgequality")!!.setOnPreferenceChangeListener { _, newValue ->
-                setResult()
-                activity.prefs().edit { putInt(C.CHAT_BADGEQUALITY, newValue as Int) }
-                true
-            }
-
-            findPreference<SeekBarPreference>("chat_limit")!!.setOnPreferenceChangeListener { _, newValue ->
-                setResult()
-                activity.prefs().edit { putInt(C.CHAT_LIMIT, newValue as Int) }
                 true
             }
 

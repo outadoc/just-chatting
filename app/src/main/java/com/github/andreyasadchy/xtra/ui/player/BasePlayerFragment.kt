@@ -51,6 +51,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
     private lateinit var playerAspectRatioToggle: ImageButton
     private lateinit var showChat: ImageButton
     private lateinit var hideChat: ImageButton
+    private lateinit var pause: ImageButton
 
     protected abstract val layoutId: Int
     protected abstract val chatContainerId: Int
@@ -107,11 +108,16 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
         slidingLayout.maximizedSecondViewVisibility = if (prefs.getBoolean(C.KEY_CHAT_OPENED, true)) View.VISIBLE else View.GONE //TODO
         playerView = view.findViewById(R.id.playerView)
         chatLayout = view.findViewById(chatContainerId)
+        pause = view.findViewById(R.id.exo_pause)
         aspectRatioFrameLayout = view.findViewById(R.id.aspectRatioFrameLayout)
         aspectRatioFrameLayout.setAspectRatio(16f / 9f)
         val isNotOfflinePlayer = this !is OfflinePlayerFragment
-        if (this is StreamPlayerFragment && !prefs.getBoolean(C.PLAYER_VIEWERICON, true)) {
+        if (this is StreamPlayerFragment && !prefs.getBoolean(C.PLAYER_VIEWERICON, false)) {
             view.findViewById<ImageView>(R.id.viewericon).gone()
+        }
+        if (this is StreamPlayerFragment && !prefs.getBoolean(C.PLAYER_PAUSE, false)) {
+            pause.layoutParams.height = 0
+            pause.layoutParams.width = 0
         }
         if (prefs.getBoolean(C.PLAYER_DOUBLETAP, true)) {
             playerView.setOnDoubleTapListener {
@@ -197,20 +203,19 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
             }
         } else {
             val rewind = prefs.getString("playerRewind", "5000")!!.toInt()
-            val forward = prefs.getString("playerForward", "5000")!!.toInt()
             val rewindImage = when (rewind) {
                 5000 -> R.drawable.baseline_replay_5_black_48
                 10000 -> R.drawable.baseline_replay_10_black_48
                 else -> R.drawable.baseline_replay_30_black_48
             }
-            val forwardImage = when (forward) {
+            val forwardImage = when (rewind) {
                 5000 -> R.drawable.baseline_forward_5_black_48
                 10000 -> R.drawable.baseline_forward_10_black_48
                 else -> R.drawable.baseline_forward_30_black_48
             }
             playerView.apply {
                 setRewindIncrementMs(rewind)
-                setFastForwardIncrementMs(forward)
+                setFastForwardIncrementMs(rewind)
             }
             view.findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_rew).setImageResource(rewindImage)
             view.findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_ffwd).setImageResource(forwardImage)

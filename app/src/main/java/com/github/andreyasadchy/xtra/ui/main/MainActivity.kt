@@ -89,8 +89,8 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = prefs()
-        val lang = prefs.getString(C.UI_LANGUAGE, null)
-        if (lang != null) {
+        val lang = prefs.getString(C.UI_LANGUAGE, "auto")
+        if (lang != "auto") {
             val config = resources.configuration
             val locale = Locale(lang)
             Locale.setDefault(locale)

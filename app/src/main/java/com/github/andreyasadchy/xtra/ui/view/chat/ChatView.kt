@@ -31,6 +31,7 @@ import com.github.andreyasadchy.xtra.model.kraken.user.Emote as TwitchEmote
 
 var MAX_ADAPTER_COUNT = 125
 var emoteQuality = "3"
+var stvQuality = 4
 
 class ChatView : ConstraintLayout {
 
@@ -72,7 +73,8 @@ class ChatView : ConstraintLayout {
     fun init(fragment: Fragment) {
         this.fragment = fragment
         emoteQuality = context.prefs().getInt(C.CHAT_EMOTEQUALITY, 3).toString()
-        MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 125)
+        stvQuality = context.prefs().getInt(C.CHAT_STVQUALITY, 4)
+        MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
         adapter = ChatAdapter(fragment, context.convertDpToPixels(29.5f), context.convertDpToPixels(18.5f), context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
             context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getInt(C.CHAT_BADGEQUALITY, 3), context.prefs().getBoolean(C.CHAT_GIFS, true), context.prefs().getBoolean(C.CHAT_GIFS2, false))
         recyclerView.let {
@@ -117,7 +119,7 @@ class ChatView : ConstraintLayout {
 
     fun addEmotes(list: List<Emote>) {
         when (list.firstOrNull()) {
-            is BttvEmote, is FfzEmote -> {
+            is BttvEmote, is FfzEmote, is StvEmote -> {
                 adapter.addEmotes(list)
                 if (messagingEnabled) {
                     autoCompleteList!!.addAll(list)

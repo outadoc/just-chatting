@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.view_chat.view.*
 import kotlin.math.max
 import com.github.andreyasadchy.xtra.model.kraken.user.Emote as TwitchEmote
 
-var MAX_ADAPTER_COUNT = 125
+var MAX_ADAPTER_COUNT = 200
 var emoteQuality = "3"
 var stvQuality = 4
 

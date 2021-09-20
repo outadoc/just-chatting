@@ -5,7 +5,6 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.github.andreyasadchy.xtra.model.chat.Emote
-import com.github.andreyasadchy.xtra.util.C.TWITCH_EMOTES_URL
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.IgnoredOnParcel
 
@@ -18,5 +17,5 @@ class Emote(
 
         @Ignore
         @IgnoredOnParcel
-        override val url: String = "$TWITCH_EMOTES_URL$id/2.0"
+        override val url: String = "https://static-cdn.jtvnw.net/emoticons/v2/$id/default/dark/2.0"
 }

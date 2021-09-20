@@ -5,6 +5,6 @@ class StvEmote(
     val mime: String,
     override val url: String) : Emote() {
 
-    override val isPng: Boolean
-        get() = !mime.endsWith("gif", true)
+    override val isPng: String
+        get() = mime
 }

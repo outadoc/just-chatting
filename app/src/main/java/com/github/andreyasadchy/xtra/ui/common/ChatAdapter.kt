@@ -22,6 +22,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.text.getSpans
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.integration.webp.decoder.WebpDrawable
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.bumptech.glide.request.target.CustomTarget
@@ -40,6 +41,7 @@ import java.util.concurrent.CountDownLatch
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.set
+
 
 class ChatAdapter(
         private val fragment: Fragment,
@@ -140,7 +142,7 @@ class ChatAdapter(
         builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), index, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
         try {
             var emotename = ""
-            var ispng = true
+            var ispng = "image/png"
             chatMessage.emotes?.let { emotes ->
                 val copy = emotes.map {
                     val realBegin = chatMessage.message.offsetByCodePoints(0, it.begin)
@@ -167,18 +169,15 @@ class ChatAdapter(
                     e.end -= length
                 }
                 if (gifs && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    var emoteurl = "https://static-cdn.jtvnw.net/emoticons/v2/$emotename/default/dark/1.0"
+                    val emoteurl = "https://static-cdn.jtvnw.net/emoticons/v2/$emotename/default/dark/1.0"
                     val future = CallbackFuture()
                     OkHttpClient().newCall(Request.Builder().url(emoteurl).head().build()).enqueue(future)
                     val response = future.get()
-                    if (response != null) {
-                        ispng = response.header("Content-Type") != "image/gif"
-                    } else {
-                        ispng = true
-                    }
+                    ispng = response?.header("Content-Type") ?: "image/png"
+                    response?.body()?.close()
                 }
                 if (gifs2) {
-                    var emoteurl = "https://static-cdn.jtvnw.net/emoticons/v2/$emotename/default/dark/1.0"
+                    val emoteurl = "https://static-cdn.jtvnw.net/emoticons/v2/$emotename/default/dark/1.0"
                     val countDownLatch = CountDownLatch(1)
                     OkHttpClient().newCall(Request.Builder().url(emoteurl).head().build()).enqueue(object : Callback {
                         override fun onFailure(call: Call, e: IOException) {
@@ -187,8 +186,10 @@ class ChatAdapter(
 
                         override fun onResponse(call: Call, response: Response) {
                             try {
-                                ispng = response.header("Content-Type") != "image/gif"
+                                ispng = response.header("Content-Type").toString()
+                                response.body()?.close()
                             } catch (e: java.lang.Exception) {
+                                ispng = "image/png"
                                 countDownLatch.countDown()
                             }
                             countDownLatch.countDown()
@@ -268,23 +269,40 @@ class ChatAdapter(
 
     private fun loadImages(holder: ViewHolder, images: List<Image>, originalMessage: CharSequence, builder: SpannableStringBuilder) {
         images.forEach { (url, start, end, isEmote, isPng) ->
-            if (isPng) {
-                GlideApp.with(fragment)
+            when (isPng) {
+                "image/webp" -> {
+                    GlideApp.with(fragment)
+                        .asWebp()
                         .load(url)
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
-                        .into(object : CustomTarget<Drawable>() {
-                            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
-                                val width: Int
-                                val height: Int
-                                if (isEmote) {
-                                    val size = calculateEmoteSize(resource)
-                                    width = size.first
-                                    height = size.second
+                        .into(object : CustomTarget<WebpDrawable>() {
+                            override fun onResourceReady(resource: WebpDrawable, transition: Transition<in WebpDrawable>?) {
+                                if (resource.frameCount > 1) {
+                                    anim(resource, transition)
                                 } else {
-                                    width = badgeSize
-                                    height = badgeSize
+                                    static()
                                 }
-                                resource.setBounds(0, 0, width, height)
+                            }
+                            fun anim(resource: WebpDrawable, transition: Transition<in WebpDrawable>?) {
+                                resource.apply {
+                                    val size = calculateEmoteSize(this)
+                                    setBounds(0, 0, size.first, size.second)
+                                    loopCount = WebpDrawable.LOOP_FOREVER
+                                    callback = object : Drawable.Callback {
+                                        override fun unscheduleDrawable(who: Drawable, what: Runnable) {
+                                            holder.textView.removeCallbacks(what)
+                                        }
+
+                                        override fun invalidateDrawable(who: Drawable) {
+                                            holder.textView.invalidate()
+                                        }
+
+                                        override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
+                                            holder.textView.postDelayed(what, `when`)
+                                        }
+                                    }
+                                    start()
+                                }
                                 try {
                                     builder.setSpan(ImageSpan(resource), start, end, SPAN_EXCLUSIVE_EXCLUSIVE)
                                 } catch (e: IndexOutOfBoundsException) {
@@ -295,9 +313,40 @@ class ChatAdapter(
 
                             override fun onLoadCleared(placeholder: Drawable?) {
                             }
+
+                            fun static() {
+                                GlideApp.with(fragment)
+                                    .load(url)
+                                    .diskCacheStrategy(DiskCacheStrategy.DATA)
+                                    .into(object : CustomTarget<Drawable>() {
+                                        override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                                            val width: Int
+                                            val height: Int
+                                            if (isEmote) {
+                                                val size = calculateEmoteSize(resource)
+                                                width = size.first
+                                                height = size.second
+                                            } else {
+                                                width = badgeSize
+                                                height = badgeSize
+                                            }
+                                            resource.setBounds(0, 0, width, height)
+                                            try {
+                                                builder.setSpan(ImageSpan(resource), start, end, SPAN_EXCLUSIVE_EXCLUSIVE)
+                                            } catch (e: IndexOutOfBoundsException) {
+//                                    Crashlytics.logException(e)
+                                            }
+                                            holder.bind(originalMessage, builder)
+                                        }
+
+                                        override fun onLoadCleared(placeholder: Drawable?) {
+                                        }
+                                    })
+                            }
                         })
-            } else {
-                GlideApp.with(fragment)
+                }
+                "image/gif" -> {
+                    GlideApp.with(fragment)
                         .asGif()
                         .load(url)
                         .diskCacheStrategy(DiskCacheStrategy.DATA)
@@ -333,6 +382,36 @@ class ChatAdapter(
                             override fun onLoadCleared(placeholder: Drawable?) {
                             }
                         })
+                }
+                else -> {
+                    GlideApp.with(fragment)
+                        .load(url)
+                        .diskCacheStrategy(DiskCacheStrategy.DATA)
+                        .into(object : CustomTarget<Drawable>() {
+                            override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                                val width: Int
+                                val height: Int
+                                if (isEmote) {
+                                    val size = calculateEmoteSize(resource)
+                                    width = size.first
+                                    height = size.second
+                                } else {
+                                    width = badgeSize
+                                    height = badgeSize
+                                }
+                                resource.setBounds(0, 0, width, height)
+                                try {
+                                    builder.setSpan(ImageSpan(resource), start, end, SPAN_EXCLUSIVE_EXCLUSIVE)
+                                } catch (e: IndexOutOfBoundsException) {
+//                                    Crashlytics.logException(e)
+                                }
+                                holder.bind(originalMessage, builder)
+                            }
+
+                            override fun onLoadCleared(placeholder: Drawable?) {
+                            }
+                        })
+                }
             }
         }
     }
@@ -353,6 +432,7 @@ class ChatAdapter(
         super.onViewAttachedToWindow(holder)
         (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
             (it.drawable as? GifDrawable)?.start()
+            (it.drawable as? WebpDrawable)?.start()
         }
     }
 
@@ -360,6 +440,7 @@ class ChatAdapter(
         super.onViewDetachedFromWindow(holder)
         (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
             (it.drawable as? GifDrawable)?.stop()
+            (it.drawable as? WebpDrawable)?.stop()
         }
     }
 
@@ -368,6 +449,7 @@ class ChatAdapter(
         for (i in 0 until childCount) {
             ((recyclerView.getChildAt(i) as TextView).text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
                 (it.drawable as? GifDrawable)?.stop()
+                (it.drawable as? WebpDrawable)?.stop()
             }
         }
         super.onDetachedFromRecyclerView(recyclerView)

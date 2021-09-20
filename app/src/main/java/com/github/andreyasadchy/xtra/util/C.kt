@@ -9,7 +9,6 @@ object C {
     const val CHANNEL = "channel"
     const val DOWNLOAD_STORAGE = "downloadStorage"
     const val ASPECT_RATIO_LANDSCAPE = "aspectRatioLandscape"
-    const val TWITCH_EMOTES_URL = "https://static-cdn.jtvnw.net/emoticons/v2/"
     const val FIRST_LAUNCH1 = "first_launch1"
     const val LANDSCAPE_CHAT_WIDTH = "landscape_chat_width"
     const val KEY_CHAT_OPENED = "key_chat_opened"

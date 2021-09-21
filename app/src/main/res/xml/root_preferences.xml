@@ -44,21 +44,19 @@
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="ui_rounduserimage"
-        android:title="ui_rounduserimage"
+        android:title="circle profile pics"
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="ui_viewcount"
-        android:summary="truncated view counts"
-        android:title="ui_viewcount"
+        android:title="truncated view counts"
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="ui_startonfollowed"
-        android:summary="start on following page when logged in"
-        android:title="ui_startonfollowed"
+        android:title="start on following page when logged in"
         app:iconSpaceReserved="false"/>
 
     <ListPreference
@@ -89,36 +87,41 @@
     <PreferenceCategory android:title="chat" app:iconSpaceReserved="false" />
     <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:dependency="animatedGifEmotes"
         android:key="chat_gifs"
-        android:summary="animated sub emotes"
-        android:title="chat_gifs (api 24+)"
+        android:title="animated sub emotes (api 24+)"
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
+        android:dependency="animatedGifEmotes"
         android:key="chat_gifs2"
-        android:summary="animated sub emotes"
-        android:title="chat_gifs"
+        android:title="animated sub emotes"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="animatedGifEmotes"
+        android:title="@string/animated_emotes"
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="chat_boldnames"
-        android:title="chat_boldnames"
+        android:title="bold usernames"
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="chat_randomcolor"
-        android:summary="random color for users without color set"
-        android:title="chat_randomcolor"
+        android:title="random color for users without color set"
         app:iconSpaceReserved="false"/>
 
     <SeekBarPreference
         android:defaultValue="3"
         android:key="chat_emotequality"
         android:max="3"
-        android:title="chat_emotequality"
+        android:title="emote quality"
         app:iconSpaceReserved="false"
         app:min="1"
         app:showSeekBarValue="true" />
@@ -136,7 +139,7 @@
         android:defaultValue="3"
         android:key="chat_badgequality"
         android:max="3"
-        android:title="chat_badgequality"
+        android:title="badge quality"
         app:iconSpaceReserved="false"
         app:min="1"
         app:showSeekBarValue="true" />
@@ -145,7 +148,7 @@
         android:defaultValue="200"
         android:key="chat_limit"
         android:max="800"
-        android:title="chat_limit"
+        android:title="message limit"
         app:iconSpaceReserved="false"
         app:min="1"
         app:showSeekBarValue="true" />
@@ -186,7 +189,7 @@
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="player_doubletap"
-        android:title="player_doubletap"
+        android:title="double tap to toggle chat"
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat

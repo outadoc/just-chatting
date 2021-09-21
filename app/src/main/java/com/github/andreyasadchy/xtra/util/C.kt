@@ -37,6 +37,7 @@ object C {
     const val PLAYER_CHANNEL = "player_channel"
     const val PLAYER_QUALITY = "player_quality"
     const val PLAYER_SAVEQUALITY = "player_savequality"
+    const val ANIMATED_EMOTES = "animatedGifEmotes"
     const val CHAT_RANDOMCOLOR = "chat_randomcolor"
     const val CHAT_BOLDNAMES = "chat_boldnames"
     const val CHAT_EMOTEQUALITY = "chat_emotequality"

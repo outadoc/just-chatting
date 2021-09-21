@@ -117,6 +117,7 @@
     <string name="channels">Channels</string>
     <string name="video">Video</string>
     <string name="watch_video">Watch full video</string>
+    <string name="animated_emotes">Animated emotes</string>
     <string name="chat_settings">Chat settings</string>
     <string name="sleep_timer">Sleep timer</string>
     <string name="start">Start</string>

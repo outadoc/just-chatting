@@ -277,13 +277,6 @@ class ChatAdapter(
                     .diskCacheStrategy(DiskCacheStrategy.DATA)
                     .into(object : CustomTarget<WebpDrawable>() {
                         override fun onResourceReady(resource: WebpDrawable, transition: Transition<in WebpDrawable>?) {
-                            if (resource.frameCount > 1) {
-                                anim(resource, transition)
-                            } else {
-                                static()
-                            }
-                        }
-                        fun anim(resource: WebpDrawable, transition: Transition<in WebpDrawable>?) {
                             resource.apply {
                                 val size = calculateEmoteSize(this)
                                 setBounds(0, 0, size.first, size.second)
@@ -314,7 +307,7 @@ class ChatAdapter(
                         override fun onLoadCleared(placeholder: Drawable?) {
                         }
 
-                        fun static() {
+                        override fun onLoadFailed(errorDrawable: Drawable?) {
                             GlideApp.with(fragment)
                                 .load(url)
                                 .diskCacheStrategy(DiskCacheStrategy.DATA)

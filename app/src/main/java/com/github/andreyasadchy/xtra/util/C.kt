@@ -44,6 +44,5 @@ object C {
     const val CHAT_STVQUALITY = "chat_stvquality"
     const val CHAT_BADGEQUALITY = "chat_badgequality"
     const val CHAT_LIMIT = "chat_limit"
-    const val CHAT_GIFS = "chat_gifs"
-    const val CHAT_GIFS2 = "chat_gifs2"
+    const val CHAT_ZEROWIDTH = "chat_zerowidth"
 }

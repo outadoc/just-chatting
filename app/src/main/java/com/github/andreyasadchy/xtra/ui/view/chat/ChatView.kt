@@ -76,8 +76,8 @@ class ChatView : ConstraintLayout {
         stvQuality = context.prefs().getInt(C.CHAT_STVQUALITY, 4)
         MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
         adapter = ChatAdapter(fragment, context.convertDpToPixels(29.5f), context.convertDpToPixels(18.5f), context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
-            context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getInt(C.CHAT_BADGEQUALITY, 3), context.prefs().getBoolean(C.CHAT_GIFS, true),
-            context.prefs().getBoolean(C.CHAT_GIFS2, false), context.prefs().getBoolean(C.ANIMATED_EMOTES, true))
+            context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getInt(C.CHAT_BADGEQUALITY, 3), context.prefs().getBoolean(C.ANIMATED_EMOTES, true),
+            context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true))
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null

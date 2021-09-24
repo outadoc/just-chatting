@@ -17,7 +17,9 @@ class StvRoomDeserializer : JsonDeserializer<StvEmotesResponse> {
             val urls = emote.getAsJsonArray("urls")
             val quality = urls.get(when (stvQuality) {4 -> 3 3 -> 2 2 -> 1 else -> 0}).asJsonArray
             val url = quality.get(1)
-            emotes.add(StvEmote(emote.get("name").asString, emote.get("mime").asString, url.asString))
+            val visibility = emote.getAsJsonArray("visibility_simple")
+            val zerowidth = visibility.toString().contains("ZERO_WIDTH")
+            emotes.add(StvEmote(emote.get("name").asString, emote.get("mime").asString, url.asString, zerowidth))
         }
         return StvEmotesResponse(emotes)
     }

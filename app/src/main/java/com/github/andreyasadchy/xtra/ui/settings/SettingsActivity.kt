@@ -87,26 +87,6 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 }
             }
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.isEnabled = false
-                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.summary = "Android 7 required"
-            } else {
-                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.setOnPreferenceChangeListener { _, _ ->
-                    changed = true
-                    activity.apply { recreate() }
-                    true
-                }
-                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS2)!!.setOnPreferenceChangeListener { _, _ ->
-                    changed = true
-                    activity.apply { recreate() }
-                    true
-                }
-                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS)!!.isEnabled =
-                    context?.prefs()?.getBoolean(C.CHAT_GIFS2, false) != true
-                findPreference<SwitchPreferenceCompat>(C.CHAT_GIFS2)!!.isEnabled =
-                    context?.prefs()?.getBoolean(C.CHAT_GIFS, true) != true
-            }
-
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
                 findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.isEnabled = false
                 findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.summary = "not supported"

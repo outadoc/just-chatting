@@ -86,26 +86,6 @@
 
     <PreferenceCategory android:title="chat" app:iconSpaceReserved="false" />
     <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:dependency="animatedGifEmotes"
-        android:key="chat_gifs"
-        android:title="animated sub emotes (api 24+)"
-        app:iconSpaceReserved="false"/>
-
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:dependency="animatedGifEmotes"
-        android:key="chat_gifs2"
-        android:title="animated sub emotes"
-        app:iconSpaceReserved="false"/>
-
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="animatedGifEmotes"
-        android:title="@string/animated_emotes"
-        app:iconSpaceReserved="false"/>
-
-    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="chat_boldnames"
         android:title="bold usernames"
@@ -115,6 +95,18 @@
         android:defaultValue="true"
         android:key="chat_randomcolor"
         android:title="random color for users without color set"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="animatedGifEmotes"
+        android:title="@string/animated_emotes"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="chat_zerowidth"
+        android:title="zero width emotes"
         app:iconSpaceReserved="false"/>
 
     <SeekBarPreference

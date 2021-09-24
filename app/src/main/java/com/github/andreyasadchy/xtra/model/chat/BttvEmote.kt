@@ -11,9 +11,12 @@ class BttvEmote(
         override val name: String,
         val imageType: String) : Emote() {
 
+    override val url: String
+        get() = "$BTTV_URL$id/${emoteQuality}x"
+
     override val isPng: String
         get() = "image/$imageType"
 
-    override val url: String
-        get() = "$BTTV_URL$id/${emoteQuality}x"
+    override val zerowidth: Boolean
+        get() = name == "SoSnowy"||name == "IceCold"||name == "SantaHat"||name == "TopHat"||name == "ReinDeer"||name == "CandyCane"||name == "cvMask"||name == "cvHazmat"
 }

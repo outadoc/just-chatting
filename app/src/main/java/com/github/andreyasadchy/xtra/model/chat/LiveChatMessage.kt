@@ -8,6 +8,7 @@ data class LiveChatMessage(
         override val isAction: Boolean,
         override val emotes: List<TwitchEmote>?,
         override val badges: List<Badge>?,
+        override var globalBadge: GlobalBadge?,
         override var subscriberBadge: SubscriberBadge?,
         val userId: Int,
         val userType: String?,

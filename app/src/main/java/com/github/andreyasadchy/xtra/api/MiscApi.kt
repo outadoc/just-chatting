@@ -1,14 +1,14 @@
 package com.github.andreyasadchy.xtra.api
 
-import com.github.andreyasadchy.xtra.model.chat.BttvEmotesResponse
-import com.github.andreyasadchy.xtra.model.chat.FfzEmotesResponse
-import com.github.andreyasadchy.xtra.model.chat.StvEmotesResponse
-import com.github.andreyasadchy.xtra.model.chat.SubscriberBadgesResponse
+import com.github.andreyasadchy.xtra.model.chat.*
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface MiscApi {
+
+    @GET("https://badges.twitch.tv/v1/badges/global/display")
+    suspend fun getGlobalBadges(): GlobalBadgesResponse
 
     @GET("https://badges.twitch.tv/v1/badges/channels/{channelId}/display")
     suspend fun getSubscriberBadges(@Path("channelId") channelId: String): SubscriberBadgesResponse

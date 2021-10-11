@@ -3,6 +3,7 @@ package com.github.andreyasadchy.xtra.util
 import android.content.Context
 import android.text.format.DateUtils
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.model.chat.GlobalBadgesResponse
 import com.github.andreyasadchy.xtra.model.chat.SubscriberBadgesResponse
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
@@ -42,8 +43,8 @@ object TwitchApiHelper {
         return DateUtils.formatDateTime(context, date, format)
     }
 
-    fun startChat(channelName: String, userName: String?, userToken: String?, subscriberBadges: SubscriberBadgesResponse?, newMessageListener: OnChatMessageReceivedListener): LiveChatThread {
-        return LiveChatThread(userName, userToken, channelName, MessageListenerImpl(subscriberBadges, newMessageListener)).apply { start() }
+    fun startChat(channelName: String, userName: String?, userToken: String?, globalBadges: GlobalBadgesResponse?, subscriberBadges: SubscriberBadgesResponse?, newMessageListener: OnChatMessageReceivedListener): LiveChatThread {
+        return LiveChatThread(userName, userToken, channelName, MessageListenerImpl(globalBadges, subscriberBadges, newMessageListener)).apply { start() }
     }
 
     fun parseClipOffset(url: String): Double {

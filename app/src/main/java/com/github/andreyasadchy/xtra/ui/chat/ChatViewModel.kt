@@ -23,20 +23,8 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import kotlin.collections.ArrayList
-import kotlin.collections.Collection
-import kotlin.collections.List
-import kotlin.collections.MutableList
-import kotlin.collections.associateBy
 import kotlin.collections.contains
-import kotlin.collections.filter
-import kotlin.collections.find
-import kotlin.collections.forEach
-import kotlin.collections.hashSetOf
-import kotlin.collections.isNotEmpty
-import kotlin.collections.mutableListOf
-import kotlin.collections.mutableMapOf
 import kotlin.collections.set
-import kotlin.collections.sortedWith
 import com.github.andreyasadchy.xtra.model.kraken.user.Emote as TwitchEmote
 
 class ChatViewModel @Inject constructor(
@@ -70,6 +58,7 @@ class ChatViewModel @Inject constructor(
     val newMessage: LiveData<ChatMessage>
         get() = _newMessage
 
+    private var globalBadges: GlobalBadgesResponse? = null
     private var subscriberBadges: SubscriberBadgesResponse? = null
 
     private var chat: ChatController? = null
@@ -116,8 +105,9 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 subscriberBadges = playerRepository.loadSubscriberBadges(channelId)
+                globalBadges = playerRepository.loadGlobalBadges()
             } catch (e: Exception) {
-                //no subscriber badges
+                Log.e(TAG, "Failed to load badges", e)
             } finally {
                 chat?.start()
             }
@@ -169,6 +159,12 @@ class ChatViewModel @Inject constructor(
                 }
             }
             try {
+                val channelStv = playerRepository.loadStvEmotes(channelName)
+                channelStv.body()?.emotes?.let(list::addAll)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load 7tv emotes for channel $channelName", e)
+            }
+            try {
                 val channelBttv = playerRepository.loadBttvEmotes(channelName)
                 channelBttv.body()?.emotes?.let(list::addAll)
             } catch (e: Exception) {
@@ -179,12 +175,6 @@ class ChatViewModel @Inject constructor(
                 channelFfz.body()?.emotes?.let(list::addAll)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load FFZ emotes for channel $channelName", e)
-            }
-            try {
-                val channelStv = playerRepository.loadStvEmotes(channelName)
-                channelStv.body()?.emotes?.let(list::addAll)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load 7tv emotes for channel $channelName", e)
             }
             val sorted = list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
             (chat as? LiveChatController)?.addEmotes(sorted)
@@ -224,7 +214,7 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), subscriberBadges, this)
+            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), globalBadges, subscriberBadges, this)
         }
 
         override fun pause() {
@@ -286,6 +276,9 @@ class ChatViewModel @Inject constructor(
         override fun onMessage(message: ChatMessage) {
             message.badges?.find { it.id == "subscriber" }?.let {
                 message.subscriberBadge = subscriberBadges?.getBadge(it.version.toInt())
+            }
+            message.badges?.forEach {
+                message.globalBadge = globalBadges?.getGlobalBadge(it.id, it.version)
             }
             _chatMessages.value!!.add(message)
             _newMessage.postValue(message)

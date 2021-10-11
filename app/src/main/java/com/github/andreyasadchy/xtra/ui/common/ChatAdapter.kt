@@ -76,31 +76,12 @@ class ChatAdapter(
         val images = ArrayList<Image>()
         var index = 0
         var badgesCount = 0
-        chatMessage.badges?.forEach { (id, version) ->
+        chatMessage.badges?.forEach { (id) ->
             val url: String? = when (id) {
-                "bits" -> {
-                    val count = version.toInt()
-                    val color = when {
-                        count < 100 -> "gray"
-                        count < 1000 -> "purple"
-                        count < 5000 -> "green"
-                        count < 10000 -> "blue"
-                        else -> "red"
-                    }
-                    "https://static-cdn.jtvnw.net/bits/dark/static/$color/2" //TODO change theme based on app theme
-                }
-                "broadcaster" -> BADGES_URL + "5527c58c-fb7d-422d-b71b-f309dcb85cc1/" + badgeQuality
-                "moderator" -> BADGES_URL + "3267646d-33f0-4b17-b3df-f923a41db1d0/" + badgeQuality
-                "vip" -> BADGES_URL + "b817aba4-fad8-49e2-b88a-7cc744dfa6ec/" + badgeQuality
+                "moderator" -> "https://static-cdn.jtvnw.net/badges/v1/3267646d-33f0-4b17-b3df-f923a41db1d0/$badgeQuality"
+                "vip" -> "https://static-cdn.jtvnw.net/badges/v1/b817aba4-fad8-49e2-b88a-7cc744dfa6ec/$badgeQuality"
                 "subscriber" -> when (badgeQuality) {3 -> (chatMessage.subscriberBadge?.imageUrl4x) 2 -> (chatMessage.subscriberBadge?.imageUrl2x) else -> (chatMessage.subscriberBadge?.imageUrl1x)}
-                "sub-gifter" -> BADGES_URL + "f1d8486f-eb2e-4553-b44f-4d614617afc1/" + badgeQuality
-                "staff" -> BADGES_URL + "d97c37bd-a6f5-4c38-8f57-4e4bef88af34/" + badgeQuality
-                "admin" -> BADGES_URL + "9ef7e029-4cdf-4d4d-a0d5-e2b3fb2583fe/" + badgeQuality
-                "global_mod" -> BADGES_URL + "9384c43e-4ce7-4e94-b2a1-b93656896eba/" + badgeQuality
-                "turbo" -> BADGES_URL + "bd444ec6-8f34-4bf9-91f4-af1e3428d80f/" + badgeQuality
-                "premium" -> BADGES_URL + "bbbe0db0-a598-423e-86d0-f9fb98ca1933/" + badgeQuality
-                "partner" -> BADGES_URL + "d12a2e27-16f6-41d0-ab77-b780518f00a3/" + badgeQuality
-                else -> null
+                else -> when (badgeQuality) {3 -> (chatMessage.globalBadge?.imageUrl4x) 2 -> (chatMessage.globalBadge?.imageUrl2x) else -> (chatMessage.globalBadge?.imageUrl1x)}
             }
             url?.let {
                 builder.append("  ")
@@ -505,9 +486,5 @@ class ChatAdapter(
                 setOnClickListener { messageClickListener?.invoke(originalMessage, formattedMessage) }
             }
         }
-    }
-
-    private companion object {
-        const val BADGES_URL = "https://static-cdn.jtvnw.net/badges/v1/"
     }
 }

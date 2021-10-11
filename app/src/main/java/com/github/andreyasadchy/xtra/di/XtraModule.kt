@@ -143,6 +143,7 @@ class XtraModule {
     @Provides
     fun providesGsonConverterFactory(): GsonConverterFactory {
         return GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                .registerTypeAdapter(GlobalBadgesResponse::class.java, GlobalBadgeDeserializer())
                 .registerTypeAdapter(SubscriberBadgesResponse::class.java, SubscriberBadgeDeserializer())
                 .registerTypeAdapter(UserEmotesResponse::class.java, UserEmotesDeserializer())
                 .registerTypeAdapter(StvEmotesResponse::class.java, StvRoomDeserializer())

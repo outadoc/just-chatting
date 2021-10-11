@@ -1,10 +1,6 @@
 package com.github.andreyasadchy.xtra.util.chat
 
-import com.github.andreyasadchy.xtra.model.chat.Badge
-import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
-import com.github.andreyasadchy.xtra.model.chat.SubscriberBadge
-import com.github.andreyasadchy.xtra.model.chat.SubscriberBadgesResponse
-import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.model.chat.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.set
@@ -12,6 +8,7 @@ import kotlin.collections.set
 private const val TAG = "MessageListenerImpl"
 
 class MessageListenerImpl(
+        private val globalBadges: GlobalBadgesResponse?,
         private val subscriberBadges: SubscriberBadgesResponse?,
         private val callback: OnChatMessageReceivedListener) : LiveChatThread.OnMessageReceivedListener {
     
@@ -47,17 +44,19 @@ class MessageListenerImpl(
         }
 
         var badgesList: MutableList<Badge>? = null
+        var globalBadge: GlobalBadge? = null
         var subscriberBadge: SubscriberBadge? = null
         val badges = prefixes["badges"]
         if (badges != null) {
             val entries = splitAndMakeMap(badges, ",", "/").entries
             badgesList = ArrayList(entries.size)
-            entries.forEach {
-                it.value?.let { value ->
-                    badgesList.add(Badge(it.key, value))
-                    if (it.key == "subscriber" && subscriberBadges != null) {
-                        subscriberBadge = subscriberBadges.getBadge(value.toInt())
-                    }
+            entries.forEach { (key, value) ->
+                badgesList.add(Badge(key, value.toString()))
+                if (key == "subscriber" && subscriberBadges != null) {
+                    subscriberBadge = subscriberBadges.getBadge(value!!.toInt())
+                }
+                if (globalBadges != null) {
+                    globalBadge = globalBadges.getGlobalBadge(key, value.toString())
                 }
             }
         }
@@ -70,6 +69,7 @@ class MessageListenerImpl(
                 isAction,
                 emotesList,
                 badgesList,
+                globalBadge,
                 subscriberBadge,
                 prefixes["user-id"]!!.toInt(),
                 prefixes["user-type"],

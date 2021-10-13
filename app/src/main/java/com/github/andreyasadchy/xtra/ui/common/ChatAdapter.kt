@@ -77,11 +77,18 @@ class ChatAdapter(
         var index = 0
         var badgesCount = 0
         chatMessage.badges?.forEach { (id) ->
-            val url: String? = when (id) {
-                "moderator" -> "https://static-cdn.jtvnw.net/badges/v1/3267646d-33f0-4b17-b3df-f923a41db1d0/$badgeQuality"
-                "vip" -> "https://static-cdn.jtvnw.net/badges/v1/b817aba4-fad8-49e2-b88a-7cc744dfa6ec/$badgeQuality"
-                "subscriber" -> when (badgeQuality) {3 -> (chatMessage.subscriberBadge?.imageUrl4x) 2 -> (chatMessage.subscriberBadge?.imageUrl2x) else -> (chatMessage.subscriberBadge?.imageUrl1x)}
-                else -> when (badgeQuality) {3 -> (chatMessage.globalBadge?.imageUrl4x) 2 -> (chatMessage.globalBadge?.imageUrl2x) else -> (chatMessage.globalBadge?.imageUrl1x)}
+            val url: String? = if (id == "bits" || id == "subscriber") {
+                when (badgeQuality) {
+                    3 -> (chatMessage.channelBadge?.imageUrl4x)
+                    2 -> (chatMessage.channelBadge?.imageUrl2x)
+                    else -> (chatMessage.channelBadge?.imageUrl1x)
+                }
+            } else {
+                when (badgeQuality) {
+                    3 -> (chatMessage.globalBadge?.imageUrl4x)
+                    2 -> (chatMessage.globalBadge?.imageUrl2x)
+                    else -> (chatMessage.globalBadge?.imageUrl1x)
+                }
             }
             url?.let {
                 builder.append("  ")

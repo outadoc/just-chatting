@@ -118,8 +118,8 @@ class PlayerRepository @Inject constructor(
         misc.getGlobalBadges()
     }
 
-    suspend fun loadSubscriberBadges(channelId: String): SubscriberBadgesResponse = withContext(Dispatchers.IO) {
-        misc.getSubscriberBadges(channelId)
+    suspend fun loadChannelBadges(channelId: String): GlobalBadgesResponse = withContext(Dispatchers.IO) {
+        misc.getChannelBadges(channelId)
     }
 
     suspend fun loadGlobalStvEmotes(): Response<StvEmotesResponse> = withContext(Dispatchers.IO) {

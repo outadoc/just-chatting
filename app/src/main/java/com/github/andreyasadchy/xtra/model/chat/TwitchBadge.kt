@@ -2,7 +2,7 @@ package com.github.andreyasadchy.xtra.model.chat
 
 import com.google.gson.annotations.SerializedName
 
-data class SubscriberBadge(
+data class TwitchBadge(
     @SerializedName("image_url_1x")
     val imageUrl1x: String,
     @SerializedName("image_url_2x")

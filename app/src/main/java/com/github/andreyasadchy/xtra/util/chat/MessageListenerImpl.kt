@@ -9,7 +9,7 @@ private const val TAG = "MessageListenerImpl"
 
 class MessageListenerImpl(
         private val globalBadges: GlobalBadgesResponse?,
-        private val subscriberBadges: SubscriberBadgesResponse?,
+        private val channelBadges: GlobalBadgesResponse?,
         private val callback: OnChatMessageReceivedListener) : LiveChatThread.OnMessageReceivedListener {
     
     override fun onMessage(message: String) {
@@ -44,19 +44,23 @@ class MessageListenerImpl(
         }
 
         var badgesList: MutableList<Badge>? = null
-        var globalBadge: GlobalBadge? = null
-        var subscriberBadge: SubscriberBadge? = null
+        var globalBadge: TwitchBadge? = null
+        var channelBadge: TwitchBadge? = null
         val badges = prefixes["badges"]
         if (badges != null) {
             val entries = splitAndMakeMap(badges, ",", "/").entries
             badgesList = ArrayList(entries.size)
-            entries.forEach { (key, value) ->
-                badgesList.add(Badge(key, value.toString()))
-                if (key == "subscriber" && subscriberBadges != null) {
-                    subscriberBadge = subscriberBadges.getBadge(value!!.toInt())
-                }
-                if (globalBadges != null) {
-                    globalBadge = globalBadges.getGlobalBadge(key, value.toString())
+            entries.forEach {
+                it.value?.let { value ->
+                    badgesList.add(Badge(it.key, value))
+                    if (it.key == "bits" || it.key == "subscriber") {
+                        if (channelBadges != null) {
+                            channelBadge = channelBadges.getGlobalBadge(it.key, value)
+                        }
+                    }
+                    if (globalBadges != null) {
+                        globalBadge = globalBadges.getGlobalBadge(it.key, value)
+                    }
                 }
             }
         }
@@ -70,7 +74,7 @@ class MessageListenerImpl(
                 emotesList,
                 badgesList,
                 globalBadge,
-                subscriberBadge,
+                channelBadge,
                 prefixes["user-id"]!!.toInt(),
                 prefixes["user-type"],
                 prefixes["display-name"]!!,

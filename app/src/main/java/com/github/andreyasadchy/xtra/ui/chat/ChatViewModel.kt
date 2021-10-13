@@ -59,7 +59,7 @@ class ChatViewModel @Inject constructor(
         get() = _newMessage
 
     private var globalBadges: GlobalBadgesResponse? = null
-    private var subscriberBadges: SubscriberBadgesResponse? = null
+    private var channelBadges: GlobalBadgesResponse? = null
 
     private var chat: ChatController? = null
 
@@ -104,7 +104,7 @@ class ChatViewModel @Inject constructor(
     private fun init(channelId: String, channelName: String) {
         viewModelScope.launch {
             try {
-                subscriberBadges = playerRepository.loadSubscriberBadges(channelId)
+                channelBadges = playerRepository.loadChannelBadges(channelId)
                 globalBadges = playerRepository.loadGlobalBadges()
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load badges", e)
@@ -214,7 +214,7 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), globalBadges, subscriberBadges, this)
+            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), globalBadges, channelBadges, this)
         }
 
         override fun pause() {
@@ -274,8 +274,8 @@ class ChatViewModel @Inject constructor(
         abstract fun stop()
 
         override fun onMessage(message: ChatMessage) {
-            message.badges?.find { it.id == "subscriber" }?.let {
-                message.subscriberBadge = subscriberBadges?.getBadge(it.version.toInt())
+            message.badges?.find { it.id == "bits" || it.id == "subscriber" }?.let {
+                message.channelBadge = channelBadges?.getGlobalBadge(it.id, it.version)
             }
             message.badges?.forEach {
                 message.globalBadge = globalBadges?.getGlobalBadge(it.id, it.version)

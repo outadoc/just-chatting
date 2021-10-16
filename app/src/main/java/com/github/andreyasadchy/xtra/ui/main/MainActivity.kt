@@ -1,10 +1,10 @@
 package com.github.andreyasadchy.xtra.ui.main
 
 import android.app.PictureInPictureParams
-import android.content.Intent
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Rect
+import android.net.ConnectivityManager
 import android.os.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -82,6 +82,11 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     var playerFragment: BasePlayerFragment? = null
         private set
     private val fragNavController = FragNavController(supportFragmentManager, R.id.fragmentContainer)
+    private val networkReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            viewModel.setNetworkAvailable(isNetworkAvailable)
+        }
+    }
     private lateinit var prefs: SharedPreferences
 
     //Lifecycle methods
@@ -142,6 +147,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
                 }
             }
         })
+        registerReceiver(networkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         restorePlayerFragment()
     }
 
@@ -153,6 +159,11 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         fragNavController.onSaveInstanceState(outState)
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(networkReceiver)
+        super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -184,7 +195,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     override fun onBackPressed() {
         if (!viewModel.isPlayerMaximized) {
             if (fragNavController.isRootFragment) {
-                if (User.get(this) !is NotLoggedIn) {
+                if (User.get(this) !is NotLoggedIn && prefs.getBoolean(C.UI_STARTONFOLLOWED, false)) {
                     if (fragNavController.currentStackIndex != INDEX_FOLLOWED) {
                         navBar.selectedItemId = R.id.fragment_follow
                     } else {

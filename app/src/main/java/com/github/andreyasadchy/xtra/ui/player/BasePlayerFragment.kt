@@ -188,6 +188,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
                                 showStatusBar()
                             }
                         }
+                    } else {
                         if (isKeyboardShown) {
                             isKeyboardShown = false
                             chatLayout.clearFocus()

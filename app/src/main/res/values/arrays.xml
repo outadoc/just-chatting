@@ -17,7 +17,7 @@
         <item>@string/dark</item>
         <item>@string/amoled</item>
         <item>@string/light</item>
-        <item>Blue</item>
+        <item>@string/blue</item>
     </string-array>
 
     <string-array name="themeValues">
@@ -71,6 +71,14 @@
         <item>160p</item>
     </string-array>
 
+    <string-array name="languageEntries">
+        <item>auto</item>
+        <item>English</item>
+        <item>Arabic</item>
+        <item>Spanish</item>
+        <item>Russian</item>
+    </string-array>
+
     <string-array name="language">
         <item>auto</item>
         <item>en</item>
@@ -80,9 +88,9 @@
     </string-array>
 
     <string-array name="cutoutmodeEntries">
-        <item>DEFAULT</item>
-        <item>SHORT_EDGES</item>
-        <item>NEVER</item>
+        <item>@string/cutoutmode_default</item>
+        <item>@string/cutoutmode_always</item>
+        <item>@string/never</item>
     </string-array>
 
     <string-array name="cutoutmodeValues">

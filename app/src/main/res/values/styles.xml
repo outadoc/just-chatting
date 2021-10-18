@@ -86,16 +86,6 @@
         <item name="cardBackgroundColor">?attr/primaryColor</item>
     </style>
 
-    <style name="MenuIcon">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">15dp</item>
-        <item name="android:layout_marginLeft">15dp</item>
-        <item name="android:layout_marginEnd">15dp</item>
-        <item name="android:layout_marginRight">15dp</item>
-        <item name="android:tint">?attr/textColor</item>
-    </style>
-
     <style name="NavBarDark">
         <item name="android:background">@color/primaryDark</item>
         <item name="itemIconTint">@color/nav_bar_dark</item>
@@ -174,18 +164,6 @@
 
     <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
         <item name="android:textColor">?attr/textColor</item>
-    </style>
-
-    <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="Outline">
-        <item name="android:shadowColor">#000000</item>
-        <item name="android:shadowDx">0</item>
-        <item name="android:shadowDy">0</item>
-        <item name="android:shadowRadius">3</item>
     </style>
 
     <style name="Thumbnail">

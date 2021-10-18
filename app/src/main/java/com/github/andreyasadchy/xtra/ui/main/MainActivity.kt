@@ -35,7 +35,6 @@ import com.github.andreyasadchy.xtra.ui.downloads.DownloadsFragment
 import com.github.andreyasadchy.xtra.ui.follow.FollowValidationFragment
 import com.github.andreyasadchy.xtra.ui.games.GameFragment
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
-import com.github.andreyasadchy.xtra.ui.menu.MenuFragment
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.clip.ClipPlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.offline.OfflinePlayerFragment
@@ -60,7 +59,6 @@ const val INDEX_GAMES = FragNavController.TAB1
 const val INDEX_TOP = FragNavController.TAB2
 const val INDEX_FOLLOWED = FragNavController.TAB3
 const val INDEX_DOWNLOADS = FragNavController.TAB4
-const val INDEX_MENU = FragNavController.TAB5
 
 class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, BaseStreamsFragment.OnStreamSelectedListener, OnChannelSelectedListener, BaseClipsFragment.OnClipSelectedListener, BaseVideosFragment.OnVideoSelectedListener, HasAndroidInjector, DownloadsFragment.OnVideoSelectedListener, Injectable, SlidingLayout.Listener {
 
@@ -360,7 +358,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
     private fun initNavigation() {
         fragNavController.apply {
-            rootFragments = listOf(GamesFragment(), TopFragment(), FollowValidationFragment(), DownloadsFragment(), MenuFragment())
+            rootFragments = listOf(GamesFragment(), TopFragment(), FollowValidationFragment(), DownloadsFragment())
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
             transactionListener = object : FragNavController.TransactionListener {
                 override fun onFragmentTransaction(fragment: Fragment?, transactionType: FragNavController.TransactionType) {
@@ -377,7 +375,6 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
                     R.id.fragment_top -> INDEX_TOP
                     R.id.fragment_follow -> INDEX_FOLLOWED
                     R.id.fragment_downloads -> INDEX_DOWNLOADS
-                    R.id.fragment_menu -> INDEX_MENU
                     else -> throw IllegalArgumentException()
                 }
                 fragNavController.switchTab(index)

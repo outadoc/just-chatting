@@ -16,8 +16,4 @@
         android:id="@+id/fragment_downloads"
         android:icon="@drawable/ic_file_download_black_24dp"
         android:title="@string/downloads" />
-    <item
-        android:id="@+id/fragment_menu"
-        android:icon="@drawable/ic_menu_black_24dp"
-        android:title="@string/menu" />
 </menu>

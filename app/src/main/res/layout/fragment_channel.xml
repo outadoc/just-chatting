@@ -55,6 +55,14 @@
                 app:layout_collapseMode="pin" >
 
                 <ImageView
+                    android:id="@+id/menu"
+                    style="?android:attr/actionOverflowButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:tint="?attr/textColor"
+                    android:layout_gravity="end" />
+
+                <ImageView
                     android:id="@+id/search"
                     style="@style/Search"/>
 

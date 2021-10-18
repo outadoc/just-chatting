@@ -1,10 +1,14 @@
 package com.github.andreyasadchy.xtra.ui.channel
 
+import android.app.Activity
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.PopupMenu
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -13,18 +17,22 @@ import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
+import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.kraken.Channel
 import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
 import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
+import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.convertDpToPixels
-import com.github.andreyasadchy.xtra.util.isInLandscapeOrientation
-import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
+import com.github.andreyasadchy.xtra.util.*
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_channel.*
+import kotlinx.android.synthetic.main.fragment_channel.appBar
+import kotlinx.android.synthetic.main.fragment_channel.search
+import kotlinx.android.synthetic.main.fragment_channel.toolbar
+import kotlinx.android.synthetic.main.fragment_media.*
 import kotlinx.android.synthetic.main.fragment_media_pager.*
 
 
@@ -49,6 +57,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
+        val isLoggedIn = User.get(activity) !is NotLoggedIn
         setAdapter(ChannelPagerAdapter(activity, childFragmentManager, requireArguments()))
         if (activity.isInLandscapeOrientation) {
             appBar.setExpanded(false, false)
@@ -60,6 +69,32 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
             setNavigationOnClickListener { activity.popFragment() }
         }
         search.setOnClickListener { activity.openSearch() }
+        menu.setOnClickListener { it ->
+            PopupMenu(activity, it).apply {
+                inflate(R.menu.top_menu)
+                menu.findItem(R.id.login).title = if (isLoggedIn) getString(R.string.log_out) else getString(R.string.log_in)
+                setOnMenuItemClickListener {
+                    when(it.itemId) {
+                        R.id.settings -> { activity.startActivityFromFragment(this@ChannelPagerFragment, Intent(activity, SettingsActivity::class.java), 3) }
+                        R.id.login -> {
+                            if (!isLoggedIn) {
+                                activity.startActivityForResult(Intent(activity, LoginActivity::class.java), 1)
+                            } else {
+                                AlertDialog.Builder(activity)
+                                    .setTitle(getString(R.string.logout_title))
+                                    .setMessage(getString(R.string.logout_msg, context?.prefs()?.getString(C.USERNAME, "")))
+                                    .setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.dismiss() }
+                                    .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                                        activity.startActivityForResult(Intent(activity, LoginActivity::class.java), 2) }
+                                    .show()
+                            }
+                        }
+                    }
+                    true
+                }
+                show()
+            }
+        }
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             private val layoutParams = collapsingToolbar.layoutParams as AppBarLayout.LayoutParams
             private val originalScrollFlags = layoutParams.scrollFlags
@@ -91,7 +126,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
             }
         })
         User.get(activity).let {
-            if (it is LoggedIn) {
+            if (it is LoggedIn && context?.prefs()?.getBoolean(C.UI_FOLLOW, true) == true) {
                 initializeFollow(this, viewModel, follow, it)
             }
         }
@@ -105,6 +140,13 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
         super.onConfigurationChanged(newConfig)
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             appBar.setExpanded(false, false)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 3 && resultCode == Activity.RESULT_OK) {
+            requireActivity().recreate()
         }
     }
 }

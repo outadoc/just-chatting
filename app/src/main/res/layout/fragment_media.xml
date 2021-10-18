@@ -19,6 +19,14 @@
             app:layout_scrollFlags="scroll|enterAlways">
 
             <ImageView
+                android:id="@+id/menubutton"
+                style="?android:attr/actionOverflowButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:tint="?attr/textColor"
+                android:layout_gravity="end" />
+
+            <ImageView
                 android:id="@+id/search"
                 style="@style/Search" />
 

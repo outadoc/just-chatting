@@ -262,7 +262,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFrag
         })
         if (this !is OfflinePlayerFragment) {
             User.get(activity).let {
-                if (it is LoggedIn) {
+                if (it is LoggedIn && prefs.getBoolean(C.UI_FOLLOW, true)) {
                     initializeFollow(this, (viewModel as FollowViewModel), view.findViewById(R.id.follow), it)
                 }
             }

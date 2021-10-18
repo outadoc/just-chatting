@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.view.KeyEvent
 import android.webkit.CookieManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -20,15 +19,7 @@ import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.repository.AuthRepository
-import com.github.andreyasadchy.xtra.ui.Utils
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.applyTheme
-import com.github.andreyasadchy.xtra.util.convertDpToPixels
-import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.shortToast
-import com.github.andreyasadchy.xtra.util.toast
-import com.github.andreyasadchy.xtra.util.visible
+import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -76,10 +67,6 @@ class LoginActivity : AppCompatActivity(), Injectable {
     private fun initWebView() {
         webViewContainer.visible()
         welcomeContainer.gone()
-        toolbar.apply {
-            navigationIcon = Utils.getNavigationIcon(this@LoginActivity)
-            setNavigationOnClickListener { finish() }
-        }
         havingTrouble.setOnClickListener {
             AlertDialog.Builder(this)
                     .setMessage(getString(R.string.login_problem_solution))
@@ -142,7 +129,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
+/*    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
         if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
             if (webView.canGoBack()) {
                 webView.goBack()
@@ -150,7 +137,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
             }
         }
         return super.onKeyDown(keyCode, event)
-    }
+    }*/
 
     private fun loginIfValidUrl(url: String): Boolean {
         val matcher = tokenPattern.matcher(url)

@@ -1,7 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.player.stream
 
 import android.app.Application
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -17,7 +16,6 @@ import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
 import com.github.andreyasadchy.xtra.ui.player.HlsPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode.*
 import com.github.andreyasadchy.xtra.util.RemoteConfigParams
-import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.toast
 import com.google.android.exoplayer2.upstream.DefaultLoadErrorHandlingPolicy
 import kotlinx.coroutines.delay
@@ -118,7 +116,7 @@ class StreamPlayerViewModel @Inject constructor(
                         httpDataSourceFactory.defaultRequestProperties.set("X-Donate-To", "https://ttv.lol/donate")
                     } else {
                         val context = getApplication<Application>()
-                        context.toast("TTV.LOL is offline. Disable Adblock to view streams in the meantime")
+                        context.toast(R.string.adblock_not_working)
                     }
                 }
                 mediaSource = hlsMediaSourceFactory.createMediaSource(result.first)

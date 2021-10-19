@@ -52,7 +52,8 @@ class StreamPlayerFragment : BasePlayerFragment() {
     }
 
     override fun initialize() {
-        viewModel.startStream(stream, prefs.getBoolean(C.AD_BLOCKER, true))
+        viewModel.startStream(stream, prefs.getBoolean(C.AD_BLOCKER, true), prefs.getBoolean(C.TOKEN_RANDOM_DEVICEID, true),
+            prefs.getString(C.TOKEN_XDEVICEID, "")!!, prefs.getString(C.TOKEN_DEVICEID, "")!!)
         super.initialize()
         val settings = requireView().findViewById<ImageButton>(R.id.settings)
         viewModel.loaded.observe(viewLifecycleOwner, Observer {

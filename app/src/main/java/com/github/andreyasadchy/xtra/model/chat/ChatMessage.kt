@@ -9,6 +9,5 @@ interface ChatMessage {
     val isAction: Boolean
     val emotes: List<TwitchEmote>?
     val badges: List<Badge>?
-    var globalBadge: TwitchBadge?
-    var channelBadge: TwitchBadge?
+    var globalBadges: List<TwitchBadge>?
 }

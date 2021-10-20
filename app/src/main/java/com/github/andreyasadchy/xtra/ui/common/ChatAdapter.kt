@@ -76,18 +76,28 @@ class ChatAdapter(
         val images = ArrayList<Image>()
         var index = 0
         var badgesCount = 0
-        chatMessage.badges?.forEach { (id) ->
-            val url: String? = if (id == "bits" || id == "subscriber") {
-                when (badgeQuality) {
-                    3 -> (chatMessage.channelBadge?.imageUrl4x)
-                    2 -> (chatMessage.channelBadge?.imageUrl2x)
-                    else -> (chatMessage.channelBadge?.imageUrl1x)
+        chatMessage.badges?.forEachIndexed { badgeindex, element ->
+            var url: String? = null
+            val global = chatMessage.globalBadges?.elementAt(badgeindex)
+            if (element.id == "bits" || element.id == "subscriber") {
+                url = when (badgeQuality) {
+                    3 -> (global?.imageUrl4x)
+                    2 -> (global?.imageUrl2x)
+                    else -> (global?.imageUrl1x)
                 }
-            } else {
-                when (badgeQuality) {
-                    3 -> (chatMessage.globalBadge?.imageUrl4x)
-                    2 -> (chatMessage.globalBadge?.imageUrl2x)
-                    else -> (chatMessage.globalBadge?.imageUrl1x)
+                if (url == null) {
+                    url = when (badgeQuality) {
+                        3 -> (global?.imageUrl4x)
+                        2 -> (global?.imageUrl2x)
+                        else -> (global?.imageUrl1x)
+                    }
+                }
+            }
+            if (element.id != "bits" && element.id != "subscriber") {
+                url = when (badgeQuality) {
+                    3 -> (global?.imageUrl4x)
+                    2 -> (global?.imageUrl2x)
+                    else -> (global?.imageUrl1x)
                 }
             }
             url?.let {

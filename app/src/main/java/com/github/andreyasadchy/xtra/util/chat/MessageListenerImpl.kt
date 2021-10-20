@@ -44,8 +44,8 @@ class MessageListenerImpl(
         }
 
         var badgesList: MutableList<Badge>? = null
-        var globalBadge: TwitchBadge? = null
-        var channelBadge: TwitchBadge? = null
+        val globalBadgesList = mutableListOf<TwitchBadge>()
+        var channelBadge: TwitchBadge?
         val badges = prefixes["badges"]
         if (badges != null) {
             val entries = splitAndMakeMap(badges, ",", "/").entries
@@ -54,12 +54,15 @@ class MessageListenerImpl(
                 it.value?.let { value ->
                     badgesList.add(Badge(it.key, value))
                     if (it.key == "bits" || it.key == "subscriber") {
-                        if (channelBadges != null) {
-                            channelBadge = channelBadges.getGlobalBadge(it.key, value)
+                        channelBadge = (channelBadges?.getGlobalBadge(it.key, value))
+                        if (channelBadge != null) {
+                            globalBadgesList.add(channelBadge!!)
+                        } else {
+                            globalBadgesList.add(globalBadges?.getGlobalBadge(it.key, value)!!)
                         }
                     }
-                    if (globalBadges != null) {
-                        globalBadge = globalBadges.getGlobalBadge(it.key, value)
+                    if (it.key != "bits" && it.key != "subscriber") {
+                        globalBadgesList.add(globalBadges?.getGlobalBadge(it.key, value)!!)
                     }
                 }
             }
@@ -73,8 +76,7 @@ class MessageListenerImpl(
                 isAction,
                 emotesList,
                 badgesList,
-                globalBadge,
-                channelBadge,
+                globalBadgesList,
                 prefixes["user-id"]!!.toInt(),
                 prefixes["user-type"],
                 prefixes["display-name"]!!,

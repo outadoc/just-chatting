@@ -274,12 +274,22 @@ class ChatViewModel @Inject constructor(
         abstract fun stop()
 
         override fun onMessage(message: ChatMessage) {
-            message.badges?.find { it.id == "bits" || it.id == "subscriber" }?.let {
-                message.channelBadge = channelBadges?.getGlobalBadge(it.id, it.version)
+            val globalBadgesList = mutableListOf<TwitchBadge>()
+            var channelBadge: TwitchBadge?
+            message.badges?.forEach { (id, version) ->
+                if (id == "bits" || id == "subscriber") {
+                    channelBadge = channelBadges!!.getGlobalBadge(id, version)
+                    if (channelBadge != null) {
+                        globalBadgesList.add(channelBadge!!)
+                    } else {
+                        globalBadgesList.add(globalBadges?.getGlobalBadge(id, version)!!)
+                    }
+                }
+                if (id != "bits" && id != "subscriber") {
+                    globalBadgesList.add(globalBadges?.getGlobalBadge(id, version)!!)
+                }
             }
-            message.badges?.forEach {
-                message.globalBadge = globalBadges?.getGlobalBadge(it.id, it.version)
-            }
+            message.globalBadges = globalBadgesList
             _chatMessages.value!!.add(message)
             _newMessage.postValue(message)
         }

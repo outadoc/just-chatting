@@ -29,6 +29,7 @@ object C {
     const val PLAYER_DOUBLETAP = "player_doubletap"
     const val PLAYER_PAUSE = "player_pause"
     const val PLAYER_ASPECT = "player_aspect"
+    const val PLAYER_CHATBARTOGGLE = "player_chatbartoggle"
     const val PLAYER_CHATTOGGLE = "player_chattoggle"
     const val PLAYER_SLEEP = "player_sleep"
     const val PLAYER_FULLSCREEN = "player_fullscreen"

@@ -239,7 +239,7 @@ class ChatView : ConstraintLayout {
                     return when (position) {
                         0 -> context.getString(R.string.recent_emotes)
                         1 -> "Twitch"
-                        else -> "BTTV/FFZ"
+                        else -> "BTTV/FFZ/7TV"
                     }
                 }
             }

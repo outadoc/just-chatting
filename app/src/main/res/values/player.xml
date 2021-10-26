@@ -167,6 +167,12 @@
         <item name="autoSizeTextType">uniform</item>
     </style>
 
+    <style name="PlayerToggleChatBar" parent="PlayerSmallImage">
+        <item name="android:id">@id/toggleChatBar</item>
+        <item name="android:src">@drawable/baseline_keyboard_black_24</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
     <style name="PlayerHideChat" parent="PlayerSmallImage">
         <item name="android:id">@id/hideChat</item>
         <item name="android:src">@drawable/baseline_speaker_notes_off_black_24</item>

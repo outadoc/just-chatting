@@ -157,9 +157,10 @@
     <string name="player_download">Show download button</string>
     <string name="player_sleep">Show sleep timer button</string>
     <string name="player_aspect">Show aspect ratio changer</string>
+    <string name="player_chatbartoggle">Show chat bar toggle</string>
     <string name="player_chattoggle">Show chat toggle button</string>
     <string name="player_fullscreen">Show fullscreen button</string>
-    <string name="player_viewericon">Show icon next to viewcount</string>
+    <string name="player_viewericon">Show icon next to view count</string>
     <string name="player_pause">Show pause button on livestreams</string>
     <string name="settings_ui">UI</string>
     <string name="settings_chat">CHAT</string>

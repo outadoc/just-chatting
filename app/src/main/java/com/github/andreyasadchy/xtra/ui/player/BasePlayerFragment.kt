@@ -50,6 +50,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
     private lateinit var playerAspectRatioToggle: ImageButton
     private lateinit var showChat: ImageButton
     private lateinit var hideChat: ImageButton
+    private lateinit var toggleChatBar: ImageButton
     private lateinit var pause: ImageButton
 
     protected abstract val layoutId: Int
@@ -178,6 +179,11 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         }
         if (this is StreamPlayerFragment) {
             if (User.get(activity) !is NotLoggedIn) {
+                if (prefs.getBoolean(C.PLAYER_CHATBARTOGGLE, true)) {
+                    toggleChatBar = view.findViewById(R.id.toggleChatBar)
+                    toggleChatBar.visible()
+                    toggleChatBar.apply { setOnClickListener { toggleChatBar() } }
+                }
                 slidingLayout.viewTreeObserver.addOnGlobalLayoutListener {
                     if (slidingLayout.isKeyboardShown) {
                         if (!isKeyboardShown) {
@@ -411,6 +417,15 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
 
     private fun setPreferredChatVisibility() {
         if (prefs.getBoolean(C.KEY_CHAT_OPENED, true)) showChat() else hideChat()
+    }
+
+    private fun toggleChatBar() {
+        val messageView = view?.findViewById<LinearLayout>(R.id.messageView)
+        if (messageView?.isVisible == true) {
+            messageView.gone()
+        } else {
+            messageView?.visible()
+        }
     }
 
     private fun hideChat() {

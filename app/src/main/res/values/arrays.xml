@@ -76,7 +76,7 @@
         <item>English</item>
         <item>Arabic</item>
         <item>Spanish</item>
-        <item>Portuguese</item>
+        <item>Portuguese (Brazil)</item>
         <item>Russian</item>
     </string-array>
 
@@ -85,7 +85,7 @@
         <item>en</item>
         <item>ar</item>
         <item>es</item>
-        <item>pt-rBR</item>
+        <item>pt</item>
         <item>ru</item>
     </string-array>
 

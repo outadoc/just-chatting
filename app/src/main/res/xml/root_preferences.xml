@@ -182,52 +182,58 @@
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="player_minimize"
-        android:title="@string/player_minimize"
-        app:iconSpaceReserved="false"/>
-
-    <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="player_channel"
         android:title="@string/player_channel"
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="player_minimize"
+        android:title="@string/player_minimize"
+        android:icon="@drawable/baseline_expand_more_black_24" />
+
+    <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="player_download"
         android:title="@string/player_download"
-        app:iconSpaceReserved="false"/>
+        android:icon="@drawable/ic_file_download_black_24dp" />
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="player_sleep"
         android:title="@string/player_sleep"
-        app:iconSpaceReserved="false"/>
+        android:icon="@drawable/baseline_alarm_black_24" />
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="player_aspect"
         android:title="@string/player_aspect"
-        app:iconSpaceReserved="false"/>
+        android:icon="@drawable/baseline_aspect_ratio_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="player_chatbartoggle"
+        android:title="@string/player_chatbartoggle"
+        android:icon="@drawable/baseline_keyboard_black_24" />
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="player_chattoggle"
         android:title="@string/player_chattoggle"
-        app:iconSpaceReserved="false"/>
+        android:icon="@drawable/baseline_speaker_notes_black_24" />
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="player_fullscreen"
         android:title="@string/player_fullscreen"
-        app:iconSpaceReserved="false"/>
+        android:icon="@drawable/baseline_fullscreen_black_24" />
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="player_viewericon"
         android:title="@string/player_viewericon"
-        app:iconSpaceReserved="false"/>
+        android:icon="@drawable/baseline_person_black_24" />
 
     <SwitchPreferenceCompat
         android:defaultValue="false"

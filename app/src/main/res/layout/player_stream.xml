@@ -48,6 +48,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="5dp">
+        <ImageButton style="@style/PlayerToggleChatBar" />
         <ImageButton style="@style/PlayerShowChat" />
         <ImageButton style="@style/PlayerHideChat" />
         <ImageButton style="@style/PlayerFullscreenToggle"/>

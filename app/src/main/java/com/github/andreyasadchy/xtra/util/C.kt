@@ -38,6 +38,7 @@ object C {
     const val PLAYER_CHANNEL = "player_channel"
     const val PLAYER_QUALITY = "player_quality"
     const val PLAYER_SAVEQUALITY = "player_savequality"
+    const val PLAYER_SPEED = "player_speed"
     const val TOKEN_XDEVICEID = "token_xdeviceid"
     const val TOKEN_DEVICEID = "token_deviceid"
     const val TOKEN_RANDOM_DEVICEID = "token_random_deviceid"

@@ -25,7 +25,6 @@ import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.kraken.Channel
 import com.github.andreyasadchy.xtra.ui.common.AlertDialogFragment
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
-import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
@@ -41,7 +40,7 @@ import kotlinx.coroutines.launch
 
 
 @Suppress("PLUGIN_WARNING")
-abstract class BasePlayerFragment : BaseNetworkFragment(), RadioButtonDialogFragment.OnSortOptionChanged, Injectable, LifecycleListener, SlidingLayout.Listener, FollowFragment, SleepTimerDialog.OnSleepTimerStartedListener, AlertDialogFragment.OnDialogResultListener {
+abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, LifecycleListener, SlidingLayout.Listener, FollowFragment, SleepTimerDialog.OnSleepTimerStartedListener, AlertDialogFragment.OnDialogResultListener {
 
     private lateinit var slidingLayout: SlidingLayout
     private lateinit var playerView: CustomPlayerView

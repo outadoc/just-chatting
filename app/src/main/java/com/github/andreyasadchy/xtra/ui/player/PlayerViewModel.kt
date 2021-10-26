@@ -17,12 +17,8 @@ import com.github.andreyasadchy.xtra.ui.common.BaseAndroidViewModel
 import com.github.andreyasadchy.xtra.ui.common.OnQualityChangeListener
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerViewModel
 import com.github.andreyasadchy.xtra.util.*
-import com.google.android.exoplayer2.DefaultLoadControl
-import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.github.andreyasadchy.xtra.util.C
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -75,6 +71,13 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
     private var timerEndTime = 0L
     val timerTimeLeft
         get() = timerEndTime - System.currentTimeMillis()
+
+    init {
+        val speed = context.prefs().getFloat(C.PLAYER_SPEED, 1f)
+        if (speed != 1f) {
+            setSpeed(speed, false)
+        }
+    }
 
     fun setTimer(duration: Long) {
         timer?.let {
@@ -218,5 +221,11 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
     override fun onCleared() {
         player.release()
         timer?.cancel()
+    }
+
+    open fun setSpeed(speed: Float, save: Boolean = true) {
+        player.playbackParameters = PlaybackParameters(speed)
+        val context = getApplication<Application>()
+        if (save) context.prefs().edit { putFloat(C.PLAYER_SPEED, speed) }
     }
 }

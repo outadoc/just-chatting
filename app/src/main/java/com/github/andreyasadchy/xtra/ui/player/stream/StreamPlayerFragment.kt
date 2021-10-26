@@ -10,12 +10,13 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.kraken.Channel
 import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
+import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.player_stream.*
 
-class StreamPlayerFragment : BasePlayerFragment() {
+class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnSortOptionChanged {
 
     override val viewModel by viewModels<StreamPlayerViewModel> { viewModelFactory }
     private lateinit var chatFragment: ChatFragment
@@ -88,7 +89,7 @@ class StreamPlayerFragment : BasePlayerFragment() {
 //        draggableView?.maximize()
 //    }
 
-    override fun onChange(index: Int, text: CharSequence, tag: Int?) {
+    override fun onChange(requestCode: Int, index: Int, text: CharSequence, tag: Int?) {
         viewModel.changeQuality(index)
 //            if (index >= viewModel.helper.urls.value!!.lastIndex) {
 //                TODO hide player

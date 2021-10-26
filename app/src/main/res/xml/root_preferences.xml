@@ -115,6 +115,12 @@
         android:title="@string/zerowidth"
         app:iconSpaceReserved="false"/>
 
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="chat_ffzfrombttv"
+        android:title="@string/ffzfrombttv"
+        app:iconSpaceReserved="false"/>
+
     <SeekBarPreference
         android:defaultValue="3"
         android:key="chat_emotequality"
@@ -143,9 +149,9 @@
         app:showSeekBarValue="true" />
 
     <SeekBarPreference
-        android:defaultValue="200"
+        android:defaultValue="600"
         android:key="chat_limit"
-        android:max="800"
+        android:max="1000"
         android:title="@string/message_limit"
         app:iconSpaceReserved="false"
         app:min="1"

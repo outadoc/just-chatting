@@ -70,17 +70,17 @@ class ChatViewModel @Inject constructor(
     val chatters: Collection<Chatter>
         get() = (chat as LiveChatController).chatters.values
 
-    fun startLive(user: User, channel: Channel) {
+    fun startLive(user: User, channel: Channel, ffzfrombttv: Boolean) {
         if (chat == null) {
             chat = LiveChatController(user, channel.name, channel.displayName)
-            init(channel.id, channel.name)
+            init(channel.id, channel.name, ffzfrombttv)
         }
     }
 
-    fun startReplay(channel: Channel, videoId: String, startTime: Double, getCurrentPosition: () -> Double) {
+    fun startReplay(channel: Channel, videoId: String, startTime: Double, getCurrentPosition: () -> Double, ffzfrombttv: Boolean) {
         if (chat == null) {
             chat = VideoChatController(videoId, startTime, getCurrentPosition)
-            init(channel.id, channel.name)
+            init(channel.id, channel.name, ffzfrombttv)
         }
     }
 
@@ -101,7 +101,7 @@ class ChatViewModel @Inject constructor(
         super.onCleared()
     }
 
-    private fun init(channelId: String, channelName: String) {
+    private fun init(channelId: String, channelName: String, ffzfrombttv: Boolean) {
         viewModelScope.launch {
             try {
                 channelBadges = playerRepository.loadChannelBadges(channelId)
@@ -148,7 +148,8 @@ class ChatViewModel @Inject constructor(
                     list.addAll(it)
                 } else {
                     try {
-                        val emotes = playerRepository.loadGlobalFfzEmotes().body()?.emotes
+                        val emotes = if (ffzfrombttv) playerRepository.loadBttvGlobalFfzEmotes().body()?.emotes
+                        else playerRepository.loadGlobalFfzEmotes().body()?.emotes
                         if (emotes != null) {
                             globalFfzEmotes = emotes
                             list.addAll(emotes)
@@ -165,14 +166,14 @@ class ChatViewModel @Inject constructor(
                 Log.e(TAG, "Failed to load 7tv emotes for channel $channelName", e)
             }
             try {
-                val channelBttv = playerRepository.loadBttvEmotes(channelName)
+                val channelBttv = playerRepository.loadBttvEmotes(channelId)
                 channelBttv.body()?.emotes?.let(list::addAll)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load BTTV emotes for channel $channelName", e)
             }
             try {
-                val channelFfz = playerRepository.loadFfzEmotes(channelName)
-                channelFfz.body()?.emotes?.let(list::addAll)
+                if (ffzfrombttv) playerRepository.loadBttvFfzEmotes(channelId).body()?.emotes?.let(list::addAll)
+                else playerRepository.loadFfzEmotes(channelName).body()?.emotes?.let(list::addAll)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load FFZ emotes for channel $channelName", e)
             }

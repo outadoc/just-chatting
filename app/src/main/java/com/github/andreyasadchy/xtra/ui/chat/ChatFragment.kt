@@ -17,9 +17,7 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
-import com.github.andreyasadchy.xtra.util.LifecycleListener
-import com.github.andreyasadchy.xtra.util.hideKeyboard
-import com.github.andreyasadchy.xtra.util.visible
+import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.view_chat.view.*
 
 class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDialog.OnButtonClickListener {
@@ -37,8 +35,9 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         val user = User.get(requireContext())
         val userIsLoggedIn = user is LoggedIn
         val isLive = args.getBoolean(KEY_IS_LIVE)
+        val ffzfrombttv = requireContext().prefs().getBoolean(C.CHAT_FFZFROMBTTV, true)
         val enableChat = if (isLive) {
-            viewModel.startLive(user, channel)
+            viewModel.startLive(user, channel, ffzfrombttv)
             chatView.init(this)
             chatView.setCallback(viewModel)
             if (userIsLoggedIn) {
@@ -55,7 +54,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
                 if (it != null) {
                     chatView.init(this)
                     val getCurrentPosition = (parentFragment as ChatReplayPlayerFragment)::getCurrentPosition
-                    viewModel.startReplay(channel, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
+                    viewModel.startReplay(channel, it, args.getDouble(KEY_START_TIME), getCurrentPosition, ffzfrombttv)
                     true
                 } else {
                     chatView.chatReplayUnavailable.visible()

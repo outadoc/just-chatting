@@ -172,4 +172,5 @@
     <string name="settings_token">ACCESS TOKEN HEADERS</string>
     <string name="token_random_deviceid">Random device id</string>
     <string name="settings_token_summary">for livestreams only, disable adblock</string>
+    <string name="ffzfrombttv">Get ffz emotes from bttv api</string>
 </resources>

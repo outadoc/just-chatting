@@ -176,4 +176,5 @@
     <string name="Android_5_required">Android 5 required</string>
     <string name="Android_9_required">Android 9 required</string>
     <string name="token_random_deviceid">Random device id</string>
+    <string name="ffzfrombttv">Get ffz emotes from bttv api</string>
 </resources>

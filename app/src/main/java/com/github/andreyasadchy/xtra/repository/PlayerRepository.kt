@@ -126,8 +126,12 @@ class PlayerRepository @Inject constructor(
         misc.getGlobalStvEmotes()
     }
 
-    suspend fun loadGlobalBttvEmotes(): Response<BttvEmotesResponse> = withContext(Dispatchers.IO) {
+    suspend fun loadGlobalBttvEmotes(): Response<BttvGlobalResponse> = withContext(Dispatchers.IO) {
         misc.getGlobalBttvEmotes()
+    }
+
+    suspend fun loadBttvGlobalFfzEmotes(): Response<BttvFfzResponse> = withContext(Dispatchers.IO) {
+        misc.getBttvGlobalFfzEmotes()
     }
 
     suspend fun loadGlobalFfzEmotes(): Response<FfzEmotesResponse> = withContext(Dispatchers.IO) {
@@ -138,8 +142,12 @@ class PlayerRepository @Inject constructor(
         misc.getStvEmotes(channel)
     }
 
-    suspend fun loadBttvEmotes(channel: String): Response<BttvEmotesResponse> = withContext(Dispatchers.IO) {
-        misc.getBttvEmotes(channel)
+    suspend fun loadBttvEmotes(channelId: String): Response<BttvChannelResponse> = withContext(Dispatchers.IO) {
+        misc.getBttvEmotes(channelId)
+    }
+
+    suspend fun loadBttvFfzEmotes(channelId: String): Response<BttvFfzResponse> = withContext(Dispatchers.IO) {
+        misc.getBttvFfzEmotes(channelId)
     }
 
     suspend fun loadFfzEmotes(channel: String): Response<FfzEmotesResponse> = withContext(Dispatchers.IO) {

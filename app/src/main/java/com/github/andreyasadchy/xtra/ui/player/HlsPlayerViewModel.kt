@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.player
 
 import android.app.Application
+import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
@@ -12,6 +13,8 @@ import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode.AUDIO_ONLY
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode.NORMAL
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerViewModel
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
 import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.source.TrackGroupArray
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
@@ -45,7 +48,10 @@ abstract class HlsPlayerViewModel(
             updateVideoQuality()
             qualities[index]
         }
-        writeQuality(quality)
+        val context = getApplication<Application>()
+        if (context.prefs().getString(C.PLAYER_DEFAULTQUALITY, "saved") == "saved") {
+            context.prefs().edit { putString(C.PLAYER_QUALITY, quality) }
+        }
         val mode = _playerMode.value
         if (mode != NORMAL) {
             _playerMode.value = NORMAL
@@ -71,12 +77,32 @@ abstract class HlsPlayerViewModel(
         if (trackSelector.currentMappedTrackInfo != null) {
             if (helper.loaded.value != true) {
                 helper.loaded.value = true
-                val index = readQuality().let { quality ->
-                    when (quality) {
-                        "Auto" -> 0
-                        "Source" -> 1
-                        else -> qualities.indexOf(quality).let { if (it != -1) it else 0 }
-                    }
+                val context = getApplication<Application>()
+                val defaultquality = context.prefs().getString(C.PLAYER_DEFAULTQUALITY, "saved")
+                val savedquality = context.prefs().getString(C.PLAYER_QUALITY, "720p60")
+                val qualitylist: MutableList<String> = mutableListOf()
+                val index = when (defaultquality) {
+                    "Auto" -> 0
+                    "Source" -> 1
+                    "saved" ->
+                        savedquality.let { quality ->
+                            if (quality == "Auto") {
+                                0
+                            } else {
+                                qualities.indexOf(quality).let { if (it != -1) it else 0 }
+                            }
+                        }
+                    else -> if (defaultquality != null) {
+                        qualities.forEach { it ->
+                            val comp = it.take(4).filter { it.isDigit() }
+                            if (comp != "") {
+                                if (defaultquality.toInt() < comp.toInt())
+                                    qualitylist.add("no")
+                                else qualitylist.add("yes")
+                            }
+                        }
+                        qualitylist.indexOf("yes").let { if (it != -1) it + 1 else 0 }
+                    } else 0
                 }
                 qualityIndex = index
             }

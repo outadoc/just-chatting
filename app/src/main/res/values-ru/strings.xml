@@ -131,7 +131,7 @@
     <string name="logout_msg">Logged in as %s</string>
     <string name="language">Language</string>
     <string name="cutoutmode">Display cutout mode</string>
-    <string name="cutoutmode_default">Default</string>
+    <string name="cutoutmode_default">Default - Portrait mode only</string>
     <string name="never">Never</string>
     <string name="blue">Blue</string>
     <string name="statusBarColor">Status bar color</string>
@@ -148,8 +148,7 @@
     <string name="badgequality">Badge quality</string>
     <string name="message_limit">Message limit</string>
     <string name="playerRewind">Rewind/Fast forward</string>
-    <string name="player_quality">Player quality</string>
-    <string name="player_savequality">Save quality when changing through player</string>
+    <string name="player_defaultquality">Default player quality</string>
     <string name="player_doubletap">Double tap to toggle chat</string>
     <string name="player_minimize">Show minimize button</string>
     <string name="player_channel">Show channel name</string>
@@ -177,4 +176,9 @@
     <string name="playback_speed">Playback speed</string>
     <string name="quality">Quality</string>
     <string name="speed1">Normal</string>
+    <string name="source">Source</string>
+    <string name="saved_value">Saved value</string>
+    <string name="playerQualityEntries3">720p or lower</string>
+    <string name="playerQualityEntries2">480p or lower</string>
+    <string name="playerQualityEntries1">360p or lower</string>
 </resources>

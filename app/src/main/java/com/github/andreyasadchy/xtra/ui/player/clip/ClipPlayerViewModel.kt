@@ -1,7 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.player.clip
 
 import android.app.Application
-import android.content.Context
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
@@ -53,9 +52,7 @@ class ClipPlayerViewModel @Inject constructor(
         playbackPosition = player.currentPosition
         val quality = helper.urls.values.elementAt(index)
         play(quality)
-        if (prefs.getBoolean(C.PLAYER_SAVEQUALITY, true)) {
-            prefs.edit { putString(C.PLAYER_QUALITY, helper.urls.keys.elementAt(index)) }
-        }
+        prefs.edit { putString(C.PLAYER_QUALITY, helper.urls.keys.elementAt(index)) }
         qualityIndex = index
     }
 
@@ -75,11 +72,11 @@ class ClipPlayerViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     val urls = graphQLRepositoy.loadClipUrls(clip.slug)
-                    val preferredQuality = prefs.getString(C.PLAYER_QUALITY, "720p60")
-                    if (preferredQuality != null) {
+                    val savedquality = prefs.getString(C.PLAYER_QUALITY, "720p60")
+                    if (savedquality != null) {
                         var url: String? = null
                         for (entry in urls.entries.withIndex()) {
-                            if (entry.value.key == preferredQuality) {
+                            if (entry.value.key == savedquality) {
                                 url = entry.value.value
                                 qualityIndex = entry.index
                                 break

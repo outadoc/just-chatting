@@ -22,6 +22,7 @@
     <string name="clips">Clips</string>
     <string name="scroll_down">Scroll down</string>
     <string name="auto">Auto</string>
+    <string name="source">Source</string>
     <string name="audio_only">Audio only</string>
     <string name="chat_only">Chat only</string>
     <string name="select_quality">Select quality</string>
@@ -155,8 +156,7 @@
     <string name="badgequality">Badge quality</string>
     <string name="message_limit">Message limit</string>
     <string name="playerRewind">Rewind/Fast forward</string>
-    <string name="player_quality">Player quality</string>
-    <string name="player_savequality">Save quality when changing through player</string>
+    <string name="player_defaultquality">Default player quality</string>
     <string name="player_doubletap">Double tap to toggle chat</string>
     <string name="player_minimize">Show minimize button</string>
     <string name="player_channel">Show channel name</string>
@@ -188,4 +188,8 @@
     <string name="speed1.5" translatable="false">1.5x</string>
     <string name="speed1.75" translatable="false">1.75x</string>
     <string name="speed2" translatable="false">2.0x</string>
+    <string name="saved_value">Saved value</string>
+    <string name="playerQualityEntries1">360p or lower</string>
+    <string name="playerQualityEntries2">480p or lower</string>
+    <string name="playerQualityEntries3">720p or lower</string>
 </resources>

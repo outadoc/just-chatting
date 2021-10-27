@@ -242,18 +242,12 @@
         app:iconSpaceReserved="false"/>
 
     <ListPreference
-        android:defaultValue="720p60"
-        android:entries="@array/playerQuality"
-        android:entryValues="@array/playerQuality"
-        android:key="player_quality"
+        android:defaultValue="saved"
+        android:entries="@array/playerQualityEntries"
+        android:entryValues="@array/playerQualityValues"
+        android:key="player_defaultquality"
         android:summary="%s"
-        android:title="@string/player_quality"
-        app:iconSpaceReserved="false"/>
-
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="player_savequality"
-        android:title="@string/player_savequality"
+        android:title="@string/player_defaultquality"
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat

@@ -105,18 +105,6 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
         player.stop()
     }
 
-    open fun readQuality(): String? {
-        val context = getApplication<Application>()
-        return context.prefs().getString(C.PLAYER_QUALITY, "720p60")
-    }
-
-    open fun writeQuality(quality: String) {
-        val context = getApplication<Application>()
-        if (context.prefs().getBoolean(C.PLAYER_SAVEQUALITY, true)) {
-            context.prefs().edit { putString(C.PLAYER_QUALITY, quality) }
-        }
-    }
-
     open fun restartPlayer() {
         playbackPosition = currentPlayer.value!!.currentPosition
         player.stop()

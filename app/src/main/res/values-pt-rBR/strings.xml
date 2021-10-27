@@ -95,7 +95,6 @@
     <string name="chat">Chat</string>
     <string name="recent_emotes">Recentes</string>
     <string name="notification_playback_channel_title">Reprodução</string>
-    <string name="notification_playback_channel_id" translatable="false">xtra_playback_channel</string>
     <string name="channels">Canais</string>
     <string name="video">Vídeo</string>
     <string name="watch_video">Assista ao vídeo completo</string>
@@ -127,12 +126,12 @@
     <string name="compact_streams_title">Compact streams</string>
     <string name="compact_streams_description">Don\'t show stream previews</string>
     <string name="adblock_desc">Uses the TTV.LOL api to load streams</string>
-    <string name="adblock">Adblock</string>
+    <string name="adblock">Use Adblocker</string>
     <string name="logout_title">Log out?</string>
     <string name="logout_msg">Logged in as %s</string>
     <string name="language">Language</string>
     <string name="cutoutmode">Display cutout mode</string>
-    <string name="cutoutmode_default">Default</string>
+    <string name="cutoutmode_default">Default - Portrait mode only</string>
     <string name="never">Never</string>
     <string name="blue">Blue</string>
     <string name="statusBarColor">Status bar color</string>
@@ -149,8 +148,7 @@
     <string name="badgequality">Badge quality</string>
     <string name="message_limit">Message limit</string>
     <string name="playerRewind">Rewind/Fast forward</string>
-    <string name="player_quality">Player quality</string>
-    <string name="player_savequality">Save quality when changing through player</string>
+    <string name="player_defaultquality">Default player quality</string>
     <string name="player_doubletap">Double tap to toggle chat</string>
     <string name="player_minimize">Show minimize button</string>
     <string name="player_channel">Show channel name</string>
@@ -178,4 +176,9 @@
     <string name="playback_speed">Velocidade de reprodução</string>
     <string name="quality">Qualidade</string>
     <string name="speed1">Normal</string>
+    <string name="source">Source</string>
+    <string name="saved_value">Saved value</string>
+    <string name="playerQualityEntries3">720p or lower</string>
+    <string name="playerQualityEntries2">480p or lower</string>
+    <string name="playerQualityEntries1">360p or lower</string>
 </resources>

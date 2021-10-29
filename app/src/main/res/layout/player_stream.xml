@@ -8,8 +8,10 @@
     <ImageButton style="@style/PlayerPlay"/>
     <ImageButton style="@style/PlayerPause"/>
 
-    <ImageButton style="@style/PlayerMinimize" />
-    <TextView style="@style/PlayerChannel" />
+    <RelativeLayout style="@style/PlayerTopLeftPanel">
+        <ImageButton style="@style/PlayerMinimize" />
+        <TextView style="@style/PlayerChannel" />
+    </RelativeLayout>
 
     <LinearLayout style="@style/PlayerTopRightPanel">
         <ImageButton style="@style/PlayerFollow" />
@@ -18,36 +20,30 @@
         <ImageButton style="@style/PlayerSettings" />
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/restart"
-        style="@style/PlayerRestart" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="9dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_vertical"
-        tools:ignore="RelativeOverlap">
-        <ImageView
-            android:id="@+id/viewericon"
-            style="@style/PlayerViewers" />
-        <TextView
-            android:id="@+id/viewers"
-            style="@style/PlayerText"
-            android:layout_marginStart="2dp"
-            android:layout_marginLeft="2dp"
-            tools:text="13.3K" />
+    <LinearLayout style="@style/PlayerBotLeftPanel">
+        <ImageButton style="@style/PlayerRestart"/>
+        <ImageButton style="@style/PlayerVolume"/>
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+    <ImageView
+        android:id="@+id/viewericon"
+        style="@style/PlayerViewers"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="5dp">
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:layout_marginBottom="15dp"
+        android:layout_toLeftOf="@+id/viewers"
+        android:layout_toStartOf="@+id/viewers" />
+
+    <TextView
+        android:id="@+id/viewers"
+        style="@style/PlayerText"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        tools:text="13.3K" />
+
+    <LinearLayout style="@style/PlayerBotRightPanel">
         <ImageButton style="@style/PlayerToggleChatBar" />
         <ImageButton style="@style/PlayerShowChat" />
         <ImageButton style="@style/PlayerHideChat" />

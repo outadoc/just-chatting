@@ -14,11 +14,7 @@
 
         <ImageView
             android:id="@+id/menu"
-            style="?android:attr/actionOverflowButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:tint="?attr/textColor"
-            android:layout_gravity="end" />
+            style="@style/MenuButton"/>
 
         <ImageView
             android:id="@+id/search"

@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerSettingsDialog
+import com.github.andreyasadchy.xtra.ui.player.PlayerVolumeDialog
 
 object FragmentUtils {
 
@@ -47,5 +48,9 @@ object FragmentUtils {
             quality,
             speed
         ).show(fragmentManager, null)
+    }
+
+    fun showPlayerVolumeDialog(fragmentManager: FragmentManager) {
+        PlayerVolumeDialog.newInstance().show(fragmentManager, null)
     }
 }

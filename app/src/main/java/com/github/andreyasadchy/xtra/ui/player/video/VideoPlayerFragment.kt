@@ -16,11 +16,12 @@ import com.github.andreyasadchy.xtra.ui.download.VideoDownloadDialog
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
 import com.github.andreyasadchy.xtra.ui.player.PlayerSettingsDialog
+import com.github.andreyasadchy.xtra.ui.player.PlayerVolumeDialog
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
-class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPlayerFragment, PlayerSettingsDialog.PlayerSettingsListener {
+class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPlayerFragment, PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener {
 //    override fun play(obj: Parcelable) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }
@@ -58,6 +59,7 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
         val view = requireView()
         val settings = view.findViewById<ImageButton>(R.id.settings)
         val download = view.findViewById<ImageButton>(R.id.download)
+        val volume = view.findViewById<ImageButton>(R.id.volumeButton)
         viewModel.loaded.observe(viewLifecycleOwner, Observer {
             if (it) {
                 settings.enable()
@@ -74,6 +76,9 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
             FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
         }
         download.setOnClickListener { showDownloadDialog() }
+        volume.setOnClickListener {
+            FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
+        }
     }
 
     override fun onChangeQuality(index: Int) {
@@ -82,6 +87,10 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
 
     override fun onChangeSpeed(speed: Float) {
         viewModel.setSpeed(speed)
+    }
+
+    override fun changeVolume(volume: Float) {
+        viewModel.setVolume(volume)
     }
 
     override fun showDownloadDialog() {

@@ -181,4 +181,5 @@
     <string name="playerQualityEntries3">720p or lower</string>
     <string name="playerQualityEntries2">480p or lower</string>
     <string name="playerQualityEntries1">360p or lower</string>
+    <string name="player_volumebutton">Show volume button</string>
 </resources>

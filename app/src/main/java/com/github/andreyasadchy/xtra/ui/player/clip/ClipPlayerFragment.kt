@@ -16,12 +16,13 @@ import com.github.andreyasadchy.xtra.ui.download.HasDownloadDialog
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerSettingsDialog
+import com.github.andreyasadchy.xtra.ui.player.PlayerVolumeDialog
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_player_clip.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
-class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPlayerFragment, PlayerSettingsDialog.PlayerSettingsListener {
+class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPlayerFragment, PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener {
 //    override fun play(obj: Parcelable) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }
@@ -68,6 +69,7 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
         val view = requireView()
         val settings = view.findViewById<ImageButton>(R.id.settings)
         val download = view.findViewById<ImageButton>(R.id.download)
+        val volume = view.findViewById<ImageButton>(R.id.volumeButton)
         viewModel.loaded.observe(this, Observer {
             settings.enable()
             download.enable()
@@ -79,6 +81,9 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
             FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities.keys, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
         }
         download.setOnClickListener { showDownloadDialog() }
+        volume.setOnClickListener {
+            FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
+        }
         clip.vod?.let { vod ->
             viewModel.video.observe(viewLifecycleOwner, Observer {
                 (requireActivity() as MainActivity).startVideo(it, TwitchApiHelper.parseClipOffset(vod.url) * 1000.0 + viewModel.player.currentPosition)
@@ -93,6 +98,10 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
 
     override fun onChangeSpeed(speed: Float) {
         viewModel.setSpeed(speed)
+    }
+
+    override fun changeVolume(volume: Float) {
+        viewModel.setVolume(volume)
     }
 
     override fun showDownloadDialog() {

@@ -7,10 +7,15 @@
     <item name="settings" type="id" />
     <item name="follow" type="id" />
     <item name="topRightPanel" type="id" />
+    <item name="topLeftPanel" type="id" />
+    <item name="botRightPanel" type="id" />
+    <item name="botLeftPanel" type="id" />
     <item name="channel" type="id" />
     <item name="fullscreenToggle" type="id" />
     <item name="download" type="id" />
     <item name="aspectRatio" type="id" />
     <item name="sleepTimer" type="id" />
     <item name="toggleChatBar" type="id" />
+    <item name="restart" type="id" />
+    <item name="volumeButton" type="id" />
 </resources>

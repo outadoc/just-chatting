@@ -13,10 +13,11 @@ import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
+import com.github.andreyasadchy.xtra.ui.player.PlayerVolumeDialog
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.player_stream.*
 
-class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnSortOptionChanged {
+class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnSortOptionChanged, PlayerVolumeDialog.PlayerVolumeListener {
 
     override val viewModel by viewModels<StreamPlayerViewModel> { viewModelFactory }
     private lateinit var chatFragment: ChatFragment
@@ -57,6 +58,8 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
             prefs.getString(C.TOKEN_XDEVICEID, "")!!, prefs.getString(C.TOKEN_DEVICEID, "")!!)
         super.initialize()
         val settings = requireView().findViewById<ImageButton>(R.id.settings)
+        val restart = requireView().findViewById<ImageButton>(R.id.restart)
+        val volume = requireView().findViewById<ImageButton>(R.id.volumeButton)
         viewModel.loaded.observe(viewLifecycleOwner, Observer {
             if (it) settings.enable() else settings.disable()
         })
@@ -70,6 +73,13 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         restart.setOnClickListener {
             viewModel.restartPlayer()
         }
+        volume.setOnClickListener {
+            FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
+        }
+    }
+
+    override fun changeVolume(volume: Float) {
+        viewModel.setVolume(volume)
     }
 
     fun hideEmotesMenu() = chatFragment.hideEmotesMenu()

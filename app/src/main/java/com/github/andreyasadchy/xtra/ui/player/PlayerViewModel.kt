@@ -77,6 +77,7 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
         if (speed != 1f) {
             setSpeed(speed, false)
         }
+        player.volume = context.prefs().getInt(C.PLAYER_VOLUME, 100) / 100f
     }
 
     fun setTimer(duration: Long) {
@@ -215,5 +216,9 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
         player.playbackParameters = PlaybackParameters(speed)
         val context = getApplication<Application>()
         if (save) context.prefs().edit { putFloat(C.PLAYER_SPEED, speed) }
+    }
+
+    open fun setVolume(volume: Float) {
+        player.volume = volume
     }
 }

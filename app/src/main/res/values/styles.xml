@@ -189,17 +189,27 @@
     </style>
 
     <style name="Search">
-        <item name="android:layout_width">40dp</item>
-        <item name="android:layout_height">40dp</item>
-        <item name="android:padding">7dp</item>
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:padding">5dp</item>
         <item name="android:src">@drawable/baseline_search_black_24</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
         <item name="android:tint">?attr/textColor</item>
         <item name="android:layout_gravity">end</item>
-        <item name="android:layout_marginStart">10dp</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginEnd">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginEnd">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+    </style>
+
+    <style name="MenuButton">
+        <item name="android:layout_width">35dp</item>
+        <item name="android:layout_height">35dp</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:src">@drawable/baseline_more_vert_black_24</item>
+        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+        <item name="android:tint">?attr/textColor</item>
+        <item name="android:layout_gravity">end</item>
+        <item name="android:layout_marginEnd">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
     </style>
 
     <style name="MediaSpinner">

@@ -10,9 +10,10 @@ import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
 import com.github.andreyasadchy.xtra.ui.player.PlayerSettingsDialog
+import com.github.andreyasadchy.xtra.ui.player.PlayerVolumeDialog
 import com.github.andreyasadchy.xtra.util.FragmentUtils
 
-class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerSettingsListener {
+class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener {
 //    override fun play(obj: Parcelable) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }
@@ -42,6 +43,9 @@ class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerS
         requireView().findViewById<ImageButton>(R.id.settings).setOnClickListener {
             FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
         }
+        requireView().findViewById<ImageButton>(R.id.volumeButton).setOnClickListener {
+            FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
+        }
     }
 
     override fun onNetworkRestored() {
@@ -62,6 +66,10 @@ class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerS
 
     override fun onChangeSpeed(speed: Float) {
         viewModel.setSpeed(speed)
+    }
+
+    override fun changeVolume(volume: Float) {
+        viewModel.setVolume(volume)
     }
     companion object {
         private const val KEY_VIDEO = "video"

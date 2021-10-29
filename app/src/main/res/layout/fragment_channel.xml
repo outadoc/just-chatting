@@ -56,11 +56,7 @@
 
                 <ImageView
                     android:id="@+id/menu"
-                    style="?android:attr/actionOverflowButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:tint="?attr/textColor"
-                    android:layout_gravity="end" />
+                    style="@style/MenuButton"/>
 
                 <ImageView
                     android:id="@+id/search"
@@ -68,8 +64,8 @@
 
                 <ImageButton
                     android:id="@+id/follow"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_gravity="end"
                     android:src="@drawable/baseline_favorite_border_black_24"
                     android:background="?attr/selectableItemBackgroundBorderless"

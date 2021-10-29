@@ -9,12 +9,21 @@
     <ImageButton style="@style/PlayerRewind"/>
     <ImageButton style="@style/PlayerForward"/>
 
-    <ImageButton style="@style/PlayerMinimize"/>
+    <LinearLayout style="@style/PlayerTopLeftPanel">
+        <ImageButton style="@style/PlayerMinimize" />
+    </LinearLayout>
 
     <LinearLayout style="@style/PlayerTopRightPanel">
         <ImageButton style="@style/PlayerSleep" />
         <ImageButton style="@style/PlayerRatio" />
         <ImageButton style="@style/PlayerSettings" />
+    </LinearLayout>
+
+    <LinearLayout style="@style/PlayerBotLeftPanel"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="false"
+        android:layout_above="@id/exo_progress" >
+        <ImageButton style="@style/PlayerVolume"/>
     </LinearLayout>
 
     <TextView style="@style/PlayerPosition"/>
@@ -23,12 +32,9 @@
         style="@style/PlayerProgress"/>
     <TextView style="@style/PlayerDuration" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+    <LinearLayout style="@style/PlayerBotRightPanel"
         android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="false"
         android:layout_above="@id/exo_progress" >
         <ImageButton style="@style/PlayerShowChat" />
         <ImageButton style="@style/PlayerHideChat" />

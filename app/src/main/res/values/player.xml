@@ -48,12 +48,49 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
+    <style name="PlayerTopLeftPanel">
+        <item name="android:id">@id/topLeftPanel</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_toStartOf">@id/topRightPanel</item>
+        <item name="android:layout_toLeftOf">@id/topRightPanel</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="PlayerBotRightPanel">
+        <item name="android:id">@id/botRightPanel</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="PlayerBotLeftPanel">
+        <item name="android:id">@id/botLeftPanel</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
     <style name="PlayerMinimize" parent="PlayerSmallImage">
         <item name="android:id">@id/minimize</item>
         <item name="android:src">@drawable/baseline_expand_more_black_48</item>
-        <item name="android:layout_marginTop">9dp</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginStart">10dp</item>
     </style>
 
     <style name="PlayerSettings" parent="PlayerSmallImage">
@@ -120,18 +157,16 @@
 
     <style name="PlayerFullscreenToggle" parent="PlayerSmallImage">
         <item name="android:id">@id/fullscreenToggle</item>
-        <item name="android:layout_alignParentEnd">true</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_marginRight">10dp</item>
-        <item name="android:layout_marginEnd">10dp</item>
     </style>
 
     <style name="PlayerRestart" parent="PlayerSmallImage">
+        <item name="android:id">@id/restart</item>
         <item name="android:src">@drawable/baseline_replay_black_24</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_marginLeft">10dp</item>
-        <item name="android:layout_marginStart">10dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
+    </style>
+
+    <style name="PlayerVolume" parent="PlayerSmallImage">
+        <item name="android:id">@id/volumeButton</item>
+        <item name="android:src">@drawable/baseline_volume_up_black_24</item>
     </style>
 
     <style name="PlayerRewind" parent="PlayerLargeImage">
@@ -153,18 +188,16 @@
     <style name="PlayerChannel" parent="PlayerText">
         <item name="android:id">@id/channel</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">35dp</item>
-        <item name="android:layout_toEndOf">@id/minimize</item>
+        <item name="android:layout_height">30dp</item>
         <item name="android:layout_toRightOf">@id/minimize</item>
-        <item name="android:layout_toStartOf">@id/topRightPanel</item>
-        <item name="android:layout_toLeftOf">@id/topRightPanel</item>
-        <item name="android:layout_marginStart">15dp</item>
-        <item name="android:layout_marginLeft">15dp</item>
-        <item name="android:layout_marginTop">17dp</item>
-        <item name="autoSizeMaxTextSize">18sp</item>
-        <item name="autoSizeMinTextSize">14sp</item>
-        <item name="autoSizeStepGranularity">1sp</item>
-        <item name="autoSizeTextType">uniform</item>
+        <item name="android:layout_toEndOf">@id/minimize</item>
+        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:layout_marginEnd">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="PlayerToggleChatBar" parent="PlayerSmallImage">
@@ -176,15 +209,13 @@
     <style name="PlayerHideChat" parent="PlayerSmallImage">
         <item name="android:id">@id/hideChat</item>
         <item name="android:src">@drawable/baseline_speaker_notes_off_black_24</item>
-        <item name="android:layout_marginEnd">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <style name="PlayerShowChat" parent="PlayerSmallImage">
         <item name="android:id">@id/showChat</item>
         <item name="android:src">@drawable/baseline_speaker_notes_black_24</item>
-        <item name="android:layout_marginEnd">10dp</item>
-        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:visibility">gone</item>
     </style>
 
     <style name="PlayerRatio" parent="PlayerSmallImage">

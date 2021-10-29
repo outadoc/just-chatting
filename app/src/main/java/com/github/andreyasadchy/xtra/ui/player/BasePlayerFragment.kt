@@ -8,15 +8,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.core.content.edit
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.LoggedIn
@@ -35,6 +33,7 @@ import com.github.andreyasadchy.xtra.ui.view.CustomPlayerView
 import com.github.andreyasadchy.xtra.ui.view.SlidingLayout
 import com.github.andreyasadchy.xtra.util.*
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
+import kotlinx.android.synthetic.main.view_chat.view.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -176,6 +175,9 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         }
         if (!prefs.getBoolean(C.PLAYER_CHANNEL, true)) {
             view.findViewById<TextView>(R.id.channel).gone()
+        }
+        if (!prefs.getBoolean(C.PLAYER_VOLUMEBUTTON, false)) {
+            view.findViewById<TextView>(R.id.volumeButton).gone()
         }
         if (this is StreamPlayerFragment) {
             if (User.get(activity) !is NotLoggedIn) {
@@ -389,6 +391,10 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                     weight = 0f
                 }
                 setPreferredChatVisibility()
+                val recycleview = requireView().findViewById<RecyclerView>(R.id.recyclerView)
+                val btndwn = requireView().findViewById<Button>(R.id.btnDown)
+                if (chatLayout.isVisible && btndwn != null && !btndwn.isVisible)
+                    recycleview.scrollToPosition(recycleview.adapter?.itemCount!! - 1) // scroll down
             } else {
                 chatLayout.gone()
             }
@@ -422,6 +428,9 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
     private fun toggleChatBar() {
         val messageView = view?.findViewById<LinearLayout>(R.id.messageView)
         if (messageView?.isVisible == true) {
+            chatLayout.hideKeyboard()
+            chatLayout.clearFocus()
+            chatLayout.viewPager.gone() // emote menu
             messageView.gone()
         } else {
             messageView?.visible()

@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.util
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Build
@@ -75,7 +74,7 @@ fun ImageView.loadBitmap(url: String) {
 
 fun EditText.showKeyboard() {
     requestFocus()
-    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(this, 0)
 }
 
 fun View.hideKeyboard() {

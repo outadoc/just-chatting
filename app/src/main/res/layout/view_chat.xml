@@ -60,29 +60,29 @@
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/baseline_backspace_black_24"
-                android:tint="?attr/textColor"
                 android:background="?android:selectableItemBackground"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible"
+                app:tint="?attr/textColor" />
 
             <ImageButton
                 android:id="@+id/emotes"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_tag_faces_black_24dp"
-                android:tint="?attr/textColor"
                 android:background="?android:selectableItemBackground"
-                tools:visibility="visible"/>
+                tools:visibility="visible"
+                app:tint="?attr/textColor" />
 
             <ImageButton
                 android:id="@+id/send"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:src="@drawable/ic_send_black_24dp"
-                android:tint="?attr/textColor"
                 android:background="?android:selectableItemBackground"
                 android:visibility="gone"
-                tools:visibility="visible"/>
+                tools:visibility="visible"
+                app:tint="?attr/textColor" />
         </LinearLayout>
 
         <androidx.viewpager.widget.ViewPager

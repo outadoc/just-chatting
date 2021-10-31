@@ -1,11 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.download
 
 import android.annotation.SuppressLint
-import android.app.IntentService
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -22,12 +18,7 @@ import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.FetchProvider
-import com.github.andreyasadchy.xtra.util.RemoteConfigParams
-import com.iheartradio.m3u8.Encoding
-import com.iheartradio.m3u8.Format
-import com.iheartradio.m3u8.ParsingMode
-import com.iheartradio.m3u8.PlaylistParser
-import com.iheartradio.m3u8.PlaylistWriter
+import com.iheartradio.m3u8.*
 import com.iheartradio.m3u8.data.MediaPlaylist
 import com.iheartradio.m3u8.data.Playlist
 import com.iheartradio.m3u8.data.TrackData
@@ -108,7 +99,7 @@ class DownloadService : IntentService(TAG) {
 
     @SuppressLint("CheckResult")
     override fun onHandleIntent(intent: Intent?) {
-        request = intent!!.getParcelableExtra(KEY_REQUEST)
+        request = intent!!.getParcelableExtra(KEY_REQUEST)!!
         offlineVideo = runBlocking { offlineRepository.getVideoById(request.offlineVideoId) }
             ?: return //Download was canceled
         Log.d(TAG, "Starting download. Id: ${offlineVideo.id}")

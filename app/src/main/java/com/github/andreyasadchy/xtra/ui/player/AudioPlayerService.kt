@@ -1,10 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.player
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
@@ -29,11 +25,7 @@ import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
-import com.google.android.exoplayer2.DefaultControlDispatcher
-import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.ExoPlayer
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.Player
+import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
@@ -88,7 +80,7 @@ class AudioPlayerService : Service() {
     override fun onBind(intent: Intent): IBinder? {
         val channelId = getString(R.string.notification_playback_channel_id)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             if (manager.getNotificationChannel(channelId) == null) {
                 val channel = NotificationChannel(channelId, getString(R.string.notification_playback_channel_title), NotificationManager.IMPORTANCE_LOW)
                 channel.setSound(null, null)
@@ -131,7 +123,7 @@ class AudioPlayerService : Service() {
                 this,
                 channelId,
                 System.currentTimeMillis().toInt(),
-                DescriptionAdapter(intent.getStringExtra(KEY_TITLE), intent.getStringExtra(KEY_CHANNEL_NAME), intent.getStringExtra(KEY_IMAGE_URL)),
+                DescriptionAdapter(intent.getStringExtra(KEY_TITLE), intent.getStringExtra(KEY_CHANNEL_NAME) ?: "", intent.getStringExtra(KEY_IMAGE_URL) ?: ""),
                 object : PlayerNotificationManager.NotificationListener {
                     override fun onNotificationPosted(notificationId: Int, notification: Notification, ongoing: Boolean) {
                         startForeground(notificationId, notification)

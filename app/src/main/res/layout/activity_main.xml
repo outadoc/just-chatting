@@ -27,7 +27,7 @@
             android:id="@+id/navBar"
             style="?attr/navBarStyle"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="55dp"
             app:labelVisibilityMode="labeled"
             app:menu="@menu/navigation_bar" />
     </LinearLayout>

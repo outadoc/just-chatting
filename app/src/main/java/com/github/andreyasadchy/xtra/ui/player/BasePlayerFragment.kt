@@ -85,9 +85,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         super.onCreate(savedInstanceState)
         val activity = requireActivity()
         prefs = activity.prefs()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            systemUiFlags = systemUiFlags or (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
-        }
+        systemUiFlags = systemUiFlags or (View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
         isPortrait = activity.isInPortraitOrientation
     }
 
@@ -393,7 +391,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 setPreferredChatVisibility()
                 val recycleview = requireView().findViewById<RecyclerView>(R.id.recyclerView)
                 val btndwn = requireView().findViewById<Button>(R.id.btnDown)
-                if (chatLayout.isVisible && btndwn != null && !btndwn.isVisible)
+                if (chatLayout.isVisible && btndwn != null && !btndwn.isVisible && recycleview.adapter?.itemCount != null)
                     recycleview.scrollToPosition(recycleview.adapter?.itemCount!! - 1) // scroll down
             } else {
                 chatLayout.gone()

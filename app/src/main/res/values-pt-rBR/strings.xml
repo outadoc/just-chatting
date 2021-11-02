@@ -167,7 +167,6 @@
     <string name="cutoutmode_always">Always - Both portrait and landscape modes</string>
     <string name="adblock_not_working">TTV.LOL is offline. Disable Adblock to view streams in the meantime</string>
     <string name="not_supported">Not supported</string>
-    <string name="Android_5_required">Android 5 required</string>
     <string name="Android_9_required">Android 9 required</string>
     <string name="settings_token">ACCESS TOKEN HEADERS</string>
     <string name="token_random_deviceid">Random device id</string>

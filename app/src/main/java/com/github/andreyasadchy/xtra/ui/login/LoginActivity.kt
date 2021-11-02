@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.ui.login
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.webkit.CookieManager
 import android.webkit.WebView
@@ -172,10 +171,6 @@ class LoginActivity : AppCompatActivity(), Injectable {
     }
 
     private fun clearCookies() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            CookieManager.getInstance().removeAllCookies(null)
-        } else {
-            CookieManager.getInstance().removeAllCookie()
-        }
+        CookieManager.getInstance().removeAllCookies(null)
     }
 }

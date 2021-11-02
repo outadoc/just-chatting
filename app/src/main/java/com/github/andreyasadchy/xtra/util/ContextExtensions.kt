@@ -43,7 +43,7 @@ fun Activity.applyTheme(): String {
         else -> R.style.DarkTheme
     })
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && prefs().getBoolean(C.UI_STATUSBAR, true)) {
+    if (prefs().getBoolean(C.UI_STATUSBAR, true)) {
         when (theme) {
             "1" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)
             "2" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryLight)
@@ -51,7 +51,7 @@ fun Activity.applyTheme(): String {
             else -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryDark)
         }
     }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && prefs().getBoolean(C.UI_NAVBAR, true)) {
+    if (prefs().getBoolean(C.UI_NAVBAR, true)) {
         when (theme) {
             "1" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)
             "2" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryLight)
@@ -76,7 +76,7 @@ val Context.isInLandscapeOrientation
     get() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
 val Context.isActivityResumed
-    get() = this !is Activity || !((Build.VERSION.SDK_INT > Build.VERSION_CODES.JELLY_BEAN && isDestroyed) || isFinishing)
+    get() = this !is Activity || !((isDestroyed) || isFinishing)
 
 fun Context.toast(@StringRes resId: Int) {
     Toast.makeText(this, resId, Toast.LENGTH_LONG).show()

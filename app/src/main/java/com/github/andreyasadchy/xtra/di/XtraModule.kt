@@ -1,8 +1,6 @@
 package com.github.andreyasadchy.xtra.di
 
 import android.app.Application
-import android.os.Build
-import android.util.Log
 import com.github.andreyasadchy.xtra.api.*
 import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataDeserializer
@@ -17,25 +15,17 @@ import com.github.andreyasadchy.xtra.repository.KrakenRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.util.FetchProvider
 import com.github.andreyasadchy.xtra.util.RemoteConfigParams
-import com.github.andreyasadchy.xtra.util.TlsSocketFactory
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.google.gson.GsonBuilder
 import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import dagger.Module
 import dagger.Provides
-import okhttp3.CipherSuite
-import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
-import okhttp3.TlsVersion
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.security.KeyStore
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
-import javax.net.ssl.SSLContext
-import javax.net.ssl.TrustManagerFactory
-import javax.net.ssl.X509TrustManager
 
 @Module
 class XtraModule {
@@ -163,27 +153,6 @@ class XtraModule {
 /*            if (BuildConfig.DEBUG) {
                 addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
             }*/
-
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.LOLLIPOP) {
-                try {
-                    val trustManager = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm()).run {
-                        init(null as KeyStore?)
-                        trustManagers.first { it is X509TrustManager } as X509TrustManager
-                    }
-                    val sslContext = SSLContext.getInstance(TlsVersion.TLS_1_2.javaName)
-                    sslContext.init(null, arrayOf(trustManager), null)
-                    val cipherSuites = ConnectionSpec.MODERN_TLS.cipherSuites!!.toMutableList().apply {
-                        add(CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA)
-                    }.toTypedArray()
-                    sslSocketFactory(TlsSocketFactory(sslContext.socketFactory), trustManager)
-                    val cs = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
-                            .cipherSuites(*cipherSuites)
-                            .build()
-                    connectionSpecs(arrayListOf(cs))
-                } catch (e: Exception) {
-                    Log.e("OkHttpTLSCompat", "Error while setting TLS 1.2 compatibility", e)
-                }
-            }
             connectTimeout(5, TimeUnit.MINUTES)
             writeTimeout(5, TimeUnit.MINUTES)
             readTimeout(5, TimeUnit.MINUTES)

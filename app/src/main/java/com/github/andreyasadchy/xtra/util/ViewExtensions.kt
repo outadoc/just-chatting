@@ -4,14 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Rect
-import android.os.Build
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -95,12 +93,7 @@ val View.isKeyboardShown: Boolean
 
 fun ImageView.setTint(@ColorRes tint: Int) {
     val color = ContextCompat.getColor(context, tint)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        drawable.setTint(color)
-    } else {
-        val wrap = DrawableCompat.wrap(drawable)
-        DrawableCompat.setTint(wrap, color)
-    }
+    drawable.setTint(color)
 }
 
 fun ImageView.enable() {

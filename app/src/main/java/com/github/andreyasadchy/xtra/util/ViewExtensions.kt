@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.annotation.ColorRes
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -72,7 +73,18 @@ fun ImageView.loadBitmap(url: String) {
 
 fun EditText.showKeyboard() {
     requestFocus()
-    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).showSoftInput(this, 0)
+    val imm: InputMethodManager? = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    this.postDelayed({
+        imm?.showSoftInput(this, 0)
+    }, 100)
+}
+
+fun SearchView.showKeyboard() {
+    val imm: InputMethodManager? = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    this.postDelayed({
+        this.isIconified = false
+        imm?.showSoftInput(this, 0)
+    }, 100)
 }
 
 fun View.hideKeyboard() {

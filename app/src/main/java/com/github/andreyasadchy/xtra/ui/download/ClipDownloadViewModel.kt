@@ -41,7 +41,7 @@ class ClipDownloadViewModel @Inject constructor(
                     }
                 }
             } else {
-                _qualities.value = qualities
+                _qualities.value = qualities!!
             }
         }
     }

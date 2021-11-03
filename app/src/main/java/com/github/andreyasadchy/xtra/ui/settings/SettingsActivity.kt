@@ -63,6 +63,23 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
             findPreference<ListPreference>(C.PORTRAIT_COLUMN_COUNT)!!.onPreferenceChangeListener = changeListener
             findPreference<ListPreference>(C.LANDSCAPE_COLUMN_COUNT)!!.onPreferenceChangeListener = changeListener
 
+            findPreference<SwitchPreferenceCompat>(C.UI_STATUSBAR)!!.setOnPreferenceChangeListener { _, _ ->
+                changed = true
+                activity.apply {
+                    applyTheme()
+                    recreate()
+                }
+                true
+            }
+            findPreference<SwitchPreferenceCompat>(C.UI_NAVBAR)!!.setOnPreferenceChangeListener { _, _ ->
+                changed = true
+                activity.apply {
+                    applyTheme()
+                    recreate()
+                }
+                true
+            }
+
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
                 findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.isEnabled = false
                 findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.summary = resources.getString(R.string.not_supported)

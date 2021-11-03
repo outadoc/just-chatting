@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.di
 
 import android.app.Application
+import com.github.andreyasadchy.xtra.BuildConfig
 import com.github.andreyasadchy.xtra.api.*
 import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataDeserializer
@@ -22,6 +23,7 @@ import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -150,9 +152,9 @@ class XtraModule {
     @Provides
     fun providesOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder().apply {
-/*            if (BuildConfig.DEBUG) {
+            if (BuildConfig.DEBUG) {
                 addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
-            }*/
+            }
             connectTimeout(5, TimeUnit.MINUTES)
             writeTimeout(5, TimeUnit.MINUTES)
             readTimeout(5, TimeUnit.MINUTES)
@@ -170,7 +172,7 @@ class XtraModule {
     @Provides
     fun providesFetchConfigurationBuilder(application: Application, okHttpClient: OkHttpClient): FetchConfiguration.Builder {
         return FetchConfiguration.Builder(application)
-/*                .enableLogging(BuildConfig.DEBUG)*/
+                .enableLogging(BuildConfig.DEBUG)
                 .enableRetryOnNetworkGain(true)
                 .setDownloadConcurrentLimit(3)
                 .setHttpDownloader(OkHttpDownloader(okHttpClient))

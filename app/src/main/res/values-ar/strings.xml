@@ -105,7 +105,7 @@
     <string name="hours">س</string>
     <string name="minutes">د</string>
     <string name="playback_will_stop">سوف يتوقف التشغيل في%s</string>
-    <string name="playback_will_stop_hours_minutes">سيتم إيقاف التشغيل في %1$s$2% s</string>
+    <string name="playback_will_stop_hours_minutes">سيتم إيقاف التشغيل في %1$s %2$s</string>
     <string name="timer_canceled">تم إلغاء الموقت</string>
     <string name="trouble_logging_in">Having trouble logging in?</string>
     <string name="login_problem_solution">You can log in using an external browser. After you press \"Authorize\", a page with an error should appear. Copy the url, return here and click the \"Enter url\" button. Paste the url and click \"Log in\"</string>

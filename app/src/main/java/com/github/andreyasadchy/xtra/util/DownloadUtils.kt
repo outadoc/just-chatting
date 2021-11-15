@@ -11,7 +11,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.video.Video
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.model.offline.Downloadable
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.model.offline.Request

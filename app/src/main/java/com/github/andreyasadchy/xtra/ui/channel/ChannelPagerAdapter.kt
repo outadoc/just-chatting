@@ -31,7 +31,7 @@ class ChannelPagerAdapter(
             0 -> ChannelVideosFragment()
             1 -> ClipsFragment()
 //            2 -> ChannelInfoFragment()
-            else -> return ChatFragment.newInstance(args.getParcelable(C.CHANNEL)!!)
+            else -> return ChatFragment.newInstance(args.getString(C.CHANNEL)!!, "", "")
         }
         return fragment.apply { arguments = args }
     }

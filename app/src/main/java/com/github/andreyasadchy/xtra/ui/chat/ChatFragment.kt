@@ -11,13 +11,14 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.chat.Emote
-import com.github.andreyasadchy.xtra.model.kraken.Channel
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
-import com.github.andreyasadchy.xtra.util.*
+import com.github.andreyasadchy.xtra.util.LifecycleListener
+import com.github.andreyasadchy.xtra.util.hideKeyboard
+import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.view_chat.view.*
 
 class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDialog.OnButtonClickListener {
@@ -29,15 +30,16 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         return inflater.inflate(R.layout.fragment_chat, container, false).also { chatView = it as ChatView }
     }
 
+    var chLogin = ""
+    var chName = ""
     override fun initialize() {
         val args = requireArguments()
-        val channel = args.getParcelable<Channel>(KEY_CHANNEL)!!
+        val channelId = args.getString(KEY_CHANNEL)!!
         val user = User.get(requireContext())
         val userIsLoggedIn = user is LoggedIn
         val isLive = args.getBoolean(KEY_IS_LIVE)
-        val ffzfrombttv = requireContext().prefs().getBoolean(C.CHAT_FFZFROMBTTV, true)
         val enableChat = if (isLive) {
-            viewModel.startLive(user, channel, ffzfrombttv)
+            viewModel.startLive(user, channelId, chLogin, chName)
             chatView.init(this)
             chatView.setCallback(viewModel)
             if (userIsLoggedIn) {
@@ -54,7 +56,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
                 if (it != null) {
                     chatView.init(this)
                     val getCurrentPosition = (parentFragment as ChatReplayPlayerFragment)::getCurrentPosition
-                    viewModel.startReplay(channel, it, args.getDouble(KEY_START_TIME), getCurrentPosition, ffzfrombttv)
+                    viewModel.startReplay(channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
                     true
                 } else {
                     chatView.chatReplayUnavailable.visible()
@@ -88,8 +90,8 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         chatView.setMessage(message)
     }
 
-    override fun onViewProfileClicked(channel: Channel) {
-        (requireActivity() as MainActivity).viewChannel(channel)
+    override fun onViewProfileClicked(id: String, name: String) {
+        (requireActivity() as MainActivity).viewChannel(id, name)
         (parentFragment as? BasePlayerFragment)?.minimize()
     }
 
@@ -113,11 +115,11 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         private const val KEY_VIDEO_ID = "videoId"
         private const val KEY_START_TIME = "startTime"
 
-        fun newInstance(channel: Channel) = ChatFragment().apply {
-            arguments = bundleOf(KEY_IS_LIVE to true, KEY_CHANNEL to channel)
+        fun newInstance(channel: String, channelLogin: String, channelName: String) = ChatFragment().apply {
+            arguments = bundleOf(KEY_IS_LIVE to true, KEY_CHANNEL to channel); chLogin = channelLogin ; chName = channelName
         }
 
-        fun newInstance(channel: Channel, videoId: String?, startTime: Double?) = ChatFragment().apply {
+        fun newInstance(channel: String, videoId: String?, startTime: Double?) = ChatFragment().apply {
             arguments = bundleOf(KEY_IS_LIVE to false, KEY_CHANNEL to channel, KEY_VIDEO_ID to videoId, KEY_START_TIME to startTime)
         }
     }

@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import com.github.andreyasadchy.xtra.model.kraken.user.Emote
+import com.github.andreyasadchy.xtra.model.helix.user.Emote
 
 
 @Dao

@@ -5,7 +5,6 @@ import android.widget.ImageButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.Channel
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
@@ -19,7 +18,11 @@ class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerS
 //    }
 
     override val viewModel by viewModels<OfflinePlayerViewModel> { viewModelFactory }
-    override val channel: Channel
+    override val channelId: String
+        get() = null!!
+    override val channelLogin: String
+        get() = null!!
+    override val channelName: String
         get() = null!!
 
     override val layoutId: Int

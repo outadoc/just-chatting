@@ -7,10 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.video.BroadcastType
-import com.github.andreyasadchy.xtra.model.kraken.video.Period
-import com.github.andreyasadchy.xtra.model.kraken.video.Sort
-import com.github.andreyasadchy.xtra.model.kraken.video.Video
+import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
+import com.github.andreyasadchy.xtra.model.helix.video.Period
+import com.github.andreyasadchy.xtra.model.helix.video.Sort
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
@@ -28,7 +28,7 @@ class TopVideosViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Video>> = Transformations.map(filter) {
-        repository.loadVideos(null, it.period, it.broadcastType, it.language, Sort.VIEWS, viewModelScope)
+        repository.loadVideos(it.clientId, it.token, null, it.period, it.broadcastType, it.language, Sort.VIEWS, viewModelScope)
     }
     var selectedIndex = 1
         private set
@@ -38,8 +38,8 @@ class TopVideosViewModel @Inject constructor(
         filter.value = Filter()
     }
 
-    fun filter(period: Period, index: Int, text: CharSequence) {
-        filter.value?.copy(period = period).let {
+    fun filter(clientId: String?, token: String?, period: Period, index: Int, text: CharSequence) {
+        filter.value?.copy(clientId = clientId, token = token, period = period).let {
             if (filter.value != it) {
                 filter.value = it
                 selectedIndex = index
@@ -49,6 +49,8 @@ class TopVideosViewModel @Inject constructor(
     }
 
     private data class Filter(
+            val clientId: String? = "",
+            val token: String? = "",
             val period: Period = Period.WEEK,
             val broadcastType: BroadcastType = BroadcastType.ALL,
             val language: String? = null)

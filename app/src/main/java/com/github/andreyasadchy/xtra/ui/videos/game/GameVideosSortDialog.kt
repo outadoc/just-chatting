@@ -8,14 +8,11 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.core.os.bundleOf
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.video.Period
-import com.github.andreyasadchy.xtra.model.kraken.video.Period.ALL
-import com.github.andreyasadchy.xtra.model.kraken.video.Period.DAY
-import com.github.andreyasadchy.xtra.model.kraken.video.Period.MONTH
-import com.github.andreyasadchy.xtra.model.kraken.video.Period.WEEK
-import com.github.andreyasadchy.xtra.model.kraken.video.Sort
-import com.github.andreyasadchy.xtra.model.kraken.video.Sort.TIME
-import com.github.andreyasadchy.xtra.model.kraken.video.Sort.VIEWS
+import com.github.andreyasadchy.xtra.model.helix.video.Period
+import com.github.andreyasadchy.xtra.model.helix.video.Period.*
+import com.github.andreyasadchy.xtra.model.helix.video.Sort
+import com.github.andreyasadchy.xtra.model.helix.video.Sort.TIME
+import com.github.andreyasadchy.xtra.model.helix.video.Sort.VIEWS
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.dialog_videos_sort.*
 

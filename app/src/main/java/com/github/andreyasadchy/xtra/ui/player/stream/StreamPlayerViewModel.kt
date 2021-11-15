@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
+import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserFactory
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistTracker
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
@@ -33,10 +33,9 @@ class StreamPlayerViewModel @Inject constructor(
     private val _stream = MutableLiveData<Stream>()
     val stream: LiveData<Stream>
         get() = _stream
-    override val channelInfo: Pair<String, String>
+    override val channelId: String
         get() {
-            val s = _stream.value!!
-            return s.channel.id to s.channel.displayName
+            return _stream.value!!.user_id
         }
 
     private var useAdBlock = false
@@ -50,7 +49,7 @@ class StreamPlayerViewModel @Inject constructor(
         .setPlaylistTrackerFactory(DefaultHlsPlaylistTracker.FACTORY)
         .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(6))
 
-    fun startStream(stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String) {
+    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String) {
         this.useAdBlock = useAdBlock
         this.randomDeviceId = randomDeviceId
         this.xdeviceid = xdeviceid
@@ -61,7 +60,7 @@ class StreamPlayerViewModel @Inject constructor(
             viewModelScope.launch {
                 while (isActive) {
                     try {
-                        val s = repository.loadStream(stream.channel.id).stream ?: break
+                        val s = repository.loadStream(clientId, token, stream.user_id).data.first()
                         _stream.postValue(s)
                         delay(300000L)
                     } catch (e: Exception) {
@@ -80,7 +79,7 @@ class StreamPlayerViewModel @Inject constructor(
             index < qualities.size - 1 -> {
                 (player.currentManifest as? HlsManifest)?.let {
                     val s = _stream.value!!
-                    startBackgroundAudio(helper.urls.values.last(), s.channel.displayName, s.channel.status, s.channel.logo, false, AudioPlayerService.TYPE_STREAM, null)
+                    startBackgroundAudio(helper.urls.values.last(), s.user_name, s.title, "", false, AudioPlayerService.TYPE_STREAM, null)
                     _playerMode.value = AUDIO_ONLY
                 }
             }
@@ -116,7 +115,7 @@ class StreamPlayerViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val playerType = RemoteConfigParams.TWITCH_PLAYER_TYPE_KEY
-                val result = playerRepository.loadStreamPlaylistUrl(stream.channel.name, playerType, useAdBlock, randomDeviceId, xdeviceid, deviceid)
+                val result = playerRepository.loadStreamPlaylistUrl(stream.user_login, playerType, useAdBlock, randomDeviceId, xdeviceid, deviceid)
                 if (useAdBlock) {
                     if (result.second) {
                         httpDataSourceFactory.defaultRequestProperties.set("X-Donate-To", "https://ttv.lol/donate")

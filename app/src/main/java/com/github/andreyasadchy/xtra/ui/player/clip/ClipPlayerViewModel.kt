@@ -8,8 +8,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
-import com.github.andreyasadchy.xtra.model.kraken.clip.Clip
-import com.github.andreyasadchy.xtra.model.kraken.video.Video
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.GraphQLRepositoy
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
@@ -39,8 +39,8 @@ class ClipPlayerViewModel @Inject constructor(
         get() = helper.urls
     val loaded: LiveData<Boolean>
         get() = helper.loaded
-    override val channelInfo: Pair<String, String>
-        get() = clip.broadcaster.id to clip.broadcaster.displayName
+    override val channelId: String
+        get() = clip.broadcaster_id
     private val _video = MutableLiveData<Video>()
     val video: LiveData<Video>
         get() = _video
@@ -71,7 +71,7 @@ class ClipPlayerViewModel @Inject constructor(
             this.clip = clip
             viewModelScope.launch {
                 try {
-                    val urls = graphQLRepositoy.loadClipUrls(clip.slug)
+                    val urls = graphQLRepositoy.loadClipUrls(clip.id)
                     val savedquality = prefs.getString(C.PLAYER_QUALITY, "720p60")
                     if (savedquality != null) {
                         var url: String? = null
@@ -103,7 +103,7 @@ class ClipPlayerViewModel @Inject constructor(
 
     override fun setUser(user: LoggedIn) {
         if (!this::follow.isInitialized) {
-            follow = FollowLiveData(repository, user, channelInfo.first, viewModelScope)
+            follow = FollowLiveData(repository, user, channelId, viewModelScope)
         }
     }
 
@@ -117,12 +117,12 @@ class ClipPlayerViewModel @Inject constructor(
         }
     }
 
-    fun loadVideo() {
+    fun loadVideo(clientId: String?, token: String?) {
         if (!loadingVideo) {
             loadingVideo = true
             viewModelScope.launch {
                 try {
-                    val video = repository.loadVideo(clip.vod!!.id)
+                    val video = repository.loadVideo(clientId, token, clip.video_id).data.first()
                     _video.postValue(video)
                 } catch (e: Exception) {
 

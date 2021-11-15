@@ -4,7 +4,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.channel.Channel
+import com.github.andreyasadchy.xtra.model.helix.channel.Channel
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -24,9 +24,9 @@ class ChannelSearchAdapter(
 
     override fun bind(item: Channel, view: View) {
         with(view) {
-            setOnClickListener { listener.viewChannel(item) }
-            logo.loadImage(fragment, item.logo)
-            name.text = item.displayName
+            setOnClickListener { listener.viewChannel(item.id, item.display_name) }
+            logo.loadImage(fragment, null)
+            name.text = item.display_name
         }
     }
 }

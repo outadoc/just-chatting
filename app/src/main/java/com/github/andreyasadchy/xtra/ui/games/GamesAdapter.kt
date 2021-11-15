@@ -4,7 +4,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.game.GameWrapper
+import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
@@ -14,23 +14,23 @@ import kotlinx.android.synthetic.main.fragment_games_list_item.view.*
 
 class GamesAdapter(
         private val fragment: Fragment,
-        private val listener: GamesFragment.OnGameSelectedListener) : BasePagedListAdapter<GameWrapper>(
-        object : DiffUtil.ItemCallback<GameWrapper>() {
-            override fun areItemsTheSame(oldItem: GameWrapper, newItem: GameWrapper): Boolean =
-                    oldItem.game.id == newItem.game.id
+        private val listener: GamesFragment.OnGameSelectedListener) : BasePagedListAdapter<Game>(
+        object : DiffUtil.ItemCallback<Game>() {
+            override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean =
+                    oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: GameWrapper, newItem: GameWrapper): Boolean =
-                    oldItem.viewers == newItem.viewers
+            override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean =
+                    true
         }) {
 
     override val layoutId: Int = R.layout.fragment_games_list_item
 
-    override fun bind(item: GameWrapper, view: View) {
+    override fun bind(item: Game, view: View) {
         with(view) {
-            setOnClickListener { listener.openGame(item.game) }
-            gameImage.loadImage(fragment, item.game.box.medium)
-            gameName.text = item.game.name
-            viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewers, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            setOnClickListener { listener.openGame(item.id, item.name) }
+            gameImage.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.box_art_url, "medium", true))
+            gameName.text = item.name
+            viewers.text = TwitchApiHelper.formatViewersCount(context, 0, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
         }
     }
 }

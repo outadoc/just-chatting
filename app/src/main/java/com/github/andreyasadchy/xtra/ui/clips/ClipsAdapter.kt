@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.clip.Clip
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.C
@@ -23,10 +23,10 @@ class ClipsAdapter(
         private val showDownloadDialog: (Clip) -> Unit) : BasePagedListAdapter<Clip>(
         object : DiffUtil.ItemCallback<Clip>() {
             override fun areItemsTheSame(oldItem: Clip, newItem: Clip): Boolean =
-                    oldItem.slug == newItem.slug
+                    oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: Clip, newItem: Clip): Boolean =
-                    oldItem.views == newItem.views &&
+                    oldItem.view_count == newItem.view_count &&
                             oldItem.title == newItem.title
 
         }) {
@@ -34,22 +34,22 @@ class ClipsAdapter(
     override val layoutId: Int = R.layout.fragment_clips_list_item
 
     override fun bind(item: Clip, view: View) {
-        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.broadcaster) }
+        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.broadcaster_id, item.broadcaster_name) }
         with(view) {
             setOnClickListener { clickListener.startClip(item) }
             setOnLongClickListener { showDownloadDialog(item); true }
-            thumbnail.loadImage(fragment, item.thumbnails.medium, diskCacheStrategy = DiskCacheStrategy.NONE)
-            date.text = TwitchApiHelper.formatTime(context, item.createdAt)
-            views.text = TwitchApiHelper.formatViewsCount(context, item.views, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            thumbnail.loadImage(fragment, item.thumbnail_url, diskCacheStrategy = DiskCacheStrategy.NONE)
+            date.text = TwitchApiHelper.formatTime(context, item.uploadDate)
+            views.text = TwitchApiHelper.formatViewsCount(context, item.view_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
             duration.text = DateUtils.formatElapsedTime(item.duration.toLong())
             userImage.apply {
-                loadImage(fragment, item.broadcaster.logo, circle = true)
+                loadImage(fragment, null, circle = true)
                 setOnClickListener(channelListener)
             }
             title.text = item.title
             username.apply {
                 setOnClickListener(channelListener)
-                text = item.broadcaster.displayName
+                text = item.broadcaster_name
             }
             gameName.text = item.game
             options.setOnClickListener {

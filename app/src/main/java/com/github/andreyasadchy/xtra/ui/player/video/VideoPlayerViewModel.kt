@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.VideoDownloadInfo
 import com.github.andreyasadchy.xtra.model.VideoPosition
-import com.github.andreyasadchy.xtra.model.kraken.video.Video
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
@@ -13,12 +13,10 @@ import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
 import com.github.andreyasadchy.xtra.ui.player.HlsPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
-import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerViewModel
 import com.github.andreyasadchy.xtra.util.toast
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 import javax.inject.Inject
 
 
@@ -44,8 +42,8 @@ class VideoPlayerViewModel @Inject constructor(
             return VideoDownloadInfo(video, helper.urls, relativeTimes, durations, playlist.durationUs / 1000L, playlist.targetDurationUs / 1000L, player.currentPosition)
         }
 
-    override val channelInfo: Pair<String, String>
-        get() = video.channel.id to video.channel.displayName
+    override val channelId: String
+        get() = video.user_id
 
     fun setVideo(video: Video, offset: Double) {
         if (!this::video.isInitialized) {
@@ -81,7 +79,7 @@ class VideoPlayerViewModel @Inject constructor(
             }
             else -> {
                 (player.currentManifest as? HlsManifest)?.let {
-                    startBackgroundAudio(helper.urls.values.last(), video.channel.displayName, video.channel.status, video.channel.logo, true, AudioPlayerService.TYPE_VIDEO, video.id.substring(1).toLong())
+                    startBackgroundAudio(helper.urls.values.last(), video.user_name, video.title, "", true, AudioPlayerService.TYPE_VIDEO, video.id.substring(1).toLong())
                     _playerMode.value = PlayerMode.AUDIO_ONLY
                 }
             }

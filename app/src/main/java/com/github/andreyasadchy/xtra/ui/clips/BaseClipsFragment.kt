@@ -5,12 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.clip.Clip
-import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
-import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
-import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
-import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
-import com.github.andreyasadchy.xtra.ui.common.Scrollable
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
+import com.github.andreyasadchy.xtra.ui.common.*
 import com.github.andreyasadchy.xtra.ui.download.ClipDownloadDialog
 import com.github.andreyasadchy.xtra.ui.download.HasDownloadDialog
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*

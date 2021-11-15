@@ -4,9 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
-import com.github.andreyasadchy.xtra.model.kraken.game.Game
-import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
-import com.github.andreyasadchy.xtra.model.kraken.stream.StreamType
+import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
@@ -17,11 +15,11 @@ class StreamsViewModel @Inject constructor(
 
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Stream>> = Transformations.map(filter) {
-        repository.loadStreams(it?.game?.name, it.languages, it.streamType, viewModelScope)
+        repository.loadStreams(it.clientId, it.token, it.game, it.languages, viewModelScope)
     }
 
-    fun loadStreams(game: Game? = null, languages: String? = null) {
-        Filter(game, languages).let {
+    fun loadStreams(clientId: String?, token: String?, channelId: String? = null,  game: String? = null, languages: String? = null) {
+        Filter(clientId, token, channelId, game, languages).let {
             if (filter.value != it) {
                 filter.value = it
             }
@@ -29,7 +27,9 @@ class StreamsViewModel @Inject constructor(
     }
 
     private data class Filter(
-            val game: Game?,
-            val languages: String?,
-            val streamType: StreamType = StreamType.LIVE)
+            val clientId: String?,
+            val token: String?,
+            val channelId: String?,
+            val game: String?,
+            val languages: String?)
 }

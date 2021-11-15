@@ -13,7 +13,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.clip.Clip
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import kotlinx.android.synthetic.main.dialog_clip_download.*
 import javax.inject.Inject
 

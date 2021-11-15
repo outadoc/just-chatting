@@ -16,8 +16,8 @@ interface MiscApi {
     @GET("https://api.7tv.app/v2/emotes/global")
     suspend fun getGlobalStvEmotes(): Response<StvEmotesResponse>
 
-    @GET("https://api.7tv.app/v2/users/{channel}/emotes")
-    suspend fun getStvEmotes(@Path("channel") channel: String): Response<StvEmotesResponse>
+    @GET("https://api.7tv.app/v2/users/{channelId}/emotes")
+    suspend fun getStvEmotes(@Path("channelId") channelId: String): Response<StvEmotesResponse>
 
     @GET("https://api.betterttv.net/3/cached/emotes/global")
     suspend fun getGlobalBttvEmotes(): Response<BttvGlobalResponse>
@@ -30,10 +30,4 @@ interface MiscApi {
 
     @GET("https://api.betterttv.net/3/cached/frankerfacez/users/twitch/{channelId}")
     suspend fun getBttvFfzEmotes(@Path("channelId") channelId: String): Response<BttvFfzResponse>
-
-    @GET("https://api.frankerfacez.com/v1/set/global")
-    suspend fun getGlobalFfzEmotes(): Response<FfzEmotesResponse>
-
-    @GET("https://api.frankerfacez.com/v1/room/{channel}")
-    suspend fun getFfzEmotes(@Path("channel") channel: String): Response<FfzEmotesResponse>
 }

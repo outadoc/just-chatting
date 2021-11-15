@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.channel.Channel
+import com.github.andreyasadchy.xtra.model.helix.channel.Channel
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.search.Searchable
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 
 class ChannelSearchFragment : PagedListFragment<Channel, ChannelSearchViewModel, BasePagedListAdapter<Channel>>(), Searchable {
@@ -30,7 +32,7 @@ class ChannelSearchFragment : PagedListFragment<Channel, ChannelSearchViewModel,
 
     override fun search(query: String) {
         if (query.isNotEmpty()) { //TODO same query doesn't fire
-            viewModel.setQuery(query)
+            viewModel.setQuery(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), query)
         } else {
             adapter.submitList(null)
             nothing_here?.gone()

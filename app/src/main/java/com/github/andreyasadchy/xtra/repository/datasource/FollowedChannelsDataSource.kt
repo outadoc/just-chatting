@@ -1,39 +1,37 @@
 package com.github.andreyasadchy.xtra.repository.datasource
 
 import androidx.paging.DataSource
-import com.github.andreyasadchy.xtra.api.KrakenApi
-import com.github.andreyasadchy.xtra.model.kraken.follows.Follow
-import com.github.andreyasadchy.xtra.model.kraken.follows.Order
-import com.github.andreyasadchy.xtra.model.kraken.follows.Sort
+import com.github.andreyasadchy.xtra.api.HelixApi
+import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import kotlinx.coroutines.CoroutineScope
 
 class FollowedChannelsDataSource(
-        private val userId: String,
-        private val sort: Sort,
-        private val order: Order,
-        private val api: KrakenApi,
-        coroutineScope: CoroutineScope) : BasePositionalDataSource<Follow>(coroutineScope) {
+    private val clientId: String?,
+    private val userToken: String?,
+    private val userId: String,
+    private val api: HelixApi,
+    coroutineScope: CoroutineScope) : BasePositionalDataSource<Follow>(coroutineScope) {
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Follow>) {
         loadInitial(params, callback) {
-            api.getFollowedChannels(userId, sort, order, params.requestedLoadSize, 0).follows
+            api.getFollowedChannels(clientId, userToken, userId, params.requestedLoadSize, null).data
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Follow>) {
         loadRange(params, callback) {
-            api.getFollowedChannels(userId, sort, order, params.loadSize, params.startPosition).follows
+            api.getFollowedChannels(clientId, userToken, userId, params.loadSize, null).data
         }
     }
 
     class Factory(
-            private val userId: String,
-            private val sort: Sort,
-            private val order: Order,
-            private val api: KrakenApi,
-            private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
+        private val clientId: String?,
+        private val userToken: String?,
+        private val userId: String,
+        private val api: HelixApi,
+        private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
 
         override fun create(): DataSource<Int, Follow> =
-                FollowedChannelsDataSource(userId, sort, order, api, coroutineScope).also(sourceLiveData::postValue)
+                FollowedChannelsDataSource(clientId, userToken, userId, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

@@ -8,13 +8,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.kraken.follows.Follow
-import com.github.andreyasadchy.xtra.model.kraken.follows.Order
-import com.github.andreyasadchy.xtra.model.kraken.follows.Sort
+import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 import kotlinx.android.synthetic.main.fragment_followed_channels.*
 import kotlinx.android.synthetic.main.sort_bar.*
@@ -36,13 +36,13 @@ class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewM
         viewModel.sortText.observe(viewLifecycleOwner, Observer {
             sortText.text = it
         })
-        viewModel.setUser(User.get(requireContext()))
-        sortBar.setOnClickListener { FollowedChannelsSortDialog.newInstance(viewModel.sort, viewModel.order).show(childFragmentManager, null) }
+        viewModel.setUser(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), User.get(requireContext()))
+        sortBar.setOnClickListener { FollowedChannelsSortDialog.newInstance().show(childFragmentManager, null) }
     }
 
-    override fun onChange(sort: Sort, sortText: CharSequence, order: Order, orderText: CharSequence) {
+    override fun onChange(sortText: CharSequence, orderText: CharSequence) {
         adapter.submitList(null)
-        viewModel.filter(sort, order, getString(R.string.sort_and_order, sortText, orderText))
+        viewModel.filter(getString(R.string.sort_and_order, sortText, orderText))
     }
 
     override fun scrollToTop() {

@@ -7,8 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.Channel
-import com.github.andreyasadchy.xtra.model.kraken.video.Video
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatReplayPlayerFragment
 import com.github.andreyasadchy.xtra.ui.download.HasDownloadDialog
@@ -28,8 +27,12 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
 
     override val viewModel by viewModels<VideoPlayerViewModel> { viewModelFactory }
     private lateinit var video: Video
-    override val channel: Channel
-        get() = video.channel
+    override val channelId: String
+        get() = video.user_id
+    override val channelLogin: String
+        get() = video.user_login
+    override val channelName: String
+        get() = video.user_name
 
     override val layoutId: Int
         get() = R.layout.fragment_player_video
@@ -49,7 +52,7 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (childFragmentManager.findFragmentById(R.id.chatFragmentContainer) == null) {
-            childFragmentManager.beginTransaction().replace(R.id.chatFragmentContainer, ChatFragment.newInstance(channel, video.id, 0.0)).commit()
+            childFragmentManager.beginTransaction().replace(R.id.chatFragmentContainer, ChatFragment.newInstance(channelId, video.id, 0.0)).commit()
         }
     }
 

@@ -20,7 +20,6 @@ import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.kraken.Channel
 import com.github.andreyasadchy.xtra.ui.common.AlertDialogFragment
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
@@ -67,7 +66,9 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
     private var resizeMode = 0
 
     protected lateinit var prefs: SharedPreferences
-    protected abstract val channel: Channel
+    protected abstract val channelId: String
+    protected abstract val channelLogin: String
+    protected abstract val channelName: String
 
     val playerWidth: Int
         get() = playerView.width
@@ -159,9 +160,9 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         if (isNotOfflinePlayer) {
             view.findViewById<ImageButton>(R.id.settings).disable()
             view.findViewById<TextView>(R.id.channel).apply {
-                text = channel.displayName
+                text = channelName
                 setOnClickListener {
-                    activity.viewChannel(channel)
+                    activity.viewChannel(channelLogin, channelName)
                     slidingLayout.minimize()
                 }
             }

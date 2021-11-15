@@ -8,13 +8,14 @@
         <item name="android:windowBackground">?attr/primaryColor</item>
         <item name="android:colorBackground">?attr/primaryColor</item>
         <item name="navBarStyle">@style/NavBarDark</item>
-        <item name="bottomSheetDialogTheme">@style/BottomSheetDark</item>
+        <item name="bottomSheetDialogTheme">@style/BottomSheetDark</item> <!--player-->
         <item name="dividerColor">@color/secondaryDark</item>
         <item name="android:textColorSecondary">@color/secondaryTextColorDark</item>
         <item name="secondaryTextColor">@color/secondaryTextColorDark</item>
         <item name="colorButtonNormal">@color/secondaryDark</item>
-        <item name="android:dialogTheme">@style/DialogDark</item>
-        <item name="alertDialogTheme">@style/DialogDark</item>
+        <item name="android:dialogTheme">@style/DialogDark</item> <!--download dialog-->
+        <item name="alertDialogTheme">@style/DialogDark</item> <!--settings, sleep timer, log out-->
+        <item name="android:alertDialogTheme">@style/DialogDark</item> <!--delete video, permissions?-->
         <item name="radioButtonStyle">@style/RadioButton</item>
     </style>
 
@@ -33,6 +34,7 @@
         <item name="colorButtonNormal">@color/secondaryLight</item>
         <item name="android:dialogTheme">@style/DialogLight</item>
         <item name="alertDialogTheme">@style/DialogLight</item>
+        <item name="android:alertDialogTheme">@style/DialogLight</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
@@ -53,6 +55,7 @@
         <item name="colorButtonNormal">@color/secondaryAmoled</item>
         <item name="android:dialogTheme">@style/DialogAmoled</item>
         <item name="alertDialogTheme">@style/DialogAmoled</item>
+        <item name="android:alertDialogTheme">@style/DialogAmoled</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
     </style>
 
@@ -71,6 +74,7 @@
         <item name="colorButtonNormal">@color/secondaryBlue</item>
         <item name="android:dialogTheme">@style/DialogBlue</item>
         <item name="alertDialogTheme">@style/DialogBlue</item>
+        <item name="android:alertDialogTheme">@style/DialogBlue</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
     </style>
 
@@ -111,28 +115,28 @@
     </style>
 
     <style name="BottomSheetDark" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="android:colorBackground">@color/primaryDark</item>
+        <item name="android:backgroundTint">@color/primaryDark</item>
         <item name="colorAccent">@color/accent</item>
         <item name="colorButtonNormal">@color/secondaryDark</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
     </style>
 
     <style name="BottomSheetLight" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="android:colorBackground">@color/primaryLight</item>
+        <item name="android:backgroundTint">@color/primaryLight</item>
         <item name="colorAccent">@color/accent</item>
         <item name="colorButtonNormal">@color/secondaryLight</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
     </style>
 
     <style name="BottomSheetAmoled" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="android:colorBackground">@android:color/black</item>
+        <item name="android:backgroundTint">@android:color/black</item>
         <item name="colorAccent">@android:color/white</item>
         <item name="colorButtonNormal">@color/secondaryAmoled</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
     </style>
 
     <style name="BottomSheetBlue" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="android:colorBackground">@color/primaryBlue</item>
+        <item name="android:backgroundTint">@color/primaryBlue</item>
         <item name="colorAccent">@color/accent</item>
         <item name="colorButtonNormal">@color/secondaryBlue</item>
         <item name="radioButtonStyle">@style/RadioButton</item>

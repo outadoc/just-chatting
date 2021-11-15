@@ -3,7 +3,7 @@ package com.github.andreyasadchy.xtra.ui.streams
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
-import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
+import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -18,25 +18,25 @@ abstract class BaseStreamsAdapter(
                     oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: Stream, newItem: Stream): Boolean =
-                    oldItem.viewers == newItem.viewers &&
-                            oldItem.game == newItem.game &&
-                            oldItem.channel.status == newItem.channel.status
+                    oldItem.viewer_count == newItem.viewer_count &&
+                            oldItem.game_name == newItem.game_name &&
+                            oldItem.title == newItem.title
         }) {
 
     override fun bind(item: Stream, view: View) {
-        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.channel) }
+        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.user_id, item.user_name) }
         with(view) {
             setOnClickListener { clickListener.startStream(item) }
             userImage.apply {
                 setOnClickListener(channelListener)
-                loadImage(fragment, item.channel.logo, circle = true)
+                loadImage(fragment, null, circle = true)
             }
             username.apply {
                 setOnClickListener(channelListener)
-                text = item.channel.displayName
+                text = item.user_name
             }
-            title.text = item.channel.status?.trim()
-            gameName.text = item.game
+            title.text = item.title.trim()
+            gameName.text = item.game_name
         }
     }
 }

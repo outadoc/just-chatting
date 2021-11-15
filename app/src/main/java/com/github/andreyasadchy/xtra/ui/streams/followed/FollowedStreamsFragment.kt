@@ -3,7 +3,7 @@ package com.github.andreyasadchy.xtra.ui.streams.followed
 import android.os.Bundle
 import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
+import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
@@ -33,6 +33,6 @@ class FollowedStreamsFragment : BaseStreamsFragment<FollowedStreamsViewModel>() 
 
     override fun initialize() {
         super.initialize()
-        viewModel.init(User.get(requireContext()), !compactStreams)
+        viewModel.init(requireContext().prefs().getString(C.CLIENT_ID, ""), User.get(requireContext()), !compactStreams)
     }
 }

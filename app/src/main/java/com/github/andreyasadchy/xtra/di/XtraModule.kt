@@ -10,13 +10,10 @@ import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenDeser
 import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenResponse
 import com.github.andreyasadchy.xtra.model.gql.playlist.VideoPlaylistTokenDeserializer
 import com.github.andreyasadchy.xtra.model.gql.playlist.VideoPlaylistTokenResponse
-import com.github.andreyasadchy.xtra.model.kraken.user.UserEmotesDeserializer
-import com.github.andreyasadchy.xtra.model.kraken.user.UserEmotesResponse
-import com.github.andreyasadchy.xtra.repository.KrakenRepository
+import com.github.andreyasadchy.xtra.repository.HelixRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.util.FetchProvider
 import com.github.andreyasadchy.xtra.util.RemoteConfigParams
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.google.gson.GsonBuilder
 import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
@@ -34,25 +31,19 @@ class XtraModule {
 
     @Singleton
     @Provides
-    fun providesTwitchService(repository: KrakenRepository): TwitchService {
+    fun providesTwitchService(repository: HelixRepository): TwitchService {
         return repository
     }
 
     @Singleton
     @Provides
-    fun providesKrakenApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): KrakenApi {
+    fun providesHelixApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): HelixApi {
         return Retrofit.Builder()
-                .baseUrl("https://api.twitch.tv/kraken/")
-                .client(client.newBuilder().addInterceptor { chain ->
-                    val request = chain.request().newBuilder()
-                            .addHeader("Client-ID", TwitchApiHelper.CLIENT_ID)
-                            .addHeader("Accept", "application/vnd.twitchtv.v5+json")
-                            .build()
-                    chain.proceed(request)
-                }.build())
+                .baseUrl("https://api.twitch.tv/helix/")
+                .client(client)
                 .addConverterFactory(gsonConverterFactory)
                 .build()
-                .create(KrakenApi::class.java)
+                .create(HelixApi::class.java)
     }
 
     @Singleton
@@ -136,12 +127,10 @@ class XtraModule {
     fun providesGsonConverterFactory(): GsonConverterFactory {
         return GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 .registerTypeAdapter(GlobalBadgesResponse::class.java, GlobalBadgeDeserializer())
-                .registerTypeAdapter(UserEmotesResponse::class.java, UserEmotesDeserializer())
                 .registerTypeAdapter(StvEmotesResponse::class.java, StvRoomDeserializer())
                 .registerTypeAdapter(BttvGlobalResponse::class.java, BttvGlobalDeserializer())
                 .registerTypeAdapter(BttvChannelResponse::class.java, BttvChannelDeserializer())
                 .registerTypeAdapter(BttvFfzResponse::class.java, BttvFfzDeserializer())
-                .registerTypeAdapter(FfzEmotesResponse::class.java, FfzRoomDeserializer())
                 .registerTypeAdapter(ClipDataResponse::class.java, ClipDataDeserializer())
                 .registerTypeAdapter(StreamPlaylistTokenResponse::class.java, StreamPlaylistTokenDeserializer())
                 .registerTypeAdapter(VideoPlaylistTokenResponse::class.java, VideoPlaylistTokenDeserializer())

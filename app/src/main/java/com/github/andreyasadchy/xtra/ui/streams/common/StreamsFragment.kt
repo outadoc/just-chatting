@@ -2,7 +2,7 @@ package com.github.andreyasadchy.xtra.ui.streams.common
 
 import android.os.Bundle
 import androidx.fragment.app.viewModels
-import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
+import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
@@ -32,6 +32,6 @@ class StreamsFragment : BaseStreamsFragment<StreamsViewModel>() {
 
     override fun initialize() {
         super.initialize()
-        viewModel.loadStreams(arguments?.getParcelable(C.GAME))
+        viewModel.loadStreams(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), game = arguments?.getString(C.GAME))
     }
 }

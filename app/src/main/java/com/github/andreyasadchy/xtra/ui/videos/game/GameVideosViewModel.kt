@@ -7,11 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.game.Game
-import com.github.andreyasadchy.xtra.model.kraken.video.BroadcastType
-import com.github.andreyasadchy.xtra.model.kraken.video.Period
-import com.github.andreyasadchy.xtra.model.kraken.video.Sort
-import com.github.andreyasadchy.xtra.model.kraken.video.Video
+import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
+import com.github.andreyasadchy.xtra.model.helix.video.Period
+import com.github.andreyasadchy.xtra.model.helix.video.Sort
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
@@ -28,7 +27,7 @@ class GameVideosViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Video>> = Transformations.map(filter) {
-        repository.loadVideos(it.game.name, it.period, it.broadcastType, it.language, it.sort, viewModelScope)
+        repository.loadVideos(it.clientId, it.token, it.game, it.period, it.broadcastType, it.language, it.sort, viewModelScope)
     }
     val sort: Sort
         get() = filter.value!!.sort
@@ -39,19 +38,21 @@ class GameVideosViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.view_count), context.getString(R.string.this_week))
     }
 
-    fun setGame(game: Game) {
+    fun setGame(clientId: String?, token: String?, game: String) {
         if (filter.value?.game != game) {
-            filter.value = Filter(game)
+            filter.value = Filter(clientId, token, game)
         }
     }
 
-    fun filter(sort: Sort, period: Period, text: CharSequence) {
-        filter.value = filter.value?.copy(sort = sort, period = period)
+    fun filter(clientId: String?, token: String?, sort: Sort, period: Period, text: CharSequence) {
+        filter.value = filter.value?.copy(clientId = clientId, token = token, sort = sort, period = period)
         _sortText.value = text
     }
 
     private data class Filter(
-            val game: Game,
+            val clientId: String?,
+            val token: String?,
+            val game: String,
             val sort: Sort = Sort.VIEWS,
             val period: Period = Period.WEEK,
             val broadcastType: BroadcastType = BroadcastType.ALL,

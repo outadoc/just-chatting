@@ -30,8 +30,8 @@ class LoginActivity : AppCompatActivity(), Injectable {
 
     @Inject
     lateinit var repository: AuthRepository
-
-    private val authUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${TwitchApiHelper.CLIENT_ID}&redirect_uri=https://localhost&scope=chat_login user_follows_edit user_subscriptions user_read"
+    private val clientId = prefs().getString(C.CLIENT_ID, "")
+    private val authUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=https://localhost&scope=chat_login user:read:subscriptions user:read:follows"
     private val tokenPattern = Pattern.compile("token=(.+?)(?=&)")
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +54,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
             repository.deleteAllEmotes()
             GlobalScope.launch {
                 try {
-                    repository.revoke(user.token)
+                    repository.revoke(clientId, user.token)
                 } catch (e: Exception) {
 
                 }

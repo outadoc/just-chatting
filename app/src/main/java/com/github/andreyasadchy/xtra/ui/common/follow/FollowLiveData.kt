@@ -10,12 +10,13 @@ class FollowLiveData(
         private val repository: TwitchService,
         private val user: LoggedIn,
         private val channelId: String,
-        private val viewModelScope: CoroutineScope) : MutableLiveData<Boolean>()  {
+        private val viewModelScope: CoroutineScope,
+        private val clientId: String = "") : MutableLiveData<Boolean>()  {
 
     init {
         viewModelScope.launch {
             try {
-                val isFollowing = repository.loadUserFollows(user.id, channelId)
+                val isFollowing = repository.loadUserFollows(clientId, user.token, channelId, user.id)
                 super.setValue(isFollowing)
             } catch (e: Exception) {
 
@@ -27,11 +28,9 @@ class FollowLiveData(
         viewModelScope.launch {
             try {
                 if (value) {
-                    val followed = repository.followChannel(user.token, user.id, channelId)
-                    super.setValue(followed)
+
                 } else {
-                    val unfollowed = repository.unfollowChannel(user.token, user.id, channelId)
-                    super.setValue(!unfollowed)
+
                 }
             } catch (e: Exception) {
 

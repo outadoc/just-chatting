@@ -1,7 +1,7 @@
 package com.github.andreyasadchy.xtra.model
 
 import android.os.Parcelable
-import com.github.andreyasadchy.xtra.model.kraken.video.Video
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize

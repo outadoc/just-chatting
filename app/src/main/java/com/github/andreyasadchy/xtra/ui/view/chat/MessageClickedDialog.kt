@@ -11,9 +11,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
-import com.github.andreyasadchy.xtra.model.kraken.Channel
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import kotlinx.android.synthetic.main.dialog_chat_message_click.*
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
     interface OnButtonClickListener {
         fun onReplyClicked(userName: String)
         fun onCopyMessageClicked(message: String)
-        fun onViewProfileClicked(channel: Channel)
+        fun onViewProfileClicked(id: String, name: String)
     }
 
     companion object {
@@ -69,8 +70,8 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             copyMessage.gone()
         }
         viewProfile.setOnClickListener {
-            viewModel.loadUser(extractUserName(msg)).observe(viewLifecycleOwner, Observer {
-                listener.onViewProfileClicked(it)
+            viewModel.loadUser(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), extractUserName(msg)).observe(viewLifecycleOwner, Observer {
+                listener.onViewProfileClicked(it.id, it.display_name)
                 dismiss()
             })
         }

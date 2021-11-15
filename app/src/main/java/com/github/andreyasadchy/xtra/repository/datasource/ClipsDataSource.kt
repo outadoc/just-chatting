@@ -1,46 +1,39 @@
 package com.github.andreyasadchy.xtra.repository.datasource
 
 import androidx.paging.DataSource
-import com.github.andreyasadchy.xtra.api.KrakenApi
-import com.github.andreyasadchy.xtra.model.kraken.clip.Clip
-import com.github.andreyasadchy.xtra.model.kraken.clip.Period
+import com.github.andreyasadchy.xtra.api.HelixApi
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import kotlinx.coroutines.CoroutineScope
 
 class ClipsDataSource(
-        private val channelName: String?,
-        private val gameName: String?,
-        private val languages: String?,
-        private val period: Period?,
-        private val trending: Boolean?,
-        private val api: KrakenApi,
-        coroutineScope: CoroutineScope) : BasePageKeyedDataSource<Clip>(coroutineScope) {
+    private val clientId: String?,
+    private val userToken: String?,
+    private val channelName: String?,
+    private val gameName: String?,
+    private val api: HelixApi,
+    coroutineScope: CoroutineScope) : BasePositionalDataSource<Clip>(coroutineScope) {
 
-    override fun loadInitial(params: LoadInitialParams<String>, callback: LoadInitialCallback<String, Clip>) {
+    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Clip>) {
         loadInitial(params, callback) {
-            api.getClips(channelName, gameName, languages, period, trending, params.requestedLoadSize, null).let {
-                it.clips to it.cursor
-            }
+            api.getClips(clientId, userToken, channelName, gameName, params.requestedLoadSize, null).data
         }
     }
 
-    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, Clip>) {
-        loadAfter(params, callback) {
-            api.getClips(channelName, gameName, languages, period, trending, params.requestedLoadSize, params.key).let {
-                it.clips to it.cursor
-            }
+    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Clip>) {
+        loadRange(params, callback) {
+            api.getClips(clientId, userToken, channelName, gameName, params.loadSize, null).data
         }
     }
 
     class Factory(
-            private val channelName: String?,
-            private val gameName: String?,
-            private val languages: String?,
-            private val period: Period?,
-            private val trending: Boolean?,
-            private val api: KrakenApi,
-            private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<String, Clip, ClipsDataSource>() {
+        private val clientId: String?,
+        private val userToken: String?,
+        private val channelName: String?,
+        private val gameName: String?,
+        private val api: HelixApi,
+        private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Clip, ClipsDataSource>() {
 
-        override fun create(): DataSource<String, Clip> =
-                ClipsDataSource(channelName, gameName, languages, period, trending, api, coroutineScope).also(sourceLiveData::postValue)
+        override fun create(): DataSource<Int, Clip> =
+                ClipsDataSource(clientId, userToken, channelName, gameName, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

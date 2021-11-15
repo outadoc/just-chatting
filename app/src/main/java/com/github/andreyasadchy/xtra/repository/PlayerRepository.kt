@@ -86,11 +86,10 @@ class PlayerRepository @Inject constructor(
     }
 
     suspend fun loadVideoPlaylistUrl(videoId: String): Uri = withContext(Dispatchers.IO) {
-        val id = videoId.substring(1) //substring 1 to remove v, should be removed when upgraded to new api
-        Log.d(TAG, "Getting video playlist url for video $id")
-        val accessToken = loadVideoPlaylistAccessToken(id)
+        Log.d(TAG, "Getting video playlist url for video $videoId")
+        val accessToken = loadVideoPlaylistAccessToken(videoId)
         buildUrl(
-            "https://usher.ttvnw.net/vod/$id.m3u8?",
+            "https://usher.ttvnw.net/vod/$videoId.m3u8?",
             "token", accessToken.token,
             "sig", accessToken.signature,
             "allow_source", "true",
@@ -101,9 +100,8 @@ class PlayerRepository @Inject constructor(
     }
 
     suspend fun loadVideoPlaylist(videoId: String): Response<ResponseBody> = withContext(Dispatchers.IO) {
-        val id = videoId.substring(1)
-        Log.d(TAG, "Getting video playlist for video $id")
-        val accessToken = loadVideoPlaylistAccessToken(id)
+        Log.d(TAG, "Getting video playlist for video $videoId")
+        val accessToken = loadVideoPlaylistAccessToken(videoId)
         val playlistQueryOptions = HashMap<String, String>()
         playlistQueryOptions["token"] = accessToken.token
         playlistQueryOptions["sig"] = accessToken.signature
@@ -111,7 +109,7 @@ class PlayerRepository @Inject constructor(
         playlistQueryOptions["allow_audio_only"] = "true"
         playlistQueryOptions["type"] = "any"
         playlistQueryOptions["p"] = Random.nextInt(999999).toString()
-        usher.getVideoPlaylist(id, playlistQueryOptions)
+        usher.getVideoPlaylist(videoId, playlistQueryOptions)
     }
 
     suspend fun loadGlobalBadges(): GlobalBadgesResponse = withContext(Dispatchers.IO) {
@@ -134,12 +132,8 @@ class PlayerRepository @Inject constructor(
         misc.getBttvGlobalFfzEmotes()
     }
 
-    suspend fun loadGlobalFfzEmotes(): Response<FfzEmotesResponse> = withContext(Dispatchers.IO) {
-        misc.getGlobalFfzEmotes()
-    }
-
-    suspend fun loadStvEmotes(channel: String): Response<StvEmotesResponse> = withContext(Dispatchers.IO) {
-        misc.getStvEmotes(channel)
+    suspend fun loadStvEmotes(channelId: String): Response<StvEmotesResponse> = withContext(Dispatchers.IO) {
+        misc.getStvEmotes(channelId)
     }
 
     suspend fun loadBttvEmotes(channelId: String): Response<BttvChannelResponse> = withContext(Dispatchers.IO) {
@@ -148,10 +142,6 @@ class PlayerRepository @Inject constructor(
 
     suspend fun loadBttvFfzEmotes(channelId: String): Response<BttvFfzResponse> = withContext(Dispatchers.IO) {
         misc.getBttvFfzEmotes(channelId)
-    }
-
-    suspend fun loadFfzEmotes(channel: String): Response<FfzEmotesResponse> = withContext(Dispatchers.IO) {
-        misc.getFfzEmotes(channel)
     }
 
     fun loadEmotes() = emotes.getAll()

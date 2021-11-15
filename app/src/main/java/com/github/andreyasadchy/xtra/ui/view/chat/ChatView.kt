@@ -27,7 +27,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
 import kotlinx.android.synthetic.main.view_chat.view.*
 import kotlin.math.max
-import com.github.andreyasadchy.xtra.model.kraken.user.Emote as TwitchEmote
+import com.github.andreyasadchy.xtra.model.helix.user.Emote as TwitchEmote
 
 var MAX_ADAPTER_COUNT = 200
 var emoteQuality = "3"

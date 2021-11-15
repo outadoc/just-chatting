@@ -12,8 +12,7 @@ import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.kraken.game.Game
-import com.github.andreyasadchy.xtra.model.kraken.game.GameWrapper
+import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
@@ -30,14 +29,14 @@ import kotlinx.android.synthetic.main.fragment_games.menu
 import kotlinx.android.synthetic.main.fragment_games.search
 import kotlinx.android.synthetic.main.fragment_media.*
 
-class GamesFragment : PagedListFragment<GameWrapper, GamesViewModel, BasePagedListAdapter<GameWrapper>>(), Scrollable {
+class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapter<Game>>(), Scrollable {
 
     interface OnGameSelectedListener {
-        fun openGame(game: Game)
+        fun openGame(id: String, name: String)
     }
 
     override val viewModel by viewModels<GamesViewModel> { viewModelFactory }
-    override val adapter: BasePagedListAdapter<GameWrapper> by lazy { GamesAdapter(this, requireActivity() as MainActivity) }
+    override val adapter: BasePagedListAdapter<Game> by lazy { GamesAdapter(this, requireActivity() as MainActivity) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_games, container, false)
@@ -86,5 +85,10 @@ class GamesFragment : PagedListFragment<GameWrapper, GamesViewModel, BasePagedLi
         if (requestCode == 3 && resultCode == Activity.RESULT_OK) {
             requireActivity().recreate()
         }
+    }
+
+    override fun initialize() {
+        super.initialize()
+        viewModel.loadGames(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""))
     }
 }

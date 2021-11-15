@@ -19,7 +19,6 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.kraken.Channel
 import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
 import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
@@ -39,15 +38,16 @@ import kotlinx.android.synthetic.main.fragment_media_pager.*
 class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
 
     companion object {
-        fun newInstance(channel: Channel) = ChannelPagerFragment().apply { arguments = bundleOf(C.CHANNEL to channel) }
+        fun newInstance(id: String, name: String) = ChannelPagerFragment().apply { arguments = bundleOf(C.CHANNEL to id); text = name }
     }
 
+    var text = ""
     private val viewModel by viewModels<ChannelPagerViewModel> { viewModelFactory }
-    private lateinit var channel: Channel
+    private lateinit var channel: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        channel = requireArguments().getParcelable(C.CHANNEL)!!
+        channel = requireArguments().getString(C.CHANNEL)!!
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -62,8 +62,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
         if (activity.isInLandscapeOrientation) {
             appBar.setExpanded(false, false)
         }
-        collapsingToolbar.title = channel.displayName
-        logo.loadImage(this, channel.logo, circle = true)
+        collapsingToolbar.title = text
+        logo.loadImage(this, null, circle = true)
         toolbar.apply {
             navigationIcon = Utils.getNavigationIcon(activity)
             setNavigationOnClickListener { activity.popFragment() }
@@ -115,14 +115,14 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
     }
 
     override fun initialize() {
-        viewModel.loadStream(channel)
+        viewModel.loadStream(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", channel)
         val activity = requireActivity() as MainActivity
         viewModel.stream.observe(viewLifecycleOwner, Observer {
-            watchLive.isVisible = it.stream != null
-            it.stream?.let { s ->
+            watchLive.isVisible = it.data != null
+            it.data.firstOrNull().let { s ->
                 toolbarContainer.updateLayoutParams { height = ViewGroup.LayoutParams.WRAP_CONTENT }
                 collapsingToolbar.expandedTitleMarginBottom = activity.convertDpToPixels(50.5f)
-                watchLive.setOnClickListener { activity.startStream(s) }
+                watchLive.setOnClickListener { s?.let { it1 -> activity.startStream(it1) } }
             }
         })
         User.get(activity).let {
@@ -133,7 +133,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
     }
 
     override fun onNetworkRestored() {
-        viewModel.retry()
+        viewModel.retry(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "")
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

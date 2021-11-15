@@ -12,7 +12,9 @@ import com.github.andreyasadchy.xtra.repository.LoadingState
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.search.Searchable
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 import kotlinx.android.synthetic.main.fragment_search.*
 
@@ -53,7 +55,7 @@ class GameSearchFragment : BaseNetworkFragment(), Searchable {
     override fun search(query: String) {
         if (isInitialized) {
             if (query.isNotEmpty()) {
-                viewModel.setQuery(query)
+                viewModel.setQuery(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), query)
             } else {
                 adapter.submitList(null)
                 nothing_here?.gone()

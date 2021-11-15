@@ -7,8 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.Channel
-import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
+import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
@@ -22,8 +21,12 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
     override val viewModel by viewModels<StreamPlayerViewModel> { viewModelFactory }
     private lateinit var chatFragment: ChatFragment
     private lateinit var stream: Stream
-    override val channel: Channel
-        get() = stream.channel
+    override val channelId: String
+        get() = stream.user_id
+    override val channelLogin: String
+        get() = stream.user_login
+    override val channelName: String
+        get() = stream.user_name
 
     override val layoutId: Int
         get() = R.layout.fragment_player_stream
@@ -46,7 +49,7 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
             if (it != null) {
                 it as ChatFragment
             } else {
-                val fragment = ChatFragment.newInstance(channel)
+                val fragment = ChatFragment.newInstance(channelId, channelLogin, channelName)
                 childFragmentManager.beginTransaction().replace(R.id.chatFragmentContainer, fragment).commit()
                 fragment
             }
@@ -54,7 +57,7 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
     }
 
     override fun initialize() {
-        viewModel.startStream(stream, prefs.getBoolean(C.AD_BLOCKER, true), prefs.getBoolean(C.TOKEN_RANDOM_DEVICEID, true),
+        viewModel.startStream(prefs.getString(C.CLIENT_ID, ""), prefs.getString(C.TOKEN, "") ?: "", stream, prefs.getBoolean(C.AD_BLOCKER, true), prefs.getBoolean(C.TOKEN_RANDOM_DEVICEID, true),
             prefs.getString(C.TOKEN_XDEVICEID, "")!!, prefs.getString(C.TOKEN_DEVICEID, "")!!)
         super.initialize()
         val settings = requireView().findViewById<ImageButton>(R.id.settings)
@@ -64,7 +67,7 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
             if (it) settings.enable() else settings.disable()
         })
         viewModel.stream.observe(viewLifecycleOwner, Observer {
-            viewers.text = TwitchApiHelper.formatCount(it.viewers, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false)
+            viewers.text = TwitchApiHelper.formatCount(it.viewer_count, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false)
             )
         })
         settings.setOnClickListener {

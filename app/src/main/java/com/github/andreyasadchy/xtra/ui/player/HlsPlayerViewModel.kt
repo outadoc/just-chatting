@@ -146,7 +146,7 @@ abstract class HlsPlayerViewModel(
 
     override fun setUser(user: LoggedIn) {
         if (!this::follow.isInitialized) { //TODO REFACTOR
-            follow = FollowLiveData(repository, user, channelInfo.first, viewModelScope)
+            follow = FollowLiveData(repository, user, channelId, viewModelScope)
         }
     }
 

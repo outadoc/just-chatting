@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.clip.Clip
-import com.github.andreyasadchy.xtra.model.kraken.clip.Period
-import com.github.andreyasadchy.xtra.model.kraken.game.Game
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
@@ -24,7 +22,7 @@ class ClipsViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Clip>> = Transformations.map(filter) {
-        repository.loadClips(it.channelName, it.game?.name, it.languages, it.period, it.trending, viewModelScope)
+        repository.loadClips(it.clientId, it.token, it.channelName, it.game, viewModelScope)
     }
     var selectedIndex = 2
         private set
@@ -33,27 +31,25 @@ class ClipsViewModel @Inject constructor(
         _sortText.value = context.getString(sortOptions[selectedIndex])
     }
 
-    fun loadClips(channelName: String? = null, game: Game? = null, languages: String? = null) {
+    fun loadClips(clientId: String?, token: String?, channelName: String? = null, game: String? = null) {
         if (filter.value == null) {
-            filter.value = Filter(channelName, game, languages)
+            filter.value = Filter(clientId, token, channelName, game)
         } else {
-            filter.value?.copy(channelName = channelName, game = game, languages = languages).let {
+            filter.value?.copy(clientId = clientId, channelName = channelName, game = game).let {
                 if (filter.value != it)
                     filter.value = it
             }
         }
     }
 
-    fun filter(period: Period?, trending: Boolean, index: Int, text: CharSequence) {
-        filter.value = filter.value?.copy(period = period, trending = trending)
+    fun filter(index: Int, text: CharSequence) {
         _sortText.value = text
         selectedIndex = index
     }
 
     private data class Filter(
+            val clientId: String?,
+            val token: String?,
             val channelName: String?,
-            val game: Game?,
-            val languages: String?,
-            val period: Period? = Period.WEEK,
-            val trending: Boolean = false)
+            val game: String?)
 }

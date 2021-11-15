@@ -3,10 +3,12 @@ package com.github.andreyasadchy.xtra.ui.videos.top
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.video.Period
+import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosFragment
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.fragment_videos.*
 import kotlinx.android.synthetic.main.sort_bar.*
 
@@ -31,6 +33,6 @@ class TopVideosFragment : BaseVideosFragment<TopVideosViewModel>(), RadioButtonD
             else -> throw IllegalArgumentException()
         }
         adapter.submitList(null)
-        viewModel.filter(period, index, text)
+        viewModel.filter(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), period, index, text)
     }
 }

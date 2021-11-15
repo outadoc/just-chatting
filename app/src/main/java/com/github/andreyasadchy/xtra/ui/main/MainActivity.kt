@@ -18,11 +18,9 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.kraken.Channel
-import com.github.andreyasadchy.xtra.model.kraken.clip.Clip
-import com.github.andreyasadchy.xtra.model.kraken.game.Game
-import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
-import com.github.andreyasadchy.xtra.model.kraken.video.Video
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
+import com.github.andreyasadchy.xtra.model.helix.stream.Stream
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.ui.channel.ChannelPagerFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
@@ -92,7 +90,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = prefs()
-        val lang = prefs.getString(C.UI_LANGUAGE, "auto")
+        val lang = prefs.getString(C.UI_LANGUAGE, "auto") ?: "auto"
         if (lang != "auto") {
             val config = resources.configuration
             val locale = Locale(lang)
@@ -133,7 +131,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
         viewModel.isNetworkAvailable.observe(this, Observer {
             it.getContentIfNotHandled()?.let { online ->
                 if (online) {
-                    viewModel.validate(this)
+                    viewModel.validate(prefs.getString(C.CLIENT_ID, ""), this)
                 }
                 if (flag) {
                     shortToast(if (online) R.string.connection_restored else R.string.no_connection)
@@ -269,8 +267,8 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
 //Navigation listeners
 
-    override fun openGame(game: Game) {
-        fragNavController.pushFragment(GameFragment.newInstance(game))
+    override fun openGame(id: String, name: String) {
+        fragNavController.pushFragment(GameFragment.newInstance(id, name))
     }
 
     override fun startStream(stream: Stream) {
@@ -290,8 +288,8 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
         startPlayer(OfflinePlayerFragment.newInstance(video))
     }
 
-    override fun viewChannel(channel: Channel) {
-        fragNavController.pushFragment(ChannelPagerFragment.newInstance(channel))
+    override fun viewChannel(id: String, name: String) {
+        fragNavController.pushFragment(ChannelPagerFragment.newInstance(id, name))
     }
 
 //SlidingLayout.Listener

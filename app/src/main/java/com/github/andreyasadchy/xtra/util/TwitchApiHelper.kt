@@ -13,12 +13,23 @@ import java.util.*
 
 object TwitchApiHelper {
 
-    const val CLIENT_ID = "ilfexgv3nnljz3isbm257gzwrzr7bi"
-
     var checkedValidation = false
 
-    fun getTemplateUrl(url: String, width: Int, height: Int): String {
-        return url.replace("{width}", width.toString()).replace("{height}", height.toString())
+    fun getTemplateUrl(url: String, size: String, game: Boolean = false, video: Boolean = false): String {
+        if (url == "") return "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"
+        val width = if (game) {when (size) {"large" -> "272" "medium" -> "136" else -> "52"} } else {
+            when (size) {"large" -> "640" "medium" -> "320" else -> "80"} }
+        val height = if (game) {when (size) {"large" -> "380" "medium" -> "190" else -> "72"} } else {
+            when (size) {"large" -> "360" "medium" -> "180" else -> "45"} }
+        return if (video) url.replace("%{width}", width).replace("%{height}", height) else
+            url.replace("{width}", width).replace("{height}", height)
+    }
+
+    fun getDuration(duration: String): Long {
+        val h = duration.substringBefore("h", "0").takeLast(2).filter { it.isDigit() }.toInt()
+        val m = duration.substringBefore("m", "0").takeLast(2).filter { it.isDigit() }.toInt()
+        val s = duration.substringBefore("s", "0").takeLast(2).filter { it.isDigit() }.toInt()
+        return  ((h * 3600) + (m * 60) + s).toLong()
     }
 
     fun parseIso8601Date(date: String): Long {
@@ -81,7 +92,7 @@ object TwitchApiHelper {
         }
     }
 
-    fun addTokenPrefix(token: String) = "OAuth $token"
+    fun addTokenPrefix(token: String) = "Bearer $token"
 
     private fun formatCountIfMoreThanAThousand(count: Int): String {
         val divider: Int

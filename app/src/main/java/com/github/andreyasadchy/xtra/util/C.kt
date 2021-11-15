@@ -52,5 +52,5 @@ object C {
     const val CHAT_BADGEQUALITY = "chat_badgequality"
     const val CHAT_LIMIT = "chat_limit"
     const val CHAT_ZEROWIDTH = "chat_zerowidth"
-    const val CHAT_FFZFROMBTTV = "chat_ffzfrombttv"
+    const val CLIENT_ID = "client_id"
 }

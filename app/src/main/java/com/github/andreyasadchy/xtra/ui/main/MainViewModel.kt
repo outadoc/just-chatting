@@ -66,13 +66,13 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun validate(activity: Activity) {
+    fun validate(clientId: String?, activity: Activity) {
         val user = User.get(activity)
         if (TwitchApiHelper.checkedValidation) {
             if (user is LoggedIn) {
                 viewModelScope.launch {
                     try {
-                        repository.loadUserEmotes(user.token, user.id)
+
                     } catch (e: Exception) {
 
                     }
@@ -84,9 +84,9 @@ class MainViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     val response = authRepository.validate(user.token)
-                    if (response?.clientId == TwitchApiHelper.CLIENT_ID) { //stop using twitch client id for everything
+                    if (response?.clientId == clientId) { //stop using twitch client id for everything
                         User.validated()
-                        repository.loadUserEmotes(user.token, user.id)
+
                     } else {
                         throw IllegalStateException("401")
                     }

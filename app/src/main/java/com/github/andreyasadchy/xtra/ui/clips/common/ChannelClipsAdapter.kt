@@ -7,7 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.clip.Clip
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.ui.clips.BaseClipsFragment
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.util.C
@@ -22,10 +22,10 @@ class ChannelClipsAdapter(
         private val showDownloadDialog: (Clip) -> Unit) : BasePagedListAdapter<Clip>(
         object : DiffUtil.ItemCallback<Clip>() {
             override fun areItemsTheSame(oldItem: Clip, newItem: Clip): Boolean =
-                    oldItem.slug == newItem.slug
+                    oldItem.id == newItem.id
 
             override fun areContentsTheSame(oldItem: Clip, newItem: Clip): Boolean =
-                    oldItem.views == newItem.views &&
+                    oldItem.view_count == newItem.view_count &&
                             oldItem.title == newItem.title
 
         }) {
@@ -36,9 +36,9 @@ class ChannelClipsAdapter(
         with(view) {
             setOnClickListener { clickListener.startClip(item) }
             setOnLongClickListener { showDownloadDialog(item); true }
-            thumbnail.loadImage(fragment, item.thumbnails.medium, diskCacheStrategy = DiskCacheStrategy.NONE)
-            date.text = TwitchApiHelper.formatTime(context, item.createdAt)
-            views.text = TwitchApiHelper.formatViewsCount(context, item.views, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            thumbnail.loadImage(fragment, item.thumbnail_url, diskCacheStrategy = DiskCacheStrategy.NONE)
+            date.text = TwitchApiHelper.formatTime(context, item.uploadDate)
+            views.text = TwitchApiHelper.formatViewsCount(context, item.view_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
             duration.text = DateUtils.formatElapsedTime(item.duration.toLong())
             title.text = item.title
             gameName.text = item.game

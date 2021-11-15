@@ -5,12 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.github.andreyasadchy.xtra.model.kraken.clip.Clip
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.offline.Request
 import com.github.andreyasadchy.xtra.repository.GraphQLRepositoy
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.util.DownloadUtils
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -34,7 +33,7 @@ class ClipDownloadViewModel @Inject constructor(
             if (qualities == null) {
                 viewModelScope.launch {
                     try {
-                        val urls = graphQLRepositoy.loadClipUrls(clip.slug)
+                        val urls = graphQLRepositoy.loadClipUrls(clip.id)
                         _qualities.postValue(urls)
                     } catch (e: Exception) {
 
@@ -50,8 +49,8 @@ class ClipDownloadViewModel @Inject constructor(
         GlobalScope.launch {
             val context = getApplication<Application>()
 
-            val filePath = "$path${File.separator}${clip.slug}$quality"
-            val startPosition = clip.vod?.let { TwitchApiHelper.parseClipOffset(it.url) }?.let { (it * 1000.0).toLong() }
+            val filePath = "$path${File.separator}${clip.id}$quality"
+            val startPosition = clip.duration.let { (it * 1000.0).toLong() }
 
             val offlineVideo = DownloadUtils.prepareDownload(context, clip, url, filePath, clip.duration.toLong() * 1000L, startPosition)
             val videoId = offlineRepository.saveVideo(offlineVideo).toInt()

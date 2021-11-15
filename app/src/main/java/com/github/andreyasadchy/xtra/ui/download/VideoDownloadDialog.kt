@@ -21,7 +21,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.VideoDownloadInfo
-import com.github.andreyasadchy.xtra.model.kraken.video.Video
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import kotlinx.android.synthetic.main.dialog_video_download.*
 import javax.inject.Inject
 

@@ -4,7 +4,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.stream.Stream
+import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
@@ -22,8 +22,8 @@ class StreamsAdapter(
     override fun bind(item: Stream, view: View) {
         super.bind(item, view)
         with(view) {
-            thumbnail.loadImage(fragment, item.preview.large, true, diskCacheStrategy = DiskCacheStrategy.NONE)
-            viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewers, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            thumbnail.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.thumbnail_url, "large"), true, diskCacheStrategy = DiskCacheStrategy.NONE)
+            viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewer_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
         }
     }
 }

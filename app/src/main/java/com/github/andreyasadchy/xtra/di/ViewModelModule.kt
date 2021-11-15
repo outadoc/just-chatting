@@ -3,10 +3,8 @@ package com.github.andreyasadchy.xtra.di
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.github.andreyasadchy.xtra.ui.channel.ChannelPagerViewModel
-import com.github.andreyasadchy.xtra.ui.channel.info.ChannelInfoViewModel
 import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.clips.common.ClipsViewModel
-import com.github.andreyasadchy.xtra.ui.clips.followed.FollowedClipsViewModel
 import com.github.andreyasadchy.xtra.ui.common.GenericViewModelFactory
 import com.github.andreyasadchy.xtra.ui.download.ClipDownloadViewModel
 import com.github.andreyasadchy.xtra.ui.download.VideoDownloadViewModel
@@ -23,7 +21,6 @@ import com.github.andreyasadchy.xtra.ui.search.games.GameSearchViewModel
 import com.github.andreyasadchy.xtra.ui.streams.common.StreamsViewModel
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsViewModel
 import com.github.andreyasadchy.xtra.ui.videos.channel.ChannelVideosViewModel
-import com.github.andreyasadchy.xtra.ui.videos.followed.FollowedVideosViewModel
 import com.github.andreyasadchy.xtra.ui.videos.game.GameVideosViewModel
 import com.github.andreyasadchy.xtra.ui.videos.top.TopVideosViewModel
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedViewModel
@@ -84,11 +81,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(FollowedVideosViewModel::class)
-    abstract fun bindFollowedVideosViewModel(followedVideosViewModel: FollowedVideosViewModel): ViewModel
-
-    @Binds
-    @IntoMap
     @ViewModelKey(GameVideosViewModel::class)
     abstract fun bindGameVideosViewModel(gameVideosViewModel: GameVideosViewModel): ViewModel
 
@@ -106,11 +98,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ClipsViewModel::class)
     abstract fun bindClipsViewModel(clipsViewModel: ClipsViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(FollowedClipsViewModel::class)
-    abstract fun bindFollowedClipsViewModel(followedClipsViewModel: FollowedClipsViewModel): ViewModel
 
     @Binds
     @IntoMap
@@ -151,9 +138,4 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(FollowedChannelsViewModel::class)
     abstract fun bindFollowedChannelsViewModel(followedChannelsViewModel: FollowedChannelsViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(ChannelInfoViewModel::class)
-    abstract fun bindChannelInfoViewModel(channelInfoViewModel: ChannelInfoViewModel): ViewModel
 }

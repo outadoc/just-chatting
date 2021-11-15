@@ -7,8 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.kraken.Channel
-import com.github.andreyasadchy.xtra.model.kraken.clip.Clip
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatReplayPlayerFragment
 import com.github.andreyasadchy.xtra.ui.download.ClipDownloadDialog
@@ -29,8 +28,12 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
 
     override val viewModel by viewModels<ClipPlayerViewModel> { viewModelFactory }
     private lateinit var clip: Clip
-    override val channel: Channel
-        get() = clip.broadcaster
+    override val channelId: String
+        get() = clip.broadcaster_id
+    override val channelLogin: String
+        get() = null!!
+    override val channelName: String
+        get() = clip.broadcaster_name
 
     override val layoutId: Int
         get() = R.layout.fragment_player_clip
@@ -50,15 +53,9 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         if (childFragmentManager.findFragmentById(R.id.chatFragmentContainer) == null) {
-            var videoId: String? = null
-            var startTime: Double? = null
-            clip.vod?.let {
-                videoId = "v${it.id}"
-                startTime = TwitchApiHelper.parseClipOffset(it.url)
-            }
-            childFragmentManager.beginTransaction().replace(R.id.chatFragmentContainer, ChatFragment.newInstance(channel, videoId, startTime)).commit()
+            childFragmentManager.beginTransaction().replace(R.id.chatFragmentContainer, ChatFragment.newInstance(channelId, clip.video_id, 0.0)).commit()
         }
-        if (clip.vod == null) {
+        if (clip.video_id == "") {
             watchVideo.gone()
         }
     }
@@ -84,11 +81,11 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
         volume.setOnClickListener {
             FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
         }
-        clip.vod?.let { vod ->
+        if (clip.video_id != "") {
             viewModel.video.observe(viewLifecycleOwner, Observer {
-                (requireActivity() as MainActivity).startVideo(it, TwitchApiHelper.parseClipOffset(vod.url) * 1000.0 + viewModel.player.currentPosition)
+                (requireActivity() as MainActivity).startVideo(it, 0.0)
             })
-            watchVideo.setOnClickListener { viewModel.loadVideo() }
+            watchVideo.setOnClickListener { viewModel.loadVideo(prefs.getString(C.CLIENT_ID, ""), prefs.getString(C.TOKEN, "")) }
         }
     }
 

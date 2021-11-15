@@ -1,10 +1,8 @@
 package com.github.andreyasadchy.xtra.di
 
 import com.github.andreyasadchy.xtra.ui.channel.ChannelPagerFragment
-import com.github.andreyasadchy.xtra.ui.channel.info.ChannelInfoFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.clips.common.ClipsFragment
-import com.github.andreyasadchy.xtra.ui.clips.followed.FollowedClipsFragment
 import com.github.andreyasadchy.xtra.ui.download.ClipDownloadDialog
 import com.github.andreyasadchy.xtra.ui.download.VideoDownloadDialog
 import com.github.andreyasadchy.xtra.ui.downloads.DownloadsFragment
@@ -20,7 +18,6 @@ import com.github.andreyasadchy.xtra.ui.search.games.GameSearchFragment
 import com.github.andreyasadchy.xtra.ui.streams.common.StreamsFragment
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
 import com.github.andreyasadchy.xtra.ui.videos.channel.ChannelVideosFragment
-import com.github.andreyasadchy.xtra.ui.videos.followed.FollowedVideosFragment
 import com.github.andreyasadchy.xtra.ui.videos.game.GameVideosFragment
 import com.github.andreyasadchy.xtra.ui.videos.top.TopVideosFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
@@ -55,16 +52,10 @@ abstract class FragmentBuilderModule {
     abstract fun contributeClipsFragment(): ClipsFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeFollowedClipsFragment(): FollowedClipsFragment
-
-    @ContributesAndroidInjector
     abstract fun contributeChannelVideosFragment(): ChannelVideosFragment
 
     @ContributesAndroidInjector
     abstract fun contributeVideosFragment(): GameVideosFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributeFollowedVideosFragment(): FollowedVideosFragment
 
     @ContributesAndroidInjector
     abstract fun contributeTopVideosFragment(): TopVideosFragment
@@ -98,7 +89,4 @@ abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun contributeFollowedChannelsFragment(): FollowedChannelsFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributeChannelInfoFragment(): ChannelInfoFragment
 }

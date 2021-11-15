@@ -176,7 +176,6 @@
     <string name="not_supported">Not supported</string>
     <string name="Android_9_required">Android 9 required</string>
     <string name="token_random_deviceid">Random device id</string>
-    <string name="ffzfrombttv">Get ffz emotes from bttv api</string>
     <string name="playback_speed">Playback speed</string>
     <string name="quality">Quality</string>
     <string name="speed0.25" translatable="false">0.25x</string>

@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.util.FragmentUtils
-import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.visible
 
 interface FollowFragment { //TODO REFACTOR
@@ -16,10 +15,10 @@ interface FollowFragment { //TODO REFACTOR
             setUser(user)
             followButton.visible()
             var initialized = false
-            val channelName = channelInfo.second
+            val channelName = channelId
             follow.observe(fragment.viewLifecycleOwner, Observer { following ->
                 if (initialized) {
-                    context.shortToast(context.getString(if (following) R.string.now_following else R.string.unfollowed, channelName))
+
                 } else {
                     initialized = true
                 }

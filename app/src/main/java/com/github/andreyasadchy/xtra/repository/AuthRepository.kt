@@ -22,8 +22,8 @@ class AuthRepository @Inject constructor(
         api.validateToken(TwitchApiHelper.addTokenPrefix(token))
     }
 
-    suspend fun revoke(token: String) = withContext(Dispatchers.IO) {
-        api.revokeToken(TwitchApiHelper.CLIENT_ID, token)
+    suspend fun revoke(clientId: String?, token: String) = withContext(Dispatchers.IO) {
+        api.revokeToken(clientId!!, token)
     }
 
     fun deleteAllEmotes() {

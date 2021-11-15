@@ -115,12 +115,6 @@
         android:title="@string/zerowidth"
         app:iconSpaceReserved="false"/>
 
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="chat_ffzfrombttv"
-        android:title="@string/ffzfrombttv"
-        app:iconSpaceReserved="false"/>
-
     <SeekBarPreference
         android:defaultValue="3"
         android:key="chat_emotequality"
@@ -297,4 +291,12 @@
         android:dependency="adblock"
         android:disableDependentsState="true"
         app:iconSpaceReserved="false"/>
+
+    <EditTextPreference
+        android:defaultValue="ilfexgv3nnljz3isbm257gzwrzr7bi"
+        android:key="client_id"
+        android:singleLine="true"
+        android:title="CLIENT_ID"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
 </PreferenceScreen>

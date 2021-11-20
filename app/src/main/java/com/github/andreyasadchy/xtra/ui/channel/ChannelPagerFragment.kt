@@ -115,7 +115,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
     }
 
     override fun initialize() {
-        viewModel.loadStream(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", channel)
+        viewModel.loadStream(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", channel)
         val activity = requireActivity() as MainActivity
         viewModel.stream.observe(viewLifecycleOwner, Observer {
             watchLive.isVisible = it.data != null
@@ -133,7 +133,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
     }
 
     override fun onNetworkRestored() {
-        viewModel.retry(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "")
+        viewModel.retry(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "")
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

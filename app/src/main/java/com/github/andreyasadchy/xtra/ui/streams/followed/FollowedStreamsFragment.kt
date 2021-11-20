@@ -33,6 +33,6 @@ class FollowedStreamsFragment : BaseStreamsFragment<FollowedStreamsViewModel>() 
 
     override fun initialize() {
         super.initialize()
-        viewModel.init(requireContext().prefs().getString(C.CLIENT_ID, ""), User.get(requireContext()), !compactStreams)
+        viewModel.init(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), User.get(requireContext()), !compactStreams)
     }
 }

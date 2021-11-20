@@ -131,7 +131,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
         viewModel.isNetworkAvailable.observe(this, Observer {
             it.getContentIfNotHandled()?.let { online ->
                 if (online) {
-                    viewModel.validate(prefs.getString(C.CLIENT_ID, ""), this)
+                    viewModel.validate(prefs.getString(C.HELIX_CLIENT_ID, ""), this)
                 }
                 if (flag) {
                     shortToast(if (online) R.string.connection_restored else R.string.no_connection)

@@ -32,7 +32,7 @@ class ChannelSearchFragment : PagedListFragment<Channel, ChannelSearchViewModel,
 
     override fun search(query: String) {
         if (query.isNotEmpty()) { //TODO same query doesn't fire
-            viewModel.setQuery(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), query)
+            viewModel.setQuery(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), query)
         } else {
             adapter.submitList(null)
             nothing_here?.gone()

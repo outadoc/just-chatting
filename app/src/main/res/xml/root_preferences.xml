@@ -292,11 +292,20 @@
         android:disableDependentsState="true"
         app:iconSpaceReserved="false"/>
 
+    <PreferenceCategory android:title="@string/settings_api" app:iconSpaceReserved="false"/>
     <EditTextPreference
         android:defaultValue="ilfexgv3nnljz3isbm257gzwrzr7bi"
-        android:key="client_id"
+        android:key="helix_client_id"
         android:singleLine="true"
-        android:title="CLIENT_ID"
+        android:title="@string/api_helix"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+    <EditTextPreference
+        android:defaultValue="kimne78kx3ncx6brgo4mv6wki5h1ko"
+        android:key="gql_client_id"
+        android:singleLine="true"
+        android:title="@string/api_gql"
         app:useSimpleSummaryProvider="true"
         app:iconSpaceReserved="false" />
 </PreferenceScreen>

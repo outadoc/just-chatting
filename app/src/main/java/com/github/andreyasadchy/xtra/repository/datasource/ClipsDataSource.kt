@@ -12,16 +12,21 @@ class ClipsDataSource(
     private val gameName: String?,
     private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Clip>(coroutineScope) {
+    private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Clip>) {
         loadInitial(params, callback) {
-            api.getClips(clientId, userToken, channelName, gameName, params.requestedLoadSize, null).data
+            val get = api.getClips(clientId, userToken, channelName, gameName, params.requestedLoadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Clip>) {
         loadRange(params, callback) {
-            api.getClips(clientId, userToken, channelName, gameName, params.loadSize, null).data
+            val get = api.getClips(clientId, userToken, channelName, gameName, params.loadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 

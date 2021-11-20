@@ -85,7 +85,7 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
             viewModel.video.observe(viewLifecycleOwner, Observer {
                 (requireActivity() as MainActivity).startVideo(it, 0.0)
             })
-            watchVideo.setOnClickListener { viewModel.loadVideo(prefs.getString(C.CLIENT_ID, ""), prefs.getString(C.TOKEN, "")) }
+            watchVideo.setOnClickListener { viewModel.loadVideo(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, "")) }
         }
     }
 

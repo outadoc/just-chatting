@@ -11,16 +11,21 @@ class FollowedStreamsDataSource(
     private val user_id: String,
     private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Stream>(coroutineScope) {
+    private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
         loadInitial(params, callback) {
-            api.getFollowedStreams(clientId, userToken, user_id, params.requestedLoadSize, null).data
+            val get = api.getFollowedStreams(clientId, userToken, user_id, params.requestedLoadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
         loadRange(params, callback) {
-            api.getFollowedStreams(clientId, userToken, user_id, params.loadSize, null).data
+            val get = api.getFollowedStreams(clientId, userToken, user_id, params.loadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 

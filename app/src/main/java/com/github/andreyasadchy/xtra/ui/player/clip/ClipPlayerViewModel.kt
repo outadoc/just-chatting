@@ -71,7 +71,7 @@ class ClipPlayerViewModel @Inject constructor(
             this.clip = clip
             viewModelScope.launch {
                 try {
-                    val urls = graphQLRepositoy.loadClipUrls(clip.id)
+                    val urls = graphQLRepositoy.loadClipUrls(prefs.getString(C.GQL_CLIENT_ID, "") ?: "", clip.id)
                     val savedquality = prefs.getString(C.PLAYER_QUALITY, "720p60")
                     if (savedquality != null) {
                         var url: String? = null

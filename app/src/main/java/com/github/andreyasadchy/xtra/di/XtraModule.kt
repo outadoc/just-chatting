@@ -13,7 +13,6 @@ import com.github.andreyasadchy.xtra.model.gql.playlist.VideoPlaylistTokenRespon
 import com.github.andreyasadchy.xtra.repository.HelixRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.util.FetchProvider
-import com.github.andreyasadchy.xtra.util.RemoteConfigParams
 import com.google.gson.GsonBuilder
 import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
@@ -111,12 +110,7 @@ class XtraModule {
     fun providesGraphQLApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): GraphQLApi {
         return Retrofit.Builder()
                 .baseUrl("https://gql.twitch.tv/gql/")
-                .client(client.newBuilder().addInterceptor { chain ->
-                    val request = chain.request().newBuilder()
-                            .addHeader("Client-ID", RemoteConfigParams.TWITCH_CLIENT_ID_KEY)
-                            .build()
-                    chain.proceed(request)
-                }.build())
+                .client(client)
                 .addConverterFactory(gsonConverterFactory)
                 .build()
                 .create(GraphQLApi::class.java)

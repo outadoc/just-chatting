@@ -15,7 +15,7 @@ import retrofit2.http.POST
 interface GraphQLApi {
 
     @POST(".")
-    suspend fun getClipData(@Body json: JsonArray): ClipDataResponse
+    suspend fun getClipData(@Header("Client-ID") clientId: String?, @Body json: JsonArray): ClipDataResponse
 
     @POST(".")
     suspend fun followChannel(@Header("Authorization") token: String, @Body json: JsonArray): Response<ResponseBody>

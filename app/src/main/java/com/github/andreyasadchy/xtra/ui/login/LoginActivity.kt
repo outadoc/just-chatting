@@ -30,14 +30,13 @@ class LoginActivity : AppCompatActivity(), Injectable {
 
     @Inject
     lateinit var repository: AuthRepository
-    private val clientId = prefs().getString(C.CLIENT_ID, "")
-    private val authUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=https://localhost&scope=chat_login user:read:subscriptions user:read:follows"
     private val tokenPattern = Pattern.compile("token=(.+?)(?=&)")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         applyTheme()
         setContentView(R.layout.activity_login)
+        val clientId = prefs().getString(C.HELIX_CLIENT_ID, "")
         val user = User.get(this)
         if (user is NotLoggedIn) {
             if (intent.getBooleanExtra(C.FIRST_LAUNCH1, false)) {
@@ -66,6 +65,8 @@ class LoginActivity : AppCompatActivity(), Injectable {
     private fun initWebView() {
         webViewContainer.visible()
         welcomeContainer.gone()
+        val clientId = prefs().getString(C.HELIX_CLIENT_ID, "")
+        val authUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=https://localhost&scope=chat:read chat:edit user:read:subscriptions user:read:follows"
         havingTrouble.setOnClickListener {
             AlertDialog.Builder(this)
                     .setMessage(getString(R.string.login_problem_solution))
@@ -145,6 +146,8 @@ class LoginActivity : AppCompatActivity(), Injectable {
             welcomeContainer.gone()
             progressBar.visible()
             val token = matcher.group(1)!!
+            val clientId = prefs().getString(C.HELIX_CLIENT_ID, "")
+            val authUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=https://localhost&scope=chat:read chat:edit user:read:subscriptions user:read:follows"
             lifecycleScope.launch {
                 try {
                     val response = repository.validate(token)

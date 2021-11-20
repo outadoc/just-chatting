@@ -29,12 +29,12 @@ class ChannelVideosFragment : BaseVideosFragment<ChannelVideosViewModel>(), Radi
         viewModel.sortText.observe(viewLifecycleOwner, Observer {
             sortText.text = it
         })
-        viewModel.setChannelId(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", requireArguments().getString(C.CHANNEL)!!)
+        viewModel.setChannelId(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", requireArguments().getString(C.CHANNEL)!!)
         sortBar.setOnClickListener { FragmentUtils.showRadioButtonDialogFragment(requireContext(), childFragmentManager, viewModel.sortOptions, viewModel.selectedIndex) }
     }
 
     override fun onChange(requestCode: Int, index: Int, text: CharSequence, tag: Int?) {
         adapter.submitList(null)
-        viewModel.setSort(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", if (tag == R.string.upload_date) Sort.TIME else Sort.VIEWS, index, text)
+        viewModel.setSort(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", if (tag == R.string.upload_date) Sort.TIME else Sort.VIEWS, index, text)
     }
 }

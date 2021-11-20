@@ -11,16 +11,21 @@ class FollowedChannelsDataSource(
     private val userId: String,
     private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Follow>(coroutineScope) {
+    private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Follow>) {
         loadInitial(params, callback) {
-            api.getFollowedChannels(clientId, userToken, userId, params.requestedLoadSize, null).data
+            val get = api.getFollowedChannels(clientId, userToken, userId, params.requestedLoadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Follow>) {
         loadRange(params, callback) {
-            api.getFollowedChannels(clientId, userToken, userId, params.loadSize, null).data
+            val get = api.getFollowedChannels(clientId, userToken, userId, params.loadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 

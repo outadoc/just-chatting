@@ -11,16 +11,21 @@ class ChannelsSearchDataSource private constructor(
     private val query: String,
     private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Channel>(coroutineScope) {
+    private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Channel>) {
         loadInitial(params, callback) {
-            api.getChannels(clientId, userToken, query, params.requestedLoadSize, null).data
+            val get = api.getChannels(clientId, userToken, query, params.requestedLoadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Channel>) {
         loadRange(params, callback) {
-            api.getChannels(clientId, userToken, query, params.loadSize, null).data
+            val get = api.getChannels(clientId, userToken, query, params.loadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 

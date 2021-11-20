@@ -70,7 +70,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             copyMessage.gone()
         }
         viewProfile.setOnClickListener {
-            viewModel.loadUser(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), extractUserName(msg)).observe(viewLifecycleOwner, Observer {
+            viewModel.loadUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), extractUserName(msg)).observe(viewLifecycleOwner, Observer {
                 listener.onViewProfileClicked(it.id, it.display_name)
                 dismiss()
             })

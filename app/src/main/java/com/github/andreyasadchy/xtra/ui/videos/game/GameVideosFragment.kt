@@ -20,12 +20,12 @@ class GameVideosFragment : BaseVideosFragment<GameVideosViewModel>(), GameVideos
         viewModel.sortText.observe(viewLifecycleOwner, Observer {
             sortText.text = it
         })
-        viewModel.setGame(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), requireArguments().getString(C.GAME)!!)
+        viewModel.setGame(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), requireArguments().getString(C.GAME)!!)
         sortBar.setOnClickListener { GameVideosSortDialog.newInstance(viewModel.sort, viewModel.period).show(childFragmentManager, null) }
     }
 
     override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence) {
         adapter.submitList(null)
-        viewModel.filter(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), sort, period, getString(R.string.sort_and_period, sortText, periodText))
+        viewModel.filter(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), sort, period, getString(R.string.sort_and_period, sortText, periodText))
     }
 }

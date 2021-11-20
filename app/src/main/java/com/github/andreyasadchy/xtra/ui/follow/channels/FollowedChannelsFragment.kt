@@ -36,7 +36,7 @@ class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewM
         viewModel.sortText.observe(viewLifecycleOwner, Observer {
             sortText.text = it
         })
-        viewModel.setUser(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), User.get(requireContext()))
+        viewModel.setUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), User.get(requireContext()))
         sortBar.setOnClickListener { FollowedChannelsSortDialog.newInstance().show(childFragmentManager, null) }
     }
 

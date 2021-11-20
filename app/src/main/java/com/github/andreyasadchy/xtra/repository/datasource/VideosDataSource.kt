@@ -18,16 +18,21 @@ class VideosDataSource private constructor(
     private val sort: Sort,
     private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Video>(coroutineScope) {
+    private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
         loadInitial(params, callback) {
-            api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.requestedLoadSize, null).data
+            val get = api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.requestedLoadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         loadRange(params, callback) {
-            api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.loadSize, null).data
+            val get = api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.loadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 

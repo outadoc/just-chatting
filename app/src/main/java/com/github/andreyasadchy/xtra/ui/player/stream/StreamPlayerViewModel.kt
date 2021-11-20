@@ -15,7 +15,6 @@ import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
 import com.github.andreyasadchy.xtra.ui.player.HlsPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode.*
-import com.github.andreyasadchy.xtra.util.RemoteConfigParams
 import com.github.andreyasadchy.xtra.util.toast
 import com.google.android.exoplayer2.upstream.DefaultLoadErrorHandlingPolicy
 import kotlinx.coroutines.delay
@@ -114,7 +113,7 @@ class StreamPlayerViewModel @Inject constructor(
     private fun loadStream(stream: Stream) {
         viewModelScope.launch {
             try {
-                val playerType = RemoteConfigParams.TWITCH_PLAYER_TYPE_KEY
+                val playerType = "site"
                 val result = playerRepository.loadStreamPlaylistUrl(stream.user_login, playerType, useAdBlock, randomDeviceId, xdeviceid, deviceid)
                 if (useAdBlock) {
                     if (result.second) {

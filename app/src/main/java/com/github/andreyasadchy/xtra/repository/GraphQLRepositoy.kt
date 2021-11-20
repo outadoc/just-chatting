@@ -37,7 +37,7 @@ class GraphQLRepositoy @Inject constructor(private val graphQL: GraphQLApi) {
         graphQL.followChannel(TwitchApiHelper.addTokenPrefix(userToken), array).code() == 200
     }
 
-    suspend fun loadClipUrls(slug: String): Map<String, String> = withContext(Dispatchers.IO) {
+    suspend fun loadClipUrls(clientId: String, slug: String): Map<String, String> = withContext(Dispatchers.IO) {
         Log.d(TAG, "Loading clip urls for clip: $slug")
         val array = JsonArray(1)
         val videoAccessTokenOperation = JsonObject().apply {
@@ -53,7 +53,7 @@ class GraphQLRepositoy @Inject constructor(private val graphQL: GraphQLApi) {
             })
         }
         array.add(videoAccessTokenOperation)
-        val response = graphQL.getClipData(array)
+        val response = graphQL.getClipData(clientId, array)
         response.videos.associateBy({ if (it.frameRate != 60) "${it.quality}p" else "${it.quality}p${it.frameRate}" }, { it.url })
     }
 

@@ -171,11 +171,14 @@
     <string name="settings_ui">UI</string>
     <string name="settings_chat">CHAT</string>
     <string name="settings_player">PLAYER</string>
-    <string name="settings_token">ACCESS TOKEN HEADERS</string>
+    <string name="settings_token">PLAYLIST HEADERS</string>
     <string name="settings_token_summary">for livestreams only, disable adblock</string>
+    <string name="settings_api">API</string>
     <string name="not_supported">Not supported</string>
     <string name="Android_9_required">Android 9 required</string>
     <string name="token_random_deviceid">Random device id</string>
+    <string name="api_helix">Helix client id</string>
+    <string name="api_gql">GQL client id</string>
     <string name="playback_speed">Playback speed</string>
     <string name="quality">Quality</string>
     <string name="speed0.25" translatable="false">0.25x</string>

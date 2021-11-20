@@ -27,13 +27,13 @@ class ClipDownloadViewModel @Inject constructor(
 
     private lateinit var clip: Clip
 
-    fun init(clip: Clip, qualities: Map<String, String>?) {
+    fun init(clientId: String, clip: Clip, qualities: Map<String, String>?) {
         if (!this::clip.isInitialized) {
             this.clip = clip
             if (qualities == null) {
                 viewModelScope.launch {
                     try {
-                        val urls = graphQLRepositoy.loadClipUrls(clip.id)
+                        val urls = graphQLRepositoy.loadClipUrls(clientId, clip.id)
                         _qualities.postValue(urls)
                     } catch (e: Exception) {
 

@@ -12,16 +12,21 @@ class StreamsDataSource private constructor(
     private val languages: String?,
     private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Stream>(coroutineScope) {
+    private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
         loadInitial(params, callback) {
-            api.getStreams(clientId, userToken, game, languages, params.requestedLoadSize, null).data
+            val get = api.getStreams(clientId, userToken, game, languages, params.requestedLoadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
         loadRange(params, callback) {
-            api.getStreams(clientId, userToken, game, languages, params.loadSize, null).data
+            val get = api.getStreams(clientId, userToken, game, languages, params.loadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 

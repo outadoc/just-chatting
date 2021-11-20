@@ -34,7 +34,7 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>() {
         viewModel.sortText.observe(viewLifecycleOwner, Observer {
             sortText.text = it
         })
-        viewModel.loadClips(requireContext().prefs().getString(C.CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), arguments?.getString(C.CHANNEL), arguments?.getString(C.GAME))
+        viewModel.loadClips(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), arguments?.getString(C.CHANNEL), arguments?.getString(C.GAME))
         sortBar.setOnClickListener { FragmentUtils.showRadioButtonDialogFragment(requireContext(), childFragmentManager, viewModel.sortOptions, viewModel.selectedIndex) }
     }
 

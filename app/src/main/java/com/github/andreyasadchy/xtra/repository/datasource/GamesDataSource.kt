@@ -10,16 +10,21 @@ class GamesDataSource(
     private val userToken: String?,
     private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Game>(coroutineScope) {
+    private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Game>) {
         loadInitial(params, callback) {
-            api.getTopGames(clientId, userToken, params.requestedLoadSize, null).data
+            val get = api.getTopGames(clientId, userToken, params.requestedLoadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Game>) {
         loadRange(params, callback) {
-            api.getTopGames(clientId, userToken, params.loadSize, null).data
+            val get = api.getTopGames(clientId, userToken, params.loadSize, offset)
+            offset = get.pagination?.cursor
+            get.data
         }
     }
 

@@ -168,7 +168,7 @@
     <string name="adblock_not_working">TTV.LOL is offline. Disable Adblock to view streams in the meantime</string>
     <string name="not_supported">Not supported</string>
     <string name="Android_9_required">Android 9 required</string>
-    <string name="settings_token">ACCESS TOKEN HEADERS</string>
+    <string name="settings_token">PLAYLIST HEADERS</string>
     <string name="token_random_deviceid">Random device id</string>
     <string name="settings_token_summary">for livestreams only, disable adblock</string>
     <string name="playback_speed">Velocidade de reprodução</string>
@@ -180,4 +180,7 @@
     <string name="playerQualityEntries2">480p or lower</string>
     <string name="playerQualityEntries1">360p or lower</string>
     <string name="player_volumebutton">Show volume button</string>
+    <string name="settings_api">API</string>
+    <string name="api_helix">Helix client id</string>
+    <string name="api_gql">GQL client id</string>
 </resources>

@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.offline.Request
-import com.github.andreyasadchy.xtra.repository.GraphQLRepositoy
+import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.util.DownloadUtils
 import kotlinx.coroutines.GlobalScope
@@ -16,9 +16,9 @@ import java.io.File
 import javax.inject.Inject
 
 class ClipDownloadViewModel @Inject constructor(
-        application: Application,
-        private val graphQLRepositoy: GraphQLRepositoy,
-        private val offlineRepository: OfflineRepository
+    application: Application,
+    private val graphQLRepository: GraphQLRepository,
+    private val offlineRepository: OfflineRepository
 ) : AndroidViewModel(application) {
 
     private val _qualities = MutableLiveData<Map<String, String>>()
@@ -33,7 +33,7 @@ class ClipDownloadViewModel @Inject constructor(
             if (qualities == null) {
                 viewModelScope.launch {
                     try {
-                        val urls = graphQLRepositoy.loadClipUrls(clientId, clip.id)
+                        val urls = graphQLRepository.loadClipUrls(clientId, clip.id)
                         _qualities.postValue(urls)
                     } catch (e: Exception) {
 

@@ -76,9 +76,9 @@ class ChatViewModel @Inject constructor(
         }
     }
 
-    fun startReplay(channelId: String, videoId: String, startTime: Double, getCurrentPosition: () -> Double) {
+    fun startReplay(clientId: String, channelId: String, videoId: String, startTime: Double, getCurrentPosition: () -> Double) {
         if (chat == null) {
-            chat = VideoChatController(videoId, startTime, getCurrentPosition)
+            chat = VideoChatController(clientId, videoId, startTime, getCurrentPosition)
             init(channelId)
         }
     }
@@ -242,6 +242,7 @@ class ChatViewModel @Inject constructor(
     }
 
     private inner class VideoChatController(
+            private val clientId: String,
             private val videoId: String,
             private val startTime: Double,
             private val getCurrentPosition: () -> Double) : ChatController() {
@@ -254,7 +255,7 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             stop()
-            chatReplayManager = ChatReplayManager(repository, videoId, startTime, getCurrentPosition, this, { _chatMessages.postValue(ArrayList()) }, viewModelScope)
+            chatReplayManager = ChatReplayManager(clientId, repository, videoId, startTime, getCurrentPosition, this, { _chatMessages.postValue(ArrayList()) }, viewModelScope)
         }
 
         override fun pause() {

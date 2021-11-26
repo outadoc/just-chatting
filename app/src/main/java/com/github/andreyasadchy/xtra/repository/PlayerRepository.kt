@@ -31,7 +31,6 @@ import kotlin.collections.set
 import kotlin.random.Random
 
 private const val TAG = "PlayerRepository"
-private const val UNDEFINED = "undefined"
 
 @Singleton
 class PlayerRepository @Inject constructor(
@@ -44,7 +43,7 @@ class PlayerRepository @Inject constructor(
     private val ttvLolApi: TTVLolApi
 ) {
 
-    suspend fun loadStreamPlaylistUrl(channelName: String, playerType: String, useAdblock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String): Pair<Uri, Boolean> = withContext(Dispatchers.IO) {
+    suspend fun loadStreamPlaylistUrl(gqlclientId: String, channelName: String, playerType: String, useAdblock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String): Pair<Uri, Boolean> = withContext(Dispatchers.IO) {
         Log.d(TAG, "Getting stream playlist for channel $channelName. Player type: $playerType")
 
         //removes "commercial break in progress"
@@ -70,8 +69,8 @@ class PlayerRepository @Inject constructor(
         } else {
             val accessTokenJson = getAccessTokenJson(isLive = true, isVod = false, login = channelName, playerType = playerType, vodId = "")
             val accessTokenHeaders = getAccessTokenHeaders(randomDeviceId, xdeviceid, deviceid)
-            accessTokenHeaders["Authorization"] = UNDEFINED
-            val accessToken = graphQL.getStreamAccessToken(accessTokenHeaders, accessTokenJson)
+            accessTokenHeaders["Authorization"] = ""
+            val accessToken = graphQL.getStreamAccessToken(gqlclientId, accessTokenHeaders, accessTokenJson)
             buildUrl(
                 "https://usher.ttvnw.net/api/channel/hls/$channelName.m3u8?",
                 "allow_source", "true",
@@ -85,9 +84,9 @@ class PlayerRepository @Inject constructor(
         }
     }
 
-    suspend fun loadVideoPlaylistUrl(videoId: String): Uri = withContext(Dispatchers.IO) {
+    suspend fun loadVideoPlaylistUrl(gqlclientId: String, videoId: String): Uri = withContext(Dispatchers.IO) {
         Log.d(TAG, "Getting video playlist url for video $videoId")
-        val accessToken = loadVideoPlaylistAccessToken(videoId)
+        val accessToken = loadVideoPlaylistAccessToken(gqlclientId, videoId)
         buildUrl(
             "https://usher.ttvnw.net/vod/$videoId.m3u8?",
             "token", accessToken.token,
@@ -99,9 +98,9 @@ class PlayerRepository @Inject constructor(
         )
     }
 
-    suspend fun loadVideoPlaylist(videoId: String): Response<ResponseBody> = withContext(Dispatchers.IO) {
+    suspend fun loadVideoPlaylist(gqlclientId: String, videoId: String): Response<ResponseBody> = withContext(Dispatchers.IO) {
         Log.d(TAG, "Getting video playlist for video $videoId")
-        val accessToken = loadVideoPlaylistAccessToken(videoId)
+        val accessToken = loadVideoPlaylistAccessToken(gqlclientId, videoId)
         val playlistQueryOptions = HashMap<String, String>()
         playlistQueryOptions["token"] = accessToken.token
         playlistQueryOptions["sig"] = accessToken.signature
@@ -221,12 +220,12 @@ class PlayerRepository @Inject constructor(
         }
     }
 
-    private suspend fun loadVideoPlaylistAccessToken(videoId: String): VideoPlaylistTokenResponse {
+    private suspend fun loadVideoPlaylistAccessToken(gqlclientId: String, videoId: String): VideoPlaylistTokenResponse {
         //        val accessToken = api.getVideoAccessToken(clientId, id, token)
         val accessTokenJson = getAccessTokenJson(isLive = false, isVod = true, login = "", playerType = "channel_home_live", vodId = videoId)
         val accessTokenHeaders = getAccessTokenHeaders()
-        accessTokenHeaders["Authorization"] = UNDEFINED
-        return graphQL.getVideoAccessToken(accessTokenHeaders, accessTokenJson)
+        accessTokenHeaders["Authorization"] = ""
+        return graphQL.getVideoAccessToken(gqlclientId, accessTokenHeaders, accessTokenJson)
     }
 
     private fun buildUrl(url: String, vararg queryParams: String): Uri {

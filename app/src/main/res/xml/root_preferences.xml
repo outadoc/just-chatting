@@ -292,7 +292,21 @@
         android:disableDependentsState="true"
         app:iconSpaceReserved="false"/>
 
+    <EditTextPreference
+        android:defaultValue="embed"
+        android:key="token_playertype"
+        android:singleLine="true"
+        android:title="playerType"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
     <PreferenceCategory android:title="@string/settings_api" app:iconSpaceReserved="false"/>
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="api_usehelix"
+        android:title="@string/api_usehelix"
+        app:iconSpaceReserved="false"/>
+
     <EditTextPreference
         android:defaultValue="ilfexgv3nnljz3isbm257gzwrzr7bi"
         android:key="helix_client_id"

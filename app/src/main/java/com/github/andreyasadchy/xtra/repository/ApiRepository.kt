@@ -14,6 +14,7 @@ import com.github.andreyasadchy.xtra.model.helix.stream.StreamsResponse
 import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.model.helix.video.*
 import com.github.andreyasadchy.xtra.repository.datasource.*
+import com.github.andreyasadchy.xtra.repository.datasourceGQL.*
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,11 +22,12 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val TAG = "HelixRepository"
+private const val TAG = "ApiRepository"
 
 @Singleton
 class HelixRepository @Inject constructor(
     private val api: HelixApi,
+    private val gql: GraphQLRepository,
     private val emotesDao: EmotesDao) : TwitchService {
 
     override fun loadTopGames(clientId: String?, userToken: String?, coroutineScope: CoroutineScope): Listing<Game> {
@@ -117,9 +119,16 @@ class HelixRepository @Inject constructor(
         api.getUsersByLogin(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, login).data?.first()!!
     }
 
-    override suspend fun loadGames(clientId: String?, userToken: String?, query: String): List<Game> = withContext(Dispatchers.IO) {
+    override fun loadGames(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Game> {
         Log.d(TAG, "Loading games containing: $query")
-        api.getGames(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, query).data ?: emptyList()
+        val factory = GamesSearchDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, query, api, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(15)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(5)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
     }
 
     override fun loadChannels(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Channel> {
@@ -132,16 +141,6 @@ class HelixRepository @Inject constructor(
                 .setEnablePlaceholders(false)
                 .build()
         return Listing.create(factory, config)
-    }
-
-    override suspend fun loadVideoChatLog(videoId: String, offsetSeconds: Double): VideoMessagesResponse = withContext(Dispatchers.IO) {
-        Log.d(TAG, "Loading chat log for video $videoId. Offset in seconds: $offsetSeconds")
-        api.getVideoChatLog(videoId.substring(1), offsetSeconds, 100)
-    }
-
-    override suspend fun loadVideoChatAfter(videoId: String, cursor: String): VideoMessagesResponse = withContext(Dispatchers.IO) {
-        Log.d(TAG, "Loading chat log for video $videoId. Cursor: $cursor")
-        api.getVideoChatLogAfter(videoId.substring(1), cursor, 100)
     }
 
     override suspend fun loadUserFollows(clientId: String?, userToken: String?, userId: String, channelId: String): Boolean = withContext(Dispatchers.IO) {
@@ -157,6 +156,116 @@ class HelixRepository @Inject constructor(
                 .setPrefetchDistance(10)
                 .setEnablePlaceholders(false)
                 .build()
+        return Listing.create(factory, config)
+    }
+
+    override suspend fun loadVideoChatLog(clientId: String?, videoId: String, offsetSeconds: Double): VideoMessagesResponse = withContext(Dispatchers.IO) {
+        Log.d(TAG, "Loading chat log for video $videoId. Offset in seconds: $offsetSeconds")
+        api.getVideoChatLog(clientId, videoId, offsetSeconds, 100)
+    }
+
+    override suspend fun loadVideoChatAfter(clientId: String?, videoId: String, cursor: String): VideoMessagesResponse = withContext(Dispatchers.IO) {
+        Log.d(TAG, "Loading chat log for video $videoId. Cursor: $cursor")
+        api.getVideoChatLogAfter(clientId, videoId, cursor, 100)
+    }
+
+
+    override fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game> {
+        val factory = GamesDataSourceGQL.Factory(clientId, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(30)
+            .setInitialLoadSizeHint(30)
+            .setPrefetchDistance(10)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadTopStreamsGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Stream> {
+        val factory = StreamsDataSourceGQL.Factory(clientId, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(10)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(3)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadGameStreamsGQL(clientId: String?, game: String?, coroutineScope: CoroutineScope): Listing<Stream> {
+        val factory = GameStreamsDataSourceGQL.Factory(clientId, game, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(10)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(3)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadGameVideosGQL(clientId: String?, game: String?, type: String?, coroutineScope: CoroutineScope): Listing<Video> {
+        val factory = GameVideosDataSourceGQL.Factory(clientId, game, type, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(10)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(3)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadGameClipsGQL(clientId: String?, game: String?, sort: String?, coroutineScope: CoroutineScope): Listing<Clip> {
+        val factory = GameClipsDataSourceGQL.Factory(clientId, game, sort, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(10)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(3)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadChannelVideosGQL(clientId: String?, game: String?, type: String?, sort: String?, coroutineScope: CoroutineScope): Listing<Video> {
+        val factory = ChannelVideosDataSourceGQL.Factory(clientId, game, type, sort, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(10)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(3)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadChannelClipsGQL(clientId: String?, game: String?, sort: String?, coroutineScope: CoroutineScope): Listing<Clip> {
+        val factory = ChannelClipsDataSourceGQL.Factory(clientId, game, sort, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(10)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(3)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadSearchChannelsGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<Channel> {
+        val factory = SearchChannelsDataSourceGQL.Factory(clientId, query, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(15)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(5)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadSearchGamesGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<Game> {
+        val factory = SearchGamesDataSourceGQL.Factory(clientId, query, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(15)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(5)
+            .setEnablePlaceholders(false)
+            .build()
         return Listing.create(factory, config)
     }
 }

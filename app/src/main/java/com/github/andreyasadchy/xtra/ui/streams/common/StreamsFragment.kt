@@ -32,6 +32,9 @@ class StreamsFragment : BaseStreamsFragment<StreamsViewModel>() {
 
     override fun initialize() {
         super.initialize()
-        viewModel.loadStreams(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), game = arguments?.getString(C.GAME))
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != null) {
+            viewModel.loadStreams(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), game = arguments?.getString(C.GAME))
+        } else {
+            viewModel.loadStreams(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), game = arguments?.getString(C.GAME))}
     }
 }

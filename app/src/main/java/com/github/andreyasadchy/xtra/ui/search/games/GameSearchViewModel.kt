@@ -3,39 +3,31 @@ package com.github.andreyasadchy.xtra.ui.search.games
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
-import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.model.helix.game.Game
-import com.github.andreyasadchy.xtra.repository.LoadingState
+import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.TwitchService
-import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
+import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
 import javax.inject.Inject
 
 class GameSearchViewModel @Inject constructor(
-        private val repository: TwitchService) : BaseViewModel() {
+        private val repository: TwitchService) : PagedListViewModel<Game>() {
 
+    private var useHelix = false
     private val query = MutableLiveData<String>()
     private var clientId = MutableLiveData<String>()
     private var token = MutableLiveData<String>()
-    val list: LiveData<List<Game>> = Transformations.switchMap(query) {
-        liveData {
-            try {
-                _loadingState.postValue(LoadingState.LOADING)
-                val games = repository.loadGames(clientId.value, token.value, it)
-                emit(games)
-            } catch (e: Exception) {
-                shouldRetry = true
-            } finally {
-                _loadingState.postValue(LoadingState.LOADED)
-            }
-        }
+    override val result: LiveData<Listing<Game>> = Transformations.map(query) {
+        if (useHelix)
+            repository.loadGames(clientId.value, token.value, it, viewModelScope)
+        else
+            repository.loadSearchGamesGQL(clientId.value, it, viewModelScope)
     }
-    private var shouldRetry = false
 
-    private val _loadingState = MutableLiveData<LoadingState>()
-    val loadingState: LiveData<LoadingState>
-        get() = _loadingState
-
-    fun setQuery(clientId: String?, token: String?, query: String) {
+    fun setQuery(usehelix: Boolean, clientId: String?, query: String, token: String? = "") {
+        if (useHelix != usehelix) {
+            useHelix = usehelix
+        }
         if (this.clientId.value != clientId) {
             this.clientId.value = clientId
         }
@@ -44,13 +36,6 @@ class GameSearchViewModel @Inject constructor(
         }
         if (this.query.value != query) {
             this.query.value = query
-        }
-    }
-
-    fun retry() {
-        if (shouldRetry) {
-            shouldRetry = false
-            query.value = query.value
         }
     }
 }

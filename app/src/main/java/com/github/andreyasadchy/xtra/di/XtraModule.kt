@@ -4,12 +4,23 @@ import android.app.Application
 import com.github.andreyasadchy.xtra.BuildConfig
 import com.github.andreyasadchy.xtra.api.*
 import com.github.andreyasadchy.xtra.model.chat.*
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelClipsDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelClipsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataDeserializer
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
+import com.github.andreyasadchy.xtra.model.gql.game.*
 import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenDeserializer
 import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenResponse
 import com.github.andreyasadchy.xtra.model.gql.playlist.VideoPlaylistTokenDeserializer
 import com.github.andreyasadchy.xtra.model.gql.playlist.VideoPlaylistTokenResponse
+import com.github.andreyasadchy.xtra.model.gql.search.SearchChannelDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.search.SearchChannelDataResponse
+import com.github.andreyasadchy.xtra.model.gql.search.SearchGameDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.search.SearchGameDataResponse
+import com.github.andreyasadchy.xtra.model.gql.stream.StreamDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.stream.StreamDataResponse
 import com.github.andreyasadchy.xtra.repository.HelixRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.util.FetchProvider
@@ -43,17 +54,6 @@ class XtraModule {
                 .addConverterFactory(gsonConverterFactory)
                 .build()
                 .create(HelixApi::class.java)
-    }
-
-    @Singleton
-    @Provides
-    fun providesApiService(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): ApiService {
-        return Retrofit.Builder()
-                .baseUrl("https://api.twitch.tv/api/")
-                .client(client)
-                .addConverterFactory(gsonConverterFactory)
-                .build()
-                .create(ApiService::class.java)
     }
 
     @Singleton
@@ -125,9 +125,18 @@ class XtraModule {
                 .registerTypeAdapter(BttvGlobalResponse::class.java, BttvGlobalDeserializer())
                 .registerTypeAdapter(BttvChannelResponse::class.java, BttvChannelDeserializer())
                 .registerTypeAdapter(BttvFfzResponse::class.java, BttvFfzDeserializer())
-                .registerTypeAdapter(ClipDataResponse::class.java, ClipDataDeserializer())
                 .registerTypeAdapter(StreamPlaylistTokenResponse::class.java, StreamPlaylistTokenDeserializer())
                 .registerTypeAdapter(VideoPlaylistTokenResponse::class.java, VideoPlaylistTokenDeserializer())
+                .registerTypeAdapter(ClipDataResponse::class.java, ClipDataDeserializer())
+                .registerTypeAdapter(GameDataResponse::class.java, GameDataDeserializer())
+                .registerTypeAdapter(StreamDataResponse::class.java, StreamDataDeserializer())
+                .registerTypeAdapter(GameStreamsDataResponse::class.java, GameStreamsDataDeserializer())
+                .registerTypeAdapter(GameVideosDataResponse::class.java, GameVideosDataDeserializer())
+                .registerTypeAdapter(GameClipsDataResponse::class.java, GameClipsDataDeserializer())
+                .registerTypeAdapter(ChannelVideosDataResponse::class.java, ChannelVideosDataDeserializer())
+                .registerTypeAdapter(ChannelClipsDataResponse::class.java, ChannelClipsDataDeserializer())
+                .registerTypeAdapter(SearchChannelDataResponse::class.java, SearchChannelDataDeserializer())
+                .registerTypeAdapter(SearchGameDataResponse::class.java, SearchGameDataDeserializer())
                 .create())
     }
 

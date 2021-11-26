@@ -22,6 +22,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.VideoDownloadInfo
 import com.github.andreyasadchy.xtra.model.helix.video.Video
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.dialog_video_download.*
 import javax.inject.Inject
 
@@ -59,7 +61,7 @@ class VideoDownloadDialog : BaseDownloadDialog() {
         })
         requireArguments().getParcelable<VideoDownloadInfo?>(KEY_VIDEO_INFO).let {
             if (it == null) {
-                viewModel.setVideo(requireArguments().getParcelable(KEY_VIDEO)!!)
+                viewModel.setVideo(requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: "", requireArguments().getParcelable(KEY_VIDEO)!!)
             } else {
                 viewModel.setVideoInfo(it)
             }

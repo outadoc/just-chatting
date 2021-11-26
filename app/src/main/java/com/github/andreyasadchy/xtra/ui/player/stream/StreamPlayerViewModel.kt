@@ -41,6 +41,8 @@ class StreamPlayerViewModel @Inject constructor(
     private var randomDeviceId = true
     private var xdeviceid = ""
     private var deviceid = ""
+    private var playerType = ""
+    private var gqlclientId = ""
 
     private val hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
         .setAllowChunklessPreparation(true)
@@ -48,11 +50,13 @@ class StreamPlayerViewModel @Inject constructor(
         .setPlaylistTrackerFactory(DefaultHlsPlaylistTracker.FACTORY)
         .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(6))
 
-    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String) {
+    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String, playerType: String, gqlclientId: String) {
         this.useAdBlock = useAdBlock
         this.randomDeviceId = randomDeviceId
         this.xdeviceid = xdeviceid
         this.deviceid = deviceid
+        this.playerType = playerType
+        this.gqlclientId = gqlclientId
         if (_stream.value == null) {
             _stream.value = stream
             loadStream(stream)
@@ -113,8 +117,7 @@ class StreamPlayerViewModel @Inject constructor(
     private fun loadStream(stream: Stream) {
         viewModelScope.launch {
             try {
-                val playerType = "site"
-                val result = playerRepository.loadStreamPlaylistUrl(stream.user_login, playerType, useAdBlock, randomDeviceId, xdeviceid, deviceid)
+                val result = playerRepository.loadStreamPlaylistUrl(gqlclientId, stream.user_login, playerType, useAdBlock, randomDeviceId, xdeviceid, deviceid)
                 if (useAdBlock) {
                     if (result.second) {
                         httpDataSourceFactory.defaultRequestProperties.set("X-Donate-To", "https://ttv.lol/donate")

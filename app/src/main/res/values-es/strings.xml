@@ -183,4 +183,5 @@
     <string name="settings_api">API</string>
     <string name="api_helix">Helix client id</string>
     <string name="api_gql">GQL client id</string>
+    <string name="api_usehelix">Use helix api when logged in</string>
 </resources>

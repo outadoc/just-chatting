@@ -29,7 +29,7 @@ abstract class BaseStreamsAdapter(
             setOnClickListener { clickListener.startStream(item) }
             userImage.apply {
                 setOnClickListener(channelListener)
-                loadImage(fragment, null, circle = true)
+                loadImage(fragment, item.profileImageURL, circle = true)
             }
             username.apply {
                 setOnClickListener(channelListener)

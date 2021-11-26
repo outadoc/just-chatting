@@ -7,6 +7,7 @@ import com.github.andreyasadchy.xtra.model.chat.GlobalBadgesResponse
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
+import java.lang.Double.parseDouble
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -16,7 +17,8 @@ object TwitchApiHelper {
     var checkedValidation = false
 
     fun getTemplateUrl(url: String, size: String, game: Boolean = false, video: Boolean = false): String {
-        if (url == "") return "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"
+        if (url == "") return if (game) "https://static-cdn.jtvnw.net/ttv-static/404_boxart.jpg" else
+            "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"
         val width = if (game) {when (size) {"large" -> "272" "medium" -> "136" else -> "52"} } else {
             when (size) {"large" -> "640" "medium" -> "320" else -> "80"} }
         val height = if (game) {when (size) {"large" -> "380" "medium" -> "190" else -> "72"} } else {
@@ -26,10 +28,15 @@ object TwitchApiHelper {
     }
 
     fun getDuration(duration: String): Long {
-        val h = duration.substringBefore("h", "0").takeLast(2).filter { it.isDigit() }.toInt()
-        val m = duration.substringBefore("m", "0").takeLast(2).filter { it.isDigit() }.toInt()
-        val s = duration.substringBefore("s", "0").takeLast(2).filter { it.isDigit() }.toInt()
-        return  ((h * 3600) + (m * 60) + s).toLong()
+        return try {
+            parseDouble(duration)
+            duration.toLong()
+        } catch (e: NumberFormatException) {
+            val h = duration.substringBefore("h", "0").takeLast(2).filter { it.isDigit() }.toInt()
+            val m = duration.substringBefore("m", "0").takeLast(2).filter { it.isDigit() }.toInt()
+            val s = duration.substringBefore("s", "0").takeLast(2).filter { it.isDigit() }.toInt()
+            ((h * 3600) + (m * 60) + s).toLong()
+        }
     }
 
     fun parseIso8601Date(date: String): Long {

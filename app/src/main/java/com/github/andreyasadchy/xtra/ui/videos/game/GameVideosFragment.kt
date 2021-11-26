@@ -20,12 +20,20 @@ class GameVideosFragment : BaseVideosFragment<GameVideosViewModel>(), GameVideos
         viewModel.sortText.observe(viewLifecycleOwner, Observer {
             sortText.text = it
         })
-        viewModel.setGame(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), requireArguments().getString(C.GAME)!!)
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != null) {
+            viewModel.setGame(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireArguments().getString(C.GAME)!!, requireContext().prefs().getString(C.TOKEN, ""))
+        } else {
+            viewModel.setGame(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), requireArguments().getString(C.GAME)!!)
+        }
         sortBar.setOnClickListener { GameVideosSortDialog.newInstance(viewModel.sort, viewModel.period).show(childFragmentManager, null) }
     }
 
     override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence) {
         adapter.submitList(null)
-        viewModel.filter(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), sort, period, getString(R.string.sort_and_period, sortText, periodText))
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != null) {
+            viewModel.filter(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), sort, period, getString(R.string.sort_and_period, sortText, periodText), requireContext().prefs().getString(C.TOKEN, ""))
+        } else {
+            viewModel.filter(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), sort, period, getString(R.string.sort_and_period, sortText, periodText))
+        }
     }
 }

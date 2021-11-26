@@ -5,25 +5,21 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.game.Game
-import com.github.andreyasadchy.xtra.ui.common.BaseListAdapter
+import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.loadImage
-import kotlinx.android.synthetic.main.fragment_search_games_list_item.view.*
+import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.*
 
 class GameSearchAdapter(
         private val fragment: Fragment,
-        private val listener: GamesFragment.OnGameSelectedListener) : BaseListAdapter<Game>(
+        private val listener: GamesFragment.OnGameSelectedListener) : BasePagedListAdapter<Game>(
         object : DiffUtil.ItemCallback<Game>() {
-            override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean {
-                return oldItem.id == newItem.id
-            }
+            override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean =
+                oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean {
-                return true
-            }
-        }
-) {
+            override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean = true
+        }) {
 
     override val layoutId: Int = R.layout.fragment_search_games_list_item
 

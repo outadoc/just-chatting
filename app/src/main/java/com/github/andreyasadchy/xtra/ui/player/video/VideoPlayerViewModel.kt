@@ -45,12 +45,12 @@ class VideoPlayerViewModel @Inject constructor(
     override val channelId: String
         get() = video.user_id
 
-    fun setVideo(video: Video, offset: Double) {
+    fun setVideo(gqlclientId: String, video: Video, offset: Double) {
         if (!this::video.isInitialized) {
             this.video = video
             viewModelScope.launch {
                 try {
-                    val url = playerRepository.loadVideoPlaylistUrl(video.id)
+                    val url = playerRepository.loadVideoPlaylistUrl(gqlclientId, video.id)
                     mediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(url)
                     play()
                     if (offset > 0) {

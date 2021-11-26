@@ -3,18 +3,14 @@ package com.github.andreyasadchy.xtra.ui.player
 import com.github.andreyasadchy.xtra.model.chat.VideoChatMessage
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.util.*
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
 import kotlin.math.max
 
 class ChatReplayManager @Inject constructor(
+        private val clientId: String,
         private val repository: TwitchService,
         private val videoId: String,
         private val startTime: Double,
@@ -55,7 +51,7 @@ class ChatReplayManager @Inject constructor(
         offsetJob = coroutineScope.launch(Dispatchers.IO) {
             try {
                 isLoading = true
-                val log = repository.loadVideoChatLog(videoId, offset)
+                val log = repository.loadVideoChatLog(clientId, videoId, offset)
                 isLoading = false
                 list.addAll(log.messages)
                 cursor = log.next
@@ -94,7 +90,7 @@ class ChatReplayManager @Inject constructor(
             nextJob = coroutineScope.launch(Dispatchers.IO) {
                 try {
                     isLoading = true
-                    val log = repository.loadVideoChatAfter(videoId, c)
+                    val log = repository.loadVideoChatAfter(clientId, videoId, c)
                     list.addAll(log.messages)
                     cursor = log.next
                 } catch (e: Exception) {

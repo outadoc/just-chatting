@@ -27,7 +27,10 @@ class GameVideosViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Video>> = Transformations.map(filter) {
-        repository.loadVideos(it.clientId, it.token, it.game, it.period, it.broadcastType, it.language, it.sort, viewModelScope)
+        if (it.usehelix)
+            repository.loadVideos(it.clientId, it.token, it.game, it.period, it.broadcastType, it.language, it.sort, viewModelScope)
+        else
+            repository.loadGameVideosGQL(it.clientId, it.game, null, viewModelScope)
     }
     val sort: Sort
         get() = filter.value!!.sort
@@ -38,18 +41,19 @@ class GameVideosViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.view_count), context.getString(R.string.this_week))
     }
 
-    fun setGame(clientId: String?, token: String?, game: String) {
+    fun setGame(usehelix: Boolean, clientId: String?, game: String, token: String? = "") {
         if (filter.value?.game != game) {
-            filter.value = Filter(clientId, token, game)
+            filter.value = Filter(usehelix, clientId, token, game)
         }
     }
 
-    fun filter(clientId: String?, token: String?, sort: Sort, period: Period, text: CharSequence) {
-        filter.value = filter.value?.copy(clientId = clientId, token = token, sort = sort, period = period)
+    fun filter(usehelix: Boolean, clientId: String?, sort: Sort, period: Period, text: CharSequence, token: String? = "") {
+        filter.value = filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, sort = sort, period = period)
         _sortText.value = text
     }
 
     private data class Filter(
+            val usehelix: Boolean,
             val clientId: String?,
             val token: String?,
             val game: String,

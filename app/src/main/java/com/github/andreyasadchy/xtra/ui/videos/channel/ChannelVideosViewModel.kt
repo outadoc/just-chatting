@@ -27,7 +27,10 @@ class ChannelVideosViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Video>> = Transformations.map(filter) {
-        repository.loadChannelVideos(it.clientId, it.token, it.channelId, BroadcastType.ALL, it.sort, viewModelScope)
+        if (it.usehelix)
+            repository.loadChannelVideos(it.clientId, it.token, it.channelId, BroadcastType.ALL, it.sort, viewModelScope)
+        else
+            repository.loadChannelVideosGQL(it.clientId, it.channelId, null, when (it.sort) { Sort.TIME -> "TIME" else -> "VIEWS" }, viewModelScope)
     }
     var selectedIndex = 0
         private set
@@ -36,21 +39,22 @@ class ChannelVideosViewModel @Inject constructor(
         _sortText.value = context.getString(sortOptions[selectedIndex])
     }
 
-    fun setChannelId(clientId: String?, token: String, channelId: String) {
+    fun setChannelId(usehelix: Boolean, clientId: String?, channelId: String, token: String? = "") {
         if (filter.value?.channelId != channelId) {
-            filter.value = Filter(clientId, token, channelId)
+            filter.value = Filter(usehelix, clientId, token, channelId = channelId)
         }
     }
 
-    fun setSort(clientId: String?, token: String, sort: Sort, index: Int, text: CharSequence) {
-        filter.value = filter.value?.copy(clientId = clientId, token = token, sort = sort)
+    fun setSort(usehelix: Boolean, clientId: String?, sort: Sort, index: Int, text: CharSequence, token: String? = "") {
+        filter.value = filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, sort = sort)
         selectedIndex = index
         _sortText.value = text
     }
 
     private data class Filter(
+            val usehelix: Boolean,
             val clientId: String?,
-            val token: String,
+            val token: String?,
             val channelId: String,
             val sort: Sort = Sort.TIME)
 }

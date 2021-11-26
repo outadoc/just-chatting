@@ -10,7 +10,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.video.Video
-import com.github.andreyasadchy.xtra.repository.GraphQLRepositoy
+import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
@@ -27,9 +27,9 @@ import javax.inject.Inject
 private const val TAG = "ClipPlayerViewModel"
 
 class ClipPlayerViewModel @Inject constructor(
-        context: Application,
-        private val graphQLRepositoy: GraphQLRepositoy,
-        private val repository: TwitchService) : PlayerViewModel(context), FollowViewModel {
+    context: Application,
+    private val graphQLRepository: GraphQLRepository,
+    private val repository: TwitchService) : PlayerViewModel(context), FollowViewModel {
 
     private lateinit var clip: Clip
     private val factory: ProgressiveMediaSource.Factory = ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -71,7 +71,7 @@ class ClipPlayerViewModel @Inject constructor(
             this.clip = clip
             viewModelScope.launch {
                 try {
-                    val urls = graphQLRepositoy.loadClipUrls(prefs.getString(C.GQL_CLIENT_ID, "") ?: "", clip.id)
+                    val urls = graphQLRepository.loadClipUrls(prefs.getString(C.GQL_CLIENT_ID, "") ?: "", clip.id)
                     val savedquality = prefs.getString(C.PLAYER_QUALITY, "720p60")
                     if (savedquality != null) {
                         var url: String? = null

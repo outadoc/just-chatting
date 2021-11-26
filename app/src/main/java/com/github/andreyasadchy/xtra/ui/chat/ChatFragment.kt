@@ -16,9 +16,7 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
-import com.github.andreyasadchy.xtra.util.LifecycleListener
-import com.github.andreyasadchy.xtra.util.hideKeyboard
-import com.github.andreyasadchy.xtra.util.visible
+import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.view_chat.view.*
 
 class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDialog.OnButtonClickListener {
@@ -34,6 +32,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
     var chName = ""
     override fun initialize() {
         val args = requireArguments()
+        val clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: ""
         val channelId = args.getString(KEY_CHANNEL)!!
         val user = User.get(requireContext())
         val userIsLoggedIn = user is LoggedIn
@@ -56,7 +55,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
                 if (it != null) {
                     chatView.init(this)
                     val getCurrentPosition = (parentFragment as ChatReplayPlayerFragment)::getCurrentPosition
-                    viewModel.startReplay(channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
+                    viewModel.startReplay(clientId, channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
                     true
                 } else {
                     chatView.chatReplayUnavailable.visible()

@@ -30,7 +30,7 @@ class GamesAdapter(
             setOnClickListener { listener.openGame(item.id, item.name) }
             gameImage.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.box_art_url, "medium", true))
             gameName.text = item.name
-            viewers.text = TwitchApiHelper.formatViewersCount(context, 0, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewersCount, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
         }
     }
 }

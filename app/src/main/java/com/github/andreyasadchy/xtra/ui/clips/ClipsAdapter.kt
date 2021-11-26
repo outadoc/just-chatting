@@ -43,7 +43,7 @@ class ClipsAdapter(
             views.text = TwitchApiHelper.formatViewsCount(context, item.view_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
             duration.text = DateUtils.formatElapsedTime(item.duration.toLong())
             userImage.apply {
-                loadImage(fragment, null, circle = true)
+                loadImage(fragment, item.channelLogo, circle = true)
                 setOnClickListener(channelListener)
             }
             title.text = item.title

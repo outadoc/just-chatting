@@ -8,24 +8,26 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Video(
         override val id: String,
-        val stream_id: String,
+        val stream_id: String = "",
         val user_id: String,
         val user_login: String,
         val user_name: String,
         override val title: String,
-        val description: String?,
+        val description: String? = "",
         @SerializedName("created_at")
         val createdAt: String,
         @SerializedName("published_at")
-        val publishedAt: String,
+        val publishedAt: String = "",
         val thumbnail_url: String,
-        val viewable: String,
+        val viewable: String = "",
         val view_count: Int,
-        val language: String,
-        val type: String,
+        val language: String = "",
+        val type: String = "",
         val duration: String,
         @SerializedName("muted_segments")
-        val mutedSegments: List<MutedSegment>?) : Parcelable, Downloadable {
+        val mutedSegments: List<MutedSegment>? = null,
+        val game_name: String = "",
+        val profileImageURL: String = "") : Parcelable, Downloadable {
 
     @Parcelize
     data class MutedSegment(
@@ -37,9 +39,9 @@ data class Video(
         override val channelName: String
                 get() = user_name
         override val channelLogo: String
-                get() = ""
+                get() = profileImageURL
         override val game: String
-                get() = ""
+                get() = game_name
         override val uploadDate: String
                 get() = createdAt
 }

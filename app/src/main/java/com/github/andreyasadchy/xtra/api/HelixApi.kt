@@ -48,20 +48,20 @@ interface HelixApi {
     suspend fun getUsersByLogin(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("login") logins: String): UsersResponse
 
     @GET("search/categories")
-    suspend fun getGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("query") query: String): GamesResponse
+    suspend fun getGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("query") query: String, @Query("first") limit: Int, @Query("after") offset: String?): GamesResponse
 
     @GET("search/channels")
     suspend fun getChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("query") query: String, @Query("first") limit: Int, @Query("after") offset: String?): ChannelSearchResponse
-
-    @GET("https://api.twitch.tv/v5/videos/{id}/comments")
-    suspend fun getVideoChatLog(@Path("id") videoId: String?, @Query("content_offset_seconds") offsetSeconds: Double, @Query("limit") limit: Int): VideoMessagesResponse
-
-    @GET("https://api.twitch.tv/v5/videos/{id}/comments")
-    suspend fun getVideoChatLogAfter(@Path("id") videoId: String?, @Query("cursor") cursor: String, @Query("limit") limit: Int): VideoMessagesResponse
 
     @GET("users/follows")
     suspend fun getUserFollows(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("to_id") userId: String, @Query("from_id") channelId: String): FollowResponse
 
     @GET("users/follows")
     suspend fun getFollowedChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("from_id") userId: String, @Query("first") limit: Int, @Query("after") offset: String?): FollowResponse
+
+    @GET("https://api.twitch.tv/v5/videos/{id}/comments")
+    suspend fun getVideoChatLog(@Header("Client-ID") clientId: String?, @Path("id") videoId: String?, @Query("content_offset_seconds") offsetSeconds: Double, @Query("limit") limit: Int): VideoMessagesResponse
+
+    @GET("https://api.twitch.tv/v5/videos/{id}/comments")
+    suspend fun getVideoChatLogAfter(@Header("Client-ID") clientId: String?, @Path("id") videoId: String?, @Query("cursor") cursor: String, @Query("limit") limit: Int): VideoMessagesResponse
 }

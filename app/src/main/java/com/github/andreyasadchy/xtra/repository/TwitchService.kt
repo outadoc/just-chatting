@@ -26,10 +26,20 @@ interface TwitchService {
     fun loadChannelVideos(clientId: String?, userToken: String?, channelId: String, broadcastType: BroadcastType, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>
     suspend fun loadUserById(clientId: String?, userToken: String?, id: String): User
     suspend fun loadUserByLogin(clientId: String?, userToken: String?, login: String): User
-    suspend fun loadGames(clientId: String?, userToken: String?, query: String): List<Game>
+    fun loadGames(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Game>
     fun loadChannels(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Channel>
-    suspend fun loadVideoChatLog(videoId: String, offsetSeconds: Double): VideoMessagesResponse
-    suspend fun loadVideoChatAfter(videoId: String, cursor: String): VideoMessagesResponse
     suspend fun loadUserFollows(clientId: String?, userToken: String?, userId: String, channelId: String): Boolean
     fun loadFollowedChannels(clientId: String?, userToken: String?, userId: String, coroutineScope: CoroutineScope): Listing<Follow>
+    suspend fun loadVideoChatLog(clientId: String?, videoId: String, offsetSeconds: Double): VideoMessagesResponse
+    suspend fun loadVideoChatAfter(clientId: String?, videoId: String, cursor: String): VideoMessagesResponse
+
+    fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game>
+    fun loadTopStreamsGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Stream>
+    fun loadGameStreamsGQL(clientId: String?, game: String?, coroutineScope: CoroutineScope): Listing<Stream>
+    fun loadGameVideosGQL(clientId: String?, game: String?, type: String?, coroutineScope: CoroutineScope): Listing<Video>
+    fun loadGameClipsGQL(clientId: String?, game: String?, sort: String?, coroutineScope: CoroutineScope): Listing<Clip>
+    fun loadChannelVideosGQL(clientId: String?, game: String?, type: String?, sort: String?, coroutineScope: CoroutineScope): Listing<Video>
+    fun loadChannelClipsGQL(clientId: String?, game: String?, sort: String?, coroutineScope: CoroutineScope): Listing<Clip>
+    fun loadSearchChannelsGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<Channel>
+    fun loadSearchGamesGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<Game>
 }

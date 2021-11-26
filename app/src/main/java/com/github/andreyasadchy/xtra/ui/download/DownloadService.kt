@@ -17,7 +17,9 @@ import com.github.andreyasadchy.xtra.model.offline.Request
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FetchProvider
+import com.github.andreyasadchy.xtra.util.prefs
 import com.iheartradio.m3u8.*
 import com.iheartradio.m3u8.data.MediaPlaylist
 import com.iheartradio.m3u8.data.Playlist
@@ -173,7 +175,7 @@ class DownloadService : IntentService(TAG) {
             })
             GlobalScope.launch {
                 try {
-                    val response = playerRepository.loadVideoPlaylist(request.videoId!!)
+                    val response = playerRepository.loadVideoPlaylist(applicationContext.prefs().getString(C.GQL_CLIENT_ID, "") ?: "", request.videoId!!)
                     playlist = URL("https://.*\\.m3u8".toRegex().find(response.body()!!.string())!!.value).openStream().use {
                         PlaylistParser(it, Format.EXT_M3U, Encoding.UTF_8, ParsingMode.LENIENT).parse().mediaPlaylist
                     }

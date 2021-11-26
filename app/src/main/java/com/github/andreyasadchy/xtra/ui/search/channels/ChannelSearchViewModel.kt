@@ -13,14 +13,21 @@ import javax.inject.Inject
 class ChannelSearchViewModel @Inject constructor(
         private val repository: TwitchService) : PagedListViewModel<Channel>() {
 
+    private var useHelix = false
     private val query = MutableLiveData<String>()
     private var clientId = MutableLiveData<String>()
     private var token = MutableLiveData<String>()
     override val result: LiveData<Listing<Channel>> = Transformations.map(query) {
-        repository.loadChannels(clientId.value, token.value, it, viewModelScope)
+        if (useHelix)
+            repository.loadChannels(clientId.value, token.value, it, viewModelScope)
+        else
+            repository.loadSearchChannelsGQL(clientId.value, it, viewModelScope)
     }
 
-    fun setQuery(clientId: String?, token: String?, query: String) {
+    fun setQuery(usehelix: Boolean, clientId: String?, query: String, token: String? = "") {
+        if (useHelix != usehelix) {
+            useHelix = usehelix
+        }
         if (this.clientId.value != clientId) {
             this.clientId.value = clientId
         }

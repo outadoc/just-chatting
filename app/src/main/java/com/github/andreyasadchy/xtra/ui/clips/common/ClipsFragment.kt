@@ -2,7 +2,9 @@ package com.github.andreyasadchy.xtra.ui.clips.common
 
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
+import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.ui.clips.BaseClipsFragment
 import com.github.andreyasadchy.xtra.ui.clips.ClipsAdapter
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
@@ -34,12 +36,26 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>() {
         viewModel.sortText.observe(viewLifecycleOwner, Observer {
             sortText.text = it
         })
-        viewModel.loadClips(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), arguments?.getString(C.CHANNEL), arguments?.getString(C.GAME))
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != null) {
+            viewModel.loadClips(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), arguments?.getString(C.CHANNEL), arguments?.getString(C.GAME), requireContext().prefs().getString(C.TOKEN, ""))
+        } else {
+            viewModel.loadClips(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), arguments?.getString(C.CHANNEL), arguments?.getString(C.GAME))
+        }
         sortBar.setOnClickListener { FragmentUtils.showRadioButtonDialogFragment(requireContext(), childFragmentManager, viewModel.sortOptions, viewModel.selectedIndex) }
     }
 
     override fun onChange(requestCode: Int, index: Int, text: CharSequence, tag: Int?) {
+        val period: Period = when (tag) {
+            R.string.today -> Period.DAY
+            R.string.this_week -> Period.WEEK
+            R.string.this_month -> Period.MONTH
+            else -> Period.ALL
+        }
         adapter.submitList(null)
-        viewModel.filter(index, text)
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != null) {
+            viewModel.filter(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), period, index, text, requireContext().prefs().getString(C.TOKEN, ""))
+        } else {
+            viewModel.filter(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), period, index, text)
+        }
     }
 }

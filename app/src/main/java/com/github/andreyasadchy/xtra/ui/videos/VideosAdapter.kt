@@ -50,7 +50,7 @@ class VideosAdapter(
             }
             userImage.apply {
                 setOnClickListener(channelListener)
-                loadImage(fragment, null, circle = true)
+                loadImage(fragment, item.channelLogo, circle = true)
             }
             username.apply {
                 setOnClickListener(channelListener)

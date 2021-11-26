@@ -29,12 +29,20 @@ class ChannelVideosFragment : BaseVideosFragment<ChannelVideosViewModel>(), Radi
         viewModel.sortText.observe(viewLifecycleOwner, Observer {
             sortText.text = it
         })
-        viewModel.setChannelId(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", requireArguments().getString(C.CHANNEL)!!)
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != null) {
+            viewModel.setChannelId(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireArguments().getString(C.CHANNEL)!!, requireContext().prefs().getString(C.TOKEN, ""))
+        } else {
+            viewModel.setChannelId(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), requireArguments().getString(C.CHANNEL)!!)
+        }
         sortBar.setOnClickListener { FragmentUtils.showRadioButtonDialogFragment(requireContext(), childFragmentManager, viewModel.sortOptions, viewModel.selectedIndex) }
     }
 
     override fun onChange(requestCode: Int, index: Int, text: CharSequence, tag: Int?) {
         adapter.submitList(null)
-        viewModel.setSort(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", if (tag == R.string.upload_date) Sort.TIME else Sort.VIEWS, index, text)
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != null) {
+            viewModel.setSort(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), if (tag == R.string.upload_date) Sort.TIME else Sort.VIEWS, index, text, requireContext().prefs().getString(C.TOKEN, ""))
+        } else {
+            viewModel.setSort(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), if (tag == R.string.upload_date) Sort.TIME else Sort.VIEWS, index, text)
+        }
     }
 }

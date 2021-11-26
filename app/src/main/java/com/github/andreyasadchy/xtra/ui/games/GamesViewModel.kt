@@ -15,11 +15,14 @@ class GamesViewModel @Inject constructor(
 
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Game>> = Transformations.map(filter) {
-        repository.loadTopGames(it.clientId, it.token, viewModelScope)
+        if (it.usehelix)
+            repository.loadTopGames(it.clientId, it.token, viewModelScope)
+        else
+            repository.loadTopGamesGQL(it.clientId, viewModelScope)
     }
 
-    fun loadGames(clientId: String?, token: String?) {
-        Filter(clientId, token).let {
+    fun loadGames(usehelix: Boolean, clientId: String?, token: String? = "") {
+        Filter(usehelix, clientId, token).let {
             if (filter.value != it) {
                 filter.value = it
             }
@@ -27,6 +30,7 @@ class GamesViewModel @Inject constructor(
     }
 
     private data class Filter(
+        val usehelix: Boolean,
         val clientId: String?,
         val token: String?)
 }

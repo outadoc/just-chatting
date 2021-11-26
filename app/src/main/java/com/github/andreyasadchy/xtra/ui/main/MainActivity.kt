@@ -269,7 +269,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
     override fun openGame(id: String, name: String) {
         fragNavController.pushFragment(GameFragment.newInstance(
-            if (prefs().getBoolean(C.API_USEHELIX, true) && prefs().getString(C.USERNAME, "") != null) id else name, name))
+            if (prefs().getBoolean(C.API_USEHELIX, true) && prefs().getString(C.USERNAME, "") != "") id else name, name))
     }
 
     override fun startStream(stream: Stream) {
@@ -291,7 +291,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
     override fun viewChannel(id: String, name: String) {
         fragNavController.pushFragment(ChannelPagerFragment.newInstance(
-            if (prefs().getBoolean(C.API_USEHELIX, true) && prefs().getString(C.USERNAME, "") != null) id else name, name))
+            if (prefs().getBoolean(C.API_USEHELIX, true) && prefs().getString(C.USERNAME, "") != "") id else name, name))
     }
 
 //SlidingLayout.Listener

@@ -36,7 +36,7 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>() {
         viewModel.sortText.observe(viewLifecycleOwner, Observer {
             sortText.text = it
         })
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != null) {
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
             viewModel.loadClips(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), arguments?.getString(C.CHANNEL), arguments?.getString(C.GAME), requireContext().prefs().getString(C.TOKEN, ""))
         } else {
             viewModel.loadClips(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), arguments?.getString(C.CHANNEL), arguments?.getString(C.GAME))
@@ -52,7 +52,7 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>() {
             else -> Period.ALL
         }
         adapter.submitList(null)
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != null) {
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
             viewModel.filter(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), period, index, text, requireContext().prefs().getString(C.TOKEN, ""))
         } else {
             viewModel.filter(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), period, index, text)

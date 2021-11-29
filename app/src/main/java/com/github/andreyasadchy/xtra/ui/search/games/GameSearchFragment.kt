@@ -32,7 +32,7 @@ class GameSearchFragment : PagedListFragment<Game, GameSearchViewModel, BasePage
 
     override fun search(query: String) {
         if (query.isNotEmpty()) {
-            if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
+            if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "" && requireContext().prefs().getBoolean(C.API_USEHELIX_GAMES, false)) {
                 viewModel.setQuery(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), query, requireContext().prefs().getString(C.TOKEN, ""))
             } else {
                 viewModel.setQuery(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), query)

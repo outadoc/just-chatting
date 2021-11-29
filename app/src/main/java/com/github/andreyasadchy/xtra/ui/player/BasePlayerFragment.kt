@@ -69,6 +69,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
     protected abstract val channelId: String
     protected abstract val channelLogin: String
     protected abstract val channelName: String
+    protected abstract val channelImage: String
 
     val playerWidth: Int
         get() = playerView.width
@@ -162,7 +163,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
             view.findViewById<TextView>(R.id.channel).apply {
                 text = channelName
                 setOnClickListener {
-                    activity.viewChannel(channelLogin, channelName)
+                    activity.viewChannel(channelId, channelLogin, channelName, channelImage)
                     slidingLayout.minimize()
                 }
             }

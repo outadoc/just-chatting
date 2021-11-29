@@ -34,7 +34,7 @@ class ClipsAdapter(
     override val layoutId: Int = R.layout.fragment_clips_list_item
 
     override fun bind(item: Clip, view: View) {
-        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.broadcaster_id, item.broadcaster_name) }
+        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.broadcaster_id, item.broadcaster_login_gql, item.broadcaster_name, item.profileImageURL) }
         with(view) {
             setOnClickListener { clickListener.startClip(item) }
             setOnLongClickListener { showDownloadDialog(item); true }

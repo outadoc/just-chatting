@@ -24,7 +24,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
     interface OnButtonClickListener {
         fun onReplyClicked(userName: String)
         fun onCopyMessageClicked(message: String)
-        fun onViewProfileClicked(id: String, name: String)
+        fun onViewProfileClicked(id: String, login: String, name: String, profileImage: String)
     }
 
     companion object {
@@ -71,7 +71,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         }
         viewProfile.setOnClickListener {
             viewModel.loadUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), extractUserName(msg)).observe(viewLifecycleOwner, Observer {
-                listener.onViewProfileClicked(it.id, it.display_name)
+                listener.onViewProfileClicked(it.id, it.login, it.display_name, it.profile_image_url)
                 dismiss()
             })
         }

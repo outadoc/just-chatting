@@ -54,6 +54,7 @@ object C {
     const val TOKEN_RANDOM_DEVICEID = "token_random_deviceid"
     const val TOKEN_PLAYERTYPE = "token_playertype"
     const val API_USEHELIX = "api_usehelix"
+    const val API_USEHELIX_GAMES = "api_usehelix_games"
     const val HELIX_CLIENT_ID = "helix_client_id"
     const val GQL_CLIENT_ID = "gql_client_id"
 }

@@ -24,8 +24,8 @@ class ChannelSearchAdapter(
 
     override fun bind(item: Channel, view: View) {
         with(view) {
-            setOnClickListener { listener.viewChannel(item.id, item.display_name) }
-            logo.loadImage(fragment, item.thumbnail_url)
+            setOnClickListener { listener.viewChannel(item.id, item.broadcaster_login, item.display_name, item.profileImageURL) }
+            logo.loadImage(fragment, item.profileImageURL)
             name.text = item.display_name
         }
     }

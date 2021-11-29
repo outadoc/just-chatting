@@ -14,7 +14,9 @@ import com.github.andreyasadchy.xtra.util.C
 class ChannelPagerAdapter(
         private val context: Context,
         fm: FragmentManager,
-        private val args: Bundle) : ItemAwareFragmentPagerAdapter(fm) {
+        private val args: Bundle,
+        private val login: String,
+        private val displayName: String) : ItemAwareFragmentPagerAdapter(fm) {
 
     override fun getPageTitle(position: Int): CharSequence? {
         val id = when (position) {
@@ -31,7 +33,7 @@ class ChannelPagerAdapter(
             0 -> ChannelVideosFragment()
             1 -> ClipsFragment()
 //            2 -> ChannelInfoFragment()
-            else -> return ChatFragment.newInstance(args.getString(C.CHANNEL)!!, "", "")
+            else -> return ChatFragment.newInstance(args.getString(C.CHANNEL)!!, login, displayName)
         }
         return fragment.apply { arguments = args }
     }

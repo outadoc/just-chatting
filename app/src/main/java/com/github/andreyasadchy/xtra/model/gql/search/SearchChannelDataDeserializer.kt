@@ -15,13 +15,13 @@ class SearchChannelDataDeserializer : JsonDeserializer<SearchChannelDataResponse
         var cursor: String? = null
         val dataJson = json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("channels").getAsJsonArray("edges")
         dataJson.forEach {
-            cursor = json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("channels").getAsJsonPrimitive("cursor").asString
+            cursor = if (!json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("channels").get("cursor").isJsonNull) json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("channels").getAsJsonPrimitive("cursor").asString else null
             val obj = it.asJsonObject.getAsJsonObject("item")
             data.add(Channel(
-                    obj.getAsJsonPrimitive("id").asString,
-                    obj.getAsJsonPrimitive("login").asString,
-                    obj.getAsJsonPrimitive("displayName").asString,
-                    thumbnail_url = obj.getAsJsonPrimitive("profileImageURL").asString
+                    id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else "",
+                    broadcaster_login = if (!(obj.get("login").isJsonNull)) { obj.getAsJsonPrimitive("login").asString } else "",
+                    display_name = if (!(obj.get("displayName").isJsonNull)) { obj.getAsJsonPrimitive("displayName").asString } else "",
+                    profileImageURL = if (!(obj.get("profileImageURL").isJsonNull)) { obj.getAsJsonPrimitive("profileImageURL").asString } else "",
                 )
             )
         }

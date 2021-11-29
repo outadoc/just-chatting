@@ -24,6 +24,8 @@ class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerS
         get() = null!!
     override val channelName: String
         get() = null!!
+    override val channelImage: String
+        get() = null!!
 
     override val layoutId: Int
         get() = R.layout.fragment_player_offline

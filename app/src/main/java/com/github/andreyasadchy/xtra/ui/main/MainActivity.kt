@@ -289,9 +289,11 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
         startPlayer(OfflinePlayerFragment.newInstance(video))
     }
 
-    override fun viewChannel(id: String, name: String) {
-        fragNavController.pushFragment(ChannelPagerFragment.newInstance(
-            if (prefs().getBoolean(C.API_USEHELIX, true) && prefs().getString(C.USERNAME, "") != "") id else name, name))
+    override fun viewChannel(id: String, login: String, name: String, profileImage: String?) {
+        if (prefs().getBoolean(C.API_USEHELIX, true) && prefs().getString(C.USERNAME, "") != "")
+            fragNavController.pushFragment(ChannelPagerFragment.newInstance(id, login, name, profileImage))
+        else
+            fragNavController.pushFragment(ChannelPagerFragment.newInstance(login, login, name, profileImage))
     }
 
 //SlidingLayout.Listener

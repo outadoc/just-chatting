@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
@@ -16,10 +15,8 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
-import kotlinx.android.synthetic.main.fragment_followed_channels.*
-import kotlinx.android.synthetic.main.sort_bar.*
 
-class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewModel, BasePagedListAdapter<Follow>>(), FollowedChannelsSortDialog.OnFilter, Scrollable {
+class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewModel, BasePagedListAdapter<Follow>>(), Scrollable {
 
     override val viewModel by viewModels<FollowedChannelsViewModel> { viewModelFactory }
     override val adapter: BasePagedListAdapter<Follow> by lazy {
@@ -33,16 +30,7 @@ class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewM
 
     override fun initialize() {
         super.initialize()
-        viewModel.sortText.observe(viewLifecycleOwner, Observer {
-            sortText.text = it
-        })
-        viewModel.setUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), User.get(requireContext()))
-        sortBar.setOnClickListener { FollowedChannelsSortDialog.newInstance().show(childFragmentManager, null) }
-    }
-
-    override fun onChange(sortText: CharSequence, orderText: CharSequence) {
-        adapter.submitList(null)
-        viewModel.filter(getString(R.string.sort_and_order, sortText, orderText))
+        viewModel.setUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), User.get(requireContext()))
     }
 
     override fun scrollToTop() {

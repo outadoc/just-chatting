@@ -24,7 +24,7 @@ abstract class BaseStreamsAdapter(
         }) {
 
     override fun bind(item: Stream, view: View) {
-        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.user_id, item.user_name) }
+        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.user_id, item.user_login, item.user_name, item.profileImageURL) }
         with(view) {
             setOnClickListener { clickListener.startStream(item) }
             userImage.apply {

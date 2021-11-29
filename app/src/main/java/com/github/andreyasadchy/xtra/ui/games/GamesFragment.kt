@@ -89,7 +89,7 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
 
     override fun initialize() {
         super.initialize()
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "" && requireContext().prefs().getBoolean(C.API_USEHELIX_GAMES, false)) {
             viewModel.loadGames(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""))
         } else {
             viewModel.loadGames(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))}

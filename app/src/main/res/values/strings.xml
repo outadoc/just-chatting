@@ -178,6 +178,7 @@
     <string name="Android_9_required">Android 9 required</string>
     <string name="token_random_deviceid">Random device id</string>
     <string name="api_usehelix">Use helix api when logged in</string>
+    <string name="api_usehelix_games">Get games from helix</string>
     <string name="api_helix">Helix client id</string>
     <string name="api_gql">GQL client id</string>
     <string name="playback_speed">Playback speed</string>

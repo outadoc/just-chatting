@@ -151,9 +151,9 @@ class HelixRepository @Inject constructor(
     override fun loadFollowedChannels(clientId: String?, userToken: String?, userId: String, coroutineScope: CoroutineScope): Listing<Follow> {
         val factory = FollowedChannelsDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, api, coroutineScope)
         val config = PagedList.Config.Builder()
-                .setPageSize(40)
-                .setInitialLoadSizeHint(40)
-                .setPrefetchDistance(10)
+                .setPageSize(15)
+                .setInitialLoadSizeHint(15)
+                .setPrefetchDistance(5)
                 .setEnablePlaceholders(false)
                 .build()
         return Listing.create(factory, config)

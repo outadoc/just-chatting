@@ -15,14 +15,13 @@ class SearchGameDataDeserializer : JsonDeserializer<SearchGameDataResponse> {
         var cursor: String? = null
         val dataJson = json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("games").getAsJsonArray("edges")
         dataJson.forEach {
-            cursor = json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("games").getAsJsonPrimitive("cursor").asString
+            cursor = if (!json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("games").get("cursor").isJsonNull) json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("games").getAsJsonPrimitive("cursor").asString else null
             val obj = it.asJsonObject.getAsJsonObject("item")
             data.add(Game(
-                    obj.getAsJsonPrimitive("id").asString,
-                    obj.getAsJsonPrimitive("displayName").asString,
-                    obj.getAsJsonPrimitive("boxArtURL").asString,
-                    if (!obj.get("viewersCount").isJsonNull)
-                        obj.getAsJsonPrimitive("viewersCount").asInt else 0
+                    id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else "",
+                    name = if (!(obj.get("displayName").isJsonNull)) { obj.getAsJsonPrimitive("displayName").asString } else "",
+                    box_art_url = if (!(obj.get("boxArtURL").isJsonNull)) { obj.getAsJsonPrimitive("boxArtURL").asString } else "",
+                    viewersCount = if (!(obj.get("viewersCount").isJsonNull)) { obj.getAsJsonPrimitive("viewersCount").asInt } else 0,
                 )
             )
         }

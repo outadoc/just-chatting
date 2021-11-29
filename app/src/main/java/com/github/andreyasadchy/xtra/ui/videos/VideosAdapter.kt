@@ -31,7 +31,7 @@ class VideosAdapter(
     override val layoutId: Int = R.layout.fragment_videos_list_item
 
     override fun bind(item: Video, view: View) {
-        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.user_id, item.user_name) }
+        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.user_id, item.user_login, item.user_name, item.profileImageURL) }
         with(view) {
             val position = positions?.get(item.id.substring(1).toLong())
             setOnClickListener { clickListener.startVideo(item, position?.toDouble()) }

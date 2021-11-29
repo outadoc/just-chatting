@@ -307,6 +307,12 @@
         android:title="@string/api_usehelix"
         app:iconSpaceReserved="false"/>
 
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="api_usehelix_games"
+        android:title="@string/api_usehelix_games"
+        app:iconSpaceReserved="false"/>
+
     <EditTextPreference
         android:defaultValue="ilfexgv3nnljz3isbm257gzwrzr7bi"
         android:key="helix_client_id"

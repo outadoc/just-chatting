@@ -15,13 +15,14 @@ class GameDataDeserializer : JsonDeserializer<GameDataResponse> {
         var cursor: String? = null
         val dataJson = json.asJsonObject.getAsJsonObject("data").getAsJsonObject("directoriesWithTags").getAsJsonArray("edges")
         dataJson.forEach {
-            cursor = it.asJsonObject.getAsJsonPrimitive("cursor").asString
+            cursor = if (!it.asJsonObject.get("cursor").isJsonNull) it.asJsonObject.get("cursor").asString else null
             val obj = it.asJsonObject.getAsJsonObject("node")
             data.add(Game(
-                obj.getAsJsonPrimitive("id").asString,
-                obj.getAsJsonPrimitive("displayName").asString,
-                obj.getAsJsonPrimitive("avatarURL").asString,
-                obj.getAsJsonPrimitive("viewersCount").asInt)
+                    id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else "",
+                    name = if (!(obj.get("displayName").isJsonNull)) { obj.getAsJsonPrimitive("displayName").asString } else "",
+                    box_art_url = if (!(obj.get("avatarURL").isJsonNull)) { obj.getAsJsonPrimitive("avatarURL").asString } else "",
+                    viewersCount = if (!(obj.get("viewersCount").isJsonNull)) { obj.getAsJsonPrimitive("viewersCount").asInt } else 0,
+                )
             )
         }
         return GameDataResponse(data, cursor)

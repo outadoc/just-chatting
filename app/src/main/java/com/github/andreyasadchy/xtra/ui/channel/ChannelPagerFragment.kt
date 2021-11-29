@@ -38,10 +38,14 @@ import kotlinx.android.synthetic.main.fragment_media_pager.*
 class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
 
     companion object {
-        fun newInstance(id: String, name: String) = ChannelPagerFragment().apply { arguments = bundleOf(C.CHANNEL to id); text = name }
+        fun newInstance(id: String, login: String, name: String, profileImage: String?) = ChannelPagerFragment().apply { arguments = bundleOf(C.CHANNEL to id)
+            ; chlogin = login; chdisplayName = name; if (profileImage != null) { chprofileImage = profileImage }
+        }
     }
 
-    var text = ""
+    var chlogin = ""
+    var chdisplayName = ""
+    var chprofileImage = ""
     private val viewModel by viewModels<ChannelPagerViewModel> { viewModelFactory }
     private lateinit var channel: String
 
@@ -58,12 +62,12 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
         val isLoggedIn = User.get(activity) !is NotLoggedIn
-        setAdapter(ChannelPagerAdapter(activity, childFragmentManager, requireArguments()))
+        setAdapter(ChannelPagerAdapter(activity, childFragmentManager, requireArguments(), chlogin, chdisplayName))
         if (activity.isInLandscapeOrientation) {
             appBar.setExpanded(false, false)
         }
-        collapsingToolbar.title = text
-        logo.loadImage(this, null, circle = true)
+        collapsingToolbar.title = chdisplayName
+        logo.loadImage(this, chprofileImage, circle = true)
         toolbar.apply {
             navigationIcon = Utils.getNavigationIcon(activity)
             setNavigationOnClickListener { activity.popFragment() }
@@ -118,7 +122,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
         viewModel.loadStream(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", channel)
         val activity = requireActivity() as MainActivity
         viewModel.stream.observe(viewLifecycleOwner, Observer {
-            watchLive.isVisible = it.data != null
+            watchLive.isVisible = it.data.firstOrNull() != null
             it.data.firstOrNull().let { s ->
                 toolbarContainer.updateLayoutParams { height = ViewGroup.LayoutParams.WRAP_CONTENT }
                 collapsingToolbar.expandedTitleMarginBottom = activity.convertDpToPixels(50.5f)

@@ -20,6 +20,7 @@ data class Clip(
         val created_at: String,
         val thumbnail_url: String,
         val duration: Double,
+        val broadcaster_login_gql: String = "",
         val profileImageURL: String = "") : Parcelable, Downloadable {
 
         override val thumbnail: String

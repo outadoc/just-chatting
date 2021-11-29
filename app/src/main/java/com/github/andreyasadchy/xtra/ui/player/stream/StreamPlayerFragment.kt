@@ -27,6 +27,8 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         get() = stream.user_login
     override val channelName: String
         get() = stream.user_name
+    override val channelImage: String
+        get() = stream.profileImageURL
 
     override val layoutId: Int
         get() = R.layout.fragment_player_stream

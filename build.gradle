@@ -1,11 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.5.31'
+    ext.kotlin_version = '1.6.0'
     ext.paging = '2.1.2'
-    ext.lifecycle = '2.4.0-rc01'
+    ext.lifecycle = '2.4.0'
     ext.room = '2.3.0'
-    ext.exoplayer = "2.10.8"
-    ext.dagger = '2.40'
+    ext.exoplayer = '2.16.1'
+    ext.dagger = '2.40.2'
     ext.retrofit = '2.9.0'
     ext.glide = '4.12.0'
     ext.fetch = "3.1.4"

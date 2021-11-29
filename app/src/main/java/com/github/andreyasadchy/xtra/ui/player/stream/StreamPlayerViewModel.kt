@@ -6,16 +6,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserFactory
-import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistTracker
-import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
-import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
 import com.github.andreyasadchy.xtra.ui.player.HlsPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode.*
 import com.github.andreyasadchy.xtra.util.toast
+import com.google.android.exoplayer2.MediaItem
+import com.google.android.exoplayer2.source.hls.HlsManifest
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.source.hls.playlist.DefaultHlsPlaylistParserFactory
+import com.google.android.exoplayer2.source.hls.playlist.DefaultHlsPlaylistTracker
 import com.google.android.exoplayer2.upstream.DefaultLoadErrorHandlingPolicy
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -120,13 +121,13 @@ class StreamPlayerViewModel @Inject constructor(
                 val result = playerRepository.loadStreamPlaylistUrl(gqlclientId, stream.user_login, playerType, useAdBlock, randomDeviceId, xdeviceid, deviceid)
                 if (useAdBlock) {
                     if (result.second) {
-                        httpDataSourceFactory.defaultRequestProperties.set("X-Donate-To", "https://ttv.lol/donate")
+                        httpDataSourceFactory.setDefaultRequestProperties(hashMapOf("X-Donate-To" to "https://ttv.lol/donate"))
                     } else {
                         val context = getApplication<Application>()
                         context.toast(R.string.adblock_not_working)
                     }
                 }
-                mediaSource = hlsMediaSourceFactory.createMediaSource(result.first)
+                mediaSource = hlsMediaSourceFactory.createMediaSource(MediaItem.fromUri(result.first))
                 play()
             } catch (e: Exception) {
                 val context = getApplication<Application>()

@@ -40,8 +40,12 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
 
     protected val trackSelector = DefaultTrackSelector(context)
     private val rewind = context.prefs().getString("playerRewind", "5000")!!.toLong()
+    private val minbuffer = context.prefs().getString(C.PLAYER_BUFFER_MIN, "15000")!!.toInt()
+    private val maxbuffer = context.prefs().getString(C.PLAYER_BUFFER_MAX, "50000")!!.toInt()
+    private val playbackbuffer = context.prefs().getString(C.PLAYER_BUFFER_PLAYBACK, "2000")!!.toInt()
+    private val rebuffer = context.prefs().getString(C.PLAYER_BUFFER_REBUFFER, "5000")!!.toInt()
     val player: ExoPlayer = ExoPlayer.Builder(context).setTrackSelector(trackSelector).setLoadControl(DefaultLoadControl.Builder()
-        .setBufferDurationsMs(15000, 50000, 2000, 5000)
+        .setBufferDurationsMs(minbuffer, maxbuffer, playbackbuffer, rebuffer)
         .build()).setSeekBackIncrementMs(rewind).setSeekForwardIncrementMs(rewind).build()
     protected lateinit var mediaSource: MediaSource //TODO maybe redo these viewmodels to custom players
 

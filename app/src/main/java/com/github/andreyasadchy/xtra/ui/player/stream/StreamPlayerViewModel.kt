@@ -44,6 +44,9 @@ class StreamPlayerViewModel @Inject constructor(
     private var deviceid = ""
     private var playerType = ""
     private var gqlclientId = ""
+    private var minspeed = ""
+    private var maxspeed = ""
+    private var targetoffset = ""
 
     private val hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
         .setAllowChunklessPreparation(true)
@@ -51,13 +54,16 @@ class StreamPlayerViewModel @Inject constructor(
         .setPlaylistTrackerFactory(DefaultHlsPlaylistTracker.FACTORY)
         .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(6))
 
-    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String, playerType: String, gqlclientId: String) {
+    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String, playerType: String, gqlclientId: String, minspeed: String, maxspeed: String, targetoffset: String) {
         this.useAdBlock = useAdBlock
         this.randomDeviceId = randomDeviceId
         this.xdeviceid = xdeviceid
         this.deviceid = deviceid
         this.playerType = playerType
         this.gqlclientId = gqlclientId
+        this.minspeed = minspeed
+        this.maxspeed = maxspeed
+        this.targetoffset = targetoffset
         if (_stream.value == null) {
             _stream.value = stream
             loadStream(stream)
@@ -127,7 +133,9 @@ class StreamPlayerViewModel @Inject constructor(
                         context.toast(R.string.adblock_not_working)
                     }
                 }
-                mediaSource = hlsMediaSourceFactory.createMediaSource(MediaItem.fromUri(result.first))
+                mediaSource = hlsMediaSourceFactory.createMediaSource(
+                    MediaItem.Builder().setUri(result.first).setLiveConfiguration(MediaItem.LiveConfiguration.Builder()
+                        .setMinPlaybackSpeed(minspeed.toFloat()).setMaxPlaybackSpeed(maxspeed.toFloat()).setTargetOffsetMs(targetoffset.toLong()).build()).build())
                 play()
             } catch (e: Exception) {
                 val context = getApplication<Application>()

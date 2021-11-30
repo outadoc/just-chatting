@@ -118,7 +118,7 @@ class DownloadService : IntentService(TAG) {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 putExtra(MainActivity.KEY_CODE, MainActivity.INTENT_OPEN_DOWNLOADS_TAB)
             }
-            setContentIntent(PendingIntent.getActivity(this@DownloadService, REQUEST_CODE_DOWNLOAD, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT))
+            setContentIntent(PendingIntent.getActivity(this@DownloadService, REQUEST_CODE_DOWNLOAD, clickIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT))
             addAction(createAction(android.R.string.cancel, ACTION_CANCEL, 0))
             addAction(pauseAction)
         }
@@ -302,7 +302,7 @@ class DownloadService : IntentService(TAG) {
             setProgress(0, 0, false)
             setOngoing(false)
             setSmallIcon(android.R.drawable.stat_sys_download_done)
-            setContentIntent(PendingIntent.getActivity(this@DownloadService, REQUEST_CODE_PLAY, intent, PendingIntent.FLAG_UPDATE_CURRENT))
+            setContentIntent(PendingIntent.getActivity(this@DownloadService, REQUEST_CODE_PLAY, intent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT))
             mActions.clear()
         }
         notificationManager.notify(offlineVideo.id, notificationBuilder.build())
@@ -314,7 +314,7 @@ class DownloadService : IntentService(TAG) {
         offlineRepository.updateVideo(offlineVideo)
     }
 
-    private fun createAction(@StringRes title: Int, action: String, requestCode: Int) = NotificationCompat.Action(0, getString(title), PendingIntent.getBroadcast(this, requestCode, Intent(action), PendingIntent.FLAG_UPDATE_CURRENT))
+    private fun createAction(@StringRes title: Int, action: String, requestCode: Int) = NotificationCompat.Action(0, getString(title), PendingIntent.getBroadcast(this, requestCode, Intent(action), if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT))
 
     inner class NotificationActionReceiver : BroadcastReceiver() {
 

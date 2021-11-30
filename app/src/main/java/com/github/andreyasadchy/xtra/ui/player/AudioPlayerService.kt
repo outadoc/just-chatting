@@ -229,11 +229,7 @@ class AudioPlayerService : Service() {
                 flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
                 putExtra(MainActivity.KEY_CODE, MainActivity.INTENT_OPEN_PLAYER)
             }
-            return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                PendingIntent.getActivity(this@AudioPlayerService, REQUEST_CODE_RESUME, clickIntent, PendingIntent.FLAG_MUTABLE)
-            } else {
-                return PendingIntent.getActivity(this@AudioPlayerService, REQUEST_CODE_RESUME, clickIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-            }
+            return PendingIntent.getActivity(this@AudioPlayerService, REQUEST_CODE_RESUME, clickIntent, if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_IMMUTABLE else PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
         override fun getCurrentContentText(player: Player): String? = text

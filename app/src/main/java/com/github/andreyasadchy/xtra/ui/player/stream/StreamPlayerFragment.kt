@@ -59,9 +59,12 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
     }
 
     override fun initialize() {
-        viewModel.startStream(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, "") ?: "", stream, prefs.getBoolean(C.AD_BLOCKER, true), prefs.getBoolean(C.TOKEN_RANDOM_DEVICEID, true),
-            prefs.getString(C.TOKEN_XDEVICEID, "")!!, prefs.getString(C.TOKEN_DEVICEID, "")!!, prefs.getString(C.TOKEN_PLAYERTYPE, "")!!, prefs.getString(C.GQL_CLIENT_ID, "") ?: "",
-            prefs.getString(C.PLAYER_MINSPEEDLIVE, "")!!, prefs.getString(C.PLAYER_MAXSPEEDLIVE, "")!!, prefs.getString(C.PLAYER_TARGETOFFSET, "")!!)
+        val usehelix = prefs.getBoolean(C.API_USEHELIX, true)
+        val loggedIn = prefs.getString(C.USERNAME, "") != ""
+        viewModel.startStream(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, "") ?: "", stream, prefs.getBoolean(C.AD_BLOCKER, true),
+            prefs.getBoolean(C.TOKEN_RANDOM_DEVICEID, true), prefs.getString(C.TOKEN_XDEVICEID, "") ?: "", prefs.getString(C.TOKEN_DEVICEID, "") ?: "",
+            prefs.getString(C.TOKEN_PLAYERTYPE, "") ?: "", prefs.getString(C.GQL_CLIENT_ID, "") ?: "", prefs.getString(C.PLAYER_MINSPEEDLIVE, "") ?: "",
+            prefs.getString(C.PLAYER_MAXSPEEDLIVE, "") ?: "", prefs.getString(C.PLAYER_TARGETOFFSET, "5000") ?: "", usehelix, loggedIn)
         super.initialize()
         val settings = requireView().findViewById<ImageButton>(R.id.settings)
         val restart = requireView().findViewById<ImageButton>(R.id.restart)
@@ -69,10 +72,12 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         viewModel.loaded.observe(viewLifecycleOwner, Observer {
             if (it) settings.enable() else settings.disable()
         })
-        viewModel.stream.observe(viewLifecycleOwner, Observer {
-            viewers.text = TwitchApiHelper.formatCount(it.viewer_count, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false)
-            )
-        })
+        if (usehelix && loggedIn) {
+            viewModel.stream.observe(viewLifecycleOwner, Observer {
+                viewers.text = TwitchApiHelper.formatCount(it.viewer_count, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false)
+                )
+            })
+        }
         settings.setOnClickListener {
             FragmentUtils.showRadioButtonDialogFragment(childFragmentManager, viewModel.qualities, viewModel.qualityIndex)
         }

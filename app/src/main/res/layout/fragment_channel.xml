@@ -39,7 +39,7 @@
                     android:id="@+id/watchLive"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
-                    android:text="@string/watch_live"
+                    android:text="@string/open_player"
                     android:textAllCaps="true"
                     android:textSize="17sp"
                     android:gravity="center"

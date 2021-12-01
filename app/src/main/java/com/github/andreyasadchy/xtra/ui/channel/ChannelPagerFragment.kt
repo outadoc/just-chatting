@@ -9,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.os.bundleOf
-import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -19,6 +17,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
+import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
 import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
@@ -38,21 +37,17 @@ import kotlinx.android.synthetic.main.fragment_media_pager.*
 class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
 
     companion object {
-        fun newInstance(id: String, login: String, name: String, profileImage: String?) = ChannelPagerFragment().apply { arguments = bundleOf(C.CHANNEL to id)
-            ; chlogin = login; chdisplayName = name; if (profileImage != null) { chprofileImage = profileImage }
+        fun newInstance(id: String, login: String, name: String, profileImage: String?) = ChannelPagerFragment().apply {
+            bundle.putString(C.CHANNEL_ID, id)
+            bundle.putString(C.CHANNEL_LOGIN, login)
+            bundle.putString(C.CHANNEL_DISPLAYNAME, name)
+            bundle.putString(C.CHANNEL_PROFILEIMAGE, profileImage)
+            arguments = bundle
         }
     }
 
-    var chlogin = ""
-    var chdisplayName = ""
-    var chprofileImage = ""
+    var bundle = Bundle()
     private val viewModel by viewModels<ChannelPagerViewModel> { viewModelFactory }
-    private lateinit var channel: String
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        channel = requireArguments().getString(C.CHANNEL)!!
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_channel, container, false)
@@ -62,12 +57,12 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
         val isLoggedIn = User.get(activity) !is NotLoggedIn
-        setAdapter(ChannelPagerAdapter(activity, childFragmentManager, requireArguments(), chlogin, chdisplayName))
+        setAdapter(ChannelPagerAdapter(activity, childFragmentManager, requireArguments()))
         if (activity.isInLandscapeOrientation) {
             appBar.setExpanded(false, false)
         }
-        collapsingToolbar.title = chdisplayName
-        logo.loadImage(this, chprofileImage, circle = true)
+        collapsingToolbar.title = requireArguments().getString(C.CHANNEL_DISPLAYNAME)
+        logo.loadImage(this, requireArguments().getString(C.CHANNEL_PROFILEIMAGE), circle = true)
         toolbar.apply {
             navigationIcon = Utils.getNavigationIcon(activity)
             setNavigationOnClickListener { activity.popFragment() }
@@ -119,16 +114,24 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
     }
 
     override fun initialize() {
-        viewModel.loadStream(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", channel)
         val activity = requireActivity() as MainActivity
-        viewModel.stream.observe(viewLifecycleOwner, Observer {
-            watchLive.isVisible = it.data.firstOrNull() != null
-            it.data.firstOrNull().let { s ->
-                toolbarContainer.updateLayoutParams { height = ViewGroup.LayoutParams.WRAP_CONTENT }
-                collapsingToolbar.expandedTitleMarginBottom = activity.convertDpToPixels(50.5f)
-                watchLive.setOnClickListener { s?.let { it1 -> activity.startStream(it1) } }
-            }
-        })
+        toolbarContainer.updateLayoutParams { height = ViewGroup.LayoutParams.WRAP_CONTENT }
+        collapsingToolbar.expandedTitleMarginBottom = activity.convertDpToPixels(50.5f)
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
+            viewModel.loadStream(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", requireArguments().getString(C.CHANNEL_ID) ?: "")
+            viewModel.stream.observe(viewLifecycleOwner, Observer {
+                if (it.data.firstOrNull() != null) {
+                    watchLive.text = getString(R.string.watch_live)
+                    it.data.firstOrNull().let { s ->
+                        watchLive.setOnClickListener { s?.let { it1 -> activity.startStream(it1) } }
+                    }
+                } else {
+                    watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID) ?: "", user_login = requireArguments().getString(C.CHANNEL_LOGIN) ?: "", user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME) ?: "", profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE) ?: "")) }
+                }
+            })
+        } else {
+            watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID) ?: "", user_login = requireArguments().getString(C.CHANNEL_LOGIN) ?: "", user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME) ?: "", profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE) ?: "")) }
+        }
         User.get(activity).let {
             if (it is LoggedIn && context?.prefs()?.getBoolean(C.UI_FOLLOW, true) == true) {
                 initializeFollow(this, viewModel, follow, it)

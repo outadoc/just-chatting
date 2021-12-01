@@ -3,7 +3,6 @@ package com.github.andreyasadchy.xtra
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.ProcessLifecycleOwner
-import androidx.multidex.MultiDex
 import com.github.andreyasadchy.xtra.di.AppInjector
 import com.github.andreyasadchy.xtra.util.AppLifecycleObserver
 import com.github.andreyasadchy.xtra.util.LifecycleListener
@@ -32,9 +31,6 @@ class XtraApp : Application(), HasAndroidInjector {
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-        if (BuildConfig.DEBUG) {
-            MultiDex.install(this)
-        }
     }
 
     override fun androidInjector(): AndroidInjector<Any> {

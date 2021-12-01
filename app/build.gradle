@@ -32,7 +32,6 @@ android {
             applicationIdSuffix '.debug'
             versionNameSuffix '-DEBUG'
             signingConfig signingConfigs.debug
-            multiDexEnabled true
         }
         release {
             shrinkResources true
@@ -72,8 +71,6 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
-    implementation 'androidx.multidex:multidex:2.0.1'
 
     //UI
     implementation 'com.google.android.material:material:1.5.0-beta01'

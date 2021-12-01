@@ -1,11 +1,15 @@
 package com.github.andreyasadchy.xtra.util
 
 object C {
-    const val GAME = "game"
+    const val GAME_ID = "game_id"
+    const val GAME_NAME = "game_name"
+    const val CHANNEL_ID = "channel_id"
+    const val CHANNEL_LOGIN = "channel_login"
+    const val CHANNEL_DISPLAYNAME = "channel_displayname"
+    const val CHANNEL_PROFILEIMAGE = "channel_profileimage"
     const val TOKEN = "token"
     const val USERNAME = "username"
     const val USER_ID = "user_id"
-    const val CHANNEL = "channel"
     const val DOWNLOAD_STORAGE = "downloadStorage"
     const val ASPECT_RATIO_LANDSCAPE = "aspectRatioLandscape"
     const val FIRST_LAUNCH1 = "first_launch1"
@@ -62,6 +66,7 @@ object C {
     const val TOKEN_PLAYERTYPE = "token_playertype"
     const val API_USEHELIX = "api_usehelix"
     const val API_USEHELIX_GAMES = "api_usehelix_games"
+    const val API_USEHELIX_CHANNELVIDEOS = "api_usehelix_channelvideos"
     const val HELIX_CLIENT_ID = "helix_client_id"
     const val GQL_CLIENT_ID = "gql_client_id"
 }

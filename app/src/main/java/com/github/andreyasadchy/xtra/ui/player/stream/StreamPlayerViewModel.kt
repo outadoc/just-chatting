@@ -12,6 +12,7 @@ import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
 import com.github.andreyasadchy.xtra.ui.player.HlsPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode.*
 import com.github.andreyasadchy.xtra.util.toast
+import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.hls.HlsManifest
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
@@ -54,7 +55,7 @@ class StreamPlayerViewModel @Inject constructor(
         .setPlaylistTrackerFactory(DefaultHlsPlaylistTracker.FACTORY)
         .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(6))
 
-    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String, playerType: String, gqlclientId: String, minspeed: String, maxspeed: String, targetoffset: String) {
+    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String, playerType: String, gqlclientId: String, minspeed: String, maxspeed: String, targetoffset: String, usehelix: Boolean, loggedIn: Boolean) {
         this.useAdBlock = useAdBlock
         this.randomDeviceId = randomDeviceId
         this.xdeviceid = xdeviceid
@@ -67,14 +68,16 @@ class StreamPlayerViewModel @Inject constructor(
         if (_stream.value == null) {
             _stream.value = stream
             loadStream(stream)
-            viewModelScope.launch {
-                while (isActive) {
-                    try {
-                        val s = repository.loadStream(clientId, token, stream.user_id).data.first()
-                        _stream.postValue(s)
-                        delay(300000L)
-                    } catch (e: Exception) {
-                        delay(60000L)
+            if (usehelix && loggedIn) {
+                viewModelScope.launch {
+                    while (isActive) {
+                        try {
+                            val s = repository.loadStream(clientId, token, stream.user_id).data.first()
+                            _stream.postValue(s)
+                            delay(300000L)
+                        } catch (e: Exception) {
+                            delay(60000L)
+                        }
                     }
                 }
             }
@@ -89,7 +92,7 @@ class StreamPlayerViewModel @Inject constructor(
             index < qualities.size - 1 -> {
                 (player.currentManifest as? HlsManifest)?.let {
                     val s = _stream.value!!
-                    startBackgroundAudio(helper.urls.values.last(), s.user_name, s.title, "", false, AudioPlayerService.TYPE_STREAM, null)
+                    startBackgroundAudio(helper.urls.values.last(), s.user_name, s.title, s.profileImageURL, false, AudioPlayerService.TYPE_STREAM, null)
                     _playerMode.value = AUDIO_ONLY
                 }
             }
@@ -135,7 +138,10 @@ class StreamPlayerViewModel @Inject constructor(
                 }
                 mediaSource = hlsMediaSourceFactory.createMediaSource(
                     MediaItem.Builder().setUri(result.first).setLiveConfiguration(MediaItem.LiveConfiguration.Builder()
-                        .setMinPlaybackSpeed(minspeed.toFloat()).setMaxPlaybackSpeed(maxspeed.toFloat()).setTargetOffsetMs(targetoffset.toLong()).build()).build())
+                        .setMinPlaybackSpeed(if (minspeed != "") minspeed.toFloat() else C.RATE_UNSET)
+                        .setMaxPlaybackSpeed(if (maxspeed != "") maxspeed.toFloat() else C.RATE_UNSET)
+                        .setTargetOffsetMs(if (targetoffset != "") targetoffset.toLong() else C.TIME_UNSET)
+                        .build()).build())
                 play()
             } catch (e: Exception) {
                 val context = getApplication<Application>()

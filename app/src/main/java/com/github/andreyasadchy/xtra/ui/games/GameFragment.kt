@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.ui.games
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.ui.clips.common.ClipsFragment
@@ -17,15 +16,19 @@ import kotlinx.android.synthetic.main.fragment_media.*
 class GameFragment : MediaFragment() {
 
     companion object {
-        fun newInstance(id: String, name: String) = GameFragment().apply { arguments = bundleOf(C.GAME to id); text = name }
+        fun newInstance(id: String, name: String) = GameFragment().apply {
+            bundle.putString(C.GAME_ID, id)
+            bundle.putString(C.GAME_NAME, name)
+            arguments = bundle
+        }
     }
 
-    var text = ""
+    var bundle = Bundle()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
         toolbar.apply {
-            title = text
+            title = requireArguments().getString(C.GAME_NAME)
             navigationIcon = Utils.getNavigationIcon(activity)
             setNavigationOnClickListener { activity.popFragment() }
         }

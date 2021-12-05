@@ -11,6 +11,7 @@ import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.ui.clips.common.ClipsFragment
 import com.github.andreyasadchy.xtra.ui.common.MediaFragment
+import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
@@ -65,5 +66,10 @@ class TopFragment : MediaFragment() {
                 show()
             }
         }
+    }
+
+    override fun scrollToTop() {
+        appBar?.setExpanded(true, true)
+        (childFragmentManager.findFragmentById(R.id.fragmentContainer) as? Scrollable)?.scrollToTop()
     }
 }

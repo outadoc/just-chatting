@@ -4,10 +4,11 @@ import android.content.Context
 import android.text.format.DateUtils
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.GlobalBadgesResponse
+import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
-import java.lang.Double.parseDouble
+import java.lang.Long.parseLong
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -16,27 +17,52 @@ object TwitchApiHelper {
 
     var checkedValidation = false
 
-    fun getTemplateUrl(url: String, size: String, game: Boolean = false, video: Boolean = false): String {
-        if (url == "") return if (game) "https://static-cdn.jtvnw.net/ttv-static/404_boxart.jpg" else
-            "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"
-        val width = if (game) {when (size) {"large" -> "272" "medium" -> "136" else -> "52"} } else {
-            when (size) {"large" -> "640" "medium" -> "320" else -> "80"} }
-        val height = if (game) {when (size) {"large" -> "380" "medium" -> "190" else -> "72"} } else {
-            when (size) {"large" -> "360" "medium" -> "180" else -> "45"} }
-        return if (video) url.replace("%{width}", width).replace("%{height}", height) else
-            url.replace("{width}", width).replace("{height}", height)
+    fun getTemplateUrl(url: String?, type: String, template: String): String {
+        if ((url == null)||(url == "")||(url == "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"))
+            return when (type) {
+                "game" -> "https://static-cdn.jtvnw.net/ttv-static/404_boxart.jpg"
+                "profileimage" -> ""
+                else -> "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"
+            }
+        val width = when (type) {
+            "game" -> "285"
+            "video" -> "1280"
+            "profileimage" -> "300"
+            else -> "" }
+        val height = when (type) {
+            "game" -> "380"
+            "video" -> "720"
+            "profileimage" -> "300"
+            else -> "" }
+        return when (template) {
+            "1" -> url.replace("{width}", width).replace("{height}", height)
+            "2" -> url.replace("%{width}", width).replace("%{height}", height)
+            "3" -> """\d\dx\d\d""".toRegex().replace(url, "${width}x${height}")
+            "4" -> """\d\d\dx\d\d\d""".toRegex().replace(url, "${width}x${height}")
+            "5" -> """-\d\d\dx\d\d\d""".toRegex().replace(url, width)
+            else -> url }
     }
 
     fun getDuration(duration: String): Long {
         return try {
-            parseDouble(duration)
-            duration.toLong()
+            parseLong(duration)
         } catch (e: NumberFormatException) {
             val h = duration.substringBefore("h", "0").takeLast(2).filter { it.isDigit() }.toInt()
             val m = duration.substringBefore("m", "0").takeLast(2).filter { it.isDigit() }.toInt()
             val s = duration.substringBefore("s", "0").takeLast(2).filter { it.isDigit() }.toInt()
             ((h * 3600) + (m * 60) + s).toLong()
         }
+    }
+
+    fun getClipTime(period: Period? = null): String {
+        val days = when (period) {
+            Period.DAY -> -1
+            Period.WEEK -> -7
+            Period.MONTH -> -30
+            else -> 0 }
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_YEAR, days)
+        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(calendar.time)
     }
 
     fun parseIso8601Date(date: String): Long {

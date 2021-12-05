@@ -18,7 +18,12 @@ class StreamsDataSource private constructor(
         loadInitial(params, callback) {
             val get = api.getStreams(clientId, userToken, game, languages, params.requestedLoadSize, offset)
             offset = get.pagination?.cursor
-            get.data
+            val list = mutableListOf<Stream>()
+            list.addAll(get.data)
+            for (i in list) {
+                if (i.user_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url ?: ""
+            }
+            list
         }
     }
 
@@ -26,7 +31,12 @@ class StreamsDataSource private constructor(
         loadRange(params, callback) {
             val get = api.getStreams(clientId, userToken, game, languages, params.loadSize, offset)
             offset = get.pagination?.cursor
-            get.data
+            val list = mutableListOf<Stream>()
+            list.addAll(get.data)
+            for (i in list) {
+                if (i.user_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url ?: ""
+            }
+            list
         }
     }
 

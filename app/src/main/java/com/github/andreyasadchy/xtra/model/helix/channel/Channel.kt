@@ -15,4 +15,4 @@ data class Channel(
         val started_at: String = "",
         val broadcaster_language: String = "",
         val thumbnail_url: String = "",
-        val profileImageURL: String = "") : Parcelable
+        var profileImageURL: String = "") : Parcelable

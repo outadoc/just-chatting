@@ -3,9 +3,17 @@ package com.github.andreyasadchy.xtra.api
 import com.github.andreyasadchy.xtra.model.chat.*
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MiscApi {
+
+    @GET("https://api.twitch.tv/v5/videos/{id}/comments")
+    suspend fun getVideoChatLog(@Header("Client-ID") clientId: String?, @Path("id") videoId: String?, @Query("content_offset_seconds") offsetSeconds: Double, @Query("limit") limit: Int): VideoMessagesResponse
+
+    @GET("https://api.twitch.tv/v5/videos/{id}/comments")
+    suspend fun getVideoChatLogAfter(@Header("Client-ID") clientId: String?, @Path("id") videoId: String?, @Query("cursor") cursor: String, @Query("limit") limit: Int): VideoMessagesResponse
 
     @GET("https://badges.twitch.tv/v1/badges/global/display")
     suspend fun getGlobalBadges(): GlobalBadgesResponse

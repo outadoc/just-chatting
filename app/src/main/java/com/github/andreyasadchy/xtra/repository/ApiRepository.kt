@@ -3,6 +3,7 @@ package com.github.andreyasadchy.xtra.repository
 import android.util.Log
 import androidx.paging.PagedList
 import com.github.andreyasadchy.xtra.api.HelixApi
+import com.github.andreyasadchy.xtra.api.MiscApi
 import com.github.andreyasadchy.xtra.db.EmotesDao
 import com.github.andreyasadchy.xtra.model.chat.VideoMessagesResponse
 import com.github.andreyasadchy.xtra.model.helix.channel.Channel
@@ -28,6 +29,7 @@ private const val TAG = "ApiRepository"
 class HelixRepository @Inject constructor(
     private val api: HelixApi,
     private val gql: GraphQLRepository,
+    private val misc: MiscApi,
     private val emotesDao: EmotesDao) : TwitchService {
 
     override fun loadTopGames(clientId: String?, userToken: String?, coroutineScope: CoroutineScope): Listing<Game> {
@@ -48,8 +50,8 @@ class HelixRepository @Inject constructor(
     override fun loadStreams(clientId: String?, userToken: String?, game: String?, languages: String?, coroutineScope: CoroutineScope): Listing<Stream> {
         val factory = StreamsDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, game, languages, api, coroutineScope)
         val config = PagedList.Config.Builder()
-                .setPageSize(10)
-                .setInitialLoadSizeHint(15)
+                .setPageSize(1)
+                .setInitialLoadSizeHint(1)
                 .setPrefetchDistance(3)
                 .setEnablePlaceholders(false)
                 .build()
@@ -60,23 +62,23 @@ class HelixRepository @Inject constructor(
         val factory = FollowedStreamsDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, user_id, api, coroutineScope)
         val builder = PagedList.Config.Builder().setEnablePlaceholders(false)
         if (thumbnailsEnabled) {
-            builder.setPageSize(10)
-                    .setInitialLoadSizeHint(15)
+            builder.setPageSize(1)
+                    .setInitialLoadSizeHint(1)
                     .setPrefetchDistance(3)
         } else {
-            builder.setPageSize(30)
-                    .setInitialLoadSizeHint(30)
+            builder.setPageSize(1)
+                    .setInitialLoadSizeHint(1)
                     .setPrefetchDistance(10)
         }
         val config = builder.build()
         return Listing.create(factory, config)
     }
 
-    override fun loadClips(clientId: String?, userToken: String?, channelName: String?, gameName: String?, coroutineScope: CoroutineScope): Listing<Clip> {
-        val factory = ClipsDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, channelName, gameName, api, coroutineScope)
+    override fun loadClips(clientId: String?, userToken: String?, channelName: String?, gameName: String?, started_at: String?, ended_at: String?, coroutineScope: CoroutineScope): Listing<Clip> {
+        val factory = ClipsDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, channelName, gameName, started_at, ended_at, api, coroutineScope)
         val config = PagedList.Config.Builder()
-                .setPageSize(10)
-                .setInitialLoadSizeHint(15)
+                .setPageSize(1)
+                .setInitialLoadSizeHint(1)
                 .setPrefetchDistance(3)
                 .setEnablePlaceholders(false)
                 .build()
@@ -90,8 +92,8 @@ class HelixRepository @Inject constructor(
     override fun loadVideos(clientId: String?, userToken: String?, game: String?, period: Period, broadcastType: BroadcastType, language: String?, sort: Sort, coroutineScope: CoroutineScope): Listing<Video> {
         val factory = VideosDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, game, period, broadcastType, language, sort, api, coroutineScope)
         val config = PagedList.Config.Builder()
-                .setPageSize(10)
-                .setInitialLoadSizeHint(15)
+                .setPageSize(1)
+                .setInitialLoadSizeHint(1)
                 .setPrefetchDistance(3)
                 .setEnablePlaceholders(false)
                 .build()
@@ -135,8 +137,8 @@ class HelixRepository @Inject constructor(
         Log.d(TAG, "Loading channels containing: $query")
         val factory = ChannelsSearchDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, query, api, coroutineScope)
         val config = PagedList.Config.Builder()
-                .setPageSize(15)
-                .setInitialLoadSizeHint(15)
+                .setPageSize(1)
+                .setInitialLoadSizeHint(1)
                 .setPrefetchDistance(5)
                 .setEnablePlaceholders(false)
                 .build()
@@ -151,8 +153,8 @@ class HelixRepository @Inject constructor(
     override fun loadFollowedChannels(clientId: String?, userToken: String?, userId: String, coroutineScope: CoroutineScope): Listing<Follow> {
         val factory = FollowedChannelsDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, api, coroutineScope)
         val config = PagedList.Config.Builder()
-                .setPageSize(15)
-                .setInitialLoadSizeHint(15)
+                .setPageSize(1)
+                .setInitialLoadSizeHint(1)
                 .setPrefetchDistance(5)
                 .setEnablePlaceholders(false)
                 .build()
@@ -161,12 +163,12 @@ class HelixRepository @Inject constructor(
 
     override suspend fun loadVideoChatLog(clientId: String?, videoId: String, offsetSeconds: Double): VideoMessagesResponse = withContext(Dispatchers.IO) {
         Log.d(TAG, "Loading chat log for video $videoId. Offset in seconds: $offsetSeconds")
-        api.getVideoChatLog(clientId, videoId, offsetSeconds, 100)
+        misc.getVideoChatLog(clientId, videoId, offsetSeconds, 100)
     }
 
     override suspend fun loadVideoChatAfter(clientId: String?, videoId: String, cursor: String): VideoMessagesResponse = withContext(Dispatchers.IO) {
         Log.d(TAG, "Loading chat log for video $videoId. Cursor: $cursor")
-        api.getVideoChatLogAfter(clientId, videoId, cursor, 100)
+        misc.getVideoChatLogAfter(clientId, videoId, cursor, 100)
     }
 
 

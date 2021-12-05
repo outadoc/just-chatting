@@ -62,7 +62,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
             appBar.setExpanded(false, false)
         }
         collapsingToolbar.title = requireArguments().getString(C.CHANNEL_DISPLAYNAME)
-        logo.loadImage(this, requireArguments().getString(C.CHANNEL_PROFILEIMAGE), circle = true)
+        logo.loadImage(this, TwitchApiHelper.getTemplateUrl(requireArguments().getString(C.CHANNEL_PROFILEIMAGE) ?: "", "profileimage",
+            if (context?.prefs()!!.getBoolean(C.API_USEHELIX, true) && context?.prefs()!!.getString(C.USERNAME, "") != "") "4" else "3"), circle = true)
         toolbar.apply {
             navigationIcon = Utils.getNavigationIcon(activity)
             setNavigationOnClickListener { activity.popFragment() }

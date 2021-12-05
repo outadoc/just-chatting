@@ -24,7 +24,12 @@ class VideosDataSource private constructor(
         loadInitial(params, callback) {
             val get = api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.requestedLoadSize, offset)
             offset = get.pagination?.cursor
-            get.data
+            val list = mutableListOf<Video>()
+            list.addAll(get.data)
+            for (i in list) {
+                if (i.user_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url ?: ""
+            }
+            list
         }
     }
 
@@ -32,7 +37,12 @@ class VideosDataSource private constructor(
         loadRange(params, callback) {
             val get = api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.loadSize, offset)
             offset = get.pagination?.cursor
-            get.data
+            val list = mutableListOf<Video>()
+            list.addAll(get.data)
+            for (i in list) {
+                if (i.user_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url ?: ""
+            }
+            list
         }
     }
 

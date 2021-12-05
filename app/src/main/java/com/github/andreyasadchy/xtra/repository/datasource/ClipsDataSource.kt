@@ -10,23 +10,45 @@ class ClipsDataSource(
     private val userToken: String?,
     private val channelName: String?,
     private val gameName: String?,
+    private val started_at: String?,
+    private val ended_at: String?,
     private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Clip>(coroutineScope) {
     private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Clip>) {
         loadInitial(params, callback) {
-            val get = api.getClips(clientId, userToken, channelName, gameName, params.requestedLoadSize, offset)
+            val get = api.getClips(clientId, userToken, channelName, gameName, started_at, ended_at, params.requestedLoadSize, offset)
             offset = get.pagination?.cursor
-            get.data
+            val list = mutableListOf<Clip>()
+            list.addAll(get.data)
+            for (i in list) {
+                if (i.game_id != "") i.game_name = api.getGame(clientId, userToken, i.game_id).data.first().name
+                val user = api.getUserById(clientId, userToken, i.broadcaster_id).data?.first()
+                if (i.broadcaster_id != "") {
+                    i.profileImageURL = user?.profile_image_url ?: ""
+                    i.broadcaster_login = user?.login ?: ""
+                }
+            }
+            list
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Clip>) {
         loadRange(params, callback) {
-            val get = api.getClips(clientId, userToken, channelName, gameName, params.loadSize, offset)
+            val get = api.getClips(clientId, userToken, channelName, gameName, started_at, ended_at, params.loadSize, offset)
             offset = get.pagination?.cursor
-            get.data
+            val list = mutableListOf<Clip>()
+            list.addAll(get.data)
+            for (i in list) {
+                if (i.game_id != "") i.game_name = api.getGame(clientId, userToken, i.game_id).data.first().name
+                val user = api.getUserById(clientId, userToken, i.broadcaster_id).data?.first()
+                if (i.broadcaster_id != "") {
+                    i.profileImageURL = user?.profile_image_url ?: ""
+                    i.broadcaster_login = user?.login ?: ""
+                }
+            }
+            list
         }
     }
 
@@ -35,10 +57,12 @@ class ClipsDataSource(
         private val userToken: String?,
         private val channelName: String?,
         private val gameName: String?,
+        private val started_at: String?,
+        private val ended_at: String?,
         private val api: HelixApi,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Clip, ClipsDataSource>() {
 
         override fun create(): DataSource<Int, Clip> =
-                ClipsDataSource(clientId, userToken, channelName, gameName, api, coroutineScope).also(sourceLiveData::postValue)
+                ClipsDataSource(clientId, userToken, channelName, gameName, started_at, ended_at, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

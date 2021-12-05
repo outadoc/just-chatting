@@ -22,7 +22,7 @@ class StreamsAdapter(
     override fun bind(item: Stream, view: View) {
         super.bind(item, view)
         with(view) {
-            thumbnail.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.thumbnail_url, "large"), true, diskCacheStrategy = DiskCacheStrategy.NONE)
+            thumbnail.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.thumbnail_url, "video", if (context.prefs().getBoolean(C.API_USEHELIX, true) && context.prefs().getString(C.USERNAME, "") != "") "1" else "4"), true, diskCacheStrategy = DiskCacheStrategy.NONE)
             viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewer_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
         }
     }

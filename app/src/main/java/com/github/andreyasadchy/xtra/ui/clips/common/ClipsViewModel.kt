@@ -11,6 +11,7 @@ import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import javax.inject.Inject
 
 class ClipsViewModel @Inject constructor(
@@ -23,9 +24,17 @@ class ClipsViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Clip>> = Transformations.map(filter) {
-        if (it.usehelix)
-            repository.loadClips(it.clientId, it.token, it.channelName, it.game, viewModelScope)
-        else {
+        if (it.usehelix) {
+            val started = when (it.period) {
+                Period.ALL -> null
+                else -> TwitchApiHelper.getClipTime(it.period)
+            }
+            val ended = when (it.period) {
+                Period.ALL -> null
+                else -> TwitchApiHelper.getClipTime()
+            }
+            repository.loadClips(it.clientId, it.token, it.channelName, it.game, started, ended, viewModelScope)
+        } else {
             val period = when (it.period) {
                 Period.DAY -> "LAST_DAY"
                 Period.WEEK -> "LAST_WEEK"

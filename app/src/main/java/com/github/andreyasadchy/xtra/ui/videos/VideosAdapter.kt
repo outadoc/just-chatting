@@ -36,7 +36,7 @@ class VideosAdapter(
             val position = positions?.get(item.id.substring(1).toLong())
             setOnClickListener { clickListener.startVideo(item, position?.toDouble()) }
             setOnLongClickListener { showDownloadDialog(item); true }
-            thumbnail.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.thumbnail_url, "large", video = true), diskCacheStrategy = DiskCacheStrategy.NONE)
+            thumbnail.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.thumbnail_url, "video", if (context.prefs().getBoolean(C.API_USEHELIX, true) && context.prefs().getString(C.USERNAME, "") != "") "2" else "4"), diskCacheStrategy = DiskCacheStrategy.NONE)
             date.text = TwitchApiHelper.formatTime(context, item.createdAt)
             views.text = TwitchApiHelper.formatViewsCount(context, item.view_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
             duration.text = DateUtils.formatElapsedTime(TwitchApiHelper.getDuration(item.duration))
@@ -50,7 +50,7 @@ class VideosAdapter(
             }
             userImage.apply {
                 setOnClickListener(channelListener)
-                loadImage(fragment, item.channelLogo, circle = true)
+                loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.channelLogo, "profileimage", if (context.prefs().getBoolean(C.API_USEHELIX, true) && context.prefs().getString(C.USERNAME, "") != "") "4" else "3"), circle = true)
             }
             username.apply {
                 setOnClickListener(channelListener)

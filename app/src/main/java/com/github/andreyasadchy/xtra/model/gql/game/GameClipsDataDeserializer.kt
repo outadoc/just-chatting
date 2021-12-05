@@ -20,7 +20,7 @@ class GameClipsDataDeserializer : JsonDeserializer<GameClipsDataResponse> {
             data.add(Clip(
                     id = if (!(obj.get("slug").isJsonNull)) { obj.getAsJsonPrimitive("slug").asString } else "",
                     broadcaster_id = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("id").asString } else "",
-                    broadcaster_login_gql = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("login").asString } else "",
+                    broadcaster_login = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("login").asString } else "",
                     broadcaster_name = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("displayName").asString } else "",
                     game_id = if (!(obj.get("game").isJsonNull)) { obj.getAsJsonObject("game").getAsJsonPrimitive("name").asString } else "",
                     title = if (!(obj.get("title").isJsonNull)) { obj.getAsJsonPrimitive("title").asString } else "",

@@ -102,15 +102,6 @@ class ChatViewModel @Inject constructor(
 
     private fun init(channelId: String) {
         viewModelScope.launch {
-            try {
-                channelBadges = playerRepository.loadChannelBadges(channelId)
-                globalBadges = playerRepository.loadGlobalBadges()
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load badges", e)
-            } finally {
-                chat?.start()
-            }
-
             val list = mutableListOf<Emote>()
             globalStvEmotes.also {
                 if (it != null) {
@@ -178,6 +169,15 @@ class ChatViewModel @Inject constructor(
             val sorted = list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
             (chat as? LiveChatController)?.addEmotes(sorted)
             _otherEmotes.postValue(sorted)
+
+            try {
+                channelBadges = playerRepository.loadChannelBadges(channelId)
+                globalBadges = playerRepository.loadGlobalBadges()
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load badges", e)
+            } finally {
+                chat?.start()
+            }
         }
     }
 

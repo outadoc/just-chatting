@@ -20,8 +20,9 @@ data class Clip(
         val created_at: String,
         val thumbnail_url: String,
         val duration: Double,
-        val broadcaster_login_gql: String = "",
-        val profileImageURL: String = "") : Parcelable, Downloadable {
+        var game_name: String = "",
+        var broadcaster_login: String = "",
+        var profileImageURL: String = "") : Parcelable, Downloadable {
 
         override val thumbnail: String
                 get() = thumbnail_url
@@ -30,7 +31,7 @@ data class Clip(
         override val channelLogo: String
                 get() = profileImageURL
         override val game: String
-                get() = game_id
+                get() = game_name
         override val uploadDate: String
                 get() = created_at
 }

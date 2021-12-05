@@ -17,4 +17,4 @@ data class Stream(
         val started_at: String = "",
         val language: String = "",
         val thumbnail_url: String = "",
-        val profileImageURL: String = "") : Parcelable
+        var profileImageURL: String = "") : Parcelable

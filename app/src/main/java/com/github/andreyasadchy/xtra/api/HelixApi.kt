@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.api
 
-import com.github.andreyasadchy.xtra.model.chat.VideoMessagesResponse
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearchResponse
 import com.github.andreyasadchy.xtra.model.helix.clip.ClipsResponse
 import com.github.andreyasadchy.xtra.model.helix.follows.FollowResponse
@@ -12,10 +11,12 @@ import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.VideosResponse
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface HelixApi {
+
+    @GET("games")
+    suspend fun getGame(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") id: String): GamesResponse
 
     @GET("games/top")
     suspend fun getTopGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("first") limit: Int, @Query("after") offset: String?): GamesResponse
@@ -30,7 +31,7 @@ interface HelixApi {
     suspend fun getFollowedStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") user_id: String?, @Query("first") limit: Int, @Query("after") offset: String?): StreamsResponse
 
     @GET("clips")
-    suspend fun getClips(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("broadcaster_id") channel: String?, @Query("game_id") gameName: String?, @Query("first") limit: Int, @Query("after") cursor: String?): ClipsResponse
+    suspend fun getClips(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("broadcaster_id") channel: String?, @Query("game_id") gameName: String?, @Query("started_at") started_at: String?, @Query("ended_at") ended_at: String?, @Query("first") limit: Int, @Query("after") cursor: String?): ClipsResponse
 
     @GET("videos")
     suspend fun getVideo(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") videoId: String): VideosResponse
@@ -58,10 +59,4 @@ interface HelixApi {
 
     @GET("users/follows")
     suspend fun getFollowedChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("from_id") userId: String, @Query("first") limit: Int, @Query("after") offset: String?): FollowResponse
-
-    @GET("https://api.twitch.tv/v5/videos/{id}/comments")
-    suspend fun getVideoChatLog(@Header("Client-ID") clientId: String?, @Path("id") videoId: String?, @Query("content_offset_seconds") offsetSeconds: Double, @Query("limit") limit: Int): VideoMessagesResponse
-
-    @GET("https://api.twitch.tv/v5/videos/{id}/comments")
-    suspend fun getVideoChatLogAfter(@Header("Client-ID") clientId: String?, @Path("id") videoId: String?, @Query("cursor") cursor: String, @Query("limit") limit: Int): VideoMessagesResponse
 }

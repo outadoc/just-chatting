@@ -11,4 +11,5 @@ data class Follow(
         val to_id: String,
         val to_login: String,
         val to_name: String,
-        val followed_at: String) : Parcelable
+        val followed_at: String,
+        var profileImageURL: String = "") : Parcelable

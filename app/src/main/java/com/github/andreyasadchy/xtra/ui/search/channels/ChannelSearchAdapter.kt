@@ -7,7 +7,10 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.channel.Channel
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.*
 
 class ChannelSearchAdapter(
@@ -25,7 +28,7 @@ class ChannelSearchAdapter(
     override fun bind(item: Channel, view: View) {
         with(view) {
             setOnClickListener { listener.viewChannel(item.id, item.broadcaster_login, item.display_name, item.profileImageURL) }
-            logo.loadImage(fragment, item.profileImageURL)
+            logo.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.profileImageURL, "profileimage", if (context.prefs().getBoolean(C.API_USEHELIX, true) && context.prefs().getString(C.USERNAME, "") != "") "4" else "3"), circle = true)
             name.text = item.display_name
         }
     }

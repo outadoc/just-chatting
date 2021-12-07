@@ -2,6 +2,7 @@ package com.github.andreyasadchy.xtra.model.helix.video
 
 import android.os.Parcelable
 import com.github.andreyasadchy.xtra.model.offline.Downloadable
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
@@ -35,13 +36,15 @@ data class Video(
             val offset: Int) : Parcelable
 
         override val thumbnail: String
-            get() = thumbnail_url
+            get() = TwitchApiHelper.getTemplateUrl(thumbnail_url, "video")
         override val channelName: String
                 get() = user_name
         override val channelLogo: String
-                get() = profileImageURL
+                get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
         override val game: String
                 get() = game_name
         override val uploadDate: String
                 get() = createdAt
+        override val videoType: String
+            get() = type
 }

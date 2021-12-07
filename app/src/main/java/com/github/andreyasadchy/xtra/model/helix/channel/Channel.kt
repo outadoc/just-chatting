@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.model.helix.channel
 
 import android.os.Parcelable
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -15,4 +16,8 @@ data class Channel(
         val started_at: String = "",
         val broadcaster_language: String = "",
         val thumbnail_url: String = "",
-        var profileImageURL: String = "") : Parcelable
+        var profileImageURL: String = "") : Parcelable {
+
+        val channelLogo: String
+                get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
+}

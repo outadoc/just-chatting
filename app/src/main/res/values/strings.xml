@@ -212,4 +212,7 @@
     <string name="playerQualityEntries2">480p or lower</string>
     <string name="playerQualityEntries3">720p or lower</string>
     <string name="player_volumebutton">Show volume button</string>
+    <string name="video_type_archive">Past broadcast</string>
+    <string name="video_type_highlight">Highlight</string>
+    <string name="video_type_upload">Upload</string>
 </resources>

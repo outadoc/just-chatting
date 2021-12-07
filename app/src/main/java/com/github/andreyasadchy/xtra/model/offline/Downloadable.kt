@@ -8,6 +8,7 @@ interface Downloadable {
     val channelLogo: String
     val game: String?
     val uploadDate: String
+    val videoType: String
 }
 
 internal class Wrapper(downloadable: Downloadable) : Downloadable {
@@ -19,6 +20,7 @@ internal class Wrapper(downloadable: Downloadable) : Downloadable {
     override val channelLogo: String
     override val game: String?
     override val uploadDate: String
+    override val videoType: String
 
     init {
         downloadable.let {
@@ -29,6 +31,7 @@ internal class Wrapper(downloadable: Downloadable) : Downloadable {
             channelLogo = it.channelLogo
             game = it.game
             uploadDate = it.uploadDate
+            videoType = it.videoType
         }
     }
 }

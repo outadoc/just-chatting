@@ -20,7 +20,6 @@
             android:id="@+id/date"
             style="@style/ThumbnailItem"
             android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
             android:shadowColor="#000000"
             android:shadowDx="1"
@@ -51,7 +50,6 @@
             android:id="@+id/duration"
             style="@style/ThumbnailItem"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:shadowColor="#000000"
             android:shadowDx="1"
@@ -61,6 +59,20 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="13:37" />
+
+        <TextView
+            android:id="@+id/type"
+            style="@style/ThumbnailItem"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="type" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -73,7 +85,6 @@
             android:id="@+id/userImage"
             style="@style/UserPicture"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginTop="12dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"

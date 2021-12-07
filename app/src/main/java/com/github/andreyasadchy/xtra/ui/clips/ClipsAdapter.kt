@@ -34,16 +34,16 @@ class ClipsAdapter(
     override val layoutId: Int = R.layout.fragment_clips_list_item
 
     override fun bind(item: Clip, view: View) {
-        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.broadcaster_id, item.broadcaster_login, item.broadcaster_name, item.profileImageURL) }
+        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.broadcaster_id, item.broadcaster_login, item.broadcaster_name, item.channelLogo) }
         with(view) {
             setOnClickListener { clickListener.startClip(item) }
             setOnLongClickListener { showDownloadDialog(item); true }
-            thumbnail.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.thumbnail_url, "clip", "5"), diskCacheStrategy = DiskCacheStrategy.NONE)
+            thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.NONE)
             date.text = TwitchApiHelper.formatTime(context, item.uploadDate)
             views.text = TwitchApiHelper.formatViewsCount(context, item.view_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
             duration.text = DateUtils.formatElapsedTime(item.duration.toLong())
             userImage.apply {
-                loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.channelLogo, "profileimage", if (context.prefs().getBoolean(C.API_USEHELIX, true) && context.prefs().getString(C.USERNAME, "") != "") "4" else "3"), circle = true)
+                loadImage(fragment, item.channelLogo, circle = true)
                 setOnClickListener(channelListener)
             }
             title.text = item.title

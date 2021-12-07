@@ -201,4 +201,7 @@
     <string name="player_buffer_rebuffer_summary">The default duration of media that must be buffered for playback to resume after a rebuffer, in milliseconds</string>
     <string name="api_usehelix_channelvideos">Get channel videos from helix</string>
     <string name="open_player">Open player</string>
+    <string name="video_type_archive">Past broadcast</string>
+    <string name="video_type_highlight">Highlight</string>
+    <string name="video_type_upload">Upload</string>
 </resources>

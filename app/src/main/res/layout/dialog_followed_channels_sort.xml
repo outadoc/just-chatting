@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:text="@string/sort"
             android:textStyle="bold"
-            android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp" />
 
         <RadioButton
@@ -44,7 +43,6 @@
             android:layout_height="wrap_content"
             android:text="@string/order"
             android:textStyle="bold"
-            android:layout_marginLeft="5dp"
             android:layout_marginStart="5dp" />
 
         <RadioButton

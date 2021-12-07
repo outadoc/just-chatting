@@ -17,7 +17,7 @@ object TwitchApiHelper {
 
     var checkedValidation = false
 
-    fun getTemplateUrl(url: String?, type: String, template: String): String {
+    fun getTemplateUrl(url: String?, type: String): String {
         if ((url == null)||(url == "")||(url == "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"))
             return when (type) {
                 "game" -> "https://static-cdn.jtvnw.net/ttv-static/404_boxart.jpg"
@@ -34,13 +34,23 @@ object TwitchApiHelper {
             "video" -> "720"
             "profileimage" -> "300"
             else -> "" }
-        return when (template) {
-            "1" -> url.replace("{width}", width).replace("{height}", height)
-            "2" -> url.replace("%{width}", width).replace("%{height}", height)
-            "3" -> """\d\dx\d\d""".toRegex().replace(url, "${width}x${height}")
-            "4" -> """\d\d\dx\d\d\d""".toRegex().replace(url, "${width}x${height}")
-            "5" -> """-\d\d\dx\d\d\d""".toRegex().replace(url, width)
-            else -> url }
+        val reg1 = """-\d\d\dx\d\d\d""".toRegex()
+        val reg2 = """\d\d\d\dx\d\d\d""".toRegex()
+        val reg3 = """\d\d\dx\d\d\d""".toRegex()
+        val reg4 = """\d\dx\d\d\d""".toRegex()
+        val reg5 = """\d\d\dx\d\d""".toRegex()
+        val reg6 = """\d\dx\d\d""".toRegex()
+        if (type == "clip") return if (reg1.containsMatchIn(url)) reg1.replace(url, "") else url
+        return when {
+            url.contains("%{width}", true) -> url.replace("%{width}", width).replace("%{height}", height)
+            url.contains("{width}", true) -> url.replace("{width}", width).replace("{height}", height)
+            reg2.containsMatchIn(url) -> reg2.replace(url, "${width}x${height}")
+            reg3.containsMatchIn(url) -> reg3.replace(url, "${width}x${height}")
+            reg4.containsMatchIn(url) -> reg4.replace(url, "${width}x${height}")
+            reg5.containsMatchIn(url) -> reg5.replace(url, "${width}x${height}")
+            reg6.containsMatchIn(url) -> reg6.replace(url, "${width}x${height}")
+            else -> url
+        }
     }
 
     fun getDuration(duration: String): Long {
@@ -63,6 +73,15 @@ object TwitchApiHelper {
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.DAY_OF_YEAR, days)
         return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(calendar.time)
+    }
+
+    fun getType(context: Context, type: String): String? {
+        return when (type) {
+            "archive" -> context.getString(R.string.video_type_archive)
+            "highlight" -> context.getString(R.string.video_type_highlight)
+            "upload" -> context.getString(R.string.video_type_upload)
+            else -> null
+        }
     }
 
     fun parseIso8601Date(date: String): Long {

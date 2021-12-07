@@ -37,10 +37,10 @@ interface HelixApi {
     suspend fun getVideo(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") videoId: String): VideosResponse
 
     @GET("videos")
-    suspend fun getTopVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("game_id") game: String?, @Query("period") period: com.github.andreyasadchy.xtra.model.helix.video.Period?, @Query("type") broadcastType: BroadcastType?, @Query("language") language: String?, @Query("sort") sort: Sort?, @Query("limit") limit: Int, @Query("after") offset: String?): VideosResponse
+    suspend fun getTopVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("game_id") game: String?, @Query("period") period: com.github.andreyasadchy.xtra.model.helix.video.Period?, @Query("type") broadcastType: BroadcastType?, @Query("language") language: String?, @Query("sort") sort: Sort?, @Query("first") limit: Int, @Query("after") offset: String?): VideosResponse
 
     @GET("videos")
-    suspend fun getChannelVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") channelId: String, @Query("type") broadcastType: BroadcastType?, @Query("sort") sort: Sort?, @Query("limit") limit: Int, @Query("offset") offset: String?): VideosResponse
+    suspend fun getChannelVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") channelId: String, @Query("type") broadcastType: BroadcastType?, @Query("sort") sort: Sort?, @Query("first") limit: Int, @Query("after") offset: String?): VideosResponse
 
     @GET("users")
     suspend fun getUserById(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") id: String): UsersResponse

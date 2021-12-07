@@ -6,10 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.fragment_streams_list_item.view.*
 
 abstract class BaseStreamsAdapter(
@@ -32,7 +29,7 @@ abstract class BaseStreamsAdapter(
             setOnClickListener { clickListener.startStream(item) }
             userImage.apply {
                 setOnClickListener(channelListener)
-                loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.profileImageURL, "profileimage", if (context.prefs().getBoolean(C.API_USEHELIX, true) && context.prefs().getString(C.USERNAME, "") != "") "4" else "3"), circle = true)
+                loadImage(fragment, item.channelLogo, circle = true)
             }
             username.apply {
                 setOnClickListener(channelListener)

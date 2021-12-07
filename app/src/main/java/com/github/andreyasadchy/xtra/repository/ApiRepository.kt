@@ -103,8 +103,8 @@ class HelixRepository @Inject constructor(
     override fun loadChannelVideos(clientId: String?, userToken: String?, channelId: String, broadcastType: BroadcastType, sort: Sort, coroutineScope: CoroutineScope): Listing<Video> {
         val factory = ChannelVideosDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, channelId, broadcastType, sort, api, coroutineScope)
         val config = PagedList.Config.Builder()
-                .setPageSize(10)
-                .setInitialLoadSizeHint(15)
+                .setPageSize(1)
+                .setInitialLoadSizeHint(1)
                 .setPrefetchDistance(3)
                 .setEnablePlaceholders(false)
                 .build()

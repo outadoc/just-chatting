@@ -28,7 +28,7 @@ class GamesAdapter(
     override fun bind(item: Game, view: View) {
         with(view) {
             setOnClickListener { listener.openGame(item.id, item.name) }
-            gameImage.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.box_art_url, "game", if (context.prefs().getBoolean(C.API_USEHELIX, true) && context.prefs().getString(C.USERNAME, "") != "" && context.prefs().getBoolean(C.API_USEHELIX_GAMES, false)) "1" else "4"))
+            gameImage.loadImage(fragment, item.boxArt)
             gameName.text = item.name
             viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewersCount, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
         }

@@ -39,6 +39,7 @@ class DownloadsAdapter(
             date.text = context.getString(R.string.uploaded_date, TwitchApiHelper.formatTime(context, item.uploadDate))
             downloadDate.text = context.getString(R.string.downloaded_date, TwitchApiHelper.formatTime(context, item.downloadDate))
             duration.text = DateUtils.formatElapsedTime(item.duration / 1000L)
+            type.text = TwitchApiHelper.getType(context, item.type)
             userImage.loadImage(fragment, item.channelLogo, circle = true)
             title.text = item.name
             username.text = item.channelName

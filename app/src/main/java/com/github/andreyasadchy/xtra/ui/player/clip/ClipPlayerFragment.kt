@@ -35,7 +35,7 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
     override val channelName: String
         get() = clip.broadcaster_name
     override val channelImage: String
-        get() = clip.profileImageURL
+        get() = clip.channelLogo
 
             override val layoutId: Int
         get() = R.layout.fragment_player_clip

@@ -36,7 +36,7 @@ class ChannelClipsAdapter(
         with(view) {
             setOnClickListener { clickListener.startClip(item) }
             setOnLongClickListener { showDownloadDialog(item); true }
-            thumbnail.loadImage(fragment, TwitchApiHelper.getTemplateUrl(item.thumbnail_url, "clip", "5"), diskCacheStrategy = DiskCacheStrategy.NONE)
+            thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.NONE)
             date.text = TwitchApiHelper.formatTime(context, item.uploadDate)
             views.text = TwitchApiHelper.formatViewsCount(context, item.view_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
             duration.text = DateUtils.formatElapsedTime(item.duration.toLong())

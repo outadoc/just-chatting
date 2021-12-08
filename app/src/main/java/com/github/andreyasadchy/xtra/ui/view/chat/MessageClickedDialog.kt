@@ -71,7 +71,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         }
         viewProfile.setOnClickListener {
             viewModel.loadUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), extractUserName(msg)).observe(viewLifecycleOwner, Observer {
-                listener.onViewProfileClicked(it.id, it.login, it.display_name, it.profile_image_url)
+                listener.onViewProfileClicked(it.id, it.login, it.display_name, it.channelLogo)
                 dismiss()
             })
         }

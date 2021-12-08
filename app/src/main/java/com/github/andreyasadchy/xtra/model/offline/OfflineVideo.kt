@@ -24,7 +24,7 @@ data class OfflineVideo(
         val game: String, //TODO write a proper migration to null?
         val duration: Long,
         @ColumnInfo(name = "upload_date")
-        val uploadDate: Long,
+        val uploadDate: Long?,
         @ColumnInfo(name = "download_date")
         val downloadDate: Long,
         @ColumnInfo(name = "last_watch_position")

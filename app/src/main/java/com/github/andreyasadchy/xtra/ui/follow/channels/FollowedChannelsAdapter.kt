@@ -24,7 +24,7 @@ class FollowedChannelsAdapter(
 
     override fun bind(item: Follow, view: View) {
         with(view) {
-            setOnClickListener { listener.viewChannel(item.to_id, item.to_login, item.to_name, item.profileImageURL) }
+            setOnClickListener { listener.viewChannel(item.to_id, item.to_login, item.to_name, item.channelLogo) }
             logo.loadImage(fragment, item.channelLogo)
             name.text = item.to_name
         }

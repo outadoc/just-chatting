@@ -36,7 +36,7 @@ class DownloadsAdapter(
             setOnClickListener { clickListener.startOfflineVideo(item) }
             setOnLongClickListener { deleteVideo(item); true }
             thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.AUTOMATIC)
-            date.text = context.getString(R.string.uploaded_date, TwitchApiHelper.formatTime(context, item.uploadDate))
+            date.text = item.uploadDate?.let { context.getString(R.string.uploaded_date, TwitchApiHelper.formatTime(context, it)) }
             downloadDate.text = context.getString(R.string.downloaded_date, TwitchApiHelper.formatTime(context, item.downloadDate))
             duration.text = DateUtils.formatElapsedTime(item.duration / 1000L)
             type.text = TwitchApiHelper.getType(context, item.type)

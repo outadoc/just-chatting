@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
 import java.lang.Long.parseLong
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -84,12 +85,20 @@ object TwitchApiHelper {
         }
     }
 
-    fun parseIso8601Date(date: String): Long {
-        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).parse(date)?.time ?: 0L
+    fun parseIso8601Date(date: String): Long? {
+        return try {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).parse(date)?.time
+        } catch (e: ParseException) {
+            try {
+                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault()).parse(date)?.time
+            } catch (e: ParseException) {
+                null
+            }
+        }
     }
 
-    fun formatTime(context: Context, iso8601date: String): String {
-        return formatTime(context, parseIso8601Date(iso8601date))
+    fun formatTime(context: Context, iso8601date: String): String? {
+        return parseIso8601Date(iso8601date)?.let { formatTime(context, it) }
     }
 
     fun formatTime(context: Context, date: Long): String {

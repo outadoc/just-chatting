@@ -6,6 +6,8 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.VideoDownloadInfo
 import com.github.andreyasadchy.xtra.model.VideoPosition
 import com.github.andreyasadchy.xtra.model.helix.video.Video
+import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
+import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
@@ -13,10 +15,6 @@ import com.github.andreyasadchy.xtra.ui.player.HlsPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
 import com.github.andreyasadchy.xtra.util.toast
 import com.google.android.exoplayer2.ExoPlaybackException
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.PlaybackException
-import com.google.android.exoplayer2.source.hls.HlsManifest
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.HttpDataSource
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -53,7 +51,7 @@ class VideoPlayerViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     val url = playerRepository.loadVideoPlaylistUrl(gqlclientId, video.id)
-                    mediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(url))
+                    mediaSource = HlsMediaSource.Factory(dataSourceFactory).createMediaSource(url)
                     play()
                     if (offset > 0) {
                         player.seekTo(offset.toLong())
@@ -81,7 +79,7 @@ class VideoPlayerViewModel @Inject constructor(
             }
             else -> {
                 (player.currentManifest as? HlsManifest)?.let {
-                    startBackgroundAudio(helper.urls.values.last(), video.user_name, video.title, video.channelLogo, true, AudioPlayerService.TYPE_VIDEO, video.id.toLong())
+                    startBackgroundAudio(helper.urls.values.last(), video.user_name, video.title, "", true, AudioPlayerService.TYPE_VIDEO, video.id.substring(1).toLong())
                     _playerMode.value = PlayerMode.AUDIO_ONLY
                 }
             }
@@ -107,16 +105,13 @@ class VideoPlayerViewModel @Inject constructor(
         super.onPause()
     }
 
-    override fun onPlayerError(error: PlaybackException) {
-        val error2 = player.playerError
-        if (error2 != null) {
-            if (error2.type == ExoPlaybackException.TYPE_SOURCE &&
-                error2.sourceException.let { it is HttpDataSource.InvalidResponseCodeException && it.responseCode == 403 }) {
-                val context = getApplication<Application>()
-                context.toast(R.string.video_subscribers_only)
-            } else {
-                super.onPlayerError(error)
-            }
+    override fun onPlayerError(error: ExoPlaybackException) {
+        if (error.type == ExoPlaybackException.TYPE_SOURCE &&
+            error.sourceException.let { it is HttpDataSource.InvalidResponseCodeException && it.responseCode == 403 }) {
+            val context = getApplication<Application>()
+            context.toast(R.string.video_subscribers_only)
+        } else {
+            super.onPlayerError(error)
         }
     }
 

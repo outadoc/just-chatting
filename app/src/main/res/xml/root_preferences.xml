@@ -248,69 +248,6 @@
         android:title="@string/playerRewind"
         app:iconSpaceReserved="false"/>
 
-    <EditTextPreference
-        android:defaultValue="15000"
-        android:key="player_buffer_min"
-        android:singleLine="true"
-        android:title="@string/player_buffer_min"
-        app:dialogMessage="@string/player_buffer_min_summary"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
-
-    <EditTextPreference
-        android:defaultValue="50000"
-        android:key="player_buffer_max"
-        android:singleLine="true"
-        android:title="@string/player_buffer_max"
-        app:dialogMessage="@string/player_buffer_max_summary"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
-
-    <EditTextPreference
-        android:defaultValue="2000"
-        android:key="player_buffer_playback"
-        android:singleLine="true"
-        android:title="@string/player_buffer_playback"
-        app:dialogMessage="@string/player_buffer_playback_summary"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
-
-    <EditTextPreference
-        android:defaultValue="5000"
-        android:key="player_buffer_rebuffer"
-        android:singleLine="true"
-        android:title="@string/player_buffer_rebuffer"
-        app:dialogMessage="@string/player_buffer_rebuffer_summary"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
-
-    <EditTextPreference
-        android:defaultValue=""
-        android:key="player_minspeedlive"
-        android:singleLine="true"
-        android:title="@string/player_minspeedlive"
-        app:dialogMessage="@string/player_minspeedlive_summary"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
-
-    <EditTextPreference
-        android:defaultValue=""
-        android:key="player_maxspeedlive"
-        android:singleLine="true"
-        android:title="@string/player_maxspeedlive"
-        app:dialogMessage="@string/player_maxspeedlive_summary"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
-
-    <EditTextPreference
-        android:defaultValue="5000"
-        android:key="player_targetoffset"
-        android:singleLine="true"
-        android:title="@string/player_targetoffset"
-        app:dialogMessage="@string/player_targetoffset_summary"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
-
     <ListPreference
         android:defaultValue="saved"
         android:entries="@array/playerQualityEntries"

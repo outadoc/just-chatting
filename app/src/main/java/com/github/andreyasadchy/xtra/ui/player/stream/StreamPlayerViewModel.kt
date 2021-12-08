@@ -6,18 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
+import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserFactory
+import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistTracker
+import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
+import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
 import com.github.andreyasadchy.xtra.ui.player.HlsPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode.*
 import com.github.andreyasadchy.xtra.util.toast
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.MediaItem
-import com.google.android.exoplayer2.source.hls.HlsManifest
-import com.google.android.exoplayer2.source.hls.HlsMediaSource
-import com.google.android.exoplayer2.source.hls.playlist.DefaultHlsPlaylistParserFactory
-import com.google.android.exoplayer2.source.hls.playlist.DefaultHlsPlaylistTracker
 import com.google.android.exoplayer2.upstream.DefaultLoadErrorHandlingPolicy
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -45,9 +43,6 @@ class StreamPlayerViewModel @Inject constructor(
     private var deviceid = ""
     private var playerType = ""
     private var gqlclientId = ""
-    private var minspeed = ""
-    private var maxspeed = ""
-    private var targetoffset = ""
 
     private val hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
         .setAllowChunklessPreparation(true)
@@ -55,16 +50,13 @@ class StreamPlayerViewModel @Inject constructor(
         .setPlaylistTrackerFactory(DefaultHlsPlaylistTracker.FACTORY)
         .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(6))
 
-    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String, playerType: String, gqlclientId: String, minspeed: String, maxspeed: String, targetoffset: String, usehelix: Boolean, loggedIn: Boolean) {
+    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String, playerType: String, gqlclientId: String, usehelix: Boolean, loggedIn: Boolean) {
         this.useAdBlock = useAdBlock
         this.randomDeviceId = randomDeviceId
         this.xdeviceid = xdeviceid
         this.deviceid = deviceid
         this.playerType = playerType
         this.gqlclientId = gqlclientId
-        this.minspeed = minspeed
-        this.maxspeed = maxspeed
-        this.targetoffset = targetoffset
         if (_stream.value == null) {
             _stream.value = stream
             loadStream(stream)
@@ -130,18 +122,13 @@ class StreamPlayerViewModel @Inject constructor(
                 val result = playerRepository.loadStreamPlaylistUrl(gqlclientId, stream.user_login, playerType, useAdBlock, randomDeviceId, xdeviceid, deviceid)
                 if (useAdBlock) {
                     if (result.second) {
-                        httpDataSourceFactory.setDefaultRequestProperties(hashMapOf("X-Donate-To" to "https://ttv.lol/donate"))
+                        httpDataSourceFactory.defaultRequestProperties.set("X-Donate-To", "https://ttv.lol/donate")
                     } else {
                         val context = getApplication<Application>()
                         context.toast(R.string.adblock_not_working)
                     }
                 }
-                mediaSource = hlsMediaSourceFactory.createMediaSource(
-                    MediaItem.Builder().setUri(result.first).setLiveConfiguration(MediaItem.LiveConfiguration.Builder()
-                        .setMinPlaybackSpeed(if (minspeed != "") minspeed.toFloat() else C.RATE_UNSET)
-                        .setMaxPlaybackSpeed(if (maxspeed != "") maxspeed.toFloat() else C.RATE_UNSET)
-                        .setTargetOffsetMs(if (targetoffset != "") targetoffset.toLong() else C.TIME_UNSET)
-                        .build()).build())
+                mediaSource = hlsMediaSourceFactory.createMediaSource(result.first)
                 play()
             } catch (e: Exception) {
                 val context = getApplication<Application>()

@@ -24,9 +24,9 @@ class ChannelVideosDataSource (
             val list = mutableListOf<Video>()
             list.addAll(get.data)
             for (i in list) {
-                val user = api.getUserById(clientId, userToken, i.user_id).data?.first()
+                val user = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first() }
                 if (i.user_id != "") {
-                    i.profileImageURL = user?.profile_image_url ?: ""
+                    i.profileImageURL = user?.profile_image_url
                 }
             }
             list
@@ -40,9 +40,9 @@ class ChannelVideosDataSource (
             val list = mutableListOf<Video>()
             list.addAll(get.data)
             for (i in list) {
-                val user = api.getUserById(clientId, userToken, i.user_id).data?.first()
+                val user = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first() }
                 if (i.user_id != "") {
-                    i.profileImageURL = user?.profile_image_url ?: ""
+                    i.profileImageURL = user?.profile_image_url
                 }
             }
             list

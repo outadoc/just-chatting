@@ -267,7 +267,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
 //Navigation listeners
 
-    override fun openGame(id: String, name: String) {
+    override fun openGame(id: String?, name: String?) {
         fragNavController.pushFragment(GameFragment.newInstance(id, name))
     }
 
@@ -288,7 +288,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
         startPlayer(OfflinePlayerFragment.newInstance(video))
     }
 
-    override fun viewChannel(id: String, login: String, name: String, profileImage: String?) {
+    override fun viewChannel(id: String?, login: String?, name: String?, profileImage: String?) {
         fragNavController.pushFragment(ChannelPagerFragment.newInstance(id, login, name, profileImage))
     }
 

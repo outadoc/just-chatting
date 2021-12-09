@@ -33,6 +33,6 @@ class TopVideosFragment : BaseVideosFragment<TopVideosViewModel>(), RadioButtonD
             else -> throw IllegalArgumentException()
         }
         adapter.submitList(null)
-        viewModel.filter(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), period, index, text)
+        viewModel.filter(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), period, index, text)
     }
 }

@@ -34,7 +34,7 @@ object DownloadUtils {
         DownloadService.activeRequests.add(request.offlineVideoId)
     }
 
-    fun prepareDownload(context: Context, downloadable: Downloadable, url: String, path: String, duration: Long, startPosition: Long?, segmentFrom: Int? = null, segmentTo: Int? = null): OfflineVideo {
+    fun prepareDownload(context: Context, downloadable: Downloadable, url: String, path: String, duration: Long?, startPosition: Long?, segmentFrom: Int? = null, segmentTo: Int? = null): OfflineVideo {
         val offlinePath = if (downloadable is Video) {
             "$path${System.currentTimeMillis()}.m3u8"
         } else {
@@ -51,8 +51,8 @@ object DownloadUtils {
                 downloadedThumbnail = thumbnail
                 downloadedLogo = channelLogo
             }
-            OfflineVideo(offlinePath, url, startPosition, title, channelName, downloadedLogo ?: "", downloadedThumbnail, game
-                    ?: "", duration, TwitchApiHelper.parseIso8601Date(uploadDate), System.currentTimeMillis(), 0L, 0, if (segmentTo != null && segmentFrom != null) segmentTo - segmentFrom + 1 else 100, type = videoType)
+            OfflineVideo(offlinePath, url, startPosition, title, channelName, downloadedLogo ?: "", downloadedThumbnail, game,
+                duration, uploadDate?.let { TwitchApiHelper.parseIso8601Date(it) }, System.currentTimeMillis(), 0L, 0, if (segmentTo != null && segmentFrom != null) segmentTo - segmentFrom + 1 else 100, type = videoType)
         }
     }
 

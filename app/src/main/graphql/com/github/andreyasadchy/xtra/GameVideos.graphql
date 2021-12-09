@@ -1,0 +1,24 @@
+query GameVideos($name: String, $sort: VideoSort, $first: Int, $after: Cursor) {
+    game(name: $name) {
+        videos(sort: $sort, first: $first, after: $after) {
+            edges {
+                cursor
+                node {
+                    id
+                    broadcastType
+                    title
+                    createdAt
+                    previewThumbnailURL
+                    viewCount
+                    lengthSeconds
+                    owner {
+                        id
+                        login
+                        displayName
+                        profileImageURL(width: 300)
+                    }
+                }
+            }
+        }
+    }
+}

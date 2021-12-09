@@ -9,26 +9,26 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Video(
     override val id: String,
-    val stream_id: String = "",
-    val user_id: String,
-    val user_login: String,
-    val user_name: String,
-    override val title: String,
-    val description: String? = "",
+    val stream_id: String? = null,
+    val user_id: String? = null,
+    val user_login: String? = null,
+    val user_name: String? = null,
+    override val title: String? = null,
+    val description: String? = null,
     @SerializedName("created_at")
-        val createdAt: String,
+        val createdAt: String? = null,
     @SerializedName("published_at")
-        val publishedAt: String = "",
-    val thumbnail_url: String,
-    val viewable: String = "",
-    val view_count: Int,
-    val language: String = "",
-    val type: String = "",
-    val duration: String,
+        val publishedAt: String? = null,
+    val thumbnail_url: String? = null,
+    val viewable: String? = null,
+    val view_count: Int? = null,
+    val language: String? = null,
+    val type: String? = null,
+    val duration: String? = null,
     @SerializedName("muted_segments")
         val mutedSegments: List<MutedSegment>? = null,
-    val game_name: String = "",
-    var profileImageURL: String = "") : Parcelable, Downloadable {
+    val game_name: String? = null,
+    var profileImageURL: String? = null) : Parcelable, Downloadable {
 
     @Parcelize
     data class MutedSegment(
@@ -37,14 +37,14 @@ data class Video(
 
         override val thumbnail: String
             get() = TwitchApiHelper.getTemplateUrl(thumbnail_url, "video")
-        override val channelName: String
+        override val channelName: String?
                 get() = user_name
         override val channelLogo: String
                 get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
-        override val game: String
+        override val game: String?
                 get() = game_name
-        override val uploadDate: String
+        override val uploadDate: String?
                 get() = createdAt
-        override val videoType: String
+        override val videoType: String?
             get() = type
 }

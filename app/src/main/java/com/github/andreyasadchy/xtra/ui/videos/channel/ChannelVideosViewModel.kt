@@ -13,6 +13,7 @@ import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
+import com.github.andreyasadchy.xtra.type.VideoSort
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosViewModel
 import javax.inject.Inject
 
@@ -30,7 +31,7 @@ class ChannelVideosViewModel @Inject constructor(
         if (it.usehelix)
             repository.loadChannelVideos(it.clientId, it.token, it.channelId, BroadcastType.ALL, it.sort, viewModelScope)
         else
-            repository.loadChannelVideosGQL(it.clientId, it.channelId, null, when (it.sort) { Sort.TIME -> "TIME" else -> "VIEWS" }, viewModelScope)
+            repository.loadChannelVideosGQL(it.clientId, it.channelId, null, when (it.sort) { Sort.TIME -> VideoSort.TIME else -> VideoSort.VIEWS }, viewModelScope)
     }
     var selectedIndex = 0
         private set

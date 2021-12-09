@@ -12,6 +12,8 @@ import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.model.helix.video.VideosResponse
+import com.github.andreyasadchy.xtra.type.ClipsPeriod
+import com.github.andreyasadchy.xtra.type.VideoSort
 import kotlinx.coroutines.CoroutineScope
 
 interface TwitchService {
@@ -35,11 +37,12 @@ interface TwitchService {
 
     fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game>
     fun loadTopStreamsGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Stream>
+    fun loadTopVideosGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Video>
     fun loadGameStreamsGQL(clientId: String?, game: String?, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadGameVideosGQL(clientId: String?, game: String?, type: String?, coroutineScope: CoroutineScope): Listing<Video>
-    fun loadGameClipsGQL(clientId: String?, game: String?, sort: String?, coroutineScope: CoroutineScope): Listing<Clip>
-    fun loadChannelVideosGQL(clientId: String?, game: String?, type: String?, sort: String?, coroutineScope: CoroutineScope): Listing<Video>
-    fun loadChannelClipsGQL(clientId: String?, game: String?, sort: String?, coroutineScope: CoroutineScope): Listing<Clip>
+    fun loadGameClipsGQL(clientId: String?, game: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>
+    fun loadChannelVideosGQL(clientId: String?, game: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video>
+    fun loadChannelClipsGQL(clientId: String?, game: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>
     fun loadSearchChannelsGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<Channel>
     fun loadSearchGamesGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<Game>
 }

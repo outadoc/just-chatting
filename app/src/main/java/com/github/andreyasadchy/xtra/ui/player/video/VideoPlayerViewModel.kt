@@ -42,7 +42,7 @@ class VideoPlayerViewModel @Inject constructor(
             return VideoDownloadInfo(video, helper.urls, relativeTimes, durations, playlist.durationUs / 1000L, playlist.targetDurationUs / 1000L, player.currentPosition)
         }
 
-    override val channelId: String
+    override val channelId: String?
         get() = video.user_id
 
     fun setVideo(gqlclientId: String, video: Video, offset: Double) {
@@ -79,7 +79,7 @@ class VideoPlayerViewModel @Inject constructor(
             }
             else -> {
                 (player.currentManifest as? HlsManifest)?.let {
-                    startBackgroundAudio(helper.urls.values.last(), video.user_name, video.title, "", true, AudioPlayerService.TYPE_VIDEO, video.id.substring(1).toLong())
+                    startBackgroundAudio(helper.urls.values.last(), video.user_name, video.title, "", true, AudioPlayerService.TYPE_VIDEO, video.id.toLong())
                     _playerMode.value = PlayerMode.AUDIO_ONLY
                 }
             }
@@ -117,7 +117,7 @@ class VideoPlayerViewModel @Inject constructor(
 
     override fun onCleared() {
         if (playerMode.value == PlayerMode.NORMAL && this::video.isInitialized) { //TODO
-            playerRepository.saveVideoPosition(VideoPosition(video.id.substring(1).toLong(), player.currentPosition))
+            playerRepository.saveVideoPosition(VideoPosition(video.id.toLong(), player.currentPosition))
         }
         super.onCleared()
     }

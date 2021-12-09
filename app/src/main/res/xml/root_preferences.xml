@@ -55,6 +55,12 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:key="ui_broadcasterscount"
+        android:title="@string/broadcastersCount"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
         android:key="ui_startonfollowed"
         android:title="@string/startonfollowed"
         app:iconSpaceReserved="false"/>
@@ -302,21 +308,9 @@
 
     <PreferenceCategory android:title="@string/settings_api" app:iconSpaceReserved="false"/>
     <SwitchPreferenceCompat
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="api_usehelix"
         android:title="@string/api_usehelix"
-        app:iconSpaceReserved="false"/>
-
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="api_usehelix_games"
-        android:title="@string/api_usehelix_games"
-        app:iconSpaceReserved="false"/>
-
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="api_usehelix_channelvideos"
-        android:title="@string/api_usehelix_channelvideos"
         app:iconSpaceReserved="false"/>
 
     <EditTextPreference

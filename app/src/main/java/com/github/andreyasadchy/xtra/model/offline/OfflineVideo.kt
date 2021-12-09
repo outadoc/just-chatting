@@ -10,30 +10,31 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(tableName = "videos")
 data class OfflineVideo(
-        val url: String,
-        @ColumnInfo(name = "source_url")
-        val sourceUrl: String,
-        @ColumnInfo(name = "source_start_position")
-        val sourceStartPosition: Long?,
-        val name: String,
-        @ColumnInfo(name = "channel_name")
-        val channelName: String,
-        @ColumnInfo(name = "channel_logo")
-        val channelLogo: String,
-        val thumbnail: String,
-        val game: String, //TODO write a proper migration to null?
-        val duration: Long,
-        @ColumnInfo(name = "upload_date")
-        val uploadDate: Long?,
-        @ColumnInfo(name = "download_date")
-        val downloadDate: Long,
-        @ColumnInfo(name = "last_watch_position")
-        var lastWatchPosition: Long,
-        var progress: Int,
-        @ColumnInfo(name = "max_progress")
-        val maxProgress: Int,
-        var status: Int = STATUS_PENDING,
-        val type: String) : Parcelable {
+    val url: String,
+    @ColumnInfo(name = "source_url")
+    val sourceUrl: String,
+    @ColumnInfo(name = "source_start_position")
+    val sourceStartPosition: Long?,
+    val name: String?,
+    @ColumnInfo(name = "channel_name")
+    val channelName: String?,
+    @ColumnInfo(name = "channel_logo")
+    val channelLogo: String,
+    val thumbnail: String,
+    val game: String?, //TODO write a proper migration to null?
+    val duration: Long?,
+    @ColumnInfo(name = "upload_date")
+    val uploadDate: Long?,
+    @ColumnInfo(name = "download_date")
+    val downloadDate: Long,
+    @ColumnInfo(name = "last_watch_position")
+    var lastWatchPosition: Long,
+    var progress: Int,
+    @ColumnInfo(name = "max_progress")
+    val maxProgress: Int,
+    var status: Int = STATUS_PENDING,
+    val type: String?
+) : Parcelable {
 
     @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)

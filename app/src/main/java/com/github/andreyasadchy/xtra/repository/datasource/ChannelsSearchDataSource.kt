@@ -20,7 +20,7 @@ class ChannelsSearchDataSource private constructor(
             val list = mutableListOf<Channel>()
             list.addAll(get.data)
             for (i in list) {
-                if (i.id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.id).data?.first()?.profile_image_url ?: ""
+                i.profileImageURL = i.id?.let { api.getUserById(clientId, userToken, i.id).data?.first()?.profile_image_url }
             }
             list
         }
@@ -33,7 +33,7 @@ class ChannelsSearchDataSource private constructor(
             val list = mutableListOf<Channel>()
             list.addAll(get.data)
             for (i in list) {
-                if (i.id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.id).data?.first()?.profile_image_url ?: ""
+                i.profileImageURL = i.id?.let { api.getUserById(clientId, userToken, i.id).data?.first()?.profile_image_url }
             }
             list
         }

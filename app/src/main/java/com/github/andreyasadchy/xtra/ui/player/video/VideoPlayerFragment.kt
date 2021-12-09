@@ -27,11 +27,11 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
 
     override val viewModel by viewModels<VideoPlayerViewModel> { viewModelFactory }
     private lateinit var video: Video
-    override val channelId: String
+    override val channelId: String?
         get() = video.user_id
-    override val channelLogin: String
+    override val channelLogin: String?
         get() = video.user_login
-    override val channelName: String
+    override val channelName: String?
         get() = video.user_name
     override val channelImage: String
         get() = video.channelLogo

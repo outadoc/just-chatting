@@ -23,10 +23,10 @@ class ClipsDataSource(
             val list = mutableListOf<Clip>()
             list.addAll(get.data)
             for (i in list) {
-                if (i.game_id != "") i.game_name = api.getGame(clientId, userToken, i.game_id).data.first().name
-                val user = api.getUserById(clientId, userToken, i.broadcaster_id).data?.first()
+                i.game_name = i.game_id?.let { api.getGame(clientId, userToken, i.game_id).data.first().name }
+                val user = i.broadcaster_id?.let { api.getUserById(clientId, userToken, i.broadcaster_id).data?.first() }
                 if (i.broadcaster_id != "") {
-                    i.profileImageURL = user?.profile_image_url ?: ""
+                    i.profileImageURL = user?.profile_image_url
                     i.broadcaster_login = user?.login ?: ""
                 }
             }
@@ -41,10 +41,10 @@ class ClipsDataSource(
             val list = mutableListOf<Clip>()
             list.addAll(get.data)
             for (i in list) {
-                if (i.game_id != "") i.game_name = api.getGame(clientId, userToken, i.game_id).data.first().name
-                val user = api.getUserById(clientId, userToken, i.broadcaster_id).data?.first()
+                i.game_name = i.game_id?.let { api.getGame(clientId, userToken, i.game_id).data.first().name }
+                val user = i.broadcaster_id?.let { api.getUserById(clientId, userToken, i.broadcaster_id).data?.first() }
                 if (i.broadcaster_id != "") {
-                    i.profileImageURL = user?.profile_image_url ?: ""
+                    i.profileImageURL = user?.profile_image_url
                     i.broadcaster_login = user?.login ?: ""
                 }
             }

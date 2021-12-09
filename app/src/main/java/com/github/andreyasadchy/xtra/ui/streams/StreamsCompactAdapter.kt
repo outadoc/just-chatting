@@ -20,7 +20,7 @@ class StreamsCompactAdapter(
     override fun bind(item: Stream, view: View) {
         super.bind(item, view)
         with(view) {
-            viewers.text = TwitchApiHelper.formatCount(item.viewer_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            if (item.viewer_count != null) viewers.text = TwitchApiHelper.formatCount(item.viewer_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
         }
     }
 }

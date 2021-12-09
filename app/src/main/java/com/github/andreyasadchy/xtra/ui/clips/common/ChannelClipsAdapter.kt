@@ -37,9 +37,9 @@ class ChannelClipsAdapter(
             setOnClickListener { clickListener.startClip(item) }
             setOnLongClickListener { showDownloadDialog(item); true }
             thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.NONE)
-            date.text = TwitchApiHelper.formatTime(context, item.uploadDate)
-            views.text = TwitchApiHelper.formatViewsCount(context, item.view_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
-            duration.text = DateUtils.formatElapsedTime(item.duration.toLong())
+            date.text = item.uploadDate?.let { TwitchApiHelper.formatTime(context, it) }
+            views.text = item.view_count?.let { TwitchApiHelper.formatViewsCount(context, it, context.prefs().getBoolean(C.UI_VIEWCOUNT, false)) }
+            duration.text = item.duration?.let { DateUtils.formatElapsedTime(it.toLong()) }
             title.text = item.title
             gameName.text = item.game
             options.setOnClickListener {

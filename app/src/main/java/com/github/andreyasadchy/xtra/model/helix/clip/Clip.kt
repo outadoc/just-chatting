@@ -8,33 +8,33 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Clip(
         override val id: String,
-        val url: String = "",
-        val embed_url: String = "",
-        val broadcaster_id: String,
-        val broadcaster_name: String,
-        val creator_id: String = "",
-        val creator_name: String = "",
-        val video_id: String = "",
-        val game_id: String = "",
-        override val title: String,
-        val view_count: Int,
-        val created_at: String,
-        val thumbnail_url: String,
-        val duration: Double,
-        var game_name: String = "",
-        var broadcaster_login: String = "",
-        var profileImageURL: String = "") : Parcelable, Downloadable {
+        val url: String? = null,
+        val embed_url: String? = null,
+        val broadcaster_id: String? = null,
+        val broadcaster_name: String? = null,
+        val creator_id: String? = null,
+        val creator_name: String? = null,
+        val video_id: String? = null,
+        val game_id: String? = null,
+        override val title: String? = null,
+        val view_count: Int? = null,
+        val created_at: String? = null,
+        val thumbnail_url: String? = null,
+        val duration: Double? = null,
+        var game_name: String? = null,
+        var broadcaster_login: String? = null,
+        var profileImageURL: String? = null) : Parcelable, Downloadable {
 
         override val thumbnail: String
                 get() = TwitchApiHelper.getTemplateUrl(thumbnail_url, "clip")
-        override val channelName: String
+        override val channelName: String?
                 get() = broadcaster_name
         override val channelLogo: String
                 get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
-        override val game: String
+        override val game: String?
                 get() = game_name
-        override val uploadDate: String
+        override val uploadDate: String?
                 get() = created_at
-        override val videoType: String
-                get() = ""
+        override val videoType: String?
+                get() = null
 }

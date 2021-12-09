@@ -4,6 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo3.api.Optional
+import com.github.andreyasadchy.xtra.StreamQuery
+import com.github.andreyasadchy.xtra.apolloClient
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.helix.stream.StreamsResponse
 import com.github.andreyasadchy.xtra.repository.TwitchService
@@ -20,6 +23,9 @@ class ChannelPagerViewModel @Inject constructor(private val repository: TwitchSe
     private val _stream = MutableLiveData<StreamsResponse>()
     val stream: LiveData<StreamsResponse>
         get() = _stream
+    private val _streamGQL = MutableLiveData<Int?>()
+    val streamGQL: MutableLiveData<Int?>
+        get() = _streamGQL
 
     override val channelId: String
         get() {
@@ -48,10 +54,32 @@ class ChannelPagerViewModel @Inject constructor(private val repository: TwitchSe
         }
     }
 
+    fun loadStreamGQL(clientId: String?, channel: String) {
+        if (_channel.value != channel) {
+            _channel.value = channel
+            viewModelScope.launch {
+                try {
+                    val stream = apolloClient(clientId).query(StreamQuery(Optional.Present(channel))).execute().data?.user?.stream?.viewersCount
+                    _streamGQL.postValue(stream)
+                } catch (e: Exception) {
+
+                }
+            }
+        }
+    }
+
     fun retry(clientId: String?, token: String) {
         if (_stream.value == null) {
             _channel.value?.let {
                 loadStream(clientId, token, it)
+            }
+        }
+    }
+
+    fun retryGQL(clientId: String?) {
+        if (_streamGQL.value == null) {
+            _channel.value?.let {
+                loadStreamGQL(clientId, it)
             }
         }
     }

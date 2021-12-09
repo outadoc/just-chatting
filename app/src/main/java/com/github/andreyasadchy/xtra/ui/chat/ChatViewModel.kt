@@ -69,17 +69,21 @@ class ChatViewModel @Inject constructor(
     val chatters: Collection<Chatter>
         get() = (chat as LiveChatController).chatters.values
 
-    fun startLive(user: User, channelId: String, channelLogin: String, channelName: String) {
-        if (chat == null) {
+    fun startLive(user: User, channelId: String?, channelLogin: String?, channelName: String?) {
+        if (chat == null && channelLogin != null && channelName != null) {
             chat = LiveChatController(user, channelLogin, channelName)
-            init(channelId)
+            if (channelId != null) {
+                init(channelId)
+            }
         }
     }
 
-    fun startReplay(clientId: String, channelId: String, videoId: String, startTime: Double, getCurrentPosition: () -> Double) {
+    fun startReplay(clientId: String, channelId: String?, videoId: String, startTime: Double, getCurrentPosition: () -> Double) {
         if (chat == null) {
             chat = VideoChatController(clientId, videoId, startTime, getCurrentPosition)
-            init(channelId)
+            if (channelId != null) {
+                init(channelId)
+            }
         }
     }
 

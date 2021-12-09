@@ -28,12 +28,12 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         return inflater.inflate(R.layout.fragment_chat, container, false).also { chatView = it as ChatView }
     }
 
-    var chLogin = ""
-    var chName = ""
+    var chLogin: String? = null
+    var chName: String? = null
     override fun initialize() {
         val args = requireArguments()
         val clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: ""
-        val channelId = args.getString(KEY_CHANNEL)!!
+        val channelId = args.getString(KEY_CHANNEL)
         val user = User.get(requireContext())
         val userIsLoggedIn = user is LoggedIn
         val isLive = args.getBoolean(KEY_IS_LIVE)
@@ -114,11 +114,11 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         private const val KEY_VIDEO_ID = "videoId"
         private const val KEY_START_TIME = "startTime"
 
-        fun newInstance(channel: String, channelLogin: String, channelName: String) = ChatFragment().apply {
+        fun newInstance(channel: String?, channelLogin: String?, channelName: String?) = ChatFragment().apply {
             arguments = bundleOf(KEY_IS_LIVE to true, KEY_CHANNEL to channel); chLogin = channelLogin ; chName = channelName
         }
 
-        fun newInstance(channel: String, videoId: String?, startTime: Double?) = ChatFragment().apply {
+        fun newInstance(channel: String?, videoId: String?, startTime: Double?) = ChatFragment().apply {
             arguments = bundleOf(KEY_IS_LIVE to false, KEY_CHANNEL to channel, KEY_VIDEO_ID to videoId, KEY_START_TIME to startTime)
         }
     }

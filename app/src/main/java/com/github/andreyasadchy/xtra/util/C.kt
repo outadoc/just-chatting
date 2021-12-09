@@ -22,6 +22,7 @@ object C {
     const val COMPACT_STREAMS = "compactStreams"
     const val UI_ROUNDUSERIMAGE = "ui_rounduserimage"
     const val UI_VIEWCOUNT = "ui_viewcount"
+    const val UI_BROADCASTERSCOUNT = "ui_broadcasterscount"
     const val UI_STARTONFOLLOWED = "ui_startonfollowed"
     const val UI_STATUSBAR = "ui_statusbar"
     const val UI_NAVBAR = "ui_navbar"
@@ -58,8 +59,6 @@ object C {
     const val TOKEN_RANDOM_DEVICEID = "token_random_deviceid"
     const val TOKEN_PLAYERTYPE = "token_playertype"
     const val API_USEHELIX = "api_usehelix"
-    const val API_USEHELIX_GAMES = "api_usehelix_games"
-    const val API_USEHELIX_CHANNELVIDEOS = "api_usehelix_channelvideos"
     const val HELIX_CLIENT_ID = "helix_client_id"
     const val GQL_CLIENT_ID = "gql_client_id"
 }

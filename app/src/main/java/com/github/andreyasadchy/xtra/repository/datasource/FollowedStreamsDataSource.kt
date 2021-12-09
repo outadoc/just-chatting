@@ -20,7 +20,7 @@ class FollowedStreamsDataSource(
             val list = mutableListOf<Stream>()
             list.addAll(get.data)
             for (i in list) {
-                if (i.user_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url ?: ""
+                i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url }
             }
             list
         }
@@ -33,7 +33,7 @@ class FollowedStreamsDataSource(
             val list = mutableListOf<Stream>()
             list.addAll(get.data)
             for (i in list) {
-                if (i.user_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url ?: ""
+                i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, it).data?.first()?.profile_image_url }
             }
             list
         }

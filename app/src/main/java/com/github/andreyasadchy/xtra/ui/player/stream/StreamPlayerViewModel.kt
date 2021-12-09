@@ -1,10 +1,12 @@
 package com.github.andreyasadchy.xtra.ui.player.stream
 
 import android.app.Application
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo3.api.Optional
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.StreamQuery
+import com.github.andreyasadchy.xtra.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserFactory
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistTracker
@@ -29,12 +31,12 @@ class StreamPlayerViewModel @Inject constructor(
     repository: TwitchService
 ) : HlsPlayerViewModel(context, repository) {
 
-    private val _stream = MutableLiveData<Stream>()
-    val stream: LiveData<Stream>
+    private val _stream = MutableLiveData<Stream?>()
+    val stream: MutableLiveData<Stream?>
         get() = _stream
-    override val channelId: String
+    override val channelId: String?
         get() {
-            return _stream.value!!.user_id
+            return _stream.value?.user_id
         }
 
     private var useAdBlock = false
@@ -60,16 +62,18 @@ class StreamPlayerViewModel @Inject constructor(
         if (_stream.value == null) {
             _stream.value = stream
             loadStream(stream)
-            if (usehelix && loggedIn) {
-                viewModelScope.launch {
-                    while (isActive) {
-                        try {
-                            val s = repository.loadStream(clientId, token, stream.user_id).data.first()
-                            _stream.postValue(s)
-                            delay(300000L)
-                        } catch (e: Exception) {
-                            delay(60000L)
+            viewModelScope.launch {
+                while (isActive) {
+                    try {
+                        val s = if (usehelix && loggedIn) {
+                            stream.user_id?.let { repository.loadStream(clientId, token, it).data.first() }
+                        } else {
+                            stream.user_login?.let { Stream(viewer_count = apolloClient(clientId).query(StreamQuery(Optional.Present(it))).execute().data?.user?.stream?.viewersCount) }
                         }
+                        _stream.postValue(s)
+                        delay(300000L)
+                    } catch (e: Exception) {
+                        delay(60000L)
                     }
                 }
             }
@@ -119,8 +123,9 @@ class StreamPlayerViewModel @Inject constructor(
     private fun loadStream(stream: Stream) {
         viewModelScope.launch {
             try {
-                val result = playerRepository.loadStreamPlaylistUrl(gqlclientId, stream.user_login, playerType, useAdBlock, randomDeviceId, xdeviceid, deviceid)
-                if (useAdBlock) {
+                val result = stream.user_login?.let { playerRepository.loadStreamPlaylistUrl(gqlclientId, it, playerType, useAdBlock, randomDeviceId, xdeviceid, deviceid) }
+                if (result != null) {
+                    if (useAdBlock) {
                     if (result.second) {
                         httpDataSourceFactory.defaultRequestProperties.set("X-Donate-To", "https://ttv.lol/donate")
                     } else {
@@ -128,8 +133,9 @@ class StreamPlayerViewModel @Inject constructor(
                         context.toast(R.string.adblock_not_working)
                     }
                 }
-                mediaSource = hlsMediaSourceFactory.createMediaSource(result.first)
+                    mediaSource = hlsMediaSourceFactory.createMediaSource(result.first)
                 play()
+                }
             } catch (e: Exception) {
                 val context = getApplication<Application>()
                 context.toast(R.string.error_stream)

@@ -10,6 +10,7 @@ import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.TwitchService
+import com.github.andreyasadchy.xtra.type.ClipsPeriod
 import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import javax.inject.Inject
@@ -36,10 +37,10 @@ class ClipsViewModel @Inject constructor(
             repository.loadClips(it.clientId, it.token, it.channelName, it.game, started, ended, viewModelScope)
         } else {
             val period = when (it.period) {
-                Period.DAY -> "LAST_DAY"
-                Period.WEEK -> "LAST_WEEK"
-                Period.MONTH -> "LAST_MONTH"
-                else -> "ALL_TIME" }
+                Period.DAY -> ClipsPeriod.LAST_DAY
+                Period.WEEK -> ClipsPeriod.LAST_WEEK
+                Period.MONTH -> ClipsPeriod.LAST_MONTH
+                else -> ClipsPeriod.ALL_TIME }
             if (it.game == null)
                 repository.loadChannelClipsGQL(it.clientId, it.channelName, period, viewModelScope)
             else

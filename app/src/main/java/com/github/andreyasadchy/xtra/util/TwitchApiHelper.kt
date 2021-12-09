@@ -19,7 +19,7 @@ object TwitchApiHelper {
     var checkedValidation = false
 
     fun getTemplateUrl(url: String?, type: String): String {
-        if ((url == null)||(url == "")||(url == "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"))
+        if ((url == null)||(url == "")||(url.startsWith("https://vod-secure.twitch.tv/_404/404_processing")))
             return when (type) {
                 "game" -> "https://static-cdn.jtvnw.net/ttv-static/404_boxart.jpg"
                 "profileimage" -> ""
@@ -76,8 +76,8 @@ object TwitchApiHelper {
         return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(calendar.time)
     }
 
-    fun getType(context: Context, type: String): String? {
-        return when (type) {
+    fun getType(context: Context, type: String?): String? {
+        return when (type?.lowercase()) {
             "archive" -> context.getString(R.string.video_type_archive)
             "highlight" -> context.getString(R.string.video_type_highlight)
             "upload" -> context.getString(R.string.video_type_upload)

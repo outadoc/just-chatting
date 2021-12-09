@@ -28,11 +28,11 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
 
     override val viewModel by viewModels<ClipPlayerViewModel> { viewModelFactory }
     private lateinit var clip: Clip
-    override val channelId: String
+    override val channelId: String?
         get() = clip.broadcaster_id
-    override val channelLogin: String
+    override val channelLogin: String?
         get() = clip.broadcaster_login
-    override val channelName: String
+    override val channelName: String?
         get() = clip.broadcaster_name
     override val channelImage: String
         get() = clip.channelLogo
@@ -85,7 +85,9 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
         }
         if (clip.video_id != "") {
             viewModel.video.observe(viewLifecycleOwner, Observer {
-                (requireActivity() as MainActivity).startVideo(it, 0.0)
+                if (it != null) {
+                    (requireActivity() as MainActivity).startVideo(it, 0.0)
+                }
             })
             watchVideo.setOnClickListener { viewModel.loadVideo(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, "")) }
         }

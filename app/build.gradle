@@ -1,7 +1,10 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id("com.android.application")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
+    id("kotlin-kapt")
+    id("com.apollographql.apollo3").version("3.0.0-rc01")
+}
 
 android {
     signingConfigs {
@@ -119,4 +122,11 @@ dependencies {
 
     implementation "androidx.tonyodev.fetch2:xfetch2:$fetch"
     implementation "androidx.tonyodev.fetch2okhttp:xfetch2okhttp:$fetch"
+
+    implementation('com.apollographql.apollo3:apollo-runtime:3.0.0-rc01')
+}
+
+apollo {
+    packageName.set("com.github.andreyasadchy.xtra")
+    generateKotlinModels.set(true)
 }

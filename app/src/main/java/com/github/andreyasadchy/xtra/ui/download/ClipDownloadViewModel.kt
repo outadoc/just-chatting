@@ -50,9 +50,9 @@ class ClipDownloadViewModel @Inject constructor(
             val context = getApplication<Application>()
 
             val filePath = "$path${File.separator}${clip.id}$quality"
-            val startPosition = clip.duration.let { (it * 1000.0).toLong() }
+            val startPosition = clip.duration.let { (it?.times(1000.0))?.toLong() }
 
-            val offlineVideo = DownloadUtils.prepareDownload(context, clip, url, filePath, clip.duration.toLong() * 1000L, startPosition)
+            val offlineVideo = DownloadUtils.prepareDownload(context, clip, url, filePath, clip.duration?.toLong()?.times(1000L), startPosition)
             val videoId = offlineRepository.saveVideo(offlineVideo).toInt()
             val request = Request(videoId, url, offlineVideo.url)
             offlineRepository.saveRequest(request)

@@ -1,0 +1,23 @@
+query GameClips($name: String, $sort: ClipsPeriod, $first: Int, $after: Cursor) {
+    game(name: $name) {
+        clips(criteria: { period: $sort }, first: $first, after: $after) {
+            edges {
+                cursor
+                node {
+                    slug
+                    title
+                    createdAt
+                    thumbnailURL
+                    viewCount
+                    durationSeconds
+                    broadcaster {
+                        id
+                        login
+                        displayName
+                        profileImageURL(width: 300)
+                    }
+                }
+            }
+        }
+    }
+}

@@ -29,6 +29,20 @@
             app:layout_constraintLeft_toLeftOf="parent"
             tools:text="133769 viewers" />
 
+        <TextView
+            android:id="@+id/type"
+            style="@style/ThumbnailItem"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:shadowColor="#000000"
+            android:shadowDx="1"
+            android:shadowDy="2"
+            android:shadowRadius="1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="type" />
+
         <ImageView
             android:id="@+id/userImage"
             style="@style/UserPicture"

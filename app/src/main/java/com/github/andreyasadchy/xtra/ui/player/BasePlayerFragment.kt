@@ -66,10 +66,10 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
     private var resizeMode = 0
 
     protected lateinit var prefs: SharedPreferences
-    protected abstract val channelId: String
-    protected abstract val channelLogin: String
-    protected abstract val channelName: String
-    protected abstract val channelImage: String
+    protected abstract val channelId: String?
+    protected abstract val channelLogin: String?
+    protected abstract val channelName: String?
+    protected abstract val channelImage: String?
 
     val playerWidth: Int
         get() = playerView.width

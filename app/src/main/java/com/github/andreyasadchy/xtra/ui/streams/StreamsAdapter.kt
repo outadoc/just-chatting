@@ -23,7 +23,8 @@ class StreamsAdapter(
         super.bind(item, view)
         with(view) {
             thumbnail.loadImage(fragment, item.thumbnail, true, diskCacheStrategy = DiskCacheStrategy.NONE)
-            viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewer_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            if (item.viewer_count != null) viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewer_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            type.text = TwitchApiHelper.getType(context, item.type)
         }
     }
 }

@@ -6,10 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_games_list_item.view.*
 
 class GamesAdapter(
@@ -29,8 +26,15 @@ class GamesAdapter(
         with(view) {
             setOnClickListener { listener.openGame(item.id, item.name) }
             gameImage.loadImage(fragment, item.boxArt)
-            gameName.text = item.name
-            viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewersCount, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            if (item.name != null)  {
+                gameName.visible()
+                gameName.text = item.name }
+            if (item.viewersCount != null)  {
+                viewers.visible()
+                viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewersCount, context.prefs().getBoolean(C.UI_VIEWCOUNT, false)) }
+            if (item.broadcastersCount != null && context.prefs().getBoolean(C.UI_BROADCASTERSCOUNT, true)) {
+                broadcastersCount.visible()
+                broadcastersCount.text = context.getString(R.string.broadcasters, item.broadcastersCount.toString()) }
         }
     }
 }

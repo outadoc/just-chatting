@@ -38,7 +38,7 @@ class DownloadsAdapter(
             thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.AUTOMATIC)
             date.text = item.uploadDate?.let { context.getString(R.string.uploaded_date, TwitchApiHelper.formatTime(context, it)) }
             downloadDate.text = context.getString(R.string.downloaded_date, TwitchApiHelper.formatTime(context, item.downloadDate))
-            duration.text = DateUtils.formatElapsedTime(item.duration / 1000L)
+            duration.text = item.duration?.let { DateUtils.formatElapsedTime(item.duration / 1000L) }
             type.text = TwitchApiHelper.getType(context, item.type)
             userImage.loadImage(fragment, item.channelLogo, circle = true)
             title.text = item.name
@@ -51,10 +51,12 @@ class DownloadsAdapter(
                     show()
                 }
             }
-            progressBar.progress = (item.lastWatchPosition.toFloat() / item.duration * 100).toInt()
-            item.sourceStartPosition?.let {
-                sourceStart.text = context.getString(R.string.source_vod_start, DateUtils.formatElapsedTime(it / 1000L))
-                sourceEnd.text = context.getString(R.string.source_vod_end, DateUtils.formatElapsedTime((it + item.duration) / 1000L))
+            if (item.duration != null) {
+                progressBar.progress = (item.lastWatchPosition.toFloat() / item.duration * 100).toInt()
+                item.sourceStartPosition?.let {
+                    sourceStart.text = context.getString(R.string.source_vod_start, DateUtils.formatElapsedTime(it / 1000L))
+                    sourceEnd.text = context.getString(R.string.source_vod_end, DateUtils.formatElapsedTime((it + item.duration) / 1000L))
+                }
             }
             status.apply {
                 if (item.status == OfflineVideo.STATUS_DOWNLOADED) {

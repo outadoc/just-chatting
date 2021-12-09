@@ -37,7 +37,7 @@ import kotlinx.android.synthetic.main.fragment_media_pager.*
 class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
 
     companion object {
-        fun newInstance(id: String, login: String, name: String, profileImage: String?) = ChannelPagerFragment().apply {
+        fun newInstance(id: String?, login: String?, name: String?, profileImage: String?) = ChannelPagerFragment().apply {
             bundle.putString(C.CHANNEL_ID, id)
             bundle.putString(C.CHANNEL_LOGIN, login)
             bundle.putString(C.CHANNEL_DISPLAYNAME, name)
@@ -126,11 +126,16 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
                         watchLive.setOnClickListener { s?.let { it1 -> activity.startStream(it1) } }
                     }
                 } else {
-                    watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID) ?: "", user_login = requireArguments().getString(C.CHANNEL_LOGIN) ?: "", user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME) ?: "", profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE) ?: "")) }
+                    watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID), user_login = requireArguments().getString(C.CHANNEL_LOGIN), user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))) }
                 }
             })
         } else {
-            watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID) ?: "", user_login = requireArguments().getString(C.CHANNEL_LOGIN) ?: "", user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME) ?: "", profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE) ?: "")) }
+            viewModel.loadStreamGQL(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), requireArguments().getString(C.CHANNEL_LOGIN) ?: "")
+            viewModel.streamGQL.observe(viewLifecycleOwner, Observer {
+                if (it != null)
+                    watchLive.text = getString(R.string.watch_live)
+                watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID), user_login = requireArguments().getString(C.CHANNEL_LOGIN), user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))) }
+            })
         }
         User.get(activity).let {
             if (it is LoggedIn && context?.prefs()?.getBoolean(C.UI_FOLLOW, true) == true) {
@@ -140,7 +145,10 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
     }
 
     override fun onNetworkRestored() {
-        viewModel.retry(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "")
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "")
+            viewModel.retry(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "")
+        else
+            viewModel.retryGQL(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

@@ -21,13 +21,13 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
     override val viewModel by viewModels<StreamPlayerViewModel> { viewModelFactory }
     private lateinit var chatFragment: ChatFragment
     private lateinit var stream: Stream
-    override val channelId: String
+    override val channelId: String?
         get() = stream.user_id
-    override val channelLogin: String
+    override val channelLogin: String?
         get() = stream.user_login
-    override val channelName: String
+    override val channelName: String?
         get() = stream.user_name
-    override val channelImage: String
+    override val channelImage: String?
         get() = stream.profileImageURL
 
     override val layoutId: Int
@@ -71,12 +71,9 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         viewModel.loaded.observe(viewLifecycleOwner, Observer {
             if (it) settings.enable() else settings.disable()
         })
-        if (usehelix && loggedIn) {
-            viewModel.stream.observe(viewLifecycleOwner, Observer {
-                viewers.text = TwitchApiHelper.formatCount(it.viewer_count, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false)
-                )
-            })
-        }
+        viewModel.stream.observe(viewLifecycleOwner, Observer {
+            if (it?.viewer_count != null) viewers.text = TwitchApiHelper.formatCount(it.viewer_count, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false))
+        })
         settings.setOnClickListener {
             FragmentUtils.showRadioButtonDialogFragment(childFragmentManager, viewModel.qualities, viewModel.qualityIndex)
         }

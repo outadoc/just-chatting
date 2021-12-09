@@ -9,14 +9,14 @@ import kotlinx.coroutines.launch
 class FollowLiveData(
         private val repository: TwitchService,
         private val user: LoggedIn,
-        private val channelId: String,
+        private val channelId: String?,
         private val viewModelScope: CoroutineScope,
         private val clientId: String = "") : MutableLiveData<Boolean>()  {
 
     init {
         viewModelScope.launch {
             try {
-                val isFollowing = repository.loadUserFollows(clientId, user.token, channelId, user.id)
+                val isFollowing = channelId?.let { repository.loadUserFollows(clientId, user.token, it, user.id) }
                 super.setValue(isFollowing)
             } catch (e: Exception) {
 

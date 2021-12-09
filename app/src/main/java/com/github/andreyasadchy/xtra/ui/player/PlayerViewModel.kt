@@ -119,7 +119,7 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
         }
     }
 
-    protected fun startBackgroundAudio(playlistUrl: String, channelName: String, title: String?, imageUrl: String, usePlayPause: Boolean, type: Int, videoId: Number?) {
+    protected fun startBackgroundAudio(playlistUrl: String, channelName: String?, title: String?, imageUrl: String?, usePlayPause: Boolean, type: Int, videoId: Number?) {
         val context = XtraApp.INSTANCE //TODO
         val intent = Intent(context, AudioPlayerService::class.java).apply {
             putExtra(AudioPlayerService.KEY_PLAYLIST_URL, playlistUrl)

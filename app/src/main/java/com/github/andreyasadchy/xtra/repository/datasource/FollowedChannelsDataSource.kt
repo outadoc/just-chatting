@@ -20,7 +20,7 @@ class FollowedChannelsDataSource(
             val list = mutableListOf<Follow>()
             list.addAll(get.data)
             for (i in list) {
-                if (i.to_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.to_id).data?.first()?.profile_image_url ?: ""
+                if (i.to_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.to_id).data?.first()?.profile_image_url
             }
             list
         }
@@ -33,7 +33,7 @@ class FollowedChannelsDataSource(
             val list = mutableListOf<Follow>()
             list.addAll(get.data)
             for (i in list) {
-                if (i.to_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.to_id).data?.first()?.profile_image_url ?: ""
+                if (i.to_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.to_id).data?.first()?.profile_image_url
             }
             list
         }

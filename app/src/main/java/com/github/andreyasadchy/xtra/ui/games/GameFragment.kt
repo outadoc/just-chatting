@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_media.*
 class GameFragment : MediaFragment() {
 
     companion object {
-        fun newInstance(id: String, name: String) = GameFragment().apply {
+        fun newInstance(id: String?, name: String?) = GameFragment().apply {
             bundle.putString(C.GAME_ID, id)
             bundle.putString(C.GAME_NAME, name)
             arguments = bundle

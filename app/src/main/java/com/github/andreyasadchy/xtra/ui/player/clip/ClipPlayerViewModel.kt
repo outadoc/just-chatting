@@ -39,10 +39,10 @@ class ClipPlayerViewModel @Inject constructor(
         get() = helper.urls
     val loaded: LiveData<Boolean>
         get() = helper.loaded
-    override val channelId: String
+    override val channelId: String?
         get() = clip.broadcaster_id
-    private val _video = MutableLiveData<Video>()
-    val video: LiveData<Video>
+    private val _video = MutableLiveData<Video?>()
+    val video: MutableLiveData<Video?>
         get() = _video
     private var loadingVideo = false
 
@@ -122,7 +122,7 @@ class ClipPlayerViewModel @Inject constructor(
             loadingVideo = true
             viewModelScope.launch {
                 try {
-                    val video = repository.loadVideo(clientId, token, clip.video_id).data.first()
+                    val video = clip.video_id?.let { repository.loadVideo(clientId, token, it).data.first() }
                     _video.postValue(video)
                 } catch (e: Exception) {
 

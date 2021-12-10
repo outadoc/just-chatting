@@ -24,7 +24,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
     interface OnButtonClickListener {
         fun onReplyClicked(userName: String)
         fun onCopyMessageClicked(message: String)
-        fun onViewProfileClicked(id: String, login: String, name: String, profileImage: String)
+        fun onViewProfileClicked(id: String?, login: String?, name: String?, profileImage: String?)
     }
 
     companion object {
@@ -70,10 +70,17 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             copyMessage.gone()
         }
         viewProfile.setOnClickListener {
-            viewModel.loadUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), extractUserName(msg)).observe(viewLifecycleOwner, Observer {
-                listener.onViewProfileClicked(it.id, it.login, it.display_name, it.channelLogo)
-                dismiss()
-            })
+            if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
+                viewModel.loadUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), extractUserName(msg)).observe(viewLifecycleOwner, Observer {
+                    listener.onViewProfileClicked(it.id, it.login, it.display_name, it.channelLogo)
+                    dismiss()
+                })
+            } else {
+                viewModel.loadUserGQL(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), extractUserName(msg)).observe(viewLifecycleOwner, Observer {
+                    listener.onViewProfileClicked(it.id, it.login, it.display_name, it.channelLogo)
+                    dismiss()
+                })
+            }
         }
         viewModel.errors.observe(viewLifecycleOwner, Observer {
             requireContext().shortToast(R.string.error_loading_user)

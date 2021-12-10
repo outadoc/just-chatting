@@ -104,8 +104,8 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadChannelVideos(clientId: String?, userToken: String?, channelId: String, broadcastType: BroadcastType, sort: Sort, coroutineScope: CoroutineScope): Listing<Video> {
-        val factory = ChannelVideosDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, channelId, broadcastType, sort, api, coroutineScope)
+    override fun loadChannelVideos(clientId: String?, userToken: String?, channelId: String, period: Period, broadcastType: BroadcastType, sort: Sort, coroutineScope: CoroutineScope): Listing<Video> {
+        val factory = ChannelVideosDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, channelId, period, broadcastType, sort, api, coroutineScope)
         val config = PagedList.Config.Builder()
                 .setPageSize(1)
                 .setInitialLoadSizeHint(1)
@@ -220,8 +220,8 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadGameVideosGQL(clientId: String?, game: String?, type: String?, coroutineScope: CoroutineScope): Listing<Video> {
-        val factory = GameVideosDataSourceGQLquery.Factory(clientId, game, type, gql, coroutineScope)
+    override fun loadGameVideosGQL(clientId: String?, game: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video> {
+        val factory = GameVideosDataSourceGQLquery.Factory(clientId, game, type, sort, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)

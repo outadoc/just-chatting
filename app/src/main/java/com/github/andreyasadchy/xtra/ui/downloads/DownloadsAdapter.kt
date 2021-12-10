@@ -16,9 +16,11 @@ import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_downloads_list_item.view.*
 
 class DownloadsAdapter(
-        private val fragment: Fragment,
-        private val clickListener: DownloadsFragment.OnVideoSelectedListener,
-        private val deleteVideo: (OfflineVideo) -> Unit) : BaseListAdapter<OfflineVideo>(
+    private val fragment: Fragment,
+    private val clickListener: DownloadsFragment.OnVideoSelectedListener,
+    private val deleteVideo: (OfflineVideo) -> Unit,
+    private val user: (OfflineVideo) -> Unit
+) : BaseListAdapter<OfflineVideo>(
         object : DiffUtil.ItemCallback<OfflineVideo>() {
             override fun areItemsTheSame(oldItem: OfflineVideo, newItem: OfflineVideo): Boolean {
                 return oldItem.id == newItem.id
@@ -40,9 +42,15 @@ class DownloadsAdapter(
             downloadDate.text = context.getString(R.string.downloaded_date, TwitchApiHelper.formatTime(context, item.downloadDate))
             duration.text = item.duration?.let { DateUtils.formatElapsedTime(item.duration / 1000L) }
             type.text = TwitchApiHelper.getType(context, item.type)
-            userImage.loadImage(fragment, item.channelLogo, circle = true)
+            userImage.apply {
+                setOnClickListener { user(item) }
+                loadImage(fragment, item.channelLogo, circle = true)
+            }
+            username.apply {
+                setOnClickListener { user(item) }
+                text = item.channelName
+            }
             title.text = item.name
-            username.text = item.channelName
             game.text = item.game
             options.setOnClickListener {
                 PopupMenu(context, it).apply {

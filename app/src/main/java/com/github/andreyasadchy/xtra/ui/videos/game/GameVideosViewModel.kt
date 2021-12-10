@@ -14,6 +14,7 @@ import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
+import com.github.andreyasadchy.xtra.type.VideoSort
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosViewModel
 import javax.inject.Inject
 
@@ -30,12 +31,20 @@ class GameVideosViewModel @Inject constructor(
         if (it.usehelix)
             repository.loadVideos(it.clientId, it.token, it.game, it.period, it.broadcastType, it.language, it.sort, viewModelScope)
         else
-            repository.loadGameVideosGQL(it.clientId, it.game, null, viewModelScope)
+            repository.loadGameVideosGQL(it.clientId, it.game,
+                when (it.broadcastType) {
+                    BroadcastType.ARCHIVE -> com.github.andreyasadchy.xtra.type.BroadcastType.ARCHIVE
+                    BroadcastType.HIGHLIGHT -> com.github.andreyasadchy.xtra.type.BroadcastType.HIGHLIGHT
+                    BroadcastType.UPLOAD -> com.github.andreyasadchy.xtra.type.BroadcastType.UPLOAD
+                    else -> null },
+                when (it.sort) { Sort.TIME -> VideoSort.TIME else -> VideoSort.VIEWS }, viewModelScope)
     }
     val sort: Sort
         get() = filter.value!!.sort
     val period: Period
         get() = filter.value!!.period
+    val type: BroadcastType
+        get() = filter.value!!.broadcastType
 
     init {
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.view_count), context.getString(R.string.this_week))
@@ -47,8 +56,8 @@ class GameVideosViewModel @Inject constructor(
         }
     }
 
-    fun filter(usehelix: Boolean, clientId: String?, sort: Sort, period: Period, text: CharSequence, token: String? = "") {
-        filter.value = filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, sort = sort, period = period)
+    fun filter(usehelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, text: CharSequence, token: String? = "") {
+        filter.value = filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, sort = sort, period = period, broadcastType = type)
         _sortText.value = text
     }
 

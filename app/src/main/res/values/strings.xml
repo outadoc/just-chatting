@@ -201,4 +201,6 @@
     <string name="video_type_highlight">Highlight</string>
     <string name="video_type_upload">Upload</string>
     <string name="broadcasters">%s broadcasters</string>
+    <string name="all">All</string>
+    <string name="type">Type</string>
 </resources>

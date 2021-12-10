@@ -20,12 +20,14 @@ import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
+import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.prefs
+import kotlinx.android.synthetic.main.dialog_chat_message_click.*
 import kotlinx.android.synthetic.main.fragment_channel.*
 import kotlinx.android.synthetic.main.fragment_downloads.*
 import kotlinx.android.synthetic.main.fragment_downloads.menu
@@ -43,6 +45,9 @@ class DownloadsFragment : Fragment(), Injectable, Scrollable {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<DownloadsViewModel> { viewModelFactory }
 
+    private val channelClickListener: OnChannelSelectedListener
+        get() { return requireActivity() as MainActivity }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_downloads, container, false)
     }
@@ -51,7 +56,7 @@ class DownloadsFragment : Fragment(), Injectable, Scrollable {
         super.onActivityCreated(savedInstanceState)
         val activity = requireActivity() as MainActivity
         val isLoggedIn = User.get(activity) !is NotLoggedIn
-        val adapter = DownloadsAdapter(this, activity) {
+        val adapter = DownloadsAdapter(this, activity, {
             val delete = getString(R.string.delete)
             AlertDialog.Builder(activity)
                     .setTitle(delete)
@@ -59,7 +64,13 @@ class DownloadsFragment : Fragment(), Injectable, Scrollable {
                     .setPositiveButton(delete) { _, _ -> viewModel.delete(it) }
                     .setNegativeButton(getString(android.R.string.cancel), null)
                     .show()
-        }
+        }, { offlineVideo ->
+            offlineVideo.channelName?.let { channel ->
+                viewModel.loadUserGQL(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channel).observe(viewLifecycleOwner, Observer {
+                    channelClickListener.viewChannel(it.id, it.login, it.display_name, it.channelLogo)
+                })
+            }
+        })
         recyclerView.adapter = adapter
         (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         viewModel.list.observe(viewLifecycleOwner, Observer {

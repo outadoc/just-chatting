@@ -23,7 +23,7 @@ type Stream {
 type Game {
   name: String
   streams(first: Int, after: Cursor): Streams
-  videos(sort: VideoSort, first: Int, after: Cursor): Videos
+  videos(sort: VideoSort, types: [BroadcastType!], first: Int, after: Cursor): Videos
   clips(criteria: criteria, first: Int, after: Cursor): Clips
 }
 

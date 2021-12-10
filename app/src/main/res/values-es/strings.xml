@@ -190,4 +190,6 @@
     <string name="video_type_upload">Upload</string>
     <string name="broadcasters">%s broadcasters</string>
     <string name="broadcastersCount">Show broadcasters count on games</string>
+    <string name="all">All</string>
+    <string name="type">Type</string>
 </resources>

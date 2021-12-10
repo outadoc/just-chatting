@@ -6,16 +6,16 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class User(
-    val id: String,
-    val login: String,
-    val display_name: String,
-    val type: String,
-    val broadcaster_type: String,
-    val description: String?,
-    val profile_image_url: String,
-    val offline_image_url: String,
-    val view_count: Int,
-    val created_at: String) : Parcelable {
+    val id: String? = null,
+    val login: String? = null,
+    val display_name: String? = null,
+    val type: String? = null,
+    val broadcaster_type: String? = null,
+    val description: String? = null,
+    val profile_image_url: String? = null,
+    val offline_image_url: String? = null,
+    val view_count: Int? = null,
+    val created_at: String? = null) : Parcelable {
 
     val channelLogo: String
         get() = TwitchApiHelper.getTemplateUrl(profile_image_url, "profileimage")

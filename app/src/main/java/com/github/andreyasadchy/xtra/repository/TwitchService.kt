@@ -25,7 +25,7 @@ interface TwitchService {
     fun loadClips(clientId: String?, userToken: String?, channelName: String?, gameName: String?, started_at: String?, ended_at: String?, coroutineScope: CoroutineScope): Listing<Clip>
     suspend fun loadVideo(clientId: String?, userToken: String?, videoId: String): VideosResponse
     fun loadVideos(clientId: String?, userToken: String?, game: String?, period: com.github.andreyasadchy.xtra.model.helix.video.Period, broadcastType: BroadcastType, language: String?, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>
-    fun loadChannelVideos(clientId: String?, userToken: String?, channelId: String, broadcastType: BroadcastType, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>
+    fun loadChannelVideos(clientId: String?, userToken: String?, channelId: String, period: com.github.andreyasadchy.xtra.model.helix.video.Period, broadcastType: BroadcastType, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>
     suspend fun loadUserById(clientId: String?, userToken: String?, id: String): User
     suspend fun loadUserByLogin(clientId: String?, userToken: String?, login: String): User
     fun loadGames(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Game>
@@ -39,7 +39,7 @@ interface TwitchService {
     fun loadTopStreamsGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadTopVideosGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Video>
     fun loadGameStreamsGQL(clientId: String?, game: String?, coroutineScope: CoroutineScope): Listing<Stream>
-    fun loadGameVideosGQL(clientId: String?, game: String?, type: String?, coroutineScope: CoroutineScope): Listing<Video>
+    fun loadGameVideosGQL(clientId: String?, game: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video>
     fun loadGameClipsGQL(clientId: String?, game: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>
     fun loadChannelVideosGQL(clientId: String?, game: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video>
     fun loadChannelClipsGQL(clientId: String?, game: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>

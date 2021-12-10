@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.core.os.bundleOf
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.model.helix.video.Period.*
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
@@ -19,17 +20,18 @@ import kotlinx.android.synthetic.main.dialog_videos_sort.*
 class GameVideosSortDialog : ExpandingBottomSheetDialogFragment() {
 
     interface OnFilter {
-        fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence)
+        fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType)
     }
 
     companion object {
 
         private const val SORT = "sort"
         private const val PERIOD = "period"
+        private const val TYPE = "type"
 
-        fun newInstance(sort: Sort, period: Period): GameVideosSortDialog {
+        fun newInstance(sort: Sort, period: Period, type: BroadcastType): GameVideosSortDialog {
             return GameVideosSortDialog().apply {
-                arguments = bundleOf(SORT to sort, PERIOD to period)
+                arguments = bundleOf(SORT to sort, PERIOD to period, TYPE to type)
             }
         }
     }
@@ -55,12 +57,20 @@ class GameVideosSortDialog : ExpandingBottomSheetDialogFragment() {
             MONTH -> R.id.month
             ALL -> R.id.all
         }
+        val originalTypeId = when (args.getSerializable(TYPE) as BroadcastType) {
+            BroadcastType.ARCHIVE -> R.id.typeArchive
+            BroadcastType.HIGHLIGHT -> R.id.typeHighlight
+            BroadcastType.UPLOAD -> R.id.typeUpload
+            BroadcastType.ALL -> R.id.typeAll
+        }
         sort.check(originalSortId)
         period.check(originalPeriodId)
+        sortType.check(originalTypeId)
         apply.setOnClickListener {
             val checkedPeriodId = period.checkedRadioButtonId
             val checkedSortId = sort.checkedRadioButtonId
-            if (checkedPeriodId != originalPeriodId || checkedSortId != originalSortId) {
+            val checkedTypeId = sortType.checkedRadioButtonId
+            if (checkedPeriodId != originalPeriodId || checkedSortId != originalSortId || checkedTypeId != originalTypeId) {
                 val sortBtn = view.findViewById<RadioButton>(checkedSortId)
                 val periodBtn = view.findViewById<RadioButton>(checkedPeriodId)
                 listener.onChange(
@@ -72,7 +82,13 @@ class GameVideosSortDialog : ExpandingBottomSheetDialogFragment() {
                             R.id.month -> MONTH
                             else -> ALL
                         },
-                        periodBtn.text)
+                        periodBtn.text,
+                        when (checkedTypeId) {
+                            R.id.typeArchive -> BroadcastType.ARCHIVE
+                            R.id.typeHighlight -> BroadcastType.HIGHLIGHT
+                            R.id.typeUpload -> BroadcastType.UPLOAD
+                            else -> BroadcastType.ALL
+                        })
             }
             dismiss()
         }

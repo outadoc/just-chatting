@@ -5,7 +5,7 @@ buildscript {
     ext.lifecycle = '2.4.0'
     ext.room = '2.3.0'
     ext.exoplayer = '2.10.8'
-    ext.dagger = '2.40.2'
+    ext.dagger = '2.40.5'
     ext.retrofit = '2.9.0'
     ext.glide = '4.12.0'
     ext.fetch = "3.1.4"
@@ -15,7 +15,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.3'
+        classpath 'com.android.tools.build:gradle:7.0.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

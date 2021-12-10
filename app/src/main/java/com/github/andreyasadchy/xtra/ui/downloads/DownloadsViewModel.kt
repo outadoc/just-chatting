@@ -4,10 +4,17 @@ package com.github.andreyasadchy.xtra.ui.downloads
 import android.app.Application
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo3.api.Optional
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.GlideApp
+import com.github.andreyasadchy.xtra.UserQuery
+import com.github.andreyasadchy.xtra.apolloClient
+import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.util.FetchProvider
@@ -26,6 +33,32 @@ class DownloadsViewModel @Inject internal constructor(
         application: Application,
         private val repository: OfflineRepository,
         private val fetchProvider: FetchProvider) : AndroidViewModel(application) {
+
+    private val user = MutableLiveData<User>()
+    private var isLoading = false
+
+    fun loadUserGQL(clientId: String?, channelName: String): LiveData<User> {
+        if (user.value?.login != channelName && !isLoading) {
+            isLoading = true
+            viewModelScope.launch {
+                try {
+                    val get = apolloClient(clientId).query(UserQuery(Optional.Present(channelName))).execute().data?.user
+                    val u = User(
+                        id = get?.id,
+                        login = get?.login,
+                        display_name = get?.displayName,
+                        profile_image_url = get?.profileImageURL,
+                    )
+                    user.postValue(u)
+                } catch (e: Exception) {
+
+                } finally {
+                    isLoading = false
+                }
+            }
+        }
+        return user
+    }
 
     val list = repository.loadAllVideos()
 

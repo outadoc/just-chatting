@@ -1,6 +1,8 @@
 package com.github.andreyasadchy.xtra.di
 
 import android.app.Application
+import com.apollographql.apollo3.ApolloClient
+import com.apollographql.apollo3.network.okHttpClient
 import com.github.andreyasadchy.xtra.BuildConfig
 import com.github.andreyasadchy.xtra.api.*
 import com.github.andreyasadchy.xtra.model.chat.*
@@ -22,7 +24,9 @@ import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import dagger.Module
 import dagger.Provides
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -131,6 +135,29 @@ class XtraModule {
                 .registerTypeAdapter(SearchChannelDataResponse::class.java, SearchChannelDataDeserializer())
                 .registerTypeAdapter(SearchGameDataResponse::class.java, SearchGameDataDeserializer())
                 .create())
+    }
+
+    @Singleton
+    @Provides
+    fun apolloClient(clientId: String?): ApolloClient {
+        val builder = ApolloClient.Builder()
+            .serverUrl("https://gql.twitch.tv/gql/")
+            .okHttpClient(OkHttpClient.Builder()
+                .addInterceptor(AuthorizationInterceptor(clientId))
+                .build()
+            )
+
+        return builder.build()
+    }
+
+    private class AuthorizationInterceptor(val clientId: String?): Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val request = chain.request().newBuilder()
+                .addHeader("Client-ID", clientId ?: "")
+                .build()
+
+            return chain.proceed(request)
+        }
     }
 
     @Singleton

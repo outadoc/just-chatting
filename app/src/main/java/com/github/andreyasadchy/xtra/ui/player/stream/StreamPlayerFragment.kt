@@ -3,6 +3,7 @@ package com.github.andreyasadchy.xtra.ui.player.stream
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -73,6 +74,7 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         })
         viewModel.stream.observe(viewLifecycleOwner, Observer {
             if (it?.viewer_count != null) viewers.text = TwitchApiHelper.formatCount(it.viewer_count, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false))
+            else requireView().findViewById<ImageView>(R.id.viewericon).gone()
         })
         settings.setOnClickListener {
             FragmentUtils.showRadioButtonDialogFragment(childFragmentManager, viewModel.qualities, viewModel.qualityIndex)

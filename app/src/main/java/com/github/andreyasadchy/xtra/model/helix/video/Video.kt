@@ -37,6 +37,8 @@ data class Video(
 
         override val thumbnail: String
             get() = TwitchApiHelper.getTemplateUrl(thumbnail_url, "video")
+        override val channelId: String?
+            get() = user_id
         override val channelName: String?
                 get() = user_name
         override val channelLogo: String

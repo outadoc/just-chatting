@@ -51,7 +51,7 @@ object DownloadUtils {
                 downloadedThumbnail = thumbnail
                 downloadedLogo = channelLogo
             }
-            OfflineVideo(offlinePath, url, startPosition, title, channelName, downloadedLogo ?: "", downloadedThumbnail, game,
+            OfflineVideo(offlinePath, url, startPosition, title, channelId, channelName, downloadedLogo ?: "", downloadedThumbnail, game,
                 duration, uploadDate?.let { TwitchApiHelper.parseIso8601Date(it) }, System.currentTimeMillis(), 0L, 0, if (segmentTo != null && segmentFrom != null) segmentTo - segmentFrom + 1 else 100, type = videoType)
         }
     }

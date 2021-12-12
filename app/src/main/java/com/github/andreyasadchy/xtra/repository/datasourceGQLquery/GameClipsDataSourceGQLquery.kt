@@ -3,7 +3,8 @@ package com.github.andreyasadchy.xtra.repository.datasourceGQLquery
 import androidx.paging.DataSource
 import com.apollographql.apollo3.api.Optional
 import com.github.andreyasadchy.xtra.GameClipsQuery
-import com.github.andreyasadchy.xtra.apolloClient
+import com.github.andreyasadchy.xtra.di.XtraModule
+import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.datasource.BaseDataSourceFactory
@@ -18,10 +19,12 @@ class GameClipsDataSourceGQLquery(
     private val api: GraphQLRepository,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Clip>(coroutineScope) {
     private var offset: String? = null
+    private var nextPage: Boolean = true
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Clip>) {
         loadInitial(params, callback) {
-            val get = apolloClient(clientId).query(GameClipsQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.game?.clips?.edges
+            val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.game?.clips
+            val get = get1?.edges
             val list = mutableListOf<Clip>()
             if (get != null) {
                 for (i in get) {
@@ -31,6 +34,8 @@ class GameClipsDataSourceGQLquery(
                             broadcaster_id = i?.node?.broadcaster?.id,
                             broadcaster_login = i?.node?.broadcaster?.login,
                             broadcaster_name = i?.node?.broadcaster?.displayName,
+                            video_id = i?.node?.video?.id,
+                            videoOffsetSeconds = i?.node?.videoOffsetSeconds,
                             game_name = game,
                             title = i?.node?.title,
                             view_count = i?.node?.viewCount,
@@ -42,6 +47,7 @@ class GameClipsDataSourceGQLquery(
                     )
                 }
                 offset = get.lastOrNull()?.cursor
+                nextPage = get1.pageInfo?.hasNextPage ?: true
             }
             list
         }
@@ -49,7 +55,8 @@ class GameClipsDataSourceGQLquery(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Clip>) {
         loadRange(params, callback) {
-            val get = apolloClient(clientId).query(GameClipsQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.game?.clips?.edges
+            val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.game?.clips
+            val get = get1?.edges
             val list = mutableListOf<Clip>()
             if (get != null) {
                 for (i in get) {
@@ -59,6 +66,8 @@ class GameClipsDataSourceGQLquery(
                             broadcaster_id = i?.node?.broadcaster?.id,
                             broadcaster_login = i?.node?.broadcaster?.login,
                             broadcaster_name = i?.node?.broadcaster?.displayName,
+                            video_id = i?.node?.video?.id,
+                            videoOffsetSeconds = i?.node?.videoOffsetSeconds,
                             game_name = game,
                             title = i?.node?.title,
                             view_count = i?.node?.viewCount,
@@ -70,6 +79,7 @@ class GameClipsDataSourceGQLquery(
                     )
                 }
                 offset = get.lastOrNull()?.cursor
+                nextPage = get1.pageInfo?.hasNextPage ?: true
             }
             list
         }

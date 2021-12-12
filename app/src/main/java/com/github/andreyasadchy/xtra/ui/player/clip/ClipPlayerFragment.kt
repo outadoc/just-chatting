@@ -54,10 +54,10 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (childFragmentManager.findFragmentById(R.id.chatFragmentContainer) == null) {
-            childFragmentManager.beginTransaction().replace(R.id.chatFragmentContainer, ChatFragment.newInstance(channelId, clip.video_id, 0.0)).commit()
+        if (childFragmentManager.findFragmentById(R.id.chatFragmentContainer) == null && !requireContext().prefs().getBoolean(C.API_USEHELIX, true) || requireContext().prefs().getString(C.USERNAME, "") == "") {
+            childFragmentManager.beginTransaction().replace(R.id.chatFragmentContainer, ChatFragment.newInstance(channelId, clip.video_id, clip.videoOffsetSeconds?.toDouble())).commit()
         }
-        if (clip.video_id == "") {
+        if (clip.video_id == null || clip.video_id == "") {
             watchVideo.gone()
         }
     }
@@ -83,13 +83,19 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
         volume.setOnClickListener {
             FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
         }
-        if (clip.video_id != "") {
+        if (clip.video_id != null && clip.video_id != "") {
             viewModel.video.observe(viewLifecycleOwner, Observer {
                 if (it != null) {
-                    (requireActivity() as MainActivity).startVideo(it, 0.0)
+                    (requireActivity() as MainActivity).startVideo(it, (clip.videoOffsetSeconds?.toDouble() ?: 0.0) * 1000.0 + viewModel.player.currentPosition)
                 }
             })
-            watchVideo.setOnClickListener { viewModel.loadVideo(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, "")) }
+            watchVideo.setOnClickListener {
+                if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
+                    viewModel.loadVideo(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, ""))
+                } else {
+                    viewModel.loadVideoGQL(prefs.getString(C.GQL_CLIENT_ID, ""))
+                }
+            }
         }
     }
 

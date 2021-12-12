@@ -6,7 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
 import com.github.andreyasadchy.xtra.StreamQuery
-import com.github.andreyasadchy.xtra.apolloClient
+import com.github.andreyasadchy.xtra.di.XtraModule
+import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.helix.stream.StreamsResponse
 import com.github.andreyasadchy.xtra.repository.TwitchService
@@ -59,7 +60,7 @@ class ChannelPagerViewModel @Inject constructor(private val repository: TwitchSe
             _channel.value = channel
             viewModelScope.launch {
                 try {
-                    val stream = apolloClient(clientId).query(StreamQuery(Optional.Present(channel))).execute().data?.user?.stream?.viewersCount
+                    val stream = apolloClient(XtraModule(), clientId).query(StreamQuery(Optional.Present(channel))).execute().data?.user?.stream?.viewersCount
                     _streamGQL.postValue(stream)
                 } catch (e: Exception) {
 

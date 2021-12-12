@@ -3,7 +3,8 @@ package com.github.andreyasadchy.xtra.repository.datasourceGQLquery
 import androidx.paging.DataSource
 import com.apollographql.apollo3.api.Optional
 import com.github.andreyasadchy.xtra.UserVideosQuery
-import com.github.andreyasadchy.xtra.apolloClient
+import com.github.andreyasadchy.xtra.di.XtraModule
+import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.datasource.BaseDataSourceFactory
 import com.github.andreyasadchy.xtra.repository.datasource.BasePositionalDataSource
@@ -18,10 +19,11 @@ class ChannelVideosDataSourceGQLquery private constructor(
     private val sort: VideoSort?,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Video>(coroutineScope) {
     private var offset: String? = null
+    private var nextPage: Boolean = true
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
         loadInitial(params, callback) {
-            val get1 = apolloClient(clientId).query(UserVideosQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(type),Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.user
+            val get1 = apolloClient(XtraModule(), clientId).query(UserVideosQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(type),Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.user
             val get = get1?.videos?.edges
             val list = mutableListOf<Video>()
             if (get != null) {
@@ -44,6 +46,7 @@ class ChannelVideosDataSourceGQLquery private constructor(
                     )
                 }
                 offset = get.lastOrNull()?.cursor
+                nextPage = get1.videos.pageInfo?.hasNextPage ?: true
             }
             list
         }
@@ -51,10 +54,10 @@ class ChannelVideosDataSourceGQLquery private constructor(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         loadRange(params, callback) {
-            val get1 = apolloClient(clientId).query(UserVideosQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(type),Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.user
+            val get1 = apolloClient(XtraModule(), clientId).query(UserVideosQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(type),Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.user
             val get = get1?.videos?.edges
             val list = mutableListOf<Video>()
-            if (get != null) {
+            if (get != null && nextPage) {
                 for (i in get) {
                     list.add(
                         Video(
@@ -74,6 +77,7 @@ class ChannelVideosDataSourceGQLquery private constructor(
                     )
                 }
                 offset = get.lastOrNull()?.cursor
+                nextPage = get1.videos.pageInfo?.hasNextPage ?: true
             }
             list
         }

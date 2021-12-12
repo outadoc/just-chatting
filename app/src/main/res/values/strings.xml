@@ -105,7 +105,6 @@
     <string name="notification_playback_channel_title">Playback</string>
     <string name="notification_playback_channel_id" translatable="false">xtra_playback_channel</string>
     <string name="channels">Channels</string>
-    <string name="video">Video</string>
     <string name="watch_video">Watch full video</string>
     <string name="animated_emotes">Animated emotes</string>
     <string name="sleep_timer">Sleep timer</string>

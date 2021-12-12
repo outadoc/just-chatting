@@ -17,6 +17,9 @@ query GameStreams($name: String, $first: Int, $after: Cursor) {
                     }
                 }
             }
+            pageInfo {
+                hasNextPage
+            }
         }
     }
 }

@@ -16,6 +16,8 @@ data class OfflineVideo(
     @ColumnInfo(name = "source_start_position")
     val sourceStartPosition: Long?,
     val name: String?,
+    @ColumnInfo(name = "channel_id")
+    val channelId: String?,
     @ColumnInfo(name = "channel_name")
     val channelName: String?,
     @ColumnInfo(name = "channel_logo")

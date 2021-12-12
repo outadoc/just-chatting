@@ -16,7 +16,14 @@ query GameClips($name: String, $sort: ClipsPeriod, $first: Int, $after: Cursor) 
                         displayName
                         profileImageURL(width: 300)
                     }
+                    video {
+                        id
+                    }
+                    videoOffsetSeconds
                 }
+            }
+            pageInfo {
+                hasNextPage
             }
         }
     }

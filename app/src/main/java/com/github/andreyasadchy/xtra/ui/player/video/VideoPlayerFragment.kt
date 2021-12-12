@@ -36,7 +36,7 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
     override val channelImage: String
         get() = video.channelLogo
 
-            override val layoutId: Int
+    override val layoutId: Int
         get() = R.layout.fragment_player_video
     override val chatContainerId: Int
         get() = R.id.chatFragmentContainer

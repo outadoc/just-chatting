@@ -19,5 +19,8 @@ query TopStreams($first: Int, $after: Cursor) {
                 }
             }
         }
+        pageInfo {
+            hasNextPage
+        }
     }
 }

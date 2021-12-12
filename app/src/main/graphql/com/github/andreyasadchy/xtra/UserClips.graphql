@@ -17,7 +17,14 @@ query UserClips($login: String, $sort: ClipsPeriod, $first: Int, $after: Cursor)
                     game {
                         name
                     }
+                    video {
+                        id
+                    }
+                    videoOffsetSeconds
                 }
+            }
+            pageInfo {
+                hasNextPage
             }
         }
     }

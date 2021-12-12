@@ -19,6 +19,9 @@ query GameVideos($name: String, $sort: VideoSort, $type: [BroadcastType!], $firs
                     }
                 }
             }
+            pageInfo {
+                hasNextPage
+            }
         }
     }
 }

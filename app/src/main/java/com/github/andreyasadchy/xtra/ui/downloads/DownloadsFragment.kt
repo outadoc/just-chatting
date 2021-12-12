@@ -20,7 +20,6 @@ import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
-import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
@@ -45,9 +44,6 @@ class DownloadsFragment : Fragment(), Injectable, Scrollable {
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<DownloadsViewModel> { viewModelFactory }
 
-    private val channelClickListener: OnChannelSelectedListener
-        get() { return requireActivity() as MainActivity }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_downloads, container, false)
     }
@@ -65,10 +61,16 @@ class DownloadsFragment : Fragment(), Injectable, Scrollable {
                     .setNegativeButton(getString(android.R.string.cancel), null)
                     .show()
         }, { offlineVideo ->
-            offlineVideo.channelName?.let { channel ->
-                viewModel.loadUserGQL(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channel).observe(viewLifecycleOwner, Observer {
-                    channelClickListener.viewChannel(it.id, it.login, it.display_name, it.channelLogo)
-                })
+            offlineVideo.channelId?.let { channel ->
+                if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
+                    viewModel.loadUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), channel).observe(viewLifecycleOwner, Observer {
+                        (requireActivity() as MainActivity).viewChannel(it.id, it.login, it.display_name, it.channelLogo)
+                    })
+                } else {
+                    viewModel.loadUserGQL(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channel).observe(viewLifecycleOwner, Observer {
+                        (requireActivity() as MainActivity).viewChannel(it.id, it.login, it.display_name, it.channelLogo)
+                    })
+                }
             }
         })
         recyclerView.adapter = adapter

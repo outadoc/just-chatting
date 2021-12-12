@@ -6,7 +6,11 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.apollographql.apollo3.api.Optional
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.VideoQuery
+import com.github.andreyasadchy.xtra.di.XtraModule
+import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.video.Video
@@ -123,6 +127,29 @@ class ClipPlayerViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     val video = clip.video_id?.let { repository.loadVideo(clientId, token, it).data.first() }
+                    _video.postValue(video)
+                } catch (e: Exception) {
+
+                } finally {
+                    loadingVideo = false
+                }
+            }
+        }
+    }
+
+    fun loadVideoGQL(clientId: String?) {
+        if (!loadingVideo) {
+            loadingVideo = true
+            viewModelScope.launch {
+                try {
+                    val get = apolloClient(XtraModule(), clientId).query(VideoQuery(Optional.Present(clip.video_id))).execute().data?.video
+                    val video = Video(
+                        id = get?.id ?: "",
+                        user_id = get?.owner?.id,
+                        user_login = get?.owner?.login,
+                        user_name = get?.owner?.displayName,
+                        profileImageURL = get?.owner?.profileImageURL,
+                    )
                     _video.postValue(video)
                 } catch (e: Exception) {
 

@@ -21,5 +21,8 @@ query TopVideos($first: Int, $after: Cursor) {
                 }
             }
         }
+        pageInfo {
+            hasNextPage
+        }
     }
 }

@@ -9,5 +9,8 @@ query TopGames($first: Int, $after: Cursor) {
                 broadcastersCount
             }
         }
+        pageInfo {
+            hasNextPage
+        }
     }
 }

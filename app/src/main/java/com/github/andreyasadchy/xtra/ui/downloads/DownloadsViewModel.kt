@@ -13,10 +13,12 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.UserQuery
-import com.github.andreyasadchy.xtra.apolloClient
+import com.github.andreyasadchy.xtra.di.XtraModule
+import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
+import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.util.FetchProvider
 import com.iheartradio.m3u8.Encoding
 import com.iheartradio.m3u8.Format
@@ -32,17 +34,35 @@ import javax.inject.Inject
 class DownloadsViewModel @Inject internal constructor(
         application: Application,
         private val repository: OfflineRepository,
-        private val fetchProvider: FetchProvider) : AndroidViewModel(application) {
+        private val fetchProvider: FetchProvider,
+        private val api: TwitchService) : AndroidViewModel(application) {
 
     private val user = MutableLiveData<User>()
     private var isLoading = false
 
-    fun loadUserGQL(clientId: String?, channelName: String): LiveData<User> {
-        if (user.value?.login != channelName && !isLoading) {
+    fun loadUser(clientId: String?, token: String?, channelId: String): LiveData<User> {
+        if (user.value?.id != channelId && !isLoading) {
             isLoading = true
             viewModelScope.launch {
                 try {
-                    val get = apolloClient(clientId).query(UserQuery(Optional.Present(channelName))).execute().data?.user
+                    val u = api.loadUserById(clientId, token, channelId)
+                    user.postValue(u)
+                } catch (e: Exception) {
+
+                } finally {
+                    isLoading = false
+                }
+            }
+        }
+        return user
+    }
+
+    fun loadUserGQL(clientId: String?, channelId: String): LiveData<User> {
+        if (user.value?.id != channelId && !isLoading) {
+            isLoading = true
+            viewModelScope.launch {
+                try {
+                    val get = apolloClient(XtraModule(), clientId).query(UserQuery(id = Optional.Present(channelId))).execute().data?.user
                     val u = User(
                         id = get?.id,
                         login = get?.login,

@@ -3,7 +3,8 @@ type Query {
   streams(first: Int, after: Cursor): Streams
   videos(first: Int, after: Cursor): Videos
   game(name: String, first: Int, after: Cursor): Game
-  user(login: String): User
+  user(id: ID, login: String): User
+  video(id: ID): VideoNode
 }
 
 type User {
@@ -29,6 +30,7 @@ type Game {
 
 type Games {
   edges: [GameEdges]
+  pageInfo: PageInfo
 }
 
 type GameEdges {
@@ -38,6 +40,7 @@ type GameEdges {
 
 type Streams {
   edges: [StreamEdges]
+  pageInfo: PageInfo
 }
 
 type StreamEdges {
@@ -47,6 +50,7 @@ type StreamEdges {
 
 type Videos {
   edges: [VideoEdges]
+  pageInfo: PageInfo
 }
 
 type VideoEdges {
@@ -56,6 +60,7 @@ type VideoEdges {
 
 type Clips {
   edges: [ClipEdges]
+  pageInfo: PageInfo
 }
 
 type ClipEdges {
@@ -95,6 +100,8 @@ type VideoNode {
 type ClipNode {
   id: String
   slug: ID!
+  video: VideoNode
+  videoOffsetSeconds: Int
   broadcaster: broadcaster
   title: String
   createdAt: String
@@ -137,6 +144,11 @@ enum ClipsPeriod {
   LAST_WEEK
   LAST_MONTH
   ALL_TIME
+}
+
+type PageInfo {
+  hasNextPage: Boolean
+  hasPreviousPage: Boolean
 }
 
 scalar Cursor

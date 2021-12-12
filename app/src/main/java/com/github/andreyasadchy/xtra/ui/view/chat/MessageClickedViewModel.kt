@@ -5,7 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.apollographql.apollo3.api.Optional
 import com.github.andreyasadchy.xtra.UserQuery
-import com.github.andreyasadchy.xtra.apolloClient
+import com.github.andreyasadchy.xtra.di.XtraModule
+import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
@@ -39,7 +40,7 @@ class MessageClickedViewModel @Inject constructor(private val repository: Twitch
             isLoading = true
             viewModelScope.launch {
                 try {
-                    val get = apolloClient(clientId).query(UserQuery(Optional.Present(channelName))).execute().data?.user
+                    val get = apolloClient(XtraModule(), clientId).query(UserQuery(Optional.Present(channelName))).execute().data?.user
                     val u = User(
                         id = get?.id,
                         login = get?.login,

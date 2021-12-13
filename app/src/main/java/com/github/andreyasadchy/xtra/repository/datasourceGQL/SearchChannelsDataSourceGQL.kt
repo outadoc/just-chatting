@@ -25,8 +25,10 @@ class SearchChannelsDataSourceGQL private constructor(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Channel>) {
         loadRange(params, callback) {
             val get = api.loadSearchChannels(clientId, query, offset)
-            offset = get.cursor
-            get.data
+            if (offset != null && offset != "") {
+                offset = get.cursor
+                get.data
+            } else mutableListOf()
         }
     }
 

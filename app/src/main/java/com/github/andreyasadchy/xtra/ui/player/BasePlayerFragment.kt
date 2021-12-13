@@ -8,7 +8,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.edit
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
@@ -111,9 +114,6 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         aspectRatioFrameLayout = view.findViewById(R.id.aspectRatioFrameLayout)
         aspectRatioFrameLayout.setAspectRatio(16f / 9f)
         val isNotOfflinePlayer = this !is OfflinePlayerFragment
-        if (this is StreamPlayerFragment && !prefs.getBoolean(C.PLAYER_VIEWERICON, false)) {
-            view.findViewById<ImageView>(R.id.viewericon).gone()
-        }
         if (this is StreamPlayerFragment && !prefs.getBoolean(C.PLAYER_PAUSE, false)) {
             pause.layoutParams.height = 0
             pause.layoutParams.width = 0

@@ -51,7 +51,7 @@ class GameStreamsDataSourceGQLquery private constructor(
             val get1 = apolloClient(XtraModule(), clientId).query(GameStreamsQuery(Optional.Present(game), Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.game?.streams
             val get = get1?.edges
             val list = mutableListOf<Stream>()
-            if (get != null) {
+            if (get != null && nextPage && offset != null && offset != "") {
                 for (i in get) {
                     list.add(Stream(
                         id = i?.node?.id,

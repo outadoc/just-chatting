@@ -23,12 +23,12 @@ class VideosDataSource private constructor(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
         loadInitial(params, callback) {
             val get = api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.requestedLoadSize, offset)
-            offset = get.pagination?.cursor
             val list = mutableListOf<Video>()
             list.addAll(get.data)
             for (i in list) {
                 i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url }
             }
+            offset = get.pagination?.cursor
             list
         }
     }
@@ -36,11 +36,13 @@ class VideosDataSource private constructor(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         loadRange(params, callback) {
             val get = api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.loadSize, offset)
-            offset = get.pagination?.cursor
             val list = mutableListOf<Video>()
-            list.addAll(get.data)
-            for (i in list) {
-                i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url }
+            if (offset != null && offset != "") {
+                list.addAll(get.data)
+                for (i in list) {
+                    i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url }
+                }
+                offset = get.pagination?.cursor
             }
             list
         }

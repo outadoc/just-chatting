@@ -60,7 +60,7 @@ class GameVideosDataSourceGQLquery private constructor(
             val get1 = apolloClient(XtraModule(), clientId).query(GameVideosQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(typelist), Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.game?.videos
             val get = get1?.edges
             val list = mutableListOf<Video>()
-            if (get != null) {
+            if (get != null && nextPage && offset != null && offset != "") {
                 for (i in get) {
                     list.add(
                         Video(

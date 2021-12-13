@@ -16,12 +16,12 @@ class FollowedChannelsDataSource(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Follow>) {
         loadInitial(params, callback) {
             val get = api.getFollowedChannels(clientId, userToken, userId, params.requestedLoadSize, offset)
-            offset = get.pagination?.cursor
             val list = mutableListOf<Follow>()
             list.addAll(get.data)
             for (i in list) {
                 if (i.to_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.to_id).data?.first()?.profile_image_url
             }
+            offset = get.pagination?.cursor
             list
         }
     }
@@ -29,11 +29,13 @@ class FollowedChannelsDataSource(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Follow>) {
         loadRange(params, callback) {
             val get = api.getFollowedChannels(clientId, userToken, userId, params.loadSize, offset)
-            offset = get.pagination?.cursor
             val list = mutableListOf<Follow>()
-            list.addAll(get.data)
-            for (i in list) {
-                if (i.to_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.to_id).data?.first()?.profile_image_url
+            if (offset != null && offset != "") {
+                list.addAll(get.data)
+                for (i in list) {
+                    if (i.to_id != "") i.profileImageURL = api.getUserById(clientId, userToken, i.to_id).data?.first()?.profile_image_url
+                }
+                offset = get.pagination?.cursor
             }
             list
         }

@@ -16,12 +16,12 @@ class FollowedStreamsDataSource(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
         loadInitial(params, callback) {
             val get = api.getFollowedStreams(clientId, userToken, user_id, params.requestedLoadSize, offset)
-            offset = get.pagination?.cursor
             val list = mutableListOf<Stream>()
             list.addAll(get.data)
             for (i in list) {
                 i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url }
             }
+            offset = get.pagination?.cursor
             list
         }
     }
@@ -29,11 +29,13 @@ class FollowedStreamsDataSource(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
         loadRange(params, callback) {
             val get = api.getFollowedStreams(clientId, userToken, user_id, params.loadSize, offset)
-            offset = get.pagination?.cursor
             val list = mutableListOf<Stream>()
-            list.addAll(get.data)
-            for (i in list) {
-                i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, it).data?.first()?.profile_image_url }
+            if (offset != null && offset != "") {
+                list.addAll(get.data)
+                for (i in list) {
+                    i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, it).data?.first()?.profile_image_url }
+                }
+                offset = get.pagination?.cursor
             }
             list
         }

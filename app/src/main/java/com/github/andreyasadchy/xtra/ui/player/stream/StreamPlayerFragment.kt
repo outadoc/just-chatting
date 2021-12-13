@@ -72,9 +72,16 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         viewModel.loaded.observe(viewLifecycleOwner, Observer {
             if (it) settings.enable() else settings.disable()
         })
+        val iconpref = prefs.getBoolean(C.PLAYER_VIEWERICON, false)
+        val icon = requireView().findViewById<ImageView>(R.id.viewericon)
         viewModel.stream.observe(viewLifecycleOwner, Observer {
-            if (it?.viewer_count != null) viewers.text = TwitchApiHelper.formatCount(it.viewer_count, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false))
-            else requireView().findViewById<ImageView>(R.id.viewericon).gone()
+            if (it?.viewer_count != null) {
+                viewers.text = TwitchApiHelper.formatCount(it.viewer_count, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false))
+                if (iconpref) icon.visible()
+            } else {
+                viewers.text = null
+                icon.gone()
+            }
         })
         settings.setOnClickListener {
             FragmentUtils.showRadioButtonDialogFragment(childFragmentManager, viewModel.qualities, viewModel.qualityIndex)

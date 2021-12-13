@@ -191,4 +191,6 @@
     <string name="broadcastersCount">Show broadcasters count on games</string>
     <string name="all">All</string>
     <string name="type">Type</string>
+    <string name="api_helix_summary">Used for followed channels and sub emotes anyway</string>
+    <string name="video_type_rerun">Rerun</string>
 </resources>

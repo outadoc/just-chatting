@@ -35,6 +35,7 @@ interface TwitchService {
     suspend fun loadVideoChatLog(clientId: String?, videoId: String, offsetSeconds: Double): VideoMessagesResponse
     suspend fun loadVideoChatAfter(clientId: String?, videoId: String, cursor: String): VideoMessagesResponse
 
+    suspend fun loadStreamGQL(clientId: String?, channelId: String): Int?
     fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game>
     fun loadTopStreamsGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadTopVideosGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Video>

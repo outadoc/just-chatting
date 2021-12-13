@@ -3,11 +3,7 @@ package com.github.andreyasadchy.xtra.ui.player.stream
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.StreamQuery
-import com.github.andreyasadchy.xtra.di.XtraModule
-import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserFactory
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistTracker
@@ -69,7 +65,7 @@ class StreamPlayerViewModel @Inject constructor(
                         val s = if (usehelix && loggedIn) {
                             stream.user_id?.let { repository.loadStream(clientId, token, it).data.first() }
                         } else {
-                            stream.user_login?.let { Stream(viewer_count = apolloClient(XtraModule(), clientId).query(StreamQuery(Optional.Present(it))).execute().data?.user?.stream?.viewersCount) }
+                            stream.user_login?.let { Stream(user_login = it, viewer_count = repository.loadStreamGQL(gqlclientId, it)) }
                         }
                         _stream.postValue(s)
                         delay(300000L)

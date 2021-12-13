@@ -58,7 +58,7 @@ class GameClipsDataSourceGQLquery(
             val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.game?.clips
             val get = get1?.edges
             val list = mutableListOf<Clip>()
-            if (get != null) {
+            if (get != null && nextPage && offset != null && offset != "") {
                 for (i in get) {
                     list.add(
                         Clip(

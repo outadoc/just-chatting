@@ -23,8 +23,10 @@ class GamesDataSource(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Game>) {
         loadRange(params, callback) {
             val get = api.getTopGames(clientId, userToken, params.loadSize, offset)
-            offset = get.pagination?.cursor
-            get.data
+            if (offset != null && offset != "") {
+                offset = get.pagination?.cursor
+                get.data
+            } else mutableListOf()
         }
     }
 

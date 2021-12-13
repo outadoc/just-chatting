@@ -19,7 +19,6 @@ class ClipsDataSource(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Clip>) {
         loadInitial(params, callback) {
             val get = api.getClips(clientId, userToken, channelName, gameName, started_at, ended_at, params.requestedLoadSize, offset)
-            offset = get.pagination?.cursor
             val list = mutableListOf<Clip>()
             list.addAll(get.data)
             for (i in list) {
@@ -30,6 +29,7 @@ class ClipsDataSource(
                     i.broadcaster_login = user?.login ?: ""
                 }
             }
+            offset = get.pagination?.cursor
             list
         }
     }
@@ -37,16 +37,18 @@ class ClipsDataSource(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Clip>) {
         loadRange(params, callback) {
             val get = api.getClips(clientId, userToken, channelName, gameName, started_at, ended_at, params.loadSize, offset)
-            offset = get.pagination?.cursor
             val list = mutableListOf<Clip>()
-            list.addAll(get.data)
-            for (i in list) {
-                i.game_name = i.game_id?.let { api.getGame(clientId, userToken, i.game_id).data.first().name }
-                val user = i.broadcaster_id?.let { api.getUserById(clientId, userToken, i.broadcaster_id).data?.first() }
-                if (i.broadcaster_id != "") {
-                    i.profileImageURL = user?.profile_image_url
-                    i.broadcaster_login = user?.login ?: ""
+            if (offset != null && offset != "") {
+                list.addAll(get.data)
+                for (i in list) {
+                    i.game_name = i.game_id?.let { api.getGame(clientId, userToken, i.game_id).data.first().name }
+                    val user = i.broadcaster_id?.let { api.getUserById(clientId, userToken, i.broadcaster_id).data?.first() }
+                    if (i.broadcaster_id != "") {
+                        i.profileImageURL = user?.profile_image_url
+                        i.broadcaster_login = user?.login ?: ""
+                    }
                 }
+                offset = get.pagination?.cursor
             }
             list
         }

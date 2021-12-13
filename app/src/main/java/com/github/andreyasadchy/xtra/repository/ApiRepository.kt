@@ -2,9 +2,13 @@ package com.github.andreyasadchy.xtra.repository
 
 import android.util.Log
 import androidx.paging.PagedList
+import com.apollographql.apollo3.api.Optional
+import com.github.andreyasadchy.xtra.StreamQuery
 import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.api.MiscApi
 import com.github.andreyasadchy.xtra.db.EmotesDao
+import com.github.andreyasadchy.xtra.di.XtraModule
+import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.chat.VideoMessagesResponse
 import com.github.andreyasadchy.xtra.model.helix.channel.Channel
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
@@ -175,6 +179,10 @@ class HelixRepository @Inject constructor(
         misc.getVideoChatLogAfter(clientId, videoId, cursor, 100)
     }
 
+
+    override suspend fun loadStreamGQL(clientId: String?, channelId: String): Int? = withContext(Dispatchers.IO) {
+        apolloClient(XtraModule(), clientId).query(StreamQuery(Optional.Present(channelId))).execute().data?.user?.stream?.viewersCount
+    }
 
     override fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game> {
         val factory = GamesDataSourceGQLquery.Factory(clientId, gql, coroutineScope)

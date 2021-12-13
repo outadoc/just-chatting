@@ -16,12 +16,12 @@ class ChannelsSearchDataSource private constructor(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Channel>) {
         loadInitial(params, callback) {
             val get = api.getChannels(clientId, userToken, query, params.requestedLoadSize, offset)
-            offset = get.pagination?.cursor
             val list = mutableListOf<Channel>()
             list.addAll(get.data)
             for (i in list) {
                 i.profileImageURL = i.id?.let { api.getUserById(clientId, userToken, i.id).data?.first()?.profile_image_url }
             }
+            offset = get.pagination?.cursor
             list
         }
     }
@@ -29,11 +29,13 @@ class ChannelsSearchDataSource private constructor(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Channel>) {
         loadRange(params, callback) {
             val get = api.getChannels(clientId, userToken, query, params.loadSize, offset)
-            offset = get.pagination?.cursor
             val list = mutableListOf<Channel>()
-            list.addAll(get.data)
-            for (i in list) {
-                i.profileImageURL = i.id?.let { api.getUserById(clientId, userToken, i.id).data?.first()?.profile_image_url }
+            if (offset != null && offset != "") {
+                list.addAll(get.data)
+                for (i in list) {
+                    i.profileImageURL = i.id?.let { api.getUserById(clientId, userToken, i.id).data?.first()?.profile_image_url }
+                }
+                offset = get.pagination?.cursor
             }
             list
         }

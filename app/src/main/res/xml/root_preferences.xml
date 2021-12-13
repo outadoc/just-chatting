@@ -299,7 +299,7 @@
         app:iconSpaceReserved="false"/>
 
     <EditTextPreference
-        android:defaultValue="embed"
+        android:defaultValue="site"
         android:key="token_playertype"
         android:singleLine="true"
         android:title="playerType"
@@ -310,6 +310,7 @@
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="api_usehelix"
+        android:summary="@string/api_helix_summary"
         android:title="@string/api_usehelix"
         app:iconSpaceReserved="false"/>
 

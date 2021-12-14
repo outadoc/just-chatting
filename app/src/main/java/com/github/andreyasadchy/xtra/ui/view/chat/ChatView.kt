@@ -27,7 +27,7 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
 import kotlinx.android.synthetic.main.view_chat.view.*
 import kotlin.math.max
-import com.github.andreyasadchy.xtra.model.helix.user.Emote as TwitchEmote
+import com.github.andreyasadchy.xtra.model.helix.emote.Emote as TwitchEmote
 
 var MAX_ADAPTER_COUNT = 200
 var emoteQuality = "3"
@@ -37,6 +37,7 @@ class ChatView : ConstraintLayout {
 
     interface MessageSenderCallback {
         fun send(message: CharSequence)
+        fun addEmoteSets(clientId: String?, userToken: String?)
     }
 
     private lateinit var adapter: ChatAdapter
@@ -252,6 +253,9 @@ class ChatView : ConstraintLayout {
                             setCurrentItem(1, false)
                         }
                         visible()
+                        if (currentItem == 1) {
+                            messageCallback?.addEmoteSets(context.prefs().getString(C.HELIX_CLIENT_ID, ""), context.prefs().getString(C.TOKEN, ""))
+                        }
                     } else {
                         gone()
                     }

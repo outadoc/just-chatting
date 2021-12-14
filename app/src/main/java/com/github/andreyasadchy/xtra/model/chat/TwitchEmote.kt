@@ -6,10 +6,7 @@ import com.google.gson.annotations.SerializedName
 class TwitchEmote(
         @SerializedName("_id")
         override val name: String,
-        var begin: Int,
-        var end: Int,
-        override val isPng: String = "image/png") : Emote() {
-
-    override val url: String
-        get() = "https://static-cdn.jtvnw.net/emoticons/v2/$name/default/dark/$emoteQuality.0"
-}
+        var begin: Int = 0,
+        var end: Int = 0,
+        override val type: String = "image/png",
+        override val url: String = "https://static-cdn.jtvnw.net/emoticons/v2/$name/default/dark/$emoteQuality.0") : Emote()

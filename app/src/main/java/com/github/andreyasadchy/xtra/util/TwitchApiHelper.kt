@@ -3,11 +3,12 @@ package com.github.andreyasadchy.xtra.util
 import android.content.Context
 import android.text.format.DateUtils
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.chat.GlobalBadgesResponse
+import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesResponse
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
+import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
 import java.lang.Long.parseLong
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -115,8 +116,8 @@ object TwitchApiHelper {
         return DateUtils.formatDateTime(context, date, format)
     }
 
-    fun startChat(channelName: String, userName: String?, userToken: String?, globalBadges: GlobalBadgesResponse?, channelBadges: GlobalBadgesResponse?, newMessageListener: OnChatMessageReceivedListener): LiveChatThread {
-        return LiveChatThread(userName, userToken, channelName, MessageListenerImpl(globalBadges, channelBadges, newMessageListener)).apply { start() }
+    fun startChat(channelName: String, userName: String?, userToken: String?, globalBadges: TwitchBadgesResponse?, channelBadges: TwitchBadgesResponse?, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener): LiveChatThread {
+        return LiveChatThread(userName, userToken, channelName, MessageListenerImpl(globalBadges, channelBadges, newMessageListener, UserStateListener)).apply { start() }
     }
 
     fun parseClipOffset(url: String): Double {

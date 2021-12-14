@@ -48,7 +48,7 @@ class EmotesFragment : Fragment() {
         val observer: Observer<List<Emote>> = Observer(emotesAdapter::submitList)
         when (args.getInt(KEY_POSITION)) {
             0 -> viewModel.recentEmotes.observe(viewLifecycleOwner, observer)
-            1 -> viewModel.twitchEmotes.observe(viewLifecycleOwner, observer)
+            1 -> viewModel.emotesFromSets.observe(viewLifecycleOwner, observer)
             else -> viewModel.otherEmotes.observe(viewLifecycleOwner, observer)
         }
     }

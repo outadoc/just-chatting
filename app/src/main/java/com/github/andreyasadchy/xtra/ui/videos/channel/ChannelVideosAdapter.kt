@@ -32,17 +32,18 @@ class ChannelVideosAdapter(
 
     override fun bind(item: Video, view: View) {
         with(view) {
+            val getDuration = item.duration?.let { TwitchApiHelper.getDuration(it) }
             val position = positions?.get(item.id.toLong())
             setOnClickListener { clickListener.startVideo(item, position?.toDouble()) }
             setOnLongClickListener { showDownloadDialog(item); true }
             thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.NONE)
             date.text = item.createdAt?.let { TwitchApiHelper.formatTime(context, it) }
             views.text = item.view_count?.let { TwitchApiHelper.formatViewsCount(context, it, context.prefs().getBoolean(C.UI_VIEWCOUNT, false)) }
-            duration.text = item.duration?.let { DateUtils.formatElapsedTime(TwitchApiHelper.getDuration(it)) }
+            duration.text = getDuration?.let { DateUtils.formatElapsedTime(it) }
             type.text = TwitchApiHelper.getType(context, item.videoType)
             position.let {
-                if (it != null && item.duration != null) {
-                    progressBar.progress = (it / (TwitchApiHelper.getDuration(item.duration) * 10)).toInt()
+                if (it != null && getDuration != null && getDuration > 0L) {
+                    progressBar.progress = (it / (getDuration * 10)).toInt()
                     progressBar.visible()
                 } else {
                     progressBar.gone()

@@ -16,10 +16,10 @@ interface MiscApi {
     suspend fun getVideoChatLogAfter(@Header("Client-ID") clientId: String?, @Path("id") videoId: String?, @Query("cursor") cursor: String, @Query("limit") limit: Int): VideoMessagesResponse
 
     @GET("https://badges.twitch.tv/v1/badges/global/display")
-    suspend fun getGlobalBadges(): GlobalBadgesResponse
+    suspend fun getGlobalBadges(): TwitchBadgesResponse
 
     @GET("https://badges.twitch.tv/v1/badges/channels/{channelId}/display")
-    suspend fun getChannelBadges(@Path("channelId") channelId: String): GlobalBadgesResponse
+    suspend fun getChannelBadges(@Path("channelId") channelId: String): TwitchBadgesResponse
 
     @GET("https://api.7tv.app/v2/emotes/global")
     suspend fun getGlobalStvEmotes(): Response<StvEmotesResponse>

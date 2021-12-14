@@ -10,7 +10,7 @@ class BttvEmote(
     override val url: String
         get() = "https://cdn.betterttv.net/emote/$id/${emoteQuality}x"
 
-    override val isPng: String
+    override val type: String
         get() = "image/$imageType"
 
     override val zerowidth: Boolean

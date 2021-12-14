@@ -111,11 +111,11 @@ class PlayerRepository @Inject constructor(
         usher.getVideoPlaylist(videoId, playlistQueryOptions)
     }
 
-    suspend fun loadGlobalBadges(): GlobalBadgesResponse = withContext(Dispatchers.IO) {
+    suspend fun loadGlobalBadges(): TwitchBadgesResponse = withContext(Dispatchers.IO) {
         misc.getGlobalBadges()
     }
 
-    suspend fun loadChannelBadges(channelId: String): GlobalBadgesResponse = withContext(Dispatchers.IO) {
+    suspend fun loadChannelBadges(channelId: String): TwitchBadgesResponse = withContext(Dispatchers.IO) {
         misc.getChannelBadges(channelId)
     }
 

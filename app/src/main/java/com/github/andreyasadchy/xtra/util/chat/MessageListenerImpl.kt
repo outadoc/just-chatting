@@ -8,9 +8,10 @@ import kotlin.collections.set
 private const val TAG = "MessageListenerImpl"
 
 class MessageListenerImpl(
-        private val globalBadges: GlobalBadgesResponse?,
-        private val channelBadges: GlobalBadgesResponse?,
-        private val callback: OnChatMessageReceivedListener) : LiveChatThread.OnMessageReceivedListener {
+    private val twitchBadges: TwitchBadgesResponse?,
+    private val channelBadges: TwitchBadgesResponse?,
+    private val callback: OnChatMessageReceivedListener,
+    private val callbackUserState: OnUserStateReceivedListener) : LiveChatThread.OnMessageReceivedListener {
     
     override fun onMessage(message: String) {
         val parts = message.split(" ".toRegex(), 2)
@@ -54,15 +55,15 @@ class MessageListenerImpl(
                 it.value?.let { value ->
                     badgesList.add(Badge(it.key, value))
                     if (it.key == "bits" || it.key == "subscriber") {
-                        channelBadge = (channelBadges?.getGlobalBadge(it.key, value))
+                        channelBadge = (channelBadges?.getTwitchBadge(it.key, value))
                         if (channelBadge != null) {
                             globalBadgesList.add(channelBadge!!)
                         } else {
-                            globalBadgesList.add(globalBadges?.getGlobalBadge(it.key, value)!!)
+                            globalBadgesList.add(twitchBadges?.getTwitchBadge(it.key, value)!!)
                         }
                     }
                     if (it.key != "bits" && it.key != "subscriber") {
-                        globalBadgesList.add(globalBadges?.getGlobalBadge(it.key, value)!!)
+                        globalBadgesList.add(twitchBadges?.getTwitchBadge(it.key, value)!!)
                     }
                 }
             }
@@ -101,6 +102,18 @@ class MessageListenerImpl(
     override fun onJoin(message: String) {
 //        println("JOIN $message")
 
+    }
+
+    override fun onUserState(message: String) {
+        val parts = message.split(" ".toRegex(), 2)
+        val prefix = parts[0]
+        val prefixes = splitAndMakeMap(prefix, ";", "=")
+        val sets = prefixes["emote-sets"]
+        var list: List<String>? = null
+        if (sets != null && list == null) {
+            list = sets.split(",".toRegex()).dropLastWhile { it.isEmpty() }
+            callbackUserState.onUserState(list)
+        }
     }
 
     private fun splitAndMakeMap(string: String, splitRegex: String, mapRegex: String): Map<String, String?> {

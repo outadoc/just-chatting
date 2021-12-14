@@ -3,10 +3,10 @@ package com.github.andreyasadchy.xtra.model.chat
 import com.google.gson.*
 import java.lang.reflect.Type
 
-class GlobalBadgeDeserializer : JsonDeserializer<GlobalBadgesResponse> {
+class TwitchBadgeDeserializer : JsonDeserializer<TwitchBadgesResponse> {
 
     @Throws(JsonParseException::class)
-    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): GlobalBadgesResponse {
+    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): TwitchBadgesResponse {
         val gson = Gson()
         val badgeSets = json.asJsonObject.getAsJsonObject("badge_sets")
         return if (badgeSets.size() > 0) {
@@ -17,9 +17,9 @@ class GlobalBadgeDeserializer : JsonDeserializer<GlobalBadgesResponse> {
                     map[Pair(name, key)] = gson.fromJson(value.asJsonObject, TwitchBadge::class.java)
                 }
             }
-            GlobalBadgesResponse(map)
+            TwitchBadgesResponse(map)
         } else {
-            GlobalBadgesResponse()
+            TwitchBadgesResponse()
         }
     }
 }

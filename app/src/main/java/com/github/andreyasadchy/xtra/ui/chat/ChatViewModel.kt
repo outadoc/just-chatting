@@ -16,6 +16,7 @@ import com.github.andreyasadchy.xtra.util.SingleLiveEvent
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
 import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
+import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
 import kotlinx.coroutines.launch
 import java.util.*
@@ -24,7 +25,7 @@ import javax.inject.Inject
 import kotlin.collections.ArrayList
 import kotlin.collections.contains
 import kotlin.collections.set
-import com.github.andreyasadchy.xtra.model.helix.user.Emote as TwitchEmote
+import com.github.andreyasadchy.xtra.model.helix.emote.Emote as TwitchEmote
 
 class ChatViewModel @Inject constructor(
         private val repository: TwitchService,
@@ -48,6 +49,10 @@ class ChatViewModel @Inject constructor(
     val otherEmotes: LiveData<List<Emote>>
         get() = _otherEmotes
 
+    var emoteSetsAdded = false
+    var emoteSets: List<String>? = null
+    val emotesFromSets = MutableLiveData<List<Emote>>()
+
     private val _chatMessages by lazy {
         MutableLiveData<MutableList<ChatMessage>>().apply { value = Collections.synchronizedList(ArrayList(MAX_ADAPTER_COUNT + 1)) }
     }
@@ -57,8 +62,8 @@ class ChatViewModel @Inject constructor(
     val newMessage: LiveData<ChatMessage>
         get() = _newMessage
 
-    private var globalBadges: GlobalBadgesResponse? = null
-    private var channelBadges: GlobalBadgesResponse? = null
+    private var globalBadges: TwitchBadgesResponse? = null
+    private var channelBadges: TwitchBadgesResponse? = null
 
     private var chat: ChatController? = null
 
@@ -104,8 +109,21 @@ class ChatViewModel @Inject constructor(
         super.onCleared()
     }
 
+    override fun addEmoteSets(clientId: String?, userToken: String?) {
+        chat?.addEmoteSets(clientId, userToken)
+    }
+
     private fun init(channelId: String) {
         viewModelScope.launch {
+            try {
+                channelBadges = playerRepository.loadChannelBadges(channelId)
+                globalBadges = playerRepository.loadGlobalBadges()
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load badges", e)
+            } finally {
+                chat?.start()
+            }
+
             val list = mutableListOf<Emote>()
             globalStvEmotes.also {
                 if (it != null) {
@@ -173,15 +191,6 @@ class ChatViewModel @Inject constructor(
             val sorted = list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
             (chat as? LiveChatController)?.addEmotes(sorted)
             _otherEmotes.postValue(sorted)
-
-            try {
-                channelBadges = playerRepository.loadChannelBadges(channelId)
-                globalBadges = playerRepository.loadGlobalBadges()
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load badges", e)
-            } finally {
-                chat?.start()
-            }
         }
     }
 
@@ -217,7 +226,7 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), globalBadges, channelBadges, this)
+            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), globalBadges, channelBadges, this, this)
         }
 
         override fun pause() {
@@ -236,6 +245,28 @@ class ChatViewModel @Inject constructor(
                 chatters[message.displayName] = chatter
                 _newChatter.postValue(chatter)
             }
+        }
+
+        override fun addEmoteSets(clientId: String?, userToken: String?) {
+            if (!emoteSetsAdded) {
+                viewModelScope.launch {
+                    val emotes = mutableListOf<Emote>()
+                    emoteSets?.asReversed()?.forEach {
+                        try {
+                            emotes.addAll(repository.loadEmotesFromSet(clientId, userToken, it))
+                        } catch (e: Exception) {
+                        }
+                    }
+                    if (emotes.isNotEmpty()) {
+                        emoteSetsAdded = true
+                        emotesFromSets.value = emotes
+                    }
+                }
+            }
+        }
+
+        override fun onUserState(list: List<String>?) {
+            emoteSets = list
         }
 
         fun addEmotes(list: List<Emote>) {
@@ -269,28 +300,35 @@ class ChatViewModel @Inject constructor(
         override fun stop() {
             chatReplayManager?.stop()
         }
+
+        override fun addEmoteSets(clientId: String?, userToken: String?) {
+        }
+
+        override fun onUserState(list: List<String>?) {
+        }
     }
 
-    private abstract inner class ChatController : OnChatMessageReceivedListener {
+    private abstract inner class ChatController : OnChatMessageReceivedListener, OnUserStateReceivedListener {
         abstract fun send(message: CharSequence)
         abstract fun start()
         abstract fun pause()
         abstract fun stop()
+        abstract fun addEmoteSets(clientId: String?, userToken: String?)
 
         override fun onMessage(message: ChatMessage) {
             val globalBadgesList = mutableListOf<TwitchBadge>()
             var channelBadge: TwitchBadge?
             message.badges?.forEach { (id, version) ->
                 if (id == "bits" || id == "subscriber") {
-                    channelBadge = channelBadges!!.getGlobalBadge(id, version)
+                    channelBadge = channelBadges!!.getTwitchBadge(id, version)
                     if (channelBadge != null) {
                         globalBadgesList.add(channelBadge!!)
                     } else {
-                        globalBadgesList.add(globalBadges?.getGlobalBadge(id, version)!!)
+                        globalBadgesList.add(globalBadges?.getTwitchBadge(id, version)!!)
                     }
                 }
                 if (id != "bits" && id != "subscriber") {
-                    globalBadgesList.add(globalBadges?.getGlobalBadge(id, version)!!)
+                    globalBadgesList.add(globalBadges?.getTwitchBadge(id, version)!!)
                 }
             }
             message.globalBadges = globalBadgesList

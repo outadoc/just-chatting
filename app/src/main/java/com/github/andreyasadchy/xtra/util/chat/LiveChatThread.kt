@@ -2,11 +2,7 @@ package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
-import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.IOException
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
+import java.io.*
 import java.net.Socket
 import java.util.*
 import java.util.concurrent.Executor
@@ -54,8 +50,11 @@ class LiveChatThread(
 
                     if (userName != null) {
                         val messageOut = readerOut!!.readLine()!!
-                        if (messageOut.startsWith("PING")) {
-                            handlePing(writerOut!!)
+                        messageOut.run {
+                            when {
+                                contains("USERSTATE") -> listener.onUserState(this)
+                                startsWith("PING") -> handlePing(writerIn)
+                            }
                         }
                     }
                 }
@@ -85,8 +84,7 @@ class LiveChatThread(
                 }
             }
             write("NICK justinfan${Random().nextInt(((9999 - 1000) + 1)) + 1000}", writerIn) //random number between 1000 and 9999
-            write("CAP REQ :twitch.tv/tags", writerIn, writerOut)
-            write("CAP REQ :twitch.tv/commands", writerIn, writerOut)
+            write("CAP REQ :twitch.tv/tags twitch.tv/commands", writerIn, writerOut)
             write("JOIN $hashChannelName", writerIn, writerOut)
             writerIn.flush()
             writerOut?.flush()
@@ -134,11 +132,15 @@ class LiveChatThread(
         }
     }
 
+    override fun addEmoteSets(clientId: String?, userToken: String?) {
+    }
+
     interface OnMessageReceivedListener {
         fun onMessage(message: String)
         fun onNotice(message: String)
         fun onUserNotice(message: String)
         fun onRoomState(message: String)
         fun onJoin(message: String)
+        fun onUserState(message: String)
     }
 }

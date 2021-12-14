@@ -40,7 +40,7 @@ class MessageClickedViewModel @Inject constructor(private val repository: Twitch
             isLoading = true
             viewModelScope.launch {
                 try {
-                    val get = apolloClient(XtraModule(), clientId).query(UserQuery(Optional.Present(channelName))).execute().data?.user
+                    val get = apolloClient(XtraModule(), clientId).query(UserQuery(login = Optional.Present(channelName))).execute().data?.user
                     val u = User(
                         id = get?.id,
                         login = get?.login,

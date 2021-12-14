@@ -2,6 +2,7 @@ package com.github.andreyasadchy.xtra.api
 
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearchResponse
 import com.github.andreyasadchy.xtra.model.helix.clip.ClipsResponse
+import com.github.andreyasadchy.xtra.model.helix.emote.EmoteSetResponse
 import com.github.andreyasadchy.xtra.model.helix.follows.FollowResponse
 import com.github.andreyasadchy.xtra.model.helix.game.GamesResponse
 import com.github.andreyasadchy.xtra.model.helix.stream.StreamsResponse
@@ -59,4 +60,7 @@ interface HelixApi {
 
     @GET("users/follows")
     suspend fun getFollowedChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("from_id") userId: String, @Query("first") limit: Int, @Query("after") offset: String?): FollowResponse
+
+    @GET("chat/emotes/set")
+    suspend fun getEmotesFromSet(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("emote_set_id") setId: String?): EmoteSetResponse
 }

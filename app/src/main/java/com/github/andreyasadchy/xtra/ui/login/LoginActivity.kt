@@ -66,7 +66,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
         webViewContainer.visible()
         welcomeContainer.gone()
         val clientId = prefs().getString(C.HELIX_CLIENT_ID, "")
-        val authUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=https://localhost&scope=chat:read chat:edit user:read:subscriptions user:read:follows"
+        val authUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=https://localhost&scope=chat:read chat:edit user:read:follows"
         havingTrouble.setOnClickListener {
             AlertDialog.Builder(this)
                     .setMessage(getString(R.string.login_problem_solution))

@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.api.MiscApi
 import com.github.andreyasadchy.xtra.db.EmotesDao
 import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
+import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.model.chat.VideoMessagesResponse
 import com.github.andreyasadchy.xtra.model.helix.channel.Channel
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
@@ -177,6 +178,10 @@ class HelixRepository @Inject constructor(
     override suspend fun loadVideoChatAfter(clientId: String?, videoId: String, cursor: String): VideoMessagesResponse = withContext(Dispatchers.IO) {
         Log.d(TAG, "Loading chat log for video $videoId. Cursor: $cursor")
         misc.getVideoChatLogAfter(clientId, videoId, cursor, 100)
+    }
+
+    override suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setId: String): List<TwitchEmote> = withContext(Dispatchers.IO) {
+        api.getEmotesFromSet(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, setId).emotes
     }
 
 

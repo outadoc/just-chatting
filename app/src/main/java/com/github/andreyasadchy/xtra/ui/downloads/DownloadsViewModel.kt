@@ -37,11 +37,12 @@ class DownloadsViewModel @Inject internal constructor(
         private val fetchProvider: FetchProvider,
         private val api: TwitchService) : AndroidViewModel(application) {
 
-    private val user = MutableLiveData<User>()
+    private var user = MutableLiveData<User>()
     private var isLoading = false
 
     fun loadUser(clientId: String?, token: String?, channelId: String): LiveData<User> {
-        if (user.value?.id != channelId && !isLoading) {
+        user = MutableLiveData<User>()
+        if (!isLoading) {
             isLoading = true
             viewModelScope.launch {
                 try {
@@ -58,7 +59,8 @@ class DownloadsViewModel @Inject internal constructor(
     }
 
     fun loadUserGQL(clientId: String?, channelId: String): LiveData<User> {
-        if (user.value?.id != channelId && !isLoading) {
+        user = MutableLiveData<User>()
+        if (!isLoading) {
             isLoading = true
             viewModelScope.launch {
                 try {

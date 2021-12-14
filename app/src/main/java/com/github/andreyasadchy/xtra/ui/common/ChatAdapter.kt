@@ -193,7 +193,7 @@ class ChatAdapter(
                     }
                     builder.replace(builderIndex, endIndex, ".")
                     builder.setSpan(ForegroundColorSpan(Color.TRANSPARENT), builderIndex, builderIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE)
-                    images.add(Image(emote.url, builderIndex, builderIndex + 1, true, emote.isPng, emote.zerowidth))
+                    images.add(Image(emote.url, builderIndex, builderIndex + 1, true, emote.type, emote.zerowidth))
                     emotesFound++
                     2
                 }
@@ -217,8 +217,8 @@ class ChatAdapter(
     override fun getItemCount(): Int = messages?.size ?: 0
 
     private fun loadImages(holder: ViewHolder, images: List<Image>, originalMessage: CharSequence, builder: SpannableStringBuilder) {
-        images.forEach { (url, start, end, isEmote, isPng, zerowidth) ->
-            if (isPng == "image/webp" && animateGifs) {
+        images.forEach { (url, start, end, isEmote, type, zerowidth) ->
+            if (type == "image/webp" && animateGifs) {
                 GlideApp.with(fragment)
                     .asWebp()
                     .load(url)
@@ -287,7 +287,7 @@ class ChatAdapter(
                                 })
                         }
                     })
-            } else if (isPng == "image/gif" && animateGifs) {
+            } else if (type == "image/gif" && animateGifs) {
                 GlideApp.with(fragment)
                     .asGif()
                     .load(url)
@@ -325,7 +325,7 @@ class ChatAdapter(
                         override fun onLoadCleared(placeholder: Drawable?) {
                         }
                     })
-            } else if (isPng == "check" && animateGifs) {
+            } else if (type == "check" && animateGifs) {
                 GlideApp.with(fragment)
                     .asGif()
                     .load(url)

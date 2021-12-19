@@ -193,4 +193,12 @@
     <string name="type">Type</string>
     <string name="api_helix_summary">Used for followed channels and sub emotes anyway</string>
     <string name="video_type_rerun">Rerun</string>
+    <string name="room_emote">Emote</string>
+    <string name="room_followers">Followers</string>
+    <string name="room_followers_min">Followers %s\\m</string>
+    <string name="room_unique">Unique</string>
+    <string name="room_slow">Slow %s\\s</string>
+    <string name="room_subs">Subs</string>
+    <string name="chat_join">Connected to %s</string>
+    <string name="copy_clip">Copy to clipboard</string>
 </resources>

@@ -11,7 +11,9 @@ class MessageListenerImpl(
     private val twitchBadges: TwitchBadgesResponse?,
     private val channelBadges: TwitchBadgesResponse?,
     private val callback: OnChatMessageReceivedListener,
-    private val callbackUserState: OnUserStateReceivedListener) : LiveChatThread.OnMessageReceivedListener {
+    private val callbackUserState: OnUserStateReceivedListener,
+    private val callbackRoomState: OnRoomStateReceivedListener,
+    private val callbackCommand: OnCommandReceivedListener) : LiveChatThread.OnMessageReceivedListener {
     
     override fun onMessage(message: String) {
         val parts = message.split(" ".toRegex(), 2)
@@ -22,7 +24,7 @@ class MessageListenerImpl(
         val userName = messageInfo.substring(1, messageInfo.indexOf("!"))
         val userMessage: String
         val isAction: Boolean
-        messageInfo.substring(messageInfo.indexOf(":", 44) + 1).let { //from <message>
+        messageInfo.substring(messageInfo.indexOf(":", messageInfo.indexOf(":") + 1) + 1).let { //from <message>
             if (!it.startsWith(ACTION)) {
                 userMessage = it
                 isAction = false
@@ -70,42 +72,71 @@ class MessageListenerImpl(
         }
 
         callback.onMessage(LiveChatMessage(
-                prefixes["id"]!!,
-                userName,
-                userMessage,
-                prefixes["color"],
-                isAction,
-                emotesList,
-                badgesList,
-                globalBadgesList,
-                prefixes["user-id"]!!.toInt(),
-                prefixes["user-type"],
-                prefixes["display-name"]!!,
-                prefixes["room-id"]!!,
-                prefixes["tmi-sent-ts"]!!.toLong()))
+            id = prefixes["id"],
+            userId = prefixes["user-id"],
+            userName = userName,
+            displayName = prefixes["display-name"],
+            message = userMessage,
+            color = prefixes["color"],
+            isAction = isAction,
+            emotes = emotesList,
+            badges = badgesList,
+            globalBadges = globalBadgesList,
+            userType = prefixes["user-type"],
+            roomId = prefixes["room-id"],
+            timestamp = prefixes["tmi-sent-ts"]?.toLong()
+        ))
+    }
+
+    override fun onCommand(message: String) {
+        callbackCommand.onCommand(Command(
+            message = message
+        ))
     }
 
     override fun onNotice(message: String) {
-//        println("NOTICE $message")
+        callbackCommand.onCommand(Command(
+            message = message.substring(message.indexOf(":", message.indexOf(":") + 1) + 1)
+        ))
     }
 
     override fun onUserNotice(message: String) {
-//        println("USER NOTICE $message")
-
+        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val prefix = parts[0]
+        val prefixes = splitAndMakeMap(prefix, ";", "=")
+        val system = prefixes["system-msg"]?.replace("\\s", " ")
+        val messageInfo = parts[1]
+        val index = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
+        val msg = if (index != -1) messageInfo.substring(index + 1) else null
+        if (system != null) {
+            callbackCommand.onCommand(Command(
+                message = if (msg != null) "$system $msg" else system
+            ))
+        }
     }
 
     override fun onRoomState(message: String) {
-//        println("ROOMSTATE $message")
-
+        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val prefix = parts[0]
+        val prefixes = splitAndMakeMap(prefix, ";", "=")
+        callbackRoomState.onRoomState(RoomState(
+            emote = prefixes["emote-only"],
+            followers = prefixes["followers-only"],
+            unique = prefixes["r9k"],
+            slow = prefixes["slow"],
+            subs = prefixes["subs-only"]
+        ))
     }
 
     override fun onJoin(message: String) {
-//        println("JOIN $message")
-
+        callbackCommand.onCommand(Command(
+            message = message.substring(message.indexOf("#") + 1),
+            type = "join"
+        ))
     }
 
     override fun onUserState(message: String) {
-        val parts = message.split(" ".toRegex(), 2)
+        val parts = message.substring(1).split(" ".toRegex(), 2)
         val prefix = parts[0]
         val prefixes = splitAndMakeMap(prefix, ";", "=")
         val sets = prefixes["emote-sets"]

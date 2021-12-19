@@ -64,7 +64,7 @@ class ChatAdapter(
     private var username: String? = null
     private val scaledEmoteSize = (emoteSize * 0.78f).toInt()
 
-    private var messageClickListener: ((CharSequence, CharSequence) -> Unit)? = null
+    private var messageClickListener: ((CharSequence, CharSequence, String?) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.chat_list_item, parent, false))
@@ -106,7 +106,8 @@ class ChatAdapter(
                 badgesCount++
             }
         }
-        val userName = chatMessage.displayName
+        val userId = chatMessage.userId
+        val userName = chatMessage.displayName ?: ""
         val userNameLength = userName.length
         val userNameEndIndex = index + userNameLength
         val originalMessage: String
@@ -126,8 +127,7 @@ class ChatAdapter(
             if (userColor == null) {
                 userColors[userName] ?: getRandomColor().also { userColors[userName] = it }
             } else {
-                savedColors[userColor]
-                        ?: Color.parseColor(userColor).also { savedColors[userColor] = it }
+                savedColors[userColor] ?: Color.parseColor(userColor).also { savedColors[userColor] = it }
             }
         }
         builder.setSpan(ForegroundColorSpan(color), index, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -210,13 +210,13 @@ class ChatAdapter(
         } catch (e: Exception) {
 //            Crashlytics.logException(e)
         }
-        holder.bind(originalMessage, builder)
-        loadImages(holder, images, originalMessage, builder)
+        holder.bind(originalMessage, builder, userId)
+        loadImages(holder, images, originalMessage, builder, userId)
     }
 
     override fun getItemCount(): Int = messages?.size ?: 0
 
-    private fun loadImages(holder: ViewHolder, images: List<Image>, originalMessage: CharSequence, builder: SpannableStringBuilder) {
+    private fun loadImages(holder: ViewHolder, images: List<Image>, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?) {
         images.forEach { (url, start, end, isEmote, type, zerowidth) ->
             if (type == "image/webp" && animateGifs) {
                 GlideApp.with(fragment)
@@ -250,7 +250,7 @@ class ChatAdapter(
                             } catch (e: IndexOutOfBoundsException) {
 //                                    Crashlytics.logException(e)
                             }
-                            holder.bind(originalMessage, builder)
+                            holder.bind(originalMessage, builder, userId)
                         }
 
                         override fun onLoadCleared(placeholder: Drawable?) {
@@ -279,7 +279,7 @@ class ChatAdapter(
                                         } catch (e: IndexOutOfBoundsException) {
 //                                    Crashlytics.logException(e)
                                         }
-                                        holder.bind(originalMessage, builder)
+                                        holder.bind(originalMessage, builder, userId)
                                     }
 
                                     override fun onLoadCleared(placeholder: Drawable?) {
@@ -319,7 +319,7 @@ class ChatAdapter(
                             } catch (e: IndexOutOfBoundsException) {
 //                                    Crashlytics.logException(e)
                             }
-                            holder.bind(originalMessage, builder)
+                            holder.bind(originalMessage, builder, userId)
                         }
 
                         override fun onLoadCleared(placeholder: Drawable?) {
@@ -356,7 +356,7 @@ class ChatAdapter(
                             } catch (e: IndexOutOfBoundsException) {
 //                                    Crashlytics.logException(e)
                             }
-                            holder.bind(originalMessage, builder)
+                            holder.bind(originalMessage, builder, userId)
                         }
 
                         override fun onLoadCleared(placeholder: Drawable?) {
@@ -384,7 +384,7 @@ class ChatAdapter(
                                         } catch (e: IndexOutOfBoundsException) {
 //                                    Crashlytics.logException(e)
                                         }
-                                        holder.bind(originalMessage, builder)
+                                        holder.bind(originalMessage, builder, userId)
                                     }
 
                                     override fun onLoadCleared(placeholder: Drawable?) {
@@ -415,7 +415,7 @@ class ChatAdapter(
                             } catch (e: IndexOutOfBoundsException) {
 //                                    Crashlytics.logException(e)
                             }
-                            holder.bind(originalMessage, builder)
+                            holder.bind(originalMessage, builder, userId)
                         }
 
                         override fun onLoadCleared(placeholder: Drawable?) {
@@ -433,7 +433,7 @@ class ChatAdapter(
         this.username = username
     }
 
-    fun setOnClickListener(listener: (CharSequence, CharSequence) -> Unit) {
+    fun setOnClickListener(listener: (CharSequence, CharSequence, String?) -> Unit) {
         messageClickListener = listener
     }
 
@@ -496,11 +496,11 @@ class ChatAdapter(
 
         val textView = itemView as TextView
 
-        fun bind(originalMessage: CharSequence, formattedMessage: SpannableStringBuilder) {
+        fun bind(originalMessage: CharSequence, formattedMessage: SpannableStringBuilder, userId: String?) {
             textView.apply {
                 text = formattedMessage
                 movementMethod = LinkMovementMethod.getInstance()
-                setOnClickListener { messageClickListener?.invoke(originalMessage, formattedMessage) }
+                setOnClickListener { messageClickListener?.invoke(originalMessage, formattedMessage, userId) }
             }
         }
     }

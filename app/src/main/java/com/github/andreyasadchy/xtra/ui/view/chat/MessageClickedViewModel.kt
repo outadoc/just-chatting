@@ -18,12 +18,12 @@ class MessageClickedViewModel @Inject constructor(private val repository: Twitch
     private val user = MutableLiveData<User>()
     private var isLoading = false
 
-    fun loadUser(clientId: String?, token: String?, channelName: String): LiveData<User> {
+    fun loadUser(clientId: String?, token: String?, channelId: String): LiveData<User> {
         if (user.value == null && !isLoading) {
             isLoading = true
             viewModelScope.launch {
                 try {
-                    val u = repository.loadUserByLogin(clientId, token, channelName)
+                    val u = repository.loadUserById(clientId, token, channelId)
                     user.postValue(u)
                 } catch (e: Exception) {
                     _errors.postValue(e)
@@ -35,12 +35,12 @@ class MessageClickedViewModel @Inject constructor(private val repository: Twitch
         return user
     }
 
-    fun loadUserGQL(clientId: String?, channelName: String): LiveData<User> {
+    fun loadUserGQL(clientId: String?, channelId: String): LiveData<User> {
         if (user.value == null && !isLoading) {
             isLoading = true
             viewModelScope.launch {
                 try {
-                    val get = apolloClient(XtraModule(), clientId).query(UserQuery(login = Optional.Present(channelName))).execute().data?.user
+                    val get = apolloClient(XtraModule(), clientId).query(UserQuery(id = Optional.Present(channelId))).execute().data?.user
                     val u = User(
                         id = get?.id,
                         login = get?.login,

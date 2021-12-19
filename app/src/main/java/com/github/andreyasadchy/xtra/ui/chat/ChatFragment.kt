@@ -66,8 +66,10 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         if (enableChat) {
             chatView.enableChatInteraction(isLive && userIsLoggedIn)
             viewModel.chatMessages.observe(viewLifecycleOwner, Observer(chatView::submitList))
-            viewModel.newMessage.observe(viewLifecycleOwner, Observer { chatView.notifyMessageAdded() })
+            viewModel.newMessage.observe(viewLifecycleOwner, { chatView.notifyMessageAdded() })
             viewModel.otherEmotes.observe(viewLifecycleOwner, Observer(chatView::addEmotes))
+            viewModel.roomState.observe(viewLifecycleOwner, { chatView.notifyRoomState(it) })
+            viewModel.command.observe(viewLifecycleOwner, { chatView.notifyCommand(it) })
         }
     }
 

@@ -53,13 +53,14 @@ class LiveChatThread(
                         messageOut.run {
                             when {
                                 contains("USERSTATE") -> listener.onUserState(this)
-                                startsWith("PING") -> handlePing(writerIn)
+                                startsWith("PING") -> handlePing(writerOut!!)
                             }
                         }
                     }
                 }
             } catch (e: IOException) {
                 Log.d(TAG, "Disconnecting from $hashChannelName")
+                listener.onCommand("Disconnecting from $hashChannelName - $e")
                 disconnect()
             } catch (e: Exception) {
                 close()
@@ -91,6 +92,7 @@ class LiveChatThread(
             Log.d(TAG, "Successfully connected to - $hashChannelName")
         } catch (e: IOException) {
             Log.e(TAG, "Error connecting to Twitch IRC", e)
+            listener.onCommand("Error connecting to Twitch IRC - $e")
             throw e
         }
     }
@@ -107,11 +109,13 @@ class LiveChatThread(
             socketIn?.close()
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketIn", e)
+            listener.onCommand("Error while closing socketIn - $e")
         }
         try {
             socketOut?.close()
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketOut", e)
+            listener.onCommand("Error while closing socketOut - $e")
         }
     }
 
@@ -128,6 +132,7 @@ class LiveChatThread(
                 Log.d(TAG, "Sent message to $hashChannelName: $message")
             } catch (e: IOException) {
                 Log.e(TAG, "Error sending message", e)
+                listener.onCommand("Error sending message - $e")
             }
         }
     }
@@ -137,6 +142,7 @@ class LiveChatThread(
 
     interface OnMessageReceivedListener {
         fun onMessage(message: String)
+        fun onCommand(message: String)
         fun onNotice(message: String)
         fun onUserNotice(message: String)
         fun onRoomState(message: String)

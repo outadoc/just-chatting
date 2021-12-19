@@ -23,6 +23,8 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
 import com.github.andreyasadchy.xtra.util.*
+import com.github.andreyasadchy.xtra.util.chat.Command
+import com.github.andreyasadchy.xtra.util.chat.RoomState
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
 import kotlinx.android.synthetic.main.view_chat.view.*
@@ -119,6 +121,57 @@ class ChatView : ConstraintLayout {
         }
     }
 
+    fun notifyRoomState(roomState: RoomState) {
+        if (roomState.emote != null) {
+            when (roomState.emote) {
+                "0" -> text_emote.gone()
+                "1" -> text_emote.visible()
+            }
+        }
+        if (roomState.followers != null) {
+            when (roomState.followers) {
+                "-1" -> text_followers.gone()
+                "0" -> {
+                    text_followers.text = context.getString(R.string.room_followers)
+                    text_followers.visible()
+                }
+                else -> {
+                    text_followers.text = context.getString(R.string.room_followers_min, roomState.followers)
+                    text_followers.visible()
+                }
+            }
+        }
+        if (roomState.unique != null) {
+            when (roomState.unique) {
+                "0" -> text_unique.gone()
+                "1" -> text_unique.visible()
+            }
+        }
+        if (roomState.slow != null) {
+            when (roomState.slow) {
+                "0" -> text_slow.gone()
+                else -> {
+                    text_slow.text = context.getString(R.string.room_slow, roomState.slow)
+                    text_slow.visible()
+                }
+            }
+        }
+        if (roomState.subs != null) {
+            when (roomState.subs) {
+                "0" -> text_subs.gone()
+                "1" -> text_subs.visible()
+            }
+        }
+    }
+
+    fun notifyCommand(command: Command) {
+        val message = when (command.type) {
+            "join" -> context.getString(R.string.chat_join, command.message)
+            else -> command.message
+        }
+        adapter.messages?.add(LiveChatMessage(message = message, color = "#999999"))
+    }
+
     fun addEmotes(list: List<Emote>) {
         when (list.firstOrNull()) {
             is BttvEmote, is FfzEmote, is StvEmote -> {
@@ -195,9 +248,9 @@ class ChatView : ConstraintLayout {
     }
 
     fun enableChatInteraction(enableMessaging: Boolean) {
-        adapter.setOnClickListener { original, formatted ->
+        adapter.setOnClickListener { original, formatted, login ->
             editText.hideKeyboard()
-            MessageClickedDialog.newInstance(enableMessaging, original, formatted).show(fragment.childFragmentManager, null)
+            MessageClickedDialog.newInstance(enableMessaging, original, formatted, login).show(fragment.childFragmentManager, null)
         }
         if (enableMessaging) {
             editText.addTextChangedListener(onTextChanged = { text, _, _, _ ->

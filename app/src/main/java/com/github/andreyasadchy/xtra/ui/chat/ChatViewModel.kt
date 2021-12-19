@@ -14,17 +14,28 @@ import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.ui.view.chat.MAX_ADAPTER_COUNT
 import com.github.andreyasadchy.xtra.util.SingleLiveEvent
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
-import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
-import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
+import com.github.andreyasadchy.xtra.util.chat.*
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
 import kotlinx.coroutines.launch
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import kotlin.collections.ArrayList
+import kotlin.collections.Collection
+import kotlin.collections.List
+import kotlin.collections.MutableList
+import kotlin.collections.asReversed
+import kotlin.collections.associateBy
 import kotlin.collections.contains
+import kotlin.collections.containsKey
+import kotlin.collections.filter
+import kotlin.collections.forEach
+import kotlin.collections.hashSetOf
+import kotlin.collections.isNotEmpty
+import kotlin.collections.mutableListOf
+import kotlin.collections.mutableMapOf
 import kotlin.collections.set
+import kotlin.collections.sortedWith
 import com.github.andreyasadchy.xtra.model.helix.emote.Emote as TwitchEmote
 
 class ChatViewModel @Inject constructor(
@@ -52,6 +63,8 @@ class ChatViewModel @Inject constructor(
     var emoteSetsAdded = false
     var emoteSets: List<String>? = null
     val emotesFromSets = MutableLiveData<List<Emote>>()
+    val roomState = MutableLiveData<RoomState>()
+    val command = MutableLiveData<Command>()
 
     private val _chatMessages by lazy {
         MutableLiveData<MutableList<ChatMessage>>().apply { value = Collections.synchronizedList(ArrayList(MAX_ADAPTER_COUNT + 1)) }
@@ -203,7 +216,7 @@ class ChatViewModel @Inject constructor(
         private val allEmotesMap = mutableMapOf<String, Emote>()
         private var localEmotesObserver: Observer<List<TwitchEmote>>? = null
 
-        val chatters = ConcurrentHashMap<String, Chatter>()
+        val chatters = ConcurrentHashMap<String?, Chatter>()
 
         init {
             if (user is LoggedIn) {
@@ -226,7 +239,7 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), globalBadges, channelBadges, this, this)
+            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), globalBadges, channelBadges, this, this, this, this)
         }
 
         override fun pause() {
@@ -269,6 +282,14 @@ class ChatViewModel @Inject constructor(
             emoteSets = list
         }
 
+        override fun onRoomState(list: RoomState) {
+            roomState.postValue(list)
+        }
+
+        override fun onCommand(list: Command) {
+            command.postValue(list)
+        }
+
         fun addEmotes(list: List<Emote>) {
             if (user is LoggedIn) {
                 allEmotesMap.putAll(list.associateBy { it.name })
@@ -306,9 +327,15 @@ class ChatViewModel @Inject constructor(
 
         override fun onUserState(list: List<String>?) {
         }
+
+        override fun onRoomState(list: RoomState) {
+        }
+
+        override fun onCommand(list: Command) {
+        }
     }
 
-    private abstract inner class ChatController : OnChatMessageReceivedListener, OnUserStateReceivedListener {
+    private abstract inner class ChatController : OnChatMessageReceivedListener, OnUserStateReceivedListener, OnRoomStateReceivedListener, OnCommandReceivedListener {
         abstract fun send(message: CharSequence)
         abstract fun start()
         abstract fun pause()

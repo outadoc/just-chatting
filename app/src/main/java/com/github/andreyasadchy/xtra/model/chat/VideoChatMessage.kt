@@ -48,6 +48,9 @@ data class VideoChatMessage(
     override val displayName: String
         get() = commenter?.displayName.orEmpty()
 
+    override val userId: String?
+        get() = commenter?.id
+
     data class Commenter(
             @SerializedName("display_name")
             val displayName: String,

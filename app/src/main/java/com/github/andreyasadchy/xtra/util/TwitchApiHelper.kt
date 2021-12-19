@@ -5,10 +5,7 @@ import android.text.format.DateUtils
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesResponse
 import com.github.andreyasadchy.xtra.model.helix.video.Period
-import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
-import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
-import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
-import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
+import com.github.andreyasadchy.xtra.util.chat.*
 import java.lang.Long.parseLong
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -116,8 +113,8 @@ object TwitchApiHelper {
         return DateUtils.formatDateTime(context, date, format)
     }
 
-    fun startChat(channelName: String, userName: String?, userToken: String?, globalBadges: TwitchBadgesResponse?, channelBadges: TwitchBadgesResponse?, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener): LiveChatThread {
-        return LiveChatThread(userName, userToken, channelName, MessageListenerImpl(globalBadges, channelBadges, newMessageListener, UserStateListener)).apply { start() }
+    fun startChat(channelName: String, userName: String?, userToken: String?, globalBadges: TwitchBadgesResponse?, channelBadges: TwitchBadgesResponse?, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener): LiveChatThread {
+        return LiveChatThread(userName, userToken, channelName, MessageListenerImpl(globalBadges, channelBadges, newMessageListener, UserStateListener, RoomStateListener, CommandListener)).apply { start() }
     }
 
     fun parseClipOffset(url: String): Double {
@@ -131,24 +128,24 @@ object TwitchApiHelper {
         return offset
     }
 
-    fun formatViewsCount(context: Context, count: Int, viewcount: Boolean): String {
-        return if (count > 1000 && viewcount) {
+    fun formatViewsCount(context: Context, count: Int, truncate: Boolean): String {
+        return if (count > 1000 && truncate) {
             context.getString(R.string.views, formatCountIfMoreThanAThousand(count))
         } else {
             context.resources.getQuantityString(R.plurals.views, count, count)
         }
     }
 
-    fun formatViewersCount(context: Context, count: Int, viewcount: Boolean): String {
-        return if (count > 1000 && viewcount) {
+    fun formatViewersCount(context: Context, count: Int, truncate: Boolean): String {
+        return if (count > 1000 && truncate) {
             context.getString(R.string.viewers, formatCountIfMoreThanAThousand(count))
         } else {
             context.resources.getQuantityString(R.plurals.viewers, count, count)
         }
     }
 
-    fun formatCount(count: Int, viewcount: Boolean): String {
-        return if (count > 1000 && viewcount) {
+    fun formatCount(count: Int, truncate: Boolean): String {
+        return if (count > 1000 && truncate) {
             formatCountIfMoreThanAThousand(count)
         } else {
             count.toString()

@@ -33,6 +33,12 @@
         android:text="@string/copy_message"/>
 
     <Button
+        android:id="@+id/copyClip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/copy_clip"/>
+
+    <Button
         android:id="@+id/viewProfile"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

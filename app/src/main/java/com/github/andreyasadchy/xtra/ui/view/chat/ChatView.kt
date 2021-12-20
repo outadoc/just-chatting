@@ -169,7 +169,8 @@ class ChatView : ConstraintLayout {
             "join" -> context.getString(R.string.chat_join, command.message)
             else -> command.message
         }
-        adapter.messages?.add(LiveChatMessage(message = message, color = "#999999"))
+        adapter.messages?.add(LiveChatMessage(message = message, color = "#999999", emotes = command.emotes))
+        notifyMessageAdded()
     }
 
     fun addEmotes(list: List<Emote>) {

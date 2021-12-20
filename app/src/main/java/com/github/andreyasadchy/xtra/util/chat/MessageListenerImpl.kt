@@ -16,10 +16,9 @@ class MessageListenerImpl(
     private val callbackCommand: OnCommandReceivedListener) : LiveChatThread.OnMessageReceivedListener {
     
     override fun onMessage(message: String) {
-        val parts = message.split(" ".toRegex(), 2)
+        val parts = message.substring(1).split(" ".toRegex(), 2)
         val prefix = parts[0]
         val prefixes = splitAndMakeMap(prefix, ";", "=")
-
         val messageInfo = parts[1] //:<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
         val userName = messageInfo.substring(1, messageInfo.indexOf("!"))
         val userMessage: String
@@ -88,9 +87,10 @@ class MessageListenerImpl(
         ))
     }
 
-    override fun onCommand(message: String) {
+    override fun onCommand(message: String, type: String?) {
         callbackCommand.onCommand(Command(
-            message = message
+            message = message,
+            type = type
         ))
     }
 
@@ -106,11 +106,24 @@ class MessageListenerImpl(
         val prefixes = splitAndMakeMap(prefix, ";", "=")
         val system = prefixes["system-msg"]?.replace("\\s", " ")
         val messageInfo = parts[1]
-        val index = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
-        val msg = if (index != -1) messageInfo.substring(index + 1) else null
+        val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
+        val msg = if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else null
         if (system != null) {
+            var emotesList: MutableList<TwitchEmote>? = null
+            val emotes = prefixes["emotes"]
+            if (emotes != null && msg != null) {
+                val entries = splitAndMakeMap(emotes, "/", ":").entries
+                emotesList = ArrayList(entries.size)
+                entries.forEach { emote ->
+                    emote.value?.split(",")?.forEach { indexes ->
+                        val index = indexes.split("-")
+                        emotesList.add(TwitchEmote(emote.key, index[0].toInt() + system.length + 1, index[1].toInt() + system.length + 1))
+                    }
+                }
+            }
             callbackCommand.onCommand(Command(
-                message = if (msg != null) "$system $msg" else system
+                message = if (msg != null) "$system $msg" else system,
+                emotes = emotesList
             ))
         }
     }
@@ -125,13 +138,6 @@ class MessageListenerImpl(
             unique = prefixes["r9k"],
             slow = prefixes["slow"],
             subs = prefixes["subs-only"]
-        ))
-    }
-
-    override fun onJoin(message: String) {
-        callbackCommand.onCommand(Command(
-            message = message.substring(message.indexOf("#") + 1),
-            type = "join"
         ))
     }
 

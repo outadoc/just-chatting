@@ -201,7 +201,7 @@ class ChatAdapter(
             if (chatMessage.isAction) {
                 builder.setSpan(ForegroundColorSpan(color), userNameEndIndex + 1, builder.length, SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-            if (wasMentioned) {
+            if (wasMentioned && userId != null) {
                 builder.setSpan(ForegroundColorSpan(Color.WHITE), 0, builder.length, SPAN_INCLUSIVE_INCLUSIVE)
                 holder.textView.setBackgroundColor(Color.RED)
             } else {

@@ -13,7 +13,7 @@ private const val TAG = "LiveChatThread"
 class LiveChatThread(
         private val userName: String?,
         private val userToken: String?,
-        channelName: String,
+        private val channelName: String,
         private val listener: OnMessageReceivedListener) : Thread(), ChatView.MessageSenderCallback {
     private var socketIn: Socket? = null
     private var socketOut: Socket? = null
@@ -43,7 +43,6 @@ class LiveChatThread(
                             contains("USERNOTICE") -> listener.onUserNotice(this)
                             contains("NOTICE") -> listener.onNotice(this)
                             contains("ROOMSTATE") -> listener.onRoomState(this)
-                            contains("JOIN") -> listener.onJoin(this)
                             startsWith("PING") -> handlePing(writerIn)
                         }
                     }
@@ -60,7 +59,7 @@ class LiveChatThread(
                 }
             } catch (e: IOException) {
                 Log.d(TAG, "Disconnecting from $hashChannelName")
-                listener.onCommand("Disconnecting from $hashChannelName - $e")
+                listener.onCommand("Disconnecting from $channelName - $e")
                 disconnect()
             } catch (e: Exception) {
                 close()
@@ -90,6 +89,7 @@ class LiveChatThread(
             writerIn.flush()
             writerOut?.flush()
             Log.d(TAG, "Successfully connected to - $hashChannelName")
+            listener.onCommand(channelName, "join")
         } catch (e: IOException) {
             Log.e(TAG, "Error connecting to Twitch IRC", e)
             listener.onCommand("Error connecting to Twitch IRC - $e")
@@ -142,11 +142,10 @@ class LiveChatThread(
 
     interface OnMessageReceivedListener {
         fun onMessage(message: String)
-        fun onCommand(message: String)
+        fun onCommand(message: String, type: String? = null)
         fun onNotice(message: String)
         fun onUserNotice(message: String)
         fun onRoomState(message: String)
-        fun onJoin(message: String)
         fun onUserState(message: String)
     }
 }

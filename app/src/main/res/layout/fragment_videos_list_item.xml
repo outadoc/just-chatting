@@ -12,7 +12,6 @@
             android:id="@+id/thumbnail"
             style="@style/Thumbnail"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/backgrounds/scenic" />
 
@@ -21,28 +20,16 @@
             style="@style/ThumbnailItem"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
-            android:shadowColor="#000000"
-            android:shadowDx="1"
-            android:shadowDy="2"
-            android:shadowRadius="1"
             app:layout_constraintBottom_toBottomOf="@id/thumbnail"
-            app:layout_constraintEnd_toEndOf="@id/thumbnail"
-            app:layout_constraintRight_toRightOf="@id/thumbnail"
+            app:layout_constraintEnd_toEndOf="parent"
             tools:text="April 20, 2017" />
 
         <TextView
             android:id="@+id/views"
             style="@style/ThumbnailItem"
             android:layout_marginStart="5dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
             android:layout_marginBottom="5dp"
-            android:shadowColor="#000000"
-            android:shadowDx="1"
-            android:shadowDy="2"
-            android:shadowRadius="1"
             app:layout_constraintBottom_toBottomOf="@id/thumbnail"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:text="133769 views" />
 
@@ -51,12 +38,7 @@
             style="@style/ThumbnailItem"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:shadowColor="#000000"
-            android:shadowDx="1"
-            android:shadowDy="2"
-            android:shadowRadius="1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="13:37" />
 
@@ -65,88 +47,80 @@
             style="@style/ThumbnailItem"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
-            android:shadowColor="#000000"
-            android:shadowDx="1"
-            android:shadowDy="2"
-            android:shadowRadius="1"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="type" />
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="@style/VideoProgressBar"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/thumbnail" />
+            app:layout_constraintTop_toBottomOf="@id/thumbnail"
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/userImage"
             style="@style/UserPicture"
             android:layout_marginStart="10dp"
             android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/thumbnail"
-            tools:src="@tools:sample/backgrounds/scenic" />
+            app:layout_constraintVertical_bias="0.0"
+            tools:src="@tools:sample/backgrounds/scenic"
+            tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/title"
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
             android:layout_marginTop="7dp"
-            android:textAlignment="viewStart"
-            android:gravity="start"
-            app:layout_constraintEnd_toStartOf="@+id/options"
-            app:layout_constraintRight_toLeftOf="@+id/options"
-            app:layout_constraintLeft_toRightOf="@id/userImage"
+            android:layout_marginBottom="7dp"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/options"
             app:layout_constraintStart_toEndOf="@id/userImage"
-            app:layout_constraintTop_toBottomOf="@id/thumbnail"
-            tools:text="@sample/videos.json/vods/title" />
+            app:layout_constraintTop_toBottomOf="@id/thumbnail">
 
-        <TextView
-            android:id="@+id/username"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="1dp"
-            android:textColor="?attr/secondaryTextColor"
-            android:textAlignment="viewStart"
-            android:gravity="start"
-            app:layout_constraintEnd_toStartOf="@+id/options"
-            app:layout_constraintRight_toLeftOf="@+id/options"
-            app:layout_constraintLeft_toRightOf="@id/userImage"
-            app:layout_constraintStart_toEndOf="@id/userImage"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            tools:text="@sample/videos.json/vods/channel/name" />
+            <TextView
+                android:id="@+id/title"
+                style="@style/VideoTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textAlignment="viewStart"
+                android:visibility="gone"
+                tools:text="@sample/videos.json/vods/title"
+                tools:visibility="visible" />
 
-        <TextView
-            android:id="@+id/gameName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="1dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginRight="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="?attr/secondaryTextColor"
-            android:textAlignment="viewStart"
-            android:gravity="start"
-            app:layout_constraintEnd_toStartOf="@+id/options"
-            app:layout_constraintRight_toLeftOf="@+id/options"
-            app:layout_constraintLeft_toRightOf="@id/userImage"
-            app:layout_constraintStart_toEndOf="@id/userImage"
-            app:layout_constraintTop_toBottomOf="@id/username"
-            tools:text="@sample/videos.json/vods/game" />
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textAlignment="viewStart"
+                android:textColor="?attr/secondaryTextColor"
+                android:visibility="gone"
+                tools:text="@sample/videos.json/vods/channel/name"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/gameName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textAlignment="viewStart"
+                android:textColor="?attr/secondaryTextColor"
+                android:visibility="gone"
+                tools:text="@sample/videos.json/vods/game"
+                tools:visibility="visible" />
+        </LinearLayout>
 
         <ImageButton
             android:id="@+id/options"
@@ -155,7 +129,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/thumbnail" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

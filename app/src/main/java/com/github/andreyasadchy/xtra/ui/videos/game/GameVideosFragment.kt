@@ -22,9 +22,9 @@ class GameVideosFragment : BaseVideosFragment<GameVideosViewModel>(), GameVideos
             sortText.text = it
         })
         if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.setGame(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireArguments().getString(C.GAME_ID)!!, requireContext().prefs().getString(C.TOKEN, ""))
+            viewModel.setGame(usehelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), token = requireContext().prefs().getString(C.TOKEN, ""))
         } else {
-            viewModel.setGame(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), requireArguments().getString(C.GAME_NAME)!!)
+            viewModel.setGame(usehelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME))
         }
         sortBar.setOnClickListener { GameVideosSortDialog.newInstance(viewModel.sort, viewModel.period, viewModel.type).show(childFragmentManager, null) }
     }

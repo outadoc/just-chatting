@@ -1,5 +1,5 @@
-query GameStreams($name: String, $first: Int, $after: Cursor) {
-    game(name: $name) {
+query GameStreams($id: ID, $name: String, $first: Int, $after: Cursor) {
+    game(id: $id, name: $name) {
         streams(first: $first, after: $after) {
             edges {
                 cursor

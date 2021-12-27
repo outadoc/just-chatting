@@ -22,7 +22,7 @@ abstract class BaseVideosFragment<VM : BaseVideosViewModel> : PagedListFragment<
 
     override val adapter: BaseVideosAdapter by lazy {
         val activity = requireActivity() as MainActivity
-        VideosAdapter(this, activity, activity) {
+        VideosAdapter(this, activity, activity, activity) {
             lastSelectedItem = it
             showDownloadDialog()
         }

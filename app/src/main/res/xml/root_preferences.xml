@@ -275,7 +275,7 @@
     <EditTextPreference
         android:defaultValue="twitch-web-wall-mason"
         android:key="token_xdeviceid"
-        android:singleLine="true"
+        android:maxLines="1"
         android:title="X-Device-Id"
         android:dependency="token_random_deviceid"
         app:useSimpleSummaryProvider="true"
@@ -284,7 +284,7 @@
     <EditTextPreference
         android:defaultValue="twitch-web-wall-mason"
         android:key="token_deviceid"
-        android:singleLine="true"
+        android:maxLines="1"
         android:title="Device-ID"
         android:dependency="token_random_deviceid"
         app:useSimpleSummaryProvider="true"
@@ -301,7 +301,7 @@
     <EditTextPreference
         android:defaultValue="site"
         android:key="token_playertype"
-        android:singleLine="true"
+        android:maxLines="1"
         android:title="playerType"
         app:useSimpleSummaryProvider="true"
         app:iconSpaceReserved="false" />
@@ -317,7 +317,7 @@
     <EditTextPreference
         android:defaultValue="ilfexgv3nnljz3isbm257gzwrzr7bi"
         android:key="helix_client_id"
-        android:singleLine="true"
+        android:maxLines="1"
         android:title="@string/api_helix"
         app:useSimpleSummaryProvider="true"
         app:iconSpaceReserved="false" />
@@ -325,7 +325,7 @@
     <EditTextPreference
         android:defaultValue="kimne78kx3ncx6brgo4mv6wki5h1ko"
         android:key="gql_client_id"
-        android:singleLine="true"
+        android:maxLines="1"
         android:title="@string/api_gql"
         app:useSimpleSummaryProvider="true"
         app:iconSpaceReserved="false" />

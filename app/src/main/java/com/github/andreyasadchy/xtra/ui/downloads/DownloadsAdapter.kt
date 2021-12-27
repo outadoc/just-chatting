@@ -9,6 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.ui.common.BaseListAdapter
+import com.github.andreyasadchy.xtra.ui.common.OnGameSelectedListener
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -18,6 +19,7 @@ import kotlinx.android.synthetic.main.fragment_downloads_list_item.view.*
 class DownloadsAdapter(
     private val fragment: Fragment,
     private val clickListener: DownloadsFragment.OnVideoSelectedListener,
+    private val gameClickListener: OnGameSelectedListener,
     private val deleteVideo: (OfflineVideo) -> Unit,
     private val user: (OfflineVideo) -> Unit
 ) : BaseListAdapter<OfflineVideo>(
@@ -34,6 +36,7 @@ class DownloadsAdapter(
     override val layoutId: Int = R.layout.fragment_downloads_list_item
 
     override fun bind(item: OfflineVideo, view: View) {
+        val gameListener: (View) -> Unit = { gameClickListener.openGame(item.gameId, item.gameName) }
         with(view) {
             setOnClickListener { clickListener.startOfflineVideo(item) }
             setOnLongClickListener { deleteVideo(item); true }
@@ -42,28 +45,37 @@ class DownloadsAdapter(
             downloadDate.text = context.getString(R.string.downloaded_date, TwitchApiHelper.formatTime(context, item.downloadDate))
             duration.text = item.duration?.let { DateUtils.formatElapsedTime(item.duration / 1000L) }
             type.text = TwitchApiHelper.getType(context, item.type)
-            userImage.apply {
-                setOnClickListener { user(item) }
-                loadImage(fragment, item.channelLogo, circle = true)
+            if (item.channelLogo != null)  {
+                userImage.visible()
+                userImage.loadImage(fragment, item.channelLogo, circle = true)
+                userImage.setOnClickListener { user(item) }
             }
-            username.apply {
-                setOnClickListener { user(item) }
-                text = item.channelName
+            if (item.channelName != null)  {
+                username.visible()
+                username.text = item.channelName
+                username.setOnClickListener { user(item) }
             }
-            title.text = item.name
-            game.text = item.game
-            options.setOnClickListener {
-                PopupMenu(context, it).apply {
-                    inflate(R.menu.offline_item)
-                    setOnMenuItemClickListener { deleteVideo(item); true }
-                    show()
-                }
+            if (item.name != null)  {
+                title.visible()
+                title.text = item.name
+            }
+            if (item.gameName != null)  {
+                gameName.visible()
+                gameName.text = item.gameName
+                gameName.setOnClickListener(gameListener)
             }
             if (item.duration != null) {
                 progressBar.progress = (item.lastWatchPosition.toFloat() / item.duration * 100).toInt()
                 item.sourceStartPosition?.let {
                     sourceStart.text = context.getString(R.string.source_vod_start, DateUtils.formatElapsedTime(it / 1000L))
                     sourceEnd.text = context.getString(R.string.source_vod_end, DateUtils.formatElapsedTime((it + item.duration) / 1000L))
+                }
+            }
+            options.setOnClickListener {
+                PopupMenu(context, it).apply {
+                    inflate(R.menu.offline_item)
+                    setOnMenuItemClickListener { deleteVideo(item); true }
+                    show()
                 }
             }
             status.apply {

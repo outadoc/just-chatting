@@ -15,7 +15,8 @@ query TopStreams($first: Int, $after: Cursor) {
                     profileImageURL(width: 300)
                 }
                 game {
-                    name
+                    id
+                    displayName
                 }
             }
         }

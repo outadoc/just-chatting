@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 8,
-    "identityHash": "a9282b454bef601a2de64c18c5acf47f",
+    "identityHash": "5e389453b0ce8c62425a9917e93c9e71",
     "entities": [
       {
         "tableName": "videos",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`url` TEXT NOT NULL, `source_url` TEXT NOT NULL, `source_start_position` INTEGER, `name` TEXT, `channel_id` TEXT, `channel_name` TEXT, `channel_logo` TEXT NOT NULL, `thumbnail` TEXT NOT NULL, `game` TEXT, `duration` INTEGER, `upload_date` INTEGER, `download_date` INTEGER NOT NULL, `last_watch_position` INTEGER NOT NULL, `progress` INTEGER NOT NULL, `max_progress` INTEGER NOT NULL, `status` INTEGER NOT NULL, `type` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `is_vod` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`url` TEXT NOT NULL, `source_url` TEXT NOT NULL, `source_start_position` INTEGER, `name` TEXT, `channel_id` TEXT, `channel_name` TEXT, `channel_logo` TEXT, `thumbnail` TEXT, `gameId` TEXT, `gameName` TEXT, `duration` INTEGER, `upload_date` INTEGER, `download_date` INTEGER NOT NULL, `last_watch_position` INTEGER NOT NULL, `progress` INTEGER NOT NULL, `max_progress` INTEGER NOT NULL, `status` INTEGER NOT NULL, `type` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `is_vod` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "url",
@@ -48,17 +48,23 @@
             "fieldPath": "channelLogo",
             "columnName": "channel_logo",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "thumbnail",
             "columnName": "thumbnail",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
-            "fieldPath": "game",
-            "columnName": "game",
+            "fieldPath": "gameId",
+            "columnName": "gameId",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "gameName",
+            "columnName": "gameName",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -282,7 +288,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a9282b454bef601a2de64c18c5acf47f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5e389453b0ce8c62425a9917e93c9e71')"
     ]
   }
 }

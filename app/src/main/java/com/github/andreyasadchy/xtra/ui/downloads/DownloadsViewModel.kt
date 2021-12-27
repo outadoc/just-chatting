@@ -109,8 +109,8 @@ class DownloadsViewModel @Inject internal constructor(
                                         })
                             }
                         }
-                        deleteImage(video.channelLogo)
-                        deleteImage(video.thumbnail)
+                        video.channelLogo?.let { deleteImage(it) }
+                        video.thumbnail?.let { deleteImage(it) }
                         directory.deleteRecursively()
                     } else {
                         val playlist = PlaylistParser(playlistFile.inputStream(), Format.EXT_M3U, Encoding.UTF_8).parse()

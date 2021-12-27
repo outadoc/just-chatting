@@ -51,6 +51,9 @@ data class VideoChatMessage(
     override val userId: String?
         get() = commenter?.id
 
+    override val isReward: Boolean
+        get() = false
+
     data class Commenter(
             @SerializedName("display_name")
             val displayName: String,

@@ -21,10 +21,10 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.fragment_channel.*
-import kotlinx.android.synthetic.main.fragment_channel_clips_list_item.view.*
 import kotlinx.android.synthetic.main.fragment_media.*
 import kotlinx.android.synthetic.main.fragment_media.appBar
 import kotlinx.android.synthetic.main.fragment_media.search
+import kotlinx.android.synthetic.main.fragment_videos_list_item.view.*
 
 
 abstract class MediaFragment : Fragment(), Scrollable {

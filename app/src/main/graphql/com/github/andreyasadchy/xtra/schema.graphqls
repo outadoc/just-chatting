@@ -2,7 +2,7 @@ type Query {
   games(first: Int, after: Cursor): Games
   streams(first: Int, after: Cursor): Streams
   videos(first: Int, after: Cursor): Videos
-  game(name: String, first: Int, after: Cursor): Game
+  game(id: ID, name: String, first: Int, after: Cursor): Game
   user(id: ID, login: String): User
   video(id: ID): VideoNode
 }
@@ -69,8 +69,9 @@ type ClipEdges {
 }
 
 type GameNode {
+  id: String
   displayName: String
-  avatarURL: String
+  boxArtURL: String
   viewersCount: Int
   broadcastersCount: Int
 }
@@ -78,7 +79,7 @@ type GameNode {
 type StreamNode {
   id: String
   broadcaster: broadcaster
-  game: game
+  game: GameNode
   type: String
   title: String
   viewersCount: Int
@@ -94,7 +95,7 @@ type VideoNode {
   previewThumbnailURL: String
   viewCount: Int
   lengthSeconds: Int
-  game: game
+  game: GameNode
 }
 
 type ClipNode {
@@ -108,7 +109,7 @@ type ClipNode {
   thumbnailURL: String
   viewCount: Int
   durationSeconds: Int
-  game: game
+  game: GameNode
 }
 
 type broadcaster {
@@ -116,10 +117,6 @@ type broadcaster {
   login: String
   displayName: String
   profileImageURL(width: Int): String
-}
-
-type game {
-  name: String
 }
 
 enum BroadcastType {

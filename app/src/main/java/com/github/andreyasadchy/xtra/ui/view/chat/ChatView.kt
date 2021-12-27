@@ -45,6 +45,7 @@ class ChatView : ConstraintLayout {
     private lateinit var adapter: ChatAdapter
 
     private var isChatTouched = false
+    private var showFlexbox = false
 
     private var hasRecentEmotes: Boolean? = null
     private var emotesAddedCount = 0
@@ -90,6 +91,10 @@ class ChatView : ConstraintLayout {
                     super.onScrollStateChanged(recyclerView, newState)
                     isChatTouched = newState == RecyclerView.SCROLL_STATE_DRAGGING
                     btnDown.isVisible = shouldShowButton()
+                    if (showFlexbox && flexbox.isGone) {
+                        flexbox.visible()
+                        flexbox.postDelayed({ flexbox.gone() }, 5000)
+                    }
                 }
             })
         }
@@ -162,6 +167,14 @@ class ChatView : ConstraintLayout {
                 "1" -> text_subs.visible()
             }
         }
+        if (text_emote.isGone && text_followers.isGone && text_unique.isGone && text_slow.isGone && text_subs.isGone) {
+            showFlexbox = false
+            flexbox.gone()
+        } else {
+            showFlexbox = true
+            flexbox.visible()
+            flexbox.postDelayed({ flexbox.gone() }, 5000)
+        }
     }
 
     fun notifyCommand(command: Command) {
@@ -169,7 +182,7 @@ class ChatView : ConstraintLayout {
             "join" -> context.getString(R.string.chat_join, command.message)
             else -> command.message
         }
-        adapter.messages?.add(LiveChatMessage(message = message, color = "#999999", emotes = command.emotes))
+        adapter.messages?.add(LiveChatMessage(message = message, color = "#999999", isAction = true, emotes = command.emotes))
         notifyMessageAdded()
     }
 
@@ -251,6 +264,7 @@ class ChatView : ConstraintLayout {
     fun enableChatInteraction(enableMessaging: Boolean) {
         adapter.setOnClickListener { original, formatted, login ->
             editText.hideKeyboard()
+            editText.clearFocus()
             MessageClickedDialog.newInstance(enableMessaging, original, formatted, login).show(fragment.childFragmentManager, null)
         }
         if (enableMessaging) {

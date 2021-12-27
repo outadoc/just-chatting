@@ -14,7 +14,8 @@ import kotlinx.coroutines.CoroutineScope
 
 class GameVideosDataSourceGQLquery private constructor(
     private val clientId: String?,
-    private val game: String?,
+    private val gameId: String?,
+    private val gameName: String?,
     private val type: BroadcastType?,
     private val sort: VideoSort?,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Video>(coroutineScope) {
@@ -25,7 +26,7 @@ class GameVideosDataSourceGQLquery private constructor(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
         loadInitial(params, callback) {
             if (type != null) typelist.add(type)
-            val get1 = apolloClient(XtraModule(), clientId).query(GameVideosQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(typelist), Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.game?.videos
+            val get1 = apolloClient(XtraModule(), clientId).query(GameVideosQuery(id = Optional.Present(gameId), sort = Optional.Present(sort), type = Optional.Present(typelist), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.videos
             val get = get1?.edges
             val list = mutableListOf<Video>()
             if (get != null) {
@@ -36,7 +37,8 @@ class GameVideosDataSourceGQLquery private constructor(
                             user_id = i?.node?.owner?.id,
                             user_login = i?.node?.owner?.login,
                             user_name = i?.node?.owner?.displayName,
-                            game_name = game,
+                            game_id = gameId,
+                            game_name = gameName,
                             type = i?.node?.broadcastType.toString(),
                             title = i?.node?.title,
                             view_count = i?.node?.viewCount,
@@ -57,7 +59,7 @@ class GameVideosDataSourceGQLquery private constructor(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         loadRange(params, callback) {
             if (type != null) typelist.add(type)
-            val get1 = apolloClient(XtraModule(), clientId).query(GameVideosQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(typelist), Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.game?.videos
+            val get1 = apolloClient(XtraModule(), clientId).query(GameVideosQuery(id = Optional.Present(gameId), sort = Optional.Present(sort), type = Optional.Present(typelist), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.videos
             val get = get1?.edges
             val list = mutableListOf<Video>()
             if (get != null && nextPage && offset != null && offset != "") {
@@ -68,7 +70,8 @@ class GameVideosDataSourceGQLquery private constructor(
                             user_id = i?.node?.owner?.id,
                             user_login = i?.node?.owner?.login,
                             user_name = i?.node?.owner?.displayName,
-                            game_name = game,
+                            game_id = gameId,
+                            game_name = gameName,
                             type = i?.node?.broadcastType.toString(),
                             title = i?.node?.title,
                             view_count = i?.node?.viewCount,
@@ -88,12 +91,13 @@ class GameVideosDataSourceGQLquery private constructor(
 
     class Factory (
         private val clientId: String?,
-        private val game: String?,
+        private val gameId: String?,
+        private val gameName: String?,
         private val type: BroadcastType?,
         private val sort: VideoSort?,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Video, GameVideosDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Video> =
-                GameVideosDataSourceGQLquery(clientId, game, type, sort, coroutineScope).also(sourceLiveData::postValue)
+                GameVideosDataSourceGQLquery(clientId, gameId, gameName, type, sort, coroutineScope).also(sourceLiveData::postValue)
     }
 }

@@ -14,7 +14,8 @@ import kotlinx.coroutines.CoroutineScope
 
 class GameClipsDataSourceGQLquery(
     private val clientId: String?,
-    private val game: String?,
+    private val gameId: String?,
+    private val gameName: String?,
     private val sort: ClipsPeriod?,
     private val api: GraphQLRepository,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Clip>(coroutineScope) {
@@ -23,7 +24,7 @@ class GameClipsDataSourceGQLquery(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Clip>) {
         loadInitial(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.game?.clips
+            val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(id = Optional.Present(gameId), sort = Optional.Present(sort), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.clips
             val get = get1?.edges
             val list = mutableListOf<Clip>()
             if (get != null) {
@@ -36,7 +37,8 @@ class GameClipsDataSourceGQLquery(
                             broadcaster_name = i?.node?.broadcaster?.displayName,
                             video_id = i?.node?.video?.id,
                             videoOffsetSeconds = i?.node?.videoOffsetSeconds,
-                            game_name = game,
+                            game_id = gameId,
+                            game_name = gameName,
                             title = i?.node?.title,
                             view_count = i?.node?.viewCount,
                             created_at = i?.node?.createdAt,
@@ -55,7 +57,7 @@ class GameClipsDataSourceGQLquery(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Clip>) {
         loadRange(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.game?.clips
+            val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(id = Optional.Present(gameId), sort = Optional.Present(sort), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.clips
             val get = get1?.edges
             val list = mutableListOf<Clip>()
             if (get != null && nextPage && offset != null && offset != "") {
@@ -68,7 +70,8 @@ class GameClipsDataSourceGQLquery(
                             broadcaster_name = i?.node?.broadcaster?.displayName,
                             video_id = i?.node?.video?.id,
                             videoOffsetSeconds = i?.node?.videoOffsetSeconds,
-                            game_name = game,
+                            game_id = gameId,
+                            game_name = gameName,
                             title = i?.node?.title,
                             view_count = i?.node?.viewCount,
                             created_at = i?.node?.createdAt,
@@ -87,12 +90,13 @@ class GameClipsDataSourceGQLquery(
 
     class Factory(
         private val clientId: String?,
-        private val game: String?,
+        private val gameId: String?,
+        private val gameName: String?,
         private val sort: ClipsPeriod?,
         private val api: GraphQLRepository,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Clip, GameClipsDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Clip> =
-                GameClipsDataSourceGQLquery(clientId, game, sort, api, coroutineScope).also(sourceLiveData::postValue)
+                GameClipsDataSourceGQLquery(clientId, gameId, gameName, sort, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

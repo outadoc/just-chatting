@@ -27,11 +27,12 @@ class GamesDataSourceGQLquery(
                 for (i in get) {
                     list.add(
                         Game(
-                        name = i?.node?.displayName,
-                        box_art_url = i?.node?.avatarURL,
-                        viewersCount = i?.node?.viewersCount,
-                        broadcastersCount = i?.node?.broadcastersCount,
-                    )
+                            id = i?.node?.id,
+                            name = i?.node?.displayName,
+                            box_art_url = i?.node?.boxArtURL,
+                            viewersCount = i?.node?.viewersCount,
+                            broadcastersCount = i?.node?.broadcastersCount,
+                        )
                     )
                 }
                 offset = get.lastOrNull()?.cursor
@@ -50,8 +51,9 @@ class GamesDataSourceGQLquery(
                 for (i in get) {
                     list.add(
                         Game(
+                            id = i?.node?.id,
                             name = i?.node?.displayName,
-                            box_art_url = i?.node?.avatarURL,
+                            box_art_url = i?.node?.boxArtURL,
                             viewersCount = i?.node?.viewersCount,
                             broadcastersCount = i?.node?.broadcastersCount,
                         )

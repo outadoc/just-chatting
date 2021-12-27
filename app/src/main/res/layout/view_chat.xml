@@ -1,68 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:divider="@drawable/chat_status_divider"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:showDividers="middle">
-
-            <TextView
-                android:id="@+id/text_emote"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/room_emote"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/text_followers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:visibility="gone"
-                tools:text="@string/room_followers_min"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/text_unique"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/room_unique"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/text_slow"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:visibility="gone"
-                tools:text="@string/room_slow"
-                tools:visibility="visible" />
-
-            <TextView
-                android:id="@+id/text_subs"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:singleLine="true"
-                android:text="@string/room_subs"
-                android:visibility="gone"
-                tools:visibility="visible" />
-        </LinearLayout>
+        android:orientation="vertical"
+        tools:visibility="visible">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -74,26 +21,26 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/chat_list_item"/>
+                tools:listitem="@layout/chat_list_item" />
 
             <Button
                 android:id="@+id/btnDown"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:text="@string/scroll_down"
                 android:visibility="gone"
-                android:layout_gravity="bottom"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
         </FrameLayout>
 
         <LinearLayout
             android:id="@+id/messageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="?attr/primaryColor"
-            android:visibility="gone"
             android:animateLayoutChanges="true"
+            android:background="?attr/primaryColor"
+            android:orientation="horizontal"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/viewPager"
             tools:visibility="visible">
 
@@ -102,41 +49,41 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:inputType="textCapSentences|textAutoCorrect"
+                android:completionThreshold="1"
                 android:imeOptions="actionSend|flagNoFullscreen"
                 android:importantForAutofill="no"
-                android:completionThreshold="1"
-                tools:visibility="visible"
-                tools:ignore="LabelFor" />
+                android:inputType="textCapSentences|textAutoCorrect"
+                tools:ignore="LabelFor"
+                tools:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/clear"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/baseline_backspace_black_24"
                 android:background="?android:selectableItemBackground"
+                android:src="@drawable/baseline_backspace_black_24"
                 android:visibility="gone"
-                tools:visibility="visible"
-                app:tint="?attr/textColor" />
+                app:tint="?attr/textColor"
+                tools:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/emotes"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_tag_faces_black_24dp"
                 android:background="?android:selectableItemBackground"
-                tools:visibility="visible"
-                app:tint="?attr/textColor" />
+                android:src="@drawable/ic_tag_faces_black_24dp"
+                app:tint="?attr/textColor"
+                tools:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/send"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_send_black_24dp"
                 android:background="?android:selectableItemBackground"
+                android:src="@drawable/ic_send_black_24dp"
                 android:visibility="gone"
-                tools:visibility="visible"
-                app:tint="?attr/textColor" />
+                app:tint="?attr/textColor"
+                tools:visibility="visible" />
         </LinearLayout>
 
         <androidx.viewpager.widget.ViewPager
@@ -149,12 +96,71 @@
             <com.google.android.material.tabs.TabLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:tabGravity="fill"
                 app:tabMaxWidth="0dp"
-                app:tabMode="fixed"
-                app:tabGravity="fill"/>
+                app:tabMode="fixed" />
         </androidx.viewpager.widget.ViewPager>
 
     </LinearLayout>
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/flexbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/chatStatus"
+        android:visibility="gone"
+        app:flexWrap="wrap"
+        app:justifyContent="space_evenly"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <TextView
+            android:id="@+id/text_emote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/room_emote"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/text_followers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:visibility="gone"
+            tools:text="@string/room_followers_min"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/text_unique"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/room_unique"
+            android:visibility="gone"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/text_slow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:visibility="gone"
+            tools:text="@string/room_slow"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/text_subs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/room_subs"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </com.google.android.flexbox.FlexboxLayout>
 
     <TextView
         android:id="@+id/chatReplayUnavailable"

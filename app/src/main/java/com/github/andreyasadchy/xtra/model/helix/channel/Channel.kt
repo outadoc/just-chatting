@@ -18,6 +18,6 @@ data class Channel(
         val thumbnail_url: String? = null,
         var profileImageURL: String? = null) : Parcelable {
 
-        val channelLogo: String
+        val channelLogo: String?
                 get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
 }

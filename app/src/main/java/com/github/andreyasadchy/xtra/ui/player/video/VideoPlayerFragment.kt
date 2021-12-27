@@ -33,7 +33,7 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
         get() = video.user_login
     override val channelName: String?
         get() = video.user_name
-    override val channelImage: String
+    override val channelImage: String?
         get() = video.channelLogo
 
     override val layoutId: Int

@@ -78,6 +78,7 @@ class MessageListenerImpl(
             message = userMessage,
             color = prefixes["color"],
             isAction = isAction,
+            isReward = prefixes["custom-reward-id"] != null,
             emotes = emotesList,
             badges = badgesList,
             globalBadges = globalBadgesList,

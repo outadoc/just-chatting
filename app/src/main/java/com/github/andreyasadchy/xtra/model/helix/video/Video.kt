@@ -27,6 +27,8 @@ data class Video(
     val duration: String? = null,
     @SerializedName("muted_segments")
         val mutedSegments: List<MutedSegment>? = null,
+
+    val game_id: String? = null,
     val game_name: String? = null,
     var profileImageURL: String? = null) : Parcelable, Downloadable {
 
@@ -35,15 +37,17 @@ data class Video(
             val duration: Int,
             val offset: Int) : Parcelable
 
-        override val thumbnail: String
+        override val thumbnail: String?
             get() = TwitchApiHelper.getTemplateUrl(thumbnail_url, "video")
         override val channelId: String?
             get() = user_id
         override val channelName: String?
                 get() = user_name
-        override val channelLogo: String
+        override val channelLogo: String?
                 get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
-        override val game: String?
+        override val gameId: String?
+                get() = game_id
+        override val gameName: String?
                 get() = game_name
         override val uploadDate: String?
                 get() = createdAt

@@ -52,7 +52,7 @@ class DownloadsFragment : Fragment(), Injectable, Scrollable {
         super.onActivityCreated(savedInstanceState)
         val activity = requireActivity() as MainActivity
         val isLoggedIn = User.get(activity) !is NotLoggedIn
-        val adapter = DownloadsAdapter(this, activity, {
+        val adapter = DownloadsAdapter(this, activity, activity, {
             val delete = getString(R.string.delete)
             AlertDialog.Builder(activity)
                     .setTitle(delete)

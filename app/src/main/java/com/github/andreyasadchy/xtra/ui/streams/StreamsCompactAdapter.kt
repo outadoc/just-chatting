@@ -5,22 +5,32 @@ import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
+import com.github.andreyasadchy.xtra.ui.common.OnGameSelectedListener
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.*
 
 class StreamsCompactAdapter(
         fragment: Fragment,
         clickListener: BaseStreamsFragment.OnStreamSelectedListener,
-        channelClickListener: OnChannelSelectedListener) : BaseStreamsAdapter(fragment, clickListener, channelClickListener) {
+        channelClickListener: OnChannelSelectedListener,
+        gameClickListener: OnGameSelectedListener) : BaseStreamsAdapter(fragment, clickListener, channelClickListener, gameClickListener) {
 
     override val layoutId: Int = R.layout.fragment_streams_list_item_compact
 
     override fun bind(item: Stream, view: View) {
         super.bind(item, view)
         with(view) {
-            if (item.viewer_count != null) viewers.text = TwitchApiHelper.formatCount(item.viewer_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            if (item.viewer_count != null)  {
+                viewers.visible()
+                viewers.text = TwitchApiHelper.formatCount(item.viewer_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+            }
+            if (item.type != null)  {
+                type.visible()
+                type.text = TwitchApiHelper.getType(context, item.type)
+            }
         }
     }
 }

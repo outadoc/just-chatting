@@ -238,6 +238,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         isPortrait = newConfig.orientation == Configuration.ORIENTATION_PORTRAIT
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !requireActivity().isInPictureInPictureMode) {
             chatLayout.hideKeyboard()
+            chatLayout.clearFocus()
             initLayout()
         }
     }

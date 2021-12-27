@@ -75,6 +75,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
 
     fun hideKeyboard() {
         chatView.hideKeyboard()
+        chatView.clearFocus()
     }
 
     fun hideEmotesMenu() = chatView.hideEmotesMenu()

@@ -3,6 +3,8 @@
     <attr name="primaryColor" format="color"/>
     <attr name="textColor" format="color"/>
     <attr name="secondaryTextColor" format="color"/>
+    <attr name="chatStatus" format="color"/>
+    <attr name="chatRedeem" format="color"/>
     <attr name="dividerColor" format="color"/>
     <attr name="navBarStyle" format="reference"/>
     <bool name="isTablet">false</bool>

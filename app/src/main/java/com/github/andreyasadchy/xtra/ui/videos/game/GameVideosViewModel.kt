@@ -29,9 +29,9 @@ class GameVideosViewModel @Inject constructor(
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Video>> = Transformations.map(filter) {
         if (it.usehelix)
-            repository.loadVideos(it.clientId, it.token, it.game, it.period, it.broadcastType, it.language, it.sort, viewModelScope)
+            repository.loadVideos(it.clientId, it.token, it.gameId, it.period, it.broadcastType, it.language, it.sort, viewModelScope)
         else
-            repository.loadGameVideosGQL(it.clientId, it.game,
+            repository.loadGameVideosGQL(it.clientId, it.gameId, it.gameName,
                 when (it.broadcastType) {
                     BroadcastType.ARCHIVE -> com.github.andreyasadchy.xtra.type.BroadcastType.ARCHIVE
                     BroadcastType.HIGHLIGHT -> com.github.andreyasadchy.xtra.type.BroadcastType.HIGHLIGHT
@@ -50,9 +50,10 @@ class GameVideosViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.view_count), context.getString(R.string.this_week))
     }
 
-    fun setGame(usehelix: Boolean, clientId: String?, game: String, token: String? = "") {
-        if (filter.value?.game != game) {
-            filter.value = Filter(usehelix, clientId, token, game)
+    fun setGame(usehelix: Boolean, clientId: String?, gameId: String? = null, gameName: String? = null, token: String? = "") {
+        if (filter.value?.gameId != gameId) {
+            filter.value = Filter(usehelix = usehelix, clientId = clientId, token = token, gameId = gameId, gameName = gameName
+            )
         }
     }
 
@@ -65,7 +66,8 @@ class GameVideosViewModel @Inject constructor(
             val usehelix: Boolean,
             val clientId: String?,
             val token: String?,
-            val game: String,
+            val gameId: String?,
+            val gameName: String?,
             val sort: Sort = Sort.VIEWS,
             val period: Period = Period.WEEK,
             val broadcastType: BroadcastType = BroadcastType.ALL,

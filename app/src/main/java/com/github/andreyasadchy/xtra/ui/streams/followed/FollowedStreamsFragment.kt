@@ -20,7 +20,7 @@ class FollowedStreamsFragment : BaseStreamsFragment<FollowedStreamsViewModel>() 
             super.adapter
         } else {
             val activity = requireActivity() as MainActivity
-            StreamsCompactAdapter(this, activity, activity)
+            StreamsCompactAdapter(this, activity, activity, activity)
         }
     }
 

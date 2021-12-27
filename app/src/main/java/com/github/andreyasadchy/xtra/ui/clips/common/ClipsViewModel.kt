@@ -34,17 +34,17 @@ class ClipsViewModel @Inject constructor(
                 Period.ALL -> null
                 else -> TwitchApiHelper.getClipTime()
             }
-            repository.loadClips(it.clientId, it.token, it.channelName, it.game, started, ended, viewModelScope)
+            repository.loadClips(it.clientId, it.token, it.channelName, it.gameId, started, ended, viewModelScope)
         } else {
             val period = when (it.period) {
                 Period.DAY -> ClipsPeriod.LAST_DAY
                 Period.WEEK -> ClipsPeriod.LAST_WEEK
                 Period.MONTH -> ClipsPeriod.LAST_MONTH
                 else -> ClipsPeriod.ALL_TIME }
-            if (it.game == null)
+            if (it.gameId == null)
                 repository.loadChannelClipsGQL(it.clientId, it.channelName, period, viewModelScope)
             else
-                repository.loadGameClipsGQL(it.clientId, it.game, period, viewModelScope)
+                repository.loadGameClipsGQL(it.clientId, it.gameId, it.gameName, period, viewModelScope)
         }
     }
     var selectedIndex = 2
@@ -54,11 +54,11 @@ class ClipsViewModel @Inject constructor(
         _sortText.value = context.getString(sortOptions[selectedIndex])
     }
 
-    fun loadClips(usehelix: Boolean, clientId: String?, channelName: String? = null, game: String? = null, token: String? = "") {
+    fun loadClips(usehelix: Boolean, clientId: String?, channelName: String? = null, gameId: String? = null, gameName: String? = null, token: String? = "") {
         if (filter.value == null) {
-            filter.value = Filter(usehelix = usehelix, clientId = clientId, token = token, channelName = channelName, game = game)
+            filter.value = Filter(usehelix = usehelix, clientId = clientId, token = token, channelName = channelName, gameId = gameId, gameName = gameName)
         } else {
-            filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, channelName = channelName, game = game).let {
+            filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, channelName = channelName, gameId = gameId, gameName = gameName).let {
                 if (filter.value != it)
                     filter.value = it
             }
@@ -76,6 +76,7 @@ class ClipsViewModel @Inject constructor(
             val clientId: String?,
             val token: String?,
             val channelName: String?,
-            val game: String?,
+            val gameId: String?,
+            val gameName: String?,
             val period: Period? = Period.WEEK)
 }

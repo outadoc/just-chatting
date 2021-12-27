@@ -9,12 +9,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
+import com.github.andreyasadchy.xtra.ui.common.OnGameSelectedListener
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_videos_list_item.view.*
 
 class VideosAdapter(
         private val fragment: Fragment,
         private val clickListener: BaseVideosFragment.OnVideoSelectedListener,
+        private val gameClickListener: OnGameSelectedListener,
         private val channelClickListener: OnChannelSelectedListener,
         private val showDownloadDialog: (Video) -> Unit) : BaseVideosAdapter(
         object : DiffUtil.ItemCallback<Video>() {
@@ -32,13 +34,14 @@ class VideosAdapter(
 
     override fun bind(item: Video, view: View) {
         val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.user_id, item.user_login, item.user_name, item.channelLogo) }
+        val gameListener: (View) -> Unit = { gameClickListener.openGame(item.gameId, item.gameName) }
         with(view) {
             val getDuration = item.duration?.let { TwitchApiHelper.getDuration(it) }
             val position = positions?.get(item.id.toLong())
             setOnClickListener { clickListener.startVideo(item, position?.toDouble()) }
             setOnLongClickListener { showDownloadDialog(item); true }
             thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.NONE)
-            date.text = item.createdAt?.let { TwitchApiHelper.formatTime(context, it) }
+            date.text = item.createdAt?.let { TwitchApiHelper.formatTimeString(context, it) }
             views.text = item.view_count?.let { TwitchApiHelper.formatViewsCount(context, it, context.prefs().getBoolean(C.UI_VIEWCOUNT, false)) }
             duration.text = getDuration?.let { DateUtils.formatElapsedTime(it) }
             type.text = TwitchApiHelper.getType(context, item.videoType)
@@ -50,16 +53,25 @@ class VideosAdapter(
                     progressBar.gone()
                 }
             }
-            userImage.apply {
-                setOnClickListener(channelListener)
-                loadImage(fragment, item.channelLogo, circle = true)
+            if (item.channelLogo != null)  {
+                userImage.visible()
+                userImage.loadImage(fragment, item.channelLogo, circle = true)
+                userImage.setOnClickListener(channelListener)
             }
-            username.apply {
-                setOnClickListener(channelListener)
-                text = item.user_name
+            if (item.user_name != null)  {
+                username.visible()
+                username.text = item.user_name
+                username.setOnClickListener(channelListener)
             }
-            title.text = item.title
-            gameName.text = item.game
+            if (item.title != null)  {
+                title.visible()
+                title.text = item.title
+            }
+            if (item.gameName != null)  {
+                gameName.visible()
+                gameName.text = item.gameName
+                gameName.setOnClickListener(gameListener)
+            }
             options.setOnClickListener {
                 PopupMenu(context, it).apply {
                     inflate(R.menu.media_item)

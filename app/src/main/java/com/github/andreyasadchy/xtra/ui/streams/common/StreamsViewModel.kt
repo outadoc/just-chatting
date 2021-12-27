@@ -16,17 +16,17 @@ class StreamsViewModel @Inject constructor(
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Stream>> = Transformations.map(filter) {
         if (it.usehelix)
-            repository.loadStreams(it.clientId, it.token, it.game, it.languages, viewModelScope)
+            repository.loadStreams(it.clientId, it.token, it.gameId, it.languages, viewModelScope)
         else {
-            if (it.game == null)
+            if (it.gameId == null)
                 repository.loadTopStreamsGQL(it.clientId, viewModelScope)
             else
-                repository.loadGameStreamsGQL(it.clientId, it.game, viewModelScope)
+                repository.loadGameStreamsGQL(it.clientId, it.gameId, it.gameName, viewModelScope)
         }
     }
 
-    fun loadStreams(usehelix: Boolean, clientId: String?, token: String? = "", channelId: String? = null,  game: String? = null, languages: String? = null) {
-        Filter(usehelix, clientId, token, channelId, game, languages).let {
+    fun loadStreams(usehelix: Boolean, clientId: String?, token: String? = "", channelId: String? = null, gameId: String? = null, gameName: String? = null, languages: String? = null) {
+        Filter(usehelix, clientId, token, channelId, gameId, gameName, languages).let {
             if (filter.value != it) {
                 filter.value = it
             }
@@ -38,6 +38,7 @@ class StreamsViewModel @Inject constructor(
             val clientId: String?,
             val token: String?,
             val channelId: String?,
-            val game: String?,
+            val gameId: String?,
+            val gameName: String?,
             val languages: String?)
 }

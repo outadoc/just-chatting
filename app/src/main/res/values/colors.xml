@@ -4,11 +4,13 @@
     <color name="primaryDark">#272727</color>
     <color name="secondaryDark">#FF424242</color>
     <color name="secondaryTextColorDark">#FF878787</color>
+    <color name="chatStatusDark">#99000000</color>
     <color name="primaryAmoled">#ff000000</color>
+    <color name="secondaryAmoled">#353535</color>
     <color name="primaryLight">#FFFFFF</color>
     <color name="secondaryLight">#CFCFCF</color>
     <color name="secondaryTextColorLight">#464646</color>
-    <color name="secondaryAmoled">#353535</color>
+    <color name="chatStatusLight">#99FFFFFF</color>
     <color name="primaryBlue">#001446</color>
     <color name="secondaryBlue">#000F32</color>
     <color name="secondaryTextColorBlue">#46649B</color>

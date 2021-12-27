@@ -25,9 +25,9 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>() {
             showDownloadDialog()
         }
         if (arguments?.getString(C.CHANNEL_ID) != null) {
-            ChannelClipsAdapter(this, activity, showDialog)
+            ChannelClipsAdapter(this, activity, activity, showDialog)
         } else {
-            ClipsAdapter(this, activity, activity, showDialog)
+            ClipsAdapter(this, activity, activity, activity, showDialog)
         }
     }
 
@@ -37,9 +37,9 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>() {
             sortText.text = it
         })
         if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.loadClips(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), arguments?.getString(C.CHANNEL_ID), arguments?.getString(C.GAME_ID), requireContext().prefs().getString(C.TOKEN, ""))
+            viewModel.loadClips(usehelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), channelName = arguments?.getString(C.CHANNEL_ID), gameId = arguments?.getString(C.GAME_ID), token = requireContext().prefs().getString(C.TOKEN, ""))
         } else {
-            viewModel.loadClips(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), arguments?.getString(C.CHANNEL_LOGIN), arguments?.getString(C.GAME_NAME))
+            viewModel.loadClips(usehelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelName = arguments?.getString(C.CHANNEL_LOGIN), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME))
         }
         sortBar.setOnClickListener { FragmentUtils.showRadioButtonDialogFragment(requireContext(), childFragmentManager, viewModel.sortOptions, viewModel.selectedIndex) }
     }

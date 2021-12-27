@@ -16,7 +16,8 @@ query UserVideos($login: String, $sort: VideoSort, $type: BroadcastType, $first:
                     viewCount
                     lengthSeconds
                     game {
-                        name
+                        id
+                        displayName
                     }
                 }
             }

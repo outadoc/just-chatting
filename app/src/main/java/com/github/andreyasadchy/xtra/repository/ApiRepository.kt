@@ -222,8 +222,8 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadGameStreamsGQL(clientId: String?, game: String?, coroutineScope: CoroutineScope): Listing<Stream> {
-        val factory = GameStreamsDataSourceGQLquery.Factory(clientId, game, gql, coroutineScope)
+    override fun loadGameStreamsGQL(clientId: String?, gameId: String?, gameName: String?, coroutineScope: CoroutineScope): Listing<Stream> {
+        val factory = GameStreamsDataSourceGQLquery.Factory(clientId, gameId, gameName, gql, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)
@@ -233,8 +233,8 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadGameVideosGQL(clientId: String?, game: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video> {
-        val factory = GameVideosDataSourceGQLquery.Factory(clientId, game, type, sort, coroutineScope)
+    override fun loadGameVideosGQL(clientId: String?, gameId: String?, gameName: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video> {
+        val factory = GameVideosDataSourceGQLquery.Factory(clientId, gameId, gameName, type, sort, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)
@@ -244,8 +244,8 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadGameClipsGQL(clientId: String?, game: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip> {
-        val factory = GameClipsDataSourceGQLquery.Factory(clientId, game, sort, gql, coroutineScope)
+    override fun loadGameClipsGQL(clientId: String?, gameId: String?, gameName: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip> {
+        val factory = GameClipsDataSourceGQLquery.Factory(clientId, gameId, gameName, sort, gql, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)

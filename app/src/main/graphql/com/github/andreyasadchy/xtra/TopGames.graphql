@@ -3,8 +3,9 @@ query TopGames($first: Int, $after: Cursor) {
         edges {
             cursor
             node {
+                id
                 displayName
-                avatarURL
+                boxArtURL
                 viewersCount
                 broadcastersCount
             }

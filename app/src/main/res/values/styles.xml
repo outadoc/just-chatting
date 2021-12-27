@@ -17,6 +17,8 @@
         <item name="alertDialogTheme">@style/DialogDark</item> <!--settings, sleep timer, log out-->
         <item name="android:alertDialogTheme">@style/DialogDark</item> <!--delete video, permissions?-->
         <item name="radioButtonStyle">@style/RadioButton</item>
+        <item name="chatStatus">@color/chatStatusDark</item>
+        <item name="chatRedeem">@color/accent</item>
     </style>
 
     <style name="BaseLightTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -36,6 +38,8 @@
         <item name="alertDialogTheme">@style/DialogLight</item>
         <item name="android:alertDialogTheme">@style/DialogLight</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
+        <item name="chatStatus">@color/chatStatusLight</item>
+        <item name="chatRedeem">@color/accent</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
@@ -57,6 +61,8 @@
         <item name="alertDialogTheme">@style/DialogAmoled</item>
         <item name="android:alertDialogTheme">@style/DialogAmoled</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
+        <item name="chatStatus">@color/chatStatusDark</item>
+        <item name="chatRedeem">@color/accent</item>
     </style>
 
     <style name="BaseBlueTheme" parent="Theme.AppCompat.NoActionBar">
@@ -76,6 +82,8 @@
         <item name="alertDialogTheme">@style/DialogBlue</item>
         <item name="android:alertDialogTheme">@style/DialogBlue</item>
         <item name="radioButtonStyle">@style/RadioButton</item>
+        <item name="chatStatus">@color/chatStatusDark</item>
+        <item name="chatRedeem">@color/accent</item>
     </style>
 
     <style name="DarkTheme" parent="BaseDarkTheme" />
@@ -179,12 +187,16 @@
     <style name="ThumbnailItem">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">2</item>
+        <item name="android:shadowDy">3</item>
+        <item name="android:shadowRadius">1</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textSize">13sp</item>
     </style>
 
     <style name="VideoTitle">
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="UserPicture">

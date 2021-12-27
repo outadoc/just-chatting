@@ -15,7 +15,8 @@ query UserClips($login: String, $sort: ClipsPeriod, $first: Int, $after: Cursor)
                     viewCount
                     durationSeconds
                     game {
-                        name
+                        id
+                        displayName
                     }
                     video {
                         id

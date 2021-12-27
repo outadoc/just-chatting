@@ -15,6 +15,6 @@ data class Follow(
         val followed_at: String,
         var profileImageURL: String? = null) : Parcelable {
 
-        val channelLogo: String
+        val channelLogo: String?
                 get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
 }

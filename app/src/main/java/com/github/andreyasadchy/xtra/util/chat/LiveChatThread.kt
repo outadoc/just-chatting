@@ -60,7 +60,8 @@ class LiveChatThread(
             } catch (e: IOException) {
                 Log.d(TAG, "Disconnecting from $hashChannelName")
                 listener.onCommand("Disconnecting from $channelName - $e")
-                disconnect()
+                close()
+                sleep(1000L)
             } catch (e: Exception) {
                 close()
                 sleep(1000L)

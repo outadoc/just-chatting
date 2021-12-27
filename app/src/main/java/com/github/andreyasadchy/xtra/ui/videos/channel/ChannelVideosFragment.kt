@@ -19,7 +19,7 @@ class ChannelVideosFragment : BaseVideosFragment<ChannelVideosViewModel>(), Game
 
     override val viewModel by viewModels<ChannelVideosViewModel> { viewModelFactory }
     override val adapter: BaseVideosAdapter by lazy {
-        ChannelVideosAdapter(this, requireActivity() as MainActivity) {
+        ChannelVideosAdapter(this, requireActivity() as MainActivity, requireActivity() as MainActivity) {
             lastSelectedItem = it
             showDownloadDialog()
         }

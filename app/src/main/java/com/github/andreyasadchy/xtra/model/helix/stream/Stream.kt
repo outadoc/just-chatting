@@ -20,8 +20,8 @@ data class Stream(
         val thumbnail_url: String? = null,
         var profileImageURL: String? = null) : Parcelable {
 
-        val thumbnail: String
+        val thumbnail: String?
                 get() = TwitchApiHelper.getTemplateUrl(thumbnail_url, "video")
-        val channelLogo: String
+        val channelLogo: String?
                 get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
 }

@@ -201,11 +201,15 @@ class ChatAdapter(
             if (chatMessage.isAction) {
                 builder.setSpan(ForegroundColorSpan(color), userNameEndIndex + 1, builder.length, SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-            if (wasMentioned && userId != null) {
-                builder.setSpan(ForegroundColorSpan(Color.WHITE), 0, builder.length, SPAN_INCLUSIVE_INCLUSIVE)
-                holder.textView.setBackgroundColor(Color.RED)
+            if (chatMessage.isReward) {
+                holder.textView.setBackgroundColor(R.attr.colorAccent)
             } else {
-                holder.textView.background = null
+                if (wasMentioned && userId != null) {
+                    builder.setSpan(ForegroundColorSpan(Color.WHITE), 0, builder.length, SPAN_INCLUSIVE_INCLUSIVE)
+                    holder.textView.setBackgroundColor(Color.RED)
+                } else {
+                    holder.textView.background = null
+                }
             }
         } catch (e: Exception) {
 //            Crashlytics.logException(e)

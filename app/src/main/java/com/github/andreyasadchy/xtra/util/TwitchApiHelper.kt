@@ -16,12 +16,12 @@ object TwitchApiHelper {
 
     var checkedValidation = false
 
-    fun getTemplateUrl(url: String?, type: String): String {
+    fun getTemplateUrl(url: String?, type: String): String? {
         if ((url == null)||(url == "")||(url.startsWith("https://vod-secure.twitch.tv/_404/404_processing")))
             return when (type) {
                 "game" -> "https://static-cdn.jtvnw.net/ttv-static/404_boxart.jpg"
-                "profileimage" -> ""
-                else -> "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"
+                "video" -> "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"
+                else -> null
             }
         val width = when (type) {
             "game" -> "285"
@@ -96,7 +96,7 @@ object TwitchApiHelper {
         }
     }
 
-    fun formatTime(context: Context, iso8601date: String): String? {
+    fun formatTimeString(context: Context, iso8601date: String): String? {
         return parseIso8601Date(iso8601date)?.let { formatTime(context, it) }
     }
 
@@ -128,6 +128,8 @@ object TwitchApiHelper {
         return offset
     }
 
+    fun addTokenPrefix(token: String) = "Bearer $token"
+
     fun formatViewsCount(context: Context, count: Int, truncate: Boolean): String {
         return if (count > 1000 && truncate) {
             context.getString(R.string.views, formatCountIfMoreThanAThousand(count))
@@ -151,8 +153,6 @@ object TwitchApiHelper {
             count.toString()
         }
     }
-
-    fun addTokenPrefix(token: String) = "Bearer $token"
 
     private fun formatCountIfMoreThanAThousand(count: Int): String {
         val divider: Int

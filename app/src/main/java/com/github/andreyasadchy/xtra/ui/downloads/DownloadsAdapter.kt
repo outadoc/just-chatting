@@ -57,7 +57,7 @@ class DownloadsAdapter(
             }
             if (item.name != null)  {
                 title.visible()
-                title.text = item.name
+                title.text = item.name.trim()
             }
             if (item.gameName != null)  {
                 gameName.visible()

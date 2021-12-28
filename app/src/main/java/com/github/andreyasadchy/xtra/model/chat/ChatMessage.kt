@@ -5,7 +5,7 @@ interface ChatMessage {
     val userId: String?
     val userName: String?
     val displayName: String?
-    val message: String
+    val message: String?
     val color: String?
     val isAction: Boolean
     val isReward: Boolean

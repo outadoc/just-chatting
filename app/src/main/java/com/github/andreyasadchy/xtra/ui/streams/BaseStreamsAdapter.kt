@@ -43,7 +43,7 @@ abstract class BaseStreamsAdapter(
             }
             if (item.title != null)  {
                 title.visible()
-                title.text = item.title
+                title.text = item.title.trim()
             }
             if (item.game_name != null)  {
                 gameName.visible()

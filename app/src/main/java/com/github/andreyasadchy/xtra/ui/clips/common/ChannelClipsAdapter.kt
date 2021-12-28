@@ -42,7 +42,7 @@ class ChannelClipsAdapter(
             duration.text = item.duration?.let { DateUtils.formatElapsedTime(it.toLong()) }
             if (item.title != null)  {
                 title.visible()
-                title.text = item.title
+                title.text = item.title.trim()
             }
             if (item.gameName != null)  {
                 gameName.visible()

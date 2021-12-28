@@ -41,6 +41,8 @@ class LiveChatThread(
                         when {
                             contains("PRIVMSG") -> listener.onMessage(this)
                             contains("USERNOTICE") -> listener.onUserNotice(this)
+                            contains("CLEARMSG") -> listener.onClearMessage(this)
+                            contains("CLEARCHAT") -> listener.onClearChat(this)
                             contains("NOTICE") -> listener.onNotice(this)
                             contains("ROOMSTATE") -> listener.onRoomState(this)
                             startsWith("PING") -> handlePing(writerIn)
@@ -144,6 +146,8 @@ class LiveChatThread(
     interface OnMessageReceivedListener {
         fun onMessage(message: String)
         fun onCommand(message: String, type: String? = null)
+        fun onClearMessage(message: String)
+        fun onClearChat(message: String)
         fun onNotice(message: String)
         fun onUserNotice(message: String)
         fun onRoomState(message: String)

@@ -145,20 +145,20 @@ class XtraModule {
     fun apolloClient(clientId: String?): ApolloClient {
         val builder = ApolloClient.Builder()
             .serverUrl("https://gql.twitch.tv/gql/")
-            .okHttpClient(OkHttpClient.Builder()
-                .addInterceptor(AuthorizationInterceptor(clientId))
-                .build()
-            )
-
+            .okHttpClient(OkHttpClient.Builder().apply {
+                addInterceptor(AuthorizationInterceptor(clientId))
+                if (BuildConfig.DEBUG) {
+                    addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+                }
+            }.build())
         return builder.build()
     }
 
     private class AuthorizationInterceptor(val clientId: String?): Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
-            val request = chain.request().newBuilder()
-                .addHeader("Client-ID", clientId ?: "")
-                .build()
-
+            val request = chain.request().newBuilder().apply {
+                clientId?.let { addHeader("Client-ID", it) }
+            }.build()
             return chain.proceed(request)
         }
     }

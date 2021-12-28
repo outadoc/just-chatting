@@ -7,6 +7,7 @@ interface OnCommandReceivedListener {
 }
 
 data class Command(
-    val message: String,
+    val message: String? = null,
+    val duration: String? = null,
     val type: String? = null,
     val emotes: List<TwitchEmote>? = null)

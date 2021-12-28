@@ -195,10 +195,14 @@
     <string name="video_type_rerun">Rerun</string>
     <string name="room_emote">Emote</string>
     <string name="room_followers">Followers</string>
-    <string name="room_followers_min">Followers %s\\m</string>
+    <string name="room_followers_min">Followers %s\m</string>
     <string name="room_unique">Unique</string>
-    <string name="room_slow">Slow %s\\s</string>
+    <string name="room_slow">Slow %s\s</string>
     <string name="room_subs">Subs</string>
     <string name="chat_join">Connected to %s</string>
     <string name="copy_clip">Copy to clipboard</string>
+    <string name="chat_clear">Chat has been cleared by a moderator</string>
+    <string name="chat_timeout">%1$s has been timed out for %2$s\s</string>
+    <string name="chat_ban">%s has been permanently banned</string>
+    <string name="chat_clearmsg">Message deleted from %1$s\: %2$s</string>
 </resources>

@@ -135,7 +135,7 @@ class ChatAdapter(
         try {
             chatMessage.emotes?.let { emotes ->
                 val copy = emotes.map {
-                    val realBegin = chatMessage.message.offsetByCodePoints(0, it.begin)
+                    val realBegin = chatMessage.message?.offsetByCodePoints(0, it.begin) ?: 0
                     val realEnd = if (it.begin == realBegin) {
                         it.end
                     } else {

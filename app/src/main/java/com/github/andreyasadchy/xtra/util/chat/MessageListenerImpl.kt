@@ -95,6 +95,37 @@ class MessageListenerImpl(
         ))
     }
 
+    override fun onClearMessage(message: String) {
+        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val prefix = parts[0]
+        val prefixes = splitAndMakeMap(prefix, ";", "=")
+        val user = prefixes["login"]
+        val messageInfo = parts[1]
+        val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
+        val msg = if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else null
+        callbackCommand.onCommand(Command(
+            message = user,
+            duration = msg,
+            type = "clearmsg"
+        ))
+    }
+
+    override fun onClearChat(message: String) {
+        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val prefix = parts[0]
+        val prefixes = splitAndMakeMap(prefix, ";", "=")
+        val duration = prefixes["ban-duration"]
+        val messageInfo = parts[1]
+        val userIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
+        val user = if (userIndex != -1) messageInfo.substring(userIndex + 1) else null
+        val type = if (user == null) { "clearchat" } else { if (duration != null) { "timeout" } else { "ban" } }
+        callbackCommand.onCommand(Command(
+            message = user,
+            duration = duration,
+            type = type
+        ))
+    }
+
     override fun onNotice(message: String) {
         callbackCommand.onCommand(Command(
             message = message.substring(message.indexOf(":", message.indexOf(":") + 1) + 1)

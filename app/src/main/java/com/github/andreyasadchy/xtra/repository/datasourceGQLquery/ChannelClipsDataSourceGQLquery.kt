@@ -6,7 +6,6 @@ import com.github.andreyasadchy.xtra.UserClipsQuery
 import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
-import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.datasource.BaseDataSourceFactory
 import com.github.andreyasadchy.xtra.repository.datasource.BasePositionalDataSource
 import com.github.andreyasadchy.xtra.type.ClipsPeriod
@@ -14,16 +13,15 @@ import kotlinx.coroutines.CoroutineScope
 
 class ChannelClipsDataSourceGQLquery(
     private val clientId: String?,
-    private val game: String?,
+    private val channelId: String?,
     private val sort: ClipsPeriod?,
-    private val api: GraphQLRepository,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Clip>(coroutineScope) {
     private var offset: String? = null
     private var nextPage: Boolean = true
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Clip>) {
         loadInitial(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(UserClipsQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.user
+            val get1 = apolloClient(XtraModule(), clientId).query(UserClipsQuery(Optional.Present(channelId), Optional.Present(sort), Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.user
             val get = get1?.clips?.edges
             val list = mutableListOf<Clip>()
             if (get != null) {
@@ -31,7 +29,7 @@ class ChannelClipsDataSourceGQLquery(
                     list.add(
                         Clip(
                             id = i?.node?.slug ?: "",
-                            broadcaster_id = get1.id,
+                            broadcaster_id = channelId,
                             broadcaster_login = get1.login,
                             broadcaster_name = get1.displayName,
                             video_id = i?.node?.video?.id,
@@ -56,7 +54,7 @@ class ChannelClipsDataSourceGQLquery(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Clip>) {
         loadRange(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(UserClipsQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.user
+            val get1 = apolloClient(XtraModule(), clientId).query(UserClipsQuery(Optional.Present(channelId), Optional.Present(sort), Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.user
             val get = get1?.clips?.edges
             val list = mutableListOf<Clip>()
             if (get != null && nextPage && offset != null && offset != "") {
@@ -64,7 +62,7 @@ class ChannelClipsDataSourceGQLquery(
                     list.add(
                         Clip(
                             id = i?.node?.slug ?: "",
-                            broadcaster_id = get1.id,
+                            broadcaster_id = channelId,
                             broadcaster_login = get1.login,
                             broadcaster_name = get1.displayName,
                             video_id = i?.node?.video?.id,
@@ -89,12 +87,11 @@ class ChannelClipsDataSourceGQLquery(
 
     class Factory(
         private val clientId: String?,
-        private val game: String?,
+        private val channelId: String?,
         private val sort: ClipsPeriod?,
-        private val api: GraphQLRepository,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Clip, ChannelClipsDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Clip> =
-                ChannelClipsDataSourceGQLquery(clientId, game, sort, api, coroutineScope).also(sourceLiveData::postValue)
+                ChannelClipsDataSourceGQLquery(clientId, channelId, sort, coroutineScope).also(sourceLiveData::postValue)
     }
 }

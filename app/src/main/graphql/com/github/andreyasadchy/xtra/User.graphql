@@ -1,6 +1,5 @@
-query User($id: ID, $login: String) {
-    user(id: $id, login: $login) {
-        id
+query User($id: ID) {
+    user(id: $id) {
         login
         displayName
         profileImageURL(width: 300)

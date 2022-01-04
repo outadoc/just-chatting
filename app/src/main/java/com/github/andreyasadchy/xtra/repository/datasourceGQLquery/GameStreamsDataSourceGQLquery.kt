@@ -6,7 +6,6 @@ import com.github.andreyasadchy.xtra.GameStreamsQuery
 import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.datasource.BaseDataSourceFactory
 import com.github.andreyasadchy.xtra.repository.datasource.BasePositionalDataSource
 import kotlinx.coroutines.CoroutineScope
@@ -15,7 +14,6 @@ class GameStreamsDataSourceGQLquery private constructor(
     private val clientId: String?,
     private val gameId: String?,
     private val gameName: String?,
-    private val api: GraphQLRepository,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Stream>(coroutineScope) {
     private var offset: String? = null
     private var nextPage: Boolean = true
@@ -80,10 +78,9 @@ class GameStreamsDataSourceGQLquery private constructor(
         private val clientId: String?,
         private val gameId: String?,
         private val gameName: String?,
-        private val api: GraphQLRepository,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Stream, GameStreamsDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Stream> =
-                GameStreamsDataSourceGQLquery(clientId, gameId, gameName, api, coroutineScope).also(sourceLiveData::postValue)
+                GameStreamsDataSourceGQLquery(clientId, gameId, gameName, coroutineScope).also(sourceLiveData::postValue)
     }
 }

@@ -14,7 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class ChannelVideosDataSourceGQLquery private constructor(
     private val clientId: String?,
-    private val game: String?,
+    private val channelId: String?,
     private val type: BroadcastType?,
     private val sort: VideoSort?,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Video>(coroutineScope) {
@@ -23,7 +23,7 @@ class ChannelVideosDataSourceGQLquery private constructor(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
         loadInitial(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(UserVideosQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(type),Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.user
+            val get1 = apolloClient(XtraModule(), clientId).query(UserVideosQuery(Optional.Present(channelId), Optional.Present(sort), Optional.Present(type),Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.user
             val get = get1?.videos?.edges
             val list = mutableListOf<Video>()
             if (get != null) {
@@ -31,7 +31,7 @@ class ChannelVideosDataSourceGQLquery private constructor(
                     list.add(
                         Video(
                             id = i?.node?.id ?: "",
-                            user_id = get1.id,
+                            user_id = channelId,
                             user_login = get1.login,
                             user_name = get1.displayName,
                             game_id = i?.node?.game?.id,
@@ -55,7 +55,7 @@ class ChannelVideosDataSourceGQLquery private constructor(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         loadRange(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(UserVideosQuery(Optional.Present(game), Optional.Present(sort), Optional.Present(type),Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.user
+            val get1 = apolloClient(XtraModule(), clientId).query(UserVideosQuery(Optional.Present(channelId), Optional.Present(sort), Optional.Present(type),Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.user
             val get = get1?.videos?.edges
             val list = mutableListOf<Video>()
             if (get != null && nextPage && offset != null && offset != "") {
@@ -63,7 +63,7 @@ class ChannelVideosDataSourceGQLquery private constructor(
                     list.add(
                         Video(
                             id = i?.node?.id ?: "",
-                            user_id = get1.id,
+                            user_id = channelId,
                             user_login = get1.login,
                             user_name = get1.displayName,
                             game_id = i?.node?.game?.id,
@@ -87,12 +87,12 @@ class ChannelVideosDataSourceGQLquery private constructor(
 
     class Factory (
         private val clientId: String?,
-        private val game: String?,
+        private val channelId: String?,
         private val type: BroadcastType?,
         private val sort: VideoSort?,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Video, ChannelVideosDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Video> =
-                ChannelVideosDataSourceGQLquery(clientId, game, type, sort, coroutineScope).also(sourceLiveData::postValue)
+                ChannelVideosDataSourceGQLquery(clientId, channelId, type, sort, coroutineScope).also(sourceLiveData::postValue)
     }
 }

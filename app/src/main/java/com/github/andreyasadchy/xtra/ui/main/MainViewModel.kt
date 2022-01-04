@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.NotValidated
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.repository.AuthRepository
@@ -68,25 +67,12 @@ class MainViewModel @Inject constructor(
 
     fun validate(clientId: String?, activity: Activity) {
         val user = User.get(activity)
-        if (TwitchApiHelper.checkedValidation) {
-            if (user is LoggedIn) {
-                viewModelScope.launch {
-                    try {
-
-                    } catch (e: Exception) {
-
-                    }
-                }
-            }
-            return
-        }
         if (user is NotValidated) {
             viewModelScope.launch {
                 try {
                     val response = authRepository.validate(user.token)
-                    if (response?.clientId == clientId) { //stop using twitch client id for everything
+                    if (response?.clientId == clientId) {
                         User.validated()
-
                     } else {
                         throw IllegalStateException("401")
                     }

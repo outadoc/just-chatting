@@ -25,7 +25,7 @@ class StreamsCompactAdapter(
         with(view) {
             if (item.viewer_count != null)  {
                 viewers.visible()
-                viewers.text = TwitchApiHelper.formatCount(item.viewer_count, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+                viewers.text = TwitchApiHelper.formatCount(item.viewer_count, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
             }
             if (item.type != null)  {
                 type.visible()

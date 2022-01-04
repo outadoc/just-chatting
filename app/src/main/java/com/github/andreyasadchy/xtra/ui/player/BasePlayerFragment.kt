@@ -20,7 +20,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
-import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.ui.common.AlertDialogFragment
@@ -268,12 +267,8 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 playerView.showController()
             }
         })
-        if (this !is OfflinePlayerFragment) {
-            User.get(activity).let {
-                if (it is LoggedIn && prefs.getBoolean(C.UI_FOLLOW, true)) {
-                    initializeFollow(this, (viewModel as FollowViewModel), view.findViewById(R.id.follow), it)
-                }
-            }
+        if (this !is OfflinePlayerFragment && prefs.getBoolean(C.PLAYER_FOLLOW, true)) {
+            initializeFollow(this, (viewModel as FollowViewModel), view.findViewById(R.id.follow), User.get(activity), prefs.getString(C.HELIX_CLIENT_ID, ""))
         }
         if (this !is ClipPlayerFragment && prefs.getBoolean(C.PLAYER_SLEEP, true)) {
             viewModel.sleepTimer.observe(viewLifecycleOwner, Observer {

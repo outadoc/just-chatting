@@ -6,15 +6,12 @@ import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.VideoQuery
-import com.github.andreyasadchy.xtra.di.XtraModule
-import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
-import com.github.andreyasadchy.xtra.model.LoggedIn
+import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.GraphQLRepository
+import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
@@ -33,7 +30,8 @@ private const val TAG = "ClipPlayerViewModel"
 class ClipPlayerViewModel @Inject constructor(
     context: Application,
     private val graphQLRepository: GraphQLRepository,
-    private val repository: TwitchService) : PlayerViewModel(context), FollowViewModel {
+    private val repository: TwitchService,
+    private val localFollows: LocalFollowRepository) : PlayerViewModel(context), FollowViewModel {
 
     private lateinit var clip: Clip
     private val factory: ProgressiveMediaSource.Factory = ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -43,13 +41,19 @@ class ClipPlayerViewModel @Inject constructor(
         get() = helper.urls
     val loaded: LiveData<Boolean>
         get() = helper.loaded
-    override val channelId: String?
-        get() = clip.broadcaster_id
     private val _video = MutableLiveData<Video?>()
     val video: MutableLiveData<Video?>
         get() = _video
     private var loadingVideo = false
 
+    override val userId: String?
+        get() { return clip.broadcaster_id }
+    override val userLogin: String?
+        get() { return clip.broadcaster_login }
+    override val userName: String?
+        get() { return clip.broadcaster_name }
+    override val channelLogo: String?
+        get() { return clip.channelLogo }
     override lateinit var follow: FollowLiveData
 
     override fun changeQuality(index: Int) {
@@ -105,9 +109,9 @@ class ClipPlayerViewModel @Inject constructor(
         }
     }
 
-    override fun setUser(user: LoggedIn) {
+    override fun setUser(user: User, clientId: String?) {
         if (!this::follow.isInitialized) {
-            follow = FollowLiveData(repository, user, channelId, viewModelScope)
+            follow = FollowLiveData(localFollows, userId, userLogin, userName, channelLogo, repository, clientId, user, viewModelScope)
         }
     }
 
@@ -121,36 +125,16 @@ class ClipPlayerViewModel @Inject constructor(
         }
     }
 
-    fun loadVideo(clientId: String?, token: String?) {
+    fun loadVideo(useHelix: Boolean, clientId: String?, token: String? = null) {
         if (!loadingVideo) {
             loadingVideo = true
             viewModelScope.launch {
                 try {
-                    val video = clip.video_id?.let { repository.loadVideo(clientId, token, it).data.first() }
-                    _video.postValue(video)
-                } catch (e: Exception) {
-
-                } finally {
-                    loadingVideo = false
-                }
-            }
-        }
-    }
-
-    fun loadVideoGQL(clientId: String?) {
-        if (!loadingVideo) {
-            loadingVideo = true
-            viewModelScope.launch {
-                try {
-                    val get = apolloClient(XtraModule(), clientId).query(VideoQuery(Optional.Present(clip.video_id))).execute().data?.video
-                    val video = Video(
-                        id = get?.id ?: "",
-                        user_id = get?.owner?.id,
-                        user_login = get?.owner?.login,
-                        user_name = get?.owner?.displayName,
-                        profileImageURL = get?.owner?.profileImageURL,
-                    )
-                    _video.postValue(video)
+                    if (clip.video_id != null) {
+                        val video = if (useHelix) repository.loadVideo(clientId, token, clip.video_id!!).data.first()
+                        else repository.loadVideoGQL(clientId, clip.video_id!!)
+                        _video.postValue(video)
+                    }
                 } catch (e: Exception) {
 
                 } finally {

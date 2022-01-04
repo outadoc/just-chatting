@@ -9,12 +9,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.viewpager.widget.ViewPager
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
@@ -32,21 +29,23 @@ import kotlinx.android.synthetic.main.fragment_channel.search
 import kotlinx.android.synthetic.main.fragment_channel.toolbar
 import kotlinx.android.synthetic.main.fragment_media.*
 import kotlinx.android.synthetic.main.fragment_media_pager.*
+import kotlinx.android.synthetic.main.fragment_streams_list_item.view.*
 
 
 class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
 
     companion object {
-        fun newInstance(id: String?, login: String?, name: String?, profileImage: String?) = ChannelPagerFragment().apply {
+        fun newInstance(id: String?, login: String?, name: String?, channelLogo: String?, updateLocal: Boolean = false) = ChannelPagerFragment().apply {
             bundle.putString(C.CHANNEL_ID, id)
             bundle.putString(C.CHANNEL_LOGIN, login)
             bundle.putString(C.CHANNEL_DISPLAYNAME, name)
-            bundle.putString(C.CHANNEL_PROFILEIMAGE, profileImage)
+            bundle.putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
+            bundle.putBoolean(C.CHANNEL_UPDATELOCAL, updateLocal)
             arguments = bundle
         }
     }
 
-    var bundle = Bundle()
+    val bundle = Bundle()
     private val viewModel by viewModels<ChannelPagerViewModel> { viewModelFactory }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -62,7 +61,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
             appBar.setExpanded(false, false)
         }
         collapsingToolbar.title = requireArguments().getString(C.CHANNEL_DISPLAYNAME)
-        logo.loadImage(this, requireArguments().getString(C.CHANNEL_PROFILEIMAGE) ?: "", circle = true)
+        logo.loadImage(this, requireArguments().getString(C.CHANNEL_PROFILEIMAGE), circle = true)
         toolbar.apply {
             navigationIcon = Utils.getNavigationIcon(activity)
             setNavigationOnClickListener { activity.popFragment() }
@@ -115,40 +114,52 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
 
     override fun initialize() {
         val activity = requireActivity() as MainActivity
-        toolbarContainer.updateLayoutParams { height = ViewGroup.LayoutParams.WRAP_CONTENT }
         collapsingToolbar.expandedTitleMarginBottom = activity.convertDpToPixels(50.5f)
         if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.loadStream(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "", requireArguments().getString(C.CHANNEL_ID) ?: "")
-            viewModel.stream.observe(viewLifecycleOwner, Observer {
-                if (it.data.firstOrNull() != null) {
+            viewModel.loadStream(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), channelId = requireArguments().getString(C.CHANNEL_ID), channelLogin = requireArguments().getString(C.CHANNEL_LOGIN), channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))
+        } else {
+            viewModel.loadStream(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelId = requireArguments().getString(C.CHANNEL_ID), channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))
+        }
+        viewModel.stream.observe(viewLifecycleOwner, { stream ->
+            if (stream.type?.lowercase() == "rerun")  {
+                watchLive.text = getString(R.string.watch_rerun)
+                watchLive.setOnClickListener { activity.startStream(stream) }
+            } else {
+                if (stream.viewer_count != null) {
                     watchLive.text = getString(R.string.watch_live)
-                    it.data.firstOrNull().let { s ->
-                        watchLive.setOnClickListener { s?.let { it1 -> activity.startStream(it1) } }
-                    }
+                    watchLive.setOnClickListener { activity.startStream(stream) }
                 } else {
                     watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID), user_login = requireArguments().getString(C.CHANNEL_LOGIN), user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))) }
                 }
-            })
-        } else {
-            viewModel.loadStreamGQL(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), requireArguments().getString(C.CHANNEL_LOGIN) ?: "")
-            viewModel.streamGQL.observe(viewLifecycleOwner, Observer {
-                if (it != null)
-                    watchLive.text = getString(R.string.watch_live)
-                watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID), user_login = requireArguments().getString(C.CHANNEL_LOGIN), user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))) }
-            })
-        }
-        User.get(activity).let {
-            if (it is LoggedIn && context?.prefs()?.getBoolean(C.UI_FOLLOW, true) == true) {
-                initializeFollow(this, viewModel, follow, it)
             }
+            stream.channelLogo.let { if (it != null && it != requireArguments().getString(C.CHANNEL_PROFILEIMAGE)) {
+                logo.loadImage(this, it, circle = true)
+                bundle.putString(C.CHANNEL_PROFILEIMAGE, it)
+                arguments = bundle
+            } }
+            stream.user_name.let { if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
+                collapsingToolbar.title = it
+                bundle.putString(C.CHANNEL_DISPLAYNAME, it)
+                arguments = bundle
+            } }
+            stream.user_login.let { if (it != null && it != requireArguments().getString(C.CHANNEL_LOGIN)) {
+                bundle.putString(C.CHANNEL_LOGIN, it)
+                arguments = bundle
+            } }
+            if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {
+                viewModel.updateLocalUser(requireContext(), stream)
+            }
+        })
+        if (requireContext().prefs().getBoolean(C.UI_FOLLOW, true)) {
+            initializeFollow(this, viewModel, follow, User.get(activity), context?.prefs()?.getString(C.HELIX_CLIENT_ID, ""))
         }
     }
 
     override fun onNetworkRestored() {
         if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "")
-            viewModel.retry(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, "") ?: "")
+            viewModel.retry(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""))
         else
-            viewModel.retryGQL(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))
+            viewModel.retry(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

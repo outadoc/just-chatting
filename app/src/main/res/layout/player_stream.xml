@@ -14,7 +14,9 @@
     </RelativeLayout>
 
     <LinearLayout style="@style/PlayerTopRightPanel">
-        <ImageButton style="@style/PlayerFollow" />
+        <ImageButton
+            style="@style/PlayerFollow"
+            tools:visibility="visible" />
         <ImageButton style="@style/PlayerSleep" />
         <ImageButton style="@style/PlayerRatio" />
         <ImageButton style="@style/PlayerSettings" />

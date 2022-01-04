@@ -4,9 +4,10 @@ import android.util.Log
 import androidx.paging.PagedList
 import com.apollographql.apollo3.api.Optional
 import com.github.andreyasadchy.xtra.StreamQuery
+import com.github.andreyasadchy.xtra.UserQuery
+import com.github.andreyasadchy.xtra.VideoQuery
 import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.api.MiscApi
-import com.github.andreyasadchy.xtra.db.EmotesDao
 import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
@@ -39,7 +40,7 @@ class HelixRepository @Inject constructor(
     private val api: HelixApi,
     private val gql: GraphQLRepository,
     private val misc: MiscApi,
-    private val emotesDao: EmotesDao) : TwitchService {
+    private val localFollows: LocalFollowRepository) : TwitchService {
 
     override fun loadTopGames(clientId: String?, userToken: String?, coroutineScope: CoroutineScope): Listing<Game> {
         val factory = GamesDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, api, coroutineScope)
@@ -67,8 +68,8 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadFollowedStreams(clientId: String?, userToken: String?, user_id: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream> {
-        val factory = FollowedStreamsDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, user_id, api, coroutineScope)
+    override fun loadFollowedStreams(usehelix: Boolean, clientId: String?, userToken: String?, userId: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream> {
+        val factory = FollowedStreamsDataSource.Factory(usehelix, localFollows, this, clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, api, coroutineScope)
         val builder = PagedList.Config.Builder().setEnablePlaceholders(false)
         if (thumbnailsEnabled) {
             builder.setPageSize(1)
@@ -160,7 +161,7 @@ class HelixRepository @Inject constructor(
     }
 
     override fun loadFollowedChannels(clientId: String?, userToken: String?, userId: String, coroutineScope: CoroutineScope): Listing<Follow> {
-        val factory = FollowedChannelsDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, api, coroutineScope)
+        val factory = FollowedChannelsDataSource.Factory(localFollows, clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, api, coroutineScope)
         val config = PagedList.Config.Builder()
                 .setPageSize(1)
                 .setInitialLoadSizeHint(1)
@@ -185,12 +186,27 @@ class HelixRepository @Inject constructor(
     }
 
 
-    override suspend fun loadStreamGQL(clientId: String?, channelId: String): Int? = withContext(Dispatchers.IO) {
-        apolloClient(XtraModule(), clientId).query(StreamQuery(Optional.Present(channelId))).execute().data?.user?.stream?.viewersCount
+    override suspend fun loadStreamGQL(clientId: String?, channelId: String): Stream = withContext(Dispatchers.IO) {
+        val get = apolloClient(XtraModule(), clientId).query(StreamQuery(Optional.Present(channelId))).execute().data
+        Stream(id = get?.user?.stream?.id, user_id = channelId, user_login = get?.user?.login, user_name = get?.user?.displayName,
+            game_id = get?.user?.stream?.game?.id, game_name = get?.user?.stream?.game?.displayName, type = get?.user?.stream?.type,
+            title = get?.user?.stream?.title, viewer_count = get?.user?.stream?.viewersCount, thumbnail_url = get?.user?.stream?.previewImageURL,
+            profileImageURL = get?.user?.profileImageURL)
+    }
+
+    override suspend fun loadVideoGQL(clientId: String?, videoId: String): Video = withContext(Dispatchers.IO) {
+        val get = apolloClient(XtraModule(), clientId).query(VideoQuery(Optional.Present(videoId))).execute().data
+        Video(id = get?.video?.id ?: "", user_id = get?.video?.owner?.id, user_login = get?.video?.owner?.login, user_name = get?.video?.owner?.displayName,
+            profileImageURL = get?.video?.owner?.profileImageURL)
+    }
+
+    override suspend fun loadUserByIdGQL(clientId: String?, channelId: String): User = withContext(Dispatchers.IO) {
+        val get = apolloClient(XtraModule(), clientId).query(UserQuery(Optional.Present(channelId))).execute().data
+        User(id = channelId, login = get?.user?.login, display_name = get?.user?.displayName, profile_image_url = get?.user?.profileImageURL)
     }
 
     override fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game> {
-        val factory = GamesDataSourceGQLquery.Factory(clientId, gql, coroutineScope)
+        val factory = GamesDataSourceGQLquery.Factory(clientId, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(30)
             .setInitialLoadSizeHint(30)
@@ -201,7 +217,7 @@ class HelixRepository @Inject constructor(
     }
 
     override fun loadTopStreamsGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Stream> {
-        val factory = StreamsDataSourceGQLquery.Factory(clientId, gql, coroutineScope)
+        val factory = StreamsDataSourceGQLquery.Factory(clientId, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)
@@ -223,7 +239,7 @@ class HelixRepository @Inject constructor(
     }
 
     override fun loadGameStreamsGQL(clientId: String?, gameId: String?, gameName: String?, coroutineScope: CoroutineScope): Listing<Stream> {
-        val factory = GameStreamsDataSourceGQLquery.Factory(clientId, gameId, gameName, gql, coroutineScope)
+        val factory = GameStreamsDataSourceGQLquery.Factory(clientId, gameId, gameName, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)
@@ -245,7 +261,7 @@ class HelixRepository @Inject constructor(
     }
 
     override fun loadGameClipsGQL(clientId: String?, gameId: String?, gameName: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip> {
-        val factory = GameClipsDataSourceGQLquery.Factory(clientId, gameId, gameName, sort, gql, coroutineScope)
+        val factory = GameClipsDataSourceGQLquery.Factory(clientId, gameId, gameName, sort, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)
@@ -255,8 +271,8 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadChannelVideosGQL(clientId: String?, game: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video> {
-        val factory = ChannelVideosDataSourceGQLquery.Factory(clientId, game, type, sort, coroutineScope)
+    override fun loadChannelVideosGQL(clientId: String?, channelId: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video> {
+        val factory = ChannelVideosDataSourceGQLquery.Factory(clientId, channelId, type, sort, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)
@@ -266,8 +282,8 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadChannelClipsGQL(clientId: String?, game: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip> {
-        val factory = ChannelClipsDataSourceGQLquery.Factory(clientId, game, sort, gql, coroutineScope)
+    override fun loadChannelClipsGQL(clientId: String?, channelId: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip> {
+        val factory = ChannelClipsDataSourceGQLquery.Factory(clientId, channelId, sort, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)

@@ -5,7 +5,6 @@ import android.view.View
 import android.widget.ImageButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
@@ -69,7 +68,7 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
         val settings = view.findViewById<ImageButton>(R.id.settings)
         val download = view.findViewById<ImageButton>(R.id.download)
         val volume = view.findViewById<ImageButton>(R.id.volumeButton)
-        viewModel.loaded.observe(this, Observer {
+        viewModel.loaded.observe(this, {
             settings.enable()
             download.enable()
         })
@@ -84,16 +83,16 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
             FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
         }
         if (clip.video_id != null && clip.video_id != "") {
-            viewModel.video.observe(viewLifecycleOwner, Observer {
+            viewModel.video.observe(viewLifecycleOwner, {
                 if (it != null) {
                     (requireActivity() as MainActivity).startVideo(it, (clip.videoOffsetSeconds?.toDouble() ?: 0.0) * 1000.0 + viewModel.player.currentPosition)
                 }
             })
             watchVideo.setOnClickListener {
                 if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-                    viewModel.loadVideo(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, ""))
+                    viewModel.loadVideo(useHelix = true, clientId = prefs.getString(C.HELIX_CLIENT_ID, ""), token = prefs.getString(C.TOKEN, ""))
                 } else {
-                    viewModel.loadVideoGQL(prefs.getString(C.GQL_CLIENT_ID, ""))
+                    viewModel.loadVideo(useHelix = false, clientId = prefs.getString(C.GQL_CLIENT_ID, ""))
                 }
             }
         }

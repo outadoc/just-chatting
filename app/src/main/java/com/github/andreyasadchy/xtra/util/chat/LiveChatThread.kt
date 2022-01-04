@@ -95,7 +95,6 @@ class LiveChatThread(
             listener.onCommand(channelName, "join")
         } catch (e: IOException) {
             Log.e(TAG, "Error connecting to Twitch IRC", e)
-            listener.onCommand("Error connecting to Twitch IRC - $e")
             throw e
         }
     }

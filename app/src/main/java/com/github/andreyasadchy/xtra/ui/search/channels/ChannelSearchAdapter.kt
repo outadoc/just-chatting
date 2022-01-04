@@ -8,6 +8,7 @@ import com.github.andreyasadchy.xtra.model.helix.channel.Channel
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.*
 
 class ChannelSearchAdapter(
@@ -25,8 +26,14 @@ class ChannelSearchAdapter(
     override fun bind(item: Channel, view: View) {
         with(view) {
             setOnClickListener { listener.viewChannel(item.id, item.broadcaster_login, item.display_name, item.channelLogo) }
-            logo.loadImage(fragment, item.channelLogo, circle = true)
-            name.text = item.display_name
+            if (item.channelLogo != null)  {
+                userImage.visible()
+                userImage.loadImage(fragment, item.channelLogo, circle = true)
+            }
+            if (item.display_name != null)  {
+                username.visible()
+                username.text = item.display_name
+            }
         }
     }
 }

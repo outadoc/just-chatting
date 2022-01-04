@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserF
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistTracker
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
+import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
@@ -25,16 +26,20 @@ import javax.inject.Inject
 class StreamPlayerViewModel @Inject constructor(
     context: Application,
     private val playerRepository: PlayerRepository,
-    repository: TwitchService
-) : HlsPlayerViewModel(context, repository) {
+    repository: TwitchService,
+    localFollows: LocalFollowRepository) : HlsPlayerViewModel(context, repository, localFollows) {
 
     private val _stream = MutableLiveData<Stream?>()
     val stream: MutableLiveData<Stream?>
         get() = _stream
-    override val channelId: String?
-        get() {
-            return _stream.value?.user_id
-        }
+    override val userId: String?
+        get() { return _stream.value?.user_id }
+    override val userLogin: String?
+        get() { return _stream.value?.user_login }
+    override val userName: String?
+        get() { return _stream.value?.user_name }
+    override val channelLogo: String?
+        get() { return _stream.value?.channelLogo }
 
     private var useAdBlock = false
     private var randomDeviceId = true
@@ -62,10 +67,12 @@ class StreamPlayerViewModel @Inject constructor(
             viewModelScope.launch {
                 while (isActive) {
                     try {
-                        val s = if (usehelix && loggedIn) {
-                            stream.user_id?.let { repository.loadStream(clientId, token, it).data.first() }
-                        } else {
-                            stream.user_login?.let { Stream(user_login = it, viewer_count = repository.loadStreamGQL(gqlclientId, it)) }
+                        val s = stream.user_id?.let {
+                            if (usehelix && loggedIn) {
+                                repository.loadStream(clientId, token, it).data.first()
+                            } else {
+                                repository.loadStreamGQL(gqlclientId, it)
+                            }
                         }
                         _stream.postValue(s)
                         delay(300000L)
@@ -85,7 +92,7 @@ class StreamPlayerViewModel @Inject constructor(
             index < qualities.size - 1 -> {
                 (player.currentManifest as? HlsManifest)?.let {
                     val s = _stream.value!!
-                    startBackgroundAudio(helper.urls.values.last(), s.user_name, s.title, s.profileImageURL, false, AudioPlayerService.TYPE_STREAM, null)
+                    startBackgroundAudio(helper.urls.values.last(), s.user_name, s.title, s.channelLogo, false, AudioPlayerService.TYPE_STREAM, null)
                     _playerMode.value = AUDIO_ONLY
                 }
             }

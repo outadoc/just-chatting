@@ -224,7 +224,7 @@ class PlayerRepository @Inject constructor(
         //        val accessToken = api.getVideoAccessToken(clientId, id, token)
         val accessTokenJson = getAccessTokenJson(isLive = false, isVod = true, login = "", playerType = "channel_home_live", vodId = videoId)
         val accessTokenHeaders = getAccessTokenHeaders()
-        accessTokenHeaders["Authorization"] = ""
+        // accessTokenHeaders["Authorization"] = ""
         return graphQL.getVideoAccessToken(gqlclientId, accessTokenHeaders, accessTokenJson)
     }
 

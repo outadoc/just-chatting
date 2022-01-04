@@ -29,7 +29,7 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
     override val channelName: String?
         get() = stream.user_name
     override val channelImage: String?
-        get() = stream.profileImageURL
+        get() = stream.channelLogo
 
     override val layoutId: Int
         get() = R.layout.fragment_player_stream
@@ -76,7 +76,7 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         val icon = requireView().findViewById<ImageView>(R.id.viewericon)
         viewModel.stream.observe(viewLifecycleOwner, Observer {
             if (it?.viewer_count != null) {
-                viewers.text = TwitchApiHelper.formatCount(it.viewer_count, context?.prefs()!!.getBoolean(C.UI_VIEWCOUNT, false))
+                viewers.text = TwitchApiHelper.formatCount(it.viewer_count, context?.prefs()!!.getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
                 if (iconpref) icon.visible()
             } else {
                 viewers.text = null

@@ -22,7 +22,7 @@ interface TwitchService {
     fun loadTopGames(clientId: String?, userToken: String?, coroutineScope: CoroutineScope): Listing<Game>
     suspend fun loadStream(clientId: String?, userToken: String?, channelId: String): StreamsResponse
     fun loadStreams(clientId: String?, userToken: String?, game: String?, languages: String?, coroutineScope: CoroutineScope): Listing<Stream>
-    fun loadFollowedStreams(clientId: String?, userToken: String?, user_id: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
+    fun loadFollowedStreams(usehelix: Boolean, clientId: String?, userToken: String?, userId: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadClips(clientId: String?, userToken: String?, channelName: String?, gameName: String?, started_at: String?, ended_at: String?, coroutineScope: CoroutineScope): Listing<Clip>
     suspend fun loadVideo(clientId: String?, userToken: String?, videoId: String): VideosResponse
     fun loadVideos(clientId: String?, userToken: String?, game: String?, period: com.github.andreyasadchy.xtra.model.helix.video.Period, broadcastType: BroadcastType, language: String?, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>
@@ -37,15 +37,17 @@ interface TwitchService {
     suspend fun loadVideoChatAfter(clientId: String?, videoId: String, cursor: String): VideoMessagesResponse
     suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setId: String): List<TwitchEmote>
 
-    suspend fun loadStreamGQL(clientId: String?, channelId: String): Int?
+    suspend fun loadStreamGQL(clientId: String?, channelId: String): Stream
+    suspend fun loadVideoGQL(clientId: String?, videoId: String): Video
+    suspend fun loadUserByIdGQL(clientId: String?, channelId: String): User
     fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game>
     fun loadTopStreamsGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadTopVideosGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Video>
     fun loadGameStreamsGQL(clientId: String?, gameId: String?, gameName: String?, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadGameVideosGQL(clientId: String?, gameId: String?, gameName: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video>
     fun loadGameClipsGQL(clientId: String?, gameId: String?, gameName: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>
-    fun loadChannelVideosGQL(clientId: String?, game: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video>
-    fun loadChannelClipsGQL(clientId: String?, game: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>
+    fun loadChannelVideosGQL(clientId: String?, channelId: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video>
+    fun loadChannelClipsGQL(clientId: String?, channelId: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>
     fun loadSearchChannelsGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<Channel>
     fun loadSearchGamesGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<Game>
 }

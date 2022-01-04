@@ -33,6 +33,10 @@ class FollowedStreamsFragment : BaseStreamsFragment<FollowedStreamsViewModel>() 
 
     override fun initialize() {
         super.initialize()
-        viewModel.init(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), User.get(requireContext()), !compactStreams)
+        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
+            viewModel.loadStreams(usehelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = User.get(requireContext()).token, channelId = User.get(requireContext()).id, thumbnailsEnabled = !compactStreams)
+        } else {
+            viewModel.loadStreams(usehelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelId = User.get(requireContext()).id, thumbnailsEnabled = !compactStreams)
+        }
     }
 }

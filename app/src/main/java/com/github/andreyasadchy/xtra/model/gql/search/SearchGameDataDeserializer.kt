@@ -18,9 +18,9 @@ class SearchGameDataDeserializer : JsonDeserializer<SearchGameDataResponse> {
             cursor = if (!json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("games").get("cursor").isJsonNull) json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("games").getAsJsonPrimitive("cursor").asString else null
             val obj = it.asJsonObject.getAsJsonObject("item")
             data.add(Game(
-                    id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else "",
-                    name = if (!(obj.get("displayName").isJsonNull)) { obj.getAsJsonPrimitive("displayName").asString } else "",
-                    box_art_url = if (!(obj.get("boxArtURL").isJsonNull)) { obj.getAsJsonPrimitive("boxArtURL").asString } else "",
+                    id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else null,
+                    name = if (!(obj.get("displayName").isJsonNull)) { obj.getAsJsonPrimitive("displayName").asString } else null,
+                    box_art_url = if (!(obj.get("boxArtURL").isJsonNull)) { obj.getAsJsonPrimitive("boxArtURL").asString } else null,
                     viewersCount = if (!(obj.get("viewersCount").isJsonNull)) { obj.getAsJsonPrimitive("viewersCount").asInt } else 0,
                 )
             )

@@ -31,7 +31,7 @@ import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
 import com.github.andreyasadchy.xtra.ui.download.HasDownloadDialog
 import com.github.andreyasadchy.xtra.ui.downloads.DownloadsFragment
-import com.github.andreyasadchy.xtra.ui.follow.FollowValidationFragment
+import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.games.GameFragment
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
@@ -101,10 +101,10 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener, BaseStreamsFra
                 createConfigurationContext(config)
             resources.updateConfiguration(config, resources.displayMetrics)
         }
-        if (prefs.getBoolean(C.FIRST_LAUNCH1, true)) {
+        if (prefs.getBoolean(C.FIRST_LAUNCH2, true)) {
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.root_preferences, false)
             prefs.edit {
-                putBoolean(C.FIRST_LAUNCH1, false)
+                putBoolean(C.FIRST_LAUNCH2, false)
                 putInt(C.LANDSCAPE_CHAT_WIDTH, DisplayUtils.calculateLandscapeWidthByPercent(this@MainActivity, 30))
                 if (resources.getBoolean(R.bool.isTablet)) {
                     putString(C.PORTRAIT_COLUMN_COUNT, "2")
@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener, BaseStreamsFra
 
         val notInitialized = savedInstanceState == null
         initNavigation()
-        if (User.get(this) !is NotLoggedIn && prefs.getBoolean(C.UI_STARTONFOLLOWED, false)) {
+        if ((User.get(this) !is NotLoggedIn && (prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1 < 2)) || (User.get(this) is NotLoggedIn && (prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1 == 0))) {
             fragNavController.initialize(INDEX_FOLLOWED, savedInstanceState)
             if (notInitialized) {
                 navBar.selectedItemId = R.id.fragment_follow
@@ -189,7 +189,7 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener, BaseStreamsFra
     override fun onBackPressed() {
         if (!viewModel.isPlayerMaximized) {
             if (fragNavController.isRootFragment) {
-                if (User.get(this) !is NotLoggedIn && prefs.getBoolean(C.UI_STARTONFOLLOWED, false)) {
+                if ((User.get(this) !is NotLoggedIn && (prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1 < 2)) || (User.get(this) is NotLoggedIn && (prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1 == 0))) {
                     if (fragNavController.currentStackIndex != INDEX_FOLLOWED) {
                         navBar.selectedItemId = R.id.fragment_follow
                     } else {
@@ -289,8 +289,8 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener, BaseStreamsFra
         startPlayer(OfflinePlayerFragment.newInstance(video))
     }
 
-    override fun viewChannel(id: String?, login: String?, name: String?, profileImage: String?) {
-        fragNavController.pushFragment(ChannelPagerFragment.newInstance(id, login, name, profileImage))
+    override fun viewChannel(id: String?, login: String?, name: String?, channelLogo: String?, updateLocal: Boolean) {
+        fragNavController.pushFragment(ChannelPagerFragment.newInstance(id, login, name, channelLogo, updateLocal))
     }
 
 //SlidingLayout.Listener
@@ -354,7 +354,7 @@ class MainActivity : AppCompatActivity(), OnGameSelectedListener, BaseStreamsFra
 
     private fun initNavigation() {
         fragNavController.apply {
-            rootFragments = listOf(GamesFragment(), TopFragment(), FollowValidationFragment(), DownloadsFragment())
+            rootFragments = listOf(GamesFragment(), TopFragment(), FollowMediaFragment(), DownloadsFragment())
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
             transactionListener = object : FragNavController.TransactionListener {
                 override fun onFragmentTransaction(fragment: Fragment?, transactionType: FragNavController.TransactionType) {

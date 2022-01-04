@@ -12,10 +12,8 @@ import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
 import com.github.andreyasadchy.xtra.ui.player.PlayerSettingsDialog
 import com.github.andreyasadchy.xtra.ui.player.PlayerVolumeDialog
-import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.prefs
 
 class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener {
 //    override fun play(obj: Parcelable) {
@@ -27,11 +25,11 @@ class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerS
     override val channelId: String?
         get() = video.channelId
     override val channelLogin: String?
-        get() = null
+        get() = video.channelLogin
     override val channelName: String?
         get() = video.channelName
     override val channelImage: String?
-        get() = null
+        get() = video.channelLogo
 
     override val layoutId: Int
         get() = R.layout.fragment_player_offline
@@ -62,19 +60,8 @@ class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerS
         requireView().findViewById<TextView>(R.id.channel).apply {
             text = channelName
             setOnClickListener {
-                channelId?.let { channel ->
-                    if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-                        viewModel.loadUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.TOKEN, ""), channel).observe(viewLifecycleOwner, { user ->
-                            (requireActivity() as MainActivity).viewChannel(user.id, user.login, user.display_name, user.channelLogo)
-                            slidingLayout.minimize()
-                        })
-                    } else {
-                        viewModel.loadUserGQL(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channel).observe(viewLifecycleOwner, { user ->
-                            (requireActivity() as MainActivity).viewChannel(user.id, user.login, user.display_name, user.channelLogo)
-                            slidingLayout.minimize()
-                        })
-                    }
-                }
+                (requireActivity() as MainActivity).viewChannel(channelId, channelLogin, channelName, channelImage, true)
+                slidingLayout.minimize()
             }
         }
     }

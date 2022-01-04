@@ -100,12 +100,23 @@ dependencies {
     implementation 'com.ncapdevi:frag-nav:3.2.0'
     implementation 'com.iheartradio.m3u8:open-m3u8:0.2.6'
 
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+
+    implementation "androidx.tonyodev.fetch2:xfetch2:$fetch"
+    implementation "androidx.tonyodev.fetch2okhttp:xfetch2okhttp:$fetch"
+
+    implementation 'androidx.webkit:webkit:1.4.0'
+    implementation 'com.apollographql.apollo3:apollo-runtime:3.0.0-rc01'
+
     implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayer"
 
-    implementation "com.squareup.retrofit2:retrofit:$retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation "com.github.zjupure:webpdecoder:2.0.$glide"
+    implementation "com.github.bumptech.glide:glide:$glide"
+    kapt "com.github.bumptech.glide:compiler:$glide"
+    implementation "com.github.bumptech.glide:okhttp3-integration:$glide@aar"
 
     implementation "com.google.dagger:dagger:$dagger"
     kapt "com.google.dagger:dagger-compiler:$dagger"
@@ -115,16 +126,6 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0-native-mt'
-
-    implementation "com.github.zjupure:webpdecoder:2.0.$glide"
-    implementation "com.github.bumptech.glide:glide:$glide"
-    kapt "com.github.bumptech.glide:compiler:$glide"
-    implementation "com.github.bumptech.glide:okhttp3-integration:$glide@aar"
-
-    implementation "androidx.tonyodev.fetch2:xfetch2:$fetch"
-    implementation "androidx.tonyodev.fetch2okhttp:xfetch2okhttp:$fetch"
-
-    implementation('com.apollographql.apollo3:apollo-runtime:3.0.0-rc01')
 }
 
 apollo {

@@ -18,10 +18,12 @@ data class OfflineVideo(
     val name: String?,
     @ColumnInfo(name = "channel_id")
     val channelId: String?,
+    @ColumnInfo(name = "channel_login")
+    var channelLogin: String?,
     @ColumnInfo(name = "channel_name")
-    val channelName: String?,
+    var channelName: String?,
     @ColumnInfo(name = "channel_logo")
-    val channelLogo: String?,
+    var channelLogo: String?,
     val thumbnail: String?,
     val gameId: String?,
     val gameName: String?,

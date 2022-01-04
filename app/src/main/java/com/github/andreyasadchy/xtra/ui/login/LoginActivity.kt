@@ -12,6 +12,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
+import androidx.webkit.WebSettingsCompat
+import androidx.webkit.WebViewFeature
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.LoggedIn
@@ -39,18 +41,11 @@ class LoginActivity : AppCompatActivity(), Injectable {
         val clientId = prefs().getString(C.HELIX_CLIENT_ID, "")
         val user = User.get(this)
         if (user is NotLoggedIn) {
-            if (intent.getBooleanExtra(C.FIRST_LAUNCH1, false)) {
-                welcomeContainer.visible()
-                login.setOnClickListener { initWebView() }
-                skip.setOnClickListener { finish() }
-            } else {
-                initWebView()
-            }
+            initWebView()
         } else {
             TwitchApiHelper.checkedValidation = false
             User.set(this, null)
             initWebView()
-            repository.deleteAllEmotes()
             GlobalScope.launch {
                 try {
                     repository.revoke(clientId, user.token)
@@ -64,7 +59,6 @@ class LoginActivity : AppCompatActivity(), Injectable {
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
         webViewContainer.visible()
-        welcomeContainer.gone()
         val clientId = prefs().getString(C.HELIX_CLIENT_ID, "")
         val authUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${clientId}&redirect_uri=https://localhost&scope=chat:read chat:edit user:read:follows"
         havingTrouble.setOnClickListener {
@@ -106,6 +100,14 @@ class LoginActivity : AppCompatActivity(), Injectable {
         }
         clearCookies()
         with(webView) {
+            if (prefs().getString(C.THEME, "0") != "2") {
+                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
+                    WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_ON)
+                }
+                if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
+                    WebSettingsCompat.setForceDarkStrategy(this.settings, WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY)
+                }
+            }
             settings.javaScriptEnabled = true
             webViewClient = object : WebViewClient() {
 
@@ -143,7 +145,6 @@ class LoginActivity : AppCompatActivity(), Injectable {
         val matcher = tokenPattern.matcher(url)
         return if (matcher.find()) {
             webViewContainer.gone()
-            welcomeContainer.gone()
             progressBar.visible()
             val token = matcher.group(1)!!
             val clientId = prefs().getString(C.HELIX_CLIENT_ID, "")

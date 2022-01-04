@@ -5,8 +5,9 @@ import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.LoggedIn
+import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
+import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
@@ -26,8 +27,9 @@ private const val VIDEO_RENDERER = 0
 private const val TAG = "HlsPlayerViewModel"
 
 abstract class HlsPlayerViewModel(
-        context: Application,
-        val repository: TwitchService) : PlayerViewModel(context), FollowViewModel {
+    context: Application,
+    val repository: TwitchService,
+    private val localFollows: LocalFollowRepository) : PlayerViewModel(context), FollowViewModel {
 
     protected val helper = PlayerHelper()
     val loaded: LiveData<Boolean>
@@ -144,9 +146,9 @@ abstract class HlsPlayerViewModel(
         }
     }
 
-    override fun setUser(user: LoggedIn) {
-        if (!this::follow.isInitialized) { //TODO REFACTOR
-            follow = FollowLiveData(repository, user, channelId, viewModelScope)
+    override fun setUser(user: User, clientId: String?) {
+        if (!this::follow.isInitialized) {
+            follow = FollowLiveData(localFollows, userId, userLogin, userName, channelLogo, repository, clientId, user, viewModelScope)
         }
     }
 

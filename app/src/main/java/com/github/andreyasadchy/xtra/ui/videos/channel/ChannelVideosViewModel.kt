@@ -50,13 +50,13 @@ class ChannelVideosViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.upload_date), context.getString(R.string.all_time))
     }
 
-    fun setChannelId(usehelix: Boolean, clientId: String?, channelId: String, token: String? = "") {
+    fun setChannelId(usehelix: Boolean, clientId: String?, channelId: String, token: String? = null) {
         if (filter.value?.channelId != channelId) {
             filter.value = Filter(usehelix, clientId, token, channelId = channelId)
         }
     }
 
-    fun filter(usehelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, text: CharSequence, token: String? = "") {
+    fun filter(usehelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, text: CharSequence, token: String? = null) {
         filter.value = filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, sort = sort, period = period, broadcastType = type)
         _sortText.value = text
     }

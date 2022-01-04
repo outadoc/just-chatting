@@ -6,111 +6,6 @@
     android:layout_height="match_parent"
     tools:ignore="SpUsage">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/welcomeContainer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone">
-
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
-            android:src="@drawable/logo"
-            app:layout_constraintHeight_percent="0.25"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
-
-        <TextView
-            android:id="@+id/welcome"
-            android:layout_width="0dp"
-            android:layout_height="60dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
-            android:gravity="center"
-            android:text="@string/welcome"
-            app:autoSizeMaxTextSize="60dp"
-            app:autoSizeMinTextSize="24dp"
-            app:autoSizeStepGranularity="2dp"
-            app:autoSizeTextType="uniform"
-            app:layout_constraintTop_toBottomOf="@id/logo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/loginPrompt"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="95dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginRight="32dp"
-            android:gravity="center_horizontal|top"
-            android:text="@string/login_prompt"
-            app:autoSizeMaxTextSize="50dp"
-            app:autoSizeMinTextSize="18dp"
-            app:autoSizeStepGranularity="2dp"
-            app:autoSizeTextType="uniform"
-            app:layout_constraintWidth_max="320dp"
-            app:layout_constraintHeight_max="120dp"
-            app:layout_constraintVertical_bias="0"
-            app:layout_constraintTop_toBottomOf="@id/welcome"
-            app:layout_constraintBottom_toTopOf="@id/skip"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/login"
-            android:layout_width="230dp"
-            android:layout_height="65dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="16dp"
-            android:text="@string/log_in"
-            android:textSize="18dp"
-            app:layout_constraintVertical_bias="0"
-            app:layout_constraintTop_toBottomOf="@id/loginPrompt"
-            app:layout_constraintBottom_toTopOf="@id/skip"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/skip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            android:layoutDirection="ltr"
-            android:text="@string/skip"
-            android:textSize="16dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
@@ -142,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:background="@android:color/white">
+            android:background="?attr/primaryColor">
 
             <TextView
                 android:id="@+id/havingTrouble"
@@ -151,7 +46,7 @@
                 android:text="@string/trouble_logging_in"
                 android:textSize="18sp"
                 android:textStyle="normal"
-                android:textColor="@android:color/black"
+                android:textColor="?attr/textColor"
                 android:padding="10dp"
                 android:background="?attr/selectableItemBackground"/>
         </LinearLayout>

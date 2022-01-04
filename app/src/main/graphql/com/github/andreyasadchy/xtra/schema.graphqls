@@ -12,13 +12,9 @@ type User {
   login: String
   displayName: String
   profileImageURL(width: Int): String
-  stream: Stream
+  stream: StreamNode
   videos(sort: VideoSort, type: BroadcastType, first: Int, after: Cursor): Videos
   clips(criteria: criteria, first: Int, after: Cursor): Clips
-}
-
-type Stream {
-  viewersCount: Int
 }
 
 type Game {

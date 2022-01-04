@@ -9,6 +9,7 @@ data class Game(
         val id: String? = null,
         val name: String? = null,
         val box_art_url: String? = null,
+
         val viewersCount: Int? = null,
         val broadcastersCount: Int? = null) : Parcelable {
 

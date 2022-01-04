@@ -40,7 +40,7 @@ class ClipsAdapter(
             setOnLongClickListener { showDownloadDialog(item); true }
             thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.NONE)
             date.text = item.uploadDate?.let { TwitchApiHelper.formatTimeString(context, it) }
-            views.text = item.view_count?.let { TwitchApiHelper.formatViewsCount(context, it, context.prefs().getBoolean(C.UI_VIEWCOUNT, false)) }
+            views.text = item.view_count?.let { TwitchApiHelper.formatViewsCount(context, it, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) }
             duration.text = item.duration?.let { DateUtils.formatElapsedTime(it.toLong()) }
             if (item.channelLogo != null)  {
                 userImage.visible()

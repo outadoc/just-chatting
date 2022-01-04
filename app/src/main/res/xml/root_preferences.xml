@@ -49,7 +49,7 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
-        android:key="ui_viewcount"
+        android:key="ui_truncateviewcount"
         android:title="@string/truncated_view_counts"
         app:iconSpaceReserved="false"/>
 
@@ -59,14 +59,17 @@
         android:title="@string/broadcastersCount"
         app:iconSpaceReserved="false"/>
 
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
+    <ListPreference
+        android:defaultValue="1"
+        android:entries="@array/followedEntries"
+        android:entryValues="@array/cutoutmodeValues"
         android:key="ui_startonfollowed"
+        android:summary="%s"
         android:title="@string/startonfollowed"
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="ui_follow"
         android:title="@string/show_follow_button"
         app:iconSpaceReserved="false"/>
@@ -189,6 +192,12 @@
         android:key="player_download"
         android:title="@string/player_download"
         android:icon="@drawable/ic_file_download_black_24dp" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_follow"
+        android:title="@string/show_follow_button"
+        android:icon="@drawable/baseline_favorite_border_black_24" />
 
     <SwitchPreferenceCompat
         android:defaultValue="true"

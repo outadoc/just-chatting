@@ -8,6 +8,7 @@ import com.github.andreyasadchy.xtra.model.VideoPosition
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
+import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
@@ -23,8 +24,8 @@ import javax.inject.Inject
 class VideoPlayerViewModel @Inject constructor(
     context: Application,
     private val playerRepository: PlayerRepository,
-    repository: TwitchService
-) : HlsPlayerViewModel(context, repository) {
+    repository: TwitchService,
+    localFollows: LocalFollowRepository) : HlsPlayerViewModel(context, repository, localFollows) {
 
     private lateinit var video: Video
     val videoInfo: VideoDownloadInfo?
@@ -42,8 +43,14 @@ class VideoPlayerViewModel @Inject constructor(
             return VideoDownloadInfo(video, helper.urls, relativeTimes, durations, playlist.durationUs / 1000L, playlist.targetDurationUs / 1000L, player.currentPosition)
         }
 
-    override val channelId: String?
-        get() = video.user_id
+    override val userId: String?
+        get() { return video.user_id }
+    override val userLogin: String?
+        get() { return video.user_login }
+    override val userName: String?
+        get() { return video.user_name }
+    override val channelLogo: String?
+        get() { return video.channelLogo }
 
     fun setVideo(gqlclientId: String, video: Video, offset: Double) {
         if (!this::video.isInitialized) {

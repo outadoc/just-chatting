@@ -6,7 +6,6 @@ import com.github.andreyasadchy.xtra.GameClipsQuery
 import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
-import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.datasource.BaseDataSourceFactory
 import com.github.andreyasadchy.xtra.repository.datasource.BasePositionalDataSource
 import com.github.andreyasadchy.xtra.type.ClipsPeriod
@@ -17,7 +16,6 @@ class GameClipsDataSourceGQLquery(
     private val gameId: String?,
     private val gameName: String?,
     private val sort: ClipsPeriod?,
-    private val api: GraphQLRepository,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Clip>(coroutineScope) {
     private var offset: String? = null
     private var nextPage: Boolean = true
@@ -93,10 +91,9 @@ class GameClipsDataSourceGQLquery(
         private val gameId: String?,
         private val gameName: String?,
         private val sort: ClipsPeriod?,
-        private val api: GraphQLRepository,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Clip, GameClipsDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Clip> =
-                GameClipsDataSourceGQLquery(clientId, gameId, gameName, sort, api, coroutineScope).also(sourceLiveData::postValue)
+                GameClipsDataSourceGQLquery(clientId, gameId, gameName, sort, coroutineScope).also(sourceLiveData::postValue)
     }
 }

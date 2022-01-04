@@ -1,11 +1,7 @@
 package com.github.andreyasadchy.xtra.db
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 
 @Dao
@@ -16,6 +12,9 @@ interface VideosDao {
 
     @Query("SELECT * FROM videos WHERE id = :id")
     fun getById(id: Int): OfflineVideo?
+
+    @Query("SELECT * FROM videos WHERE channel_id = :id")
+    fun getByUserId(id: Int): OfflineVideo?
 
     @Insert
     fun insert(video: OfflineVideo): Long

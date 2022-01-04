@@ -12,12 +12,13 @@
 
         <com.github.andreyasadchy.xtra.ui.view.CustomPlayerView
             android:id="@+id/playerView"
-            app:controller_layout_id="@layout/player_stream"
-            style="@style/Player"/>
+            style="@style/Player"
+            app:controller_layout_id="@layout/player_stream" />
+
     </com.google.android.exoplayer2.ui.AspectRatioFrameLayout>
 
     <FrameLayout
         android:id="@+id/chatFragmentContainer"
-        style="@style/ChatView"/>
+        style="@style/ChatView" />
 
 </com.github.andreyasadchy.xtra.ui.view.SlidingLayout>

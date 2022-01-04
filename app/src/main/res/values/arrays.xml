@@ -106,4 +106,10 @@
         <item>1</item>
         <item>2</item>
     </string-array>
+
+    <string-array name="followedEntries">
+        <item>@string/always</item>
+        <item>@string/when_logged_in</item>
+        <item>@string/never</item>
+    </string-array>
 </resources>

@@ -6,14 +6,12 @@ import com.github.andreyasadchy.xtra.TopStreamsQuery
 import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.datasource.BaseDataSourceFactory
 import com.github.andreyasadchy.xtra.repository.datasource.BasePositionalDataSource
 import kotlinx.coroutines.CoroutineScope
 
 class StreamsDataSourceGQLquery private constructor(
     private val clientId: String?,
-    private val api: GraphQLRepository,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Stream>(coroutineScope) {
     private var offset: String? = null
     private var nextPage: Boolean = true
@@ -76,10 +74,9 @@ class StreamsDataSourceGQLquery private constructor(
 
     class Factory(
         private val clientId: String?,
-        private val api: GraphQLRepository,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Stream, StreamsDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Stream> =
-                StreamsDataSourceGQLquery(clientId, api, coroutineScope).also(sourceLiveData::postValue)
+                StreamsDataSourceGQLquery(clientId, coroutineScope).also(sourceLiveData::postValue)
     }
 }

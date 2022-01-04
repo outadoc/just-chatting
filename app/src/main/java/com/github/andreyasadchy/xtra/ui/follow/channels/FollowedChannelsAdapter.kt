@@ -8,7 +8,10 @@ import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.loadImage
-import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.*
+import com.github.andreyasadchy.xtra.util.visible
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.*
+import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userImage
+import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.username
 
 class FollowedChannelsAdapter(
         private val fragment: Fragment,
@@ -24,9 +27,19 @@ class FollowedChannelsAdapter(
 
     override fun bind(item: Follow, view: View) {
         with(view) {
-            setOnClickListener { listener.viewChannel(item.to_id, item.to_login, item.to_name, item.channelLogo) }
-            logo.loadImage(fragment, item.channelLogo)
-            name.text = item.to_name
+            setOnClickListener { listener.viewChannel(item.to_id, item.to_login, item.to_name, item.channelLogo, item.followLocal) }
+            if (item.channelLogo != null)  {
+                userImage.visible()
+                userImage.loadImage(fragment, item.channelLogo, circle = true)
+            }
+            if (item.to_name != null)  {
+                username.visible()
+                username.text = item.to_name
+            }
+            if (item.followTwitch)
+                twitch.visible()
+            if (item.followLocal)
+                local.visible()
         }
     }
 }

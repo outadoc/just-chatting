@@ -6,14 +6,12 @@ import com.github.andreyasadchy.xtra.TopGamesQuery
 import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.game.Game
-import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.datasource.BaseDataSourceFactory
 import com.github.andreyasadchy.xtra.repository.datasource.BasePositionalDataSource
 import kotlinx.coroutines.CoroutineScope
 
 class GamesDataSourceGQLquery(
     private val clientId: String?,
-    private val api: GraphQLRepository,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Game>(coroutineScope) {
     private var offset: String? = null
     private var nextPage: Boolean = true
@@ -68,9 +66,8 @@ class GamesDataSourceGQLquery(
 
     class Factory(
         private val clientId: String?,
-        private val api: GraphQLRepository,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Game, GamesDataSourceGQLquery>() {
 
-        override fun create(): DataSource<Int, Game> = GamesDataSourceGQLquery(clientId, api, coroutineScope).also(sourceLiveData::postValue)
+        override fun create(): DataSource<Int, Game> = GamesDataSourceGQLquery(clientId, coroutineScope).also(sourceLiveData::postValue)
     }
 }

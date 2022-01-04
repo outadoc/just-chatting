@@ -36,11 +36,11 @@ class GamesAdapter(
             }
             if (item.viewersCount != null)  {
                 viewers.visible()
-                viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewersCount, context.prefs().getBoolean(C.UI_VIEWCOUNT, false))
+                viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewersCount, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
             }
             if (item.broadcastersCount != null && context.prefs().getBoolean(C.UI_BROADCASTERSCOUNT, true)) {
                 broadcastersCount.visible()
-                broadcastersCount.text = context.getString(R.string.broadcasters, item.broadcastersCount.toString())
+                broadcastersCount.text = resources.getQuantityString(R.plurals.broadcasters, item.broadcastersCount, item.broadcastersCount)
             }
         }
     }

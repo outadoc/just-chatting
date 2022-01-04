@@ -1,52 +1,61 @@
 package com.github.andreyasadchy.xtra.ui.channel
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.apollographql.apollo3.api.Optional
-import com.github.andreyasadchy.xtra.StreamQuery
-import com.github.andreyasadchy.xtra.di.XtraModule
-import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
-import com.github.andreyasadchy.xtra.model.LoggedIn
-import com.github.andreyasadchy.xtra.model.helix.stream.StreamsResponse
+import com.github.andreyasadchy.xtra.GlideApp
+import com.github.andreyasadchy.xtra.model.User
+import com.github.andreyasadchy.xtra.model.helix.stream.Stream
+import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
+import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ChannelPagerViewModel @Inject constructor(private val repository: TwitchService) : ViewModel(), FollowViewModel {
+class ChannelPagerViewModel @Inject constructor(
+    private val repository: TwitchService,
+    private val localFollows: LocalFollowRepository,
+    private val offlineRepository: OfflineRepository) : ViewModel(), FollowViewModel {
 
-    private val _channel = MutableLiveData<String>()
-    val channel: LiveData<String>
-        get() = _channel
-    private val _stream = MutableLiveData<StreamsResponse>()
-    val stream: LiveData<StreamsResponse>
+    private val _stream = MutableLiveData<Stream>()
+    val stream: LiveData<Stream>
         get() = _stream
-    private val _streamGQL = MutableLiveData<Int?>()
-    val streamGQL: MutableLiveData<Int?>
-        get() = _streamGQL
 
-    override val channelId: String
-        get() {
-            return _channel.value!!
-        }
-
+    private val _userId = MutableLiveData<String?>()
+    private val _userLogin = MutableLiveData<String?>()
+    private val _userName = MutableLiveData<String?>()
+    private val _profileImageURL = MutableLiveData<String?>()
+    override val userId: String?
+        get() { return _userId.value }
+    override val userLogin: String?
+        get() { return _userLogin.value }
+    override val userName: String?
+        get() { return _userName.value }
+    override val channelLogo: String?
+        get() { return _profileImageURL.value }
     override lateinit var follow: FollowLiveData
 
-    override fun setUser(user: LoggedIn) {
+    override fun setUser(user: User, clientId: String?) {
         if (!this::follow.isInitialized) {
-            follow = FollowLiveData(repository, user, channelId, viewModelScope)
+            follow = FollowLiveData(localFollows, userId, userLogin, userName, channelLogo, repository, clientId, user, viewModelScope)
         }
     }
 
-    fun loadStream(clientId: String?, token: String, channel: String) {
-        if (_channel.value != channel) {
-            _channel.value = channel
+    fun loadStream(useHelix: Boolean, clientId: String?, token: String? = null, channelId: String?, channelLogin: String?, channelName: String?, profileImageURL: String?) {
+        if (_userId.value != channelId && channelId != null) {
+            _userId.value = channelId
+            _userLogin.value = channelLogin
+            _userName.value = channelName
+            _profileImageURL.value = profileImageURL
             viewModelScope.launch {
                 try {
-                    val stream = repository.loadStream(clientId, token, channel)
+                    val stream = if (useHelix) repository.loadStream(clientId, token, channelId).data.first()
+                    else repository.loadStreamGQL(clientId, channelId)
                     _stream.postValue(stream)
                 } catch (e: Exception) {
 
@@ -55,32 +64,33 @@ class ChannelPagerViewModel @Inject constructor(private val repository: TwitchSe
         }
     }
 
-    fun loadStreamGQL(clientId: String?, channel: String) {
-        if (_channel.value != channel) {
-            _channel.value = channel
-            viewModelScope.launch {
-                try {
-                    val stream = apolloClient(XtraModule(), clientId).query(StreamQuery(Optional.Present(channel))).execute().data?.user?.stream?.viewersCount
-                    _streamGQL.postValue(stream)
-                } catch (e: Exception) {
-
-                }
-            }
-        }
-    }
-
-    fun retry(clientId: String?, token: String) {
+    fun retry(useHelix: Boolean, clientId: String?, token: String? = null) {
         if (_stream.value == null) {
-            _channel.value?.let {
-                loadStream(clientId, token, it)
-            }
+            loadStream(useHelix, clientId, token, _userId.value, _userLogin.value, _userName.value, _profileImageURL.value)
         }
     }
 
-    fun retryGQL(clientId: String?) {
-        if (_streamGQL.value == null) {
-            _channel.value?.let {
-                loadStreamGQL(clientId, it)
+    fun updateLocalUser(context: Context, stream: Stream) {
+        GlobalScope.launch {
+            try {
+                if (stream.user_id != null) {
+                    val glide = GlideApp.with(context)
+                    val downloadedLogo: String? = try {
+                        glide.downloadOnly().load(stream.channelLogo).submit().get().absolutePath
+                    } catch (e: Exception) {
+                        stream.channelLogo
+                    }
+                    localFollows.getFollowById(stream.user_id)?.let { localFollows.updateFollow(it.apply {
+                        user_login = stream.user_login
+                        user_name = stream.user_name
+                        channelLogo = downloadedLogo }) }
+                    offlineRepository.getVideoByUserId(stream.user_id.toInt())?.let { offlineRepository.updateVideo(it.apply {
+                        channelLogin = stream.user_login
+                        channelName = stream.user_name
+                        channelLogo = downloadedLogo }) }
+                }
+            } catch (e: Exception) {
+
             }
         }
     }

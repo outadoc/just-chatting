@@ -31,6 +31,8 @@ data class Clip(
                 get() = TwitchApiHelper.getTemplateUrl(thumbnail_url, "clip")
         override val channelId: String?
                 get() = broadcaster_id
+        override val channelLogin: String?
+                get() = broadcaster_login
         override val channelName: String?
                 get() = broadcaster_name
         override val channelLogo: String?

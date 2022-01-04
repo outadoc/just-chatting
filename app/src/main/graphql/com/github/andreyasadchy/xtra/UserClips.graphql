@@ -1,6 +1,5 @@
-query UserClips($login: String, $sort: ClipsPeriod, $first: Int, $after: Cursor) {
-    user(login: $login) {
-        id
+query UserClips($id: ID, $sort: ClipsPeriod, $first: Int, $after: Cursor) {
+    user(id: $id) {
         login
         displayName
         profileImageURL(width: 300)

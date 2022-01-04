@@ -33,7 +33,7 @@ class ChannelVideosFragment : BaseVideosFragment<ChannelVideosViewModel>(), Game
         if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
             viewModel.setChannelId(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireArguments().getString(C.CHANNEL_ID) ?: "", requireContext().prefs().getString(C.TOKEN, ""))
         } else {
-            viewModel.setChannelId(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), requireArguments().getString(C.CHANNEL_LOGIN) ?: "")
+            viewModel.setChannelId(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), requireArguments().getString(C.CHANNEL_ID) ?: "")
         }
         sortBar.setOnClickListener { GameVideosSortDialog.newInstance(viewModel.sort, viewModel.period, viewModel.type).show(childFragmentManager, null) }
     }

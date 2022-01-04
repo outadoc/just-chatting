@@ -137,7 +137,7 @@
     <string name="navigationBarColor">Navigation bar color</string>
     <string name="rounduserimage">Circle profile pictures</string>
     <string name="truncated_view_counts">Truncated view counts</string>
-    <string name="startonfollowed">Start on following page when logged in</string>
+    <string name="startonfollowed">Start on following page</string>
     <string name="show_follow_button">Show follow button</string>
     <string name="bold_usernames">Bold usernames</string>
     <string name="randomcolor">Random color for users without color set</string>
@@ -187,7 +187,6 @@
     <string name="video_type_archive">Past broadcast</string>
     <string name="video_type_highlight">Highlight</string>
     <string name="video_type_upload">Upload</string>
-    <string name="broadcasters">%s broadcasters</string>
     <string name="broadcastersCount">Show broadcasters count on games</string>
     <string name="all">All</string>
     <string name="type">Type</string>
@@ -205,4 +204,9 @@
     <string name="chat_timeout">%1$s has been timed out for %2$s\s</string>
     <string name="chat_ban">%s has been permanently banned</string>
     <string name="chat_clearmsg">Message deleted from %1$s\: %2$s</string>
+    <string name="when_logged_in">When logged in</string>
+    <string name="always">Always</string>
+    <string name="twitch">Twitch</string>
+    <string name="local">Local</string>
+    <string name="watch_rerun">Watch rerun</string>
 </resources>

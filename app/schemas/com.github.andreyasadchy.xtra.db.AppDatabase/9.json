@@ -1,12 +1,12 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 8,
-    "identityHash": "5e389453b0ce8c62425a9917e93c9e71",
+    "version": 9,
+    "identityHash": "51513e0adf626b6181ab6dac5634ecad",
     "entities": [
       {
         "tableName": "videos",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`url` TEXT NOT NULL, `source_url` TEXT NOT NULL, `source_start_position` INTEGER, `name` TEXT, `channel_id` TEXT, `channel_name` TEXT, `channel_logo` TEXT, `thumbnail` TEXT, `gameId` TEXT, `gameName` TEXT, `duration` INTEGER, `upload_date` INTEGER, `download_date` INTEGER NOT NULL, `last_watch_position` INTEGER NOT NULL, `progress` INTEGER NOT NULL, `max_progress` INTEGER NOT NULL, `status` INTEGER NOT NULL, `type` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `is_vod` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`url` TEXT NOT NULL, `source_url` TEXT NOT NULL, `source_start_position` INTEGER, `name` TEXT, `channel_id` TEXT, `channel_login` TEXT, `channel_name` TEXT, `channel_logo` TEXT, `thumbnail` TEXT, `gameId` TEXT, `gameName` TEXT, `duration` INTEGER, `upload_date` INTEGER, `download_date` INTEGER NOT NULL, `last_watch_position` INTEGER NOT NULL, `progress` INTEGER NOT NULL, `max_progress` INTEGER NOT NULL, `status` INTEGER NOT NULL, `type` TEXT, `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `is_vod` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "url",
@@ -35,6 +35,12 @@
           {
             "fieldPath": "channelId",
             "columnName": "channel_id",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "channelLogin",
+            "columnName": "channel_login",
             "affinity": "TEXT",
             "notNull": false
           },
@@ -283,12 +289,50 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "local_follows",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` TEXT NOT NULL, `user_login` TEXT, `user_name` TEXT, `channelLogo` TEXT, PRIMARY KEY(`user_id`))",
+        "fields": [
+          {
+            "fieldPath": "user_id",
+            "columnName": "user_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "user_login",
+            "columnName": "user_login",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "user_name",
+            "columnName": "user_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "channelLogo",
+            "columnName": "channelLogo",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "user_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5e389453b0ce8c62425a9917e93c9e71')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '51513e0adf626b6181ab6dac5634ecad')"
     ]
   }
 }

@@ -9,6 +9,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.ui.common.BaseListAdapter
+import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.common.OnGameSelectedListener
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
@@ -19,9 +20,9 @@ import kotlinx.android.synthetic.main.fragment_downloads_list_item.view.*
 class DownloadsAdapter(
     private val fragment: Fragment,
     private val clickListener: DownloadsFragment.OnVideoSelectedListener,
+    private val channelClickListener: OnChannelSelectedListener,
     private val gameClickListener: OnGameSelectedListener,
     private val deleteVideo: (OfflineVideo) -> Unit,
-    private val user: (OfflineVideo) -> Unit
 ) : BaseListAdapter<OfflineVideo>(
         object : DiffUtil.ItemCallback<OfflineVideo>() {
             override fun areItemsTheSame(oldItem: OfflineVideo, newItem: OfflineVideo): Boolean {
@@ -36,6 +37,7 @@ class DownloadsAdapter(
     override val layoutId: Int = R.layout.fragment_downloads_list_item
 
     override fun bind(item: OfflineVideo, view: View) {
+        val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.channelId, item.channelLogin, item.channelName, item.channelLogo, updateLocal = true) }
         val gameListener: (View) -> Unit = { gameClickListener.openGame(item.gameId, item.gameName) }
         with(view) {
             setOnClickListener { clickListener.startOfflineVideo(item) }
@@ -48,12 +50,12 @@ class DownloadsAdapter(
             if (item.channelLogo != null)  {
                 userImage.visible()
                 userImage.loadImage(fragment, item.channelLogo, circle = true)
-                userImage.setOnClickListener { user(item) }
+                userImage.setOnClickListener(channelListener)
             }
             if (item.channelName != null)  {
                 username.visible()
                 username.text = item.channelName
-                username.setOnClickListener { user(item) }
+                username.setOnClickListener(channelListener)
             }
             if (item.name != null)  {
                 title.visible()

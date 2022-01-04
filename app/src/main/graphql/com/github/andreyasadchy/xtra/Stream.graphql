@@ -1,7 +1,18 @@
-query Stream($login: String) {
-    user(login: $login) {
+query Stream($id: ID) {
+    user(id: $id) {
+        login
+        displayName
+        profileImageURL(width: 300)
         stream {
+            id
+            type
+            title
             viewersCount
+            previewImageURL
+            game {
+                id
+                displayName
+            }
         }
     }
 }

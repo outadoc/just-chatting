@@ -23,7 +23,7 @@ interface HelixApi {
     suspend fun getTopGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("first") limit: Int, @Query("after") offset: String?): GamesResponse
 
     @GET("streams/")
-    suspend fun getStream(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") channelId: String, @Query("after") offset: String?): StreamsResponse
+    suspend fun getStream(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") channelId: String): StreamsResponse
 
     @GET("streams/")
     suspend fun getStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("game_id") game: String?, @Query("language") languages: String?, @Query("first") limit: Int, @Query("after") offset: String?): StreamsResponse
@@ -45,9 +45,6 @@ interface HelixApi {
 
     @GET("users")
     suspend fun getUserById(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") id: String): UsersResponse
-
-    @GET("users")
-    suspend fun getUsersByLogin(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("login") logins: String): UsersResponse
 
     @GET("search/categories")
     suspend fun getGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("query") query: String, @Query("first") limit: Int, @Query("after") offset: String?): GamesResponse

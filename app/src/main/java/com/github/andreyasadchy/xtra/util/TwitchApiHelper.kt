@@ -6,6 +6,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesResponse
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.util.chat.*
+import java.lang.Integer.parseInt
 import java.lang.Long.parseLong
 import java.text.ParseException
 import java.text.SimpleDateFormat
@@ -61,6 +62,24 @@ object TwitchApiHelper {
             val s = duration.substringBefore("s", "0").takeLast(2).filter { it.isDigit() }.toInt()
             ((h * 3600) + (m * 60) + s).toLong()
         }
+    }
+
+    fun getDurationFromSeconds(input: String?): String? {
+        if (input != null) {
+            val duration = try {
+                parseInt(input)
+            } catch (e: NumberFormatException) {
+                return null
+            }
+            val days = (duration / 86400)
+            val hours = ((duration % 86400) / 3600)
+            val minutes = (((duration % 86400) % 3600) / 60)
+            val seconds = (duration % 60)
+            return String.format((if (days != 0) (days.toString() + "d ") else "") +
+                    (if (hours != 0) (hours.toString() + "h ") else "") +
+                    (if (minutes != 0) (minutes.toString() + "m ") else "") +
+                    (if (seconds != 0) (seconds.toString() + "s ") else "")).trim()
+        } else return null
     }
 
     fun getClipTime(period: Period? = null): String {

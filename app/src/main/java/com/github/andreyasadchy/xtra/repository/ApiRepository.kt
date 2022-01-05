@@ -12,14 +12,16 @@ import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.model.chat.VideoMessagesResponse
-import com.github.andreyasadchy.xtra.model.helix.channel.Channel
+import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.model.helix.stream.StreamsResponse
 import com.github.andreyasadchy.xtra.model.helix.user.User
-import com.github.andreyasadchy.xtra.model.helix.video.*
+import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
+import com.github.andreyasadchy.xtra.model.helix.video.Period
+import com.github.andreyasadchy.xtra.model.helix.video.Sort
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.datasource.*
 import com.github.andreyasadchy.xtra.repository.datasourceGQL.SearchChannelsDataSourceGQL
 import com.github.andreyasadchy.xtra.repository.datasourceGQL.SearchGamesDataSourceGQL
@@ -36,7 +38,7 @@ import javax.inject.Singleton
 private const val TAG = "ApiRepository"
 
 @Singleton
-class HelixRepository @Inject constructor(
+class ApiRepository @Inject constructor(
     private val api: HelixApi,
     private val gql: GraphQLRepository,
     private val misc: MiscApi,
@@ -53,8 +55,8 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override suspend fun loadStream(clientId: String?, userToken: String?, channelId: String): StreamsResponse = withContext(Dispatchers.IO) {
-        StreamsResponse(api.getStream(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, channelId, null).data, null)
+    override suspend fun loadStream(clientId: String?, userToken: String?, channelId: String): Stream = withContext(Dispatchers.IO) {
+        api.getStream(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, channelId).data.first()
     }
 
     override fun loadStreams(clientId: String?, userToken: String?, game: String?, languages: String?, coroutineScope: CoroutineScope): Listing<Stream> {
@@ -69,7 +71,7 @@ class HelixRepository @Inject constructor(
     }
 
     override fun loadFollowedStreams(usehelix: Boolean, clientId: String?, userToken: String?, userId: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream> {
-        val factory = FollowedStreamsDataSource.Factory(usehelix, localFollows, this, clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, api, coroutineScope)
+        val factory = FollowedStreamsDataSource.Factory(usehelix, localFollows, this, clientId, userToken, userId, api, coroutineScope)
         val builder = PagedList.Config.Builder().setEnablePlaceholders(false)
         if (thumbnailsEnabled) {
             builder.setPageSize(1)
@@ -95,8 +97,8 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override suspend fun loadVideo(clientId: String?, userToken: String?, videoId: String): VideosResponse = withContext(Dispatchers.IO) {
-        VideosResponse(api.getVideo(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, videoId).data, null)
+    override suspend fun loadVideo(clientId: String?, userToken: String?, videoId: String): Video = withContext(Dispatchers.IO) {
+        api.getVideo(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, videoId).data.first()
     }
 
     override fun loadVideos(clientId: String?, userToken: String?, game: String?, period: Period, broadcastType: BroadcastType, language: String?, sort: Sort, coroutineScope: CoroutineScope): Listing<Video> {
@@ -126,12 +128,7 @@ class HelixRepository @Inject constructor(
         api.getUserById(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, id).data?.first()!!
     }
 
-    override suspend fun loadUserByLogin(clientId: String?, userToken: String?, login: String): User = withContext(Dispatchers.IO) {
-        Log.d(TAG, "Loading user by login $login")
-        api.getUsersByLogin(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, login).data?.first()!!
-    }
-
-    override fun loadGames(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Game> {
+    override fun loadSearchGames(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Game> {
         Log.d(TAG, "Loading games containing: $query")
         val factory = GamesSearchDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, query, api, coroutineScope)
         val config = PagedList.Config.Builder()
@@ -143,7 +140,7 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadChannels(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Channel> {
+    override fun loadSearchChannels(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<ChannelSearch> {
         Log.d(TAG, "Loading channels containing: $query")
         val factory = ChannelsSearchDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, query, api, coroutineScope)
         val config = PagedList.Config.Builder()
@@ -171,6 +168,10 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
+    override suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setId: String): List<TwitchEmote> = withContext(Dispatchers.IO) {
+        api.getEmotesFromSet(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, setId).emotes
+    }
+
     override suspend fun loadVideoChatLog(clientId: String?, videoId: String, offsetSeconds: Double): VideoMessagesResponse = withContext(Dispatchers.IO) {
         Log.d(TAG, "Loading chat log for video $videoId. Offset in seconds: $offsetSeconds")
         misc.getVideoChatLog(clientId, videoId, offsetSeconds, 100)
@@ -179,10 +180,6 @@ class HelixRepository @Inject constructor(
     override suspend fun loadVideoChatAfter(clientId: String?, videoId: String, cursor: String): VideoMessagesResponse = withContext(Dispatchers.IO) {
         Log.d(TAG, "Loading chat log for video $videoId. Cursor: $cursor")
         misc.getVideoChatLogAfter(clientId, videoId, cursor, 100)
-    }
-
-    override suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setId: String): List<TwitchEmote> = withContext(Dispatchers.IO) {
-        api.getEmotesFromSet(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, setId).emotes
     }
 
 
@@ -293,7 +290,7 @@ class HelixRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadSearchChannelsGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<Channel> {
+    override fun loadSearchChannelsGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<ChannelSearch> {
         val factory = SearchChannelsDataSourceGQL.Factory(clientId, query, gql, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(15)

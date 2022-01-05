@@ -28,7 +28,7 @@ interface FollowFragment {
                         follow.value = true
                     } else {
                         if (channelName != null) {
-                            FragmentUtils.showUnfollowDialog(context, userName ?: "") {
+                            FragmentUtils.showUnfollowDialog(context, channelName) {
                                 follow.deleteFollow()
                                 follow.value = false
                             }

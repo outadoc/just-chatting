@@ -54,7 +54,7 @@ class ChannelPagerViewModel @Inject constructor(
             _profileImageURL.value = profileImageURL
             viewModelScope.launch {
                 try {
-                    val stream = if (useHelix) repository.loadStream(clientId, token, channelId).data.first()
+                    val stream = if (useHelix) repository.loadStream(clientId, token, channelId)
                     else repository.loadStreamGQL(clientId, channelId)
                     _stream.postValue(stream)
                 } catch (e: Exception) {

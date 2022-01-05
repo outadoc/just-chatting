@@ -131,7 +131,7 @@ class ClipPlayerViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     if (clip.video_id != null) {
-                        val video = if (useHelix) repository.loadVideo(clientId, token, clip.video_id!!).data.first()
+                        val video = if (useHelix) repository.loadVideo(clientId, token, clip.video_id!!)
                         else repository.loadVideoGQL(clientId, clip.video_id!!)
                         _video.postValue(video)
                     }

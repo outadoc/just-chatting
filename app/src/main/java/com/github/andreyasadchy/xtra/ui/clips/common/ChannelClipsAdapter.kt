@@ -40,7 +40,7 @@ class ChannelClipsAdapter(
             date.text = item.uploadDate?.let { TwitchApiHelper.formatTimeString(context, it) }
             views.text = item.view_count?.let { TwitchApiHelper.formatViewsCount(context, it, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) }
             duration.text = item.duration?.let { DateUtils.formatElapsedTime(it.toLong()) }
-            if (item.title != null)  {
+            if (item.title != null && item.title != "")  {
                 title.visible()
                 title.text = item.title.trim()
             }

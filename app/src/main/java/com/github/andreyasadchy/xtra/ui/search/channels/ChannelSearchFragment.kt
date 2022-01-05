@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.helix.channel.Channel
+import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
@@ -16,10 +16,10 @@ import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 
-class ChannelSearchFragment : PagedListFragment<Channel, ChannelSearchViewModel, BasePagedListAdapter<Channel>>(), Searchable {
+class ChannelSearchFragment : PagedListFragment<ChannelSearch, ChannelSearchViewModel, BasePagedListAdapter<ChannelSearch>>(), Searchable {
 
     override val viewModel by viewModels<ChannelSearchViewModel> { viewModelFactory }
-    override val adapter: BasePagedListAdapter<Channel> by lazy { ChannelSearchAdapter(this, requireActivity() as MainActivity) }
+    override val adapter: BasePagedListAdapter<ChannelSearch> by lazy { ChannelSearchAdapter(this, requireActivity() as MainActivity) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.common_recycler_view_layout, container, false)

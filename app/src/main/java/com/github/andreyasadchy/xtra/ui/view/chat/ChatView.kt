@@ -182,7 +182,7 @@ class ChatView : ConstraintLayout {
             "join" -> context.getString(R.string.chat_join, command.message)
             "clearmsg" -> context.getString(R.string.chat_clearmsg, command.message, command.duration)
             "clearchat" -> context.getString(R.string.chat_clear)
-            "timeout" -> context.getString(R.string.chat_timeout, command.message, command.duration)
+            "timeout" -> context.getString(R.string.chat_timeout, command.message, TwitchApiHelper.getDurationFromSeconds(command.duration))
             "ban" -> context.getString(R.string.chat_ban, command.message)
             else -> command.message
         }

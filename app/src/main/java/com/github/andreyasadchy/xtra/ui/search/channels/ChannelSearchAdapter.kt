@@ -4,7 +4,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.helix.channel.Channel
+import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -13,17 +13,17 @@ import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.*
 
 class ChannelSearchAdapter(
         private val fragment: Fragment,
-        private val listener: OnChannelSelectedListener) : BasePagedListAdapter<Channel>(
-        object : DiffUtil.ItemCallback<Channel>() {
-            override fun areItemsTheSame(oldItem: Channel, newItem: Channel): Boolean =
+        private val listener: OnChannelSelectedListener) : BasePagedListAdapter<ChannelSearch>(
+        object : DiffUtil.ItemCallback<ChannelSearch>() {
+            override fun areItemsTheSame(oldItem: ChannelSearch, newItem: ChannelSearch): Boolean =
                     oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: Channel, newItem: Channel): Boolean = true
+            override fun areContentsTheSame(oldItem: ChannelSearch, newItem: ChannelSearch): Boolean = true
         }) {
 
     override val layoutId: Int = R.layout.fragment_search_channels_list_item
 
-    override fun bind(item: Channel, view: View) {
+    override fun bind(item: ChannelSearch, view: View) {
         with(view) {
             setOnClickListener { listener.viewChannel(item.id, item.broadcaster_login, item.display_name, item.channelLogo) }
             if (item.channelLogo != null)  {

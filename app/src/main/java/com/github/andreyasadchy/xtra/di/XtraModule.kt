@@ -18,7 +18,7 @@ import com.github.andreyasadchy.xtra.model.gql.search.SearchGameDataDeserializer
 import com.github.andreyasadchy.xtra.model.gql.search.SearchGameDataResponse
 import com.github.andreyasadchy.xtra.model.helix.emote.EmoteSetDeserializer
 import com.github.andreyasadchy.xtra.model.helix.emote.EmoteSetResponse
-import com.github.andreyasadchy.xtra.repository.HelixRepository
+import com.github.andreyasadchy.xtra.repository.ApiRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.util.FetchProvider
 import com.google.gson.GsonBuilder
@@ -40,7 +40,7 @@ class XtraModule {
 
     @Singleton
     @Provides
-    fun providesTwitchService(repository: HelixRepository): TwitchService {
+    fun providesTwitchService(repository: ApiRepository): TwitchService {
         return repository
     }
 

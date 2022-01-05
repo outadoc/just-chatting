@@ -27,6 +27,7 @@ class FollowedChannelsDataSource(
                     val item = list.find { it.to_id == i.to_id }
                     if (item == null) {
                         i.profileImageURL = i.to_id?.let { api.getUserById(clientId, userToken, i.to_id).data?.first()?.profile_image_url }
+                        i.followTwitch = true
                         list.add(i)
                     } else {
                         item.followTwitch = true

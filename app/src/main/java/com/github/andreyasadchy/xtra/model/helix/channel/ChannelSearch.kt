@@ -5,7 +5,7 @@ import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class Channel(
+data class ChannelSearch(
         val id: String? = null,
         val broadcaster_login: String? = null,
         val display_name: String? = null,
@@ -16,6 +16,7 @@ data class Channel(
         val started_at: String? = null,
         val broadcaster_language: String? = null,
         val thumbnail_url: String? = null,
+
         var profileImageURL: String? = null) : Parcelable {
 
         val channelLogo: String?

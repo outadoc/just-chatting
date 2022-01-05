@@ -2,7 +2,7 @@ package com.github.andreyasadchy.xtra.repository.datasource
 
 import androidx.paging.DataSource
 import com.github.andreyasadchy.xtra.api.HelixApi
-import com.github.andreyasadchy.xtra.model.helix.channel.Channel
+import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import kotlinx.coroutines.CoroutineScope
 
 class ChannelsSearchDataSource private constructor(
@@ -10,13 +10,13 @@ class ChannelsSearchDataSource private constructor(
     private val userToken: String?,
     private val query: String,
     private val api: HelixApi,
-    coroutineScope: CoroutineScope) : BasePositionalDataSource<Channel>(coroutineScope) {
+    coroutineScope: CoroutineScope) : BasePositionalDataSource<ChannelSearch>(coroutineScope) {
     private var offset: String? = null
 
-    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Channel>) {
+    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<ChannelSearch>) {
         loadInitial(params, callback) {
             val get = api.getChannels(clientId, userToken, query, params.requestedLoadSize, offset)
-            val list = mutableListOf<Channel>()
+            val list = mutableListOf<ChannelSearch>()
             list.addAll(get.data)
             for (i in list) {
                 i.profileImageURL = i.id?.let { api.getUserById(clientId, userToken, i.id).data?.first()?.profile_image_url }
@@ -26,10 +26,10 @@ class ChannelsSearchDataSource private constructor(
         }
     }
 
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Channel>) {
+    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<ChannelSearch>) {
         loadRange(params, callback) {
             val get = api.getChannels(clientId, userToken, query, params.loadSize, offset)
-            val list = mutableListOf<Channel>()
+            val list = mutableListOf<ChannelSearch>()
             if (offset != null && offset != "") {
                 list.addAll(get.data)
                 for (i in list) {
@@ -46,9 +46,9 @@ class ChannelsSearchDataSource private constructor(
         private val userToken: String?,
         private val query: String,
         private val api: HelixApi,
-        private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Channel, ChannelsSearchDataSource>() {
+        private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, ChannelSearch, ChannelsSearchDataSource>() {
 
-        override fun create(): DataSource<Int, Channel> =
+        override fun create(): DataSource<Int, ChannelSearch> =
                 ChannelsSearchDataSource(clientId, userToken, query, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

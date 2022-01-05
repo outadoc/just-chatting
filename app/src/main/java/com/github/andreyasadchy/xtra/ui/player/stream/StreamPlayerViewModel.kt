@@ -69,7 +69,7 @@ class StreamPlayerViewModel @Inject constructor(
                     try {
                         val s = stream.user_id?.let {
                             if (usehelix && loggedIn) {
-                                repository.loadStream(clientId, token, it).data.first()
+                                repository.loadStream(clientId, token, it)
                             } else {
                                 repository.loadStreamGQL(gqlclientId, it)
                             }

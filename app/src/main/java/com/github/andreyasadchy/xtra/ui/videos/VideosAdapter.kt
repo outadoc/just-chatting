@@ -63,7 +63,7 @@ class VideosAdapter(
                 username.text = item.user_name
                 username.setOnClickListener(channelListener)
             }
-            if (item.title != null)  {
+            if (item.title != null && item.title != "")  {
                 title.visible()
                 title.text = item.title.trim()
             }

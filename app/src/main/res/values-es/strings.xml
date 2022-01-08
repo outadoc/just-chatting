@@ -194,9 +194,9 @@
     <string name="video_type_rerun">Rerun</string>
     <string name="room_emote">Emote</string>
     <string name="room_followers">Followers</string>
-    <string name="room_followers_min">Followers %s\m</string>
+    <string name="room_followers_min">Followers %s</string>
     <string name="room_unique">Unique</string>
-    <string name="room_slow">Slow %s\s</string>
+    <string name="room_slow">Slow %s</string>
     <string name="room_subs">Subs</string>
     <string name="chat_join">Connected to %s</string>
     <string name="copy_clip">Copy to clipboard</string>

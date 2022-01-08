@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.ui.common.OnGameSelectedListener
+import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_streams_list_item.view.*
@@ -15,7 +15,7 @@ abstract class BaseStreamsAdapter(
         protected val fragment: Fragment,
         private val clickListener: BaseStreamsFragment.OnStreamSelectedListener,
         private val channelClickListener: OnChannelSelectedListener,
-        private val gameClickListener: OnGameSelectedListener) : BasePagedListAdapter<Stream>(
+        private val gameClickListener: GamesFragment.OnGameSelectedListener) : BasePagedListAdapter<Stream>(
         object : DiffUtil.ItemCallback<Stream>() {
             override fun areItemsTheSame(oldItem: Stream, newItem: Stream): Boolean =
                     oldItem.id == newItem.id

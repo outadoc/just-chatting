@@ -19,16 +19,16 @@ class GameVideosDataDeserializer : JsonDeserializer<GameVideosDataResponse> {
             val obj = it.asJsonObject.getAsJsonObject("node")
             data.add(Video(
                     id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else "",
-                    user_id = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("id").asString } else "",
-                    user_login = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("login").asString } else "",
-                    user_name = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("displayName").asString } else "",
-                    title = if (!(obj.get("title").isJsonNull)) { obj.getAsJsonPrimitive("title").asString } else "",
-                    createdAt = if (!(obj.get("publishedAt").isJsonNull)) { obj.getAsJsonPrimitive("publishedAt").asString } else "",
-                    thumbnail_url = if (!(obj.get("previewThumbnailURL").isJsonNull)) { obj.getAsJsonPrimitive("previewThumbnailURL").asString } else "",
+                    user_id = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("id").asString } else null,
+                    user_login = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("login").asString } else null,
+                    user_name = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("displayName").asString } else null,
+                    title = if (!(obj.get("title").isJsonNull)) { obj.getAsJsonPrimitive("title").asString } else null,
+                    createdAt = if (!(obj.get("publishedAt").isJsonNull)) { obj.getAsJsonPrimitive("publishedAt").asString } else null,
+                    thumbnail_url = if (!(obj.get("previewThumbnailURL").isJsonNull)) { obj.getAsJsonPrimitive("previewThumbnailURL").asString } else null,
                     view_count = if (!(obj.get("viewCount").isJsonNull)) { obj.getAsJsonPrimitive("viewCount").asInt } else 0,
-                    duration = if (!(obj.get("lengthSeconds").isJsonNull)) { obj.getAsJsonPrimitive("lengthSeconds").asString } else "",
-                    game_name = if (!(json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonPrimitive("name").isJsonNull)) { json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonPrimitive("name").asString } else "",
-                    profileImageURL = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("profileImageURL").asString } else ""
+                    duration = if (!(obj.get("lengthSeconds").isJsonNull)) { obj.getAsJsonPrimitive("lengthSeconds").asString } else null,
+                    game_name = if (!(json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonPrimitive("name").isJsonNull)) { json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonPrimitive("name").asString } else null,
+                    profileImageURL = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("profileImageURL").asString } else null
                 )
             )
         }

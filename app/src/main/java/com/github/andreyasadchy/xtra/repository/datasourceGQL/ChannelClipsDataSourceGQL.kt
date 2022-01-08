@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class ChannelClipsDataSourceGQL(
     private val clientId: String?,
-    private val game: String?,
+    private val channelLogin: String?,
     private val sort: String?,
     private val api: GraphQLRepository,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Clip>(coroutineScope) {
@@ -17,7 +17,7 @@ class ChannelClipsDataSourceGQL(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Clip>) {
         loadInitial(params, callback) {
-            val get = api.loadChannelClips(clientId, game, sort, params.requestedLoadSize, offset)
+            val get = api.loadChannelClips(clientId, channelLogin, sort, params.requestedLoadSize, offset)
             offset = get.cursor
             get.data
         }
@@ -25,20 +25,22 @@ class ChannelClipsDataSourceGQL(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Clip>) {
         loadRange(params, callback) {
-            val get = api.loadChannelClips(clientId, game, sort, params.loadSize, offset)
-            offset = get.cursor
-            get.data
+            val get = api.loadChannelClips(clientId, channelLogin, sort, params.loadSize, offset)
+            if (offset != null && offset != "") {
+                offset = get.cursor
+                get.data
+            } else mutableListOf()
         }
     }
 
     class Factory(
         private val clientId: String?,
-        private val game: String?,
+        private val channelLogin: String?,
         private val sort: String?,
         private val api: GraphQLRepository,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Clip, ChannelClipsDataSourceGQL>() {
 
         override fun create(): DataSource<Int, Clip> =
-                ChannelClipsDataSourceGQL(clientId, game, sort, api, coroutineScope).also(sourceLiveData::postValue)
+                ChannelClipsDataSourceGQL(clientId, channelLogin, sort, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

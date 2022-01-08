@@ -31,6 +31,10 @@ import kotlinx.android.synthetic.main.fragment_media.*
 
 class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapter<Game>>(), Scrollable {
 
+    interface OnGameSelectedListener {
+        fun openGame(id: String?, name: String?)
+    }
+
     override val viewModel by viewModels<GamesViewModel> { viewModelFactory }
     override val adapter: BasePagedListAdapter<Game> by lazy { GamesAdapter(this, requireActivity() as MainActivity) }
 

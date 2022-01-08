@@ -24,8 +24,10 @@ class StreamsDataSourceGQL private constructor(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
         loadRange(params, callback) {
             val get = api.loadTopStreams(clientId, params.loadSize, offset)
-            offset = get.cursor
-            get.data
+            if (offset != null && offset != "") {
+                offset = get.cursor
+                get.data
+            } else mutableListOf()
         }
     }
 

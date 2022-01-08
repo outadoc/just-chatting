@@ -10,7 +10,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.ui.common.BaseListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.ui.common.OnGameSelectedListener
+import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -21,7 +21,7 @@ class DownloadsAdapter(
     private val fragment: Fragment,
     private val clickListener: DownloadsFragment.OnVideoSelectedListener,
     private val channelClickListener: OnChannelSelectedListener,
-    private val gameClickListener: OnGameSelectedListener,
+    private val gameClickListener: GamesFragment.OnGameSelectedListener,
     private val deleteVideo: (OfflineVideo) -> Unit,
 ) : BaseListAdapter<OfflineVideo>(
         object : DiffUtil.ItemCallback<OfflineVideo>() {

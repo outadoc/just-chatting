@@ -10,16 +10,16 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.ui.common.OnGameSelectedListener
+import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_videos_list_item.view.*
 
 class ClipsAdapter(
-        private val fragment: Fragment,
-        private val clickListener: BaseClipsFragment.OnClipSelectedListener,
-        private val channelClickListener: OnChannelSelectedListener,
-        private val gameClickListener: OnGameSelectedListener,
-        private val showDownloadDialog: (Clip) -> Unit) : BasePagedListAdapter<Clip>(
+    private val fragment: Fragment,
+    private val clickListener: BaseClipsFragment.OnClipSelectedListener,
+    private val channelClickListener: OnChannelSelectedListener,
+    private val gameClickListener: GamesFragment.OnGameSelectedListener,
+    private val showDownloadDialog: (Clip) -> Unit) : BasePagedListAdapter<Clip>(
         object : DiffUtil.ItemCallback<Clip>() {
             override fun areItemsTheSame(oldItem: Clip, newItem: Clip): Boolean =
                     oldItem.id == newItem.id

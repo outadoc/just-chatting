@@ -187,7 +187,7 @@ class MessageListenerImpl(
 
     private fun splitAndMakeMap(string: String, splitRegex: String, mapRegex: String): Map<String, String?> {
         val list = string.split(splitRegex.toRegex()).dropLastWhile { it.isEmpty() }
-        val map = HashMap<String, String?>()
+        val map = LinkedHashMap<String, String?>()
         for (pair in list) {
             val kv = pair.split(mapRegex.toRegex()).dropLastWhile { it.isEmpty() }
             map[kv[0]] = if (kv.size == 2) kv[1] else null

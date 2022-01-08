@@ -9,7 +9,7 @@ import kotlinx.coroutines.CoroutineScope
 
 class ChannelVideosDataSourceGQL private constructor(
     private val clientId: String?,
-    private val game: String?,
+    private val channelLogin: String?,
     private val type: String?,
     private val sort: String?,
     private val api: GraphQLRepository,
@@ -18,7 +18,7 @@ class ChannelVideosDataSourceGQL private constructor(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
         loadInitial(params, callback) {
-            val get = api.loadChannelVideos(clientId, game, type, sort, params.requestedLoadSize, offset)
+            val get = api.loadChannelVideos(clientId, channelLogin, type, sort, params.requestedLoadSize, offset)
             offset = get.cursor
             get.data
         }
@@ -26,21 +26,23 @@ class ChannelVideosDataSourceGQL private constructor(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         loadRange(params, callback) {
-            val get = api.loadChannelVideos(clientId, game, type, sort, params.loadSize, offset)
-            offset = get.cursor
-            get.data
+            val get = api.loadChannelVideos(clientId, channelLogin, type, sort, params.loadSize, offset)
+            if (offset != null && offset != "") {
+                offset = get.cursor
+                get.data
+            } else mutableListOf()
         }
     }
 
     class Factory (
         private val clientId: String?,
-        private val game: String?,
+        private val channelLogin: String?,
         private val type: String?,
         private val sort: String?,
         private val api: GraphQLRepository,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Video, ChannelVideosDataSourceGQL>() {
 
         override fun create(): DataSource<Int, Video> =
-                ChannelVideosDataSourceGQL(clientId, game, type, sort, api, coroutineScope).also(sourceLiveData::postValue)
+                ChannelVideosDataSourceGQL(clientId, channelLogin, type, sort, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

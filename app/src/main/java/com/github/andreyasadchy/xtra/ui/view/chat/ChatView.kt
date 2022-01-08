@@ -141,7 +141,7 @@ class ChatView : ConstraintLayout {
                     text_followers.visible()
                 }
                 else -> {
-                    text_followers.text = context.getString(R.string.room_followers_min, roomState.followers)
+                    text_followers.text = context.getString(R.string.room_followers_min, TwitchApiHelper.getDurationFromSeconds((roomState.followers.toInt() * 60).toString()))
                     text_followers.visible()
                 }
             }
@@ -156,7 +156,7 @@ class ChatView : ConstraintLayout {
             when (roomState.slow) {
                 "0" -> text_slow.gone()
                 else -> {
-                    text_slow.text = context.getString(R.string.room_slow, roomState.slow)
+                    text_slow.text = context.getString(R.string.room_slow, TwitchApiHelper.getDurationFromSeconds(roomState.slow))
                     text_slow.visible()
                 }
             }

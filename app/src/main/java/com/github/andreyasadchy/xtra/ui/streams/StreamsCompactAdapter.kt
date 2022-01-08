@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.ui.common.OnGameSelectedListener
+import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
@@ -16,7 +16,7 @@ class StreamsCompactAdapter(
         fragment: Fragment,
         clickListener: BaseStreamsFragment.OnStreamSelectedListener,
         channelClickListener: OnChannelSelectedListener,
-        gameClickListener: OnGameSelectedListener) : BaseStreamsAdapter(fragment, clickListener, channelClickListener, gameClickListener) {
+        gameClickListener: GamesFragment.OnGameSelectedListener) : BaseStreamsAdapter(fragment, clickListener, channelClickListener, gameClickListener) {
 
     override val layoutId: Int = R.layout.fragment_streams_list_item_compact
 

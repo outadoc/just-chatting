@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
-import com.github.andreyasadchy.xtra.ui.common.OnGameSelectedListener
+import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_games_list_item.view.*
 
 class GameSearchAdapter(
         private val fragment: Fragment,
-        private val listener: OnGameSelectedListener
+        private val listener: GamesFragment.OnGameSelectedListener
 ) : BasePagedListAdapter<Game>(
         object : DiffUtil.ItemCallback<Game>() {
             override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean =

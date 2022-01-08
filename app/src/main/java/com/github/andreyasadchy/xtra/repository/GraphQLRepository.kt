@@ -107,7 +107,7 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getGameStreams(clientId, json)
     }
 
-    suspend fun loadGameVideos(clientId: String?, game: String?, type: String?, limit: Int?, cursor: String?): GameVideosDataResponse {
+    suspend fun loadGameVideos(clientId: String?, game: String?, type: String?, sort: String?, limit: Int?, cursor: String?): GameVideosDataResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "DirectoryVideos_Game")
             add("variables", JsonObject().apply {
@@ -119,7 +119,7 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                 addProperty("followedCursor", cursor)
                 addProperty("gameName", game)
                 addProperty("videoLimit", limit)
-                addProperty("videoSort", "VIEWS")
+                addProperty("videoSort", sort)
             })
             add("extensions", JsonObject().apply {
                 add("persistedQuery", JsonObject().apply {

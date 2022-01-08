@@ -8,17 +8,17 @@ import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.video.Video
-import com.github.andreyasadchy.xtra.ui.common.OnGameSelectedListener
+import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosAdapter
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosFragment
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_videos_list_item.view.*
 
 class ChannelVideosAdapter(
-        private val fragment: Fragment,
-        private val clickListener: BaseVideosFragment.OnVideoSelectedListener,
-        private val gameClickListener: OnGameSelectedListener,
-        private val showDownloadDialog: (Video) -> Unit) : BaseVideosAdapter(
+    private val fragment: Fragment,
+    private val clickListener: BaseVideosFragment.OnVideoSelectedListener,
+    private val gameClickListener: GamesFragment.OnGameSelectedListener,
+    private val showDownloadDialog: (Video) -> Unit) : BaseVideosAdapter(
         object : DiffUtil.ItemCallback<Video>() {
             override fun areItemsTheSame(oldItem: Video, newItem: Video): Boolean =
                     oldItem.id == newItem.id

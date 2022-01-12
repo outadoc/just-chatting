@@ -60,7 +60,7 @@ class ChatAdapter(
     private val userColors = HashMap<String, Int>()
     private val savedColors = HashMap<String, Int>()
     private val emotes = HashMap<String, Emote>()
-    private var username: String? = null
+    private var loggedInUser: String? = null
     private val scaledEmoteSize = (emoteSize * 0.78f).toInt()
 
     private var messageClickListener: ((CharSequence, CharSequence, String?) -> Unit)? = null
@@ -73,11 +73,11 @@ class ChatAdapter(
         val chatMessage = messages?.get(position) ?: return
         val builder = SpannableStringBuilder()
         val images = ArrayList<Image>()
-        var index = 0
+        var imageIndex = 0
         var badgesCount = 0
-        chatMessage.badges?.forEachIndexed { badgeindex, element ->
+        chatMessage.badges?.forEachIndexed { badgeIndex, element ->
             var url: String? = null
-            val global = chatMessage.globalBadges?.elementAt(badgeindex)
+            val global = chatMessage.globalBadges?.elementAt(badgeIndex)
             if (element.id == "bits" || element.id == "subscriber") {
                 url = when (badgeQuality) {
                     3 -> (global?.imageUrl4x)
@@ -101,36 +101,43 @@ class ChatAdapter(
             }
             url?.let {
                 builder.append("  ")
-                images.add(Image(url, index++, index++, false))
+                images.add(Image(url, imageIndex++, imageIndex++, false))
                 badgesCount++
             }
         }
         val userId = chatMessage.userId
-        val userName = chatMessage.displayName ?: ""
-        val userNameLength = userName.length
-        val userNameEndIndex = index + userNameLength
+        val userName = chatMessage.displayName
+        val userNameLength = userName?.length ?: 0
+        val userNameEndIndex = imageIndex + userNameLength
         val originalMessage: String
         val userNameWithPostfixLength: Int
-        builder.append(userName)
-        if (!chatMessage.isAction) {
-            builder.append(": ")
-            originalMessage = "$userName: ${chatMessage.message}"
-            userNameWithPostfixLength = userNameLength + 2
+        userName?.let { builder.append(it) }
+        if (userName != null) {
+            if (!chatMessage.isAction) {
+                builder.append(": ")
+                originalMessage = "$userName: ${chatMessage.message}"
+                userNameWithPostfixLength = userNameLength + 2
+            } else {
+                builder.append(" ")
+                originalMessage = "$userName ${chatMessage.message}"
+                userNameWithPostfixLength = userNameLength + 1
+            }
         } else {
-            builder.append(" ")
-            originalMessage = "$userName ${chatMessage.message}"
-            userNameWithPostfixLength = userNameLength + 1
+            originalMessage = "${chatMessage.message}"
+            userNameWithPostfixLength = 0
         }
         builder.append(chatMessage.message)
         val color = chatMessage.color.let { userColor ->
             if (userColor == null) {
-                userColors[userName] ?: getRandomColor().also { userColors[userName] = it }
+                userColors[userName] ?: getRandomColor().also { if (userName != null) userColors[userName] = it }
             } else {
                 savedColors[userColor] ?: Color.parseColor(userColor).also { savedColors[userColor] = it }
             }
         }
-        builder.setSpan(ForegroundColorSpan(color), index, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
-        builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), index, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
+        if (userName != null) {
+            builder.setSpan(ForegroundColorSpan(color), imageIndex, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
+            builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), imageIndex, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
         try {
             chatMessage.emotes?.let { emotes ->
                 val copy = emotes.map {
@@ -142,10 +149,10 @@ class ChatAdapter(
                     }
                     TwitchEmote(it.name, realBegin, realEnd)
                 }
-                index += userNameWithPostfixLength
+                imageIndex += userNameWithPostfixLength
                 for (e in copy) {
-                    val begin = index + e.begin
-                    builder.replace(begin, index + e.end + 1, ".")
+                    val begin = imageIndex + e.begin
+                    builder.replace(begin, imageIndex + e.end + 1, ".")
                     builder.setSpan(ForegroundColorSpan(Color.TRANSPARENT), begin, begin + 1, SPAN_EXCLUSIVE_EXCLUSIVE)
                     val length = e.end - e.begin
                     for (e1 in copy) {
@@ -156,7 +163,7 @@ class ChatAdapter(
                     }
                     e.end -= length
                 }
-                copy.forEach { images.add(Image(it.url, index + it.begin, index + it.end + 1, true, "image/gif")) }
+                copy.forEach { images.add(Image(it.url, imageIndex + it.begin, imageIndex + it.end + 1, true, "image/gif")) }
             }
             val split = builder.split(" ")
             var builderIndex = 0
@@ -171,7 +178,7 @@ class ChatAdapter(
                         if (value.startsWith('@')) {
                             builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), builderIndex, endIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
                         }
-                        username?.let {
+                        loggedInUser?.let {
                             if (!wasMentioned && value.contains(it, true) && chatMessage.userName != it) {
                                 wasMentioned = true
                             }
@@ -198,7 +205,7 @@ class ChatAdapter(
                 }
             }
             if (chatMessage.isAction) {
-                builder.setSpan(ForegroundColorSpan(color), userNameEndIndex + 1, builder.length, SPAN_EXCLUSIVE_EXCLUSIVE)
+                builder.setSpan(ForegroundColorSpan(color), if (userName != null) userNameEndIndex + 1 else 0, builder.length, SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             if (chatMessage.isReward) {
                 holder.textView.setBackgroundColor(R.attr.colorAccent)
@@ -223,10 +230,12 @@ class ChatAdapter(
         images.forEach {
             if (it.type == "image/webp" && animateGifs) {
                 loadWebp(holder, it, originalMessage, builder, userId)
-            } else if (it.type == "image/gif" && animateGifs) {
-                loadGif(holder, it, originalMessage, builder, userId)
             } else {
-                loadDrawable(holder, it, originalMessage, builder, userId)
+                if (it.type == "image/gif" && animateGifs) {
+                    loadGif(holder, it, originalMessage, builder, userId)
+                } else {
+                    loadDrawable(holder, it, originalMessage, builder, userId)
+                }
             }
         }
     }
@@ -351,7 +360,7 @@ class ChatAdapter(
     }
 
     fun setUsername(username: String) {
-        this.username = username
+        this.loggedInUser = username
     }
 
     fun setOnClickListener(listener: (CharSequence, CharSequence, String?) -> Unit) {

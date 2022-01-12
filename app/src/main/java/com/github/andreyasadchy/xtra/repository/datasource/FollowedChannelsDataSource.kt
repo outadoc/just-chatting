@@ -21,19 +21,33 @@ class FollowedChannelsDataSource(
             for (i in localFollows.loadFollows()) {
                 list.add(Follow(to_id = i.user_id, to_login = i.user_login, to_name = i.user_name, profileImageURL = i.channelLogo, followLocal = true))
             }
+            val ids = mutableListOf<String>()
             if (userId != "") {
                 val get = api.getFollowedChannels(clientId, userToken, userId, params.requestedLoadSize, offset)
-                for (i in get.data) {
-                    val item = list.find { it.to_id == i.to_id }
-                    if (item == null) {
-                        i.profileImageURL = i.to_id?.let { api.getUserById(clientId, userToken, i.to_id).data?.first()?.profile_image_url }
-                        i.followTwitch = true
-                        list.add(i)
-                    } else {
-                        item.followTwitch = true
+                if (get.data != null) {
+                    for (i in get.data) {
+                        val item = list.find { it.to_id == i.to_id }
+                        if (item == null) {
+                            i.to_id?.let { ids.add(it) }
+                            i.followTwitch = true
+                            list.add(i)
+                        } else {
+                            item.followTwitch = true
+                        }
+                    }
+                    offset = get.pagination?.cursor
+                }
+            }
+            if (ids.isNotEmpty()) {
+                val users = api.getUserById(clientId, userToken, ids).data
+                if (users != null) {
+                    for (i in users) {
+                        val item = list.find { it.to_id == i.id }
+                        if (item != null) {
+                            item.profileImageURL = i.profile_image_url
+                        }
                     }
                 }
-                offset = get.pagination?.cursor
             }
             list
         }
@@ -42,18 +56,35 @@ class FollowedChannelsDataSource(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Follow>) {
         loadRange(params, callback) {
             val list = mutableListOf<Follow>()
-            if (userId != "" && offset != null && offset != "") {
-                val get = api.getFollowedChannels(clientId, userToken, userId, params.loadSize, offset)
-                for (i in get.data) {
-                    val item = list.find { it.to_id == i.to_id }
-                    if (item == null) {
-                        i.profileImageURL = i.to_id?.let { api.getUserById(clientId, userToken, i.to_id).data?.first()?.profile_image_url }
-                        list.add(i)
-                    } else {
-                        item.followTwitch = true
+            if (offset != null && offset != "") {
+                val ids = mutableListOf<String>()
+                if (userId != "") {
+                    val get = api.getFollowedChannels(clientId, userToken, userId, params.loadSize, offset)
+                    if (get.data != null) {
+                        for (i in get.data) {
+                            val item = list.find { it.to_id == i.to_id }
+                            if (item == null) {
+                                i.to_id?.let { ids.add(it) }
+                                i.followTwitch = true
+                                list.add(i)
+                            } else {
+                                item.followTwitch = true
+                            }
+                        }
+                        offset = get.pagination?.cursor
                     }
                 }
-                offset = get.pagination?.cursor
+                if (ids.isNotEmpty()) {
+                    val users = api.getUserById(clientId, userToken, ids).data
+                    if (users != null) {
+                        for (i in users) {
+                            val item = list.find { it.to_id == i.id }
+                            if (item != null) {
+                                item.profileImageURL = i.profile_image_url
+                            }
+                        }
+                    }
+                }
             }
             list
         }

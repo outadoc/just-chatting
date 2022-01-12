@@ -18,27 +18,27 @@ import kotlinx.coroutines.CoroutineScope
 interface TwitchService {
 
     fun loadTopGames(clientId: String?, userToken: String?, coroutineScope: CoroutineScope): Listing<Game>
-    suspend fun loadStream(clientId: String?, userToken: String?, channelId: String): Stream
-    fun loadStreams(clientId: String?, userToken: String?, game: String?, languages: String?, coroutineScope: CoroutineScope): Listing<Stream>
-    fun loadFollowedStreams(usehelix: Boolean, clientId: String?, userToken: String?, userId: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
-    fun loadClips(clientId: String?, userToken: String?, channelName: String?, gameName: String?, started_at: String?, ended_at: String?, coroutineScope: CoroutineScope): Listing<Clip>
-    suspend fun loadVideo(clientId: String?, userToken: String?, videoId: String): Video
+    suspend fun loadStream(clientId: String?, userToken: String?, channelId: String): Stream?
+    fun loadTopStreams(clientId: String?, userToken: String?, game: String?, languages: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
+    fun loadFollowedStreams(useHelix: Boolean, clientId: String?, userToken: String?, userId: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
+    fun loadClips(clientId: String?, userToken: String?, channelId: String?, channelLogin: String?, gameId: String?, gameName: String?, started_at: String?, ended_at: String?, coroutineScope: CoroutineScope): Listing<Clip>
+    suspend fun loadVideo(clientId: String?, userToken: String?, videoId: String): Video?
     fun loadVideos(clientId: String?, userToken: String?, game: String?, period: com.github.andreyasadchy.xtra.model.helix.video.Period, broadcastType: BroadcastType, language: String?, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>
     fun loadChannelVideos(clientId: String?, userToken: String?, channelId: String, period: com.github.andreyasadchy.xtra.model.helix.video.Period, broadcastType: BroadcastType, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>
-    suspend fun loadUserById(clientId: String?, userToken: String?, id: String): User
+    suspend fun loadUserById(clientId: String?, userToken: String?, id: String): User?
     fun loadSearchGames(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Game>
     fun loadSearchChannels(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<ChannelSearch>
     suspend fun loadUserFollows(clientId: String?, userToken: String?, userId: String, channelId: String): Boolean
     fun loadFollowedChannels(clientId: String?, userToken: String?, userId: String, coroutineScope: CoroutineScope): Listing<Follow>
-    suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setId: String): List<TwitchEmote>
+    suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setId: String): List<TwitchEmote>?
     suspend fun loadVideoChatLog(clientId: String?, videoId: String, offsetSeconds: Double): VideoMessagesResponse
     suspend fun loadVideoChatAfter(clientId: String?, videoId: String, cursor: String): VideoMessagesResponse
 
-    suspend fun loadStreamGQL(clientId: String?, channelId: String): Stream
-    suspend fun loadVideoGQL(clientId: String?, videoId: String): Video
-    suspend fun loadUserByIdGQL(clientId: String?, channelId: String): User
+    suspend fun loadStreamGQL(clientId: String?, channelId: String): Stream?
+    suspend fun loadVideoGQL(clientId: String?, videoId: String): Video?
+    suspend fun loadUserByIdGQL(clientId: String?, channelId: String): User?
     fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game>
-    fun loadTopStreamsGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Stream>
+    fun loadTopStreamsGQL(clientId: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadTopVideosGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Video>
     fun loadGameStreamsGQL(clientId: String?, gameId: String?, gameName: String?, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadGameVideosGQL(clientId: String?, gameId: String?, gameName: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video>

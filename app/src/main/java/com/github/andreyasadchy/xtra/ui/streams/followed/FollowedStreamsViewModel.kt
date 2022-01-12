@@ -15,11 +15,11 @@ class FollowedStreamsViewModel @Inject constructor(
 
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Stream>> = Transformations.map(filter) {
-        repository.loadFollowedStreams(it.usehelix, it.clientId, it.token, it.channelId, it.thumbnailsEnabled, viewModelScope)
+        repository.loadFollowedStreams(it.useHelix, it.clientId, it.token, it.channelId, it.thumbnailsEnabled, viewModelScope)
     }
 
-    fun loadStreams(usehelix: Boolean, clientId: String?, token: String? = "", channelId: String, thumbnailsEnabled: Boolean) {
-        Filter(usehelix, clientId, token, channelId, thumbnailsEnabled).let {
+    fun loadStreams(useHelix: Boolean, clientId: String?, token: String? = null, channelId: String, thumbnailsEnabled: Boolean) {
+        Filter(useHelix, clientId, token, channelId, thumbnailsEnabled).let {
             if (filter.value != it) {
                 filter.value = it
             }
@@ -27,9 +27,9 @@ class FollowedStreamsViewModel @Inject constructor(
     }
 
     private data class Filter(
-        val usehelix: Boolean,
+        val useHelix: Boolean,
         val clientId: String?,
         val token: String?,
         val channelId: String,
-        val thumbnailsEnabled: Boolean,)
+        val thumbnailsEnabled: Boolean)
 }

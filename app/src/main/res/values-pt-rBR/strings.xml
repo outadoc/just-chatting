@@ -67,7 +67,7 @@
     <string name="internal_storage">Armazenamento interno</string>
     <string name="save_to">Salvar em</string>
     <string name="no_storage_detected">Nenhum armazenamento disponível detectado (provavelmente o telefone está conectado a um computador).</string>
-    <string name="seconds">%s segundos</string>
+    <string name="seconds_full">%s segundos</string>
     <string name="unfollow">Deixar de seguir %s?</string>
     <string name="now_following">Agora você está seguindo %s</string>
     <string name="unfollowed">Deixou de seguir %s</string>
@@ -209,4 +209,7 @@
     <string name="twitch">Twitch</string>
     <string name="local">Local</string>
     <string name="watch_rerun">Watch rerun</string>
+    <string name="days">d</string>
+    <string name="seconds">s</string>
+    <string name="show_uptime">Show stream uptime</string>
 </resources>

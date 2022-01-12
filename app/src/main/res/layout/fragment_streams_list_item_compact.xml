@@ -107,6 +107,14 @@
                 android:visibility="gone"
                 tools:text="1337499"
                 tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/uptime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                tools:text="8:21:33"
+                tools:visibility="visible" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

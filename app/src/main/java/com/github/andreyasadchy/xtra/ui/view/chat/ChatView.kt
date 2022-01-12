@@ -141,7 +141,7 @@ class ChatView : ConstraintLayout {
                     text_followers.visible()
                 }
                 else -> {
-                    text_followers.text = context.getString(R.string.room_followers_min, TwitchApiHelper.getDurationFromSeconds((roomState.followers.toInt() * 60).toString()))
+                    text_followers.text = context.getString(R.string.room_followers_min, TwitchApiHelper.getDurationFromSeconds(context, (roomState.followers.toInt() * 60).toString()))
                     text_followers.visible()
                 }
             }
@@ -156,7 +156,7 @@ class ChatView : ConstraintLayout {
             when (roomState.slow) {
                 "0" -> text_slow.gone()
                 else -> {
-                    text_slow.text = context.getString(R.string.room_slow, TwitchApiHelper.getDurationFromSeconds(roomState.slow))
+                    text_slow.text = context.getString(R.string.room_slow, TwitchApiHelper.getDurationFromSeconds(context, roomState.slow))
                     text_slow.visible()
                 }
             }
@@ -182,7 +182,7 @@ class ChatView : ConstraintLayout {
             "join" -> context.getString(R.string.chat_join, command.message)
             "clearmsg" -> context.getString(R.string.chat_clearmsg, command.message, command.duration)
             "clearchat" -> context.getString(R.string.chat_clear)
-            "timeout" -> context.getString(R.string.chat_timeout, command.message, TwitchApiHelper.getDurationFromSeconds(command.duration))
+            "timeout" -> context.getString(R.string.chat_timeout, command.message, TwitchApiHelper.getDurationFromSeconds(context, command.duration))
             "ban" -> context.getString(R.string.chat_ban, command.message)
             else -> command.message
         }

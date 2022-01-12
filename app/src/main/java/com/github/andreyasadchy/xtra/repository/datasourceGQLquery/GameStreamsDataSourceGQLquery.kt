@@ -35,6 +35,7 @@ class GameStreamsDataSourceGQLquery private constructor(
                         type = i?.node?.type,
                         title = i?.node?.title,
                         viewer_count = i?.node?.viewersCount,
+                        started_at = i?.node?.createdAt,
                         thumbnail_url = i?.node?.previewImageURL,
                         profileImageURL = i?.node?.broadcaster?.profileImageURL
                     ))
@@ -63,6 +64,7 @@ class GameStreamsDataSourceGQLquery private constructor(
                         type = i?.node?.type,
                         title = i?.node?.title,
                         viewer_count = i?.node?.viewersCount,
+                        started_at = i?.node?.createdAt,
                         thumbnail_url = i?.node?.previewImageURL,
                         profileImageURL = i?.node?.broadcaster?.profileImageURL
                     ))

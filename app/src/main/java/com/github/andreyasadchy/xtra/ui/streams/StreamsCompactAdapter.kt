@@ -23,13 +23,23 @@ class StreamsCompactAdapter(
     override fun bind(item: Stream, view: View) {
         super.bind(item, view)
         with(view) {
-            if (item.viewer_count != null)  {
+            if (item.viewer_count != null) {
                 viewers.visible()
                 viewers.text = TwitchApiHelper.formatCount(item.viewer_count, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
             }
-            if (item.type != null)  {
-                type.visible()
-                type.text = TwitchApiHelper.getType(context, item.type)
+            TwitchApiHelper.getType(context, item.type).let {
+                if (it != null)  {
+                    type.visible()
+                    type.text = it
+                }
+            }
+            if (context.prefs().getBoolean(C.UI_UPTIME, true)) {
+                TwitchApiHelper.getUptime(context, item.started_at).let {
+                    if (it != null)  {
+                        uptime.visible()
+                        uptime.text = it
+                    }
+                }
             }
         }
     }

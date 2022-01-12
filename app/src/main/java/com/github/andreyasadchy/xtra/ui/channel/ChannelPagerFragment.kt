@@ -87,6 +87,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
                                     .show()
                             }
                         }
+                        else -> menu.close()
                     }
                     true
                 }
@@ -121,32 +122,32 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
             viewModel.loadStream(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelId = requireArguments().getString(C.CHANNEL_ID), channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))
         }
         viewModel.stream.observe(viewLifecycleOwner, { stream ->
-            if (stream.type?.lowercase() == "rerun")  {
+            if (stream?.type?.lowercase() == "rerun")  {
                 watchLive.text = getString(R.string.watch_rerun)
                 watchLive.setOnClickListener { activity.startStream(stream) }
             } else {
-                if (stream.viewer_count != null) {
+                if (stream?.viewer_count != null) {
                     watchLive.text = getString(R.string.watch_live)
                     watchLive.setOnClickListener { activity.startStream(stream) }
                 } else {
                     watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID), user_login = requireArguments().getString(C.CHANNEL_LOGIN), user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))) }
                 }
             }
-            stream.channelLogo.let { if (it != null && it != requireArguments().getString(C.CHANNEL_PROFILEIMAGE)) {
+            stream?.channelLogo.let { if (it != null && it != requireArguments().getString(C.CHANNEL_PROFILEIMAGE)) {
                 logo.loadImage(this, it, circle = true)
                 bundle.putString(C.CHANNEL_PROFILEIMAGE, it)
                 arguments = bundle
             } }
-            stream.user_name.let { if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
+            stream?.user_name.let { if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
                 collapsingToolbar.title = it
                 bundle.putString(C.CHANNEL_DISPLAYNAME, it)
                 arguments = bundle
             } }
-            stream.user_login.let { if (it != null && it != requireArguments().getString(C.CHANNEL_LOGIN)) {
+            stream?.user_login.let { if (it != null && it != requireArguments().getString(C.CHANNEL_LOGIN)) {
                 bundle.putString(C.CHANNEL_LOGIN, it)
                 arguments = bundle
             } }
-            if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {
+            if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL) && stream != null) {
                 viewModel.updateLocalUser(requireContext(), stream)
             }
         })

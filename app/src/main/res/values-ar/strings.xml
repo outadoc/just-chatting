@@ -67,7 +67,7 @@
     <string name="internal_storage"> التخزين الداخلي</string>
     <string name="save_to">حفظ إلى</string>
     <string name="no_storage_detected">لم يتم اكتشاف سعة تخزينية (على الأرجح أن الهاتف متصل بجهاز كومبيوتر).</string>
-    <string name="seconds">%s ثواني</string>
+    <string name="seconds_full">%s ثواني</string>
     <string name="unfollow">  إلغاء مُتابعة %s؟</string>
     <string name="now_following">أنت الآن تُتابع %s</string>
     <string name="unfollowed">تم إلغاء مُتابعة%s</string>
@@ -209,4 +209,7 @@
     <string name="twitch">Twitch</string>
     <string name="local">Local</string>
     <string name="watch_rerun">Watch rerun</string>
+    <string name="days">d</string>
+    <string name="seconds">s</string>
+    <string name="show_uptime">Show stream uptime</string>
 </resources>

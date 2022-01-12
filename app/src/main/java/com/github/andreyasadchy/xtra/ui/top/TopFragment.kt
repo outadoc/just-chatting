@@ -52,14 +52,14 @@ class TopFragment : MediaFragment() {
                             } else {
                                 AlertDialog.Builder(activity)
                                     .setTitle(getString(R.string.logout_title))
-                                    .setMessage(getString(R.string.logout_msg, context?.prefs()?.getString(
-                                        C.USERNAME, "")))
+                                    .setMessage(getString(R.string.logout_msg, context?.prefs()?.getString(C.USERNAME, "")))
                                     .setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.dismiss() }
                                     .setPositiveButton(getString(R.string.yes)) { _, _ ->
                                         activity.startActivityForResult(Intent(activity, LoginActivity::class.java), 2) }
                                     .show()
                             }
                         }
+                        else -> menu.close()
                     }
                     true
                 }

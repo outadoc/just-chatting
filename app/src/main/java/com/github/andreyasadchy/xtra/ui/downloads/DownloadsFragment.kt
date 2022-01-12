@@ -99,6 +99,7 @@ class DownloadsFragment : Fragment(), Injectable, Scrollable {
                                     .show()
                             }
                         }
+                        else -> menu.close()
                     }
                     true
                 }

@@ -73,7 +73,7 @@
     <string name="internal_storage">Internal storage</string>
     <string name="save_to">Save to</string>
     <string name="no_storage_detected">No available storage detected (most likely the phone is connected to a computer).</string>
-    <string name="seconds">%s seconds</string>
+    <string name="seconds_full">%s seconds</string>
     <string name="unfollow">Unfollow %s?</string>
     <string name="now_following">You\'re now following %s</string>
     <string name="unfollowed">Unfollowed %s</string>
@@ -220,4 +220,7 @@
     <string name="always">Always</string>
     <string name="twitch">Twitch</string>
     <string name="local">Local</string>
+    <string name="days">d</string>
+    <string name="seconds">s</string>
+    <string name="show_uptime">Show stream uptime</string>
 </resources>

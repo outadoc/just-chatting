@@ -67,6 +67,7 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
                                     .show()
                             }
                         }
+                        else -> menu.close()
                     }
                     true
                 }

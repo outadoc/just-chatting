@@ -266,7 +266,10 @@ class ChatViewModel @Inject constructor(
                     val emotes = mutableListOf<Emote>()
                     emoteSets?.asReversed()?.forEach {
                         try {
-                            emotes.addAll(repository.loadEmotesFromSet(clientId, userToken, it))
+                            val list = repository.loadEmotesFromSet(clientId, userToken, it)
+                            if (list != null) {
+                                emotes.addAll(list)
+                            }
                         } catch (e: Exception) {
                         }
                     }

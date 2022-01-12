@@ -1,7 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.channel
 
 import android.content.Context
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,8 +21,8 @@ class ChannelPagerViewModel @Inject constructor(
     private val localFollows: LocalFollowRepository,
     private val offlineRepository: OfflineRepository) : ViewModel(), FollowViewModel {
 
-    private val _stream = MutableLiveData<Stream>()
-    val stream: LiveData<Stream>
+    private val _stream = MutableLiveData<Stream?>()
+    val stream: MutableLiveData<Stream?>
         get() = _stream
 
     private val _userId = MutableLiveData<String?>()

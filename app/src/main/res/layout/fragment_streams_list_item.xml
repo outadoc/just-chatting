@@ -20,18 +20,33 @@
             style="@style/ThumbnailItem"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="5dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@+id/thumbnail"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="133769 viewers" />
+            tools:text="133769 viewers"
+            tools:visibility="visible" />
 
         <TextView
             android:id="@+id/type"
             style="@style/ThumbnailItem"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="type" />
+            tools:text="Rerun"
+            tools:visibility="visible" />
+
+        <TextView
+            android:id="@+id/uptime"
+            style="@style/ThumbnailItem"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/thumbnail"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="8:21:33"
+            tools:visibility="visible" />
 
         <ImageView
             android:id="@+id/userImage"

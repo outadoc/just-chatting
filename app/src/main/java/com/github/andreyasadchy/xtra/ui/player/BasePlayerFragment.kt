@@ -368,7 +368,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
             showChat.gone()
             showStatusBar()
             resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
-            aspectRatioFrameLayout.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+            aspectRatioFrameLayout.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
         } else {
             requireActivity().window.decorView.setOnSystemUiVisibilityChangeListener {
                 if (!isKeyboardShown && slidingLayout.isMaximized) {

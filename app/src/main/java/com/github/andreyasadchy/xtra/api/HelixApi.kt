@@ -17,22 +17,22 @@ import retrofit2.http.Query
 interface HelixApi {
 
     @GET("games")
-    suspend fun getGame(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") id: String): GamesResponse
+    suspend fun getGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") ids: List<String>): GamesResponse
 
     @GET("games/top")
     suspend fun getTopGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("first") limit: Int, @Query("after") offset: String?): GamesResponse
 
     @GET("streams/")
-    suspend fun getStream(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") channelId: String): StreamsResponse
+    suspend fun getStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") ids: List<String>): StreamsResponse
 
     @GET("streams/")
-    suspend fun getStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("game_id") game: String?, @Query("language") languages: String?, @Query("first") limit: Int, @Query("after") offset: String?): StreamsResponse
+    suspend fun getTopStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("game_id") game: String?, @Query("language") languages: String?, @Query("first") limit: Int, @Query("after") offset: String?): StreamsResponse
 
     @GET("streams/followed")
     suspend fun getFollowedStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") user_id: String?, @Query("first") limit: Int, @Query("after") offset: String?): StreamsResponse
 
     @GET("clips")
-    suspend fun getClips(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("broadcaster_id") channel: String?, @Query("game_id") gameName: String?, @Query("started_at") started_at: String?, @Query("ended_at") ended_at: String?, @Query("first") limit: Int, @Query("after") cursor: String?): ClipsResponse
+    suspend fun getClips(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("broadcaster_id") channel: String?, @Query("game_id") gameId: String?, @Query("started_at") started_at: String?, @Query("ended_at") ended_at: String?, @Query("first") limit: Int, @Query("after") cursor: String?): ClipsResponse
 
     @GET("videos")
     suspend fun getVideo(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") videoId: String): VideosResponse
@@ -44,7 +44,7 @@ interface HelixApi {
     suspend fun getChannelVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") channelId: String, @Query("period") period: com.github.andreyasadchy.xtra.model.helix.video.Period?, @Query("type") broadcastType: BroadcastType?, @Query("sort") sort: Sort?, @Query("first") limit: Int, @Query("after") offset: String?): VideosResponse
 
     @GET("users")
-    suspend fun getUserById(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") id: String): UsersResponse
+    suspend fun getUserById(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") ids: List<String>): UsersResponse
 
     @GET("search/categories")
     suspend fun getGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("query") query: String, @Query("first") limit: Int, @Query("after") offset: String?): GamesResponse

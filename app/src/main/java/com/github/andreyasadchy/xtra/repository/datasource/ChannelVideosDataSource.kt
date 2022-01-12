@@ -22,34 +22,22 @@ class ChannelVideosDataSource (
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
         loadInitial(params, callback) {
             val get = api.getChannelVideos(clientId, userToken, channelId, period, broadcastTypes, sort, params.requestedLoadSize, offset)
-            val list = mutableListOf<Video>()
-            list.addAll(get.data)
-            for (i in list) {
-                val user = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first() }
-                if (i.user_id != "") {
-                    i.profileImageURL = user?.profile_image_url
-                }
-            }
-            offset = get.pagination?.cursor
-            list
+            if (get.data != null) {
+                offset = get.pagination?.cursor
+                get.data
+            } else mutableListOf()
         }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         loadRange(params, callback) {
             val get = api.getChannelVideos(clientId, userToken, channelId, period, broadcastTypes, sort, params.loadSize, offset)
-            val list = mutableListOf<Video>()
             if (offset != null && offset != "") {
-                list.addAll(get.data)
-                for (i in list) {
-                    val user = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first() }
-                    if (i.user_id != "") {
-                        i.profileImageURL = user?.profile_image_url
-                    }
-                }
-                offset = get.pagination?.cursor
-            }
-            list
+                if (get.data != null) {
+                    offset = get.pagination?.cursor
+                    get.data
+                } else mutableListOf()
+            } else mutableListOf()
         }
     }
 

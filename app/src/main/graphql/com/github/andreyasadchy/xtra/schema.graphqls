@@ -79,6 +79,7 @@ type StreamNode {
   type: String
   title: String
   viewersCount: Int
+  createdAt: String
   previewImageURL: String
 }
 

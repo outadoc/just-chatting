@@ -55,6 +55,12 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:key="ui_uptime"
+        android:title="@string/show_uptime"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
         android:key="ui_broadcasterscount"
         android:title="@string/broadcastersCount"
         app:iconSpaceReserved="false"/>
@@ -259,7 +265,7 @@
         android:key="playerRewind"
         android:entries="@array/playerSeekEntries"
         android:entryValues="@array/playerSeekValues"
-        android:summary="@string/seconds"
+        android:summary="@string/seconds_full"
         android:title="@string/playerRewind"
         app:iconSpaceReserved="false"/>
 

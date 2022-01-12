@@ -7,6 +7,7 @@ query TopStreams($first: Int, $after: Cursor) {
                 type
                 title
                 viewersCount
+                createdAt
                 previewImageURL
                 broadcaster {
                     id

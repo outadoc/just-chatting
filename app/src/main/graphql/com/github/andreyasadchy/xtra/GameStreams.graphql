@@ -8,6 +8,7 @@ query GameStreams($id: ID, $name: String, $first: Int, $after: Cursor) {
                     type
                     title
                     viewersCount
+                    createdAt
                     previewImageURL
                     broadcaster {
                         id

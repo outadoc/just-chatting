@@ -8,6 +8,7 @@ query Stream($id: ID) {
             type
             title
             viewersCount
+            createdAt
             previewImageURL
             game {
                 id

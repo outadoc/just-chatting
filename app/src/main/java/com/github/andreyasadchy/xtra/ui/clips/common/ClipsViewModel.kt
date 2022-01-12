@@ -34,7 +34,7 @@ class ClipsViewModel @Inject constructor(
                 Period.ALL -> null
                 else -> TwitchApiHelper.getClipTime()
             }
-            repository.loadClips(it.clientId, it.token, it.channelId, it.gameId, started, ended, viewModelScope)
+            repository.loadClips(it.clientId, it.token, it.channelId, it.channelLogin, it.gameId, it.gameName, started, ended, viewModelScope)
         } else {
             val period = when (it.period) {
                 Period.DAY -> ClipsPeriod.LAST_DAY
@@ -54,11 +54,11 @@ class ClipsViewModel @Inject constructor(
         _sortText.value = context.getString(sortOptions[selectedIndex])
     }
 
-    fun loadClips(usehelix: Boolean, clientId: String?, channelId: String? = null, gameId: String? = null, gameName: String? = null, token: String? = null) {
+    fun loadClips(usehelix: Boolean, clientId: String?, channelId: String? = null, channelLogin: String? = null, gameId: String? = null, gameName: String? = null, token: String? = null) {
         if (filter.value == null) {
-            filter.value = Filter(usehelix = usehelix, clientId = clientId, token = token, channelId = channelId, gameId = gameId, gameName = gameName)
+            filter.value = Filter(usehelix = usehelix, clientId = clientId, token = token, channelId = channelId, channelLogin = channelLogin, gameId = gameId, gameName = gameName)
         } else {
-            filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, channelId = channelId, gameId = gameId, gameName = gameName).let {
+            filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, channelId = channelId, channelLogin = channelLogin, gameId = gameId, gameName = gameName).let {
                 if (filter.value != it)
                     filter.value = it
             }
@@ -76,6 +76,7 @@ class ClipsViewModel @Inject constructor(
         val clientId: String?,
         val token: String?,
         val channelId: String?,
+        val channelLogin: String?,
         val gameId: String?,
         val gameName: String?,
         val period: Period? = Period.WEEK)

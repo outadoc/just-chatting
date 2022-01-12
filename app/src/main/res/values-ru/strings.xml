@@ -67,7 +67,7 @@
     <string name="internal_storage">Память телефона</string>
     <string name="save_to">Сохранить в</string>
     <string name="no_storage_detected">Хранилище телефона не доступно (вероятнее всего телефон подключен к компьютеру).</string>
-    <string name="seconds">%s секунд</string>
+    <string name="seconds_full">%s секунд</string>
     <string name="unfollow">Отписаться от %s?</string>
     <string name="now_following">Вы подписались на %s</string>
     <string name="unfollowed">Вы отписались от %s</string>
@@ -209,4 +209,7 @@
     <string name="twitch">Twitch</string>
     <string name="local">Local</string>
     <string name="watch_rerun">Watch rerun</string>
+    <string name="days">d</string>
+    <string name="seconds">s</string>
+    <string name="show_uptime">Show stream uptime</string>
 </resources>

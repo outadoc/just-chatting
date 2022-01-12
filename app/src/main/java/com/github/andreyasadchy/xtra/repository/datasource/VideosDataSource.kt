@@ -24,9 +24,21 @@ class VideosDataSource private constructor(
         loadInitial(params, callback) {
             val get = api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.requestedLoadSize, offset)
             val list = mutableListOf<Video>()
-            list.addAll(get.data)
+            get.data?.let { list.addAll(it) }
+            val ids = mutableListOf<String>()
             for (i in list) {
-                i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url }
+                i.user_id?.let { ids.add(it) }
+            }
+            if (ids.isNotEmpty()) {
+                val users = api.getUserById(clientId, userToken, ids).data
+                if (users != null) {
+                    for (i in users) {
+                        val items = list.filter { it.user_id == i.id }
+                        for (item in items) {
+                            item.profileImageURL = i.profile_image_url
+                        }
+                    }
+                }
             }
             offset = get.pagination?.cursor
             list
@@ -38,9 +50,21 @@ class VideosDataSource private constructor(
             val get = api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.loadSize, offset)
             val list = mutableListOf<Video>()
             if (offset != null && offset != "") {
-                list.addAll(get.data)
+                get.data?.let { list.addAll(it) }
+                val ids = mutableListOf<String>()
                 for (i in list) {
-                    i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url }
+                    i.user_id?.let { ids.add(it) }
+                }
+                if (ids.isNotEmpty()) {
+                    val users = api.getUserById(clientId, userToken, ids).data
+                    if (users != null) {
+                        for (i in users) {
+                            val items = list.filter { it.user_id == i.id }
+                            for (item in items) {
+                                item.profileImageURL = i.profile_image_url
+                            }
+                        }
+                    }
                 }
                 offset = get.pagination?.cursor
             }

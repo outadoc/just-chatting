@@ -17,9 +17,21 @@ class ChannelsSearchDataSource private constructor(
         loadInitial(params, callback) {
             val get = api.getChannels(clientId, userToken, query, params.requestedLoadSize, offset)
             val list = mutableListOf<ChannelSearch>()
-            list.addAll(get.data)
+            get.data?.let { list.addAll(it) }
+            val ids = mutableListOf<String>()
             for (i in list) {
-                i.profileImageURL = i.id?.let { api.getUserById(clientId, userToken, i.id).data?.first()?.profile_image_url }
+                i.id?.let { ids.add(it) }
+            }
+            if (ids.isNotEmpty()) {
+                val users = api.getUserById(clientId, userToken, ids).data
+                if (users != null) {
+                    for (i in users) {
+                        val items = list.filter { it.id == i.id }
+                        for (item in items) {
+                            item.profileImageURL = i.profile_image_url
+                        }
+                    }
+                }
             }
             offset = get.pagination?.cursor
             list
@@ -31,9 +43,21 @@ class ChannelsSearchDataSource private constructor(
             val get = api.getChannels(clientId, userToken, query, params.loadSize, offset)
             val list = mutableListOf<ChannelSearch>()
             if (offset != null && offset != "") {
-                list.addAll(get.data)
+                get.data?.let { list.addAll(it) }
+                val ids = mutableListOf<String>()
                 for (i in list) {
-                    i.profileImageURL = i.id?.let { api.getUserById(clientId, userToken, i.id).data?.first()?.profile_image_url }
+                    i.id?.let { ids.add(it) }
+                }
+                if (ids.isNotEmpty()) {
+                    val users = api.getUserById(clientId, userToken, ids).data
+                    if (users != null) {
+                        for (i in users) {
+                            val items = list.filter { it.id == i.id }
+                            for (item in items) {
+                                item.profileImageURL = i.profile_image_url
+                            }
+                        }
+                    }
                 }
                 offset = get.pagination?.cursor
             }

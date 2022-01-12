@@ -5,11 +5,10 @@ import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.coroutines.CoroutineScope
 
 class FollowedStreamsDataSource(
-    private val usehelix: Boolean,
+    private val useHelix: Boolean,
     private val localFollows: LocalFollowRepository,
     private val repository: TwitchService,
     private val clientId: String?,
@@ -22,27 +21,43 @@ class FollowedStreamsDataSource(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
         loadInitial(params, callback) {
             val list = mutableListOf<Stream>()
+            val userIds = mutableListOf<String>()
             for (i in localFollows.loadFollows()) {
-                val get = if (usehelix) {
-                    repository.loadStream(clientId, userToken, i.user_id)
+                val get = if (useHelix) {
+                    val ids = mutableListOf<String>()
+                    ids.add(i.user_id)
+                    api.getStreams(clientId, userToken, ids).data?.firstOrNull()
                 } else {
                     repository.loadStreamGQL(clientId, i.user_id)
                 }
-                if (get.viewer_count != null) {
-                    if (usehelix) { get.profileImageURL = i.user_id.let { api.getUserById(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, i.user_id).data?.first()?.profile_image_url } }
+                if (get?.viewer_count != null) {
+                    if (useHelix) { i.user_id.let { userIds.add(it) } }
                     list.add(get)
                 }
             }
-            if (usehelix && userId != "") {
-                val get = api.getFollowedStreams(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, params.requestedLoadSize, offset)
-                for (i in get.data) {
-                    val item = list.find { it.user_id == i.user_id }
-                    if (item == null) {
-                        i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, i.user_id).data?.first()?.profile_image_url }
-                        list.add(i)
+            if (useHelix && userId != "") {
+                val get = api.getFollowedStreams(clientId, userToken, userId, params.requestedLoadSize, offset)
+                if (get.data != null) {
+                    for (i in get.data) {
+                        val item = list.find { it.user_id == i.user_id }
+                        if (item == null) {
+                            i.user_id?.let { userIds.add(it) }
+                            list.add(i)
+                        }
+                    }
+                    offset = get.pagination?.cursor
+                }
+            }
+            if (userIds.isNotEmpty()) {
+                val users = api.getUserById(clientId, userToken, userIds).data
+                if (users != null) {
+                    for (i in users) {
+                        val item = list.find { it.user_id == i.id }
+                        if (item != null) {
+                            item.profileImageURL = i.profile_image_url
+                        }
                     }
                 }
-                offset = get.pagination?.cursor
             }
             list
         }
@@ -51,23 +66,39 @@ class FollowedStreamsDataSource(
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
         loadRange(params, callback) {
             val list = mutableListOf<Stream>()
-            if (usehelix && userId != "" && offset != null && offset != "") {
-                val get = api.getFollowedStreams(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, params.loadSize, offset)
-                for (i in get.data) {
-                    val item = list.find { it.user_id == i.user_id }
-                    if (item == null) {
-                        i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, i.user_id).data?.first()?.profile_image_url }
-                        list.add(i)
+            if (offset != null && offset != "") {
+                val userIds = mutableListOf<String>()
+                if (useHelix && userId != "") {
+                    val get = api.getFollowedStreams(clientId, userToken, userId, params.loadSize, offset)
+                    if (get.data != null) {
+                        for (i in get.data) {
+                            val item = list.find { it.user_id == i.user_id }
+                            if (item == null) {
+                                i.user_id?.let { userIds.add(it) }
+                                list.add(i)
+                            }
+                        }
+                        offset = get.pagination?.cursor
                     }
                 }
-                offset = get.pagination?.cursor
+                if (userIds.isNotEmpty()) {
+                    val users = api.getUserById(clientId, userToken, userIds).data
+                    if (users != null) {
+                        for (i in users) {
+                            val item = list.find { it.user_id == i.id }
+                            if (item != null) {
+                                item.profileImageURL = i.profile_image_url
+                            }
+                        }
+                    }
+                }
             }
             list
         }
     }
 
     class Factory(
-        private val usehelix: Boolean,
+        private val useHelix: Boolean,
         private val localFollows: LocalFollowRepository,
         private val repository: TwitchService,
         private val clientId: String?,
@@ -77,6 +108,6 @@ class FollowedStreamsDataSource(
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Stream, FollowedStreamsDataSource>() {
 
         override fun create(): DataSource<Int, Stream> =
-                FollowedStreamsDataSource(usehelix, localFollows, repository, clientId, userToken, user_id, api, coroutineScope).also(sourceLiveData::postValue)
+                FollowedStreamsDataSource(useHelix, localFollows, repository, clientId, userToken, user_id, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

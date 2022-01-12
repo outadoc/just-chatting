@@ -17,8 +17,10 @@ class SearchGamesDataSourceGQL private constructor(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Game>) {
         loadInitial(params, callback) {
             val get = api.loadSearchGames(clientId, query, offset)
-            offset = get.cursor
-            get.data
+            if (get.data != null) {
+                offset = get.cursor
+                get.data
+            } else mutableListOf()
         }
     }
 
@@ -26,8 +28,10 @@ class SearchGamesDataSourceGQL private constructor(
         loadRange(params, callback) {
             val get = api.loadSearchGames(clientId, query, offset)
             if (offset != null && offset != "") {
-                offset = get.cursor
-                get.data
+                if (get.data != null) {
+                    offset = get.cursor
+                    get.data
+                } else mutableListOf()
             } else mutableListOf()
         }
     }

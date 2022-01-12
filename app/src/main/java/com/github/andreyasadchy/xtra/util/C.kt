@@ -30,6 +30,7 @@ object C {
     const val UI_LANGUAGE = "ui_language"
     const val UI_CUTOUTMODE = "ui_cutoutmode"
     const val UI_FOLLOW = "ui_follow"
+    const val UI_UPTIME = "ui_uptime"
     const val PICTURE_IN_PICTURE = "pictureInPicture"
     const val PLAYER_DOUBLETAP = "player_doubletap"
     const val PLAYER_PAUSE = "player_pause"

@@ -16,11 +16,23 @@ class StreamsDataSource private constructor(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
         loadInitial(params, callback) {
-            val get = api.getStreams(clientId, userToken, game, languages, params.requestedLoadSize, offset)
+            val get = api.getTopStreams(clientId, userToken, game, languages, params.requestedLoadSize, offset)
             val list = mutableListOf<Stream>()
-            list.addAll(get.data)
+            get.data?.let { list.addAll(it) }
+            val ids = mutableListOf<String>()
             for (i in list) {
-                i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url }
+                i.user_id?.let { ids.add(it) }
+            }
+            if (ids.isNotEmpty()) {
+                val users = api.getUserById(clientId, userToken, ids).data
+                if (users != null) {
+                    for (i in users) {
+                        val items = list.filter { it.user_id == i.id }
+                        for (item in items) {
+                            item.profileImageURL = i.profile_image_url
+                        }
+                    }
+                }
             }
             offset = get.pagination?.cursor
             list
@@ -29,12 +41,24 @@ class StreamsDataSource private constructor(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
         loadRange(params, callback) {
-            val get = api.getStreams(clientId, userToken, game, languages, params.loadSize, offset)
+            val get = api.getTopStreams(clientId, userToken, game, languages, params.loadSize, offset)
             val list = mutableListOf<Stream>()
             if (offset != null && offset != "") {
-                list.addAll(get.data)
+                get.data?.let { list.addAll(it) }
+                val ids = mutableListOf<String>()
                 for (i in list) {
-                    i.profileImageURL = i.user_id?.let { api.getUserById(clientId, userToken, i.user_id).data?.first()?.profile_image_url }
+                    i.user_id?.let { ids.add(it) }
+                }
+                if (ids.isNotEmpty()) {
+                    val users = api.getUserById(clientId, userToken, ids).data
+                    if (users != null) {
+                        for (i in users) {
+                            val items = list.filter { it.user_id == i.id }
+                            for (item in items) {
+                                item.profileImageURL = i.profile_image_url
+                            }
+                        }
+                    }
                 }
                 offset = get.pagination?.cursor
             }

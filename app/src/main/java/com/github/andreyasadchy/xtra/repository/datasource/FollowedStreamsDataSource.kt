@@ -1,7 +1,11 @@
 package com.github.andreyasadchy.xtra.repository.datasource
 
 import androidx.paging.DataSource
+import com.apollographql.apollo3.api.Optional
+import com.github.andreyasadchy.xtra.StreamsQuery
 import com.github.andreyasadchy.xtra.api.HelixApi
+import com.github.andreyasadchy.xtra.di.XtraModule
+import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
@@ -22,17 +26,47 @@ class FollowedStreamsDataSource(
         loadInitial(params, callback) {
             val list = mutableListOf<Stream>()
             val userIds = mutableListOf<String>()
-            for (i in localFollows.loadFollows()) {
-                val get = if (useHelix) {
+            if (localFollows.loadFollows().isNotEmpty()) {
+                if (localFollows.loadFollows().count() <= 100) {
                     val ids = mutableListOf<String>()
-                    ids.add(i.user_id)
-                    api.getStreams(clientId, userToken, ids).data?.firstOrNull()
+                    val streams = mutableListOf<Stream>()
+                    for (i in localFollows.loadFollows()) {
+                        ids.add(i.user_id)
+                    }
+                    if (useHelix) {
+                        api.getStreams(clientId, userToken, ids).data?.let { streams.addAll(it) }
+                    } else {
+                        val get = apolloClient(XtraModule(), clientId).query(StreamsQuery(Optional.Present(ids))).execute().data?.users
+                        if (get != null) {
+                            for (i in get) {
+                                streams.add(
+                                Stream(id = i?.stream?.id, user_id = i?.id, user_login = i?.login, user_name = i?.displayName,
+                                    game_id = i?.stream?.game?.id, game_name = i?.stream?.game?.displayName, type = i?.stream?.type,
+                                    title = i?.stream?.title, viewer_count = i?.stream?.viewersCount, started_at = i?.stream?.createdAt,
+                                    thumbnail_url = i?.stream?.previewImageURL, profileImageURL = i?.profileImageURL))
+                            }
+                        }
+                    }
+                    for (i in streams) {
+                        if (i.viewer_count != null) {
+                            if (useHelix) { i.user_id?.let { userIds.add(it) } }
+                            list.add(i)
+                        }
+                    }
                 } else {
-                    repository.loadStreamGQL(clientId, i.user_id)
-                }
-                if (get?.viewer_count != null) {
-                    if (useHelix) { i.user_id.let { userIds.add(it) } }
-                    list.add(get)
+                    for (i in localFollows.loadFollows()) {
+                        val get = if (useHelix) {
+                            val ids = mutableListOf<String>()
+                            ids.add(i.user_id)
+                            api.getStreams(clientId, userToken, ids).data?.firstOrNull()
+                        } else {
+                            repository.loadStreamGQL(clientId, i.user_id)
+                        }
+                        if (get?.viewer_count != null) {
+                            if (useHelix) { i.user_id.let { userIds.add(it) } }
+                            list.add(get)
+                        }
+                    }
                 }
             }
             if (useHelix && userId != "") {

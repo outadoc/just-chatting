@@ -3,7 +3,7 @@ package com.github.andreyasadchy.xtra.repository
 import android.util.Log
 import androidx.paging.PagedList
 import com.apollographql.apollo3.api.Optional
-import com.github.andreyasadchy.xtra.StreamQuery
+import com.github.andreyasadchy.xtra.StreamsQuery
 import com.github.andreyasadchy.xtra.UserQuery
 import com.github.andreyasadchy.xtra.VideoQuery
 import com.github.andreyasadchy.xtra.api.HelixApi
@@ -193,12 +193,14 @@ class ApiRepository @Inject constructor(
 
 
     override suspend fun loadStreamGQL(clientId: String?, channelId: String): Stream? = withContext(Dispatchers.IO) {
-        val get = apolloClient(XtraModule(), clientId).query(StreamQuery(Optional.Present(channelId))).execute().data
+        val userIds = mutableListOf<String>()
+        userIds.add(channelId)
+        val get = apolloClient(XtraModule(), clientId).query(StreamsQuery(Optional.Present(userIds))).execute().data?.users?.firstOrNull()
         if (get != null) {
-            Stream(id = get.user?.stream?.id, user_id = channelId, user_login = get.user?.login, user_name = get.user?.displayName,
-                game_id = get.user?.stream?.game?.id, game_name = get.user?.stream?.game?.displayName, type = get.user?.stream?.type,
-                title = get.user?.stream?.title, viewer_count = get.user?.stream?.viewersCount, started_at = get.user?.stream?.createdAt,
-                thumbnail_url = get.user?.stream?.previewImageURL, profileImageURL = get.user?.profileImageURL)
+            Stream(id = get.stream?.id, user_id = channelId, user_login = get.login, user_name = get.displayName,
+                game_id = get.stream?.game?.id, game_name = get.stream?.game?.displayName, type = get.stream?.type,
+                title = get.stream?.title, viewer_count = get.stream?.viewersCount, started_at = get.stream?.createdAt,
+                thumbnail_url = get.stream?.previewImageURL, profileImageURL = get.profileImageURL)
         } else null
     }
 

@@ -1,5 +1,6 @@
-query Stream($id: ID) {
-    user(id: $id) {
+query Streams($id: [ID!]) {
+    users(ids: $id) {
+        id
         login
         displayName
         profileImageURL(width: 300)

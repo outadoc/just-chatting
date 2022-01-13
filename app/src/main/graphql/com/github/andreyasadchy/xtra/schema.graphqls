@@ -4,6 +4,7 @@ type Query {
   videos(first: Int, after: Cursor): Videos
   game(id: ID, name: String, first: Int, after: Cursor): Game
   user(id: ID, login: String): User
+  users(ids: [ID!]): [User]
   video(id: ID): VideoNode
 }
 

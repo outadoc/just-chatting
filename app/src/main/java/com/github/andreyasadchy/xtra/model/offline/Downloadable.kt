@@ -11,7 +11,7 @@ interface Downloadable {
     val gameId: String?
     val gameName: String?
     val uploadDate: String?
-    val videoType: String?
+    val type: String?
 }
 
 internal class Wrapper(downloadable: Downloadable) : Downloadable {
@@ -26,7 +26,7 @@ internal class Wrapper(downloadable: Downloadable) : Downloadable {
     override val gameId: String?
     override val gameName: String?
     override val uploadDate: String?
-    override val videoType: String?
+    override val type: String?
 
     init {
         downloadable.let {
@@ -40,7 +40,7 @@ internal class Wrapper(downloadable: Downloadable) : Downloadable {
             gameId = it.gameId
             gameName = it.gameName
             uploadDate = it.uploadDate
-            videoType = it.videoType
+            type = it.type
         }
     }
 }

@@ -14,7 +14,6 @@ import kotlinx.coroutines.CoroutineScope
 class GameClipsDataSourceGQLquery(
     private val clientId: String?,
     private val gameId: String?,
-    private val gameName: String?,
     private val sort: ClipsPeriod?,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Clip>(coroutineScope) {
     private var offset: String? = null
@@ -35,8 +34,6 @@ class GameClipsDataSourceGQLquery(
                             broadcaster_name = i?.node?.broadcaster?.displayName,
                             video_id = i?.node?.video?.id,
                             videoOffsetSeconds = i?.node?.videoOffsetSeconds,
-                            game_id = gameId,
-                            game_name = gameName,
                             title = i?.node?.title,
                             view_count = i?.node?.viewCount,
                             created_at = i?.node?.createdAt,
@@ -68,8 +65,6 @@ class GameClipsDataSourceGQLquery(
                             broadcaster_name = i?.node?.broadcaster?.displayName,
                             video_id = i?.node?.video?.id,
                             videoOffsetSeconds = i?.node?.videoOffsetSeconds,
-                            game_id = gameId,
-                            game_name = gameName,
                             title = i?.node?.title,
                             view_count = i?.node?.viewCount,
                             created_at = i?.node?.createdAt,
@@ -89,11 +84,10 @@ class GameClipsDataSourceGQLquery(
     class Factory(
         private val clientId: String?,
         private val gameId: String?,
-        private val gameName: String?,
         private val sort: ClipsPeriod?,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Clip, GameClipsDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Clip> =
-                GameClipsDataSourceGQLquery(clientId, gameId, gameName, sort, coroutineScope).also(sourceLiveData::postValue)
+                GameClipsDataSourceGQLquery(clientId, gameId, sort, coroutineScope).also(sourceLiveData::postValue)
     }
 }

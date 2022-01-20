@@ -13,7 +13,6 @@ import kotlinx.coroutines.CoroutineScope
 class GameStreamsDataSourceGQLquery private constructor(
     private val clientId: String?,
     private val gameId: String?,
-    private val gameName: String?,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Stream>(coroutineScope) {
     private var offset: String? = null
     private var nextPage: Boolean = true
@@ -30,8 +29,6 @@ class GameStreamsDataSourceGQLquery private constructor(
                         user_id = i?.node?.broadcaster?.id,
                         user_login = i?.node?.broadcaster?.login,
                         user_name = i?.node?.broadcaster?.displayName,
-                        game_id = gameId,
-                        game_name = gameName,
                         type = i?.node?.type,
                         title = i?.node?.title,
                         viewer_count = i?.node?.viewersCount,
@@ -59,8 +56,6 @@ class GameStreamsDataSourceGQLquery private constructor(
                         user_id = i?.node?.broadcaster?.id,
                         user_login = i?.node?.broadcaster?.login,
                         user_name = i?.node?.broadcaster?.displayName,
-                        game_id = gameId,
-                        game_name = gameName,
                         type = i?.node?.type,
                         title = i?.node?.title,
                         viewer_count = i?.node?.viewersCount,
@@ -79,10 +74,9 @@ class GameStreamsDataSourceGQLquery private constructor(
     class Factory(
         private val clientId: String?,
         private val gameId: String?,
-        private val gameName: String?,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Stream, GameStreamsDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Stream> =
-                GameStreamsDataSourceGQLquery(clientId, gameId, gameName, coroutineScope).also(sourceLiveData::postValue)
+                GameStreamsDataSourceGQLquery(clientId, gameId, coroutineScope).also(sourceLiveData::postValue)
     }
 }

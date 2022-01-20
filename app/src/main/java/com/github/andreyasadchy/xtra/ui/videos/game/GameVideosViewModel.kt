@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.ui.videos.game
 
-
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,16 +27,17 @@ class GameVideosViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Video>> = Transformations.map(filter) {
-        if (it.usehelix)
+        if (it.useHelix) {
             repository.loadVideos(it.clientId, it.token, it.gameId, it.period, it.broadcastType, it.language, it.sort, viewModelScope)
-        else
-            repository.loadGameVideosGQL(it.clientId, it.gameId, it.gameName,
+        } else {
+            repository.loadGameVideosGQL(it.clientId, it.gameId,
                 when (it.broadcastType) {
                     BroadcastType.ARCHIVE -> com.github.andreyasadchy.xtra.type.BroadcastType.ARCHIVE
                     BroadcastType.HIGHLIGHT -> com.github.andreyasadchy.xtra.type.BroadcastType.HIGHLIGHT
                     BroadcastType.UPLOAD -> com.github.andreyasadchy.xtra.type.BroadcastType.UPLOAD
                     else -> null },
                 when (it.sort) { Sort.TIME -> VideoSort.TIME else -> VideoSort.VIEWS }, viewModelScope)
+        }
     }
     val sort: Sort
         get() = filter.value!!.sort
@@ -50,26 +50,24 @@ class GameVideosViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.view_count), context.getString(R.string.this_week))
     }
 
-    fun setGame(usehelix: Boolean, clientId: String?, gameId: String? = null, gameName: String? = null, token: String? = "") {
+    fun setGame(useHelix: Boolean, clientId: String?, gameId: String? = null, token: String? = null) {
         if (filter.value?.gameId != gameId) {
-            filter.value = Filter(usehelix = usehelix, clientId = clientId, token = token, gameId = gameId, gameName = gameName
-            )
+            filter.value = Filter(useHelix = useHelix, clientId = clientId, token = token, gameId = gameId)
         }
     }
 
-    fun filter(usehelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, text: CharSequence, token: String? = "") {
-        filter.value = filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, sort = sort, period = period, broadcastType = type)
+    fun filter(useHelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, text: CharSequence, token: String? = null) {
+        filter.value = filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, sort = sort, period = period, broadcastType = type)
         _sortText.value = text
     }
 
     private data class Filter(
-            val usehelix: Boolean,
-            val clientId: String?,
-            val token: String?,
-            val gameId: String?,
-            val gameName: String?,
-            val sort: Sort = Sort.VIEWS,
-            val period: Period = Period.WEEK,
-            val broadcastType: BroadcastType = BroadcastType.ALL,
-            val language: String? = null)
+        val useHelix: Boolean,
+        val clientId: String?,
+        val token: String?,
+        val gameId: String?,
+        val sort: Sort = Sort.VIEWS,
+        val period: Period = Period.WEEK,
+        val broadcastType: BroadcastType = BroadcastType.ALL,
+        val language: String? = null)
 }

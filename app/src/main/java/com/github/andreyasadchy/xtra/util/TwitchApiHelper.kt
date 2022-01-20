@@ -3,7 +3,6 @@ package com.github.andreyasadchy.xtra.util
 import android.content.Context
 import android.text.format.DateUtils
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesResponse
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.util.chat.*
 import java.lang.Integer.parseInt
@@ -11,7 +10,6 @@ import java.lang.Long.parseLong
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
-
 
 object TwitchApiHelper {
 
@@ -91,8 +89,8 @@ object TwitchApiHelper {
                     (if (seconds != 0) (seconds.toString() + context.getString(R.string.seconds) + " ") else "")).trim() else
                 String.format((if (days != 0) ("$days:") else "") +
                         (if (hours != 0) (if (hours < 10 && days != 0) "0$hours:" else "$hours:") else (if (days != 0) "00:" else "")) +
-                        (if (minutes != 0) (if (minutes < 10 && hours != 0) "0$minutes:" else "$minutes:") else (if (hours != 0) "00:" else "")) +
-                        (if (seconds != 0) (if (seconds < 10 && minutes != 0) "0$seconds" else "$seconds") else (if (minutes != 0) "00" else "")))
+                        (if (minutes != 0) (if (minutes < 10 && hours != 0) "0$minutes:" else "$minutes:") else (if (hours != 0||days != 0) "00:" else "")) +
+                        (if (seconds != 0) (if (seconds < 10 && minutes != 0) "0$seconds" else "$seconds") else (if (minutes != 0||hours != 0||days != 0) "00" else "")))
         } else return null
     }
 
@@ -153,8 +151,8 @@ object TwitchApiHelper {
         return DateUtils.formatDateTime(context, date, format)
     }
 
-    fun startChat(channelName: String, userName: String?, userToken: String?, globalBadges: TwitchBadgesResponse?, channelBadges: TwitchBadgesResponse?, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener): LiveChatThread {
-        return LiveChatThread(userName, userToken, channelName, MessageListenerImpl(globalBadges, channelBadges, newMessageListener, UserStateListener, RoomStateListener, CommandListener)).apply { start() }
+    fun startChat(channelName: String, userName: String?, userToken: String?, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener): LiveChatThread {
+        return LiveChatThread(userName, userToken, channelName, MessageListenerImpl(newMessageListener, UserStateListener, RoomStateListener, CommandListener)).apply { start() }
     }
 
     fun parseClipOffset(url: String): Double {

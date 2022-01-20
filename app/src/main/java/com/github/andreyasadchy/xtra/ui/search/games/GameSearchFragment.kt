@@ -39,7 +39,7 @@ class GameSearchFragment : PagedListFragment<Game, GameSearchViewModel, BasePage
             }
         } else {
             adapter.submitList(null)
-            nothing_here?.gone()
+            nothingHere?.gone()
         }
     }
 }

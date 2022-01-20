@@ -27,7 +27,7 @@ class ChannelVideosDataDeserializer : JsonDeserializer<ChannelVideosDataResponse
                     thumbnail_url = if (!(obj.get("previewThumbnailURL").isJsonNull)) { obj.getAsJsonPrimitive("previewThumbnailURL").asString } else null,
                     view_count = if (!(obj.get("viewCount").isJsonNull)) { obj.getAsJsonPrimitive("viewCount").asInt } else 0,
                     duration = if (!(obj.get("lengthSeconds").isJsonNull)) { obj.getAsJsonPrimitive("lengthSeconds").asString } else null,
-                    game_name = if (!(obj.get("game").isJsonNull)) { obj.getAsJsonObject("game").getAsJsonPrimitive("displayName").asString } else null,
+                    gameName = if (!(obj.get("game").isJsonNull)) { obj.getAsJsonObject("game").getAsJsonPrimitive("displayName").asString } else null,
                     profileImageURL = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("profileImageURL").asString } else null
                 )
             )

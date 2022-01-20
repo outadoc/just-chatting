@@ -22,7 +22,6 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 class StreamPlayerViewModel @Inject constructor(
     context: Application,
     private val playerRepository: PlayerRepository,
@@ -43,10 +42,10 @@ class StreamPlayerViewModel @Inject constructor(
 
     private var useAdBlock = false
     private var randomDeviceId = true
-    private var xdeviceid = ""
-    private var deviceid = ""
+    private var xDeviceId = ""
+    private var deviceId = ""
     private var playerType = ""
-    private var gqlclientId = ""
+    private var gqlClientId = ""
 
     private val hlsMediaSourceFactory = HlsMediaSource.Factory(dataSourceFactory)
         .setAllowChunklessPreparation(true)
@@ -54,13 +53,13 @@ class StreamPlayerViewModel @Inject constructor(
         .setPlaylistTrackerFactory(DefaultHlsPlaylistTracker.FACTORY)
         .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(6))
 
-    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xdeviceid: String, deviceid: String, playerType: String, gqlclientId: String, usehelix: Boolean, loggedIn: Boolean) {
+    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xDeviceId: String, deviceId: String, playerType: String, gqlClientId: String, useHelix: Boolean, loggedIn: Boolean) {
         this.useAdBlock = useAdBlock
         this.randomDeviceId = randomDeviceId
-        this.xdeviceid = xdeviceid
-        this.deviceid = deviceid
+        this.xDeviceId = xDeviceId
+        this.deviceId = deviceId
         this.playerType = playerType
-        this.gqlclientId = gqlclientId
+        this.gqlClientId = gqlClientId
         if (_stream.value == null) {
             _stream.value = stream
             loadStream(stream)
@@ -68,10 +67,10 @@ class StreamPlayerViewModel @Inject constructor(
                 while (isActive) {
                     try {
                         val s = stream.user_id?.let {
-                            if (usehelix && loggedIn) {
+                            if (useHelix && loggedIn) {
                                 repository.loadStream(clientId, token, it)
                             } else {
-                                repository.loadStreamGQL(gqlclientId, it)
+                                repository.loadStreamGQL(gqlClientId, it)
                             }
                         }
                         _stream.postValue(s)
@@ -127,7 +126,7 @@ class StreamPlayerViewModel @Inject constructor(
     private fun loadStream(stream: Stream) {
         viewModelScope.launch {
             try {
-                val result = stream.user_login?.let { playerRepository.loadStreamPlaylistUrl(gqlclientId, it, playerType, useAdBlock, randomDeviceId, xdeviceid, deviceid) }
+                val result = stream.user_login?.let { playerRepository.loadStreamPlaylistUrl(gqlClientId, it, playerType, useAdBlock, randomDeviceId, xDeviceId, deviceId) }
                 if (result != null) {
                     if (useAdBlock) {
                     if (result.second) {

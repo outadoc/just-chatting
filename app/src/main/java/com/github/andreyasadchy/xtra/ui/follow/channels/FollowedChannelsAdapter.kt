@@ -36,10 +36,12 @@ class FollowedChannelsAdapter(
                 username.visible()
                 username.text = item.to_name
             }
-            if (item.followTwitch)
-                twitch.visible()
-            if (item.followLocal)
-                local.visible()
+            if (item.followTwitch) {
+                twitchText.visible()
+            }
+            if (item.followLocal) {
+                localText.visible()
+            }
         }
     }
 }

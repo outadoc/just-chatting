@@ -46,7 +46,12 @@ class DownloadsAdapter(
             date.text = item.uploadDate?.let { context.getString(R.string.uploaded_date, TwitchApiHelper.formatTime(context, it)) }
             downloadDate.text = context.getString(R.string.downloaded_date, TwitchApiHelper.formatTime(context, item.downloadDate))
             duration.text = item.duration?.let { DateUtils.formatElapsedTime(item.duration / 1000L) }
-            type.text = TwitchApiHelper.getType(context, item.type)
+            TwitchApiHelper.getType(context, item.type).let {
+                if (it != null)  {
+                    type.visible()
+                    type.text = it
+                }
+            }
             if (item.channelLogo != null)  {
                 userImage.visible()
                 userImage.loadImage(fragment, item.channelLogo, circle = true)

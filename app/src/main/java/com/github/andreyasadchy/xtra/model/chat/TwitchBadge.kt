@@ -11,7 +11,5 @@ data class TwitchBadge(
     val imageUrl4x: String,
     val description: String,
     val title: String,
-    @SerializedName("click_action")
-    val clickAction: String,
     @SerializedName("click_url")
     val clickUrl: String)

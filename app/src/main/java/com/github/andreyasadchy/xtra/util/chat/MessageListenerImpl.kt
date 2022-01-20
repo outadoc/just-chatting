@@ -1,15 +1,13 @@
 package com.github.andreyasadchy.xtra.util.chat
 
-import com.github.andreyasadchy.xtra.model.chat.*
+import com.github.andreyasadchy.xtra.model.chat.Badge
+import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
+import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.set
 
-private const val TAG = "MessageListenerImpl"
-
 class MessageListenerImpl(
-    private val twitchBadges: TwitchBadgesResponse?,
-    private val channelBadges: TwitchBadgesResponse?,
     private val callback: OnChatMessageReceivedListener,
     private val callbackUserState: OnUserStateReceivedListener,
     private val callbackRoomState: OnRoomStateReceivedListener,
@@ -44,10 +42,7 @@ class MessageListenerImpl(
                 }
             }
         }
-
         var badgesList: MutableList<Badge>? = null
-        val globalBadgesList = mutableListOf<TwitchBadge>()
-        var channelBadge: TwitchBadge?
         val badges = prefixes["badges"]
         if (badges != null) {
             val entries = splitAndMakeMap(badges, ",", "/").entries
@@ -55,21 +50,9 @@ class MessageListenerImpl(
             entries.forEach {
                 it.value?.let { value ->
                     badgesList.add(Badge(it.key, value))
-                    if (it.key == "bits" || it.key == "subscriber") {
-                        channelBadge = (channelBadges?.getTwitchBadge(it.key, value))
-                        if (channelBadge != null) {
-                            globalBadgesList.add(channelBadge!!)
-                        } else {
-                            globalBadgesList.add(twitchBadges?.getTwitchBadge(it.key, value)!!)
-                        }
-                    }
-                    if (it.key != "bits" && it.key != "subscriber") {
-                        globalBadgesList.add(twitchBadges?.getTwitchBadge(it.key, value)!!)
-                    }
                 }
             }
         }
-
         callback.onMessage(LiveChatMessage(
             id = prefixes["id"],
             userId = prefixes["user-id"],
@@ -79,9 +62,9 @@ class MessageListenerImpl(
             color = prefixes["color"],
             isAction = isAction,
             isReward = prefixes["custom-reward-id"] != null,
+            isFirst = prefixes["first-msg"] == "1",
             emotes = emotesList,
             badges = badgesList,
-            globalBadges = globalBadgesList,
             userType = prefixes["user-type"],
             roomId = prefixes["room-id"],
             timestamp = prefixes["tmi-sent-ts"]?.toLong()

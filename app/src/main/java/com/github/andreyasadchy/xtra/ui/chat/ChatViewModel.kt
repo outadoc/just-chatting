@@ -35,7 +35,6 @@ import kotlin.collections.isNotEmpty
 import kotlin.collections.mutableListOf
 import kotlin.collections.mutableMapOf
 import kotlin.collections.set
-import kotlin.collections.sortedWith
 import com.github.andreyasadchy.xtra.model.helix.emote.Emote as TwitchEmote
 
 class ChatViewModel @Inject constructor(
@@ -60,6 +59,7 @@ class ChatViewModel @Inject constructor(
     val otherEmotes: LiveData<List<Emote>>
         get() = _otherEmotes
 
+    val cheerEmotes = MutableLiveData<List<CheerEmote>>()
     var emoteSetsAdded = false
     var emoteSets: List<String>? = null
     val emotesFromSets = MutableLiveData<List<Emote>>()
@@ -75,8 +75,8 @@ class ChatViewModel @Inject constructor(
     val newMessage: LiveData<ChatMessage>
         get() = _newMessage
 
-    private var globalBadges: TwitchBadgesResponse? = null
-    private var channelBadges: TwitchBadgesResponse? = null
+    var globalBadges = MutableLiveData<TwitchBadgesResponse>()
+    var channelBadges = MutableLiveData<TwitchBadgesResponse>()
 
     private var chat: ChatController? = null
 
@@ -87,20 +87,20 @@ class ChatViewModel @Inject constructor(
     val chatters: Collection<Chatter>
         get() = (chat as LiveChatController).chatters.values
 
-    fun startLive(user: User, channelId: String?, channelLogin: String?, channelName: String?) {
+    fun startLive(user: User, useHelix: Boolean, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?) {
         if (chat == null && channelLogin != null && channelName != null) {
             chat = LiveChatController(user, channelLogin, channelName)
             if (channelId != null) {
-                init(channelId)
+                init(useHelix, helixClientId, gqlClientId, user.token, channelId)
             }
         }
     }
 
-    fun startReplay(clientId: String, channelId: String?, videoId: String, startTime: Double, getCurrentPosition: () -> Double) {
+    fun startReplay(user: User, useHelix: Boolean, helixClientId: String?, gqlClientId: String, channelId: String?, videoId: String, startTime: Double, getCurrentPosition: () -> Double) {
         if (chat == null) {
-            chat = VideoChatController(clientId, videoId, startTime, getCurrentPosition)
+            chat = VideoChatController(gqlClientId, videoId, startTime, getCurrentPosition)
             if (channelId != null) {
-                init(channelId)
+                init(useHelix, helixClientId, gqlClientId, user.token, channelId)
             }
         }
     }
@@ -126,17 +126,21 @@ class ChatViewModel @Inject constructor(
         chat?.addEmoteSets(clientId, userToken)
     }
 
-    private fun init(channelId: String) {
+    private fun init(useHelix: Boolean, helixClientId: String?, gqlClientId: String, token: String?, channelId: String) {
+        chat?.start()
         viewModelScope.launch {
-            try {
-                channelBadges = playerRepository.loadChannelBadges(channelId)
-                globalBadges = playerRepository.loadGlobalBadges()
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load badges", e)
-            } finally {
-                chat?.start()
+            if (globalBadges.value == null) {
+                try {
+                    globalBadges.postValue(playerRepository.loadGlobalBadges())
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load global badges", e)
+                }
             }
-
+            try {
+                channelBadges.postValue(playerRepository.loadChannelBadges(channelId))
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load badges for channel $channelId", e)
+            }
             val list = mutableListOf<Emote>()
             globalStvEmotes.also {
                 if (it != null) {
@@ -153,6 +157,12 @@ class ChatViewModel @Inject constructor(
                     }
                 }
             }
+            try {
+                val channelStv = playerRepository.loadStvEmotes(channelId)
+                channelStv.body()?.emotes?.let(list::addAll)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load 7tv emotes for channel $channelId", e)
+            }
             globalBttvEmotes.also {
                 if (it != null) {
                     list.addAll(it)
@@ -167,6 +177,12 @@ class ChatViewModel @Inject constructor(
                         Log.e(TAG, "Failed to load global BTTV emotes", e)
                     }
                 }
+            }
+            try {
+                val channelBttv = playerRepository.loadBttvEmotes(channelId)
+                channelBttv.body()?.emotes?.let(list::addAll)
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load BTTV emotes for channel $channelId", e)
             }
             globalFfzEmotes.also {
                 if (it != null) {
@@ -184,26 +200,22 @@ class ChatViewModel @Inject constructor(
                 }
             }
             try {
-                val channelStv = playerRepository.loadStvEmotes(channelId)
-                channelStv.body()?.emotes?.let(list::addAll)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load 7tv emotes for channel $channelId", e)
-            }
-            try {
-                val channelBttv = playerRepository.loadBttvEmotes(channelId)
-                channelBttv.body()?.emotes?.let(list::addAll)
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load BTTV emotes for channel $channelId", e)
-            }
-            try {
                 val channelFfz = playerRepository.loadBttvFfzEmotes(channelId)
                 channelFfz.body()?.emotes?.let(list::addAll)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load FFZ emotes for channel $channelId", e)
             }
-            val sorted = list.sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER) { it.name })
-            (chat as? LiveChatController)?.addEmotes(sorted)
-            _otherEmotes.postValue(sorted)
+            (chat as? LiveChatController)?.addEmotes(list)
+            _otherEmotes.postValue(list)
+            try {
+                val get = if (useHelix) repository.loadCheerEmotes(helixClientId, token, channelId)
+                else repository.loadCheerEmotesGQL(gqlClientId, channelId)
+                if (get != null) {
+                    cheerEmotes.postValue(get!!)
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load cheermotes for channel $channelId", e)
+            }
         }
     }
 
@@ -239,7 +251,7 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), globalBadges, channelBadges, this, this, this, this)
+            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), this, this, this, this)
         }
 
         override fun pause() {
@@ -346,22 +358,6 @@ class ChatViewModel @Inject constructor(
         abstract fun addEmoteSets(clientId: String?, userToken: String?)
 
         override fun onMessage(message: ChatMessage) {
-            val globalBadgesList = mutableListOf<TwitchBadge>()
-            var channelBadge: TwitchBadge?
-            message.badges?.forEach { (id, version) ->
-                if (id == "bits" || id == "subscriber") {
-                    channelBadge = channelBadges!!.getTwitchBadge(id, version)
-                    if (channelBadge != null) {
-                        globalBadgesList.add(channelBadge!!)
-                    } else {
-                        globalBadgesList.add(globalBadges?.getTwitchBadge(id, version)!!)
-                    }
-                }
-                if (id != "bits" && id != "subscriber") {
-                    globalBadgesList.add(globalBadges?.getTwitchBadge(id, version)!!)
-                }
-            }
-            message.globalBadges = globalBadgesList
             _chatMessages.value!!.add(message)
             _newMessage.postValue(message)
         }

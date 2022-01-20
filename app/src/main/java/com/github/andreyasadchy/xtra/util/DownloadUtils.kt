@@ -52,7 +52,7 @@ object DownloadUtils {
                 downloadedLogo = channelLogo
             }
             OfflineVideo(offlinePath, url, startPosition, title, channelId, channelLogin, channelName, downloadedLogo, downloadedThumbnail, gameId, gameName,
-                duration, uploadDate?.let { TwitchApiHelper.parseIso8601Date(it) }, System.currentTimeMillis(), 0L, 0, if (segmentTo != null && segmentFrom != null) segmentTo - segmentFrom + 1 else 100, type = videoType)
+                duration, uploadDate?.let { TwitchApiHelper.parseIso8601Date(it) }, System.currentTimeMillis(), 0L, 0, if (segmentTo != null && segmentFrom != null) segmentTo - segmentFrom + 1 else 100, type = type)
         }
     }
 
@@ -82,7 +82,7 @@ object DownloadUtils {
     fun getAvailableStorage(context: Context): List<Storage> {
         val storage = ContextCompat.getExternalFilesDirs(context, ".downloads")
         val list = mutableListOf<Storage>()
-        for (i in 0 until storage.size) {
+        for (i in storage.indices) {
             val storagePath = storage[i]?.absolutePath ?: continue
             val name = if (i == 0) {
                 context.getString(R.string.internal_storage)

@@ -34,6 +34,7 @@ import com.github.andreyasadchy.xtra.model.helix.emote.Emote as TwitchEmote
 var MAX_ADAPTER_COUNT = 200
 var emoteQuality = "3"
 var stvQuality = 4
+var animateGifs = true
 
 class ChatView : ConstraintLayout {
 
@@ -78,10 +79,11 @@ class ChatView : ConstraintLayout {
         this.fragment = fragment
         emoteQuality = context.prefs().getInt(C.CHAT_EMOTEQUALITY, 3).toString()
         stvQuality = context.prefs().getInt(C.CHAT_STVQUALITY, 4)
+        animateGifs = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
         adapter = ChatAdapter(fragment, context.convertDpToPixels(29.5f), context.convertDpToPixels(18.5f), context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
-            context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getInt(C.CHAT_BADGEQUALITY, 3), context.prefs().getBoolean(C.ANIMATED_EMOTES, true),
-            context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true))
+            context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getInt(C.CHAT_BADGEQUALITY, 3), context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true),
+            context.getString(R.string.chat_first))
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null
@@ -129,45 +131,45 @@ class ChatView : ConstraintLayout {
     fun notifyRoomState(roomState: RoomState) {
         if (roomState.emote != null) {
             when (roomState.emote) {
-                "0" -> text_emote.gone()
-                "1" -> text_emote.visible()
+                "0" -> textEmote.gone()
+                "1" -> textEmote.visible()
             }
         }
         if (roomState.followers != null) {
             when (roomState.followers) {
-                "-1" -> text_followers.gone()
+                "-1" -> textFollowers.gone()
                 "0" -> {
-                    text_followers.text = context.getString(R.string.room_followers)
-                    text_followers.visible()
+                    textFollowers.text = context.getString(R.string.room_followers)
+                    textFollowers.visible()
                 }
                 else -> {
-                    text_followers.text = context.getString(R.string.room_followers_min, TwitchApiHelper.getDurationFromSeconds(context, (roomState.followers.toInt() * 60).toString()))
-                    text_followers.visible()
+                    textFollowers.text = context.getString(R.string.room_followers_min, TwitchApiHelper.getDurationFromSeconds(context, (roomState.followers.toInt() * 60).toString()))
+                    textFollowers.visible()
                 }
             }
         }
         if (roomState.unique != null) {
             when (roomState.unique) {
-                "0" -> text_unique.gone()
-                "1" -> text_unique.visible()
+                "0" -> textUnique.gone()
+                "1" -> textUnique.visible()
             }
         }
         if (roomState.slow != null) {
             when (roomState.slow) {
-                "0" -> text_slow.gone()
+                "0" -> textSlow.gone()
                 else -> {
-                    text_slow.text = context.getString(R.string.room_slow, TwitchApiHelper.getDurationFromSeconds(context, roomState.slow))
-                    text_slow.visible()
+                    textSlow.text = context.getString(R.string.room_slow, TwitchApiHelper.getDurationFromSeconds(context, roomState.slow))
+                    textSlow.visible()
                 }
             }
         }
         if (roomState.subs != null) {
             when (roomState.subs) {
-                "0" -> text_subs.gone()
-                "1" -> text_subs.visible()
+                "0" -> textSubs.gone()
+                "1" -> textSubs.visible()
             }
         }
-        if (text_emote.isGone && text_followers.isGone && text_unique.isGone && text_slow.isGone && text_subs.isGone) {
+        if (textEmote.isGone && textFollowers.isGone && textUnique.isGone && textSlow.isGone && textSubs.isGone) {
             showFlexbox = false
             flexbox.gone()
         } else {
@@ -188,6 +190,18 @@ class ChatView : ConstraintLayout {
         }
         adapter.messages?.add(LiveChatMessage(message = message, color = "#999999", isAction = true, emotes = command.emotes))
         notifyMessageAdded()
+    }
+
+    fun addGlobalBadges(list: TwitchBadgesResponse) {
+        adapter.addGlobalBadges(list)
+    }
+
+    fun addChannelBadges(list: TwitchBadgesResponse) {
+        adapter.addChannelBadges(list)
+    }
+
+    fun addCheerEmotes(list: List<CheerEmote>) {
+        adapter.addCheerEmotes(list)
     }
 
     fun addEmotes(list: List<Emote>) {

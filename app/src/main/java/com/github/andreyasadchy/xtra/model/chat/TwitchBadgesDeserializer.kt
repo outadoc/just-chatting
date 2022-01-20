@@ -3,7 +3,7 @@ package com.github.andreyasadchy.xtra.model.chat
 import com.google.gson.*
 import java.lang.reflect.Type
 
-class TwitchBadgeDeserializer : JsonDeserializer<TwitchBadgesResponse> {
+class TwitchBadgesDeserializer : JsonDeserializer<TwitchBadgesResponse> {
 
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): TwitchBadgesResponse {

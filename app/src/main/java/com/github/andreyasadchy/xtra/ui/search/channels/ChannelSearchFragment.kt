@@ -39,7 +39,7 @@ class ChannelSearchFragment : PagedListFragment<ChannelSearch, ChannelSearchView
             }
         } else {
             adapter.submitList(null)
-            nothing_here?.gone()
+            nothingHere?.gone()
         }
     }
 }

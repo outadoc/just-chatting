@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.ui.videos.channel
 
-
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -28,9 +27,9 @@ class ChannelVideosViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Video>> = Transformations.map(filter) {
-        if (it.usehelix)
+        if (it.useHelix) {
             repository.loadChannelVideos(it.clientId, it.token, it.channelId, it.period, it.broadcastType, it.sort, viewModelScope)
-        else
+        } else {
             repository.loadChannelVideosGQL(it.clientId, it.channelId,
                 when (it.broadcastType) {
                     BroadcastType.ARCHIVE -> com.github.andreyasadchy.xtra.type.BroadcastType.ARCHIVE
@@ -38,6 +37,7 @@ class ChannelVideosViewModel @Inject constructor(
                     BroadcastType.UPLOAD -> com.github.andreyasadchy.xtra.type.BroadcastType.UPLOAD
                     else -> null },
                 when (it.sort) { Sort.TIME -> VideoSort.TIME else -> VideoSort.VIEWS }, viewModelScope)
+        }
     }
     val sort: Sort
         get() = filter.value!!.sort
@@ -50,23 +50,23 @@ class ChannelVideosViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.upload_date), context.getString(R.string.all_time))
     }
 
-    fun setChannelId(usehelix: Boolean, clientId: String?, channelId: String, token: String? = null) {
+    fun setChannelId(useHelix: Boolean, clientId: String?, channelId: String, token: String? = null) {
         if (filter.value?.channelId != channelId) {
-            filter.value = Filter(usehelix, clientId, token, channelId = channelId)
+            filter.value = Filter(useHelix, clientId, token, channelId = channelId)
         }
     }
 
-    fun filter(usehelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, text: CharSequence, token: String? = null) {
-        filter.value = filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, sort = sort, period = period, broadcastType = type)
+    fun filter(useHelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, text: CharSequence, token: String? = null) {
+        filter.value = filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, sort = sort, period = period, broadcastType = type)
         _sortText.value = text
     }
 
     private data class Filter(
-            val usehelix: Boolean,
-            val clientId: String?,
-            val token: String?,
-            val channelId: String,
-            val sort: Sort = Sort.TIME,
-            val period: Period = Period.ALL,
-            val broadcastType: BroadcastType = BroadcastType.ALL)
+        val useHelix: Boolean,
+        val clientId: String?,
+        val token: String?,
+        val channelId: String,
+        val sort: Sort = Sort.TIME,
+        val period: Period = Period.ALL,
+        val broadcastType: BroadcastType = BroadcastType.ALL)
 }

@@ -60,7 +60,9 @@ class ClipPlayerViewModel @Inject constructor(
         playbackPosition = player.currentPosition
         val quality = helper.urls.values.elementAt(index)
         play(quality)
-        prefs.edit { putString(C.PLAYER_QUALITY, helper.urls.keys.elementAt(index)) }
+        if (prefs.getString(C.PLAYER_DEFAULTQUALITY, "saved") == "saved") {
+            prefs.edit { putString(C.PLAYER_QUALITY, helper.urls.keys.elementAt(index)) }
+        }
         qualityIndex = index
     }
 
@@ -80,25 +82,43 @@ class ClipPlayerViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     val urls = graphQLRepository.loadClipUrls(prefs.getString(C.GQL_CLIENT_ID, "") ?: "", clip.id)
-                    val savedquality = prefs.getString(C.PLAYER_QUALITY, "720p60")
-                    if (savedquality != null) {
-                        var url: String? = null
-                        for (entry in urls.entries.withIndex()) {
-                            if (entry.value.key == savedquality) {
-                                url = entry.value.value
-                                qualityIndex = entry.index
-                                break
-                            }
-                        }
-                        url.let {
-                            if (it != null) {
-                                play(it)
+                    val defaultQuality = prefs.getString(C.PLAYER_DEFAULTQUALITY, "saved")
+                    val savedQuality = prefs.getString(C.PLAYER_QUALITY, "720p60")
+                    val url = when (defaultQuality) {
+                        "saved" -> {
+                            if (savedQuality == "Auto") {
+                                null
                             } else {
-                                play(urls.values.first())
+                                val item = urls.keys.find { it == savedQuality }
+                                if (item != null) {
+                                    qualityIndex = urls.keys.indexOf(item)
+                                    urls[item]
+                                } else null
                             }
                         }
-                    } else {
-                        play(urls.values.first())
+                        else -> {
+                            var url: String? = null
+                            if (defaultQuality != null) {
+                                for (i in urls.entries.withIndex()) {
+                                    val comp = i.value.key.take(4).filter { it.isDigit() }
+                                    if (comp != "") {
+                                        if (defaultQuality.toInt() >= comp.toInt()) {
+                                            qualityIndex = i.index
+                                            url = i.value.value
+                                            break
+                                        }
+                                    }
+                                }
+                            }
+                            url
+                        }
+                    }
+                    url.let {
+                        if (it != null) {
+                            play(it)
+                        } else {
+                            play(urls.values.first())
+                        }
                     }
                     helper.urls = urls
                     helper.loaded.value = true

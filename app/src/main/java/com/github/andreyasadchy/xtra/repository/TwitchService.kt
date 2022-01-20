@@ -1,5 +1,6 @@
 package com.github.andreyasadchy.xtra.repository
 
+import com.github.andreyasadchy.xtra.model.chat.CheerEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.model.chat.VideoMessagesResponse
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
@@ -19,11 +20,11 @@ interface TwitchService {
 
     fun loadTopGames(clientId: String?, userToken: String?, coroutineScope: CoroutineScope): Listing<Game>
     suspend fun loadStream(clientId: String?, userToken: String?, channelId: String): Stream?
-    fun loadTopStreams(clientId: String?, userToken: String?, game: String?, languages: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
+    fun loadTopStreams(clientId: String?, userToken: String?, gameId: String?, languages: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadFollowedStreams(useHelix: Boolean, clientId: String?, userToken: String?, userId: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
-    fun loadClips(clientId: String?, userToken: String?, channelId: String?, channelLogin: String?, gameId: String?, gameName: String?, started_at: String?, ended_at: String?, coroutineScope: CoroutineScope): Listing<Clip>
+    fun loadClips(clientId: String?, userToken: String?, channelId: String?, channelLogin: String?, gameId: String?, started_at: String?, ended_at: String?, coroutineScope: CoroutineScope): Listing<Clip>
     suspend fun loadVideo(clientId: String?, userToken: String?, videoId: String): Video?
-    fun loadVideos(clientId: String?, userToken: String?, game: String?, period: com.github.andreyasadchy.xtra.model.helix.video.Period, broadcastType: BroadcastType, language: String?, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>
+    fun loadVideos(clientId: String?, userToken: String?, gameId: String?, period: com.github.andreyasadchy.xtra.model.helix.video.Period, broadcastType: BroadcastType, language: String?, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>
     fun loadChannelVideos(clientId: String?, userToken: String?, channelId: String, period: com.github.andreyasadchy.xtra.model.helix.video.Period, broadcastType: BroadcastType, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>
     suspend fun loadUserById(clientId: String?, userToken: String?, id: String): User?
     fun loadSearchGames(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Game>
@@ -31,18 +32,20 @@ interface TwitchService {
     suspend fun loadUserFollows(clientId: String?, userToken: String?, userId: String, channelId: String): Boolean
     fun loadFollowedChannels(clientId: String?, userToken: String?, userId: String, coroutineScope: CoroutineScope): Listing<Follow>
     suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setId: String): List<TwitchEmote>?
+    suspend fun loadCheerEmotes(clientId: String?, userToken: String?, userId: String): List<CheerEmote>?
     suspend fun loadVideoChatLog(clientId: String?, videoId: String, offsetSeconds: Double): VideoMessagesResponse
     suspend fun loadVideoChatAfter(clientId: String?, videoId: String, cursor: String): VideoMessagesResponse
 
     suspend fun loadStreamGQL(clientId: String?, channelId: String): Stream?
     suspend fun loadVideoGQL(clientId: String?, videoId: String): Video?
     suspend fun loadUserByIdGQL(clientId: String?, channelId: String): User?
+    suspend fun loadCheerEmotesGQL(clientId: String?, userId: String): List<CheerEmote>?
     fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game>
     fun loadTopStreamsGQL(clientId: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadTopVideosGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Video>
-    fun loadGameStreamsGQL(clientId: String?, gameId: String?, gameName: String?, coroutineScope: CoroutineScope): Listing<Stream>
-    fun loadGameVideosGQL(clientId: String?, gameId: String?, gameName: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video>
-    fun loadGameClipsGQL(clientId: String?, gameId: String?, gameName: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>
+    fun loadGameStreamsGQL(clientId: String?, gameId: String?, coroutineScope: CoroutineScope): Listing<Stream>
+    fun loadGameVideosGQL(clientId: String?, gameId: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video>
+    fun loadGameClipsGQL(clientId: String?, gameId: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>
     fun loadChannelVideosGQL(clientId: String?, channelId: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video>
     fun loadChannelClipsGQL(clientId: String?, channelId: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>
     fun loadSearchChannelsGQL(clientId: String?, query: String, coroutineScope: CoroutineScope): Listing<ChannelSearch>

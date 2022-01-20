@@ -2,7 +2,7 @@ type Query {
   games(first: Int, after: Cursor): Games
   streams(first: Int, after: Cursor): Streams
   videos(first: Int, after: Cursor): Videos
-  game(id: ID, name: String, first: Int, after: Cursor): Game
+  game(id: ID, name: String, first: Int, after: Cursor): GameNode
   user(id: ID, login: String): User
   users(ids: [ID!]): [User]
   video(id: ID): VideoNode
@@ -16,13 +16,25 @@ type User {
   stream: StreamNode
   videos(sort: VideoSort, type: BroadcastType, first: Int, after: Cursor): Videos
   clips(criteria: criteria, first: Int, after: Cursor): Clips
+  cheer: CheerInfo
 }
 
-type Game {
-  name: String
-  streams(first: Int, after: Cursor): Streams
-  videos(sort: VideoSort, types: [BroadcastType!], first: Int, after: Cursor): Videos
-  clips(criteria: criteria, first: Int, after: Cursor): Clips
+type CheerInfo {
+  emotes: [Cheermote]
+}
+
+type Cheermote {
+  prefix: String
+  tiers: [CheermoteTier]
+}
+
+type CheermoteTier {
+  bits: Int
+  images(isAnimated: Boolean, dpiScale: Float): [CheermoteImage]
+}
+
+type CheermoteImage {
+  url: String
 }
 
 type Games {
@@ -71,6 +83,9 @@ type GameNode {
   boxArtURL: String
   viewersCount: Int
   broadcastersCount: Int
+  streams(first: Int, after: Cursor): Streams
+  videos(sort: VideoSort, types: [BroadcastType!], first: Int, after: Cursor): Videos
+  clips(criteria: criteria, first: Int, after: Cursor): Clips
 }
 
 type StreamNode {

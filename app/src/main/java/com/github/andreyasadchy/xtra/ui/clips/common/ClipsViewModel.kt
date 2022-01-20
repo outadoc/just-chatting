@@ -25,7 +25,7 @@ class ClipsViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Clip>> = Transformations.map(filter) {
-        if (it.usehelix) {
+        if (it.useHelix) {
             val started = when (it.period) {
                 Period.ALL -> null
                 else -> TwitchApiHelper.getClipTime(it.period)
@@ -34,7 +34,7 @@ class ClipsViewModel @Inject constructor(
                 Period.ALL -> null
                 else -> TwitchApiHelper.getClipTime()
             }
-            repository.loadClips(it.clientId, it.token, it.channelId, it.channelLogin, it.gameId, it.gameName, started, ended, viewModelScope)
+            repository.loadClips(it.clientId, it.token, it.channelId, it.channelLogin, it.gameId, started, ended, viewModelScope)
         } else {
             val period = when (it.period) {
                 Period.DAY -> ClipsPeriod.LAST_DAY
@@ -44,7 +44,7 @@ class ClipsViewModel @Inject constructor(
             if (it.gameId == null)
                 repository.loadChannelClipsGQL(it.clientId, it.channelId, period, viewModelScope)
             else
-                repository.loadGameClipsGQL(it.clientId, it.gameId, it.gameName, period, viewModelScope)
+                repository.loadGameClipsGQL(it.clientId, it.gameId, period, viewModelScope)
         }
     }
     var selectedIndex = 2
@@ -54,30 +54,29 @@ class ClipsViewModel @Inject constructor(
         _sortText.value = context.getString(sortOptions[selectedIndex])
     }
 
-    fun loadClips(usehelix: Boolean, clientId: String?, channelId: String? = null, channelLogin: String? = null, gameId: String? = null, gameName: String? = null, token: String? = null) {
+    fun loadClips(useHelix: Boolean, clientId: String?, channelId: String? = null, channelLogin: String? = null, gameId: String? = null, token: String? = null) {
         if (filter.value == null) {
-            filter.value = Filter(usehelix = usehelix, clientId = clientId, token = token, channelId = channelId, channelLogin = channelLogin, gameId = gameId, gameName = gameName)
+            filter.value = Filter(useHelix = useHelix, clientId = clientId, token = token, channelId = channelId, channelLogin = channelLogin, gameId = gameId)
         } else {
-            filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, channelId = channelId, channelLogin = channelLogin, gameId = gameId, gameName = gameName).let {
+            filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, channelId = channelId, channelLogin = channelLogin, gameId = gameId).let {
                 if (filter.value != it)
                     filter.value = it
             }
         }
     }
 
-    fun filter(usehelix: Boolean, clientId: String?, period: Period?, index: Int, text: CharSequence, token: String? = null) {
-        filter.value = filter.value?.copy(usehelix = usehelix, clientId = clientId, token = token, period = period)
+    fun filter(useHelix: Boolean, clientId: String?, period: Period?, index: Int, text: CharSequence, token: String? = null) {
+        filter.value = filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, period = period)
         _sortText.value = text
         selectedIndex = index
     }
 
     private data class Filter(
-        val usehelix: Boolean,
+        val useHelix: Boolean,
         val clientId: String?,
         val token: String?,
         val channelId: String?,
         val channelLogin: String?,
         val gameId: String?,
-        val gameName: String?,
         val period: Period? = Period.WEEK)
 }

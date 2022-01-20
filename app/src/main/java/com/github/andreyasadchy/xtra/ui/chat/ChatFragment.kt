@@ -32,13 +32,15 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
     var chName: String? = null
     override fun initialize() {
         val args = requireArguments()
-        val clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: ""
         val channelId = args.getString(KEY_CHANNEL)
         val user = User.get(requireContext())
         val userIsLoggedIn = user is LoggedIn
+        val useHelix = requireContext().prefs().getBoolean(C.API_USEHELIX, true) && userIsLoggedIn
+        val helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, "")
+        val gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: ""
         val isLive = args.getBoolean(KEY_IS_LIVE)
         val enableChat = if (isLive) {
-            viewModel.startLive(user, channelId, chLogin, chName)
+            viewModel.startLive(user, useHelix, helixClientId, gqlClientId, channelId, chLogin, chName)
             chatView.init(this)
             chatView.setCallback(viewModel)
             if (userIsLoggedIn) {
@@ -55,7 +57,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
                 if (it != null) {
                     chatView.init(this)
                     val getCurrentPosition = (parentFragment as ChatReplayPlayerFragment)::getCurrentPosition
-                    viewModel.startReplay(clientId, channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
+                    viewModel.startReplay(user, useHelix, helixClientId, gqlClientId, channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
                     true
                 } else {
                     chatView.chatReplayUnavailable.visible()
@@ -67,7 +69,10 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
             chatView.enableChatInteraction(isLive && userIsLoggedIn)
             viewModel.chatMessages.observe(viewLifecycleOwner, Observer(chatView::submitList))
             viewModel.newMessage.observe(viewLifecycleOwner, { chatView.notifyMessageAdded() })
+            viewModel.globalBadges.observe(viewLifecycleOwner, Observer(chatView::addGlobalBadges))
+            viewModel.channelBadges.observe(viewLifecycleOwner, Observer(chatView::addChannelBadges))
             viewModel.otherEmotes.observe(viewLifecycleOwner, Observer(chatView::addEmotes))
+            viewModel.cheerEmotes.observe(viewLifecycleOwner, Observer(chatView::addCheerEmotes))
             viewModel.roomState.observe(viewLifecycleOwner, { chatView.notifyRoomState(it) })
             viewModel.command.observe(viewLifecycleOwner, { chatView.notifyCommand(it) })
         }
@@ -117,12 +122,12 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         private const val KEY_VIDEO_ID = "videoId"
         private const val KEY_START_TIME = "startTime"
 
-        fun newInstance(channel: String?, channelLogin: String?, channelName: String?) = ChatFragment().apply {
-            arguments = bundleOf(KEY_IS_LIVE to true, KEY_CHANNEL to channel); chLogin = channelLogin ; chName = channelName
+        fun newInstance(channelId: String?, channelLogin: String?, channelName: String?) = ChatFragment().apply {
+            arguments = bundleOf(KEY_IS_LIVE to true, KEY_CHANNEL to channelId); chLogin = channelLogin ; chName = channelName
         }
 
-        fun newInstance(channel: String?, videoId: String?, startTime: Double?) = ChatFragment().apply {
-            arguments = bundleOf(KEY_IS_LIVE to false, KEY_CHANNEL to channel, KEY_VIDEO_ID to videoId, KEY_START_TIME to startTime)
+        fun newInstance(channelId: String?, videoId: String?, startTime: Double?) = ChatFragment().apply {
+            arguments = bundleOf(KEY_IS_LIVE to false, KEY_CHANNEL to channelId, KEY_VIDEO_ID to videoId, KEY_START_TIME to startTime)
         }
     }
 }

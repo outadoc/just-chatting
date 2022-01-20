@@ -15,18 +15,19 @@ class StreamsViewModel @Inject constructor(
 
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Stream>> = Transformations.map(filter) {
-        if (it.usehelix)
+        if (it.useHelix)
             repository.loadTopStreams(it.clientId, it.token, it.gameId, it.languages, it.thumbnailsEnabled, viewModelScope)
         else {
-            if (it.gameId == null)
+            if (it.gameId == null) {
                 repository.loadTopStreamsGQL(it.clientId, it.thumbnailsEnabled, viewModelScope)
-            else
-                repository.loadGameStreamsGQL(it.clientId, it.gameId, it.gameName, viewModelScope)
+            } else {
+                repository.loadGameStreamsGQL(it.clientId, it.gameId, viewModelScope)
+            }
         }
     }
 
-    fun loadStreams(usehelix: Boolean, clientId: String?, token: String? = "", channelId: String? = null, gameId: String? = null, gameName: String? = null, languages: String? = null, thumbnailsEnabled: Boolean = true) {
-        Filter(usehelix, clientId, token, channelId, gameId, gameName, languages, thumbnailsEnabled).let {
+    fun loadStreams(useHelix: Boolean, clientId: String?, token: String? = null, channelId: String? = null, gameId: String? = null, languages: String? = null, thumbnailsEnabled: Boolean = true) {
+        Filter(useHelix, clientId, token, channelId, gameId, languages, thumbnailsEnabled).let {
             if (filter.value != it) {
                 filter.value = it
             }
@@ -34,12 +35,11 @@ class StreamsViewModel @Inject constructor(
     }
 
     private data class Filter(
-            val usehelix: Boolean,
+            val useHelix: Boolean,
             val clientId: String?,
             val token: String?,
             val channelId: String?,
             val gameId: String?,
-            val gameName: String?,
             val languages: String?,
             val thumbnailsEnabled: Boolean)
 }

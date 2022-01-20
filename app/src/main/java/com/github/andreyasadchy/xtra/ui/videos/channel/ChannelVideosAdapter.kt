@@ -43,7 +43,12 @@ class ChannelVideosAdapter(
             date.text = item.createdAt?.let { TwitchApiHelper.formatTimeString(context, it) }
             views.text = item.view_count?.let { TwitchApiHelper.formatViewsCount(context, it, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) }
             duration.text = getDuration?.let { DateUtils.formatElapsedTime(it) }
-            type.text = TwitchApiHelper.getType(context, item.videoType)
+            TwitchApiHelper.getType(context, item.type).let {
+                if (it != null)  {
+                    type.visible()
+                    type.text = it
+                }
+            }
             position.let {
                 if (it != null && getDuration != null && getDuration > 0L) {
                     progressBar.progress = (it / (getDuration * 10)).toInt()

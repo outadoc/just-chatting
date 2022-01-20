@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 class VideosDataSource private constructor(
     private val clientId: String?,
     private val userToken: String?,
-    private val game: String?,
+    private val gameId: String?,
     private val period: Period,
     private val broadcastTypes: BroadcastType,
     private val language: String?,
@@ -22,7 +22,7 @@ class VideosDataSource private constructor(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Video>) {
         loadInitial(params, callback) {
-            val get = api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.requestedLoadSize, offset)
+            val get = api.getTopVideos(clientId, userToken, gameId, period, broadcastTypes, language, sort, params.requestedLoadSize, offset)
             val list = mutableListOf<Video>()
             get.data?.let { list.addAll(it) }
             val ids = mutableListOf<String>()
@@ -47,7 +47,7 @@ class VideosDataSource private constructor(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Video>) {
         loadRange(params, callback) {
-            val get = api.getTopVideos(clientId, userToken, game, period, broadcastTypes, language, sort, params.loadSize, offset)
+            val get = api.getTopVideos(clientId, userToken, gameId, period, broadcastTypes, language, sort, params.loadSize, offset)
             val list = mutableListOf<Video>()
             if (offset != null && offset != "") {
                 get.data?.let { list.addAll(it) }
@@ -75,7 +75,7 @@ class VideosDataSource private constructor(
     class Factory (
         private val clientId: String?,
         private val userToken: String?,
-        private val game: String?,
+        private val gameId: String?,
         private val period: Period,
         private val broadcastTypes: BroadcastType,
         private val language: String?,
@@ -84,6 +84,6 @@ class VideosDataSource private constructor(
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Video, VideosDataSource>() {
 
         override fun create(): DataSource<Int, Video> =
-                VideosDataSource(clientId, userToken, game, period, broadcastTypes, language, sort, api, coroutineScope).also(sourceLiveData::postValue)
+                VideosDataSource(clientId, userToken, gameId, period, broadcastTypes, language, sort, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

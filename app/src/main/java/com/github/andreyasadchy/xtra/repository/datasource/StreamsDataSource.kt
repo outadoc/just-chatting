@@ -8,7 +8,7 @@ import kotlinx.coroutines.CoroutineScope
 class StreamsDataSource private constructor(
     private val clientId: String?,
     private val userToken: String?,
-    private val game: String?,
+    private val gameId: String?,
     private val languages: String?,
     private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Stream>(coroutineScope) {
@@ -16,7 +16,7 @@ class StreamsDataSource private constructor(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
         loadInitial(params, callback) {
-            val get = api.getTopStreams(clientId, userToken, game, languages, params.requestedLoadSize, offset)
+            val get = api.getTopStreams(clientId, userToken, gameId, languages, params.requestedLoadSize, offset)
             val list = mutableListOf<Stream>()
             get.data?.let { list.addAll(it) }
             val ids = mutableListOf<String>()
@@ -41,7 +41,7 @@ class StreamsDataSource private constructor(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
         loadRange(params, callback) {
-            val get = api.getTopStreams(clientId, userToken, game, languages, params.loadSize, offset)
+            val get = api.getTopStreams(clientId, userToken, gameId, languages, params.loadSize, offset)
             val list = mutableListOf<Stream>()
             if (offset != null && offset != "") {
                 get.data?.let { list.addAll(it) }
@@ -69,12 +69,12 @@ class StreamsDataSource private constructor(
     class Factory(
         private val clientId: String?,
         private val userToken: String?,
-        private val game: String?,
+        private val gameId: String?,
         private val languages: String?,
         private val api: HelixApi,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Stream, StreamsDataSource>() {
 
         override fun create(): DataSource<Int, Stream> =
-                StreamsDataSource(clientId, userToken, game, languages, api, coroutineScope).also(sourceLiveData::postValue)
+                StreamsDataSource(clientId, userToken, gameId, languages, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

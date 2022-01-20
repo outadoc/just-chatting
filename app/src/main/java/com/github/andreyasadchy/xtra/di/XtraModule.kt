@@ -120,8 +120,9 @@ class XtraModule {
     fun providesGsonConverterFactory(): GsonConverterFactory {
         return GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 .registerTypeAdapter(EmoteSetResponse::class.java, EmoteSetDeserializer())
-                .registerTypeAdapter(TwitchBadgesResponse::class.java, TwitchBadgeDeserializer())
-                .registerTypeAdapter(StvEmotesResponse::class.java, StvRoomDeserializer())
+                .registerTypeAdapter(CheerEmotesResponse::class.java, CheerEmotesDeserializer())
+                .registerTypeAdapter(TwitchBadgesResponse::class.java, TwitchBadgesDeserializer())
+                .registerTypeAdapter(StvEmotesResponse::class.java, StvEmotesDeserializer())
                 .registerTypeAdapter(BttvGlobalResponse::class.java, BttvGlobalDeserializer())
                 .registerTypeAdapter(BttvChannelResponse::class.java, BttvChannelDeserializer())
                 .registerTypeAdapter(BttvFfzResponse::class.java, BttvFfzDeserializer())

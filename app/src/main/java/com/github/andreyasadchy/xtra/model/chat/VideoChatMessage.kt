@@ -43,8 +43,6 @@ data class VideoChatMessage(
     override val badges: List<Badge>?
         get() = messageObj.userBadges
 
-    override var globalBadges: List<TwitchBadge>? = null
-
     override val displayName: String
         get() = commenter?.displayName.orEmpty()
 
@@ -52,6 +50,9 @@ data class VideoChatMessage(
         get() = commenter?.id
 
     override val isReward: Boolean
+        get() = false
+
+    override val isFirst: Boolean
         get() = false
 
     data class Commenter(

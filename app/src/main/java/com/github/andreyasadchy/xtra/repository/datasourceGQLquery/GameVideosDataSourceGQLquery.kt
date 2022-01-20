@@ -15,7 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 class GameVideosDataSourceGQLquery private constructor(
     private val clientId: String?,
     private val gameId: String?,
-    private val gameName: String?,
     private val type: BroadcastType?,
     private val sort: VideoSort?,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Video>(coroutineScope) {
@@ -37,8 +36,6 @@ class GameVideosDataSourceGQLquery private constructor(
                             user_id = i?.node?.owner?.id,
                             user_login = i?.node?.owner?.login,
                             user_name = i?.node?.owner?.displayName,
-                            game_id = gameId,
-                            game_name = gameName,
                             type = i?.node?.broadcastType.toString(),
                             title = i?.node?.title,
                             view_count = i?.node?.viewCount,
@@ -70,8 +67,6 @@ class GameVideosDataSourceGQLquery private constructor(
                             user_id = i?.node?.owner?.id,
                             user_login = i?.node?.owner?.login,
                             user_name = i?.node?.owner?.displayName,
-                            game_id = gameId,
-                            game_name = gameName,
                             type = i?.node?.broadcastType.toString(),
                             title = i?.node?.title,
                             view_count = i?.node?.viewCount,
@@ -92,12 +87,11 @@ class GameVideosDataSourceGQLquery private constructor(
     class Factory (
         private val clientId: String?,
         private val gameId: String?,
-        private val gameName: String?,
         private val type: BroadcastType?,
         private val sort: VideoSort?,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Video, GameVideosDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Video> =
-                GameVideosDataSourceGQLquery(clientId, gameId, gameName, type, sort, coroutineScope).also(sourceLiveData::postValue)
+                GameVideosDataSourceGQLquery(clientId, gameId, type, sort, coroutineScope).also(sourceLiveData::postValue)
     }
 }

@@ -24,7 +24,6 @@ import java.util.*
 import java.util.regex.Pattern
 
 private const val VIDEO_RENDERER = 0
-private const val TAG = "HlsPlayerViewModel"
 
 abstract class HlsPlayerViewModel(
     context: Application,
@@ -80,31 +79,33 @@ abstract class HlsPlayerViewModel(
             if (helper.loaded.value != true) {
                 helper.loaded.value = true
                 val context = getApplication<Application>()
-                val defaultquality = context.prefs().getString(C.PLAYER_DEFAULTQUALITY, "saved")
-                val savedquality = context.prefs().getString(C.PLAYER_QUALITY, "720p60")
-                val qualitylist: MutableList<String> = mutableListOf()
-                val index = when (defaultquality) {
+                val defaultQuality = context.prefs().getString(C.PLAYER_DEFAULTQUALITY, "saved")
+                val savedQuality = context.prefs().getString(C.PLAYER_QUALITY, "720p60")
+                val index = when (defaultQuality) {
                     "Auto" -> 0
                     "Source" -> 1
-                    "saved" ->
-                        savedquality.let { quality ->
-                            if (quality == "Auto") {
-                                0
-                            } else {
-                                qualities.indexOf(quality).let { if (it != -1) it else 0 }
+                    "saved" -> {
+                        if (savedQuality == "Auto") {
+                            0
+                        } else {
+                            qualities.indexOf(savedQuality).let { if (it != -1) it else 0 }
+                        }
+                    }
+                    else -> {
+                        var index = 0
+                        if (defaultQuality != null) {
+                            for (i in qualities.withIndex()) {
+                                val comp = i.value.take(4).filter { it.isDigit() }
+                                if (comp != "") {
+                                    if (defaultQuality.toInt() >= comp.toInt()) {
+                                        index = i.index
+                                        break
+                                    }
+                                }
                             }
                         }
-                    else -> if (defaultquality != null) {
-                        qualities.forEach { it ->
-                            val comp = it.take(4).filter { it.isDigit() }
-                            if (comp != "") {
-                                if (defaultquality.toInt() < comp.toInt())
-                                    qualitylist.add("no")
-                                else qualitylist.add("yes")
-                            }
-                        }
-                        qualitylist.indexOf("yes").let { if (it != -1) it + 1 else 0 }
-                    } else 0
+                        index
+                    }
                 }
                 qualityIndex = index
             }

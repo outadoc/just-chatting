@@ -1,0 +1,15 @@
+query CheerEmotes($id: ID, $gif: Boolean, $quality: Float) {
+    user(id: $id) {
+        cheer {
+            emotes {
+                prefix
+                tiers {
+                    bits
+                    images(isAnimated: $gif, dpiScale: $quality) {
+                        url
+                    }
+                }
+            }
+        }
+    }
+}

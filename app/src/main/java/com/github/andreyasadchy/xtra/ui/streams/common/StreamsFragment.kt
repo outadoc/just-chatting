@@ -33,8 +33,8 @@ class StreamsFragment : BaseStreamsFragment<StreamsViewModel>() {
     override fun initialize() {
         super.initialize()
         if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.loadStreams(usehelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), gameId = arguments?.getString(C.GAME_ID), thumbnailsEnabled = !compactStreams)
+            viewModel.loadStreams(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), gameId = arguments?.getString(C.GAME_ID), thumbnailsEnabled = !compactStreams)
         } else {
-            viewModel.loadStreams(usehelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME), thumbnailsEnabled = !compactStreams)}
+            viewModel.loadStreams(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), thumbnailsEnabled = !compactStreams)}
     }
 }

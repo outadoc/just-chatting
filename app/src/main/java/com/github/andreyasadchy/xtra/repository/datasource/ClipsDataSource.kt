@@ -11,7 +11,6 @@ class ClipsDataSource(
     private val channelId: String?,
     private val channelLogin: String?,
     private val gameId: String?,
-    private val gameName: String?,
     private val started_at: String?,
     private val ended_at: String?,
     private val api: HelixApi,
@@ -31,9 +30,7 @@ class ClipsDataSource(
                 } else {
                     i.broadcaster_id?.let { userIds.add(it) }
                 }
-                if (gameName != null) {
-                    i.game_name = gameName
-                } else {
+                if (gameId == null) {
                     i.game_id?.let { gameIds.add(it) }
                 }
             }
@@ -79,9 +76,7 @@ class ClipsDataSource(
                     } else {
                         i.broadcaster_id?.let { userIds.add(it) }
                     }
-                    if (gameName != null) {
-                        i.game_name = gameName
-                    } else {
+                    if (gameId == null) {
                         i.game_id?.let { gameIds.add(it) }
                     }
                 }
@@ -120,13 +115,12 @@ class ClipsDataSource(
         private val channelId: String?,
         private val channelLogin: String?,
         private val gameId: String?,
-        private val gameName: String?,
         private val started_at: String?,
         private val ended_at: String?,
         private val api: HelixApi,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Clip, ClipsDataSource>() {
 
         override fun create(): DataSource<Int, Clip> =
-                ClipsDataSource(clientId, userToken, channelId, channelLogin, gameId, gameName, started_at, ended_at, api, coroutineScope).also(sourceLiveData::postValue)
+                ClipsDataSource(clientId, userToken, channelId, channelLogin, gameId, started_at, ended_at, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

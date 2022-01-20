@@ -15,6 +15,10 @@ import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.Sort.TIME
 import com.github.andreyasadchy.xtra.model.helix.video.Sort.VIEWS
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
+import com.github.andreyasadchy.xtra.ui.videos.channel.ChannelVideosFragment
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.dialog_videos_sort.*
 
 class GameVideosSortDialog : ExpandingBottomSheetDialogFragment() {
@@ -50,6 +54,13 @@ class GameVideosSortDialog : ExpandingBottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args = requireArguments()
+        if (parentFragment is ChannelVideosFragment) {
+            period.gone()
+        } else {
+            if (!requireContext().prefs().getBoolean(C.API_USEHELIX, true) || requireContext().prefs().getString(C.USERNAME, "") == "") {
+                period.gone()
+            }
+        }
         val originalSortId = if (args.getSerializable(SORT) as Sort == TIME) R.id.time else R.id.views
         val originalPeriodId = when (args.getSerializable(PERIOD) as Period) {
             DAY -> R.id.today

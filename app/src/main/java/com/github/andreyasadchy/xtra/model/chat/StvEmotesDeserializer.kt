@@ -7,7 +7,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import java.lang.reflect.Type
 
-class StvRoomDeserializer : JsonDeserializer<StvEmotesResponse> {
+class StvEmotesDeserializer : JsonDeserializer<StvEmotesResponse> {
 
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): StvEmotesResponse {

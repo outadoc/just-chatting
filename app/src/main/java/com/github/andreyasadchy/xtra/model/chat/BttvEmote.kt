@@ -13,6 +13,6 @@ class BttvEmote(
     override val type: String
         get() = "image/$imageType"
 
-    override val zerowidth: Boolean
+    override val zeroWidth: Boolean
         get() = name == "SoSnowy"||name == "IceCold"||name == "SantaHat"||name == "TopHat"||name == "ReinDeer"||name == "CandyCane"||name == "cvMask"||name == "cvHazmat"
 }

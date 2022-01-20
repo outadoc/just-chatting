@@ -9,7 +9,7 @@ interface ChatMessage {
     val color: String?
     val isAction: Boolean
     val isReward: Boolean
+    val isFirst: Boolean
     val emotes: List<TwitchEmote>?
     val badges: List<Badge>?
-    var globalBadges: List<TwitchBadge>?
 }

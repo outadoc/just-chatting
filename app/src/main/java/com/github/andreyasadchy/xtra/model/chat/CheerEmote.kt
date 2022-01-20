@@ -1,7 +1,7 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-class StvEmote(
+class CheerEmote(
     override val name: String,
+    val minBits: Int,
     override val type: String,
-    override val url: String,
-    override val zeroWidth: Boolean) : Emote()
+    override val url: String) : Emote()

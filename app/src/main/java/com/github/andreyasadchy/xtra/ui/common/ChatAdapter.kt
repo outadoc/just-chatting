@@ -27,14 +27,11 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.chat.ChatMessage
-import com.github.andreyasadchy.xtra.model.chat.Emote
-import com.github.andreyasadchy.xtra.model.chat.Image
-import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.model.chat.*
+import com.github.andreyasadchy.xtra.ui.view.chat.animateGifs
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.set
-
 
 class ChatAdapter(
         private val fragment: Fragment,
@@ -43,8 +40,8 @@ class ChatAdapter(
         private val randomColor: Boolean,
         private val boldNames: Boolean,
         private val badgeQuality: Int,
-        private val animateGifs: Boolean,
-        private val enableZeroWidth: Boolean) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+        private val enableZeroWidth: Boolean,
+        private val firstChatMsg: String) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
         set(value) {
@@ -59,7 +56,10 @@ class ChatAdapter(
     private val random = Random()
     private val userColors = HashMap<String, Int>()
     private val savedColors = HashMap<String, Int>()
+    private var globalBadges: TwitchBadgesResponse? = null
+    private var channelBadges: TwitchBadgesResponse? = null
     private val emotes = HashMap<String, Emote>()
+    private var cheerEmotes: List<CheerEmote>? = null
     private var loggedInUser: String? = null
     private val scaledEmoteSize = (emoteSize * 0.78f).toInt()
 
@@ -75,28 +75,30 @@ class ChatAdapter(
         val images = ArrayList<Image>()
         var imageIndex = 0
         var badgesCount = 0
-        chatMessage.badges?.forEachIndexed { badgeIndex, element ->
-            var url: String? = null
-            val global = chatMessage.globalBadges?.elementAt(badgeIndex)
-            if (element.id == "bits" || element.id == "subscriber") {
+        if (chatMessage.isFirst) {
+            builder.append("$firstChatMsg: ")
+            imageIndex += firstChatMsg.length + 2
+        }
+        chatMessage.badges?.forEach { badge ->
+            var url: String?
+            if (badge.id != "bits" && badge.id != "subscriber") {
                 url = when (badgeQuality) {
-                    3 -> (global?.imageUrl4x)
-                    2 -> (global?.imageUrl2x)
-                    else -> (global?.imageUrl1x)
+                    3 -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl4x)
+                    2 -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl2x)
+                    else -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl1x)
+                }
+            } else {
+                url = when (badgeQuality) {
+                    3 -> (channelBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl4x)
+                    2 -> (channelBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl2x)
+                    else -> (channelBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl1x)
                 }
                 if (url == null) {
                     url = when (badgeQuality) {
-                        3 -> (global?.imageUrl4x)
-                        2 -> (global?.imageUrl2x)
-                        else -> (global?.imageUrl1x)
+                        3 -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl4x)
+                        2 -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl2x)
+                        else -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl1x)
                     }
-                }
-            }
-            if (element.id != "bits" && element.id != "subscriber") {
-                url = when (badgeQuality) {
-                    3 -> (global?.imageUrl4x)
-                    2 -> (global?.imageUrl2x)
-                    else -> (global?.imageUrl1x)
                 }
             }
             url?.let {
@@ -172,7 +174,16 @@ class ChatAdapter(
             for (value in split) {
                 val length = value.length
                 val endIndex = builderIndex + length
-                val emote = emotes[value]
+                var emote = emotes[value]
+                val bits = value.takeLastWhile { it.isDigit() }
+                if (bits != "") {
+                    val name = value.substringBeforeLast(bits)
+                    val cheerEmote = cheerEmotes?.findLast { it.name.equals(name, true) && it.minBits <= bits.toInt() }
+                    if (cheerEmote != null) {
+                        emote = cheerEmote
+                        builder.insert(endIndex, bits)
+                    }
+                }
                 builderIndex += if (emote == null) {
                     if (!Patterns.WEB_URL.matcher(value).matches()) {
                         if (value.startsWith('@')) {
@@ -199,9 +210,12 @@ class ChatAdapter(
                     }
                     builder.replace(builderIndex, endIndex, ".")
                     builder.setSpan(ForegroundColorSpan(Color.TRANSPARENT), builderIndex, builderIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE)
-                    images.add(Image(emote.url, builderIndex, builderIndex + 1, true, emote.type, emote.zerowidth))
+                    images.add(Image(emote.url, builderIndex, builderIndex + 1, true, emote.type, emote.zeroWidth))
                     emotesFound++
                     2
+                }
+                if (bits != "") {
+                    builderIndex += bits.length
                 }
             }
             if (chatMessage.isAction) {
@@ -353,6 +367,18 @@ class ChatAdapter(
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
             })
+    }
+
+    fun addGlobalBadges(list: TwitchBadgesResponse) {
+        globalBadges = list
+    }
+
+    fun addChannelBadges(list: TwitchBadgesResponse) {
+        channelBadges = list
+    }
+
+    fun addCheerEmotes(list: List<CheerEmote>) {
+        cheerEmotes = list
     }
 
     fun addEmotes(list: List<Emote>) {

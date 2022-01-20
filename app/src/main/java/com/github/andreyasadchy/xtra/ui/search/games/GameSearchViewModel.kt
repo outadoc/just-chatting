@@ -18,15 +18,16 @@ class GameSearchViewModel @Inject constructor(
     private var clientId = MutableLiveData<String>()
     private var token = MutableLiveData<String>()
     override val result: LiveData<Listing<Game>> = Transformations.map(query) {
-        if (useHelix)
+        if (useHelix) {
             repository.loadSearchGames(clientId.value, token.value, it, viewModelScope)
-        else
+        } else {
             repository.loadSearchGamesGQL(clientId.value, it, viewModelScope)
+        }
     }
 
-    fun setQuery(usehelix: Boolean, clientId: String?, query: String, token: String? = "") {
-        if (useHelix != usehelix) {
-            useHelix = usehelix
+    fun setQuery(useHelix: Boolean, clientId: String?, query: String, token: String? = null) {
+        if (this.useHelix != useHelix) {
+            this.useHelix = useHelix
         }
         if (this.clientId.value != clientId) {
             this.clientId.value = clientId

@@ -22,9 +22,9 @@ class GameVideosFragment : BaseVideosFragment<GameVideosViewModel>(), GameVideos
             sortText.text = it
         })
         if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.setGame(usehelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), token = requireContext().prefs().getString(C.TOKEN, ""))
+            viewModel.setGame(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), token = requireContext().prefs().getString(C.TOKEN, ""))
         } else {
-            viewModel.setGame(usehelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME))
+            viewModel.setGame(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID))
         }
         sortBar.setOnClickListener { GameVideosSortDialog.newInstance(viewModel.sort, viewModel.period, viewModel.type).show(childFragmentManager, null) }
     }
@@ -32,9 +32,9 @@ class GameVideosFragment : BaseVideosFragment<GameVideosViewModel>(), GameVideos
     override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType) {
         adapter.submitList(null)
         if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.filter(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), sort, period, type, getString(R.string.sort_and_period, sortText, periodText), requireContext().prefs().getString(C.TOKEN, ""))
+            viewModel.filter(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), sort = sort, period = period, type = type, text = getString(R.string.sort_and_period, sortText, periodText), token = requireContext().prefs().getString(C.TOKEN, ""))
         } else {
-            viewModel.filter(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), sort, period, type, getString(R.string.sort_and_period, sortText, periodText))
+            viewModel.filter(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), sort = sort, period = period, type = type, text = getString(R.string.sort_and_period, sortText, periodText))
         }
     }
 }

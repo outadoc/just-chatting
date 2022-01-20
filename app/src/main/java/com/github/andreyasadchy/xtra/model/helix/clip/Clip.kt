@@ -43,6 +43,6 @@ data class Clip(
                 get() = game_name
         override val uploadDate: String?
                 get() = created_at
-        override val videoType: String?
+        override val type: String?
                 get() = null
 }

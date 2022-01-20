@@ -212,4 +212,5 @@
     <string name="days">d</string>
     <string name="seconds">s</string>
     <string name="show_uptime">Show stream uptime</string>
+    <string name="chat_first">First time chat</string>
 </resources>

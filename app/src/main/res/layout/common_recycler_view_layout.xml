@@ -33,7 +33,7 @@
     </com.github.andreyasadchy.xtra.ui.view.CustomSwipeRefreshLayout>
 
     <TextView
-        android:id="@+id/nothing_here"
+        android:id="@+id/nothingHere"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nothing_here"

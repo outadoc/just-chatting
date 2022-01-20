@@ -5,7 +5,7 @@ abstract class Emote {
     abstract val url: String //TODO null if property
     open val type: String
         get() = "image/png"
-    open val zerowidth: Boolean
+    open val zeroWidth: Boolean
         get() = false
 
     override fun equals(other: Any?): Boolean {

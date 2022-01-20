@@ -16,6 +16,7 @@ import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.Utils
+import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
 import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
@@ -32,7 +33,7 @@ import kotlinx.android.synthetic.main.fragment_media_pager.*
 import kotlinx.android.synthetic.main.fragment_streams_list_item.view.*
 
 
-class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
+class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
     companion object {
         fun newInstance(id: String?, login: String?, name: String?, channelLogo: String?, updateLocal: Boolean = false) = ChannelPagerFragment().apply {
@@ -133,7 +134,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
                     watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID), user_login = requireArguments().getString(C.CHANNEL_LOGIN), user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))) }
                 }
             }
-            stream?.channelLogo.let { if (it != null && it != requireArguments().getString(C.CHANNEL_PROFILEIMAGE)) {
+            stream?.channelLogo.let { if (it != null) {
                 logo.loadImage(this, it, circle = true)
                 bundle.putString(C.CHANNEL_PROFILEIMAGE, it)
                 arguments = bundle
@@ -175,5 +176,10 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment {
         if (requestCode == 3 && resultCode == Activity.RESULT_OK) {
             requireActivity().recreate()
         }
+    }
+
+    override fun scrollToTop() {
+        appBar?.setExpanded(true, true)
+        (currentFragment as? Scrollable)?.scrollToTop()
     }
 }

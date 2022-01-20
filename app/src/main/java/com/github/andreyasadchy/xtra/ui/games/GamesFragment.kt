@@ -46,6 +46,7 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
         val isLoggedIn = User.get(activity) !is NotLoggedIn
+        scrollTop.isEnabled = false
         search.setOnClickListener { activity.openSearch() }
         menu.setOnClickListener { it ->
             PopupMenu(activity, it).apply {

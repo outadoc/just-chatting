@@ -234,7 +234,7 @@ class ApiRepository @Inject constructor(
             for (i in get.user.cheer.emotes) {
                 if (i?.tiers != null) {
                     for (tier in i.tiers) {
-                        i.prefix?.let { tier?.bits?.let { it1 -> tier.images?.first()?.url?.let { it2 -> emotes.add(CheerEmote(name = it, minBits = it1, type = if (animateGifs) "image/gif" else "image/png", url = it2)) } } }
+                        i.prefix?.let { tier?.bits?.let { it1 -> tier.images?.first()?.url?.let { it2 -> emotes.add(CheerEmote(name = it, minBits = it1, color = tier.color, type = if (animateGifs) "image/gif" else "image/png", url = it2)) } } }
                     }
                 }
             }

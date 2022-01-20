@@ -72,6 +72,7 @@ class DownloadsAdapter(
                 gameName.setOnClickListener(gameListener)
             }
             if (item.duration != null) {
+                progressBar.visible()
                 progressBar.progress = (item.lastWatchPosition.toFloat() / item.duration * 100).toInt()
                 item.sourceStartPosition?.let {
                     sourceStart.text = context.getString(R.string.source_vod_start, DateUtils.formatElapsedTime(it / 1000L))

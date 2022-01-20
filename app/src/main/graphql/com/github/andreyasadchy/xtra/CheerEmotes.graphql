@@ -5,6 +5,7 @@ query CheerEmotes($id: ID, $gif: Boolean, $quality: Float) {
                 prefix
                 tiers {
                     bits
+                    color
                     images(isAnimated: $gif, dpiScale: $quality) {
                         url
                     }

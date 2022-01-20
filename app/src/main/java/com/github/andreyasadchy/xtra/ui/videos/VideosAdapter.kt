@@ -54,8 +54,6 @@ class VideosAdapter(
                 if (it != null && getDuration != null && getDuration > 0L) {
                     progressBar.progress = (it / (getDuration * 10L)).toInt()
                     progressBar.visible()
-                } else {
-                    progressBar.gone()
                 }
             }
             if (item.channelLogo != null)  {

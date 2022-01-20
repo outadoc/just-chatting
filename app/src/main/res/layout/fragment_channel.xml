@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/primaryColor"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
             app:scrimAnimationDuration="200"
             app:contentScrim="?attr/primaryColor"
             app:expandedTitleGravity="bottom|center_horizontal"

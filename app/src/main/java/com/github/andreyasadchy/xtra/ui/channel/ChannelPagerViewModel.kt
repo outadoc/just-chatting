@@ -53,8 +53,15 @@ class ChannelPagerViewModel @Inject constructor(
             _profileImageURL.value = profileImageURL
             viewModelScope.launch {
                 try {
-                    val stream = if (useHelix) repository.loadStream(clientId, token, channelId)
-                    else repository.loadStreamGQL(clientId, channelId)
+                    val stream = if (useHelix) {
+                        val get = repository.loadStream(clientId, token, channelId)
+                        if (profileImageURL == null) {
+                            get?.profileImageURL = repository.loadUserById(clientId, token, channelId)?.profile_image_url
+                        }
+                        get
+                    } else {
+                        repository.loadStreamGQL(clientId, channelId)
+                    }
                     _stream.postValue(stream)
                 } catch (e: Exception) {
 
@@ -83,10 +90,12 @@ class ChannelPagerViewModel @Inject constructor(
                         user_login = stream.user_login
                         user_name = stream.user_name
                         channelLogo = downloadedLogo }) }
-                    offlineRepository.getVideoByUserId(stream.user_id.toInt())?.let { offlineRepository.updateVideo(it.apply {
-                        channelLogin = stream.user_login
-                        channelName = stream.user_name
-                        channelLogo = downloadedLogo }) }
+                    for (i in offlineRepository.getVideosByUserId(stream.user_id.toInt())) {
+                        offlineRepository.updateVideo(i.apply {
+                            channelLogin = stream.user_login
+                            channelName = stream.user_name
+                            channelLogo = downloadedLogo })
+                    }
                 }
             } catch (e: Exception) {
 

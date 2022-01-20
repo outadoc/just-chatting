@@ -5,6 +5,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/scrollTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:background="#6D353232"
+        android:backgroundTint="#6D353232"
+        android:src="@drawable/baseline_arrow_upward_black_24"
+        android:visibility="gone"
+        app:fabSize="mini"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:rippleColor="#6D353232"
+        tools:visibility="visible" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"

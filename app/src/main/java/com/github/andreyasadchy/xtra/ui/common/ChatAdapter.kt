@@ -182,9 +182,12 @@ class ChatAdapter(
                     if (cheerEmote != null) {
                         emote = cheerEmote
                         builder.insert(endIndex, bits)
+                        if (emote.color != null) {
+                            builder.setSpan(ForegroundColorSpan(Color.parseColor(emote.color)), endIndex, endIndex + bits.length, SPAN_INCLUSIVE_INCLUSIVE)
+                        }
                     }
                 }
-                builderIndex += if (emote == null) {
+                if (emote == null) {
                     if (!Patterns.WEB_URL.matcher(value).matches()) {
                         if (value.startsWith('@')) {
                             builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), builderIndex, endIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -198,7 +201,7 @@ class ChatAdapter(
                         val url = if (value.startsWith("http")) value else "https://$value"
                         builder.setSpan(URLSpan(url), builderIndex, endIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
                     }
-                    length + 1
+                    builderIndex += length + 1
                 } else {
                     for (j in images.lastIndex - emotesFound downTo badgesCount) {
                         val e = images[j]
@@ -210,12 +213,12 @@ class ChatAdapter(
                     }
                     builder.replace(builderIndex, endIndex, ".")
                     builder.setSpan(ForegroundColorSpan(Color.TRANSPARENT), builderIndex, builderIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE)
-                    images.add(Image(emote.url, builderIndex, builderIndex + 1, true, emote.type, emote.zeroWidth))
+                    images.add(Image(emote.url, builderIndex, builderIndex + 1, true, emote.type, enableZeroWidth && emotesFound > 0 && emote.zeroWidth))
                     emotesFound++
-                    2
-                }
-                if (bits != "") {
-                    builderIndex += bits.length
+                    builderIndex += 2
+                    if (emote is CheerEmote) {
+                        builderIndex += bits.length
+                    }
                 }
             }
             if (chatMessage.isAction) {
@@ -263,8 +266,11 @@ class ChatAdapter(
                 override fun onResourceReady(resource: WebpDrawable, transition: Transition<in WebpDrawable>?) {
                     resource.apply {
                         val size = calculateEmoteSize(this)
-                        if (image.zerowidth && enableZeroWidth) setBounds(-90, 0, size.first - 90, size.second)
-                        else setBounds(0, 0, size.first, size.second)
+                        if (image.zerowidth) {
+                            setBounds(-90, 0, size.first - 90, size.second)
+                        } else {
+                            setBounds(0, 0, size.first, size.second)
+                        }
                         loopCount = WebpDrawable.LOOP_FOREVER
                         callback = object : Drawable.Callback {
                             override fun unscheduleDrawable(who: Drawable, what: Runnable) {
@@ -306,7 +312,11 @@ class ChatAdapter(
                 override fun onResourceReady(resource: GifDrawable, transition: Transition<in GifDrawable>?) {
                     resource.apply {
                         val size = calculateEmoteSize(this)
-                        setBounds(0, 0, size.first, size.second)
+                        if (image.zerowidth) {
+                            setBounds(-90, 0, size.first - 90, size.second)
+                        } else {
+                            setBounds(0, 0, size.first, size.second)
+                        }
                         setLoopCount(GifDrawable.LOOP_FOREVER)
                         callback = object : Drawable.Callback {
                             override fun unscheduleDrawable(who: Drawable, what: Runnable) {
@@ -355,8 +365,11 @@ class ChatAdapter(
                         width = badgeSize
                         height = badgeSize
                     }
-                    if (image.zerowidth && enableZeroWidth) resource.setBounds(-90, 0, width - 90, height)
-                    else resource.setBounds(0, 0, width, height)
+                    if (image.zerowidth) {
+                        resource.setBounds(-90, 0, width - 90, height)
+                    } else {
+                        resource.setBounds(0, 0, width, height)
+                    }
                     try {
                         builder.setSpan(ImageSpan(resource), image.start, image.end, SPAN_EXCLUSIVE_EXCLUSIVE)
                     } catch (e: IndexOutOfBoundsException) {

@@ -53,8 +53,6 @@ class ChannelVideosAdapter(
                 if (it != null && getDuration != null && getDuration > 0L) {
                     progressBar.progress = (it / (getDuration * 10)).toInt()
                     progressBar.visible()
-                } else {
-                    progressBar.gone()
                 }
             }
             if (item.title != null && item.title != "")  {

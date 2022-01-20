@@ -17,11 +17,12 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
             val name = i.asJsonObject.get("prefix")
             for (tier in i.asJsonObject.get("tiers").asJsonArray) {
                 val minBits = tier.asJsonObject.get("min_bits")
+                val color = tier.asJsonObject.get("color")
                 val images = tier.asJsonObject.get("images").asJsonObject.get("dark").asJsonObject
                 val animated = animateGifs && images.toString().contains("animated")
                 val urls = images.get(if (animated) "animated" else "static").asJsonObject
                 val url = urls.get(when (emoteQuality) {"3" -> ("4") "2" -> ("2") else -> ("1")}).takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("2").takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("1").asString
-                emotes.add(CheerEmote(name.asString, minBits.asInt, if (animated) "image/gif" else "image/png", url))
+                emotes.add(CheerEmote(name.asString, minBits.asInt, color.asString, if (animated) "image/gif" else "image/png", url))
             }
         }
         return CheerEmotesResponse(emotes)

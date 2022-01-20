@@ -30,6 +30,7 @@ type Cheermote {
 
 type CheermoteTier {
   bits: Int
+  color: String
   images(isAnimated: Boolean, dpiScale: Float): [CheermoteImage]
 }
 

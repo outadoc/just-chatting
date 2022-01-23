@@ -81,8 +81,8 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadFollowedStreams(useHelix: Boolean, clientId: String?, userToken: String?, userId: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream> {
-        val factory = FollowedStreamsDataSource.Factory(useHelix, localFollows, this, clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, api, coroutineScope)
+    override fun loadFollowedStreams(useHelix: Boolean, gqlClientId: String?, helixClientId: String?, userToken: String?, userId: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream> {
+        val factory = FollowedStreamsDataSource.Factory(useHelix, localFollows, this, gqlClientId, helixClientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, api, coroutineScope)
         val builder = PagedList.Config.Builder().setEnablePlaceholders(false)
         if (thumbnailsEnabled) {
             builder.setPageSize(10)

@@ -28,7 +28,6 @@ class GameSearchFragment : PagedListFragment<Game, GameSearchViewModel, BasePage
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         swipeRefresh.isEnabled = false
-        scrollTop.isEnabled = false
     }
 
     override fun search(query: String) {

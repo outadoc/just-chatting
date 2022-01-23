@@ -7,9 +7,9 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.repository.LoadingState
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
+import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.top.TopFragment
 import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.toggleVisibility
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 
 abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> : BaseNetworkFragment() {
@@ -38,7 +38,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                 })
             }
         })
-        if (parentFragment is TopFragment || parentFragment is FollowMediaFragment) {
+        if (parentFragment is TopFragment || parentFragment is FollowMediaFragment || parentFragment is SearchFragment) {
             scrollTop.isEnabled = false
         }
         recyclerView.let {
@@ -89,7 +89,6 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
         if (scrollTop.isEnabled) {
             scrollTop.setOnClickListener {
                 (parentFragment as? Scrollable)?.scrollToTop()
-                it.toggleVisibility()
             }
         }
     }

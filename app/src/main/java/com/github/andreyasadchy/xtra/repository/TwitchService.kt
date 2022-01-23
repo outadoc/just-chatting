@@ -21,7 +21,7 @@ interface TwitchService {
     fun loadTopGames(clientId: String?, userToken: String?, coroutineScope: CoroutineScope): Listing<Game>
     suspend fun loadStream(clientId: String?, userToken: String?, channelId: String): Stream?
     fun loadTopStreams(clientId: String?, userToken: String?, gameId: String?, languages: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
-    fun loadFollowedStreams(useHelix: Boolean, clientId: String?, userToken: String?, userId: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
+    fun loadFollowedStreams(useHelix: Boolean, gqlClientId: String?, helixClientId: String?, userToken: String?, userId: String, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>
     fun loadClips(clientId: String?, userToken: String?, channelId: String?, channelLogin: String?, gameId: String?, started_at: String?, ended_at: String?, coroutineScope: CoroutineScope): Listing<Clip>
     suspend fun loadVideo(clientId: String?, userToken: String?, videoId: String): Video?
     fun loadVideos(clientId: String?, userToken: String?, gameId: String?, period: com.github.andreyasadchy.xtra.model.helix.video.Period, broadcastType: BroadcastType, language: String?, sort: Sort, coroutineScope: CoroutineScope): Listing<Video>

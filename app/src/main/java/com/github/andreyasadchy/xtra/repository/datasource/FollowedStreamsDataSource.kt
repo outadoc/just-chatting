@@ -15,7 +15,8 @@ class FollowedStreamsDataSource(
     private val useHelix: Boolean,
     private val localFollows: LocalFollowRepository,
     private val repository: TwitchService,
-    private val clientId: String?,
+    private val gqlClientId: String?,
+    private val helixClientId: String?,
     private val userToken: String?,
     private val userId: String,
     private val api: HelixApi,
@@ -34,9 +35,9 @@ class FollowedStreamsDataSource(
                         ids.add(i.user_id)
                     }
                     if (useHelix) {
-                        api.getStreams(clientId, userToken, ids).data?.let { streams.addAll(it) }
+                        api.getStreams(helixClientId, userToken, ids).data?.let { streams.addAll(it) }
                     } else {
-                        val get = apolloClient(XtraModule(), clientId).query(StreamsQuery(Optional.Present(ids))).execute().data?.users
+                        val get = apolloClient(XtraModule(), gqlClientId).query(StreamsQuery(Optional.Present(ids))).execute().data?.users
                         if (get != null) {
                             for (i in get) {
                                 streams.add(
@@ -58,9 +59,9 @@ class FollowedStreamsDataSource(
                         val get = if (useHelix) {
                             val ids = mutableListOf<String>()
                             ids.add(i.user_id)
-                            api.getStreams(clientId, userToken, ids).data?.firstOrNull()
+                            api.getStreams(helixClientId, userToken, ids).data?.firstOrNull()
                         } else {
-                            repository.loadStreamGQL(clientId, i.user_id)
+                            repository.loadStreamGQL(gqlClientId, i.user_id)
                         }
                         if (get?.viewer_count != null) {
                             if (useHelix) { i.user_id.let { userIds.add(it) } }
@@ -69,8 +70,8 @@ class FollowedStreamsDataSource(
                     }
                 }
             }
-            if (useHelix && userId != "") {
-                val get = api.getFollowedStreams(clientId, userToken, userId, params.requestedLoadSize, offset)
+            if (userId != "") {
+                val get = api.getFollowedStreams(helixClientId, userToken, userId, params.requestedLoadSize, offset)
                 if (get.data != null) {
                     for (i in get.data) {
                         val item = list.find { it.user_id == i.user_id }
@@ -83,7 +84,7 @@ class FollowedStreamsDataSource(
                 }
             }
             if (userIds.isNotEmpty()) {
-                val users = api.getUserById(clientId, userToken, userIds).data
+                val users = api.getUserById(helixClientId, userToken, userIds).data
                 if (users != null) {
                     for (i in users) {
                         val item = list.find { it.user_id == i.id }
@@ -102,8 +103,8 @@ class FollowedStreamsDataSource(
             val list = mutableListOf<Stream>()
             if (offset != null && offset != "") {
                 val userIds = mutableListOf<String>()
-                if (useHelix && userId != "") {
-                    val get = api.getFollowedStreams(clientId, userToken, userId, params.loadSize, offset)
+                if (userId != "") {
+                    val get = api.getFollowedStreams(helixClientId, userToken, userId, params.loadSize, offset)
                     if (get.data != null) {
                         for (i in get.data) {
                             val item = list.find { it.user_id == i.user_id }
@@ -116,7 +117,7 @@ class FollowedStreamsDataSource(
                     }
                 }
                 if (userIds.isNotEmpty()) {
-                    val users = api.getUserById(clientId, userToken, userIds).data
+                    val users = api.getUserById(helixClientId, userToken, userIds).data
                     if (users != null) {
                         for (i in users) {
                             val item = list.find { it.user_id == i.id }
@@ -135,13 +136,14 @@ class FollowedStreamsDataSource(
         private val useHelix: Boolean,
         private val localFollows: LocalFollowRepository,
         private val repository: TwitchService,
-        private val clientId: String?,
+        private val gqlClientId: String?,
+        private val helixClientId: String?,
         private val userToken: String?,
         private val user_id: String,
         private val api: HelixApi,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Stream, FollowedStreamsDataSource>() {
 
         override fun create(): DataSource<Int, Stream> =
-                FollowedStreamsDataSource(useHelix, localFollows, repository, clientId, userToken, user_id, api, coroutineScope).also(sourceLiveData::postValue)
+                FollowedStreamsDataSource(useHelix, localFollows, repository, gqlClientId, helixClientId, userToken, user_id, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

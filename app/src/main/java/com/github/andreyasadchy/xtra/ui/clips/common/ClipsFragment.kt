@@ -11,7 +11,9 @@ import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
+import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
+import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 import kotlinx.android.synthetic.main.fragment_clips.*
 import kotlinx.android.synthetic.main.sort_bar.*
 
@@ -57,5 +59,6 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>() {
         } else {
             viewModel.filter(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), period, index, text)
         }
+        scrollTop.gone()
     }
 }

@@ -28,23 +28,23 @@ class FollowedStreamsDataSource(
             val list = mutableListOf<Stream>()
             val userIds = mutableListOf<String>()
             if (localFollows.loadFollows().isNotEmpty()) {
-                if (localFollows.loadFollows().count() <= 100) {
-                    val ids = mutableListOf<String>()
+                val ids = mutableListOf<String>()
+                for (i in localFollows.loadFollows()) {
+                    ids.add(i.user_id)
+                }
+                for (localIds in ids.chunked(100)) {
                     val streams = mutableListOf<Stream>()
-                    for (i in localFollows.loadFollows()) {
-                        ids.add(i.user_id)
-                    }
                     if (useHelix) {
-                        api.getStreams(helixClientId, userToken, ids).data?.let { streams.addAll(it) }
+                        api.getStreams(helixClientId, userToken, localIds).data?.let { streams.addAll(it) }
                     } else {
-                        val get = apolloClient(XtraModule(), gqlClientId).query(StreamsQuery(Optional.Present(ids))).execute().data?.users
+                        val get = apolloClient(XtraModule(), gqlClientId).query(StreamsQuery(Optional.Present(localIds))).execute().data?.users
                         if (get != null) {
                             for (i in get) {
                                 streams.add(
-                                Stream(id = i?.stream?.id, user_id = i?.id, user_login = i?.login, user_name = i?.displayName,
-                                    game_id = i?.stream?.game?.id, game_name = i?.stream?.game?.displayName, type = i?.stream?.type,
-                                    title = i?.stream?.title, viewer_count = i?.stream?.viewersCount, started_at = i?.stream?.createdAt,
-                                    thumbnail_url = i?.stream?.previewImageURL, profileImageURL = i?.profileImageURL))
+                                    Stream(id = i?.stream?.id, user_id = i?.id, user_login = i?.login, user_name = i?.displayName,
+                                        game_id = i?.stream?.game?.id, game_name = i?.stream?.game?.displayName, type = i?.stream?.type,
+                                        title = i?.stream?.title, viewer_count = i?.stream?.viewersCount, started_at = i?.stream?.createdAt,
+                                        thumbnail_url = i?.stream?.previewImageURL, profileImageURL = i?.profileImageURL))
                             }
                         }
                     }
@@ -52,20 +52,6 @@ class FollowedStreamsDataSource(
                         if (i.viewer_count != null) {
                             if (useHelix) { i.user_id?.let { userIds.add(it) } }
                             list.add(i)
-                        }
-                    }
-                } else {
-                    for (i in localFollows.loadFollows()) {
-                        val get = if (useHelix) {
-                            val ids = mutableListOf<String>()
-                            ids.add(i.user_id)
-                            api.getStreams(helixClientId, userToken, ids).data?.firstOrNull()
-                        } else {
-                            repository.loadStreamGQL(gqlClientId, i.user_id)
-                        }
-                        if (get?.viewer_count != null) {
-                            if (useHelix) { i.user_id.let { userIds.add(it) } }
-                            list.add(get)
                         }
                     }
                 }

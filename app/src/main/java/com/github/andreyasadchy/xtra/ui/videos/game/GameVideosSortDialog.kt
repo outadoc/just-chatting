@@ -19,6 +19,7 @@ import com.github.andreyasadchy.xtra.ui.videos.channel.ChannelVideosFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
+import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 import kotlinx.android.synthetic.main.dialog_videos_sort.*
 
 class GameVideosSortDialog : ExpandingBottomSheetDialogFragment() {
@@ -102,6 +103,7 @@ class GameVideosSortDialog : ExpandingBottomSheetDialogFragment() {
                         })
             }
             dismiss()
+            parentFragment?.scrollTop?.gone()
         }
     }
 }

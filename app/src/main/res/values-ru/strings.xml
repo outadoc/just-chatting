@@ -4,8 +4,6 @@
     <string name="popular">Популярное</string>
     <string name="following">Подписки</string>
     <string name="downloads">Загрузки</string>
-    <string name="menu">Меню</string>
-    <string name="retry">Повторить попытку</string>
     <string name="connection_error">Ошибка подключения. Пожалуйста, попробуйте ещё раз</string>
     <string name="sort">Сортировать</string>
     <string name="upload_date">По дате загрузки</string>
@@ -61,34 +59,15 @@
     <string name="dark">Тёмная</string>
     <string name="amoled">Чёрная</string>
     <string name="light">Светлая</string>
-    <string name="choose_theme">Выберите тему</string>
     <string name="settings">Настройки</string>
     <string name="theme">Тема</string>
     <string name="landscape_chat_width">Ширина чата в полноэкранном режиме</string>
-    <string name="percentage_of_screen">% от ширины экрана</string>
-    <string name="unknown_error">Неизвестная ошибка</string>
     <string name="portrait_column_count">Столбцов в книжной ориентации</string>
     <string name="landscape_column_count">Столбцов в альбомной ориентации</string>
-    <string name="download_via_wifi">Загрузка через Wi-Fi</string>
     <string name="always">Всегда</string>
-    <string name="just_once">Только сейчас</string>
-    <string name="download_preference">Скачивание видео</string>
-    <string name="any_network">Любая сеть</string>
-    <string name="wifi_only">Только через Wi-Fi</string>
-    <string name="ask_every_time">Всегда спрашивать</string>
-    <string name="download_size_warning">Длинные видео могут иметь размер более 10ГБ. Скачать только через Wi-Fi?</string>
     <string name="internal_storage">Память телефона</string>
     <string name="save_to">Сохранить в</string>
-    <string name="thank_you">Спасибо!</string>
-    <string name="rate_app_message">Если Вам нравится приложение, пожалуйста, уделите минуту чтобы оставить отзыв. Спасибо за Вашу поддержку!</string>
-    <string name="rate">Оценить</string>
-    <string name="rate_app">Оценить приложение</string>
-    <string name="remind_me_later">Напомнить позже</string>
-    <string name="no_thanks">Нет, спасибо</string>
     <string name="no_storage_detected">Хранилище телефона не доступно (вероятнее всего телефон подключён к компьютеру).</string>
-    <string name="rewind">Перемотка назад</string>
-    <string name="forward">Перемотка вперёд</string>
-    <string name="seconds">%s секунд</string>
     <string name="unfollow">Отписаться от %s?</string>
     <string name="now_following">Вы подписались на %s</string>
     <string name="unfollowed">Вы отписались от %s</string>
@@ -105,7 +84,6 @@
     <string name="stream_ended">Трансляция завершилась</string>
     <string name="viewers">%s зрителей</string>
     <string name="views">%s просмотров</string>
-    <string name="play_services_not_available">Компонент Google Play Services не доступен. Некоторые функции могут работать некорректно</string>
     <string name="download_pending">Ожидание</string>
     <string name="downloading_progress">Загрузка: %d%%</string>
     <string name="pause">Пауза</string>
@@ -118,86 +96,8 @@
     <string name="recent_emotes">Недавние</string>
     <string name="notification_playback_channel_title">Воспроизведение</string>
     <string name="channels">Каналы</string>
-    <string name="video">Видео</string>
     <string name="watch_video">Смотреть полное видео</string>
-    <string name="new_update">Новое обновление</string>
-    <string name="dont_show_changelogs">Больше не показывать изменения</string>
-    <string name="show_changelogs">Показывать изменения в новых обновлениях</string>
-    <string name="support_the_developer">Поддержать разработчика</string>
-    <string name="donate_prompt">Сколько бы Вы хотели пожертвовать?</string>
-    <string name="thank_you_so_much">Огромное спасибо!!! ❤❤❤</string>
     <string name="animated_emotes">Анимированные смайлики</string>
-    <string name="changelog">
-        <b>25 октября, 1.6.1</b>
-\n- Добавлена возможность менять скорость воспроизведения видео и клипов (Juby210)
-        \n\n<b>29 августа, 1.6.0</b>
-\n- Добавлена блокировка рекламы TTV.LOL. Можно отключить в настройках
-\n- Исправлены неработающие клипы
-\n- Кнопка обновить стрим была уменьшена и перенесена в левый нижний угол
-\n- За все это благодарность /u/Leaguehax
-        \n\n<b>24 января, 1.5.6.8</b>
-\n- Исправлена ошибка загрузки стримов (пока твич что-то не изменит)
-        \n\n<b>23 января, 1.5.6.7</b>
-\n- Просто пытаюсь продлить жизнь приложению
-        \n\n<b>14 января, 1.5.6.6</b>
-\n- Обновлён API для стримов и видео
-\n- Исправлено чат иногда не загружался
-        \n\n<b>21 ноября, 1.5.6.5</b>
-\n- Обновлена блокировка рекламы
-        \n\n<b>17 ноября, 1.5.6.4</b>
-\n- Исправлено BTTV/FFZ эмоуты не работали
-\n- Обновлена блокировка рекламы
-        \n\n<b>5 ноября, 1.5.6.2</b>
-\n- Обновлена блокировка рекламы
-        \n\n<b>28 октября, 1.5.6.1</b>
-\n- Обновлена блокировка рекламы
-        \n\n<b>11 октября, 1.5.6</b>
-\n- <b>Анимированные эмоуты больше не перегревают телефон. Их можно включить в настройках</b>
-\n- Изменения с авторизацией в Twitch. Если вы раньше не могли войти в аккаунт, попробуйте сейчас
-\n- Исправлено что стримы иногда не загружались, например при возвращении в приложение через некоторое время
-\n- Улучшена читабельность текста на картинках
-\n- Исправления ошибок и другие улучшения
-        \n\n<b>30 сентября, 1.5.5</b>
-\n- <b>Добавлена возможность включать/выключать отображение видео под вырезом для камеры (Android 9+). Включено по умолчанию</b>
-\n- Недавно использованные эмоуты теперь отображают только те BTTV/FFZ эмоуты, которые включены на текущем канале
-        \n\n<b>27 сентября, 1.5.4</b>
-\n- Улучшена блокировка рекламы. Убран экран \"Commercial break in progress\"
-\n- Улучшена производительность GIF картинок
-\n- Вырез для камеры на экране больше не блокирует видео
-        \n\n<b>31 августа, 1.5.3</b>
-\n- Исправлен некорректный растянутый размер плеера и превью. Вы все ещё можете менять соотношение сторон в альбомной ориентации в правом верхнем углу плеера
-\n- Исправлено когда клипы не проигрывались, если не поменять качество видео
-\n- Улучшена область в верхней части плеера для более удобного открытия шторки с уведомлениями
-\n- Другие улучшения
-        \n\n<b>31 мая, 1.5.2</b>
-\n- Исправлена проблема с авторизацией
-\n- Исправлено когда чат иногда зависает и перестаёт обновляться
-\n- Исправления ошибок и улучшения
-        \n\n<b>10 мая, 1.5.1</b>
-\n- Исправлена ошибка при попытке подписаться на канал
-\n- Исправления ошибок и улучшения
-        \n\n<b>26 апреля, 1.5.0</b>
-\n- Исправлена проблема с авторизацией на некоторых новых телефонах. Для старых добавлено новое решение, нажмите на кнопку \"Проблемы со входом в аккаунт\"
-\n- Добавлена возможность просматривать список отслеживаемых каналов. Нажмите на выпадающее меню и выберите \"Каналы\"
-\n- Добавлено двойное нажатие по экрану для отображения/скрытия чата
-\n- Добавлено количество зрителей на стриме
-\n- Добавлен компактный интерфейс для стримов на экране подписок который не отображает предпросмотр. Включается в настройках
-\n- Убраны устаревшие смайлы BTTV и FFZ, теперь они будут обновляться автоматически
-\n- Исправлено таймер некорректно работал в режиме только звука
-\n- Другие исправления ошибок и улучшения
-        \n\n<b>16 января, 1.4.5</b>
-\n- Исправлена ошибка при авторизации \"Ошибка при загрузке веб-браузера\"
-\n- Исправлено когда смайлы в чате иногда обрезали текст или вовсе не отображались
-\n- Улучшено отображение некоторых смайлов
-\n- Увеличена высота плеера в книжной ориентации для планшетов
-\n- Множество других улучшений и исправлений ошибок
-        \n\n<b>10 января, 1.4.4</b>
-\n- <b>Добавлена поддержка стримов с низкой задержкой</b>
-\n- Клипы снова работают
-\n- Исправлено когда режим "только звук" использовал слишком много трафика
-\n- Улучшения стабильности приложения, а также режима "картинка-в-картинке"
-    </string>
-    <string name="chat_settings">Настройки чата</string>
     <string name="sleep_timer">Таймер выключения</string>
     <string name="start">Старт</string>
     <string name="set">Старт</string>
@@ -207,7 +107,6 @@
     <string name="playback_will_stop">Воспроизведение остановится через %s</string>
     <string name="playback_will_stop_hours_minutes">Воспроизведение остановится через %1$s %2$s</string>
     <string name="timer_canceled">Таймер остановлен</string>
-    <string name="authorization">Авторизация</string>
     <string name="trouble_logging_in">Проблемы со входом в аккаунт?</string>
     <string name="login_problem_solution">Вы можете выполнить авторизацию через сторонний браузер. После авторизации должна появится страница с ошибкой. Скопируйте ссылку, вернитесь в приложение и нажмите на кнопку \"Ввести ссылку\". Вставьте ссылку и нажмите \"Войти\"</string>
     <string name="no_browser_found">Не удалось найти установленный браузер</string>
@@ -225,15 +124,93 @@
     <string name="ascending">По возрастанию</string>
     <string name="compact_streams_title">Компактный интерфейс трансляций на экране подписок</string>
     <string name="compact_streams_description">Не показывать предварительный просмотр</string>
-    <string name="info">Инфо</string>
-    <string name="enable">Включить</string>
-    <string name="disable">Отключить</string>
-    <string name="ignore_notch">Игнорировать вырез</string>
-    <string name="display_beyond_notch">Отображать видео под вырезом для камеры</string>
     <string name="adblock_not_working">Не удалось загрузить трансляцию без рекламы</string>
     <string name="adblock_desc">Отключите, если трансляции не загружаются</string>
-    <string name="adblock">Adblock</string>
+    <string name="adblock">Use Adblocker</string>
     <string name="playback_speed">Скорость воспроизведения</string>
     <string name="quality">Качество</string>
     <string name="speed1">Обычная</string>
+    <string name="logout_title">Log out?</string>
+    <string name="logout_msg">Logged in as %s</string>
+    <string name="language">Language</string>
+    <string name="cutoutmode">Display cutout mode</string>
+    <string name="cutoutmode_default">Default - Portrait mode only</string>
+    <string name="never">Never</string>
+    <string name="blue">Blue</string>
+    <string name="statusBarColor">Status bar color</string>
+    <string name="navigationBarColor">Navigation bar color</string>
+    <string name="rounduserimage">Circle profile pictures</string>
+    <string name="truncated_view_counts">Truncated view counts</string>
+    <string name="startonfollowed">Start on following page</string>
+    <string name="show_follow_button">Show follow button</string>
+    <string name="bold_usernames">Bold usernames</string>
+    <string name="randomcolor">Random color for users without color set</string>
+    <string name="zerowidth">Zero width emotes</string>
+    <string name="emotequality">Emote quality</string>
+    <string name="stvquality">7tv emote quality</string>
+    <string name="badgequality">Badge quality</string>
+    <string name="message_limit">Message limit</string>
+    <string name="playerRewind">Rewind/Fast forward</string>
+    <string name="player_defaultquality">Default player quality</string>
+    <string name="player_doubletap">Double tap to toggle chat</string>
+    <string name="player_minimize">Show minimize button</string>
+    <string name="player_channel">Show channel name</string>
+    <string name="player_download">Show download button</string>
+    <string name="player_sleep">Show sleep timer button</string>
+    <string name="player_aspect">Show aspect ratio changer</string>
+    <string name="player_chatbartoggle">Show chat bar toggle</string>
+    <string name="player_chattoggle">Show chat toggle button</string>
+    <string name="player_fullscreen">Show fullscreen button</string>
+    <string name="player_viewericon">Show icon next to view count</string>
+    <string name="player_pause">Show pause button on livestreams</string>
+    <string name="settings_ui">UI</string>
+    <string name="settings_chat">CHAT</string>
+    <string name="settings_player">PLAYER</string>
+    <string name="cutoutmode_desc">Display content inside of the cutout area</string>
+    <string name="cutoutmode_always">Always - Both portrait and landscape modes</string>
+    <string name="not_supported">Not supported</string>
+    <string name="Android_9_required">Android 9 required</string>
+    <string name="settings_token">PLAYLIST HEADERS</string>
+    <string name="token_random_deviceid">Random device id</string>
+    <string name="settings_token_summary">for livestreams only, disable adblock</string>
+    <string name="source">Source</string>
+    <string name="saved_value">Saved value</string>
+    <string name="playerQualityEntries3">720p or lower</string>
+    <string name="playerQualityEntries2">480p or lower</string>
+    <string name="playerQualityEntries1">360p or lower</string>
+    <string name="player_volumebutton">Show volume button</string>
+    <string name="settings_api">API</string>
+    <string name="api_helix">Helix client id</string>
+    <string name="api_gql">GQL client id</string>
+    <string name="api_usehelix">Use helix api when logged in</string>
+    <string name="open_player">Open player</string>
+    <string name="video_type_archive">Past broadcast</string>
+    <string name="video_type_highlight">Highlight</string>
+    <string name="video_type_upload">Upload</string>
+    <string name="broadcastersCount">Show broadcasters count on games</string>
+    <string name="all">All</string>
+    <string name="type">Type</string>
+    <string name="api_helix_summary">Used for followed channels and sub emotes anyway</string>
+    <string name="video_type_rerun">Rerun</string>
+    <string name="room_emote">Emote</string>
+    <string name="room_followers">Followers</string>
+    <string name="room_followers_min">Followers %s</string>
+    <string name="room_unique">Unique</string>
+    <string name="room_slow">Slow %s</string>
+    <string name="room_subs">Subs</string>
+    <string name="chat_join">Connected to %s</string>
+    <string name="copy_clip">Copy to clipboard</string>
+    <string name="chat_clear">Chat has been cleared by a moderator</string>
+    <string name="chat_timeout">%1$s has been timed out for %2$s</string>
+    <string name="chat_ban">%s has been permanently banned</string>
+    <string name="chat_clearmsg">Message deleted from %1$s\: %2$s</string>
+    <string name="when_logged_in">When logged in</string>
+    <string name="twitch">Twitch</string>
+    <string name="local">Local</string>
+    <string name="watch_rerun">Watch rerun</string>
+    <string name="days">d</string>
+    <string name="seconds">s</string>
+    <string name="show_uptime">Show stream uptime</string>
+    <string name="chat_first">First time chat</string>
+    <string name="seconds_full">%s секунд</string>
 </resources>

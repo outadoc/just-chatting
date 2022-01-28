@@ -64,11 +64,11 @@ android {
         }
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
-    lintOptions {
-        disable 'ContentDescription'
-    }
     kotlinOptions {
         jvmTarget = "1.8"
+    }
+    lint {
+        disable 'ContentDescription'
     }
 }
 

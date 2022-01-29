@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.github.andreyasadchy.xtra">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,7 +17,9 @@
         android:theme="@style/DarkTheme"
         android:supportsRtl="true"
         android:allowBackup="false"
-        android:fullBackupContent="@xml/backup_rules">
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        tools:targetApi="s">
         <activity
             android:name=".ui.main.MainActivity"
             android:launchMode="singleTask"
@@ -38,6 +41,8 @@
         <service android:name=".ui.player.AudioPlayerService" />
 
         <meta-data android:name="android.max_aspect" android:value="ratio_float" />
+        <meta-data android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
+            android:value="com.google.android.exoplayer2.ext.cast.DefaultCastOptionsProvider" />
     </application>
 
 </manifest>

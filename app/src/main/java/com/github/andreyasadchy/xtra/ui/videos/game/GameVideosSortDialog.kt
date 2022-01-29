@@ -58,7 +58,7 @@ class GameVideosSortDialog : ExpandingBottomSheetDialogFragment() {
         if (parentFragment is ChannelVideosFragment) {
             period.gone()
         } else {
-            if (!requireContext().prefs().getBoolean(C.API_USEHELIX, true) || requireContext().prefs().getString(C.USERNAME, "") == "") {
+            if (requireContext().prefs().getString(C.USERNAME, "") == "") {
                 period.gone()
             }
         }

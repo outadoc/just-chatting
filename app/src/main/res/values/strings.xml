@@ -151,6 +151,7 @@
     <string name="startonfollowed">Start on following page</string>
     <string name="when_logged_in">When logged in</string>
     <string name="show_follow_button">Show follow button</string>
+    <string name="show_scrolltop">Show scroll to top button</string>
     <string name="bold_usernames">Bold usernames</string>
     <string name="randomcolor">Random color for users without color set</string>
     <string name="zerowidth">Zero width emotes</string>

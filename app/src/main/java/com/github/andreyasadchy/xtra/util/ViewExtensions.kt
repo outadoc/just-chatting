@@ -2,13 +2,16 @@ package com.github.andreyasadchy.xtra.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
+import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.annotation.ColorRes
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -116,4 +119,12 @@ fun ImageView.enable() {
 fun ImageView.disable() {
     isEnabled = false
     setColorFilter(Color.GRAY)
+}
+
+class TextWithCanvas(context: Context, attrs: AttributeSet) : AppCompatTextView(context, attrs) {
+    override fun draw(canvas: Canvas?) {
+        for (i in 0..4) {
+            super.draw(canvas)
+        }
+    }
 }

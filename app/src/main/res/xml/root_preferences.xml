@@ -80,6 +80,12 @@
         android:title="@string/show_follow_button"
         app:iconSpaceReserved="false"/>
 
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="ui_scrolltop"
+        android:title="@string/show_scrolltop"
+        app:iconSpaceReserved="false"/>
+
     <ListPreference
         android:defaultValue="@string/portraitColumns"
         android:key="columnsPortrait"

@@ -31,7 +31,7 @@ class GameVideosFragment : BaseVideosFragment<GameVideosViewModel>(), GameVideos
 
     override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType) {
         adapter.submitList(null)
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
+        if (requireContext().prefs().getString(C.USERNAME, "") != "") {
             viewModel.filter(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), sort = sort, period = period, type = type, text = getString(R.string.sort_and_period, sortText, periodText), token = requireContext().prefs().getString(C.TOKEN, ""))
         } else {
             viewModel.filter(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), sort = sort, period = period, type = type, text = getString(R.string.sort_and_period, sortText, periodText))

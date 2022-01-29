@@ -213,4 +213,5 @@
     <string name="show_uptime">Show stream uptime</string>
     <string name="chat_first">First time chat</string>
     <string name="seconds_full">%s секунд</string>
+    <string name="show_scrolltop">Show scroll to top button</string>
 </resources>

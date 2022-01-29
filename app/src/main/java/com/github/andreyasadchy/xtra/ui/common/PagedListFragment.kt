@@ -9,8 +9,9 @@ import com.github.andreyasadchy.xtra.repository.LoadingState
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.top.TopFragment
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.toggleVisibility
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 
 abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> : BaseNetworkFragment() {
@@ -18,7 +19,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
     protected abstract val viewModel: VM
     protected abstract val adapter: Adapter
 
-    private var isChatTouched = false
+    private var isTouched = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -39,7 +40,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                 })
             }
         })
-        if (parentFragment is TopFragment || parentFragment is FollowMediaFragment || parentFragment is SearchFragment) {
+        if (!requireContext().prefs().getBoolean(C.UI_SCROLLTOP, true) || parentFragment is TopFragment || parentFragment is FollowMediaFragment || parentFragment is SearchFragment) {
             scrollTop.isEnabled = false
         }
         recyclerView.let {
@@ -48,7 +49,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                 it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         super.onScrollStateChanged(recyclerView, newState)
-                        isChatTouched = newState == RecyclerView.SCROLL_STATE_DRAGGING
+                        isTouched = newState == RecyclerView.SCROLL_STATE_DRAGGING
                         scrollTop.isVisible = shouldShowButton()
                     }
                 })
@@ -90,7 +91,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
         if (scrollTop.isEnabled) {
             scrollTop.setOnClickListener {
                 (parentFragment as? Scrollable)?.scrollToTop()
-                it.toggleVisibility()
+                it.gone()
             }
         }
     }

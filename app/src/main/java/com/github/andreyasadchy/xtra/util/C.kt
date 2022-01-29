@@ -31,6 +31,7 @@ object C {
     const val UI_CUTOUTMODE = "ui_cutoutmode"
     const val UI_FOLLOW = "ui_follow"
     const val UI_UPTIME = "ui_uptime"
+    const val UI_SCROLLTOP = "ui_scrolltop"
     const val PICTURE_IN_PICTURE = "pictureInPicture"
     const val PLAYER_DOUBLETAP = "player_doubletap"
     const val PLAYER_PAUSE = "player_pause"

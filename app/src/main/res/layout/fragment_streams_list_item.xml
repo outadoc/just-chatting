@@ -15,7 +15,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/backgrounds/scenic" />
 
-        <TextView
+        <com.github.andreyasadchy.xtra.util.TextWithCanvas
             android:id="@+id/viewers"
             style="@style/ThumbnailItem"
             android:layout_marginStart="5dp"
@@ -26,7 +26,7 @@
             tools:text="133769 viewers"
             tools:visibility="visible" />
 
-        <TextView
+        <com.github.andreyasadchy.xtra.util.TextWithCanvas
             android:id="@+id/type"
             style="@style/ThumbnailItem"
             android:layout_marginTop="10dp"
@@ -37,7 +37,7 @@
             tools:text="Rerun"
             tools:visibility="visible" />
 
-        <TextView
+        <com.github.andreyasadchy.xtra.util.TextWithCanvas
             android:id="@+id/uptime"
             style="@style/ThumbnailItem"
             android:layout_marginEnd="5dp"

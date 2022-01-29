@@ -30,7 +30,6 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.ui.view.chat.animateGifs
 import java.util.*
-import kotlin.collections.HashMap
 import kotlin.collections.set
 
 class ChatAdapter(
@@ -76,8 +75,8 @@ class ChatAdapter(
         var imageIndex = 0
         var badgesCount = 0
         if (chatMessage.isFirst) {
-            builder.append("$firstChatMsg: ")
-            imageIndex += firstChatMsg.length + 2
+            builder.append("$firstChatMsg: \n")
+            imageIndex += firstChatMsg.length + 3
         }
         chatMessage.badges?.forEach { badge ->
             var url: String?
@@ -231,7 +230,11 @@ class ChatAdapter(
                     builder.setSpan(ForegroundColorSpan(Color.WHITE), 0, builder.length, SPAN_INCLUSIVE_INCLUSIVE)
                     holder.textView.setBackgroundColor(Color.RED)
                 } else {
-                    holder.textView.background = null
+                    if (chatMessage.isFirst) {
+                        holder.textView.setBackgroundColor(Color.parseColor("#80404040"))
+                    } else {
+                        holder.textView.background = null
+                    }
                 }
             }
         } catch (e: Exception) {

@@ -15,7 +15,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/backgrounds/scenic" />
 
-        <TextView
+        <com.github.andreyasadchy.xtra.util.TextWithCanvas
             android:id="@+id/date"
             style="@style/ThumbnailItem"
             android:layout_marginStart="5dp"
@@ -24,7 +24,7 @@
             app:layout_constraintStart_toStartOf="parent"
             tools:text="Uploaded: July 16" />
 
-        <TextView
+        <com.github.andreyasadchy.xtra.util.TextWithCanvas
             android:id="@+id/downloadDate"
             style="@style/ThumbnailItem"
             android:layout_marginEnd="5dp"
@@ -33,7 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             tools:text="Downloaded: August 7" />
 
-        <TextView
+        <com.github.andreyasadchy.xtra.util.TextWithCanvas
             android:id="@+id/duration"
             style="@style/ThumbnailItem"
             android:layout_marginStart="10dp"
@@ -42,7 +42,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="13:37" />
 
-        <TextView
+        <com.github.andreyasadchy.xtra.util.TextWithCanvas
             android:id="@+id/sourceStart"
             style="@style/ThumbnailItem"
             android:layout_marginTop="10dp"
@@ -51,7 +51,7 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="13:37:69" />
 
-        <TextView
+        <com.github.andreyasadchy.xtra.util.TextWithCanvas
             android:id="@+id/sourceEnd"
             style="@style/ThumbnailItem"
             android:layout_marginTop="5dp"
@@ -59,7 +59,7 @@
             app:layout_constraintTop_toBottomOf="@id/sourceStart"
             tools:text="69:13:37" />
 
-        <TextView
+        <com.github.andreyasadchy.xtra.util.TextWithCanvas
             android:id="@+id/type"
             style="@style/ThumbnailItem"
             android:layout_marginTop="5dp"

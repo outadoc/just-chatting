@@ -136,29 +136,26 @@
         android:title="@string/zerowidth"
         app:iconSpaceReserved="false"/>
 
-    <SeekBarPreference
-        android:defaultValue="3"
-        android:key="chat_emotequality"
-        android:max="3"
-        android:title="@string/emotequality"
-        app:iconSpaceReserved="false"
-        app:min="1"
-        app:showSeekBarValue="true" />
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="chat_timestamps"
+        android:title="@string/timestamps"
+        app:iconSpaceReserved="false"/>
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/chatFirstMsgEntries"
+        android:entryValues="@array/cutoutmodeValues"
+        android:key="chat_firstmsg_visibility"
+        android:summary="%s"
+        android:title="@string/chat_firstmsg_visibility"
+        app:iconSpaceReserved="false"/>
 
     <SeekBarPreference
-        android:defaultValue="4"
-        android:key="chat_stvquality"
+        android:defaultValue="3"
+        android:key="chat_quality"
         android:max="4"
-        android:title="@string/stvquality"
-        app:iconSpaceReserved="false"
-        app:min="1"
-        app:showSeekBarValue="true" />
-
-    <SeekBarPreference
-        android:defaultValue="3"
-        android:key="chat_badgequality"
-        android:max="3"
-        android:title="@string/badgequality"
+        android:title="@string/emotequality"
         app:iconSpaceReserved="false"
         app:min="1"
         app:showSeekBarValue="true" />

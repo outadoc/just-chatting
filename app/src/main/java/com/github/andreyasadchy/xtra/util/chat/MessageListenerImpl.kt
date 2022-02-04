@@ -3,8 +3,6 @@ package com.github.andreyasadchy.xtra.util.chat
 import com.github.andreyasadchy.xtra.model.chat.Badge
 import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.collections.set
 
 class MessageListenerImpl(
@@ -65,8 +63,6 @@ class MessageListenerImpl(
             isFirst = prefixes["first-msg"] == "1",
             emotes = emotesList,
             badges = badgesList,
-            userType = prefixes["user-type"],
-            roomId = prefixes["room-id"],
             timestamp = prefixes["tmi-sent-ts"]?.toLong()
         ))
     }

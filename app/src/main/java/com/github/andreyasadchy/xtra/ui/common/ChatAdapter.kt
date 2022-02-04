@@ -29,6 +29,7 @@ import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.ui.view.chat.animateGifs
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import java.util.*
 import kotlin.collections.set
 
@@ -38,9 +39,11 @@ class ChatAdapter(
         private val badgeSize: Int,
         private val randomColor: Boolean,
         private val boldNames: Boolean,
-        private val badgeQuality: Int,
         private val enableZeroWidth: Boolean,
-        private val firstChatMsg: String) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+        private val enableTimestamps: Boolean,
+        private val firstmsgVisibility: String,
+        private val firstChatMsg: String,
+        private val rewardChatMsg: String) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
         set(value) {
@@ -55,8 +58,8 @@ class ChatAdapter(
     private val random = Random()
     private val userColors = HashMap<String, Int>()
     private val savedColors = HashMap<String, Int>()
-    private var globalBadges: TwitchBadgesResponse? = null
-    private var channelBadges: TwitchBadgesResponse? = null
+    private var globalBadges: List<TwitchBadge>? = null
+    private var channelBadges: List<TwitchBadge>? = null
     private val emotes = HashMap<String, Emote>()
     private var cheerEmotes: List<CheerEmote>? = null
     private var loggedInUser: String? = null
@@ -74,35 +77,27 @@ class ChatAdapter(
         val images = ArrayList<Image>()
         var imageIndex = 0
         var badgesCount = 0
-        if (chatMessage.isFirst) {
-            builder.append("$firstChatMsg: \n")
-            imageIndex += firstChatMsg.length + 3
+        if (chatMessage.isFirst && firstmsgVisibility == "0") {
+            builder.append("$firstChatMsg \n")
+            imageIndex += firstChatMsg.length + 2
         }
-        chatMessage.badges?.forEach { badge ->
-            var url: String?
-            if (badge.id != "bits" && badge.id != "subscriber") {
-                url = when (badgeQuality) {
-                    3 -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl4x)
-                    2 -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl2x)
-                    else -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl1x)
-                }
-            } else {
-                url = when (badgeQuality) {
-                    3 -> (channelBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl4x)
-                    2 -> (channelBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl2x)
-                    else -> (channelBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl1x)
-                }
-                if (url == null) {
-                    url = when (badgeQuality) {
-                        3 -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl4x)
-                        2 -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl2x)
-                        else -> (globalBadges?.getTwitchBadge(badge.id, badge.version)?.imageUrl1x)
-                    }
-                }
+        if (chatMessage.isReward && firstmsgVisibility == "0") {
+            builder.append("$rewardChatMsg \n")
+            imageIndex += rewardChatMsg.length + 2
+        }
+        val timestamp = chatMessage.timestamp?.let { TwitchApiHelper.getTimestamp(it) }
+        if (enableTimestamps && timestamp != null) {
+            builder.append("$timestamp ")
+            imageIndex += timestamp.length + 1
+        }
+        chatMessage.badges?.forEach { chatBadge ->
+            var badge = channelBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
+            if (badge == null) {
+                badge = globalBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
             }
-            url?.let {
+            badge?.url?.let {
                 builder.append("  ")
-                images.add(Image(url, imageIndex++, imageIndex++, false))
+                images.add(Image(it, imageIndex++, imageIndex++, false))
                 badgesCount++
             }
         }
@@ -223,15 +218,15 @@ class ChatAdapter(
             if (chatMessage.isAction) {
                 builder.setSpan(ForegroundColorSpan(color), if (userName != null) userNameEndIndex + 1 else 0, builder.length, SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-            if (chatMessage.isReward) {
-                holder.textView.setBackgroundColor(R.attr.colorAccent)
+            if (chatMessage.isFirst && firstmsgVisibility.toInt() < 2) {
+                holder.textView.setBackgroundColor(Color.parseColor("#80404040"))
             } else {
-                if (wasMentioned && userId != null) {
-                    builder.setSpan(ForegroundColorSpan(Color.WHITE), 0, builder.length, SPAN_INCLUSIVE_INCLUSIVE)
-                    holder.textView.setBackgroundColor(Color.RED)
+                if (chatMessage.isReward && firstmsgVisibility.toInt() < 2) {
+                    holder.textView.setBackgroundColor(R.attr.colorAccent)
                 } else {
-                    if (chatMessage.isFirst) {
-                        holder.textView.setBackgroundColor(Color.parseColor("#80404040"))
+                    if (wasMentioned && userId != null) {
+                        builder.setSpan(ForegroundColorSpan(Color.WHITE), 0, builder.length, SPAN_INCLUSIVE_INCLUSIVE)
+                        holder.textView.setBackgroundColor(Color.RED)
                     } else {
                         holder.textView.background = null
                     }
@@ -385,11 +380,11 @@ class ChatAdapter(
             })
     }
 
-    fun addGlobalBadges(list: TwitchBadgesResponse) {
+    fun addGlobalBadges(list: List<TwitchBadge>) {
         globalBadges = list
     }
 
-    fun addChannelBadges(list: TwitchBadgesResponse) {
+    fun addChannelBadges(list: List<TwitchBadge>) {
         channelBadges = list
     }
 

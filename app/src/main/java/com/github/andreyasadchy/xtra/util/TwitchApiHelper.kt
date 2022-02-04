@@ -111,6 +111,16 @@ object TwitchApiHelper {
         } else null
     }
 
+    fun getTimestamp(input: Long): String? {
+        val format = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
+        format.timeZone = TimeZone.getTimeZone("UTC")
+        return try {
+            format.format(Date(input))
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     fun getClipTime(period: Period? = null): String {
         val days = when (period) {
             Period.DAY -> -1

@@ -142,9 +142,7 @@
     <string name="bold_usernames">Bold usernames</string>
     <string name="randomcolor">Random color for users without color set</string>
     <string name="zerowidth">Zero width emotes</string>
-    <string name="emotequality">Emote quality</string>
-    <string name="stvquality">7tv emote quality</string>
-    <string name="badgequality">Badge quality</string>
+    <string name="emotequality">Emote and badge quality</string>
     <string name="message_limit">Message limit</string>
     <string name="playerRewind">Rewind/Fast forward</string>
     <string name="player_defaultquality">Default player quality</string>
@@ -214,4 +212,10 @@
     <string name="show_uptime">Show stream uptime</string>
     <string name="chat_first">First time chat</string>
     <string name="show_scrolltop">Show scroll to top button</string>
+    <string name="chat_reward">Channel point redemption</string>
+    <string name="chatFirstMsgEntries1">Show type and change background color</string>
+    <string name="chatFirstMsgEntries2">Change background color</string>
+    <string name="chatFirstMsgEntries3">Show as normal messages</string>
+    <string name="chat_firstmsg_visibility">First messages and redemptions with text</string>
+    <string name="timestamps">Show timestamps</string>
 </resources>

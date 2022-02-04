@@ -47,7 +47,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
                 chatView.setUsername(user.name)
                 chatView.setChatters(viewModel.chatters)
                 val emotesObserver = Observer(chatView::addEmotes)
-                viewModel.twitchEmotes.observe(viewLifecycleOwner, emotesObserver)
+                viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
                 viewModel.recentEmotes.observe(viewLifecycleOwner, emotesObserver)
                 viewModel.newChatter.observe(viewLifecycleOwner, Observer(chatView::addChatter))
             }
@@ -68,13 +68,13 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         if (enableChat) {
             chatView.enableChatInteraction(isLive && userIsLoggedIn)
             viewModel.chatMessages.observe(viewLifecycleOwner, Observer(chatView::submitList))
-            viewModel.newMessage.observe(viewLifecycleOwner, { chatView.notifyMessageAdded() })
+            viewModel.newMessage.observe(viewLifecycleOwner) { chatView.notifyMessageAdded() }
             viewModel.globalBadges.observe(viewLifecycleOwner, Observer(chatView::addGlobalBadges))
             viewModel.channelBadges.observe(viewLifecycleOwner, Observer(chatView::addChannelBadges))
             viewModel.otherEmotes.observe(viewLifecycleOwner, Observer(chatView::addEmotes))
             viewModel.cheerEmotes.observe(viewLifecycleOwner, Observer(chatView::addCheerEmotes))
-            viewModel.roomState.observe(viewLifecycleOwner, { chatView.notifyRoomState(it) })
-            viewModel.command.observe(viewLifecycleOwner, { chatView.notifyCommand(it) })
+            viewModel.roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
+            viewModel.command.observe(viewLifecycleOwner) { chatView.notifyCommand(it) }
         }
     }
 

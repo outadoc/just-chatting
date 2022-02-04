@@ -1,6 +1,6 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.ui.view.chat.stvQuality
+import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -15,7 +15,7 @@ class StvEmotesDeserializer : JsonDeserializer<StvEmotesResponse> {
         for (i in 0 until json.asJsonArray.size()) {
             val emote = json.asJsonArray.get(i).asJsonObject
             val urls = emote.getAsJsonArray("urls")
-            val quality = urls.get(when (stvQuality) {4 -> 3 3 -> 2 2 -> 1 else -> 0}).asJsonArray
+            val quality = urls.get(when (emoteQuality) {4 -> 3 3 -> 2 2 -> 1 else -> 0}).asJsonArray
             val url = quality.get(1)
             val visibility = emote.getAsJsonArray("visibility_simple")
             val zerowidth = visibility.toString().contains("ZERO_WIDTH")

@@ -181,8 +181,8 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setId: String): List<TwitchEmote>? = withContext(Dispatchers.IO) {
-        api.getEmotesFromSet(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, setId).emotes
+    override suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setIds: List<String>): List<TwitchEmote>? = withContext(Dispatchers.IO) {
+        api.getEmotesFromSet(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, setIds).emotes
     }
 
     override suspend fun loadCheerEmotes(clientId: String?, userToken: String?, userId: String): List<CheerEmote> = withContext(Dispatchers.IO) {
@@ -229,7 +229,7 @@ class ApiRepository @Inject constructor(
 
     override suspend fun loadCheerEmotesGQL(clientId: String?, userId: String): List<CheerEmote>? = withContext(Dispatchers.IO) {
         val emotes = mutableListOf<CheerEmote>()
-        val get = apolloClient(XtraModule(), clientId).query(CheerEmotesQuery(Optional.Present(userId), Optional.Present(animateGifs), Optional.Present((when (emoteQuality) {"3" -> (4) "2" -> (2) else -> (1)}).toDouble()))).execute().data
+        val get = apolloClient(XtraModule(), clientId).query(CheerEmotesQuery(Optional.Present(userId), Optional.Present(animateGifs), Optional.Present((when (emoteQuality) {4 -> 4 3 -> 3 2 -> 2 else -> 1}).toDouble()))).execute().data
         if (get?.user?.cheer?.emotes != null) {
             for (i in get.user.cheer.emotes) {
                 if (i?.tiers != null) {

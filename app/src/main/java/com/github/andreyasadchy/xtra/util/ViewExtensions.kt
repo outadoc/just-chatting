@@ -123,7 +123,7 @@ fun ImageView.disable() {
 
 class TextWithCanvas(context: Context, attrs: AttributeSet) : AppCompatTextView(context, attrs) {
     override fun draw(canvas: Canvas?) {
-        for (i in 0..4) {
+        for (i in 0..6) {
             super.draw(canvas)
         }
     }

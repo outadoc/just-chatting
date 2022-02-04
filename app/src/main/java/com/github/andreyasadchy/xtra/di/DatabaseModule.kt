@@ -27,10 +27,6 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesEmotesDao(database: AppDatabase): EmotesDao = database.emotes()
-
-    @Singleton
-    @Provides
     fun providesRequestsDao(database: AppDatabase): RequestsDao = database.requests()
 
     @Singleton

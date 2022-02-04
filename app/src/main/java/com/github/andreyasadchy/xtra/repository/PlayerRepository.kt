@@ -9,7 +9,6 @@ import com.github.andreyasadchy.xtra.api.GraphQLApi
 import com.github.andreyasadchy.xtra.api.MiscApi
 import com.github.andreyasadchy.xtra.api.TTVLolApi
 import com.github.andreyasadchy.xtra.api.UsherApi
-import com.github.andreyasadchy.xtra.db.EmotesDao
 import com.github.andreyasadchy.xtra.db.RecentEmotesDao
 import com.github.andreyasadchy.xtra.db.VideoPositionsDao
 import com.github.andreyasadchy.xtra.model.VideoPosition
@@ -26,7 +25,6 @@ import retrofit2.Response
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.collections.HashMap
 import kotlin.collections.set
 import kotlin.random.Random
 
@@ -37,7 +35,6 @@ class PlayerRepository @Inject constructor(
     private val usher: UsherApi,
     private val misc: MiscApi,
     private val graphQL: GraphQLApi,
-    private val emotes: EmotesDao,
     private val recentEmotes: RecentEmotesDao,
     private val videoPositions: VideoPositionsDao,
     private val ttvLolApi: TTVLolApi
@@ -111,11 +108,11 @@ class PlayerRepository @Inject constructor(
         usher.getVideoPlaylist(videoId, playlistQueryOptions)
     }
 
-    suspend fun loadGlobalBadges(): TwitchBadgesResponse = withContext(Dispatchers.IO) {
+    suspend fun loadGlobalBadges(): Response<TwitchBadgesResponse> = withContext(Dispatchers.IO) {
         misc.getGlobalBadges()
     }
 
-    suspend fun loadChannelBadges(channelId: String): TwitchBadgesResponse = withContext(Dispatchers.IO) {
+    suspend fun loadChannelBadges(channelId: String): Response<TwitchBadgesResponse> = withContext(Dispatchers.IO) {
         misc.getChannelBadges(channelId)
     }
 
@@ -142,8 +139,6 @@ class PlayerRepository @Inject constructor(
     suspend fun loadBttvFfzEmotes(channelId: String): Response<BttvFfzResponse> = withContext(Dispatchers.IO) {
         misc.getBttvFfzEmotes(channelId)
     }
-
-    fun loadEmotes() = emotes.getAll()
 
     fun loadRecentEmotes() = recentEmotes.getAll()
 

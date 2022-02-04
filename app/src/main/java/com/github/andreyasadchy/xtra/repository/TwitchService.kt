@@ -31,7 +31,7 @@ interface TwitchService {
     fun loadSearchChannels(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<ChannelSearch>
     suspend fun loadUserFollows(clientId: String?, userToken: String?, userId: String, channelId: String): Boolean
     fun loadFollowedChannels(clientId: String?, userToken: String?, userId: String, coroutineScope: CoroutineScope): Listing<Follow>
-    suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setId: String): List<TwitchEmote>?
+    suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setIds: List<String>): List<TwitchEmote>?
     suspend fun loadCheerEmotes(clientId: String?, userToken: String?, userId: String): List<CheerEmote>?
     suspend fun loadVideoChatLog(clientId: String?, videoId: String, offsetSeconds: Double): VideoMessagesResponse
     suspend fun loadVideoChatAfter(clientId: String?, videoId: String, cursor: String): VideoMessagesResponse

@@ -60,7 +60,7 @@ interface HelixApi {
     suspend fun getFollowedChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("from_id") userId: String, @Query("first") limit: Int, @Query("after") offset: String?): FollowResponse
 
     @GET("chat/emotes/set")
-    suspend fun getEmotesFromSet(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("emote_set_id") setId: String?): EmoteSetResponse
+    suspend fun getEmotesFromSet(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("emote_set_id") setIds: List<String>): EmoteSetResponse
 
     @GET("bits/cheermotes")
     suspend fun getCheerEmotes(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("broadcaster_id") userId: String?): CheerEmotesResponse

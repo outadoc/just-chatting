@@ -29,11 +29,9 @@ import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
 import kotlinx.android.synthetic.main.view_chat.view.*
 import kotlin.math.max
-import com.github.andreyasadchy.xtra.model.helix.emote.Emote as TwitchEmote
 
 var MAX_ADAPTER_COUNT = 200
-var emoteQuality = "3"
-var stvQuality = 4
+var emoteQuality = 4
 var animateGifs = true
 
 class ChatView : ConstraintLayout {
@@ -77,13 +75,12 @@ class ChatView : ConstraintLayout {
 
     fun init(fragment: Fragment) {
         this.fragment = fragment
-        emoteQuality = context.prefs().getInt(C.CHAT_EMOTEQUALITY, 3).toString()
-        stvQuality = context.prefs().getInt(C.CHAT_STVQUALITY, 4)
+        emoteQuality = context.prefs().getInt(C.CHAT_QUALITY, 3)
         animateGifs = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
         adapter = ChatAdapter(fragment, context.convertDpToPixels(29.5f), context.convertDpToPixels(18.5f), context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
-            context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getInt(C.CHAT_BADGEQUALITY, 3), context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true),
-            context.getString(R.string.chat_first))
+            context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true), context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
+            context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0") ?: "0", context.getString(R.string.chat_first), context.getString(R.string.chat_reward))
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null
@@ -192,11 +189,13 @@ class ChatView : ConstraintLayout {
         notifyMessageAdded()
     }
 
-    fun addGlobalBadges(list: TwitchBadgesResponse) {
-        adapter.addGlobalBadges(list)
+    fun addGlobalBadges(list: List<TwitchBadge>?) {
+        if (list != null) {
+            adapter.addGlobalBadges(list)
+        }
     }
 
-    fun addChannelBadges(list: TwitchBadgesResponse) {
+    fun addChannelBadges(list: List<TwitchBadge>) {
         adapter.addChannelBadges(list)
     }
 
@@ -326,7 +325,7 @@ class ChatView : ConstraintLayout {
                     return when (position) {
                         0 -> context.getString(R.string.recent_emotes)
                         1 -> "Twitch"
-                        else -> "BTTV/FFZ/7TV"
+                        else -> "7TV/BTTV/FFZ"
                     }
                 }
             }

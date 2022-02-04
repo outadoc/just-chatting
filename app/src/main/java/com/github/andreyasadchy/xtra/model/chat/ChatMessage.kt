@@ -12,4 +12,5 @@ interface ChatMessage {
     val isFirst: Boolean
     val emotes: List<TwitchEmote>?
     val badges: List<Badge>?
+    val timestamp: Long?
 }

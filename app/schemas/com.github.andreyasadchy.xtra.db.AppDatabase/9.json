@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "51513e0adf626b6181ab6dac5634ecad",
+    "identityHash": "b4570c3b0b1263d14a95b28723adf56a",
     "entities": [
       {
         "tableName": "videos",
@@ -140,32 +140,6 @@
             "id"
           ],
           "autoGenerate": true
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "emotes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `code` TEXT NOT NULL COLLATE NOCASE, PRIMARY KEY(`id`))",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "name",
-            "columnName": "code",
-            "affinity": "TEXT",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "id"
-          ],
-          "autoGenerate": false
         },
         "indices": [],
         "foreignKeys": []
@@ -332,7 +306,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '51513e0adf626b6181ab6dac5634ecad')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b4570c3b0b1263d14a95b28723adf56a')"
     ]
   }
 }

@@ -152,7 +152,7 @@
         app:iconSpaceReserved="false"/>
 
     <SeekBarPreference
-        android:defaultValue="3"
+        android:defaultValue="4"
         android:key="chat_quality"
         android:max="4"
         android:title="@string/emotequality"

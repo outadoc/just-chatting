@@ -229,4 +229,5 @@
     <string name="chatFirstMsgEntries3">Show as normal messages</string>
     <string name="chat_firstmsg_visibility">First messages and redemptions with text</string>
     <string name="timestamps">Show timestamps</string>
+    <string name="timestamp_format">Timestamp format</string>
 </resources>

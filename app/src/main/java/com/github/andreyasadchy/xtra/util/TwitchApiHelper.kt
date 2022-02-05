@@ -111,9 +111,18 @@ object TwitchApiHelper {
         } else null
     }
 
-    fun getTimestamp(input: Long): String? {
-        val format = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-        format.timeZone = TimeZone.getTimeZone("UTC")
+    fun getTimestamp(input: Long, timestampFormat: String?): String? {
+        val pattern = when (timestampFormat) {
+            "0" -> "H:mm"
+            "1" -> "HH:mm"
+            "2" -> "H:mm:ss"
+            "3" -> "HH:mm:ss"
+            "4" -> "h:mm a"
+            "5" -> "hh:mm a"
+            "6" -> "h:mm:ss a"
+            else -> "hh:mm:ss a"
+        }
+        val format = SimpleDateFormat(pattern, Locale.getDefault())
         return try {
             format.format(Date(input))
         } catch (e: Exception) {

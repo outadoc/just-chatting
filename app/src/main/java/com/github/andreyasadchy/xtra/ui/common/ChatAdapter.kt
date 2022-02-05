@@ -41,7 +41,8 @@ class ChatAdapter(
         private val boldNames: Boolean,
         private val enableZeroWidth: Boolean,
         private val enableTimestamps: Boolean,
-        private val firstmsgVisibility: String,
+        private val timestampFormat: String?,
+        private val firstmsgVisibility: String?,
         private val firstChatMsg: String,
         private val rewardChatMsg: String) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
@@ -85,9 +86,10 @@ class ChatAdapter(
             builder.append("$rewardChatMsg \n")
             imageIndex += rewardChatMsg.length + 2
         }
-        val timestamp = chatMessage.timestamp?.let { TwitchApiHelper.getTimestamp(it) }
+        val timestamp = chatMessage.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) }
         if (enableTimestamps && timestamp != null) {
             builder.append("$timestamp ")
+            builder.setSpan(ForegroundColorSpan(Color.parseColor("#999999")), imageIndex, imageIndex + timestamp.length, SPAN_INCLUSIVE_INCLUSIVE)
             imageIndex += timestamp.length + 1
         }
         chatMessage.badges?.forEach { chatBadge ->
@@ -218,10 +220,10 @@ class ChatAdapter(
             if (chatMessage.isAction) {
                 builder.setSpan(ForegroundColorSpan(color), if (userName != null) userNameEndIndex + 1 else 0, builder.length, SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-            if (chatMessage.isFirst && firstmsgVisibility.toInt() < 2) {
+            if (chatMessage.isFirst && firstmsgVisibility?.toInt() ?: 0 < 2) {
                 holder.textView.setBackgroundColor(Color.parseColor("#80404040"))
             } else {
-                if (chatMessage.isReward && firstmsgVisibility.toInt() < 2) {
+                if (chatMessage.isReward && firstmsgVisibility?.toInt() ?: 0 < 2) {
                     holder.textView.setBackgroundColor(R.attr.colorAccent)
                 } else {
                     if (wasMentioned && userId != null) {

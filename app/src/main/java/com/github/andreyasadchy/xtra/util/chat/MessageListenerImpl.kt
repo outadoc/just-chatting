@@ -85,7 +85,8 @@ class MessageListenerImpl(
         callbackCommand.onCommand(Command(
             message = user,
             duration = msg,
-            type = "clearmsg"
+            type = "clearmsg",
+            timestamp = prefixes["tmi-sent-ts"]?.toLong()
         ))
     }
 
@@ -101,13 +102,14 @@ class MessageListenerImpl(
         callbackCommand.onCommand(Command(
             message = user,
             duration = duration,
-            type = type
+            type = type,
+            timestamp = prefixes["tmi-sent-ts"]?.toLong()
         ))
     }
 
     override fun onNotice(message: String) {
         callbackCommand.onCommand(Command(
-            message = message.substring(message.indexOf(":", message.indexOf(":") + 1) + 1)
+            message = message.substring(message.indexOf(":", message.indexOf(":") + 1) + 1),
         ))
     }
 
@@ -134,7 +136,8 @@ class MessageListenerImpl(
             }
             callbackCommand.onCommand(Command(
                 message = if (msg != null) "$system $msg" else system,
-                emotes = emotesList
+                emotes = emotesList,
+                timestamp = prefixes["tmi-sent-ts"]?.toLong()
             ))
         }
     }

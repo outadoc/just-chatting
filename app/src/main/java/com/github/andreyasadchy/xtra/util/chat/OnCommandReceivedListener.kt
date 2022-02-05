@@ -10,4 +10,5 @@ data class Command(
     val message: String? = null,
     val duration: String? = null,
     val type: String? = null,
-    val emotes: List<TwitchEmote>? = null)
+    val emotes: List<TwitchEmote>? = null,
+    val timestamp: Long? = null)

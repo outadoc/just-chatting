@@ -118,4 +118,26 @@
         <item>@string/chatFirstMsgEntries2</item>
         <item>@string/chatFirstMsgEntries3</item>
     </string-array>
+
+    <string-array name="timestampValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+    <string-array name="timestampEntries">
+        <item>h:mm</item>
+        <item>hh:mm</item>
+        <item>h:mm:ss</item>
+        <item>hh:mm:ss</item>
+        <item>h:mm am/pm</item>
+        <item>hh:mm am/pm</item>
+        <item>h:mm:ss am/pm</item>
+        <item>hh:mm:ss am/pm</item>
+    </string-array>
 </resources>

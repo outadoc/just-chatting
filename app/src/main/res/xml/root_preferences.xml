@@ -144,6 +144,15 @@
 
     <ListPreference
         android:defaultValue="0"
+        android:entries="@array/timestampEntries"
+        android:entryValues="@array/timestampValues"
+        android:key="chat_timestamp_format"
+        android:summary="%s"
+        android:title="@string/timestamp_format"
+        app:iconSpaceReserved="false"/>
+
+    <ListPreference
+        android:defaultValue="0"
         android:entries="@array/chatFirstMsgEntries"
         android:entryValues="@array/cutoutmodeValues"
         android:key="chat_firstmsg_visibility"

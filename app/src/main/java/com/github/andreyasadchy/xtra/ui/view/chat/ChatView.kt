@@ -79,7 +79,8 @@ class ChatView : ConstraintLayout {
         MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
         adapter = ChatAdapter(fragment, context.convertDpToPixels(29.5f), context.convertDpToPixels(18.5f), context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
             context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true), context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
-            context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0") ?: "0", context.getString(R.string.chat_first), context.getString(R.string.chat_reward))
+            context.prefs().getString(C.CHAT_TIMESTAMP_FORMAT, "0"), context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0"), context.getString(R.string.chat_first),
+            context.getString(R.string.chat_reward))
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null
@@ -184,7 +185,7 @@ class ChatView : ConstraintLayout {
             "ban" -> context.getString(R.string.chat_ban, command.message)
             else -> command.message
         }
-        adapter.messages?.add(LiveChatMessage(message = message, color = "#999999", isAction = true, emotes = command.emotes))
+        adapter.messages?.add(LiveChatMessage(message = message, color = "#999999", isAction = true, emotes = command.emotes, timestamp = command.timestamp))
         notifyMessageAdded()
     }
 

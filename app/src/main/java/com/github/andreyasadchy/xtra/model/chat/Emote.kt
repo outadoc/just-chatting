@@ -7,6 +7,8 @@ abstract class Emote {
         get() = "image/png"
     open val zeroWidth: Boolean
         get() = false
+    open val ownerId: String?
+        get() = null
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

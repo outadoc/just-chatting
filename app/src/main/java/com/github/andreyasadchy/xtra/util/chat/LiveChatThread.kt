@@ -139,9 +139,6 @@ class LiveChatThread(
         }
     }
 
-    override fun addEmoteSets(clientId: String?, userToken: String?) {
-    }
-
     interface OnMessageReceivedListener {
         fun onMessage(message: String)
         fun onCommand(message: String, type: String? = null)

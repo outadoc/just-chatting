@@ -18,7 +18,7 @@ class EmoteSetDeserializer : JsonDeserializer<EmoteSetResponse> {
             val urls = emote.getAsJsonObject("images")
             val url = urls.get(when (emoteQuality) {4 -> ("url_4x") 3 -> ("url_4x") 2 -> ("url_2x") else -> ("url_1x")}).takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("url_2x").takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("url_1x").asString
             val format = if (emote.getAsJsonArray("format").first().asString.equals("animated")) "image/gif" else "image/png"
-            emotes.add(TwitchEmote(emote.get("name").asString, type = format, url = url, setId = emote.get("emote_set_id").asString))
+            emotes.add(TwitchEmote(emote.get("name").asString, type = format, url = url, setId = emote.get("emote_set_id").asString, ownerId = emote.get("owner_id").asString))
         }
         return EmoteSetResponse(emotes.sortedByDescending { it.setId })
     }

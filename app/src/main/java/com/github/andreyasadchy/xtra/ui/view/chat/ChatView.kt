@@ -38,7 +38,6 @@ class ChatView : ConstraintLayout {
 
     interface MessageSenderCallback {
         fun send(message: CharSequence)
-        fun addEmoteSets(clientId: String?, userToken: String?)
     }
 
     private lateinit var adapter: ChatAdapter
@@ -338,9 +337,6 @@ class ChatView : ConstraintLayout {
                             setCurrentItem(1, false)
                         }
                         visible()
-                        if (currentItem == 1) {
-                            messageCallback?.addEmoteSets(context.prefs().getString(C.HELIX_CLIENT_ID, ""), context.prefs().getString(C.TOKEN, ""))
-                        }
                     } else {
                         gone()
                     }

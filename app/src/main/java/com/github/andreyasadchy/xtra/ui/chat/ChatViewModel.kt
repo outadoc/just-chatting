@@ -63,11 +63,7 @@ class ChatViewModel @Inject constructor(
     val globalBadges = MutableLiveData<List<TwitchBadge>?>()
     val channelBadges = MutableLiveData<List<TwitchBadge>>()
     val cheerEmotes = MutableLiveData<List<CheerEmote>>()
-
-    var savedClientId: String? = null
-    var savedUserToken: String? = null
     var emoteSetsAdded = false
-    var emoteSets: List<String>? = null
     val emotesFromSets = MutableLiveData<List<Emote>>()
     val roomState = MutableLiveData<RoomState>()
     val command = MutableLiveData<Command>()
@@ -92,9 +88,9 @@ class ChatViewModel @Inject constructor(
 
     fun startLive(user: User, useHelix: Boolean, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?) {
         if (chat == null && channelLogin != null && channelName != null) {
-            chat = LiveChatController(user, channelLogin, channelName)
+            chat = LiveChatController(user, helixClientId, channelId, channelLogin, channelName)
             if (channelId != null) {
-                init(useHelix, helixClientId, gqlClientId, user.token, channelId)
+                init(useHelix, helixClientId, gqlClientId, user.token.nullIfEmpty(), channelId)
             }
         }
     }
@@ -103,7 +99,7 @@ class ChatViewModel @Inject constructor(
         if (chat == null) {
             chat = VideoChatController(gqlClientId, videoId, startTime, getCurrentPosition)
             if (channelId != null) {
-                init(useHelix, helixClientId, gqlClientId, user.token, channelId)
+                init(useHelix, helixClientId, gqlClientId, user.token.nullIfEmpty(), channelId)
             }
         }
     }
@@ -123,12 +119,6 @@ class ChatViewModel @Inject constructor(
     override fun onCleared() {
         chat?.stop()
         super.onCleared()
-    }
-
-    override fun addEmoteSets(clientId: String?, userToken: String?) {
-        savedClientId = clientId
-        savedUserToken = userToken
-        chat?.addEmoteSets()
     }
 
     private fun init(useHelix: Boolean, helixClientId: String?, gqlClientId: String, token: String?, channelId: String) {
@@ -234,7 +224,9 @@ class ChatViewModel @Inject constructor(
 
     private inner class LiveChatController(
             private val user: User,
-            private val channelName: String,
+            private val helixClientId: String?,
+            private val channelId: String?,
+            private val channelLogin: String,
             displayName: String) : ChatController() {
 
         private var chat: LiveChatThread? = null
@@ -260,7 +252,7 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(channelName, user.name.nullIfEmpty(), user.token.nullIfEmpty(), this, this, this, this)
+            chat = TwitchApiHelper.startChat(channelLogin, user.name.nullIfEmpty(), user.token.nullIfEmpty(), this, this, this, this)
         }
 
         override fun pause() {
@@ -280,32 +272,50 @@ class ChatViewModel @Inject constructor(
             }
         }
 
-        override fun addEmoteSets() {
-            if (!emoteSetsAdded) {
-                viewModelScope.launch {
-                    val emotes = mutableListOf<Emote>()
-                    emoteSets?.asReversed()?.chunked(25)?.forEach {
-                        try {
-                            val list = repository.loadEmotesFromSet(savedClientId, savedUserToken, it)
-                            if (list != null) {
-                                emotes.addAll(list)
+        override fun onUserState(sets: List<String>?) {
+            if (!emoteSetsAdded && helixClientId != null && user.token.nullIfEmpty() != null) {
+                if (savedEmoteSets != sets) {
+                    viewModelScope.launch {
+                        val emotes = mutableListOf<Emote>()
+                        sets?.asReversed()?.chunked(25)?.forEach {
+                            try {
+                                val list = repository.loadEmotesFromSet(helixClientId, user.token, it)
+                                if (list != null) {
+                                    emotes.addAll(list)
+                                }
+                            } catch (e: Exception) {
                             }
-                        } catch (e: Exception) {
+                        }
+                        if (emotes.isNotEmpty()) {
+                            savedEmoteSets = sets
+                            savedEmotesFromSets = emotes
+                            emoteSetsAdded = true
+                            val items = emotes.filter { it.ownerId == channelId }
+                            for (item in items.asReversed()) {
+                                emotes.add(0, item)
+                            }
+                            addEmotes(emotes)
+                            emotesFromSets.value = emotes
                         }
                     }
+                } else {
+                    val emotes = mutableListOf<Emote>()
+                    savedEmotesFromSets?.let { emotes.addAll(it) }
                     if (emotes.isNotEmpty()) {
                         emoteSetsAdded = true
-                        emotesFromSets.value = emotes
+                        val items = emotes.filter { it.ownerId == channelId }
+                        for (item in items.asReversed()) {
+                            emotes.add(0, item)
+                        }
                         addEmotes(emotes)
+                        viewModelScope.launch {
+                            try {
+                                emotesFromSets.value = emotes!!
+                            } catch (e: Exception) {
+                            }
+                        }
                     }
                 }
-            }
-        }
-
-        override fun onUserState(list: List<String>?) {
-            emoteSets = list
-            if (savedClientId != null && savedUserToken != null) {
-                addEmoteSets()
             }
         }
 
@@ -349,9 +359,6 @@ class ChatViewModel @Inject constructor(
             chatReplayManager?.stop()
         }
 
-        override fun addEmoteSets() {
-        }
-
         override fun onUserState(list: List<String>?) {
         }
 
@@ -367,7 +374,6 @@ class ChatViewModel @Inject constructor(
         abstract fun start()
         abstract fun pause()
         abstract fun stop()
-        abstract fun addEmoteSets()
 
         override fun onMessage(message: ChatMessage) {
             _chatMessages.value!!.add(message)
@@ -378,6 +384,8 @@ class ChatViewModel @Inject constructor(
     companion object {
         private const val TAG = "ChatViewModel"
 
+        private var savedEmoteSets: List<String>? = null
+        private var savedEmotesFromSets: List<Emote>? = null
         private var savedGlobalBadges: List<TwitchBadge>? = null
         private var globalStvEmotes: List<StvEmote>? = null
         private var globalBttvEmotes: List<BttvEmote>? = null

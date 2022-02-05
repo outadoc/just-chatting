@@ -69,7 +69,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                     dismiss()
                 }
                 copyMessage.setOnClickListener {
-                    listener.onCopyMessageClicked(msg.substring(msg.indexOf(':') + 1))
+                    listener.onCopyMessageClicked(msg.substring(msg.indexOf(':') + 2))
                     dismiss()
                 }
             } else {
@@ -87,19 +87,19 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         if (userId != null) {
             viewProfile.setOnClickListener {
                 if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-                    viewModel.loadUser(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), channelId = userId).observe(viewLifecycleOwner, {
+                    viewModel.loadUser(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), channelId = userId).observe(viewLifecycleOwner) {
                         if (it != null) {
                             listener.onViewProfileClicked(it.id, it.login, it.display_name, it.channelLogo)
                         }
                         dismiss()
-                    })
+                    }
                 } else {
-                    viewModel.loadUser(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelId = userId).observe(viewLifecycleOwner, {
+                    viewModel.loadUser(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelId = userId).observe(viewLifecycleOwner) {
                         if (it != null) {
                             listener.onViewProfileClicked(it.id, it.login, it.display_name, it.channelLogo)
                         }
                         dismiss()
-                    })
+                    }
                 }
             }
         } else viewProfile.gone()

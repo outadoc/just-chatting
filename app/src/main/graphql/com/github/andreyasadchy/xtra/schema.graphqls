@@ -12,11 +12,30 @@ type User {
   id: String
   login: String
   displayName: String
+  roles: UserRoles
+  description: String
   profileImageURL(width: Int): String
+  profileViewCount: Int
+  createdAt: Time
+  followers: FollowerConnection
   stream: StreamNode
   videos(sort: VideoSort, type: BroadcastType, first: Int, after: Cursor): Videos
   clips(criteria: criteria, first: Int, after: Cursor): Clips
   cheer: CheerInfo
+}
+
+type FollowerConnection {
+  totalCount: Int
+}
+
+type UserRoles {
+  isAffiliate: Boolean
+  isExtensionsApprover: Boolean
+  isExtensionsDeveloper: Boolean
+  isGlobalMod: Boolean
+  isPartner: Boolean
+  isSiteAdmin: Boolean
+  isStaff: Boolean
 }
 
 type CheerInfo {
@@ -162,6 +181,7 @@ type PageInfo {
   hasPreviousPage: Boolean
 }
 
+scalar Time
 scalar Cursor
 
 schema {

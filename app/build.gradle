@@ -3,7 +3,7 @@ plugins {
     id("kotlin-android")
     id("kotlin-android-extensions")
     id("kotlin-kapt")
-    id("com.apollographql.apollo3").version("3.0.0-rc01")
+    id("com.apollographql.apollo3").version("$apollo_ver")
 }
 
 android {
@@ -96,7 +96,7 @@ dependencies {
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
 
     //Misc
-    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.4'
     implementation 'com.ncapdevi:frag-nav:3.2.0'
     implementation 'com.iheartradio.m3u8:open-m3u8:0.2.6'
 
@@ -107,13 +107,13 @@ dependencies {
     implementation "androidx.tonyodev.fetch2okhttp:xfetch2okhttp:$fetch"
 
     implementation 'androidx.webkit:webkit:1.4.0'
-    implementation 'com.apollographql.apollo3:apollo-runtime:3.0.0-rc01'
+    implementation "com.apollographql.apollo3:apollo-runtime:$apollo_ver"
 
     implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayer"
 
-    implementation "com.github.zjupure:webpdecoder:2.0.$glide"
+    implementation "com.github.zjupure:webpdecoder:2.0.4.12.0"
     implementation "com.github.bumptech.glide:glide:$glide"
     kapt "com.github.bumptech.glide:compiler:$glide"
     implementation "com.github.bumptech.glide:okhttp3-integration:$glide@aar"

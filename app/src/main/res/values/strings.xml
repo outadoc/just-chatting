@@ -73,6 +73,8 @@
     <string name="internal_storage">Internal storage</string>
     <string name="save_to">Save to</string>
     <string name="no_storage_detected">No available storage detected (most likely the phone is connected to a computer).</string>
+    <string name="rewind">Rewind</string>
+    <string name="forward">Fast forward</string>
     <string name="seconds_full">%s seconds</string>
     <string name="unfollow">Unfollow %s?</string>
     <string name="now_following">You\'re now following %s</string>
@@ -157,7 +159,6 @@
     <string name="zerowidth">Zero width emotes</string>
     <string name="emotequality">Emote and badge quality</string>
     <string name="message_limit">Message limit</string>
-    <string name="playerRewind">Rewind/Fast forward</string>
     <string name="player_defaultquality">Default player quality</string>
     <string name="player_doubletap">Double tap to toggle chat</string>
     <string name="player_minimize">Show minimize button</string>
@@ -230,4 +231,12 @@
     <string name="chat_firstmsg_visibility">First messages and redemptions with text</string>
     <string name="timestamps">Show timestamps</string>
     <string name="timestamp_format">Timestamp format</string>
+    <string name="created_at">Created at %s</string>
+    <string name="followers">%s followers</string>
+    <string name="user_partner">Partner</string>
+    <string name="user_affiliate">Affiliate</string>
+    <string name="user_staff">Staff</string>
+    <string name="user_admin">Admin</string>
+    <string name="user_global_mod">Global mod</string>
+    <string name="uptime">%s uptime</string>
 </resources>

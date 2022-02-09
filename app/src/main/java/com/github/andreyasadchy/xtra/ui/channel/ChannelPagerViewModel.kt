@@ -24,6 +24,9 @@ class ChannelPagerViewModel @Inject constructor(
     private val _stream = MutableLiveData<Stream?>()
     val stream: MutableLiveData<Stream?>
         get() = _stream
+    private val _user = MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>()
+    val user: MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>
+        get() = _user
 
     private val _userId = MutableLiveData<String?>()
     private val _userLogin = MutableLiveData<String?>()
@@ -70,9 +73,29 @@ class ChannelPagerViewModel @Inject constructor(
         }
     }
 
+    fun loadUser(useHelix: Boolean, clientId: String?, token: String? = null, channelId: String?) {
+        if (channelId != null) {
+            viewModelScope.launch {
+                try {
+                    val user = if (useHelix) {
+                        repository.loadUserById(clientId, token, channelId)
+                    } else {
+                        repository.loadUserByIdGQL(clientId, channelId)
+                    }
+                    _user.postValue(user)
+                } catch (e: Exception) {
+
+                }
+            }
+        }
+    }
+
     fun retry(useHelix: Boolean, clientId: String?, token: String? = null) {
         if (_stream.value == null) {
             loadStream(useHelix, clientId, token, _userId.value, _userLogin.value, _userName.value, _profileImageURL.value)
+        }
+        if (_user.value == null) {
+            loadUser(useHelix, clientId, token, _userId.value)
         }
     }
 

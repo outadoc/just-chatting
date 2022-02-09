@@ -279,10 +279,10 @@ class ChatView : ConstraintLayout {
     }
 
     fun enableChatInteraction(enableMessaging: Boolean) {
-        adapter.setOnClickListener { original, formatted, login ->
+        adapter.setOnClickListener { original, formatted, userId ->
             editText.hideKeyboard()
             editText.clearFocus()
-            MessageClickedDialog.newInstance(enableMessaging, original, formatted, login).show(fragment.childFragmentManager, null)
+            MessageClickedDialog.newInstance(enableMessaging, original, formatted, userId).show(fragment.childFragmentManager, null)
         }
         if (enableMessaging) {
             editText.addTextChangedListener(onTextChanged = { text, _, _, _ ->
@@ -376,7 +376,7 @@ class ChatView : ConstraintLayout {
         val extent = recyclerView.computeVerticalScrollExtent()
         val range = recyclerView.computeVerticalScrollRange()
         val percentage = (100f * offset / (range - extent).toFloat())
-        return percentage < 97f
+        return percentage < 100f
     }
 
     class SpaceTokenizer : MultiAutoCompleteTextView.Tokenizer {

@@ -17,7 +17,9 @@ data class ChannelSearch(
         val broadcaster_language: String? = null,
         val thumbnail_url: String? = null,
 
-        var profileImageURL: String? = null) : Parcelable {
+        var profileImageURL: String? = null,
+
+        val followers_count: Int? = null) : Parcelable {
 
         val channelLogo: String?
                 get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")

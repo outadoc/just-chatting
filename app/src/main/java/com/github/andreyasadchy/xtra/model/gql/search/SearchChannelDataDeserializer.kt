@@ -22,6 +22,7 @@ class SearchChannelDataDeserializer : JsonDeserializer<SearchChannelDataResponse
                     broadcaster_login = if (!(obj.get("login").isJsonNull)) { obj.getAsJsonPrimitive("login").asString } else null,
                     display_name = if (!(obj.get("displayName").isJsonNull)) { obj.getAsJsonPrimitive("displayName").asString } else null,
                     profileImageURL = if (!(obj.get("profileImageURL").isJsonNull)) { obj.getAsJsonPrimitive("profileImageURL").asString } else null,
+                    followers_count = if (!(obj.get("followers").isJsonNull)) { obj.getAsJsonObject("followers").getAsJsonPrimitive("totalCount").asInt } else null,
                 )
             )
         }

@@ -10,8 +10,6 @@ import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.*
-import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userImage
-import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.username
 
 class FollowedChannelsAdapter(
         private val fragment: Fragment,

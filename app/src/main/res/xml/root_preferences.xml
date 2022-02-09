@@ -278,7 +278,16 @@
         android:entries="@array/playerSeekEntries"
         android:entryValues="@array/playerSeekValues"
         android:summary="@string/seconds_full"
-        android:title="@string/playerRewind"
+        android:title="@string/rewind"
+        app:iconSpaceReserved="false"/>
+
+    <ListPreference
+        android:defaultValue="10000"
+        android:key="playerForward"
+        android:entries="@array/playerSeekEntries"
+        android:entryValues="@array/playerSeekValues"
+        android:summary="@string/seconds_full"
+        android:title="@string/forward"
         app:iconSpaceReserved="false"/>
 
     <ListPreference

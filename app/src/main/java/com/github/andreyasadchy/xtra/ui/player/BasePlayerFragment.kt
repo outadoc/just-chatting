@@ -210,19 +210,20 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
             }
         } else {
             val rewind = prefs.getString("playerRewind", "5000")!!.toInt()
-            val rewindImage = when (rewind) {
-                5000 -> R.drawable.baseline_replay_5_black_48
-                10000 -> R.drawable.baseline_replay_10_black_48
+            val forward = prefs.getString("playerForward", "5000")!!.toInt()
+            val rewindImage = when {
+                rewind <= 5000 -> R.drawable.baseline_replay_5_black_48
+                rewind <= 10000 -> R.drawable.baseline_replay_10_black_48
                 else -> R.drawable.baseline_replay_30_black_48
             }
-            val forwardImage = when (rewind) {
-                5000 -> R.drawable.baseline_forward_5_black_48
-                10000 -> R.drawable.baseline_forward_10_black_48
+            val forwardImage = when {
+                forward <= 5000 -> R.drawable.baseline_forward_5_black_48
+                forward <= 10000 -> R.drawable.baseline_forward_10_black_48
                 else -> R.drawable.baseline_forward_30_black_48
             }
             playerView.apply {
                 setRewindIncrementMs(rewind)
-                setFastForwardIncrementMs(rewind)
+                setFastForwardIncrementMs(forward)
             }
             view.findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_rew).setImageResource(rewindImage)
             view.findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_ffwd).setImageResource(forwardImage)

@@ -7,8 +7,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.visible
+import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.*
 
 class ChannelSearchAdapter(
@@ -26,13 +25,17 @@ class ChannelSearchAdapter(
     override fun bind(item: ChannelSearch, view: View) {
         with(view) {
             setOnClickListener { listener.viewChannel(item.id, item.broadcaster_login, item.display_name, item.channelLogo) }
-            if (item.channelLogo != null)  {
+            if (item.channelLogo != null) {
                 userImage.visible()
                 userImage.loadImage(fragment, item.channelLogo, circle = true)
             }
-            if (item.display_name != null)  {
-                username.visible()
-                username.text = item.display_name
+            if (item.display_name != null) {
+                userName.visible()
+                userName.text = item.display_name
+            }
+            if (item.followers_count != null) {
+                userFollowers.visible()
+                userFollowers.text = context.getString(R.string.followers, TwitchApiHelper.formatCount(item.followers_count, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)))
             }
         }
     }

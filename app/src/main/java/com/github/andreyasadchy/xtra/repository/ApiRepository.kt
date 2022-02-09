@@ -223,7 +223,20 @@ class ApiRepository @Inject constructor(
     override suspend fun loadUserByIdGQL(clientId: String?, channelId: String): User? = withContext(Dispatchers.IO) {
         val get = apolloClient(XtraModule(), clientId).query(UserQuery(Optional.Present(channelId))).execute().data
         if (get != null) {
-            User(id = channelId, login = get.user?.login, display_name = get.user?.displayName, profile_image_url = get.user?.profileImageURL)
+            User(id = channelId, login = get.user?.login, display_name = get.user?.displayName, profile_image_url = get.user?.profileImageURL,
+                view_count = get.user?.profileViewCount, created_at = get.user?.createdAt?.toString(), followers_count = get.user?.followers?.totalCount,
+                broadcaster_type = when {
+                    get.user?.roles?.isPartner == true -> "partner"
+                    get.user?.roles?.isAffiliate == true -> "affiliate"
+                    else -> null
+                },
+                type = when {
+                    get.user?.roles?.isStaff == true -> "staff"
+                    get.user?.roles?.isSiteAdmin == true -> "admin"
+                    get.user?.roles?.isGlobalMod == true -> "global_mod"
+                    else -> null
+                }
+            )
         } else null
     }
 
@@ -239,9 +252,7 @@ class ApiRepository @Inject constructor(
                 }
             }
         }
-        if (emotes.isNotEmpty()) {
-            emotes
-        } else null
+        emotes.ifEmpty { null }
     }
 
     override fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game> {

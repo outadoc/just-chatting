@@ -3,5 +3,17 @@ query User($id: ID) {
         login
         displayName
         profileImageURL(width: 300)
+        profileViewCount
+        createdAt
+        followers {
+            totalCount
+        }
+        roles {
+            isAffiliate
+            isGlobalMod
+            isPartner
+            isSiteAdmin
+            isStaff
+        }
     }
 }

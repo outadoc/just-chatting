@@ -38,14 +38,25 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <TextView
-                android:id="@+id/username"
-                android:textSize="18sp"
+                android:id="@+id/userName"
+                style="@style/VideoTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textAlignment="viewStart"
                 android:visibility="gone"
                 tools:text="Gorgc"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/userFollowers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:textAlignment="viewStart"
+                android:textColor="?attr/secondaryTextColor"
+                android:visibility="gone"
+                tools:text="123456 viewers"
                 tools:visibility="visible" />
         </LinearLayout>
 

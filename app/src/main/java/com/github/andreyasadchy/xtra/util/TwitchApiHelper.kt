@@ -61,6 +61,17 @@ object TwitchApiHelper {
         }
     }
 
+    fun getUserType(context: Context, type: String?): String? {
+        return when (type?.lowercase()) {
+            "partner" -> context.getString(R.string.user_partner)
+            "affiliate" -> context.getString(R.string.user_affiliate)
+            "staff" -> context.getString(R.string.user_staff)
+            "admin" -> context.getString(R.string.user_admin)
+            "global_mod" -> context.getString(R.string.user_global_mod)
+            else -> null
+        }
+    }
+
     fun getDuration(duration: String): Long {
         return try {
             parseLong(duration)
@@ -106,7 +117,11 @@ object TwitchApiHelper {
             }
             val diff = if (createdAt != null) ((currentTime - createdAt) / 1000) else null
             return if (diff != null && diff >= 0) {
-                getDurationFromSeconds(context, diff.toString(), false)
+                getDurationFromSeconds(context, diff.toString(), false).let {
+                    if (it != null) {
+                        context.getString(R.string.uptime, it)
+                    } else null
+                }
             } else null
         } else null
     }

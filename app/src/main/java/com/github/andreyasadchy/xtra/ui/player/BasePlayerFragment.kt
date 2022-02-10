@@ -209,8 +209,8 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 }
             }
         } else {
-            val rewind = prefs.getString("playerRewind", "5000")!!.toInt()
-            val forward = prefs.getString("playerForward", "5000")!!.toInt()
+            val rewind = prefs.getString("playerRewind", "10000")!!.toInt()
+            val forward = prefs.getString("playerForward", "10000")!!.toInt()
             val rewindImage = when {
                 rewind <= 5000 -> R.drawable.baseline_replay_5_black_48
                 rewind <= 10000 -> R.drawable.baseline_replay_10_black_48

@@ -98,7 +98,7 @@ class ClipPlayerViewModel @Inject constructor(
                         }
                         else -> {
                             var url: String? = null
-                            if (defaultQuality != null) {
+                            if (defaultQuality?.toIntOrNull() != null) {
                                 for (i in urls.entries.withIndex()) {
                                     val comp = i.value.key.take(4).filter { it.isDigit() }
                                     if (comp != "") {

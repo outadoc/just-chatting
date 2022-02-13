@@ -101,4 +101,10 @@
         android:layout_height="wrap_content"
         android:text="@string/apply"/>
 
+    <Button
+        android:id="@+id/selectLang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/select_language"/>
+
 </LinearLayout>

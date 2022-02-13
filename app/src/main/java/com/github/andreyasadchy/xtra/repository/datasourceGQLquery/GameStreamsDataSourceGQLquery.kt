@@ -13,13 +13,14 @@ import kotlinx.coroutines.CoroutineScope
 class GameStreamsDataSourceGQLquery private constructor(
     private val clientId: String?,
     private val gameId: String?,
+    private val languages: List<String>?,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Stream>(coroutineScope) {
     private var offset: String? = null
     private var nextPage: Boolean = true
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
         loadInitial(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(GameStreamsQuery(id = Optional.Present(gameId), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.streams
+            val get1 = apolloClient(XtraModule(), clientId).query(GameStreamsQuery(id = Optional.Present(gameId), languages = Optional.Present(languages), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.streams
             val get = get1?.edges
             val list = mutableListOf<Stream>()
             if (get != null) {
@@ -46,7 +47,7 @@ class GameStreamsDataSourceGQLquery private constructor(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
         loadRange(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(GameStreamsQuery(id = Optional.Present(gameId), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.streams
+            val get1 = apolloClient(XtraModule(), clientId).query(GameStreamsQuery(id = Optional.Present(gameId), languages = Optional.Present(languages), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.streams
             val get = get1?.edges
             val list = mutableListOf<Stream>()
             if (get != null && nextPage && offset != null && offset != "") {
@@ -74,9 +75,10 @@ class GameStreamsDataSourceGQLquery private constructor(
     class Factory(
         private val clientId: String?,
         private val gameId: String?,
+        private val languages: List<String>?,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Stream, GameStreamsDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Stream> =
-                GameStreamsDataSourceGQLquery(clientId, gameId, coroutineScope).also(sourceLiveData::postValue)
+                GameStreamsDataSourceGQLquery(clientId, gameId, languages, coroutineScope).also(sourceLiveData::postValue)
     }
 }

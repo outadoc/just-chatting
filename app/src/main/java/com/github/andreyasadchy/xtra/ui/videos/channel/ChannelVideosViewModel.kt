@@ -30,7 +30,7 @@ class ChannelVideosViewModel @Inject constructor(
         if (it.useHelix) {
             repository.loadChannelVideos(it.clientId, it.token, it.channelId, it.period, it.broadcastType, it.sort, viewModelScope)
         } else {
-            repository.loadChannelVideosGQL(it.clientId, it.channelId,
+            repository.loadChannelVideosGQLQuery(it.clientId, it.channelId,
                 when (it.broadcastType) {
                     BroadcastType.ARCHIVE -> com.github.andreyasadchy.xtra.type.BroadcastType.ARCHIVE
                     BroadcastType.HIGHLIGHT -> com.github.andreyasadchy.xtra.type.BroadcastType.HIGHLIGHT

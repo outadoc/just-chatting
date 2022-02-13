@@ -22,7 +22,6 @@ class GameStreamsDataDeserializer : JsonDeserializer<GameStreamsDataResponse> {
                     user_id = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("id").asString } else null,
                     user_login = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("login").asString } else null,
                     user_name = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("displayName").asString } else null,
-                    game_name = if (!(json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonPrimitive("displayName").isJsonNull)) { json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonPrimitive("displayName").asString } else null,
                     type = if (!(obj.get("type").isJsonNull)) { obj.getAsJsonPrimitive("type").asString } else null,
                     title = if (!(obj.get("title").isJsonNull)) { obj.getAsJsonPrimitive("title").asString } else null,
                     viewer_count = if (!(obj.get("viewersCount").isJsonNull)) { obj.getAsJsonPrimitive("viewersCount").asInt } else 0,

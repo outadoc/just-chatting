@@ -1,7 +1,7 @@
 type Query {
   games(first: Int, after: Cursor): Games
-  streams(first: Int, after: Cursor): Streams
-  videos(first: Int, after: Cursor): Videos
+  streams(languages: [Language!], first: Int, after: Cursor): Streams
+  videos(language: Language, first: Int, after: Cursor): Videos
   game(id: ID, name: String, first: Int, after: Cursor): GameNode
   user(id: ID, login: String): User
   users(ids: [ID!]): [User]
@@ -20,7 +20,7 @@ type User {
   followers: FollowerConnection
   stream: StreamNode
   videos(sort: VideoSort, type: BroadcastType, first: Int, after: Cursor): Videos
-  clips(criteria: criteria, first: Int, after: Cursor): Clips
+  clips(criteria: UserClipsInput, first: Int, after: Cursor): Clips
   cheer: CheerInfo
 }
 
@@ -103,9 +103,9 @@ type GameNode {
   boxArtURL: String
   viewersCount: Int
   broadcastersCount: Int
-  streams(first: Int, after: Cursor): Streams
-  videos(sort: VideoSort, types: [BroadcastType!], first: Int, after: Cursor): Videos
-  clips(criteria: criteria, first: Int, after: Cursor): Clips
+  streams(languages: [String!], first: Int, after: Cursor): Streams
+  videos(languages: [String!], sort: VideoSort, types: [BroadcastType!], first: Int, after: Cursor): Videos
+  clips(criteria: GameClipsInput, first: Int, after: Cursor): Clips
 }
 
 type StreamNode {
@@ -165,7 +165,12 @@ enum VideoSort {
   VIEWS
 }
 
-input criteria {
+input UserClipsInput {
+  period: ClipsPeriod
+}
+
+input GameClipsInput {
+  languages: [Language!]
   period: ClipsPeriod
 }
 
@@ -174,6 +179,36 @@ enum ClipsPeriod {
   LAST_WEEK
   LAST_MONTH
   ALL_TIME
+}
+
+enum Language {
+  AR
+  ASL
+  BG
+  CS
+  DA
+  DE
+  EL
+  EN
+  ES
+  FI
+  FR
+  HU
+  IT
+  JA
+  KO
+  NL
+  NO
+  OTHER
+  PL
+  PT
+  RU
+  SK
+  SV
+  TH
+  TR
+  VI
+  ZH
 }
 
 type PageInfo {

@@ -27,7 +27,7 @@ interface HelixApi {
     suspend fun getStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") ids: List<String>): StreamsResponse
 
     @GET("streams/")
-    suspend fun getTopStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("game_id") gameId: String?, @Query("language") languages: String?, @Query("first") limit: Int, @Query("after") offset: String?): StreamsResponse
+    suspend fun getTopStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("game_id") gameId: String?, @Query("language") languages: List<String>?, @Query("first") limit: Int, @Query("after") offset: String?): StreamsResponse
 
     @GET("streams/followed")
     suspend fun getFollowedStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") userId: String?, @Query("first") limit: Int, @Query("after") offset: String?): StreamsResponse

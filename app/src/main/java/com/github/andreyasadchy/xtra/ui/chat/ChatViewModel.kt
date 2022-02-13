@@ -212,7 +212,7 @@ class ChatViewModel @Inject constructor(
             _otherEmotes.postValue(list)
             try {
                 val get = if (useHelix) repository.loadCheerEmotes(helixClientId, token, channelId)
-                else repository.loadCheerEmotesGQL(gqlClientId, channelId)
+                else repository.loadCheerEmotesGQLQuery(gqlClientId, channelId)
                 if (get != null) {
                     cheerEmotes.postValue(get!!)
                 }

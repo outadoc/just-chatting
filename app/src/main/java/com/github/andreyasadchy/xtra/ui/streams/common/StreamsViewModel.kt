@@ -15,19 +15,27 @@ class StreamsViewModel @Inject constructor(
 
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Stream>> = Transformations.map(filter) {
-        if (it.useHelix)
-            repository.loadTopStreams(it.clientId, it.token, it.gameId, it.languages, it.thumbnailsEnabled, viewModelScope)
-        else {
-            if (it.gameId == null) {
-                repository.loadTopStreamsGQL(it.clientId, it.thumbnailsEnabled, viewModelScope)
+        if (it.useHelix) {
+            repository.loadTopStreams(it.clientId, it.token, it.gameId, it.thumbnailsEnabled, viewModelScope)
+        } else {
+            if (it.tags == null) {
+                if (it.gameId == null) {
+                    repository.loadTopStreamsGQLQuery(it.clientId, it.thumbnailsEnabled, viewModelScope)
+                } else {
+                    repository.loadGameStreamsGQLQuery(it.clientId, it.gameId, null, viewModelScope)
+                }
             } else {
-                repository.loadGameStreamsGQL(it.clientId, it.gameId, viewModelScope)
+                if (it.gameName == null) {
+                    repository.loadTopStreamsGQL(it.clientId, it.tags, it.thumbnailsEnabled, viewModelScope)
+                } else {
+                    repository.loadGameStreamsGQL(it.clientId, it.gameName, it.tags, viewModelScope)
+                }
             }
         }
     }
 
-    fun loadStreams(useHelix: Boolean, clientId: String?, token: String? = null, channelId: String? = null, gameId: String? = null, languages: String? = null, thumbnailsEnabled: Boolean = true) {
-        Filter(useHelix, clientId, token, channelId, gameId, languages, thumbnailsEnabled).let {
+    fun loadStreams(useHelix: Boolean, clientId: String?, token: String? = null, channelId: String? = null, gameId: String? = null, gameName: String? = null, tags: List<String>? = null, languages: String? = null, thumbnailsEnabled: Boolean = true) {
+        Filter(useHelix, clientId, token, channelId, gameId, gameName, tags, languages, thumbnailsEnabled).let {
             if (filter.value != it) {
                 filter.value = it
             }
@@ -40,6 +48,8 @@ class StreamsViewModel @Inject constructor(
             val token: String?,
             val channelId: String?,
             val gameId: String?,
+            val gameName: String?,
+            val tags: List<String>?,
             val languages: String?,
             val thumbnailsEnabled: Boolean)
 }

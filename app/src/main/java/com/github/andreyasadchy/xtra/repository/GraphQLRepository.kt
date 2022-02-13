@@ -11,6 +11,7 @@ import com.github.andreyasadchy.xtra.model.gql.game.GameVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.search.SearchChannelDataResponse
 import com.github.andreyasadchy.xtra.model.gql.search.SearchGameDataResponse
 import com.github.andreyasadchy.xtra.model.gql.stream.StreamDataResponse
+import com.github.andreyasadchy.xtra.model.gql.tag.*
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +44,13 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         response.videos.associateBy({ if (it.frameRate != 60) "${it.quality}p" else "${it.quality}p${it.frameRate}" }, { it.url })
     }
 
-    suspend fun loadTopGames(clientId: String?, limit: Int?, cursor: String?): GameDataResponse {
+    suspend fun loadTopGames(clientId: String?, tags: List<String>?, limit: Int?, cursor: String?): GameDataResponse {
+        val array = JsonArray()
+        if (tags != null) {
+            for (i in tags) {
+                array.add(i)
+            }
+        }
         val json = JsonObject().apply {
             addProperty("operationName", "BrowsePage_AllDirectories")
             add("variables", JsonObject().apply {
@@ -51,6 +58,7 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                 addProperty("limit", limit)
                 add("options", JsonObject().apply {
                     addProperty("sort", "VIEWER_COUNT")
+                    add("tags", array)
                 })
             })
             add("extensions", JsonObject().apply {
@@ -63,7 +71,13 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getTopGames(clientId, json)
     }
 
-    suspend fun loadTopStreams(clientId: String?, limit: Int?, cursor: String?): StreamDataResponse {
+    suspend fun loadTopStreams(clientId: String?, tags: List<String>?, limit: Int?, cursor: String?): StreamDataResponse {
+        val array = JsonArray()
+        if (tags != null) {
+            for (i in tags) {
+                array.add(i)
+            }
+        }
         val json = JsonObject().apply {
             addProperty("operationName", "BrowsePage_Popular")
             add("variables", JsonObject().apply {
@@ -73,6 +87,7 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                 addProperty("sortTypeIsRecency", false)
                 add("options", JsonObject().apply {
                     addProperty("sort", "VIEWER_COUNT")
+                    add("tags", array)
                 })
             })
             add("extensions", JsonObject().apply {
@@ -85,7 +100,13 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getTopStreams(clientId, json)
     }
 
-    suspend fun loadGameStreams(clientId: String?, game: String?, limit: Int?, cursor: String?): GameStreamsDataResponse {
+    suspend fun loadGameStreams(clientId: String?, game: String?, tags: List<String>?, limit: Int?, cursor: String?): GameStreamsDataResponse {
+        val array = JsonArray()
+        if (tags != null) {
+            for (i in tags) {
+                array.add(i)
+            }
+        }
         val json = JsonObject().apply {
             addProperty("operationName", "DirectoryPage_Game")
             add("variables", JsonObject().apply {
@@ -95,6 +116,7 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                 addProperty("sortTypeIsRecency", false)
                 add("options", JsonObject().apply {
                     addProperty("sort", "VIEWER_COUNT")
+                    add("tags", array)
                 })
             })
             add("extensions", JsonObject().apply {
@@ -112,9 +134,7 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
             addProperty("operationName", "DirectoryVideos_Game")
             add("variables", JsonObject().apply {
                 if (type != null) {
-                    add("broadcastTypes", JsonObject().apply {
-                        addProperty("0", type)
-                    })
+                    addProperty("broadcastTypes", type)
                 }
                 addProperty("followedCursor", cursor)
                 addProperty("gameName", game)
@@ -194,17 +214,16 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
     }
 
     suspend fun loadSearchChannels(clientId: String?, query: String?, cursor: String?): SearchChannelDataResponse {
-        val array = JsonArray(1)
-        val obj = JsonObject().apply {
-            addProperty("cursor", cursor)
-            addProperty("index", "CHANNEL")
-        }
-        array.add(obj)
         val json = JsonObject().apply {
             addProperty("operationName", "SearchResultsPage_SearchResults")
             add("variables", JsonObject().apply {
                 add("options", JsonObject().apply {
-                    add("targets", array)
+                    add("targets", JsonArray().apply {
+                        add(JsonObject().apply {
+                            addProperty("cursor", cursor)
+                            addProperty("index", "CHANNEL")
+                        })
+                    })
                 })
                 addProperty("query", query)
             })
@@ -219,17 +238,16 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
     }
 
     suspend fun loadSearchGames(clientId: String?, query: String?, cursor: String?): SearchGameDataResponse {
-        val array = JsonArray(1)
-        val obj = JsonObject().apply {
-            addProperty("cursor", cursor)
-            addProperty("index", "GAME")
-        }
-        array.add(obj)
         val json = JsonObject().apply {
             addProperty("operationName", "SearchResultsPage_SearchResults")
             add("variables", JsonObject().apply {
                 add("options", JsonObject().apply {
-                    add("targets", array)
+                    add("targets", JsonArray().apply {
+                        add(JsonObject().apply {
+                            addProperty("cursor", cursor)
+                            addProperty("index", "GAME")
+                        })
+                    })
                 })
                 addProperty("query", query)
             })
@@ -241,6 +259,93 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
             })
         }
         return graphQL.getSearchGames(clientId, json)
+    }
+
+    suspend fun loadGameTags(clientId: String?): TagGameDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "SearchCategoryTags")
+            add("variables", JsonObject().apply {
+                addProperty("limit", 100)
+                addProperty("userQuery", "")
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "e8811c72159b644b87971a4f36872028355ce5349eb8b7fb5cc478cd79d4fd92")
+                })
+            })
+        }
+        return graphQL.getGameTags(clientId, json)
+    }
+
+    suspend fun loadGameStreamTags(clientId: String?, gameName: String? = null): TagGameStreamDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "TopTags")
+            add("variables", JsonObject().apply {
+                addProperty("categoryName", gameName)
+                addProperty("limit", 10000)
+                addProperty("showTopTagsByCategory", gameName != null)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "16c030e5b84bf696f9cf25bee7ddde328c93f2b481a0519a806c19d0e91ab9c1")
+                })
+            })
+        }
+        return graphQL.getGameStreamTags(clientId, json)
+    }
+
+    suspend fun loadStreamTags(clientId: String?): TagStreamDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "TopTags")
+            add("variables", JsonObject().apply {
+                addProperty("limit", 10000)
+                addProperty("showTopTagsByCategory", false)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "16c030e5b84bf696f9cf25bee7ddde328c93f2b481a0519a806c19d0e91ab9c1")
+                })
+            })
+        }
+        return graphQL.getStreamTags(clientId, json)
+    }
+
+    suspend fun loadSearchGameTags(clientId: String?, gameId: String?, query: String?): TagSearchGameStreamDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "SearchSingleCategoryTags")
+            add("variables", JsonObject().apply {
+                addProperty("categoryID", gameId)
+                addProperty("limit", 100)
+                addProperty("userQuery", query)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "0928a2ec27d51a3be8562d1b724a4b03164b94d26e415be1485a7c6230eb5cac")
+                })
+            })
+        }
+        return graphQL.getSearchGameTags(clientId, json)
+    }
+
+    suspend fun loadSearchAllTags(clientId: String?, query: String?): TagSearchDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "SearchLiveTags")
+            add("variables", JsonObject().apply {
+                addProperty("limit", 100)
+                addProperty("userQuery", query)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "e184321982c7a58cb6c819e9b7acdac8892f50a9501cd3a36e8cdbd0e427aeac")
+                })
+            })
+        }
+        return graphQL.getSearchStreamTags(clientId, json)
     }
 
     suspend fun loadChannelPanel(channelId: String): String? = withContext(Dispatchers.IO) {

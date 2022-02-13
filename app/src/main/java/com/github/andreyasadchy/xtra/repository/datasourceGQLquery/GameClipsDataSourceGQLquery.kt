@@ -9,11 +9,13 @@ import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.repository.datasource.BaseDataSourceFactory
 import com.github.andreyasadchy.xtra.repository.datasource.BasePositionalDataSource
 import com.github.andreyasadchy.xtra.type.ClipsPeriod
+import com.github.andreyasadchy.xtra.type.Language
 import kotlinx.coroutines.CoroutineScope
 
 class GameClipsDataSourceGQLquery(
     private val clientId: String?,
     private val gameId: String?,
+    private val languages: List<Language>?,
     private val sort: ClipsPeriod?,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Clip>(coroutineScope) {
     private var offset: String? = null
@@ -21,7 +23,7 @@ class GameClipsDataSourceGQLquery(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Clip>) {
         loadInitial(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(id = Optional.Present(gameId), sort = Optional.Present(sort), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.clips
+            val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(id = Optional.Present(gameId), languages = Optional.Present(languages), sort = Optional.Present(sort), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.clips
             val get = get1?.edges
             val list = mutableListOf<Clip>()
             if (get != null) {
@@ -52,7 +54,7 @@ class GameClipsDataSourceGQLquery(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Clip>) {
         loadRange(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(id = Optional.Present(gameId), sort = Optional.Present(sort), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.clips
+            val get1 = apolloClient(XtraModule(), clientId).query(GameClipsQuery(id = Optional.Present(gameId), languages = Optional.Present(languages), sort = Optional.Present(sort), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.clips
             val get = get1?.edges
             val list = mutableListOf<Clip>()
             if (get != null && nextPage && offset != null && offset != "") {
@@ -84,10 +86,11 @@ class GameClipsDataSourceGQLquery(
     class Factory(
         private val clientId: String?,
         private val gameId: String?,
+        private val languages: List<Language>?,
         private val sort: ClipsPeriod?,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Clip, GameClipsDataSourceGQLquery>() {
 
         override fun create(): DataSource<Int, Clip> =
-                GameClipsDataSourceGQLquery(clientId, gameId, sort, coroutineScope).also(sourceLiveData::postValue)
+                GameClipsDataSourceGQLquery(clientId, gameId, languages, sort, coroutineScope).also(sourceLiveData::postValue)
     }
 }

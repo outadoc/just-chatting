@@ -19,16 +19,17 @@ import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
+import com.github.andreyasadchy.xtra.model.helix.tag.Tag
 import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.datasource.*
-import com.github.andreyasadchy.xtra.repository.datasourceGQL.SearchChannelsDataSourceGQL
-import com.github.andreyasadchy.xtra.repository.datasourceGQL.SearchGamesDataSourceGQL
+import com.github.andreyasadchy.xtra.repository.datasourceGQL.*
 import com.github.andreyasadchy.xtra.repository.datasourceGQLquery.*
 import com.github.andreyasadchy.xtra.type.ClipsPeriod
+import com.github.andreyasadchy.xtra.type.Language
 import com.github.andreyasadchy.xtra.type.VideoSort
 import com.github.andreyasadchy.xtra.ui.view.chat.animateGifs
 import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
@@ -65,8 +66,8 @@ class ApiRepository @Inject constructor(
         api.getStreams(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userIds).data?.firstOrNull()
     }
 
-    override fun loadTopStreams(clientId: String?, userToken: String?, gameId: String?, languages: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream> {
-        val factory = StreamsDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, gameId, languages, api, coroutineScope)
+    override fun loadTopStreams(clientId: String?, userToken: String?, gameId: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream> {
+        val factory = StreamsDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, gameId, api, coroutineScope)
         val builder = PagedList.Config.Builder().setEnablePlaceholders(false)
         if (thumbnailsEnabled) {
             builder.setPageSize(10)
@@ -200,7 +201,7 @@ class ApiRepository @Inject constructor(
     }
 
 
-    override suspend fun loadStreamGQL(clientId: String?, channelId: String): Stream? = withContext(Dispatchers.IO) {
+    override suspend fun loadStreamGQLQuery(clientId: String?, channelId: String): Stream? = withContext(Dispatchers.IO) {
         val userIds = mutableListOf<String>()
         userIds.add(channelId)
         val get = apolloClient(XtraModule(), clientId).query(StreamsQuery(Optional.Present(userIds))).execute().data?.users?.firstOrNull()
@@ -212,7 +213,7 @@ class ApiRepository @Inject constructor(
         } else null
     }
 
-    override suspend fun loadVideoGQL(clientId: String?, videoId: String): Video? = withContext(Dispatchers.IO) {
+    override suspend fun loadVideoGQLQuery(clientId: String?, videoId: String): Video? = withContext(Dispatchers.IO) {
         val get = apolloClient(XtraModule(), clientId).query(VideoQuery(Optional.Present(videoId))).execute().data
         if (get != null) {
             Video(id = get.video?.id ?: "", user_id = get.video?.owner?.id, user_login = get.video?.owner?.login, user_name = get.video?.owner?.displayName,
@@ -220,7 +221,7 @@ class ApiRepository @Inject constructor(
         } else null
     }
 
-    override suspend fun loadUserByIdGQL(clientId: String?, channelId: String): User? = withContext(Dispatchers.IO) {
+    override suspend fun loadUserByIdGQLQuery(clientId: String?, channelId: String): User? = withContext(Dispatchers.IO) {
         val get = apolloClient(XtraModule(), clientId).query(UserQuery(Optional.Present(channelId))).execute().data
         if (get != null) {
             User(id = channelId, login = get.user?.login, display_name = get.user?.displayName, profile_image_url = get.user?.profileImageURL,
@@ -240,7 +241,7 @@ class ApiRepository @Inject constructor(
         } else null
     }
 
-    override suspend fun loadCheerEmotesGQL(clientId: String?, userId: String): List<CheerEmote>? = withContext(Dispatchers.IO) {
+    override suspend fun loadCheerEmotesGQLQuery(clientId: String?, userId: String): List<CheerEmote>? = withContext(Dispatchers.IO) {
         val emotes = mutableListOf<CheerEmote>()
         val get = apolloClient(XtraModule(), clientId).query(CheerEmotesQuery(Optional.Present(userId), Optional.Present(animateGifs), Optional.Present((when (emoteQuality) {4 -> 4 3 -> 3 2 -> 2 else -> 1}).toDouble()))).execute().data
         if (get?.user?.cheer?.emotes != null) {
@@ -255,7 +256,7 @@ class ApiRepository @Inject constructor(
         emotes.ifEmpty { null }
     }
 
-    override fun loadTopGamesGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Game> {
+    override fun loadTopGamesGQLQuery(clientId: String?, coroutineScope: CoroutineScope): Listing<Game> {
         val factory = GamesDataSourceGQLquery.Factory(clientId, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(30)
@@ -266,7 +267,7 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadTopStreamsGQL(clientId: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream> {
+    override fun loadTopStreamsGQLQuery(clientId: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream> {
         val factory = StreamsDataSourceGQLquery.Factory(clientId, coroutineScope)
         val builder = PagedList.Config.Builder().setEnablePlaceholders(false)
         if (thumbnailsEnabled) {
@@ -282,7 +283,7 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadTopVideosGQL(clientId: String?, coroutineScope: CoroutineScope): Listing<Video> {
+    override fun loadTopVideosGQLQuery(clientId: String?, coroutineScope: CoroutineScope): Listing<Video> {
         val factory = VideosDataSourceGQLquery.Factory(clientId, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
@@ -293,8 +294,8 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadGameStreamsGQL(clientId: String?, gameId: String?, coroutineScope: CoroutineScope): Listing<Stream> {
-        val factory = GameStreamsDataSourceGQLquery.Factory(clientId, gameId, coroutineScope)
+    override fun loadGameStreamsGQLQuery(clientId: String?, gameId: String?, languages: List<String>?, coroutineScope: CoroutineScope): Listing<Stream> {
+        val factory = GameStreamsDataSourceGQLquery.Factory(clientId, gameId, languages, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)
@@ -304,8 +305,8 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadGameVideosGQL(clientId: String?, gameId: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video> {
-        val factory = GameVideosDataSourceGQLquery.Factory(clientId, gameId, type, sort, coroutineScope)
+    override fun loadGameVideosGQLQuery(clientId: String?, gameId: String?, languages: List<String>?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video> {
+        val factory = GameVideosDataSourceGQLquery.Factory(clientId, gameId, languages, type, sort, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)
@@ -315,8 +316,8 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadGameClipsGQL(clientId: String?, gameId: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip> {
-        val factory = GameClipsDataSourceGQLquery.Factory(clientId, gameId, sort, coroutineScope)
+    override fun loadGameClipsGQLQuery(clientId: String?, gameId: String?, languages: List<Language>?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip> {
+        val factory = GameClipsDataSourceGQLquery.Factory(clientId, gameId, languages, sort, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)
@@ -326,7 +327,7 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadChannelVideosGQL(clientId: String?, channelId: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video> {
+    override fun loadChannelVideosGQLQuery(clientId: String?, channelId: String?, type: com.github.andreyasadchy.xtra.type.BroadcastType?, sort: VideoSort?, coroutineScope: CoroutineScope): Listing<Video> {
         val factory = ChannelVideosDataSourceGQLquery.Factory(clientId, channelId, type, sort, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
@@ -337,8 +338,58 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadChannelClipsGQL(clientId: String?, channelId: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip> {
+    override fun loadChannelClipsGQLQuery(clientId: String?, channelId: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip> {
         val factory = ChannelClipsDataSourceGQLquery.Factory(clientId, channelId, sort, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(10)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(3)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+
+    override fun loadTagsGQL(clientId: String?, getGameTags: Boolean, gameId: String?, gameName: String?, query: String?, coroutineScope: CoroutineScope): Listing<Tag> {
+        val factory = TagsDataSourceGQL.Factory(clientId, getGameTags, gameId, gameName, query, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(10000)
+            .setInitialLoadSizeHint(10000)
+            .setPrefetchDistance(5)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadTopGamesGQL(clientId: String?, tags: List<String>?, coroutineScope: CoroutineScope): Listing<Game> {
+        val factory = GamesDataSourceGQL.Factory(clientId, tags, gql, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(30)
+            .setInitialLoadSizeHint(30)
+            .setPrefetchDistance(10)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadTopStreamsGQL(clientId: String?, tags: List<String>?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream> {
+        val factory = StreamsDataSourceGQL.Factory(clientId, tags, gql, coroutineScope)
+        val builder = PagedList.Config.Builder().setEnablePlaceholders(false)
+        if (thumbnailsEnabled) {
+            builder.setPageSize(10)
+                .setInitialLoadSizeHint(15)
+                .setPrefetchDistance(3)
+        } else {
+            builder.setPageSize(30)
+                .setInitialLoadSizeHint(30)
+                .setPrefetchDistance(10)
+        }
+        val config = builder.build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadGameStreamsGQL(clientId: String?, gameName: String?, tags: List<String>?, coroutineScope: CoroutineScope): Listing<Stream> {
+        val factory = GameStreamsDataSourceGQL.Factory(clientId, gameName, tags, gql, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(10)
             .setInitialLoadSizeHint(15)

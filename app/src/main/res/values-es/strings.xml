@@ -213,7 +213,7 @@
     <string name="show_scrolltop">Show scroll to top button</string>
     <string name="chat_reward">Channel point redemption</string>
     <string name="chatFirstMsgEntries1">Show type and change background color</string>
-    <string name="chatFirstMsgEntries2">Change background</string>
+    <string name="chatFirstMsgEntries2">Change background color</string>
     <string name="chatFirstMsgEntries3">Show as normal messages</string>
     <string name="chat_firstmsg_visibility">First messages and redemptions with text</string>
     <string name="timestamps">Show timestamps</string>
@@ -228,4 +228,5 @@
     <string name="user_admin">Admin</string>
     <string name="user_global_mod">Global mod</string>
     <string name="uptime">%s uptime</string>
+    <string name="select_language">Select language</string>
 </resources>

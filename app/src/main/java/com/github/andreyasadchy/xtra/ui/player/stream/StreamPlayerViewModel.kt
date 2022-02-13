@@ -70,7 +70,7 @@ class StreamPlayerViewModel @Inject constructor(
                             if (useHelix && loggedIn) {
                                 repository.loadStream(clientId, token, it)
                             } else {
-                                repository.loadStreamGQL(gqlClientId, it)
+                                repository.loadStreamGQLQuery(gqlClientId, it)
                             }
                         }
                         _stream.postValue(s)

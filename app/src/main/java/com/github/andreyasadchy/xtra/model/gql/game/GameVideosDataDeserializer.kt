@@ -27,7 +27,6 @@ class GameVideosDataDeserializer : JsonDeserializer<GameVideosDataResponse> {
                     thumbnail_url = if (!(obj.get("previewThumbnailURL").isJsonNull)) { obj.getAsJsonPrimitive("previewThumbnailURL").asString } else null,
                     view_count = if (!(obj.get("viewCount").isJsonNull)) { obj.getAsJsonPrimitive("viewCount").asInt } else 0,
                     duration = if (!(obj.get("lengthSeconds").isJsonNull)) { obj.getAsJsonPrimitive("lengthSeconds").asString } else null,
-                    gameName = if (!(json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonPrimitive("name").isJsonNull)) { json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonPrimitive("name").asString } else null,
                     profileImageURL = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("profileImageURL").asString } else null
                 )
             )

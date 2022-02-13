@@ -1,5 +1,5 @@
-query TopStreams($first: Int, $after: Cursor) {
-    streams(first: $first, after: $after) {
+query TopStreams($languages: [Language!], $first: Int, $after: Cursor) {
+    streams(languages: $languages, first: $first, after: $after) {
         edges {
             cursor
             node {

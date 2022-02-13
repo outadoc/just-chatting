@@ -12,6 +12,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.core.os.bundleOf
+import androidx.core.widget.NestedScrollView
 
 
 class RadioButtonDialogFragment : ExpandingBottomSheetDialogFragment() {
@@ -65,6 +66,8 @@ class RadioButtonDialogFragment : ExpandingBottomSheetDialogFragment() {
             radioGroup.addView(button, layoutParams)
         }
         radioGroup.check(checkedId)
-        return radioGroup
+        val scrollView = NestedScrollView(context)
+        scrollView.addView(radioGroup)
+        return scrollView
     }
 }

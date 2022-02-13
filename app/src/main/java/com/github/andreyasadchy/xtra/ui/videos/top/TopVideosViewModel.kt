@@ -27,7 +27,7 @@ class TopVideosViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Video>> = Transformations.map(filter) {
-        repository.loadTopVideosGQL(it.clientId, viewModelScope)
+        repository.loadTopVideosGQLQuery(it.clientId, viewModelScope)
     }
     var selectedIndex = 1
         private set

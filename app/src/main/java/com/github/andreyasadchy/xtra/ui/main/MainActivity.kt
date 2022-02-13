@@ -5,7 +5,8 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.net.ConnectivityManager
-import android.os.*
+import android.os.Build
+import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
@@ -39,7 +40,9 @@ import com.github.andreyasadchy.xtra.ui.player.offline.OfflinePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.video.VideoPlayerFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
+import com.github.andreyasadchy.xtra.ui.search.tags.BaseTagSearchFragment
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
+import com.github.andreyasadchy.xtra.ui.streams.common.StreamsFragment
 import com.github.andreyasadchy.xtra.ui.top.TopFragment
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosFragment
 import com.github.andreyasadchy.xtra.ui.view.SlidingLayout
@@ -58,7 +61,7 @@ const val INDEX_TOP = FragNavController.TAB2
 const val INDEX_FOLLOWED = FragNavController.TAB3
 const val INDEX_DOWNLOADS = FragNavController.TAB4
 
-class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, BaseStreamsFragment.OnStreamSelectedListener, OnChannelSelectedListener, BaseClipsFragment.OnClipSelectedListener, BaseVideosFragment.OnVideoSelectedListener, HasAndroidInjector, DownloadsFragment.OnVideoSelectedListener, Injectable, SlidingLayout.Listener {
+class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, GamesFragment.OnTagGames, StreamsFragment.OnTagStreams, BaseStreamsFragment.OnStreamSelectedListener, OnChannelSelectedListener, BaseClipsFragment.OnClipSelectedListener, BaseVideosFragment.OnVideoSelectedListener, HasAndroidInjector, DownloadsFragment.OnVideoSelectedListener, Injectable, SlidingLayout.Listener {
 
     companion object {
         const val KEY_CODE = "code"
@@ -267,6 +270,14 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
 //Navigation listeners
 
+    override fun openTagGames(tags: List<String>?) {
+        fragNavController.pushFragment(GamesFragment.newInstance(tags))
+    }
+
+    override fun openTagStreams(tags: List<String>?, gameId: String?, gameName: String?) {
+        fragNavController.pushFragment(StreamsFragment.newInstance(tags, gameId, gameName))
+    }
+
     override fun openGame(id: String?, name: String?) {
         fragNavController.pushFragment(GameFragment.newInstance(id, name))
     }
@@ -345,6 +356,10 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
     fun openSearch() {
         fragNavController.pushFragment(SearchFragment())
+    }
+
+    fun openTagSearch(getGameTags: Boolean = false, gameId: String? = null, gameName: String? = null) {
+        fragNavController.pushFragment(BaseTagSearchFragment.newInstance(getGameTags, gameId, gameName))
     }
 
     override fun androidInjector(): AndroidInjector<Any> {

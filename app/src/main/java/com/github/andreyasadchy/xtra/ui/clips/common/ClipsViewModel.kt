@@ -11,6 +11,7 @@ import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.type.ClipsPeriod
+import com.github.andreyasadchy.xtra.type.Language
 import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import javax.inject.Inject
@@ -19,7 +20,6 @@ class ClipsViewModel @Inject constructor(
         context: Application,
         private val repository: TwitchService) : PagedListViewModel<Clip>() {
 
-    val sortOptions = listOf(R.string.trending, R.string.today, R.string.this_week, R.string.this_month, R.string.all_time)
     private val _sortText = MutableLiveData<CharSequence>()
     val sortText: LiveData<CharSequence>
         get() = _sortText
@@ -41,17 +41,28 @@ class ClipsViewModel @Inject constructor(
                 Period.WEEK -> ClipsPeriod.LAST_WEEK
                 Period.MONTH -> ClipsPeriod.LAST_MONTH
                 else -> ClipsPeriod.ALL_TIME }
-            if (it.gameId == null)
-                repository.loadChannelClipsGQL(it.clientId, it.channelId, period, viewModelScope)
-            else
-                repository.loadGameClipsGQL(it.clientId, it.gameId, period, viewModelScope)
+            if (it.gameId == null) {
+                repository.loadChannelClipsGQLQuery(it.clientId, it.channelId, period, viewModelScope)
+            } else {
+                val langList = mutableListOf<Language>()
+                val langValues = context.resources.getStringArray(R.array.gqlUserLanguageValues).toList()
+                if (languageIndex != 0) {
+                    val item = Language.values().find { lang -> lang.rawValue == langValues.elementAt(languageIndex) }
+                    if (item != null) {
+                        langList.add(item)
+                    }
+                }
+                repository.loadGameClipsGQLQuery(it.clientId, it.gameId, langList.ifEmpty { null }, period, viewModelScope)
+            }
         }
     }
-    var selectedIndex = 2
-        private set
+    val period: Period
+        get() = filter.value!!.period
+    val languageIndex: Int
+        get() = filter.value!!.languageIndex
 
     init {
-        _sortText.value = context.getString(sortOptions[selectedIndex])
+        _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.view_count), context.getString(R.string.this_week))
     }
 
     fun loadClips(useHelix: Boolean, clientId: String?, channelId: String? = null, channelLogin: String? = null, gameId: String? = null, token: String? = null) {
@@ -65,10 +76,9 @@ class ClipsViewModel @Inject constructor(
         }
     }
 
-    fun filter(useHelix: Boolean, clientId: String?, period: Period?, index: Int, text: CharSequence, token: String? = null) {
-        filter.value = filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, period = period)
+    fun filter(useHelix: Boolean, clientId: String?, period: Period, languageIndex: Int, text: CharSequence, token: String? = null) {
+        filter.value = filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, period = period, languageIndex = languageIndex)
         _sortText.value = text
-        selectedIndex = index
     }
 
     private data class Filter(
@@ -78,5 +88,6 @@ class ClipsViewModel @Inject constructor(
         val channelId: String?,
         val channelLogin: String?,
         val gameId: String?,
-        val period: Period? = Period.WEEK)
+        val period: Period = Period.WEEK,
+        val languageIndex: Int = 0)
 }

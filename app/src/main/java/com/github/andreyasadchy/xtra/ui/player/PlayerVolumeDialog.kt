@@ -23,8 +23,7 @@ class PlayerVolumeDialog : ExpandingBottomSheetDialogFragment() {
 
     companion object {
         fun newInstance(): PlayerVolumeDialog {
-            return PlayerVolumeDialog().apply {
-            }
+            return PlayerVolumeDialog()
         }
     }
 

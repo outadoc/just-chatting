@@ -18,7 +18,7 @@ class GamesDataSourceGQLquery(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Game>) {
         loadInitial(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(TopGamesQuery(Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.games
+            val get1 = apolloClient(XtraModule(), clientId).query(TopGamesQuery(first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.games
             val get = get1?.edges
             val list = mutableListOf<Game>()
             if (get != null) {
@@ -42,7 +42,7 @@ class GamesDataSourceGQLquery(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Game>) {
         loadRange(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(TopGamesQuery(Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.games
+            val get1 = apolloClient(XtraModule(), clientId).query(TopGamesQuery(first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.games
             val get = get1?.edges
             val list = mutableListOf<Game>()
             if (get != null && nextPage && offset != null && offset != "") {

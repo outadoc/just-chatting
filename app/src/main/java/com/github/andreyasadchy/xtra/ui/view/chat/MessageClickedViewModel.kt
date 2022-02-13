@@ -21,7 +21,7 @@ class MessageClickedViewModel @Inject constructor(private val repository: Twitch
                     val u = if (useHelix) {
                         repository.loadUserById(clientId, token, channelId)
                     } else {
-                        repository.loadUserByIdGQL(clientId, channelId)
+                        repository.loadUserByIdGQLQuery(clientId, channelId)
                     }
                     user.postValue(u)
                 } catch (e: Exception) {

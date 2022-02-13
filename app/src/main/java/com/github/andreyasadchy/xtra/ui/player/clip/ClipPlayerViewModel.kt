@@ -152,7 +152,7 @@ class ClipPlayerViewModel @Inject constructor(
                 try {
                     if (clip.video_id != null) {
                         val video = if (useHelix) repository.loadVideo(clientId, token, clip.video_id!!)
-                        else repository.loadVideoGQL(clientId, clip.video_id!!)
+                        else repository.loadVideoGQLQuery(clientId, clip.video_id!!)
                         _video.postValue(video)
                     }
                 } catch (e: Exception) {

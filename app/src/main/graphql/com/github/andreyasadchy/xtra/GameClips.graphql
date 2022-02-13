@@ -1,6 +1,6 @@
-query GameClips($id: ID, $name: String, $sort: ClipsPeriod, $first: Int, $after: Cursor) {
+query GameClips($id: ID, $name: String, $languages: [Language!], $sort: ClipsPeriod, $first: Int, $after: Cursor) {
     game(id: $id, name: $name) {
-        clips(criteria: { period: $sort }, first: $first, after: $after) {
+        clips(criteria: { languages: $languages, period: $sort }, first: $first, after: $after) {
             edges {
                 cursor
                 node {

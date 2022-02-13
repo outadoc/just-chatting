@@ -9,15 +9,15 @@ import kotlinx.coroutines.CoroutineScope
 
 class GameStreamsDataSourceGQL private constructor(
     private val clientId: String?,
-    private val gameId: String?,
     private val gameName: String?,
+    private val tags: List<String>?,
     private val api: GraphQLRepository,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Stream>(coroutineScope) {
     private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
         loadInitial(params, callback) {
-            val get = api.loadGameStreams(clientId, gameName, params.requestedLoadSize, offset)
+            val get = api.loadGameStreams(clientId, gameName, tags, params.requestedLoadSize, offset)
             offset = get.cursor
             get.data
         }
@@ -25,7 +25,7 @@ class GameStreamsDataSourceGQL private constructor(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
         loadRange(params, callback) {
-            val get = api.loadGameStreams(clientId, gameName, params.loadSize, offset)
+            val get = api.loadGameStreams(clientId, gameName, tags, params.loadSize, offset)
             if (offset != null && offset != "") {
                 offset = get.cursor
                 get.data
@@ -35,12 +35,12 @@ class GameStreamsDataSourceGQL private constructor(
 
     class Factory(
         private val clientId: String?,
-        private val gameId: String?,
         private val gameName: String?,
+        private val tags: List<String>?,
         private val api: GraphQLRepository,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Stream, GameStreamsDataSourceGQL>() {
 
         override fun create(): DataSource<Int, Stream> =
-                GameStreamsDataSourceGQL(clientId, gameId, gameName, api, coroutineScope).also(sourceLiveData::postValue)
+                GameStreamsDataSourceGQL(clientId, gameName, tags, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

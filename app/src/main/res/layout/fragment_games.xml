@@ -24,6 +24,11 @@
                 android:id="@+id/search"
                 style="@style/Search"/>
         </androidx.appcompat.widget.Toolbar>
+
+        <include
+            android:id="@+id/sortBar"
+            layout="@layout/sort_bar"/>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include

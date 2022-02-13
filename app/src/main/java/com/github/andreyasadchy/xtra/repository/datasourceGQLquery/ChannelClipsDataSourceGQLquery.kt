@@ -21,7 +21,7 @@ class ChannelClipsDataSourceGQLquery(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Clip>) {
         loadInitial(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(UserClipsQuery(Optional.Present(channelId), Optional.Present(sort), Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.user
+            val get1 = apolloClient(XtraModule(), clientId).query(UserClipsQuery(id = Optional.Present(channelId), sort = Optional.Present(sort), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.user
             val get = get1?.clips?.edges
             val list = mutableListOf<Clip>()
             if (get != null) {
@@ -54,7 +54,7 @@ class ChannelClipsDataSourceGQLquery(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Clip>) {
         loadRange(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(UserClipsQuery(Optional.Present(channelId), Optional.Present(sort), Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.user
+            val get1 = apolloClient(XtraModule(), clientId).query(UserClipsQuery(id = Optional.Present(channelId), sort = Optional.Present(sort), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.user
             val get = get1?.clips?.edges
             val list = mutableListOf<Clip>()
             if (get != null && nextPage && offset != null && offset != "") {

@@ -18,7 +18,7 @@ class StreamsDataSourceGQLquery private constructor(
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
         loadInitial(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(TopStreamsQuery(Optional.Present(params.requestedLoadSize), Optional.Present(offset))).execute().data?.streams
+            val get1 = apolloClient(XtraModule(), clientId).query(TopStreamsQuery(first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.streams
             val get = get1?.edges
             val list = mutableListOf<Stream>()
             if (get != null) {
@@ -47,7 +47,7 @@ class StreamsDataSourceGQLquery private constructor(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
         loadRange(params, callback) {
-            val get1 = apolloClient(XtraModule(), clientId).query(TopStreamsQuery(Optional.Present(params.loadSize), Optional.Present(offset))).execute().data?.streams
+            val get1 = apolloClient(XtraModule(), clientId).query(TopStreamsQuery(first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.streams
             val get = get1?.edges
             val list = mutableListOf<Stream>()
             if (get != null && nextPage && offset != null && offset != "") {

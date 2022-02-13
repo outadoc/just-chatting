@@ -1,6 +1,6 @@
-query GameStreams($id: ID, $name: String, $first: Int, $after: Cursor) {
+query GameStreams($id: ID, $name: String, $languages: [String!], $first: Int, $after: Cursor) {
     game(id: $id, name: $name) {
-        streams(first: $first, after: $after) {
+        streams(languages: $languages, first: $first, after: $after) {
             edges {
                 cursor
                 node {

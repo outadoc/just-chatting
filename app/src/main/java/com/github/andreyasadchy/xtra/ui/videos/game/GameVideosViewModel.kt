@@ -27,10 +27,19 @@ class GameVideosViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Video>> = Transformations.map(filter) {
+        val langValues = context.resources.getStringArray(R.array.gqlUserLanguageValues).toList()
+        val language = if (languageIndex != 0) {
+            langValues.elementAt(languageIndex)
+        } else null
         if (it.useHelix) {
-            repository.loadVideos(it.clientId, it.token, it.gameId, it.period, it.broadcastType, it.language, it.sort, viewModelScope)
+            repository.loadVideos(it.clientId, it.token, it.gameId, it.period, it.broadcastType, language?.lowercase(), it.sort, viewModelScope)
         } else {
-            repository.loadGameVideosGQL(it.clientId, it.gameId,
+            repository.loadGameVideosGQLQuery(it.clientId, it.gameId,
+                if (language != null) {
+                    val langList = mutableListOf<String>()
+                    langList.add(language)
+                    langList
+                } else null,
                 when (it.broadcastType) {
                     BroadcastType.ARCHIVE -> com.github.andreyasadchy.xtra.type.BroadcastType.ARCHIVE
                     BroadcastType.HIGHLIGHT -> com.github.andreyasadchy.xtra.type.BroadcastType.HIGHLIGHT
@@ -45,6 +54,8 @@ class GameVideosViewModel @Inject constructor(
         get() = filter.value!!.period
     val type: BroadcastType
         get() = filter.value!!.broadcastType
+    val languageIndex: Int
+        get() = filter.value!!.languageIndex
 
     init {
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.view_count), context.getString(R.string.this_week))
@@ -56,8 +67,8 @@ class GameVideosViewModel @Inject constructor(
         }
     }
 
-    fun filter(useHelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, text: CharSequence, token: String? = null) {
-        filter.value = filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, sort = sort, period = period, broadcastType = type)
+    fun filter(useHelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, languageIndex: Int, text: CharSequence, token: String? = null) {
+        filter.value = filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, sort = sort, period = period, broadcastType = type, languageIndex = languageIndex)
         _sortText.value = text
     }
 
@@ -69,5 +80,5 @@ class GameVideosViewModel @Inject constructor(
         val sort: Sort = Sort.VIEWS,
         val period: Period = Period.WEEK,
         val broadcastType: BroadcastType = BroadcastType.ALL,
-        val language: String? = null)
+        val languageIndex: Int = 0)
 }

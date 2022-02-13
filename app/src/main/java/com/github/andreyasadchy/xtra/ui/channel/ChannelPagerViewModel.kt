@@ -63,7 +63,7 @@ class ChannelPagerViewModel @Inject constructor(
                         }
                         get
                     } else {
-                        repository.loadStreamGQL(clientId, channelId)
+                        repository.loadStreamGQLQuery(clientId, channelId)
                     }
                     _stream.postValue(stream)
                 } catch (e: Exception) {
@@ -80,7 +80,7 @@ class ChannelPagerViewModel @Inject constructor(
                     val user = if (useHelix) {
                         repository.loadUserById(clientId, token, channelId)
                     } else {
-                        repository.loadUserByIdGQL(clientId, channelId)
+                        repository.loadUserByIdGQLQuery(clientId, channelId)
                     }
                     _user.postValue(user)
                 } catch (e: Exception) {

@@ -171,15 +171,14 @@ class ChatAdapter(
                 val length = value.length
                 val endIndex = builderIndex + length
                 var emote = emotes[value]
-                val bits = value.takeLastWhile { it.isDigit() }
-                if (bits != "") {
-                    val name = value.substringBeforeLast(bits)
-                    val cheerEmote = cheerEmotes?.findLast { it.name.equals(name, true) && it.minBits <= bits.toInt() }
+                val bitsCount = value.takeLastWhile { it.isDigit() }
+                val bitsName = value.substringBeforeLast(bitsCount)
+                if (bitsCount != "") {
+                    val cheerEmote = cheerEmotes?.findLast { it.name.equals(bitsName, true) && it.minBits <= bitsCount.toInt() }
                     if (cheerEmote != null) {
                         emote = cheerEmote
-                        builder.insert(endIndex, bits)
                         if (emote.color != null) {
-                            builder.setSpan(ForegroundColorSpan(Color.parseColor(emote.color)), endIndex, endIndex + bits.length, SPAN_INCLUSIVE_INCLUSIVE)
+                            builder.setSpan(ForegroundColorSpan(Color.parseColor(emote.color)), builderIndex + bitsName.length, endIndex, SPAN_INCLUSIVE_INCLUSIVE)
                         }
                     }
                 }
@@ -202,18 +201,26 @@ class ChatAdapter(
                     for (j in images.lastIndex - emotesFound downTo badgesCount) {
                         val e = images[j]
                         if (e.start > builderIndex) {
-                            val remove = length - 1
+                            val remove = if (emote is CheerEmote) {
+                                length - 1 - bitsCount.length
+                            } else {
+                                length - 1
+                            }
                             e.start -= remove
                             e.end -= remove
                         }
                     }
-                    builder.replace(builderIndex, endIndex, ".")
+                    if (emote is CheerEmote) {
+                        builder.replace(builderIndex, builderIndex + bitsName.length, ".")
+                    } else {
+                        builder.replace(builderIndex, endIndex, ".")
+                    }
                     builder.setSpan(ForegroundColorSpan(Color.TRANSPARENT), builderIndex, builderIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE)
                     images.add(Image(emote.url, builderIndex, builderIndex + 1, true, emote.type, emote.zeroWidth))
                     emotesFound++
                     builderIndex += 2
                     if (emote is CheerEmote) {
-                        builderIndex += bits.length
+                        builderIndex += bitsCount.length
                     }
                 }
             }

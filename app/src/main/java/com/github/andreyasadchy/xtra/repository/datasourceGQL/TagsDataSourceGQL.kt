@@ -35,7 +35,7 @@ class TagsDataSourceGQL private constructor(
                                 savedGameTags = get.data
                                 get.data
                             } else mutableListOf()
-                        } else savedAllTags ?: mutableListOf()
+                        } else savedGameTags ?: mutableListOf()
                     } else {
                         if (savedAllTags == null) {
                             val get = api.loadStreamTags(clientId)

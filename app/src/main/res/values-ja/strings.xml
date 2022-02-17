@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">Xtra</string>
     <string name="games">ゲーム</string>
@@ -240,4 +240,5 @@
     <string name="user_global_mod">グローバルモデレーター</string>
     <string name="uptime">%s 経過</string>
     <string name="select_language">言語を選択</string>
+    <string name="show_tags">タグの表示</string>
 </resources>

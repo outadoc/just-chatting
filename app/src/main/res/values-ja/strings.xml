@@ -48,7 +48,7 @@
     <string name="are_you_sure">このビデオを削除してよろしいですか?</string>
     <string name="token_expired">セッションは終了しました。再度ログインしてください</string>
     <string name="no_connection">インターネット接続がありません</string>
-    <string name="connection_restored">オンラインに戻る</string>
+    <string name="connection_restored">オンラインに戻りました</string>
     <string name="follow_tab_login_prompt">あなたがフォローしているチャンネルがここに表示されます</string>
     <string name="downloads_empty">ダウンロードした動画はここに表示されます</string>
     <string name="notification_downloads_channel_title">ダウンロード</string>
@@ -143,11 +143,11 @@
     <string name="cutoutmode_desc">カットアウト領域の中にコンテンツを表示する</string>
     <string name="cutoutmode_default">デフォルト - ポートレートモードのみ</string>
     <string name="cutoutmode_always">常時 - 縦向きと横向きの両モード</string>
-    <string name="never">なし</string>
-    <string name="blue">青</string>
+    <string name="never">しない</string>
+    <string name="blue">ブルー</string>
     <string name="statusBarColor">ステータスバーの色</string>
     <string name="navigationBarColor">ナビゲーションバーの色</string>
-    <string name="rounduserimage">円型のプロファイル画像</string>
+    <string name="rounduserimage">丸型のプロファイル画像</string>
     <string name="truncated_view_counts">簡易的なビューカウント</string>
     <string name="broadcastersCount">ゲームの配信者数の表示</string>
     <string name="startonfollowed">フォローしているページからスタート</string>
@@ -156,7 +156,7 @@
     <string name="show_scrolltop">トップへ戻るスクロールボタンの表示</string>
     <string name="bold_usernames">太字のユーザー名表示</string>
     <string name="randomcolor">色の未設定ユーザーのランダムカラー表示</string>
-    <string name="zerowidth">ゼロ幅のエモート</string>
+    <string name="zerowidth">ゼロ幅エモート</string>
     <string name="emotequality">エモートとバッジの品質</string>
     <string name="message_limit">メッセージ数の上限</string>
     <string name="player_defaultquality">デフォルトのプレイヤー品質</string>
@@ -182,7 +182,7 @@
     <string name="token_random_deviceid">ランダムなデバイスID</string>
     <string name="api_usehelix">ログイン時にHelix Apiを使用する</string>
     <string name="api_helix">HelixクライアントID</string>
-    <string name="api_helix_summary">いずれフォローされたチャンネルとサブエモートに使用される</string>
+    <string name="api_helix_summary">いずれにしてもフォローされたチャンネルとサブエモートに使用されます</string>
     <string name="api_gql">GQLクライアントID</string>
     <string name="playback_speed">再生速度</string>
     <string name="quality">品質</string>
@@ -205,16 +205,16 @@
     <string name="video_type_rerun">再視聴</string>
     <string name="all">すべて</string>
     <string name="type">種類</string>
-    <string name="room_emote">エモート限定モード</string>
-    <string name="room_followers">フォロワー限定モード</string>
-    <string name="room_followers_min">フォロワー限定モード %s</string>
-    <string name="room_unique">ユニーク限定モード</string>
+    <string name="room_emote">エモートモード</string>
+    <string name="room_followers">フォロワーモード</string>
+    <string name="room_followers_min">フォロワーモード %s</string>
+    <string name="room_unique">ユニークモード</string>
     <string name="room_slow">スローモード %s</string>
-    <string name="room_subs">サブスク限定モード</string>
-    <string name="chat_join">接続されています %s</string>
+    <string name="room_subs">サブスクモード</string>
+    <string name="chat_join">接続されました %s</string>
     <string name="copy_clip">クリップボードにコピーする</string>
     <string name="chat_clear">モデレーターによってチャットがクリアされました</string>
-    <string name="chat_timeout">%1$s は %2$s によりタイムアウトしました</string>
+    <string name="chat_timeout">%1$s は %2$s タイムアウトされました</string>
     <string name="chat_ban">%s はBANされました</string>
     <string name="chat_clearmsg">メッセージは削除されました %1$s\: %2$s</string>
     <string name="chat_first">初めてのチャット</string>
@@ -224,11 +224,11 @@
     <string name="local">ローカル</string>
     <string name="days">日</string>
     <string name="seconds">秒</string>
-    <string name="show_uptime">ストリームの稼働時間表示</string>
+    <string name="show_uptime">ストリームの経過時間表示</string>
     <string name="chatFirstMsgEntries1">種類の表示と背景色変更</string>
     <string name="chatFirstMsgEntries2">背景色の変更</string>
     <string name="chatFirstMsgEntries3">通常のメッセージとして表示</string>
-    <string name="chat_firstmsg_visibility">最初のメッセージとテキストによる回収</string>
+    <string name="chat_firstmsg_visibility">最初のメッセージとテキスト表示による出力</string>
     <string name="timestamps">タイムスタンプの表示</string>
     <string name="timestamp_format">タイムスタンプの形式</string>
     <string name="created_at">作成者 %s</string>
@@ -238,6 +238,6 @@
     <string name="user_staff">スタッフ</string>
     <string name="user_admin">管理者</string>
     <string name="user_global_mod">グローバルモデレーター</string>
-    <string name="uptime">%s アップタイム</string>
+    <string name="uptime">%s 経過</string>
     <string name="select_language">言語を選択</string>
 </resources>

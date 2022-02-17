@@ -18,7 +18,7 @@ class GamesViewModel @Inject constructor(
         if (it.useHelix) {
             repository.loadTopGames(it.clientId, it.token, viewModelScope)
         } else {
-            if (it.tags == null) {
+            if (it.tags == null && !it.showTags) {
                 repository.loadTopGamesGQLQuery(it.clientId, viewModelScope)
             } else {
                 repository.loadTopGamesGQL(it.clientId, it.tags, viewModelScope)
@@ -26,8 +26,8 @@ class GamesViewModel @Inject constructor(
         }
     }
 
-    fun loadGames(useHelix: Boolean, clientId: String?, token: String? = null, tags: List<String>? = null) {
-        Filter(useHelix, clientId, token, tags).let {
+    fun loadGames(useHelix: Boolean, showTags: Boolean, clientId: String?, token: String? = null, tags: List<String>? = null) {
+        Filter(useHelix, showTags, clientId, token, tags).let {
             if (filter.value != it) {
                 filter.value = it
             }
@@ -36,6 +36,7 @@ class GamesViewModel @Inject constructor(
 
     private data class Filter(
         val useHelix: Boolean,
+        val showTags: Boolean,
         val clientId: String?,
         val token: String?,
         val tags: List<String>?)

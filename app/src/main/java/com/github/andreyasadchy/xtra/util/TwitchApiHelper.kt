@@ -100,12 +100,12 @@ object TwitchApiHelper {
                     (if (seconds != 0) (seconds.toString() + context.getString(R.string.seconds) + " ") else "")).trim() else
                 String.format((if (days != 0) ("$days:") else "") +
                         (if (hours != 0) (if (hours < 10 && days != 0) "0$hours:" else "$hours:") else (if (days != 0) "00:" else "")) +
-                        (if (minutes != 0) (if (minutes < 10 && hours != 0) "0$minutes:" else "$minutes:") else (if (hours != 0||days != 0) "00:" else "")) +
-                        (if (seconds != 0) (if (seconds < 10 && minutes != 0) "0$seconds" else "$seconds") else (if (minutes != 0||hours != 0||days != 0) "00" else "")))
+                        (if (minutes != 0) (if (minutes < 10 && (hours != 0||days != 0)) "0$minutes:" else "$minutes:") else (if (hours != 0||days != 0) "00:" else "")) +
+                        (if (seconds != 0) (if (seconds < 10 && (minutes != 0||hours != 0||days != 0)) "0$seconds" else "$seconds") else (if (minutes != 0||hours != 0||days != 0) "00" else "")))
         } else return null
     }
 
-    fun getUptime(context: Context, input: String?): String? {
+    fun getUptime(context: Context, input: String?, noText: Boolean? = false): String? {
         return if (input != null) {
             val currentTime = Calendar.getInstance(TimeZone.getTimeZone("UTC")).time.time
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
@@ -119,7 +119,11 @@ object TwitchApiHelper {
             return if (diff != null && diff >= 0) {
                 getDurationFromSeconds(context, diff.toString(), false).let {
                     if (it != null) {
-                        context.getString(R.string.uptime, it)
+                        if (noText == true) {
+                            it
+                        } else {
+                            context.getString(R.string.uptime, it)
+                        }
                     } else null
                 }
             } else null

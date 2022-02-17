@@ -8,6 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/topLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:id="@+id/userImage"
             style="@style/UserPicture"
@@ -116,6 +122,24 @@
                 tools:text="8:21:33"
                 tools:visibility="visible" />
         </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:id="@+id/tagsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="7dp"
+            android:visibility="gone"
+            app:flexWrap="wrap"
+            app:justifyContent="space_around"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/topLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

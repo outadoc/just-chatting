@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.model.helix.game
 
 import android.os.Parcelable
+import com.github.andreyasadchy.xtra.model.helix.tag.Tag
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.android.parcel.Parcelize
 
@@ -11,7 +12,8 @@ data class Game(
         val box_art_url: String? = null,
 
         val viewersCount: Int? = null,
-        val broadcastersCount: Int? = null) : Parcelable {
+        val broadcastersCount: Int? = null,
+        val tags: List<Tag>? = null) : Parcelable {
 
         val boxArt: String?
                 get() = TwitchApiHelper.getTemplateUrl(box_art_url, "game")

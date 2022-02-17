@@ -43,7 +43,7 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
 
     val bundle = Bundle()
     override val viewModel by viewModels<GamesViewModel> { viewModelFactory }
-    override val adapter: BasePagedListAdapter<Game> by lazy { GamesAdapter(this, requireActivity() as MainActivity) }
+    override val adapter: BasePagedListAdapter<Game> by lazy { GamesAdapter(this, requireActivity() as MainActivity, requireActivity() as MainActivity) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_games, container, false)
@@ -100,9 +100,9 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
     override fun initialize() {
         super.initialize()
         if (arguments?.getStringArray(C.TAGS) == null && requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.loadGames(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""))
+            viewModel.loadGames(useHelix = true, showTags = requireContext().prefs().getBoolean(C.UI_TAGS, true), clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""))
         } else {
-            viewModel.loadGames(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), tags = arguments?.getStringArray(C.TAGS)?.toList())
+            viewModel.loadGames(useHelix = false, showTags = requireContext().prefs().getBoolean(C.UI_TAGS, true), clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), tags = arguments?.getStringArray(C.TAGS)?.toList())
         }
     }
 }

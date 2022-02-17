@@ -27,20 +27,15 @@ class TagSearchAdapter(
 
     override fun bind(item: Tag, view: View) {
         with(view) {
-            setOnClickListener { }
             if (item.name != null) {
                 userName.visible()
                 userName.text = item.name
             }
-            if (item.scope != null) {
-                userFollowers.visible()
-                userFollowers.text = item.scope
-                if (item.id != null) {
-                    if (item.scope == "CATEGORY") {
-                        setOnClickListener { gamesListener.openTagGames(listOf(item.id)) }
-                    } else {
-                        setOnClickListener { streamsListener.openTagStreams(tags = listOf(item.id), gameId = fragment.parentFragment?.arguments?.getString(C.GAME_ID), gameName = fragment.parentFragment?.arguments?.getString(C.GAME_NAME)) }
-                    }
+            if (item.id != null) {
+                if (item.scope == "CATEGORY") {
+                    setOnClickListener { gamesListener.openTagGames(listOf(item.id)) }
+                } else {
+                    setOnClickListener { streamsListener.openTagStreams(tags = listOf(item.id), gameId = fragment.parentFragment?.arguments?.getString(C.GAME_ID), gameName = fragment.parentFragment?.arguments?.getString(C.GAME_NAME)) }
                 }
             }
         }

@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.model.helix.stream
 
 import android.os.Parcelable
+import com.github.andreyasadchy.xtra.model.helix.tag.Tag
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.android.parcel.Parcelize
 
@@ -19,7 +20,8 @@ data class Stream(
         val language: String? = null,
         val thumbnail_url: String? = null,
 
-        var profileImageURL: String? = null) : Parcelable {
+        var profileImageURL: String? = null,
+        val tags: List<Tag>? = null) : Parcelable {
 
         val thumbnail: String?
                 get() = TwitchApiHelper.getTemplateUrl(thumbnail_url, "video")

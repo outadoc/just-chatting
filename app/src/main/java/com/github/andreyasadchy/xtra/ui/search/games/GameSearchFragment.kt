@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 class GameSearchFragment : PagedListFragment<Game, GameSearchViewModel, BasePagedListAdapter<Game>>(), Searchable {
 
     override val viewModel by viewModels<GameSearchViewModel> { viewModelFactory }
-    override val adapter: BasePagedListAdapter<Game> by lazy { GameSearchAdapter(this, requireActivity() as MainActivity) }
+    override val adapter: BasePagedListAdapter<Game> by lazy { GameSearchAdapter(this, requireActivity() as MainActivity, requireActivity() as MainActivity) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.common_recycler_view_layout, container, false)

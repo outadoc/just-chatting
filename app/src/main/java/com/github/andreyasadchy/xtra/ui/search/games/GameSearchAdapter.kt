@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.search.games
 
 import android.view.View
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
@@ -12,8 +13,8 @@ import kotlinx.android.synthetic.main.fragment_games_list_item.view.*
 
 class GameSearchAdapter(
         private val fragment: Fragment,
-        private val listener: GamesFragment.OnGameSelectedListener
-) : BasePagedListAdapter<Game>(
+        private val listener: GamesFragment.OnGameSelectedListener,
+        private val gamesListener: GamesFragment.OnTagGames) : BasePagedListAdapter<Game>(
         object : DiffUtil.ItemCallback<Game>() {
             override fun areItemsTheSame(oldItem: Game, newItem: Game): Boolean =
                 oldItem.id == newItem.id
@@ -41,6 +42,18 @@ class GameSearchAdapter(
             if (item.broadcastersCount != null && context.prefs().getBoolean(C.UI_BROADCASTERSCOUNT, true)) {
                 broadcastersCount.visible()
                 broadcastersCount.text = resources.getQuantityString(R.plurals.broadcasters, item.broadcastersCount, item.broadcastersCount)
+            }
+            if (item.tags != null && context.prefs().getBoolean(C.UI_TAGS, true)) {
+                tagsLayout.removeAllViews()
+                tagsLayout.visible()
+                for (tag in item.tags) {
+                    val text = TextView(context)
+                    text.text = tag.name
+                    if (tag.id != null) {
+                        text.setOnClickListener { gamesListener.openTagGames(listOf(tag.id)) }
+                    }
+                    tagsLayout.addView(text)
+                }
             }
         }
     }

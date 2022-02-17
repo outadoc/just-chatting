@@ -240,4 +240,5 @@
     <string name="user_global_mod">グローバルモデレーター</string>
     <string name="uptime">%s 経過</string>
     <string name="select_language">言語を選択</string>
+    <string name="show_tags">Show tags</string>
 </resources>

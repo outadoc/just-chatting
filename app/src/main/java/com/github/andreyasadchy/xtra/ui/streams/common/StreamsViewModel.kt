@@ -18,7 +18,7 @@ class StreamsViewModel @Inject constructor(
         if (it.useHelix) {
             repository.loadTopStreams(it.clientId, it.token, it.gameId, it.thumbnailsEnabled, viewModelScope)
         } else {
-            if (it.tags == null) {
+            if (it.tags == null && !it.showTags) {
                 if (it.gameId == null) {
                     repository.loadTopStreamsGQLQuery(it.clientId, it.thumbnailsEnabled, viewModelScope)
                 } else {
@@ -34,8 +34,8 @@ class StreamsViewModel @Inject constructor(
         }
     }
 
-    fun loadStreams(useHelix: Boolean, clientId: String?, token: String? = null, channelId: String? = null, gameId: String? = null, gameName: String? = null, tags: List<String>? = null, languages: String? = null, thumbnailsEnabled: Boolean = true) {
-        Filter(useHelix, clientId, token, channelId, gameId, gameName, tags, languages, thumbnailsEnabled).let {
+    fun loadStreams(useHelix: Boolean, showTags: Boolean, clientId: String?, token: String? = null, channelId: String? = null, gameId: String? = null, gameName: String? = null, tags: List<String>? = null, languages: String? = null, thumbnailsEnabled: Boolean = true) {
+        Filter(useHelix, showTags, clientId, token, channelId, gameId, gameName, tags, languages, thumbnailsEnabled).let {
             if (filter.value != it) {
                 filter.value = it
             }
@@ -44,6 +44,7 @@ class StreamsViewModel @Inject constructor(
 
     private data class Filter(
             val useHelix: Boolean,
+            val showTags: Boolean,
             val clientId: String?,
             val token: String?,
             val channelId: String?,

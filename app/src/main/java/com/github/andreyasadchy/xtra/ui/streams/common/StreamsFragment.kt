@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
 import com.github.andreyasadchy.xtra.ui.streams.StreamsCompactAdapter
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.prefs
+import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 import kotlinx.android.synthetic.main.fragment_streams.*
 
 class StreamsFragment : BaseStreamsFragment<StreamsViewModel>() {
@@ -48,9 +49,10 @@ class StreamsFragment : BaseStreamsFragment<StreamsViewModel>() {
     override fun initialize() {
         super.initialize()
         if (arguments?.getStringArray(C.TAGS) == null && requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.loadStreams(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), gameId = arguments?.getString(C.GAME_ID), thumbnailsEnabled = !compactStreams)
+            viewModel.loadStreams(useHelix = true, showTags = requireContext().prefs().getBoolean(C.UI_TAGS, true), clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), gameId = arguments?.getString(C.GAME_ID), thumbnailsEnabled = !compactStreams)
         } else {
-            viewModel.loadStreams(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME), tags = arguments?.getStringArray(C.TAGS)?.toList(), thumbnailsEnabled = !compactStreams)
+            viewModel.loadStreams(useHelix = false, showTags = requireContext().prefs().getBoolean(C.UI_TAGS, true), clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME), tags = arguments?.getStringArray(C.TAGS)?.toList(), thumbnailsEnabled = !compactStreams)
+            scrollTop.isEnabled = false
         }
         val activity = requireActivity() as MainActivity
         if (arguments?.getString(C.GAME_ID) != null && arguments?.getString(C.GAME_NAME) != null) {

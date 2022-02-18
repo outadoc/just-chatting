@@ -129,6 +129,7 @@ class XtraModule {
                 .registerTypeAdapter(EmoteSetResponse::class.java, EmoteSetDeserializer())
                 .registerTypeAdapter(CheerEmotesResponse::class.java, CheerEmotesDeserializer())
                 .registerTypeAdapter(TwitchBadgesResponse::class.java, TwitchBadgesDeserializer())
+                .registerTypeAdapter(RecentMessagesResponse::class.java, RecentMessagesDeserializer())
                 .registerTypeAdapter(StvEmotesResponse::class.java, StvEmotesDeserializer())
                 .registerTypeAdapter(BttvGlobalResponse::class.java, BttvGlobalDeserializer())
                 .registerTypeAdapter(BttvChannelResponse::class.java, BttvChannelDeserializer())

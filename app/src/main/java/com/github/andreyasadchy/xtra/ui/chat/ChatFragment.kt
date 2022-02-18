@@ -38,9 +38,11 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         val useHelix = requireContext().prefs().getBoolean(C.API_USEHELIX, true) && userIsLoggedIn
         val helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, "")
         val gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: ""
+        val enableRecentMsg = requireContext().prefs().getBoolean(C.CHAT_RECENT, true)
+        val recentMsgLimit = requireContext().prefs().getInt(C.CHAT_RECENT_LIMIT, 100)
         val isLive = args.getBoolean(KEY_IS_LIVE)
         val enableChat = if (isLive) {
-            viewModel.startLive(user, useHelix, helixClientId, gqlClientId, channelId, chLogin, chName)
+            viewModel.startLive(user, useHelix, helixClientId, gqlClientId, channelId, chLogin, chName, enableRecentMsg, recentMsgLimit.toString())
             chatView.init(this)
             chatView.setCallback(viewModel)
             if (userIsLoggedIn) {
@@ -69,6 +71,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
             chatView.enableChatInteraction(isLive && userIsLoggedIn)
             viewModel.chatMessages.observe(viewLifecycleOwner, Observer(chatView::submitList))
             viewModel.newMessage.observe(viewLifecycleOwner) { chatView.notifyMessageAdded() }
+            viewModel.recentMessages.observe(viewLifecycleOwner) { chatView.addRecentMessages(it) }
             viewModel.globalBadges.observe(viewLifecycleOwner, Observer(chatView::addGlobalBadges))
             viewModel.channelBadges.observe(viewLifecycleOwner, Observer(chatView::addChannelBadges))
             viewModel.otherEmotes.observe(viewLifecycleOwner, Observer(chatView::addEmotes))

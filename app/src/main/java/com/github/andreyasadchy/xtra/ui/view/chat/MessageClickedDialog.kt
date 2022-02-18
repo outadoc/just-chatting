@@ -3,6 +3,7 @@ package com.github.andreyasadchy.xtra.ui.view.chat
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -94,6 +95,11 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
     }
 
     private fun updateUserLayout(user: User) {
+        if (user.bannerImageURL != null) {
+            userLayout.visible()
+            bannerImage.visible()
+            bannerImage.loadImage(requireParentFragment(), user.bannerImageURL)
+        }
         if (user.channelLogo != null) {
             userLayout.visible()
             userImage.visible()
@@ -111,16 +117,27 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                 listener.onViewProfileClicked(user.id, user.login, user.display_name, user.channelLogo)
                 dismiss()
             }
+            if (user.bannerImageURL != null) {
+                userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
+            }
         }
         if (user.followers_count != null) {
             userLayout.visible()
             userFollowers.visible()
             userFollowers.text = requireContext().getString(R.string.followers, TwitchApiHelper.formatCount(user.followers_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)))
+            if (user.bannerImageURL != null) {
+                userFollowers.setTextColor(Color.LTGRAY)
+                userFollowers.setShadowLayer(4f, 0f, 0f, Color.BLACK)
+            }
         }
         if (user.created_at != null) {
             userLayout.visible()
             userCreated.visible()
             userCreated.text = requireContext().getString(R.string.created_at, TwitchApiHelper.formatTimeString(requireContext(), user.created_at))
+            if (user.bannerImageURL != null) {
+                userCreated.setTextColor(Color.LTGRAY)
+                userCreated.setShadowLayer(4f, 0f, 0f, Color.BLACK)
+            }
         }
     }
 

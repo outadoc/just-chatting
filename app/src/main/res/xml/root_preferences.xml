@@ -184,6 +184,21 @@
         app:min="1"
         app:showSeekBarValue="true" />
 
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="chat_recent"
+        android:title="@string/recentMsg_enable"
+        app:iconSpaceReserved="false" />
+
+    <SeekBarPreference
+        android:defaultValue="100"
+        android:key="chat_recent_limit"
+        android:max="800"
+        android:title="@string/recentMsg_limit"
+        app:iconSpaceReserved="false"
+        app:min="1"
+        app:showSeekBarValue="true" />
+
     <SeekBarPreference
         android:defaultValue="30"
         android:key="chatWidth"

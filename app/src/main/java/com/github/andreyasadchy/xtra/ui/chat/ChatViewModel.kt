@@ -60,6 +60,7 @@ class ChatViewModel @Inject constructor(
     val otherEmotes: LiveData<List<Emote>>
         get() = _otherEmotes
 
+    val recentMessages = MutableLiveData<List<LiveChatMessage>>()
     val globalBadges = MutableLiveData<List<TwitchBadge>?>()
     val channelBadges = MutableLiveData<List<TwitchBadge>>()
     val cheerEmotes = MutableLiveData<List<CheerEmote>>()
@@ -86,11 +87,11 @@ class ChatViewModel @Inject constructor(
     val chatters: Collection<Chatter>
         get() = (chat as LiveChatController).chatters.values
 
-    fun startLive(user: User, useHelix: Boolean, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?) {
+    fun startLive(user: User, useHelix: Boolean, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
         if (chat == null && channelLogin != null && channelName != null) {
             chat = LiveChatController(user, helixClientId, channelId, channelLogin, channelName)
             if (channelId != null) {
-                init(useHelix, helixClientId, gqlClientId, user.token.nullIfEmpty(), channelId)
+                init(useHelix, helixClientId, gqlClientId, user.token.nullIfEmpty(), channelId, channelLogin, enableRecentMsg, recentMsgLimit)
             }
         }
     }
@@ -121,9 +122,19 @@ class ChatViewModel @Inject constructor(
         super.onCleared()
     }
 
-    private fun init(useHelix: Boolean, helixClientId: String?, gqlClientId: String, token: String?, channelId: String) {
+    private fun init(useHelix: Boolean, helixClientId: String?, gqlClientId: String, token: String?, channelId: String, channelLogin: String? = null, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
         chat?.start()
         viewModelScope.launch {
+            if (channelLogin != null && enableRecentMsg == true && recentMsgLimit != null) {
+                try {
+                    val get = playerRepository.loadRecentMessages(channelLogin, recentMsgLimit).body()?.messages
+                    if (get != null && get.isNotEmpty()) {
+                        recentMessages.postValue(get!!)
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load recent messages for channel $channelLogin", e)
+                }
+            }
             savedGlobalBadges.also {
                 if (it != null) {
                     globalBadges.value = it
@@ -265,7 +276,7 @@ class ChatViewModel @Inject constructor(
 
         override fun onMessage(message: ChatMessage) {
             super.onMessage(message)
-            if (!chatters.containsKey(message.displayName)) {
+            if (message.displayName != null && !chatters.containsKey(message.displayName)) {
                 val chatter = Chatter(message.displayName)
                 chatters[message.displayName] = chatter
                 _newChatter.postValue(chatter)

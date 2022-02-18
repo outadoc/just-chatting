@@ -1,17 +1,40 @@
-package com.github.andreyasadchy.xtra.util.chat
+package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.model.chat.Badge
-import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
-import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
-import kotlin.collections.set
+import android.content.Context
+import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.XtraApp
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
+import com.google.gson.JsonDeserializationContext
+import com.google.gson.JsonDeserializer
+import com.google.gson.JsonElement
+import com.google.gson.JsonParseException
+import java.lang.reflect.Type
 
-class MessageListenerImpl(
-    private val callback: OnChatMessageReceivedListener,
-    private val callbackUserState: OnUserStateReceivedListener,
-    private val callbackRoomState: OnRoomStateReceivedListener,
-    private val callbackCommand: OnCommandReceivedListener) : LiveChatThread.OnMessageReceivedListener {
-    
-    override fun onMessage(message: String) {
+class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
+
+    @Throws(JsonParseException::class)
+    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): RecentMessagesResponse {
+        val messages = mutableListOf<LiveChatMessage>()
+        for (i in json.asJsonObject.getAsJsonArray("messages")) {
+            val appContext = XtraApp.INSTANCE.applicationContext
+            val message = i.asString
+            val liveMsg = when {
+                message.contains("PRIVMSG") -> onMessage(message)
+                message.contains("USERNOTICE") -> onUserNotice(message)
+                message.contains("CLEARMSG") -> onClearMessage(appContext, message)
+                message.contains("CLEARCHAT") -> onClearChat(appContext, message)
+                message.contains("NOTICE") -> onNotice(message)
+                else -> null
+            }
+            if (liveMsg != null) {
+                messages.add(liveMsg)
+            }
+        }
+        return RecentMessagesResponse(messages)
+    }
+
+    private fun onMessage(message: String): LiveChatMessage {
         val parts = message.substring(1).split(" ".toRegex(), 2)
         val prefix = parts[0]
         val prefixes = splitAndMakeMap(prefix, ";", "=")
@@ -19,8 +42,10 @@ class MessageListenerImpl(
         val userName = messageInfo.substring(1, messageInfo.indexOf("!"))
         val userMessage: String
         val isAction: Boolean
-        messageInfo.substring(messageInfo.indexOf(":", messageInfo.indexOf(":") + 1) + 1).let { //from <message>
-            if (!it.startsWith(ACTION)) {
+        val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
+        val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
+        messageInfo.substring(if (msgIndex != -1) msgIndex + 1 else index2 + 1).let { //from <message>
+            if (!it.startsWith(MessageListenerImpl.ACTION)) {
                 userMessage = it
                 isAction = false
             } else {
@@ -51,7 +76,7 @@ class MessageListenerImpl(
                 }
             }
         }
-        callback.onMessage(LiveChatMessage(
+        return LiveChatMessage(
             id = prefixes["id"],
             userId = prefixes["user-id"],
             userName = userName,
@@ -64,63 +89,68 @@ class MessageListenerImpl(
             emotes = emotesList,
             badges = badgesList,
             timestamp = prefixes["tmi-sent-ts"]?.toLong()
-        ))
+        )
     }
 
-    override fun onCommand(message: String, type: String?) {
-        callbackCommand.onCommand(Command(
-            message = message,
-            type = type
-        ))
-    }
-
-    override fun onClearMessage(message: String) {
+    private fun onClearMessage(context: Context, message: String): LiveChatMessage {
         val parts = message.substring(1).split(" ".toRegex(), 2)
         val prefix = parts[0]
         val prefixes = splitAndMakeMap(prefix, ";", "=")
         val user = prefixes["login"]
         val messageInfo = parts[1]
         val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
-        val msg = if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else null
-        callbackCommand.onCommand(Command(
-            message = user,
-            duration = msg,
-            type = "clearmsg",
+        val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
+        val msg = messageInfo.substring(if (msgIndex != -1) msgIndex + 1 else index2 + 1)
+        return LiveChatMessage(
+            message = context.getString(R.string.chat_clearmsg, user, msg),
+            color = "#999999",
+            isAction = true,
             timestamp = prefixes["tmi-sent-ts"]?.toLong()
-        ))
+        )
     }
 
-    override fun onClearChat(message: String) {
+    private fun onClearChat(context: Context, message: String): LiveChatMessage? {
         val parts = message.substring(1).split(" ".toRegex(), 2)
         val prefix = parts[0]
         val prefixes = splitAndMakeMap(prefix, ";", "=")
         val duration = prefixes["ban-duration"]
         val messageInfo = parts[1]
         val userIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
-        val user = if (userIndex != -1) messageInfo.substring(userIndex + 1) else null
+        val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
+        val user = if (userIndex != -1) messageInfo.substring(userIndex + 1) else if (index2 != -1) messageInfo.substring(index2 + 1) else null
         val type = if (user == null) { "clearchat" } else { if (duration != null) { "timeout" } else { "ban" } }
-        callbackCommand.onCommand(Command(
-            message = user,
-            duration = duration,
-            type = type,
+        return LiveChatMessage(
+            message = when (type) {
+                "clearchat" -> context.getString(R.string.chat_clear)
+                "timeout" -> context.getString(R.string.chat_timeout, user, TwitchApiHelper.getDurationFromSeconds(context, duration))
+                "ban" -> context.getString(R.string.chat_ban, user)
+                else -> return null
+            },
+            color = "#999999",
+            isAction = true,
             timestamp = prefixes["tmi-sent-ts"]?.toLong()
-        ))
+        )
     }
 
-    override fun onNotice(message: String) {
-        callbackCommand.onCommand(Command(
-            message = message.substring(message.indexOf(":", message.indexOf(":") + 1) + 1),
-        ))
+    private fun onNotice(message: String): LiveChatMessage {
+        val index = message.indexOf(":", message.indexOf(":") + 1)
+        val index2 = message.indexOf(" ", message.indexOf("#") + 1)
+        return LiveChatMessage(
+            message = message.substring(if (index != -1) index + 1 else index2 + 1),
+            color = "#999999",
+            isAction = true
+        )
     }
 
-    override fun onUserNotice(message: String) {
+    private fun onUserNotice(message: String): LiveChatMessage? {
         val parts = message.substring(1).split(" ".toRegex(), 2)
         val prefix = parts[0]
         val prefixes = splitAndMakeMap(prefix, ";", "=")
         val system = prefixes["system-msg"]?.replace("\\s", " ")
         val messageInfo = parts[1]
         val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
-        val msg = if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else null
+        val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
+        val msg = if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else if (index2 != -1) messageInfo.substring(index2 + 1) else null
         if (system != null) {
             var emotesList: MutableList<TwitchEmote>? = null
             val emotes = prefixes["emotes"]
@@ -134,37 +164,16 @@ class MessageListenerImpl(
                     }
                 }
             }
-            callbackCommand.onCommand(Command(
+            if (msg == null)
+                println("null un")
+            return LiveChatMessage(
                 message = if (msg != null) "$system $msg" else system,
+                color = "#999999",
+                isAction = true,
                 emotes = emotesList,
                 timestamp = prefixes["tmi-sent-ts"]?.toLong()
-            ))
-        }
-    }
-
-    override fun onRoomState(message: String) {
-        val parts = message.substring(1).split(" ".toRegex(), 2)
-        val prefix = parts[0]
-        val prefixes = splitAndMakeMap(prefix, ";", "=")
-        callbackRoomState.onRoomState(RoomState(
-            emote = prefixes["emote-only"],
-            followers = prefixes["followers-only"],
-            unique = prefixes["r9k"],
-            slow = prefixes["slow"],
-            subs = prefixes["subs-only"]
-        ))
-    }
-
-    override fun onUserState(message: String) {
-        val parts = message.substring(1).split(" ".toRegex(), 2)
-        val prefix = parts[0]
-        val prefixes = splitAndMakeMap(prefix, ";", "=")
-        val sets = prefixes["emote-sets"]
-        var list: List<String>? = null
-        if (sets != null && list == null) {
-            list = sets.split(",".toRegex()).dropLastWhile { it.isEmpty() }
-            callbackUserState.onUserState(list)
-        }
+            )
+        } else return null
     }
 
     private fun splitAndMakeMap(string: String, splitRegex: String, mapRegex: String): Map<String, String?> {
@@ -175,9 +184,5 @@ class MessageListenerImpl(
             map[kv[0]] = if (kv.size == 2) kv[1] else null
         }
         return map
-    }
-    
-    companion object {
-        const val ACTION = "\u0001ACTION"
     }
 }

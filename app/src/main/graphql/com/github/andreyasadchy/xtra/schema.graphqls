@@ -15,6 +15,7 @@ type User {
   roles: UserRoles
   description: String
   profileImageURL(width: Int): String
+  bannerImageURL: String
   profileViewCount: Int
   createdAt: Time
   followers: FollowerConnection

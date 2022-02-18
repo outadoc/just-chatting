@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.player.offline
 
 import android.app.Application
+import android.os.Build
 import androidx.core.net.toUri
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
@@ -17,9 +18,12 @@ class OfflinePlayerViewModel @Inject constructor(
         private val repository: OfflineRepository) : PlayerViewModel(context) {
 
     private lateinit var video: OfflineVideo
-    val qualities = listOf(context.getString(R.string.source), context.getString(R.string.audio_only))
+    val qualities = mutableListOf(context.getString(R.string.source), context.getString(R.string.audio_only))
 
     fun setVideo(video: OfflineVideo) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { //TODO update exoplayer
+            qualities.removeLast()
+        }
         if (!this::video.isInitialized) {
             this.video = video
             val mediaSourceFactory = if (video.vod) {

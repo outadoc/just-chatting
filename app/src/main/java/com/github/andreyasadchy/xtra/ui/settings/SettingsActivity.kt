@@ -86,8 +86,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
             }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.isEnabled = false
-                findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.summary = resources.getString(R.string.Android_9_required)
+                findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.isVisible = false
             } else {
                 findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.setOnPreferenceChangeListener { _, _ ->
                     changed = true

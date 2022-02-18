@@ -3,6 +3,7 @@ query User($id: ID) {
         login
         displayName
         profileImageURL(width: 300)
+        bannerImageURL
         profileViewCount
         createdAt
         followers {

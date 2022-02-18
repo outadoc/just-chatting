@@ -189,6 +189,10 @@ class ChatView : ConstraintLayout {
         notifyMessageAdded()
     }
 
+    fun addRecentMessages(list: List<LiveChatMessage>) {
+        adapter.messages?.addAll(0, list)
+    }
+
     fun addGlobalBadges(list: List<TwitchBadge>?) {
         if (list != null) {
             adapter.addGlobalBadges(list)

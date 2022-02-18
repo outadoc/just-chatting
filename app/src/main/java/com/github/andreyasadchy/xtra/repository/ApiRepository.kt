@@ -225,7 +225,8 @@ class ApiRepository @Inject constructor(
         val get = apolloClient(XtraModule(), clientId).query(UserQuery(Optional.Present(channelId))).execute().data
         if (get != null) {
             User(id = channelId, login = get.user?.login, display_name = get.user?.displayName, profile_image_url = get.user?.profileImageURL,
-                view_count = get.user?.profileViewCount, created_at = get.user?.createdAt?.toString(), followers_count = get.user?.followers?.totalCount,
+                bannerImageURL = get.user?.bannerImageURL, view_count = get.user?.profileViewCount, created_at = get.user?.createdAt?.toString(),
+                followers_count = get.user?.followers?.totalCount,
                 broadcaster_type = when {
                     get.user?.roles?.isPartner == true -> "partner"
                     get.user?.roles?.isAffiliate == true -> "affiliate"

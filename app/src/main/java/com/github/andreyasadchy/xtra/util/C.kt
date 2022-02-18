@@ -62,6 +62,8 @@ object C {
     const val CHAT_FIRSTMSG_VISIBILITY = "chat_firstmsg_visibility"
     const val CHAT_TIMESTAMPS = "chat_timestamps"
     const val CHAT_TIMESTAMP_FORMAT = "chat_timestamp_format"
+    const val CHAT_RECENT = "chat_recent"
+    const val CHAT_RECENT_LIMIT = "chat_recent_limit"
     const val TOKEN_XDEVICEID = "token_xdeviceid"
     const val TOKEN_DEVICEID = "token_deviceid"
     const val TOKEN_RANDOM_DEVICEID = "token_random_deviceid"

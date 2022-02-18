@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.player
 
 import android.app.Application
+import android.os.Build
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -134,7 +135,9 @@ abstract class HlsPlayerViewModel(
                 }
                 helper.urls = urls.apply {
                     remove(audioOnly)?.let { url ->
-                        put(audioOnly, url) //move audio option to bottom
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) { //TODO update exoplayer
+                            put(audioOnly, url) //move audio option to bottom
+                        }
                     }
                 }
                 qualities = LinkedList(urls.keys).apply {

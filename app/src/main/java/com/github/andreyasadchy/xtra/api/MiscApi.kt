@@ -21,6 +21,9 @@ interface MiscApi {
     @GET("https://badges.twitch.tv/v1/badges/channels/{channelId}/display")
     suspend fun getChannelBadges(@Path("channelId") channelId: String): Response<TwitchBadgesResponse>
 
+    @GET("https://recent-messages.robotty.de/api/v2/recent-messages/{channelLogin}")
+    suspend fun getRecentMessages(@Path("channelLogin") channelLogin: String, @Query("limit") limit: String): Response<RecentMessagesResponse>
+
     @GET("https://api.7tv.app/v2/emotes/global")
     suspend fun getGlobalStvEmotes(): Response<StvEmotesResponse>
 

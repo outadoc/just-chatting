@@ -1,23 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
+ï»¿<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <plurals name="views">
-        <item quantity="one">%s ‹’®</item>
+        <item quantity="one">%s è¦–è´</item>
         <item quantity="other">@string/views</item>
     </plurals>
     <plurals name="viewers">
-        <item quantity="one">%s ‹’®Ò</item>
+        <item quantity="one">%s è¦–è´è€…</item>
         <item quantity="other">@string/viewers</item>
     </plurals>
     <plurals name="hours">
-        <item quantity="one">%d </item>
-        <item quantity="other">%d ŠÔ</item>
+        <item quantity="one">%d æ™‚</item>
+        <item quantity="other">%d æ™‚é–“</item>
     </plurals>
     <plurals name="minutes">
-        <item quantity="one">%d •ª</item>
-        <item quantity="other">%d •ªŠÔ</item>
+        <item quantity="one">%d åˆ†</item>
+        <item quantity="other">%d åˆ†é–“</item>
     </plurals>
     <plurals name="broadcasters">
-        <item quantity="one">%d ”zM</item>
-        <item quantity="other">%d ”zMÒ</item>
+        <item quantity="one">%d é…ä¿¡</item>
+        <item quantity="other">%d é…ä¿¡è€…</item>
     </plurals>
 </resources>

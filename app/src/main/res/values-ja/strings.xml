@@ -178,7 +178,6 @@
     <string name="settings_token_summary">ライブストリームのみ、Adblockを無効</string>
     <string name="settings_api">API</string>
     <string name="not_supported">サポートされていません</string>
-    <string name="Android_9_required">Android 9以上が必要</string>
     <string name="token_random_deviceid">ランダムなデバイスID</string>
     <string name="api_usehelix">ログイン時にHelix Apiを使用する</string>
     <string name="api_helix">HelixクライアントID</string>
@@ -241,4 +240,6 @@
     <string name="uptime">%s 経過</string>
     <string name="select_language">言語を選択</string>
     <string name="show_tags">タグの表示</string>
+    <string name="recentMsg_enable">最新のメッセージの読み込み</string>
+    <string name="recentMsg_limit">最新のメッセージの上限</string>
 </resources>

@@ -3,12 +3,14 @@ package com.github.andreyasadchy.xtra.ui.channel
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.viewpager.widget.ViewPager
 import com.github.andreyasadchy.xtra.R
@@ -129,104 +131,144 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             viewModel.loadStream(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelId = requireArguments().getString(C.CHANNEL_ID), channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))
         }
         viewModel.stream.observe(viewLifecycleOwner) { stream ->
-            if (stream?.type?.lowercase() == "rerun") {
-                watchLive.text = getString(R.string.watch_rerun)
-                watchLive.setOnClickListener { activity.startStream(stream) }
-            } else {
-                if (stream?.viewer_count != null) {
-                    watchLive.text = getString(R.string.watch_live)
-                    watchLive.setOnClickListener { activity.startStream(stream) }
-                } else {
-                    watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID), user_login = requireArguments().getString(C.CHANNEL_LOGIN), user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))) }
-                }
-            }
-            stream?.channelLogo.let {
-                if (it != null) {
-                    userLayout.visible()
-                    userImage.visible()
-                    userImage.loadImage(this, it, circle = true)
-                    bundle.putString(C.CHANNEL_PROFILEIMAGE, it)
-                    arguments = bundle
-                }
-            }
-            stream?.user_name.let {
-                if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
-                    userLayout.visible()
-                    userName.visible()
-                    userName.text = it
-                    bundle.putString(C.CHANNEL_DISPLAYNAME, it)
-                    arguments = bundle
-                }
-            }
-            stream?.user_login.let {
-                if (it != null && it != requireArguments().getString(C.CHANNEL_LOGIN)) {
-                    bundle.putString(C.CHANNEL_LOGIN, it)
-                    arguments = bundle
-                }
-            }
-            if (stream?.title != null) {
-                streamLayout.visible()
-                title.visible()
-                title.text = stream.title.trim()
-            }
-            if (stream?.game_name != null) {
-                streamLayout.visible()
-                gameName.visible()
-                gameName.text = stream.game_name
-                if (stream.game_id != null) {
-                    gameName.setOnClickListener { activity.openGame(stream.game_id, stream.game_name) }
-                }
-            }
-            if (stream?.viewer_count != null) {
-                streamLayout.visible()
-                viewers.visible()
-                viewers.text = TwitchApiHelper.formatViewersCount(requireContext(), stream.viewer_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
-            }
-            if (requireContext().prefs().getBoolean(C.UI_UPTIME, true)) {
-                if (stream?.started_at != null) {
-                    TwitchApiHelper.getUptime(requireContext(), stream.started_at).let {
-                        if (it != null)  {
-                            streamLayout.visible()
-                            uptime.visible()
-                            uptime.text = it
-                        }
-                    }
-                }
-            }
-            if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL) && stream != null) {
-                viewModel.updateLocalUser(requireContext(), stream)
+            updateStreamLayout(stream)
+            if (stream?.channelUser != null) {
+                updateUserLayout(stream.channelUser)
             }
         }
         if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
             viewModel.loadUser(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), channelId = requireArguments().getString(C.CHANNEL_ID))
-        } else {
-            viewModel.loadUser(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelId = requireArguments().getString(C.CHANNEL_ID))
-        }
-        viewModel.user.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                if (user.created_at != null) {
-                    userCreated.visible()
-                    userCreated.text = requireContext().getString(R.string.created_at, TwitchApiHelper.formatTimeString(requireContext(), user.created_at))
-                }
-                if (user.followers_count != null) {
-                    userFollowers.visible()
-                    userFollowers.text = requireContext().getString(R.string.followers, TwitchApiHelper.formatCount(user.followers_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)))
-                }
-                if (user.view_count != null) {
-                    userViews.visible()
-                    userViews.text = TwitchApiHelper.formatViewsCount(requireContext(), user.view_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
-                }
-                val broadcasterType = if (user.broadcaster_type != null) { TwitchApiHelper.getUserType(requireContext(), user.broadcaster_type) } else null
-                val type = if (user.type != null) { TwitchApiHelper.getUserType(requireContext(), user.type) } else null
-                val typeString = if (broadcasterType != null && type != null) "$broadcasterType, $type" else broadcasterType ?: type
-                if (typeString != null) {
-                    userType.visible()
-                    userType.text = typeString
+            viewModel.user.observe(viewLifecycleOwner) { user ->
+                if (user != null) {
+                    updateUserLayout(user)
                 }
             }
         }
         if (requireContext().prefs().getBoolean(C.UI_FOLLOW, true)) {
             initializeFollow(this, viewModel, follow, User.get(activity), context?.prefs()?.getString(C.HELIX_CLIENT_ID, ""))
+        }
+    }
+
+    private fun updateStreamLayout(stream: Stream?) {
+        val activity = requireActivity() as MainActivity
+        if (stream?.type?.lowercase() == "rerun") {
+            watchLive.text = getString(R.string.watch_rerun)
+            watchLive.setOnClickListener { activity.startStream(stream) }
+        } else {
+            if (stream?.viewer_count != null) {
+                watchLive.text = getString(R.string.watch_live)
+                watchLive.setOnClickListener { activity.startStream(stream) }
+            } else {
+                watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID), user_login = requireArguments().getString(C.CHANNEL_LOGIN), user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))) }
+            }
+        }
+        stream?.channelLogo.let {
+            if (it != null) {
+                userLayout.visible()
+                userImage.visible()
+                userImage.loadImage(this, it, circle = true)
+                bundle.putString(C.CHANNEL_PROFILEIMAGE, it)
+                arguments = bundle
+            }
+        }
+        stream?.user_name.let {
+            if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
+                userLayout.visible()
+                userName.visible()
+                userName.text = it
+                bundle.putString(C.CHANNEL_DISPLAYNAME, it)
+                arguments = bundle
+            }
+        }
+        stream?.user_login.let {
+            if (it != null && it != requireArguments().getString(C.CHANNEL_LOGIN)) {
+                bundle.putString(C.CHANNEL_LOGIN, it)
+                arguments = bundle
+            }
+        }
+        if (stream?.title != null) {
+            streamLayout.visible()
+            title.visible()
+            title.text = stream.title.trim()
+        }
+        if (stream?.game_name != null) {
+            streamLayout.visible()
+            gameName.visible()
+            gameName.text = stream.game_name
+            if (stream.game_id != null) {
+                gameName.setOnClickListener { activity.openGame(stream.game_id, stream.game_name) }
+            }
+        }
+        if (stream?.viewer_count != null) {
+            streamLayout.visible()
+            viewers.visible()
+            viewers.text = TwitchApiHelper.formatViewersCount(requireContext(), stream.viewer_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
+        }
+        if (requireContext().prefs().getBoolean(C.UI_UPTIME, true)) {
+            if (stream?.started_at != null) {
+                TwitchApiHelper.getUptime(requireContext(), stream.started_at).let {
+                    if (it != null)  {
+                        streamLayout.visible()
+                        uptime.visible()
+                        uptime.text = it
+                    }
+                }
+            }
+        }
+    }
+
+    private fun updateUserLayout(user: com.github.andreyasadchy.xtra.model.helix.user.User) {
+        if (!userImage.isVisible && user.channelLogo != null) {
+            userLayout.visible()
+            userImage.visible()
+            userImage.loadImage(this, user.channelLogo, circle = true)
+            bundle.putString(C.CHANNEL_PROFILEIMAGE, user.channelLogo)
+            arguments = bundle
+        }
+        if (user.bannerImageURL != null) {
+            bannerImage.visible()
+            bannerImage.loadImage(this, user.bannerImageURL)
+            if (userName.isVisible) {
+                userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
+            }
+        }
+        if (user.created_at != null) {
+            userCreated.visible()
+            userCreated.text = requireContext().getString(R.string.created_at, TwitchApiHelper.formatTimeString(requireContext(), user.created_at))
+            if (user.bannerImageURL != null) {
+                userCreated.setTextColor(Color.LTGRAY)
+                userCreated.setShadowLayer(4f, 0f, 0f, Color.BLACK)
+            }
+        }
+        if (user.followers_count != null) {
+            userFollowers.visible()
+            userFollowers.text = requireContext().getString(R.string.followers, TwitchApiHelper.formatCount(user.followers_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)))
+            if (user.bannerImageURL != null) {
+                userFollowers.setTextColor(Color.LTGRAY)
+                userFollowers.setShadowLayer(4f, 0f, 0f, Color.BLACK)
+            }
+        }
+        if (user.view_count != null) {
+            userViews.visible()
+            userViews.text = TwitchApiHelper.formatViewsCount(requireContext(), user.view_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
+            if (user.bannerImageURL != null) {
+                userViews.setTextColor(Color.LTGRAY)
+                userViews.setShadowLayer(4f, 0f, 0f, Color.BLACK)
+            }
+        }
+        val broadcasterType = if (user.broadcaster_type != null) { TwitchApiHelper.getUserType(requireContext(), user.broadcaster_type) } else null
+        val type = if (user.type != null) { TwitchApiHelper.getUserType(requireContext(), user.type) } else null
+        val typeString = if (broadcasterType != null && type != null) "$broadcasterType, $type" else broadcasterType ?: type
+        if (typeString != null) {
+            userType.visible()
+            userType.text = typeString
+            if (user.bannerImageURL != null) {
+                userType.setTextColor(Color.LTGRAY)
+                userType.setShadowLayer(4f, 0f, 0f, Color.BLACK)
+            }
+        }
+        if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {
+            viewModel.updateLocalUser(requireContext(), user)
         }
     }
 

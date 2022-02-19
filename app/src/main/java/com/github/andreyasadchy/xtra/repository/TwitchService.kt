@@ -41,6 +41,7 @@ interface TwitchService {
     suspend fun loadStreamGQLQuery(clientId: String?, channelId: String): Stream?
     suspend fun loadVideoGQLQuery(clientId: String?, videoId: String): Video?
     suspend fun loadUserByIdGQLQuery(clientId: String?, channelId: String): User?
+    suspend fun loadStreamWithUserGQLQuery(clientId: String?, channelId: String): Stream?
     suspend fun loadCheerEmotesGQLQuery(clientId: String?, userId: String): List<CheerEmote>?
     fun loadTopGamesGQLQuery(clientId: String?, coroutineScope: CoroutineScope): Listing<Game>
     fun loadTopStreamsGQLQuery(clientId: String?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>

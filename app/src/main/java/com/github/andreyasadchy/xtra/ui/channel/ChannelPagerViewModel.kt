@@ -57,13 +57,9 @@ class ChannelPagerViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     val stream = if (useHelix) {
-                        val get = repository.loadStream(clientId, token, channelId)
-                        if (profileImageURL == null) {
-                            get?.profileImageURL = repository.loadUserById(clientId, token, channelId)?.profile_image_url
-                        }
-                        get
+                        repository.loadStream(clientId, token, channelId)
                     } else {
-                        repository.loadStreamGQLQuery(clientId, channelId)
+                        repository.loadStreamWithUserGQLQuery(clientId, channelId)
                     }
                     _stream.postValue(stream)
                 } catch (e: Exception) {
@@ -74,14 +70,10 @@ class ChannelPagerViewModel @Inject constructor(
     }
 
     fun loadUser(useHelix: Boolean, clientId: String?, token: String? = null, channelId: String?) {
-        if (channelId != null) {
+        if (useHelix && channelId != null) {
             viewModelScope.launch {
                 try {
-                    val user = if (useHelix) {
-                        repository.loadUserById(clientId, token, channelId)
-                    } else {
-                        repository.loadUserByIdGQLQuery(clientId, channelId)
-                    }
+                    val user = repository.loadUserById(clientId, token, channelId)
                     _user.postValue(user)
                 } catch (e: Exception) {
 
@@ -99,24 +91,24 @@ class ChannelPagerViewModel @Inject constructor(
         }
     }
 
-    fun updateLocalUser(context: Context, stream: Stream) {
+    fun updateLocalUser(context: Context, stream: com.github.andreyasadchy.xtra.model.helix.user.User) {
         GlobalScope.launch {
             try {
-                if (stream.user_id != null) {
+                if (stream.id != null) {
                     val glide = GlideApp.with(context)
                     val downloadedLogo: String? = try {
                         glide.downloadOnly().load(stream.channelLogo).submit().get().absolutePath
                     } catch (e: Exception) {
                         stream.channelLogo
                     }
-                    localFollows.getFollowById(stream.user_id)?.let { localFollows.updateFollow(it.apply {
-                        user_login = stream.user_login
-                        user_name = stream.user_name
+                    localFollows.getFollowById(stream.id)?.let { localFollows.updateFollow(it.apply {
+                        user_login = stream.login
+                        user_name = stream.display_name
                         channelLogo = downloadedLogo }) }
-                    for (i in offlineRepository.getVideosByUserId(stream.user_id.toInt())) {
+                    for (i in offlineRepository.getVideosByUserId(stream.id.toInt())) {
                         offlineRepository.updateVideo(i.apply {
-                            channelLogin = stream.user_login
-                            channelName = stream.user_name
+                            channelLogin = stream.login
+                            channelName = stream.display_name
                             channelLogo = downloadedLogo })
                     }
                 }

@@ -3,10 +3,7 @@ package com.github.andreyasadchy.xtra.repository
 import android.util.Log
 import androidx.paging.PagedList
 import com.apollographql.apollo3.api.Optional
-import com.github.andreyasadchy.xtra.CheerEmotesQuery
-import com.github.andreyasadchy.xtra.StreamsQuery
-import com.github.andreyasadchy.xtra.UserQuery
-import com.github.andreyasadchy.xtra.VideoQuery
+import com.github.andreyasadchy.xtra.*
 import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.api.MiscApi
 import com.github.andreyasadchy.xtra.di.XtraModule
@@ -239,6 +236,33 @@ class ApiRepository @Inject constructor(
                     else -> null
                 }
             )
+        } else null
+    }
+
+    override suspend fun loadStreamWithUserGQLQuery(clientId: String?, channelId: String): Stream? = withContext(Dispatchers.IO) {
+        val userIds = mutableListOf<String>()
+        userIds.add(channelId)
+        val get = apolloClient(XtraModule(), clientId).query(StreamUserQuery(Optional.Present(userIds))).execute().data
+        if (get != null) {
+            val user = User(id = channelId, login = get.users?.first()?.login, display_name = get.users?.first()?.displayName, profile_image_url = get.users?.first()?.profileImageURL,
+                bannerImageURL = get.users?.first()?.bannerImageURL, view_count = get.users?.first()?.profileViewCount, created_at = get.users?.first()?.createdAt?.toString(),
+                followers_count = get.users?.first()?.followers?.totalCount,
+                broadcaster_type = when {
+                    get.users?.first()?.roles?.isPartner == true -> "partner"
+                    get.users?.first()?.roles?.isAffiliate == true -> "affiliate"
+                    else -> null
+                },
+                type = when {
+                    get.users?.first()?.roles?.isStaff == true -> "staff"
+                    get.users?.first()?.roles?.isSiteAdmin == true -> "admin"
+                    get.users?.first()?.roles?.isGlobalMod == true -> "global_mod"
+                    else -> null
+                }
+            )
+            Stream(id = get.users?.first()?.stream?.id, user_id = channelId, user_login = get.users?.first()?.login, user_name = get.users?.first()?.displayName,
+                game_id = get.users?.first()?.stream?.game?.id, game_name = get.users?.first()?.stream?.game?.displayName, type = get.users?.first()?.stream?.type,
+                title = get.users?.first()?.stream?.title, viewer_count = get.users?.first()?.stream?.viewersCount, started_at = get.users?.first()?.stream?.createdAt,
+                thumbnail_url = get.users?.first()?.stream?.previewImageURL, profileImageURL = get.users?.first()?.profileImageURL, channelUser = user)
         } else null
     }
 

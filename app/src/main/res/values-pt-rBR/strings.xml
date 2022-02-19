@@ -231,4 +231,5 @@
     <string name="show_tags">Show tags</string>
     <string name="recentMsg_enable">Load recent messages</string>
     <string name="recentMsg_limit">Recent message limit</string>
+    <string name="play_services_not_available">Google Play Services are not available. Some functions may not work correctly</string>
 </resources>

@@ -8,6 +8,8 @@ import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
+import com.github.andreyasadchy.xtra.model.helix.follows.Order
+import com.github.andreyasadchy.xtra.model.helix.follows.Sort
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
@@ -15,8 +17,10 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
+import kotlinx.android.synthetic.main.fragment_followed_channels.*
+import kotlinx.android.synthetic.main.sort_bar.*
 
-class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewModel, BasePagedListAdapter<Follow>>(), Scrollable {
+class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewModel, BasePagedListAdapter<Follow>>(), FollowedChannelsSortDialog.OnFilter, Scrollable {
 
     override val viewModel by viewModels<FollowedChannelsViewModel> { viewModelFactory }
     override val adapter: BasePagedListAdapter<Follow> by lazy {
@@ -30,7 +34,16 @@ class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewM
 
     override fun initialize() {
         super.initialize()
-        viewModel.setUser(requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), User.get(requireContext()))
+        viewModel.sortText.observe(viewLifecycleOwner) {
+            sortText.text = it
+        }
+        viewModel.setUser(gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), user = User.get(requireContext()))
+        sortBar.setOnClickListener { FollowedChannelsSortDialog.newInstance(viewModel.sort, viewModel.order).show(childFragmentManager, null) }
+    }
+
+    override fun onChange(sort: Sort, sortText: CharSequence, order: Order, orderText: CharSequence) {
+        adapter.submitList(null)
+        viewModel.filter(gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), user = User.get(requireContext()), sort = sort, order = order, text = getString(R.string.sort_and_order, sortText, orderText))
     }
 
     override fun scrollToTop() {

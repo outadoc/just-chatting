@@ -243,4 +243,6 @@
     <string name="show_tags">タグの表示</string>
     <string name="recentMsg_enable">最新のメッセージの読み込み</string>
     <string name="recentMsg_limit">最新のメッセージの上限</string>
+    <string name="followed_at">Followed at %s</string>
+    <string name="last_broadcast_date">Last broadcast %s</string>
 </resources>

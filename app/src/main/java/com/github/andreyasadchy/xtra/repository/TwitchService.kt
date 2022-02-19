@@ -6,6 +6,7 @@ import com.github.andreyasadchy.xtra.model.chat.VideoMessagesResponse
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
+import com.github.andreyasadchy.xtra.model.helix.follows.Order
 import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.model.helix.tag.Tag
@@ -32,7 +33,7 @@ interface TwitchService {
     fun loadSearchGames(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<Game>
     fun loadSearchChannels(clientId: String?, userToken: String?, query: String, coroutineScope: CoroutineScope): Listing<ChannelSearch>
     suspend fun loadUserFollows(clientId: String?, userToken: String?, userId: String, channelId: String): Boolean
-    fun loadFollowedChannels(clientId: String?, userToken: String?, userId: String, coroutineScope: CoroutineScope): Listing<Follow>
+    fun loadFollowedChannels(gqlClientId: String?, helixClientId: String?, userToken: String?, userId: String, sort: com.github.andreyasadchy.xtra.model.helix.follows.Sort, order: Order, coroutineScope: CoroutineScope): Listing<Follow>
     suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setIds: List<String>): List<TwitchEmote>?
     suspend fun loadCheerEmotes(clientId: String?, userToken: String?, userId: String): List<CheerEmote>?
     suspend fun loadVideoChatLog(clientId: String?, videoId: String, offsetSeconds: Double): VideoMessagesResponse

@@ -1,0 +1,8 @@
+query UserLastBroadcast($id: [ID!]) {
+    users(ids: $id) {
+        id
+        lastBroadcast {
+            startedAt
+        }
+    }
+}

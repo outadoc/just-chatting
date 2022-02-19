@@ -1,16 +1,25 @@
 package com.github.andreyasadchy.xtra.repository.datasource
 
 import androidx.paging.DataSource
+import com.apollographql.apollo3.api.Optional
+import com.github.andreyasadchy.xtra.UserLastBroadcastQuery
 import com.github.andreyasadchy.xtra.api.HelixApi
+import com.github.andreyasadchy.xtra.di.XtraModule
+import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
+import com.github.andreyasadchy.xtra.model.helix.follows.Order
+import com.github.andreyasadchy.xtra.model.helix.follows.Sort
 import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
 import kotlinx.coroutines.CoroutineScope
 
 class FollowedChannelsDataSource(
     private val localFollows: LocalFollowRepository,
-    private val clientId: String?,
+    private val gqlClientId: String?,
+    private val helixClientId: String?,
     private val userToken: String?,
     private val userId: String,
+    private val sort: Sort,
+    private val order: Order,
     private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Follow>(coroutineScope) {
     private var offset: String? = null
@@ -23,7 +32,7 @@ class FollowedChannelsDataSource(
             }
             val ids = mutableListOf<String>()
             if (userId != "") {
-                val get = api.getFollowedChannels(clientId, userToken, userId, params.requestedLoadSize, offset)
+                val get = api.getFollowedChannels(helixClientId, userToken, userId, params.requestedLoadSize, offset)
                 if (get.data != null) {
                     for (i in get.data) {
                         val item = list.find { it.to_id == i.to_id }
@@ -39,7 +48,7 @@ class FollowedChannelsDataSource(
                 }
             }
             if (ids.isNotEmpty()) {
-                val users = api.getUserById(clientId, userToken, ids).data
+                val users = api.getUserById(helixClientId, userToken, ids).data
                 if (users != null) {
                     for (i in users) {
                         val item = list.find { it.to_id == i.id }
@@ -47,6 +56,33 @@ class FollowedChannelsDataSource(
                             item.profileImageURL = i.profile_image_url
                         }
                     }
+                }
+            }
+            if (list.isNotEmpty()) {
+                val allIds = list.mapNotNull { it.to_id }
+                if (allIds.isNotEmpty()) {
+                    val get = apolloClient(XtraModule(), gqlClientId).query(UserLastBroadcastQuery(Optional.Present(allIds))).execute().data?.users
+                    if (get != null) {
+                        for (user in get) {
+                            val item = list.find { it.to_id == user?.id }
+                            if (item != null) {
+                                item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
+                            }
+                        }
+                    }
+                }
+            }
+            if (order == Order.ASC) {
+                when (sort) {
+                    Sort.FOLLOWED_AT -> list.sortBy { it.followed_at }
+                    Sort.LAST_BROADCAST -> list.sortBy { it.lastBroadcast }
+                    else -> list.sortBy { it.to_login }
+                }
+            } else {
+                when (sort) {
+                    Sort.FOLLOWED_AT -> list.sortByDescending { it.followed_at }
+                    Sort.LAST_BROADCAST -> list.sortByDescending { it.lastBroadcast }
+                    else -> list.sortByDescending { it.to_login }
                 }
             }
             list
@@ -59,7 +95,7 @@ class FollowedChannelsDataSource(
             if (offset != null && offset != "") {
                 val ids = mutableListOf<String>()
                 if (userId != "") {
-                    val get = api.getFollowedChannels(clientId, userToken, userId, params.loadSize, offset)
+                    val get = api.getFollowedChannels(helixClientId, userToken, userId, params.loadSize, offset)
                     if (get.data != null) {
                         for (i in get.data) {
                             val item = list.find { it.to_id == i.to_id }
@@ -75,12 +111,26 @@ class FollowedChannelsDataSource(
                     }
                 }
                 if (ids.isNotEmpty()) {
-                    val users = api.getUserById(clientId, userToken, ids).data
+                    val users = api.getUserById(helixClientId, userToken, ids).data
                     if (users != null) {
                         for (i in users) {
                             val item = list.find { it.to_id == i.id }
                             if (item != null) {
                                 item.profileImageURL = i.profile_image_url
+                            }
+                        }
+                    }
+                }
+                if (list.isNotEmpty()) {
+                    val allIds = list.mapNotNull { it.to_id }
+                    if (allIds.isNotEmpty()) {
+                        val get = apolloClient(XtraModule(), gqlClientId).query(UserLastBroadcastQuery(Optional.Present(allIds))).execute().data?.users
+                        if (get != null) {
+                            for (user in get) {
+                                val item = list.find { it.to_id == user?.id }
+                                if (item != null) {
+                                    item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
+                                }
                             }
                         }
                     }
@@ -92,13 +142,16 @@ class FollowedChannelsDataSource(
 
     class Factory(
         private val localFollows: LocalFollowRepository,
-        private val clientId: String?,
+        private val gqlClientId: String?,
+        private val helixClientId: String?,
         private val userToken: String?,
         private val userId: String,
+        private val sort: Sort,
+        private val order: Order,
         private val api: HelixApi,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
 
         override fun create(): DataSource<Int, Follow> =
-                FollowedChannelsDataSource(localFollows, clientId, userToken, userId, api, coroutineScope).also(sourceLiveData::postValue)
+                FollowedChannelsDataSource(localFollows, gqlClientId, helixClientId, userToken, userId, sort, order, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

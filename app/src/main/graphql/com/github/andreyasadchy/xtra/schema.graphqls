@@ -19,10 +19,15 @@ type User {
   profileViewCount: Int
   createdAt: Time
   followers: FollowerConnection
+  lastBroadcast: Broadcast
   stream: StreamNode
   videos(sort: VideoSort, type: BroadcastType, first: Int, after: Cursor): Videos
   clips(criteria: UserClipsInput, first: Int, after: Cursor): Clips
   cheer: CheerInfo
+}
+
+type Broadcast {
+  startedAt: Time
 }
 
 type FollowerConnection {

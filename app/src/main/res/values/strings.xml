@@ -243,4 +243,6 @@
     <string name="show_tags">Show tags</string>
     <string name="recentMsg_enable">Load recent messages</string>
     <string name="recentMsg_limit">Recent message limit</string>
+    <string name="last_broadcast_date">Last broadcast %s</string>
+    <string name="followed_at">Followed at %s</string>
 </resources>

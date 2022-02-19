@@ -14,6 +14,7 @@ import com.github.andreyasadchy.xtra.model.chat.VideoMessagesResponse
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
+import com.github.andreyasadchy.xtra.model.helix.follows.Order
 import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.model.helix.tag.Tag
@@ -168,8 +169,8 @@ class ApiRepository @Inject constructor(
         api.getUserFollows(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, channelId).total == 1
     }
 
-    override fun loadFollowedChannels(clientId: String?, userToken: String?, userId: String, coroutineScope: CoroutineScope): Listing<Follow> {
-        val factory = FollowedChannelsDataSource.Factory(localFollows, clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, api, coroutineScope)
+    override fun loadFollowedChannels(gqlClientId: String?, helixClientId: String?, userToken: String?, userId: String, sort: com.github.andreyasadchy.xtra.model.helix.follows.Sort, order: Order, coroutineScope: CoroutineScope): Listing<Follow> {
+        val factory = FollowedChannelsDataSource.Factory(localFollows, gqlClientId, helixClientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, sort, order, api, coroutineScope)
         val config = PagedList.Config.Builder()
                 .setPageSize(40)
                 .setInitialLoadSizeHint(40)

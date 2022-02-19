@@ -224,6 +224,7 @@
     <string name="days">日</string>
     <string name="seconds">秒</string>
     <string name="show_uptime">ストリームの経過時間表示</string>
+    <string name="play_services_not_available">Google Play サービスはご利用になれません。一部の機能が正常に動作しない場合があります</string>
     <string name="chatFirstMsgEntries1">種類の表示と背景色変更</string>
     <string name="chatFirstMsgEntries2">背景色の変更</string>
     <string name="chatFirstMsgEntries3">通常のメッセージとして表示</string>

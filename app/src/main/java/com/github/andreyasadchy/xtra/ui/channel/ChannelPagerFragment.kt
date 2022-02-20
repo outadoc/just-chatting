@@ -63,6 +63,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 userLayout.visible()
                 userName.visible()
                 userName.text = it
+            } else {
+                userName.gone()
             }
         }
         requireArguments().getString(C.CHANNEL_PROFILEIMAGE).let {
@@ -70,6 +72,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 userLayout.visible()
                 userImage.visible()
                 userImage.loadImage(this, it, circle = true)
+            } else {
+                userImage.gone()
             }
         }
         toolbar.apply {
@@ -169,6 +173,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 userImage.loadImage(this, it, circle = true)
                 bundle.putString(C.CHANNEL_PROFILEIMAGE, it)
                 arguments = bundle
+            } else {
+                userImage.gone()
             }
         }
         stream?.user_name.let {
@@ -190,6 +196,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             streamLayout.visible()
             title.visible()
             title.text = stream.title.trim()
+        } else {
+            title.gone()
         }
         if (stream?.game_name != null) {
             streamLayout.visible()
@@ -198,11 +206,15 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             if (stream.game_id != null) {
                 gameName.setOnClickListener { activity.openGame(stream.game_id, stream.game_name) }
             }
+        } else {
+            gameName.gone()
         }
         if (stream?.viewer_count != null) {
             streamLayout.visible()
             viewers.visible()
-            viewers.text = TwitchApiHelper.formatViewersCount(requireContext(), stream.viewer_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
+            viewers.text = TwitchApiHelper.formatViewersCount(requireContext(), stream.viewer_count)
+        } else {
+            viewers.gone()
         }
         if (requireContext().prefs().getBoolean(C.UI_UPTIME, true)) {
             if (stream?.started_at != null) {
@@ -210,7 +222,9 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                     if (it != null)  {
                         streamLayout.visible()
                         uptime.visible()
-                        uptime.text = it
+                        uptime.text = requireContext().getString(R.string.uptime, it)
+                    } else {
+                        uptime.gone()
                     }
                 }
             }
@@ -231,6 +245,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             if (userName.isVisible) {
                 userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
+        } else {
+            bannerImage.gone()
         }
         if (user.created_at != null) {
             userCreated.visible()
@@ -239,22 +255,28 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 userCreated.setTextColor(Color.LTGRAY)
                 userCreated.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
+        } else {
+            userCreated.gone()
         }
         if (user.followers_count != null) {
             userFollowers.visible()
-            userFollowers.text = requireContext().getString(R.string.followers, TwitchApiHelper.formatCount(user.followers_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)))
+            userFollowers.text = requireContext().getString(R.string.followers, TwitchApiHelper.formatCount(requireContext(), user.followers_count))
             if (user.bannerImageURL != null) {
                 userFollowers.setTextColor(Color.LTGRAY)
                 userFollowers.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
+        } else {
+            userFollowers.gone()
         }
         if (user.view_count != null) {
             userViews.visible()
-            userViews.text = TwitchApiHelper.formatViewsCount(requireContext(), user.view_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
+            userViews.text = TwitchApiHelper.formatViewsCount(requireContext(), user.view_count)
             if (user.bannerImageURL != null) {
                 userViews.setTextColor(Color.LTGRAY)
                 userViews.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
+        } else {
+            userViews.gone()
         }
         val broadcasterType = if (user.broadcaster_type != null) { TwitchApiHelper.getUserType(requireContext(), user.broadcaster_type) } else null
         val type = if (user.type != null) { TwitchApiHelper.getUserType(requireContext(), user.type) } else null
@@ -266,6 +288,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 userType.setTextColor(Color.LTGRAY)
                 userType.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
+        } else {
+            userType.gone()
         }
         if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {
             viewModel.updateLocalUser(requireContext(), user)

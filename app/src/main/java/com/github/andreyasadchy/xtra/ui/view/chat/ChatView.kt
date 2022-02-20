@@ -125,12 +125,18 @@ class ChatView : ConstraintLayout {
         }
     }
 
+    fun notifyEmotesLoaded() {
+        adapter.messages?.size?.let { adapter.notifyItemRangeChanged(it - 40, 40) }
+    }
+
     fun notifyRoomState(roomState: RoomState) {
         if (roomState.emote != null) {
             when (roomState.emote) {
                 "0" -> textEmote.gone()
                 "1" -> textEmote.visible()
             }
+        } else {
+            textEmote.gone()
         }
         if (roomState.followers != null) {
             when (roomState.followers) {
@@ -144,12 +150,16 @@ class ChatView : ConstraintLayout {
                     textFollowers.visible()
                 }
             }
+        } else {
+            textFollowers.gone()
         }
         if (roomState.unique != null) {
             when (roomState.unique) {
                 "0" -> textUnique.gone()
                 "1" -> textUnique.visible()
             }
+        } else {
+            textUnique.gone()
         }
         if (roomState.slow != null) {
             when (roomState.slow) {
@@ -159,12 +169,16 @@ class ChatView : ConstraintLayout {
                     textSlow.visible()
                 }
             }
+        } else {
+            textSlow.gone()
         }
         if (roomState.subs != null) {
             when (roomState.subs) {
                 "0" -> textSubs.gone()
                 "1" -> textSubs.visible()
             }
+        } else {
+            textSubs.gone()
         }
         if (textEmote.isGone && textFollowers.isGone && textUnique.isGone && textSlow.isGone && textSubs.isGone) {
             showFlexbox = false

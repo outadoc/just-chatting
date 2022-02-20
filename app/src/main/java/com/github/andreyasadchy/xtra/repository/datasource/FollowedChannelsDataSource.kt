@@ -30,14 +30,12 @@ class FollowedChannelsDataSource(
             for (i in localFollows.loadFollows()) {
                 list.add(Follow(to_id = i.user_id, to_login = i.user_login, to_name = i.user_name, profileImageURL = i.channelLogo, followLocal = true))
             }
-            val ids = mutableListOf<String>()
             if (userId != "") {
-                val get = api.getFollowedChannels(helixClientId, userToken, userId, params.requestedLoadSize, offset)
+                val get = api.getFollowedChannels(helixClientId, userToken, userId, 100, offset)
                 if (get.data != null) {
                     for (i in get.data) {
                         val item = list.find { it.to_id == i.to_id }
                         if (item == null) {
-                            i.to_id?.let { ids.add(it) }
                             i.followTwitch = true
                             list.add(i)
                         } else {
@@ -47,26 +45,20 @@ class FollowedChannelsDataSource(
                     offset = get.pagination?.cursor
                 }
             }
-            if (ids.isNotEmpty()) {
-                val users = api.getUserById(helixClientId, userToken, ids).data
-                if (users != null) {
-                    for (i in users) {
-                        val item = list.find { it.to_id == i.id }
-                        if (item != null) {
-                            item.profileImageURL = i.profile_image_url
-                        }
-                    }
-                }
-            }
             if (list.isNotEmpty()) {
                 val allIds = list.mapNotNull { it.to_id }
                 if (allIds.isNotEmpty()) {
-                    val get = apolloClient(XtraModule(), gqlClientId).query(UserLastBroadcastQuery(Optional.Present(allIds))).execute().data?.users
-                    if (get != null) {
-                        for (user in get) {
-                            val item = list.find { it.to_id == user?.id }
-                            if (item != null) {
-                                item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
+                    for (ids in allIds.chunked(100)) {
+                        val get = apolloClient(XtraModule(), gqlClientId).query(UserLastBroadcastQuery(Optional.Present(ids))).execute().data?.users
+                        if (get != null) {
+                            for (user in get) {
+                                val item = list.find { it.to_id == user?.id }
+                                if (item != null) {
+                                    if (item.profileImageURL == null) {
+                                        item.profileImageURL = user?.profileImageURL
+                                    }
+                                    item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
+                                }
                             }
                         }
                     }
@@ -93,14 +85,12 @@ class FollowedChannelsDataSource(
         loadRange(params, callback) {
             val list = mutableListOf<Follow>()
             if (offset != null && offset != "") {
-                val ids = mutableListOf<String>()
                 if (userId != "") {
-                    val get = api.getFollowedChannels(helixClientId, userToken, userId, params.loadSize, offset)
+                    val get = api.getFollowedChannels(helixClientId, userToken, userId, 100, offset)
                     if (get.data != null) {
                         for (i in get.data) {
                             val item = list.find { it.to_id == i.to_id }
                             if (item == null) {
-                                i.to_id?.let { ids.add(it) }
                                 i.followTwitch = true
                                 list.add(i)
                             } else {
@@ -110,26 +100,20 @@ class FollowedChannelsDataSource(
                         offset = get.pagination?.cursor
                     }
                 }
-                if (ids.isNotEmpty()) {
-                    val users = api.getUserById(helixClientId, userToken, ids).data
-                    if (users != null) {
-                        for (i in users) {
-                            val item = list.find { it.to_id == i.id }
-                            if (item != null) {
-                                item.profileImageURL = i.profile_image_url
-                            }
-                        }
-                    }
-                }
                 if (list.isNotEmpty()) {
                     val allIds = list.mapNotNull { it.to_id }
                     if (allIds.isNotEmpty()) {
-                        val get = apolloClient(XtraModule(), gqlClientId).query(UserLastBroadcastQuery(Optional.Present(allIds))).execute().data?.users
-                        if (get != null) {
-                            for (user in get) {
-                                val item = list.find { it.to_id == user?.id }
-                                if (item != null) {
-                                    item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
+                        for (ids in allIds.chunked(100)) {
+                            val get = apolloClient(XtraModule(), gqlClientId).query(UserLastBroadcastQuery(Optional.Present(ids))).execute().data?.users
+                            if (get != null) {
+                                for (user in get) {
+                                    val item = list.find { it.to_id == user?.id }
+                                    if (item != null) {
+                                        if (item.profileImageURL == null) {
+                                            item.profileImageURL = user?.profileImageURL
+                                        }
+                                        item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
+                                    }
                                 }
                             }
                         }

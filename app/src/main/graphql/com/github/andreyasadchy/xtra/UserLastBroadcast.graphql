@@ -1,6 +1,7 @@
 query UserLastBroadcast($id: [ID!]) {
     users(ids: $id) {
         id
+        profileImageURL(width: 300)
         lastBroadcast {
             startedAt
         }

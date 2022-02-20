@@ -30,18 +30,26 @@ class GameSearchAdapter(
             if (item.boxArt != null)  {
                 gameImage.visible()
                 gameImage.loadImage(fragment, item.boxArt)
+            } else {
+                gameImage.gone()
             }
             if (item.name != null)  {
                 gameName.visible()
                 gameName.text = item.name
+            } else {
+                gameName.gone()
             }
-            if (item.viewersCount != null)  {
+            if (item.viewersCount != null) {
                 viewers.visible()
-                viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewersCount, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
+                viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewersCount)
+            } else {
+                viewers.gone()
             }
             if (item.broadcastersCount != null && context.prefs().getBoolean(C.UI_BROADCASTERSCOUNT, true)) {
                 broadcastersCount.visible()
                 broadcastersCount.text = resources.getQuantityString(R.plurals.broadcasters, item.broadcastersCount, item.broadcastersCount)
+            } else {
+                broadcastersCount.gone()
             }
             if (item.tags != null && context.prefs().getBoolean(C.UI_TAGS, true)) {
                 tagsLayout.removeAllViews()
@@ -54,6 +62,8 @@ class GameSearchAdapter(
                     }
                     tagsLayout.addView(text)
                 }
+            } else {
+                tagsLayout.gone()
             }
         }
     }

@@ -7,7 +7,10 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.util.*
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.*
 
 class ChannelSearchAdapter(
@@ -28,14 +31,20 @@ class ChannelSearchAdapter(
             if (item.channelLogo != null) {
                 userImage.visible()
                 userImage.loadImage(fragment, item.channelLogo, circle = true)
+            } else {
+                userImage.gone()
             }
             if (item.display_name != null) {
                 userName.visible()
                 userName.text = item.display_name
+            } else {
+                userName.gone()
             }
             if (item.followers_count != null) {
                 userFollowers.visible()
-                userFollowers.text = context.getString(R.string.followers, TwitchApiHelper.formatCount(item.followers_count, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)))
+                userFollowers.text = context.getString(R.string.followers, TwitchApiHelper.formatCount(context, item.followers_count))
+            } else {
+                userFollowers.gone()
             }
         }
     }

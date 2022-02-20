@@ -10,7 +10,10 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
-import com.github.andreyasadchy.xtra.util.*
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_videos_list_item.view.*
 
 class VideosAdapter(
@@ -41,39 +44,72 @@ class VideosAdapter(
             setOnClickListener { clickListener.startVideo(item, position?.toDouble()) }
             setOnLongClickListener { showDownloadDialog(item); true }
             thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.NONE)
-            date.text = item.createdAt?.let { TwitchApiHelper.formatTimeString(context, it) }
-            views.text = item.view_count?.let { TwitchApiHelper.formatViewsCount(context, it, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) }
-            duration.text = getDuration?.let { DateUtils.formatElapsedTime(it) }
-            TwitchApiHelper.getType(context, item.type).let {
-                if (it != null)  {
-                    type.visible()
-                    type.text = it
+            if (item.createdAt != null) {
+                val text = TwitchApiHelper.formatTimeString(context, item.createdAt)
+                if (text != null) {
+                    date.visible()
+                    date.text = text
+                } else {
+                    date.gone()
                 }
+            } else {
+                date.gone()
             }
-            position.let {
-                if (it != null && getDuration != null && getDuration > 0L) {
-                    progressBar.progress = (it / (getDuration * 10L)).toInt()
-                    progressBar.visible()
+            if (item.view_count != null) {
+                views.visible()
+                views.text = TwitchApiHelper.formatViewsCount(context, item.view_count)
+            } else {
+                views.gone()
+            }
+            if (getDuration != null) {
+                duration.visible()
+                duration.text = DateUtils.formatElapsedTime(getDuration)
+            } else {
+                duration.gone()
+            }
+            if (item.type != null) {
+                val text = TwitchApiHelper.getType(context, item.type)
+                if (text != null) {
+                    type.visible()
+                    type.text = text
+                } else {
+                    type.gone()
                 }
+            } else {
+                type.gone()
+            }
+            if (position != null && getDuration != null && getDuration > 0L) {
+                progressBar.progress = (position / (getDuration * 10)).toInt()
+                progressBar.visible()
+            } else {
+                progressBar.gone()
             }
             if (item.channelLogo != null)  {
                 userImage.visible()
                 userImage.loadImage(fragment, item.channelLogo, circle = true)
                 userImage.setOnClickListener(channelListener)
+            } else {
+                userImage.gone()
             }
             if (item.user_name != null)  {
                 username.visible()
                 username.text = item.user_name
                 username.setOnClickListener(channelListener)
+            } else {
+                username.gone()
             }
             if (item.title != null && item.title != "")  {
                 title.visible()
                 title.text = item.title.trim()
+            } else {
+                title.gone()
             }
             if (item.gameName != null)  {
                 gameName.visible()
                 gameName.text = item.gameName
                 gameName.setOnClickListener(gameListener)
+            } else {
+                gameName.gone()
             }
             options.setOnClickListener {
                 PopupMenu(context, it).apply {

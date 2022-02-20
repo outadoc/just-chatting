@@ -40,15 +40,25 @@ class FollowedChannelsAdapter(
             } else {
                 username.gone()
             }
-            if (item.lastBroadcast != null)  {
-                userStream.visible()
-                userStream.text = item.lastBroadcast?.let { context.getString(R.string.last_broadcast_date, TwitchApiHelper.formatTimeString(context, it)) }
+            if (item.lastBroadcast != null) {
+                val text = item.lastBroadcast?.let { TwitchApiHelper.formatTimeString(context, it) }
+                if (text != null) {
+                    userStream.visible()
+                    userStream.text = context.getString(R.string.last_broadcast_date, text)
+                } else {
+                    userStream.gone()
+                }
             } else {
                 userStream.gone()
             }
-            if (item.followed_at != null)  {
-                userFollowed.visible()
-                userFollowed.text = context.getString(R.string.followed_at, TwitchApiHelper.formatTimeString(context, item.followed_at))
+            if (item.followed_at != null) {
+                val text = TwitchApiHelper.formatTimeString(context, item.followed_at)
+                if (text != null) {
+                    userFollowed.visible()
+                    userFollowed.text = context.getString(R.string.followed_at, text)
+                } else {
+                    userFollowed.gone()
+                }
             } else {
                 userFollowed.gone()
             }

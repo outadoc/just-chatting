@@ -406,8 +406,8 @@ class ApiRepository @Inject constructor(
                 .setInitialLoadSizeHint(15)
                 .setPrefetchDistance(3)
         } else {
-            builder.setPageSize(30)
-                .setInitialLoadSizeHint(30)
+            builder.setPageSize(15)
+                .setInitialLoadSizeHint(15)
                 .setPrefetchDistance(10)
         }
         val config = builder.build()

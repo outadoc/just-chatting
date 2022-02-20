@@ -105,7 +105,7 @@ object TwitchApiHelper {
         } else return null
     }
 
-    fun getUptime(context: Context, input: String?, noText: Boolean? = false): String? {
+    fun getUptime(context: Context, input: String?): String? {
         return if (input != null) {
             val currentTime = Calendar.getInstance(TimeZone.getTimeZone("UTC")).time.time
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault())
@@ -117,15 +117,7 @@ object TwitchApiHelper {
             }
             val diff = if (createdAt != null) ((currentTime - createdAt) / 1000) else null
             return if (diff != null && diff >= 0) {
-                getDurationFromSeconds(context, diff.toString(), false).let {
-                    if (it != null) {
-                        if (noText == true) {
-                            it
-                        } else {
-                            context.getString(R.string.uptime, it)
-                        }
-                    } else null
-                }
+                getDurationFromSeconds(context, diff.toString(), false)
             } else null
         } else null
     }
@@ -206,24 +198,24 @@ object TwitchApiHelper {
 
     fun addTokenPrefix(token: String) = "Bearer $token"
 
-    fun formatViewsCount(context: Context, count: Int, truncate: Boolean): String {
-        return if (count > 1000 && truncate) {
+    fun formatViewsCount(context: Context, count: Int): String {
+        return if (count > 1000 && context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) {
             context.getString(R.string.views, formatCountIfMoreThanAThousand(count))
         } else {
             context.resources.getQuantityString(R.plurals.views, count, count)
         }
     }
 
-    fun formatViewersCount(context: Context, count: Int, truncate: Boolean): String {
-        return if (count > 1000 && truncate) {
+    fun formatViewersCount(context: Context, count: Int): String {
+        return if (count > 1000 && context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) {
             context.getString(R.string.viewers, formatCountIfMoreThanAThousand(count))
         } else {
             context.resources.getQuantityString(R.plurals.viewers, count, count)
         }
     }
 
-    fun formatCount(count: Int, truncate: Boolean): String {
-        return if (count > 1000 && truncate) {
+    fun formatCount(context: Context, count: Int): String {
+        return if (count > 1000 && context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) {
             formatCountIfMoreThanAThousand(count)
         } else {
             count.toString()

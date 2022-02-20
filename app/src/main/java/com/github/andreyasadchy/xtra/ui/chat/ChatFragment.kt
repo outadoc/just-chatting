@@ -76,6 +76,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
             viewModel.channelBadges.observe(viewLifecycleOwner, Observer(chatView::addChannelBadges))
             viewModel.otherEmotes.observe(viewLifecycleOwner, Observer(chatView::addEmotes))
             viewModel.cheerEmotes.observe(viewLifecycleOwner, Observer(chatView::addCheerEmotes))
+            viewModel.emotesLoaded.observe(viewLifecycleOwner) { chatView.notifyEmotesLoaded() }
             viewModel.roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
             viewModel.command.observe(viewLifecycleOwner) { chatView.notifyCommand(it) }
         }

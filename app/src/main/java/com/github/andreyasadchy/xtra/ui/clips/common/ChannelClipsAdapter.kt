@@ -11,7 +11,10 @@ import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.ui.clips.BaseClipsFragment
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
-import com.github.andreyasadchy.xtra.util.*
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_videos_list_item.view.*
 
 class ChannelClipsAdapter(
@@ -37,17 +40,41 @@ class ChannelClipsAdapter(
             setOnClickListener { clickListener.startClip(item) }
             setOnLongClickListener { showDownloadDialog(item); true }
             thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.NONE)
-            date.text = item.uploadDate?.let { TwitchApiHelper.formatTimeString(context, it) }
-            views.text = item.view_count?.let { TwitchApiHelper.formatViewsCount(context, it, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) }
-            duration.text = item.duration?.let { DateUtils.formatElapsedTime(it.toLong()) }
+            if (item.uploadDate != null) {
+                val text = item.uploadDate?.let { TwitchApiHelper.formatTimeString(context, it) }
+                if (text != null) {
+                    date.visible()
+                    date.text = text
+                } else {
+                    date.gone()
+                }
+            } else {
+                date.gone()
+            }
+            if (item.view_count != null) {
+                views.visible()
+                views.text = TwitchApiHelper.formatViewsCount(context, item.view_count)
+            } else {
+                views.gone()
+            }
+            if (item.duration != null) {
+                duration.visible()
+                duration.text = DateUtils.formatElapsedTime(item.duration.toLong())
+            } else {
+                duration.gone()
+            }
             if (item.title != null && item.title != "")  {
                 title.visible()
                 title.text = item.title.trim()
+            } else {
+                title.gone()
             }
             if (item.gameName != null)  {
                 gameName.visible()
                 gameName.text = item.gameName
                 gameName.setOnClickListener(gameListener)
+            } else {
+                gameName.gone()
             }
             options.setOnClickListener {
                 PopupMenu(context, it).apply {

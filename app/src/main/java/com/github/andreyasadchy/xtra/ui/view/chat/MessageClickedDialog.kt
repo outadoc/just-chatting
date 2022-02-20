@@ -86,6 +86,9 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                     listener.onCopyMessageClicked(msg.substring(msg.indexOf(':') + 2))
                     dismiss()
                 }
+            } else {
+                reply.gone()
+                copyMessage.gone()
             }
         }
         copyClip.setOnClickListener {
@@ -99,6 +102,8 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             userLayout.visible()
             bannerImage.visible()
             bannerImage.loadImage(requireParentFragment(), user.bannerImageURL)
+        } else {
+            bannerImage.gone()
         }
         if (user.channelLogo != null) {
             userLayout.visible()
@@ -108,6 +113,8 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                 listener.onViewProfileClicked(user.id, user.login, user.display_name, user.channelLogo)
                 dismiss()
             }
+        } else {
+            userImage.gone()
         }
         if (user.display_name != null) {
             userLayout.visible()
@@ -120,15 +127,19 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             if (user.bannerImageURL != null) {
                 userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
+        } else {
+            userName.gone()
         }
         if (user.followers_count != null) {
             userLayout.visible()
             userFollowers.visible()
-            userFollowers.text = requireContext().getString(R.string.followers, TwitchApiHelper.formatCount(user.followers_count, requireContext().prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)))
+            userFollowers.text = requireContext().getString(R.string.followers, TwitchApiHelper.formatCount(requireContext(), user.followers_count))
             if (user.bannerImageURL != null) {
                 userFollowers.setTextColor(Color.LTGRAY)
                 userFollowers.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
+        } else {
+            userFollowers.gone()
         }
         if (user.created_at != null) {
             userLayout.visible()
@@ -138,6 +149,8 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                 userCreated.setTextColor(Color.LTGRAY)
                 userCreated.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
+        } else {
+            userCreated.gone()
         }
     }
 

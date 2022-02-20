@@ -7,6 +7,7 @@ import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
+import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_streams_list_item.view.*
@@ -35,20 +36,28 @@ abstract class BaseStreamsAdapter(
                 userImage.visible()
                 userImage.loadImage(fragment, item.channelLogo, circle = true)
                 userImage.setOnClickListener(channelListener)
+            } else {
+                userImage.gone()
             }
             if (item.user_name != null)  {
                 username.visible()
                 username.text = item.user_name
                 username.setOnClickListener(channelListener)
+            } else {
+                username.gone()
             }
             if (item.title != null && item.title != "")  {
                 title.visible()
                 title.text = item.title.trim()
+            } else {
+                title.gone()
             }
             if (item.game_name != null)  {
                 gameName.visible()
                 gameName.text = item.game_name
                 gameName.setOnClickListener(gameListener)
+            } else {
+                gameName.gone()
             }
         }
     }

@@ -57,7 +57,7 @@ class FollowedStreamsDataSource(
                 }
             }
             if (userId != "") {
-                val get = api.getFollowedStreams(helixClientId, userToken, userId, params.requestedLoadSize, offset)
+                val get = api.getFollowedStreams(helixClientId, userToken, userId, 100, offset)
                 if (get.data != null) {
                     for (i in get.data) {
                         val item = list.find { it.user_id == i.user_id }
@@ -70,16 +70,19 @@ class FollowedStreamsDataSource(
                 }
             }
             if (userIds.isNotEmpty()) {
-                val users = api.getUserById(helixClientId, userToken, userIds).data
-                if (users != null) {
-                    for (i in users) {
-                        val item = list.find { it.user_id == i.id }
-                        if (item != null) {
-                            item.profileImageURL = i.profile_image_url
+                for (ids in userIds.chunked(100)) {
+                    val users = api.getUserById(helixClientId, userToken, ids).data
+                    if (users != null) {
+                        for (i in users) {
+                            val item = list.find { it.user_id == i.id }
+                            if (item != null) {
+                                item.profileImageURL = i.profile_image_url
+                            }
                         }
                     }
                 }
             }
+            list.sortByDescending { it.viewer_count }
             list
         }
     }
@@ -90,7 +93,7 @@ class FollowedStreamsDataSource(
             if (offset != null && offset != "") {
                 val userIds = mutableListOf<String>()
                 if (userId != "") {
-                    val get = api.getFollowedStreams(helixClientId, userToken, userId, params.loadSize, offset)
+                    val get = api.getFollowedStreams(helixClientId, userToken, userId, 100, offset)
                     if (get.data != null) {
                         for (i in get.data) {
                             val item = list.find { it.user_id == i.user_id }
@@ -103,12 +106,14 @@ class FollowedStreamsDataSource(
                     }
                 }
                 if (userIds.isNotEmpty()) {
-                    val users = api.getUserById(helixClientId, userToken, userIds).data
-                    if (users != null) {
-                        for (i in users) {
-                            val item = list.find { it.user_id == i.id }
-                            if (item != null) {
-                                item.profileImageURL = i.profile_image_url
+                    for (ids in userIds.chunked(100)) {
+                        val users = api.getUserById(helixClientId, userToken, ids).data
+                        if (users != null) {
+                            for (i in users) {
+                                val item = list.find { it.user_id == i.id }
+                                if (item != null) {
+                                    item.profileImageURL = i.profile_image_url
+                                }
                             }
                         }
                     }

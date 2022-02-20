@@ -26,21 +26,31 @@ class StreamsAdapter(
             thumbnail.loadImage(fragment, item.thumbnail, true, diskCacheStrategy = DiskCacheStrategy.NONE)
             if (item.viewer_count != null) {
                 viewers.visible()
-                viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewer_count, context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false))
+                viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewer_count)
+            } else {
+                viewers.gone()
             }
-            TwitchApiHelper.getType(context, item.type).let {
-                if (it != null)  {
+            if (item.type != null) {
+                val text = TwitchApiHelper.getType(context, item.type)
+                if (text != null) {
                     type.visible()
-                    type.text = it
+                    type.text = text
+                } else {
+                    type.gone()
                 }
+            } else {
+                type.gone()
             }
-            if (context.prefs().getBoolean(C.UI_UPTIME, true)) {
-                TwitchApiHelper.getUptime(context, item.started_at).let {
-                    if (it != null)  {
-                        uptime.visible()
-                        uptime.text = it
-                    }
+            if (context.prefs().getBoolean(C.UI_UPTIME, true) && item.started_at != null) {
+                val text = TwitchApiHelper.getUptime(context = context, input = item.started_at)
+                if (text != null) {
+                    uptime.visible()
+                    uptime.text = context.getString(R.string.uptime, text)
+                } else {
+                    uptime.gone()
                 }
+            } else {
+                uptime.gone()
             }
             if (item.tags != null && context.prefs().getBoolean(C.UI_TAGS, true)) {
                 tagsLayout.removeAllViews()
@@ -53,6 +63,8 @@ class StreamsAdapter(
                     }
                     tagsLayout.addView(text)
                 }
+            } else {
+                tagsLayout.gone()
             }
         }
     }

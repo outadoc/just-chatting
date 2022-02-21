@@ -6,4 +6,3 @@
 * Continue watching outside of the app with Picture-in-Picture mode
 * Sleep timer to stop the stream automatically
 * Customizable interface with 3 different color themes
-* No ads in app and optional TTV.LOL ad-block for livestreams

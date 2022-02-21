@@ -1,0 +1,9 @@
+<i>Xtra for Twitch</i> is a <a href='https://en.wikipedia.org/wiki/Twitch_(service)' target='_blank'>Twitch</a> client focused on providing the best viewing and chatting experience on mobile devices:
+
+* Support for popular emotes with BetterTTV and FrankerFaceZ plugins
+* Watch VODs and clips with chat replay
+* Download VODs to watch offline
+* Continue watching outside of the app with Picture-in-Picture mode
+* Sleep timer to stop the stream automatically
+* Customizable interface with 3 different color themes
+* No ads in app and optional TTV.LOL ad-block for livestreams

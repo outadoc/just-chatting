@@ -6,7 +6,7 @@
     <string name="following">フォロー中</string>
     <string name="downloads">ダウンロード</string>
     <string name="connection_error">サーバー接続エラーが発生しました。もう一度お試しください</string>
-    <string name="sort">分類</string>
+    <string name="sort">並べ替え</string>
     <string name="upload_date">アップロード日</string>
     <string name="today">今日</string>
     <string name="this_week">今週</string>
@@ -21,11 +21,11 @@
     <string name="videos">ビデオ</string>
     <string name="clips">クリップ</string>
     <string name="scroll_down">スクロールダウン</string>
-    <string name="auto">オート</string>
+    <string name="auto">自動</string>
     <string name="source">ソース</string>
     <string name="audio_only">オーディオのみ</string>
     <string name="chat_only">チャットのみ</string>
-    <string name="select_quality">品質を選ぶ</string>
+    <string name="select_quality">画質を選ぶ</string>
     <string name="download">ダウンロード</string>
     <string name="downloading">ダウンロード中</string>
     <string name="downloaded">ダウンロード完了</string>
@@ -71,7 +71,7 @@
     <string name="portrait_column_count">ポートレートのカラム数</string>
     <string name="landscape_column_count">ランドスケープのカラム数</string>
     <string name="internal_storage">内部ストレージ</string>
-    <string name="save_to">保存します</string>
+    <string name="save_to">保存する場所</string>
     <string name="no_storage_detected">利用可能なストレージが検出されませんでした。(端末がコンピュータに接続されている可能性が高いです)</string>
     <string name="rewind">巻き戻し</string>
     <string name="forward">早送り</string>
@@ -138,10 +138,10 @@
     <string name="compact_streams_description">ストリームプレビューを表示しない</string>
     <string name="logout_title">ログアウトしますか?</string>
     <string name="logout_msg">ログインしています %s</string>
-    <string name="language">言語</string>
+    <string name="language">使用言語</string>
     <string name="cutoutmode">ディスプレイカットアウトモード</string>
     <string name="cutoutmode_desc">カットアウト領域の中にコンテンツを表示する</string>
-    <string name="cutoutmode_default">デフォルト - ポートレートモードのみ</string>
+    <string name="cutoutmode_default">標準 - ポートレートモードのみ</string>
     <string name="cutoutmode_always">常時 - 縦向きと横向きの両モード</string>
     <string name="never">しない</string>
     <string name="blue">ブルー</string>
@@ -159,7 +159,7 @@
     <string name="zerowidth">ゼロ幅エモート</string>
     <string name="emotequality">エモートとバッジの品質</string>
     <string name="message_limit">メッセージ数の上限</string>
-    <string name="player_defaultquality">デフォルトのプレイヤー品質</string>
+    <string name="player_defaultquality">標準のプレイヤー画質</string>
     <string name="player_doubletap">ダブルタップでのチャット切り替え</string>
     <string name="player_minimize">最小化ボタンの表示</string>
     <string name="player_channel">チャンネル名の表示</string>
@@ -184,7 +184,7 @@
     <string name="api_helix_summary">いずれもフォローされたチャンネルとサブエモートに使用されます</string>
     <string name="api_gql">GQLクライアントID</string>
     <string name="playback_speed">再生速度</string>
-    <string name="quality">品質</string>
+    <string name="quality">画質</string>
     <string name="speed0.25" translatable="false">0.25x</string>
     <string name="speed0.5" translatable="false">0.5x</string>
     <string name="speed0.75" translatable="false">0.75x</string>
@@ -207,14 +207,14 @@
     <string name="room_emote">スタンプ限定モード</string>
     <string name="room_followers">フォロワー限定モード</string>
     <string name="room_followers_min">フォロワー限定モード %s</string>
-    <string name="room_unique">重複禁止チャットモード</string>
+    <string name="room_unique">重複チャット禁止モード</string>
     <string name="room_slow">スローモード %s</string>
     <string name="room_subs">サブスクライバー限定モード</string>
     <string name="chat_join">接続しています %s</string>
     <string name="copy_clip">クリップボードにコピーする</string>
     <string name="chat_clear">モデレーターによりチャットをクリアしました</string>
-    <string name="chat_timeout">%1$s を %2$s 追放しました</string>
-    <string name="chat_ban">%s を永久追放しました</string>
+    <string name="chat_timeout">%1$s を %2$s 一時的に追放しました</string>
+    <string name="chat_ban">%s を無期限に追放しました</string>
     <string name="chat_clearmsg">メッセージを削除しました %1$s\: %2$s</string>
     <string name="chat_first">初めてのチャット</string>
     <string name="chat_reward">チャンネルポイント引き換え</string>

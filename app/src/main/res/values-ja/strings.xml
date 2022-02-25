@@ -20,7 +20,7 @@
     <string name="live">ライブ</string>
     <string name="videos">ビデオ</string>
     <string name="clips">クリップ</string>
-    <string name="scroll_down">スクロールダウン</string>
+    <string name="scroll_down">さらにメッセージが続きます</string>
     <string name="auto">自動</string>
     <string name="source">ソース</string>
     <string name="audio_only">オーディオのみ</string>
@@ -140,7 +140,7 @@
     <string name="logout_msg">ログインしています %s</string>
     <string name="language">使用言語</string>
     <string name="cutoutmode">ディスプレイカットアウトモード</string>
-    <string name="cutoutmode_desc">カットアウト領域の中にコンテンツを表示する</string>
+    <string name="cutoutmode_desc">カットアウト領域の中にコンテンツを表示します</string>
     <string name="cutoutmode_default">標準 - ポートレートモードのみ</string>
     <string name="cutoutmode_always">常時 - 縦向きと横向きの両モード</string>
     <string name="never">しない</string>
@@ -245,4 +245,8 @@
     <string name="recentMsg_limit">最新のメッセージの上限</string>
     <string name="last_broadcast_date">前回の放送 %s</string>
     <string name="followed_at">フォローしています %s</string>
+    <string name="show_usernotice">ユーザーへの通知を表示 (サブスク、レイド)</string>
+    <string name="show_clearmsg">メッセージの削除を表示</string>
+    <string name="show_clearchat">一時追放と無期限追放を表示</string>
+    <string name="player_gamesbutton">VODにゲームボタンを表示</string>
 </resources>

@@ -5,22 +5,18 @@ import android.view.View
 import android.widget.ImageButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatReplayPlayerFragment
 import com.github.andreyasadchy.xtra.ui.download.HasDownloadDialog
 import com.github.andreyasadchy.xtra.ui.download.VideoDownloadDialog
-import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
-import com.github.andreyasadchy.xtra.ui.player.PlayerMode
-import com.github.andreyasadchy.xtra.ui.player.PlayerSettingsDialog
-import com.github.andreyasadchy.xtra.ui.player.PlayerVolumeDialog
+import com.github.andreyasadchy.xtra.ui.player.*
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
-class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPlayerFragment, PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener {
+class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPlayerFragment, PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener, PlayerGamesDialog.PlayerSeekListener {
 //    override fun play(obj: Parcelable) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }
@@ -64,8 +60,8 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
         val view = requireView()
         val settings = view.findViewById<ImageButton>(R.id.settings)
         val download = view.findViewById<ImageButton>(R.id.download)
-        val volume = view.findViewById<ImageButton>(R.id.volumeButton)
-        viewModel.loaded.observe(viewLifecycleOwner, Observer {
+        val gamesButton = view.findViewById<ImageButton>(R.id.gamesButton)
+        viewModel.loaded.observe(viewLifecycleOwner) {
             if (it) {
                 settings.enable()
                 download.enable()
@@ -73,16 +69,23 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
                 download.disable()
                 settings.disable()
             }
-        })
-        if (!prefs.getBoolean(C.PLAYER_DOWNLOAD, true)) {
+        }
+        if (prefs.getBoolean(C.PLAYER_DOWNLOAD, true)) {
+            download.setOnClickListener { showDownloadDialog() }
+        } else {
             download.gone()
         }
         settings.setOnClickListener {
             FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
         }
-        download.setOnClickListener { showDownloadDialog() }
-        volume.setOnClickListener {
-            FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
+        gamesButton.gone()
+        if (prefs.getBoolean(C.PLAYER_GAMESBUTTON, true)) {
+            viewModel.loadGamesList(prefs.getString(C.GQL_CLIENT_ID, ""), video.id).observe(viewLifecycleOwner) { list ->
+                if (list.isNotEmpty()) {
+                    gamesButton.visible()
+                    gamesButton.setOnClickListener { FragmentUtils.showPlayerGamesDialog(childFragmentManager, list) }
+                }
+            }
         }
     }
 
@@ -96,6 +99,10 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
 
     override fun changeVolume(volume: Float) {
         viewModel.setVolume(volume)
+    }
+
+    override fun seek(position: Long) {
+        viewModel.seek(position)
     }
 
     override fun showDownloadDialog() {

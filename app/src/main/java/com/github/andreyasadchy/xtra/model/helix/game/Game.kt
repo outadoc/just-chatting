@@ -13,7 +13,9 @@ data class Game(
 
         val viewersCount: Int? = null,
         val broadcastersCount: Int? = null,
-        val tags: List<Tag>? = null) : Parcelable {
+        val tags: List<Tag>? = null,
+        val vodPosition: Int? = null,
+        val vodDuration: Int? = null) : Parcelable {
 
         val boxArt: String?
                 get() = TwitchApiHelper.getTemplateUrl(box_art_url, "game")

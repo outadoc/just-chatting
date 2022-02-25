@@ -2,12 +2,10 @@ package com.github.andreyasadchy.xtra.ui.player.offline
 
 import android.os.Bundle
 import android.widget.ImageButton
-import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
-import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
 import com.github.andreyasadchy.xtra.ui.player.PlayerSettingsDialog
@@ -50,19 +48,10 @@ class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerS
     override fun initialize() {
         viewModel.setVideo(video)
         super.initialize()
+        requireView().findViewById<ImageButton>(R.id.gamesButton).gone()
         requireView().findViewById<ImageButton>(R.id.download).gone()
         requireView().findViewById<ImageButton>(R.id.settings).setOnClickListener {
             FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
-        }
-        requireView().findViewById<ImageButton>(R.id.volumeButton).setOnClickListener {
-            FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
-        }
-        requireView().findViewById<TextView>(R.id.channel).apply {
-            text = channelName
-            setOnClickListener {
-                (requireActivity() as MainActivity).viewChannel(channelId, channelLogin, channelName, channelImage, true)
-                slidingLayout.minimize()
-            }
         }
     }
 

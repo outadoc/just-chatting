@@ -1,10 +1,12 @@
 package com.github.andreyasadchy.xtra.ui.player.video
 
 import android.app.Application
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.VideoDownloadInfo
 import com.github.andreyasadchy.xtra.model.VideoPosition
+import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
@@ -50,6 +52,32 @@ class VideoPlayerViewModel @Inject constructor(
         get() { return video.user_name }
     override val channelLogo: String?
         get() { return video.channelLogo }
+
+    private val gamesList = MutableLiveData<List<Game>>()
+    private var isLoading = false
+
+    fun loadGamesList(clientId: String?, videoId: String): MutableLiveData<List<Game>> {
+        if (gamesList.value == null && !isLoading) {
+            isLoading = true
+            viewModelScope.launch {
+                try {
+                    val get = repository.loadVodGamesGQL(clientId, videoId)
+                    if (get != null) {
+                        gamesList.postValue(get!!)
+                    }
+                } catch (e: Exception) {
+                    _errors.postValue(e)
+                } finally {
+                    isLoading = false
+                }
+            }
+        }
+        return gamesList
+    }
+
+    fun seek(position: Long) {
+        player.seekTo(position)
+    }
 
     fun setVideo(gqlClientId: String, video: Video, offset: Double) {
         if (!this::video.isInitialized) {

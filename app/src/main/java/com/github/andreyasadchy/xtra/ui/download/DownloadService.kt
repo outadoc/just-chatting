@@ -163,7 +163,7 @@ class DownloadService : IntentService(TAG) {
 
                 override fun onDeleted(download: Download) {
                     if (--activeDownloadsCount == 0) {
-                        offlineRepository.deleteVideo(offlineVideo)
+                        offlineRepository.deleteVideo(applicationContext, offlineVideo)
                         stopForegroundInternal(true)
                         val directory = File(request.path)
                         if (directory.exists() && directory.list().isEmpty()) {
@@ -197,7 +197,7 @@ class DownloadService : IntentService(TAG) {
                 }
 
                 override fun onDeleted(download: Download) {
-                    offlineRepository.deleteVideo(offlineVideo)
+                    offlineRepository.deleteVideo(applicationContext, offlineVideo)
                     stopForegroundInternal(true)
                     countDownLatch.countDown()
                 }

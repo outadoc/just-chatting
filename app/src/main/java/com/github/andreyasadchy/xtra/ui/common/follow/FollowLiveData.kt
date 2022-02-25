@@ -1,15 +1,21 @@
 package com.github.andreyasadchy.xtra.ui.common.follow
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.MutableLiveData
-import com.github.andreyasadchy.xtra.GlideApp
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.offline.LocalFollow
 import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
+import com.github.andreyasadchy.xtra.util.DownloadUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 
 class FollowLiveData(
     private val localFollows: LocalFollowRepository,
@@ -38,12 +44,23 @@ class FollowLiveData(
         GlobalScope.launch {
             try {
                 if (userId != null) {
-                    val glide = GlideApp.with(context)
-                    val downloadedLogo: String? = try {
-                        glide.downloadOnly().load(channelLogo).submit().get().absolutePath
+                    try {
+                        Glide.with(context)
+                            .asBitmap()
+                            .load(channelLogo)
+                            .into(object: CustomTarget<Bitmap>() {
+                                override fun onLoadCleared(placeholder: Drawable?) {
+
+                                }
+
+                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                    DownloadUtils.savePng(context, "profile_pics", userId, resource)
+                                }
+                            })
                     } catch (e: Exception) {
-                        channelLogo
+
                     }
+                    val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${userId}.png").absolutePath
                     localFollows.saveFollow(LocalFollow(userId, userLogin, userName, downloadedLogo))
                 }
             } catch (e: Exception) {
@@ -52,11 +69,11 @@ class FollowLiveData(
         }
     }
 
-    fun deleteFollow() {
+    fun deleteFollow(context: Context) {
         viewModelScope.launch {
             try {
                 if (userId != null) {
-                    localFollows.getFollowById(userId)?.let { localFollows.deleteFollow(it) }
+                    localFollows.getFollowById(userId)?.let { localFollows.deleteFollow(context, it) }
                 }
             } catch (e: Exception) {
 

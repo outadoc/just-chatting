@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
 import com.github.andreyasadchy.xtra.ui.streams.StreamsCompactAdapter
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_streams.*
 
 class StreamsFragment : BaseStreamsFragment<StreamsViewModel>() {
@@ -53,6 +54,7 @@ class StreamsFragment : BaseStreamsFragment<StreamsViewModel>() {
             viewModel.loadStreams(useHelix = false, showTags = requireContext().prefs().getBoolean(C.UI_TAGS, true), clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME), tags = arguments?.getStringArray(C.TAGS)?.toList(), thumbnailsEnabled = !compactStreams)
         }
         val activity = requireActivity() as MainActivity
+        sortBar.visible()
         if (arguments?.getString(C.GAME_ID) != null && arguments?.getString(C.GAME_NAME) != null) {
             sortBar.setOnClickListener { activity.openTagSearch(gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME)) }
         } else {

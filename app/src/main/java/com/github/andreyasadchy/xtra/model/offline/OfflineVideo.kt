@@ -38,8 +38,8 @@ data class OfflineVideo(
     @ColumnInfo(name = "max_progress")
     val maxProgress: Int,
     var status: Int = STATUS_PENDING,
-    val type: String?
-) : Parcelable {
+    val type: String?,
+    val videoId: String?) : Parcelable {
 
     @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)

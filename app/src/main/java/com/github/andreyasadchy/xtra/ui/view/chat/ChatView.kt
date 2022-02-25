@@ -205,6 +205,7 @@ class ChatView : ConstraintLayout {
 
     fun addRecentMessages(list: List<LiveChatMessage>) {
         adapter.messages?.addAll(0, list)
+        adapter.messages?.lastIndex?.let { recyclerView.scrollToPosition(it) }
     }
 
     fun addGlobalBadges(list: List<TwitchBadge>?) {

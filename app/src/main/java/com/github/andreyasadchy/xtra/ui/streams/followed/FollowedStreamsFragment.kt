@@ -9,9 +9,7 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
 import com.github.andreyasadchy.xtra.ui.streams.StreamsCompactAdapter
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
-import kotlinx.android.synthetic.main.fragment_streams.*
 
 class FollowedStreamsFragment : BaseStreamsFragment<FollowedStreamsViewModel>() {
 
@@ -35,7 +33,6 @@ class FollowedStreamsFragment : BaseStreamsFragment<FollowedStreamsViewModel>() 
 
     override fun initialize() {
         super.initialize()
-        parentFragment?.sortBar?.gone()
         if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
             viewModel.loadStreams(useHelix = true, helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = User.get(requireContext()).token, channelId = User.get(requireContext()).id, thumbnailsEnabled = !compactStreams)
         } else {

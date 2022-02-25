@@ -181,8 +181,8 @@ object TwitchApiHelper {
         return DateUtils.formatDateTime(context, date, format)
     }
 
-    fun startChat(channelName: String, userName: String?, userToken: String?, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener): LiveChatThread {
-        return LiveChatThread(userName, userToken, channelName, MessageListenerImpl(newMessageListener, UserStateListener, RoomStateListener, CommandListener)).apply { start() }
+    fun startChat(channelName: String, userName: String?, userToken: String?, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener): LiveChatThread {
+        return LiveChatThread(userName, userToken, channelName, MessageListenerImpl(newMessageListener, UserStateListener, RoomStateListener, CommandListener, showUserNotice, showClearMsg, showClearChat)).apply { start() }
     }
 
     fun parseClipOffset(url: String): Double {

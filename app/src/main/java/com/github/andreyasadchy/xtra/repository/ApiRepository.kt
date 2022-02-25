@@ -376,6 +376,10 @@ class ApiRepository @Inject constructor(
     }
 
 
+    override suspend fun loadVodGamesGQL(clientId: String?, videoId: String?): List<Game> = withContext(Dispatchers.IO) {
+        gql.loadVodGames(clientId, videoId).data
+    }
+
     override fun loadTagsGQL(clientId: String?, getGameTags: Boolean, gameId: String?, gameName: String?, query: String?, coroutineScope: CoroutineScope): Listing<Tag> {
         val factory = TagsDataSourceGQL.Factory(clientId, getGameTags, gameId, gameName, query, gql, coroutineScope)
         val config = PagedList.Config.Builder()

@@ -25,12 +25,7 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.prefs
-import kotlinx.android.synthetic.main.dialog_chat_message_click.*
-import kotlinx.android.synthetic.main.fragment_channel.*
 import kotlinx.android.synthetic.main.fragment_downloads.*
-import kotlinx.android.synthetic.main.fragment_downloads.menu
-import kotlinx.android.synthetic.main.fragment_downloads.search
-import kotlinx.android.synthetic.main.fragment_media.*
 import javax.inject.Inject
 
 class DownloadsFragment : Fragment(), Injectable, Scrollable {
@@ -56,16 +51,16 @@ class DownloadsFragment : Fragment(), Injectable, Scrollable {
             AlertDialog.Builder(activity)
                 .setTitle(delete)
                 .setMessage(getString(R.string.are_you_sure))
-                .setPositiveButton(delete) { _, _ -> viewModel.delete(it) }
+                .setPositiveButton(delete) { _, _ -> viewModel.delete(requireContext(), it) }
                 .setNegativeButton(getString(android.R.string.cancel), null)
                 .show()
         }
         recyclerView.adapter = adapter
         (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
-        viewModel.list.observe(viewLifecycleOwner, {
+        viewModel.list.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             text.isVisible = it.isEmpty()
-        })
+        }
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                 adapter.unregisterAdapterDataObserver(this)

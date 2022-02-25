@@ -6,10 +6,14 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Environment
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.github.andreyasadchy.xtra.GlideApp
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.model.offline.Downloadable
@@ -20,6 +24,7 @@ import com.github.andreyasadchy.xtra.ui.download.DownloadService
 import com.github.andreyasadchy.xtra.ui.download.DownloadService.Companion.KEY_REQUEST
 import com.github.andreyasadchy.xtra.ui.download.DownloadService.Companion.KEY_WIFI
 import java.io.File
+import java.io.FileOutputStream
 
 object DownloadUtils {
 
@@ -40,19 +45,46 @@ object DownloadUtils {
         } else {
             "$path.mp4"
         }
-        val glide = GlideApp.with(context)
         return with(downloadable) {
-            var downloadedThumbnail: String?
-            var downloadedLogo: String?
             try {
-                downloadedThumbnail = glide.downloadOnly().load(thumbnail).submit().get().absolutePath
-                downloadedLogo = glide.downloadOnly().load(channelLogo).submit().get().absolutePath
+                Glide.with(context)
+                    .asBitmap()
+                    .load(thumbnail)
+                    .into(object: CustomTarget<Bitmap>() {
+                        override fun onLoadCleared(placeholder: Drawable?) {
+
+                        }
+
+                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                            savePng(context, "thumbnails", id, resource)
+                        }
+                    })
             } catch (e: Exception) {
-                downloadedThumbnail = thumbnail
-                downloadedLogo = channelLogo
+
             }
+            try {
+                if (channelId != null) {
+                    Glide.with(context)
+                        .asBitmap()
+                        .load(channelLogo)
+                        .into(object: CustomTarget<Bitmap>() {
+                            override fun onLoadCleared(placeholder: Drawable?) {
+
+                            }
+
+                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                savePng(context, "profile_pics", channelId!!, resource)
+                            }
+                        })
+                }
+            } catch (e: Exception) {
+
+            }
+            val downloadedThumbnail = File(context.filesDir.toString() + File.separator + "thumbnails" + File.separator + "${id}.png").absolutePath
+            val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${channelId}.png").absolutePath
             OfflineVideo(offlinePath, url, startPosition, title, channelId, channelLogin, channelName, downloadedLogo, downloadedThumbnail, gameId, gameName,
-                duration, uploadDate?.let { TwitchApiHelper.parseIso8601Date(it) }, System.currentTimeMillis(), 0L, 0, if (segmentTo != null && segmentFrom != null) segmentTo - segmentFrom + 1 else 100, type = type)
+                duration, uploadDate?.let { TwitchApiHelper.parseIso8601Date(it) }, System.currentTimeMillis(), 0L, 0,
+                if (segmentTo != null && segmentFrom != null) segmentTo - segmentFrom + 1 else 100, type = type, videoId = id)
         }
     }
 
@@ -95,5 +127,18 @@ object DownloadUtils {
             list.add(Storage(i, name, storagePath))
         }
         return list
+    }
+
+    fun savePng(context: Context, folder: String, fileName: String, bitmap: Bitmap) {
+        val outputStream: FileOutputStream
+        try {
+            val path = context.filesDir.toString() + File.separator + folder + File.separator + "$fileName.png"
+            File(context.filesDir, folder).mkdir()
+            outputStream = FileOutputStream(File(path))
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            outputStream.close()
+        } catch (e: Exception) {
+
+        }
     }
 }

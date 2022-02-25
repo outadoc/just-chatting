@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.repository
 
 import android.content.Context
+import com.github.andreyasadchy.xtra.db.LocalFollowsDao
 import com.github.andreyasadchy.xtra.db.RequestsDao
 import com.github.andreyasadchy.xtra.db.VideosDao
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
@@ -11,13 +12,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class OfflineRepository @Inject constructor(
         private val videosDao: VideosDao,
-        private val requestsDao: RequestsDao) {
+        private val requestsDao: RequestsDao,
+        private val localFollowsDao: LocalFollowsDao) {
 
     fun loadAllVideos() = videosDao.getAll()
 
@@ -33,8 +36,14 @@ class OfflineRepository @Inject constructor(
         videosDao.insert(video)
     }
 
-    fun deleteVideo(video: OfflineVideo) {
-        GlobalScope.launch { videosDao.delete(video) }
+    fun deleteVideo(context: Context, video: OfflineVideo) {
+        GlobalScope.launch {
+            videosDao.delete(video)
+            File(context.filesDir.toString() + File.separator + "thumbnails" + File.separator + "${video.videoId}.png").delete()
+            if (video.channelId != null && localFollowsDao.getById(video.channelId) == null) {
+                File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${video.channelId}.png").delete()
+            }
+        }
     }
 
     fun updateVideo(video: OfflineVideo) {

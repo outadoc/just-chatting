@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.github.andreyasadchy.xtra.R
@@ -72,6 +73,8 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                     if (user != null) {
                         savedUsers.add(user)
                         updateUserLayout(user)
+                    } else {
+                        viewProfile.visible()
                     }
                 }
             }
@@ -151,6 +154,9 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             }
         } else {
             userCreated.gone()
+        }
+        if (!userImage.isVisible && !userName.isVisible) {
+            viewProfile.visible()
         }
     }
 

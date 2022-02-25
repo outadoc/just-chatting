@@ -12,6 +12,7 @@ import com.github.andreyasadchy.xtra.model.gql.search.SearchChannelDataResponse
 import com.github.andreyasadchy.xtra.model.gql.search.SearchGameDataResponse
 import com.github.andreyasadchy.xtra.model.gql.stream.StreamDataResponse
 import com.github.andreyasadchy.xtra.model.gql.tag.*
+import com.github.andreyasadchy.xtra.model.gql.vod.VodGamesDataResponse
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
@@ -346,6 +347,22 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
             })
         }
         return graphQL.getSearchStreamTags(clientId, json)
+    }
+
+    suspend fun loadVodGames(clientId: String?, videoId: String?): VodGamesDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "VideoPlayer_ChapterSelectButtonVideo")
+            add("variables", JsonObject().apply {
+                addProperty("videoID", videoId)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "8d2793384aac3773beab5e59bd5d6f585aedb923d292800119e03d40cd0f9b41")
+                })
+            })
+        }
+        return graphQL.getVodGames(clientId, json)
     }
 
     suspend fun loadChannelPanel(channelId: String): String? = withContext(Dispatchers.IO) {

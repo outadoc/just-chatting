@@ -159,6 +159,11 @@
         <item name="android:id">@id/fullscreenToggle</item>
     </style>
 
+    <style name="PlayerGames" parent="PlayerSmallImage">
+        <item name="android:id">@id/gamesButton</item>
+        <item name="android:src">@drawable/baseline_format_list_bulleted_black_24</item>
+    </style>
+
     <style name="PlayerRestart" parent="PlayerSmallImage">
         <item name="android:id">@id/restart</item>
         <item name="android:src">@drawable/baseline_replay_black_24</item>

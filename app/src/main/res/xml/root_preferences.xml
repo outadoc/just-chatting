@@ -166,6 +166,24 @@
         android:title="@string/chat_firstmsg_visibility"
         app:iconSpaceReserved="false"/>
 
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="chat_show_usernotice"
+        android:title="@string/show_usernotice"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="chat_show_clearmsg"
+        android:title="@string/show_clearmsg"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="chat_show_clearchat"
+        android:title="@string/show_clearchat"
+        app:iconSpaceReserved="false"/>
+
     <SeekBarPreference
         android:defaultValue="4"
         android:key="chat_quality"
@@ -249,6 +267,12 @@
         android:key="player_aspect"
         android:title="@string/player_aspect"
         android:icon="@drawable/baseline_aspect_ratio_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_gamesbutton"
+        android:title="@string/player_gamesbutton"
+        android:icon="@drawable/baseline_format_list_bulleted_black_24" />
 
     <SwitchPreferenceCompat
         android:defaultValue="false"

@@ -18,4 +18,5 @@
     <item name="toggleChatBar" type="id" />
     <item name="restart" type="id" />
     <item name="volumeButton" type="id" />
+    <item name="gamesButton" type="id" />
 </resources>

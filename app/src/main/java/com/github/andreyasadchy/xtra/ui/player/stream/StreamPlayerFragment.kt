@@ -68,7 +68,6 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         super.initialize()
         val settings = requireView().findViewById<ImageButton>(R.id.settings)
         val restart = requireView().findViewById<ImageButton>(R.id.restart)
-        val volume = requireView().findViewById<ImageButton>(R.id.volumeButton)
         viewModel.loaded.observe(viewLifecycleOwner, Observer {
             if (it) settings.enable() else settings.disable()
         })
@@ -88,9 +87,6 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         }
         restart.setOnClickListener {
             viewModel.restartPlayer()
-        }
-        volume.setOnClickListener {
-            FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
         }
     }
 

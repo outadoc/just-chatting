@@ -67,27 +67,25 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
         val view = requireView()
         val settings = view.findViewById<ImageButton>(R.id.settings)
         val download = view.findViewById<ImageButton>(R.id.download)
-        val volume = view.findViewById<ImageButton>(R.id.volumeButton)
-        viewModel.loaded.observe(this, {
+        view.findViewById<ImageButton>(R.id.gamesButton).gone()
+        viewModel.loaded.observe(this) {
             settings.enable()
             download.enable()
-        })
-        if (!prefs.getBoolean(C.PLAYER_DOWNLOAD, true)) {
+        }
+        if (prefs.getBoolean(C.PLAYER_DOWNLOAD, true)) {
+            download.setOnClickListener { showDownloadDialog() }
+        } else {
             download.gone()
         }
         settings.setOnClickListener {
             FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities.keys, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
         }
-        download.setOnClickListener { showDownloadDialog() }
-        volume.setOnClickListener {
-            FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
-        }
         if (clip.video_id != null && clip.video_id != "") {
-            viewModel.video.observe(viewLifecycleOwner, {
+            viewModel.video.observe(viewLifecycleOwner) {
                 if (it != null) {
                     (requireActivity() as MainActivity).startVideo(it, (clip.videoOffsetSeconds?.toDouble() ?: 0.0) * 1000.0 + viewModel.player.currentPosition)
                 }
-            })
+            }
             watchVideo.setOnClickListener {
                 if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
                     viewModel.loadVideo(useHelix = true, clientId = prefs.getString(C.HELIX_CLIENT_ID, ""), token = prefs.getString(C.TOKEN, ""))

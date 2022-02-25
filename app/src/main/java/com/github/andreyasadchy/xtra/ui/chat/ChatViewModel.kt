@@ -88,9 +88,9 @@ class ChatViewModel @Inject constructor(
     val chatters: Collection<Chatter>
         get() = (chat as LiveChatController).chatters.values
 
-    fun startLive(user: User, useHelix: Boolean, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
+    fun startLive(user: User, useHelix: Boolean, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
         if (chat == null && channelLogin != null && channelName != null) {
-            chat = LiveChatController(user, helixClientId, channelId, channelLogin, channelName)
+            chat = LiveChatController(user, helixClientId, channelId, channelLogin, channelName, showUserNotice, showClearMsg, showClearChat)
             if (channelId != null) {
                 init(useHelix, helixClientId, gqlClientId, user.token.nullIfEmpty(), channelId, channelLogin, enableRecentMsg, recentMsgLimit)
             }
@@ -240,7 +240,10 @@ class ChatViewModel @Inject constructor(
             private val helixClientId: String?,
             private val channelId: String?,
             private val channelLogin: String,
-            displayName: String) : ChatController() {
+            displayName: String,
+            private val showUserNotice: Boolean,
+            private val showClearMsg: Boolean,
+            private val showClearChat: Boolean) : ChatController() {
 
         private var chat: LiveChatThread? = null
         private val allEmotesMap = mutableMapOf<String, Emote>()
@@ -265,7 +268,7 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(channelLogin, user.name.nullIfEmpty(), user.token.nullIfEmpty(), this, this, this, this)
+            chat = TwitchApiHelper.startChat(channelLogin, user.name.nullIfEmpty(), user.token.nullIfEmpty(), showUserNotice, showClearMsg, showClearChat, this, this, this, this)
         }
 
         override fun pause() {

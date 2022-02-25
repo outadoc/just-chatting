@@ -38,11 +38,14 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         val useHelix = requireContext().prefs().getBoolean(C.API_USEHELIX, true) && userIsLoggedIn
         val helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, "")
         val gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: ""
+        val showUserNotice = requireContext().prefs().getBoolean(C.CHAT_SHOW_USERNOTICE, true)
+        val showClearMsg = requireContext().prefs().getBoolean(C.CHAT_SHOW_CLEARMSG, true)
+        val showClearChat = requireContext().prefs().getBoolean(C.CHAT_SHOW_CLEARCHAT, true)
         val enableRecentMsg = requireContext().prefs().getBoolean(C.CHAT_RECENT, true)
         val recentMsgLimit = requireContext().prefs().getInt(C.CHAT_RECENT_LIMIT, 100)
         val isLive = args.getBoolean(KEY_IS_LIVE)
         val enableChat = if (isLive) {
-            viewModel.startLive(user, useHelix, helixClientId, gqlClientId, channelId, chLogin, chName, enableRecentMsg, recentMsgLimit.toString())
+            viewModel.startLive(user, useHelix, helixClientId, gqlClientId, channelId, chLogin, chName, showUserNotice, showClearMsg, showClearChat, enableRecentMsg, recentMsgLimit.toString())
             chatView.init(this)
             chatView.setCallback(viewModel)
             if (userIsLoggedIn) {

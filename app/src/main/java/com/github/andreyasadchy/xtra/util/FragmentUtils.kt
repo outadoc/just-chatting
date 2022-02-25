@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentManager
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
+import com.github.andreyasadchy.xtra.ui.player.PlayerGamesDialog
 import com.github.andreyasadchy.xtra.ui.player.PlayerSettingsDialog
 import com.github.andreyasadchy.xtra.ui.player.PlayerVolumeDialog
 
@@ -52,5 +54,9 @@ object FragmentUtils {
 
     fun showPlayerVolumeDialog(fragmentManager: FragmentManager) {
         PlayerVolumeDialog.newInstance().show(fragmentManager, null)
+    }
+
+    fun showPlayerGamesDialog(fragmentManager: FragmentManager, gamesList: List<Game>) {
+        PlayerGamesDialog.newInstance(gamesList).show(fragmentManager, null)
     }
 }

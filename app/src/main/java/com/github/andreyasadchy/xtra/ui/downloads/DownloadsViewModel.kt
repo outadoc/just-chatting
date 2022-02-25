@@ -2,6 +2,7 @@ package com.github.andreyasadchy.xtra.ui.downloads
 
 
 import android.app.Application
+import android.content.Context
 import android.graphics.drawable.Drawable
 import androidx.lifecycle.AndroidViewModel
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -29,8 +30,8 @@ class DownloadsViewModel @Inject internal constructor(
 
     val list = repository.loadAllVideos()
 
-    fun delete(video: OfflineVideo) {
-        repository.deleteVideo(video)
+    fun delete(context: Context, video: OfflineVideo) {
+        repository.deleteVideo(context, video)
         GlobalScope.launch {
             if (video.status == OfflineVideo.STATUS_DOWNLOADED) {
                 val playlistFile = File(video.url)

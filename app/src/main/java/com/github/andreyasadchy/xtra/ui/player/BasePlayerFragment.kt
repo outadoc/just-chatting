@@ -159,12 +159,12 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         initLayout()
         if (isNotOfflinePlayer) {
             view.findViewById<ImageButton>(R.id.settings).disable()
-            view.findViewById<TextView>(R.id.channel).apply {
-                text = channelName
-                setOnClickListener {
-                    activity.viewChannel(channelId, channelLogin, channelName, channelImage)
-                    slidingLayout.minimize()
-                }
+        }
+        view.findViewById<TextView>(R.id.channel).apply {
+            text = channelName
+            setOnClickListener {
+                activity.viewChannel(channelId, channelLogin, channelName, channelImage, !isNotOfflinePlayer)
+                slidingLayout.minimize()
             }
         }
         playerView.controllerAutoShow = controllerAutoShow
@@ -175,8 +175,12 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         if (!prefs.getBoolean(C.PLAYER_CHANNEL, true)) {
             view.findViewById<TextView>(R.id.channel).gone()
         }
-        if (!prefs.getBoolean(C.PLAYER_VOLUMEBUTTON, false)) {
-            view.findViewById<TextView>(R.id.volumeButton).gone()
+        if (prefs.getBoolean(C.PLAYER_VOLUMEBUTTON, false)) {
+            view.findViewById<ImageButton>(R.id.volumeButton).setOnClickListener {
+                FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
+            }
+        } else {
+            view.findViewById<ImageButton>(R.id.volumeButton).gone()
         }
         if (this is StreamPlayerFragment) {
             if (User.get(activity) !is NotLoggedIn) {

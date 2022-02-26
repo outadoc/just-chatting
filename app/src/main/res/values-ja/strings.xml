@@ -72,7 +72,7 @@
     <string name="landscape_column_count">ランドスケープのカラム数</string>
     <string name="internal_storage">内部ストレージ</string>
     <string name="save_to">保存する場所</string>
-    <string name="no_storage_detected">利用可能なストレージが検出されませんでした。(端末がコンピュータに接続されている可能性が高いです)</string>
+    <string name="no_storage_detected">利用可能なストレージが検出されませんでした。 (端末がコンピュータに接続されている可能性が高いです)</string>
     <string name="rewind">巻き戻し</string>
     <string name="forward">早送り</string>
     <string name="seconds_full">%s 秒</string>
@@ -245,8 +245,8 @@
     <string name="recentMsg_limit">最新のメッセージの上限</string>
     <string name="last_broadcast_date">前回の放送 %s</string>
     <string name="followed_at">フォローしています %s</string>
-    <string name="show_usernotice">ユーザーへの通知を表示 (サブスク、レイド)</string>
+    <string name="show_usernotice">ユーザーへの通知を表示 (サブスクライブ、Raid)</string>
     <string name="show_clearmsg">メッセージの削除を表示</string>
     <string name="show_clearchat">一時追放と無期限追放を表示</string>
-    <string name="player_gamesbutton">VODにゲームボタンを表示</string>
+    <string name="player_gamesbutton">VODにゲームチャプターボタンを表示</string>
 </resources>

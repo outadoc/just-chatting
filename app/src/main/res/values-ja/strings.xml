@@ -249,10 +249,10 @@
     <string name="show_clearmsg">メッセージの削除を表示</string>
     <string name="show_clearchat">一時追放と無期限追放を表示</string>
     <string name="player_gamesbutton">VODにゲームチャプターボタンを表示</string>
-    <string name="copy_fullmsg">Copy full message</string>
-    <string name="settings_debug">DEBUG</string>
-    <string name="show_copy_fullmsg">Copy full IRC messages</string>
-    <string name="chat_disconnect">Disconnecting from %1$s - %2$s</string>
-    <string name="chat_send_msg_error">Error sending message - %s</string>
-    <string name="chat_socket_error">Error while closing socket - %s</string>
+    <string name="copy_fullmsg">メッセージの全文をコピーする</string>
+    <string name="settings_debug">デバッグ</string>
+    <string name="show_copy_fullmsg">IRCのメッセージを全文コピーする</string>
+    <string name="chat_disconnect">接続を解除しました %1$s - %2$s</string>
+    <string name="chat_send_msg_error">メッセージの送信エラー - %s</string>
+    <string name="chat_socket_error">ソケットを閉じる際のエラー - %s</string>
 </resources>

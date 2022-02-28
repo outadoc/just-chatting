@@ -90,7 +90,8 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             isFirst = prefixes["first-msg"] == "1",
             emotes = emotesList,
             badges = badgesList,
-            timestamp = prefixes["tmi-sent-ts"]?.toLong()
+            timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+            fullMsg = message
         )
     }
 
@@ -108,7 +109,8 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                 message = context.getString(R.string.chat_clearmsg, user, msg),
                 color = "#999999",
                 isAction = true,
-                timestamp = prefixes["tmi-sent-ts"]?.toLong()
+                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                fullMsg = message
             )
         } else {
             return null
@@ -135,7 +137,8 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                 },
                 color = "#999999",
                 isAction = true,
-                timestamp = prefixes["tmi-sent-ts"]?.toLong()
+                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                fullMsg = message
             )
         } else {
             return null
@@ -143,12 +146,18 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
     }
 
     private fun onNotice(message: String): LiveChatMessage {
-        val index = message.indexOf(":", message.indexOf(":") + 1)
-        val index2 = message.indexOf(" ", message.indexOf("#") + 1)
+        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val prefix = parts[0]
+        val prefixes = splitAndMakeMap(prefix, ";", "=")
+        val messageInfo = parts[1]
+        val msgId = prefixes["msg-id"]
+        val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
+        val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
         return LiveChatMessage(
-            message = message.substring(if (index != -1) index + 1 else index2 + 1),
+            message = messageInfo.substring(if (msgIndex != -1) msgIndex + 1 else index2 + 1),
             color = "#999999",
-            isAction = true
+            isAction = true,
+            fullMsg = message
         )
     }
 
@@ -162,29 +171,26 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
             val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
             val msg = if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else if (index2 != -1) messageInfo.substring(index2 + 1) else null
-            if (system != null) {
-                var emotesList: MutableList<TwitchEmote>? = null
-                val emotes = prefixes["emotes"]
-                if (emotes != null && msg != null) {
-                    val entries = splitAndMakeMap(emotes, "/", ":").entries
-                    emotesList = ArrayList(entries.size)
-                    entries.forEach { emote ->
-                        emote.value?.split(",")?.forEach { indexes ->
-                            val index = indexes.split("-")
-                            emotesList.add(TwitchEmote(emote.key, index[0].toInt() + system.length + 1, index[1].toInt() + system.length + 1))
-                        }
+            var emotesList: MutableList<TwitchEmote>? = null
+            val emotes = prefixes["emotes"]
+            if (emotes != null && system != null && msg != null) {
+                val entries = splitAndMakeMap(emotes, "/", ":").entries
+                emotesList = ArrayList(entries.size)
+                entries.forEach { emote ->
+                    emote.value?.split(",")?.forEach { indexes ->
+                        val index = indexes.split("-")
+                        emotesList.add(TwitchEmote(emote.key, index[0].toInt() + system.length + 1, index[1].toInt() + system.length + 1))
                     }
                 }
-                if (msg == null)
-                    println("null un")
-                return LiveChatMessage(
-                    message = if (msg != null) "$system $msg" else system,
-                    color = "#999999",
-                    isAction = true,
-                    emotes = emotesList,
-                    timestamp = prefixes["tmi-sent-ts"]?.toLong()
-                )
-            } else return null
+            }
+            return LiveChatMessage(
+                message = if (system != null) if (msg != null) "$system $msg" else system else message,
+                color = "#999999",
+                isAction = true,
+                emotes = emotesList,
+                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                fullMsg = message
+            )
         } else {
             return null
         }

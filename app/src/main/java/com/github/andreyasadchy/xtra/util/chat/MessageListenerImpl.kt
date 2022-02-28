@@ -66,14 +66,17 @@ class MessageListenerImpl(
             isFirst = prefixes["first-msg"] == "1",
             emotes = emotesList,
             badges = badgesList,
-            timestamp = prefixes["tmi-sent-ts"]?.toLong()
+            timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+            fullMsg = message
         ))
     }
 
-    override fun onCommand(message: String, type: String?) {
+    override fun onCommand(message: String, duration: String?, type: String?, fullMsg: String?) {
         callbackCommand.onCommand(Command(
             message = message,
-            type = type
+            duration = duration,
+            type = type,
+            fullMsg = fullMsg
         ))
     }
 
@@ -90,7 +93,8 @@ class MessageListenerImpl(
                 message = user,
                 duration = msg,
                 type = "clearmsg",
-                timestamp = prefixes["tmi-sent-ts"]?.toLong()
+                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                fullMsg = message
             ))
         }
     }
@@ -109,14 +113,21 @@ class MessageListenerImpl(
                 message = user,
                 duration = duration,
                 type = type,
-                timestamp = prefixes["tmi-sent-ts"]?.toLong()
+                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                fullMsg = message
             ))
         }
     }
 
     override fun onNotice(message: String) {
+        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val prefix = parts[0]
+        val prefixes = splitAndMakeMap(prefix, ";", "=")
+        val messageInfo = parts[1]
+        val msgId = prefixes["msg-id"]
         callbackCommand.onCommand(Command(
-            message = message.substring(message.indexOf(":", message.indexOf(":") + 1) + 1),
+            message = messageInfo.substring(messageInfo.indexOf(":", messageInfo.indexOf(":") + 1) + 1),
+            fullMsg = message
         ))
     }
 
@@ -129,25 +140,24 @@ class MessageListenerImpl(
             val messageInfo = parts[1]
             val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
             val msg = if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else null
-            if (system != null) {
-                var emotesList: MutableList<TwitchEmote>? = null
-                val emotes = prefixes["emotes"]
-                if (emotes != null && msg != null) {
-                    val entries = splitAndMakeMap(emotes, "/", ":").entries
-                    emotesList = ArrayList(entries.size)
-                    entries.forEach { emote ->
-                        emote.value?.split(",")?.forEach { indexes ->
-                            val index = indexes.split("-")
-                            emotesList.add(TwitchEmote(emote.key, index[0].toInt() + system.length + 1, index[1].toInt() + system.length + 1))
-                        }
+            var emotesList: MutableList<TwitchEmote>? = null
+            val emotes = prefixes["emotes"]
+            if (emotes != null && system != null && msg != null) {
+                val entries = splitAndMakeMap(emotes, "/", ":").entries
+                emotesList = ArrayList(entries.size)
+                entries.forEach { emote ->
+                    emote.value?.split(",")?.forEach { indexes ->
+                        val index = indexes.split("-")
+                        emotesList.add(TwitchEmote(emote.key, index[0].toInt() + system.length + 1, index[1].toInt() + system.length + 1))
                     }
                 }
-                callbackCommand.onCommand(Command(
-                    message = if (msg != null) "$system $msg" else system,
-                    emotes = emotesList,
-                    timestamp = prefixes["tmi-sent-ts"]?.toLong()
-                ))
             }
+            callbackCommand.onCommand(Command(
+                message = if (system != null) if (msg != null) "$system $msg" else system else message,
+                emotes = emotesList,
+                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                fullMsg = message
+            ))
         }
     }
 

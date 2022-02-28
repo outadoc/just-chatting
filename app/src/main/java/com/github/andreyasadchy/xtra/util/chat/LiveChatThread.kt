@@ -11,10 +11,10 @@ import java.util.concurrent.Executors
 private const val TAG = "LiveChatThread"
 
 class LiveChatThread(
-        private val userName: String?,
-        private val userToken: String?,
-        private val channelName: String,
-        private val listener: OnMessageReceivedListener) : Thread(), ChatView.MessageSenderCallback {
+    private val userName: String?,
+    private val userToken: String?,
+    private val channelName: String,
+    private val listener: OnMessageReceivedListener) : Thread(), ChatView.MessageSenderCallback {
     private var socketIn: Socket? = null
     private var socketOut: Socket? = null
     private lateinit var readerIn: BufferedReader
@@ -61,7 +61,7 @@ class LiveChatThread(
                 }
             } catch (e: IOException) {
                 Log.d(TAG, "Disconnecting from $hashChannelName")
-                listener.onCommand("Disconnecting from $channelName - $e")
+                listener.onCommand(message = channelName, duration = e.toString(), type = "disconnect", fullMsg = e.stackTraceToString())
                 close()
                 sleep(1000L)
             } catch (e: Exception) {
@@ -92,7 +92,7 @@ class LiveChatThread(
             writerIn.flush()
             writerOut?.flush()
             Log.d(TAG, "Successfully connected to - $hashChannelName")
-            listener.onCommand(channelName, "join")
+            listener.onCommand(message = channelName, type = "join")
         } catch (e: IOException) {
             Log.e(TAG, "Error connecting to Twitch IRC", e)
             throw e
@@ -111,13 +111,13 @@ class LiveChatThread(
             socketIn?.close()
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketIn", e)
-            listener.onCommand("Error while closing socketIn - $e")
+            listener.onCommand(message = e.toString(), type = "socket_error", fullMsg = e.stackTraceToString())
         }
         try {
             socketOut?.close()
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketOut", e)
-            listener.onCommand("Error while closing socketOut - $e")
+            listener.onCommand(message = e.toString(), type = "socket_error", fullMsg = e.stackTraceToString())
         }
     }
 
@@ -134,14 +134,14 @@ class LiveChatThread(
                 Log.d(TAG, "Sent message to $hashChannelName: $message")
             } catch (e: IOException) {
                 Log.e(TAG, "Error sending message", e)
-                listener.onCommand("Error sending message - $e")
+                listener.onCommand(message = e.toString(), type = "send_msg_error", fullMsg = e.stackTraceToString())
             }
         }
     }
 
     interface OnMessageReceivedListener {
         fun onMessage(message: String)
-        fun onCommand(message: String, type: String? = null)
+        fun onCommand(message: String, duration: String? = null, type: String? = null, fullMsg: String? = null)
         fun onClearMessage(message: String)
         fun onClearChat(message: String)
         fun onNotice(message: String)

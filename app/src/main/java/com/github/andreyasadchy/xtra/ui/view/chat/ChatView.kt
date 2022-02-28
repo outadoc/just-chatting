@@ -193,13 +193,16 @@ class ChatView : ConstraintLayout {
     fun notifyCommand(command: Command) {
         val message = when (command.type) {
             "join" -> context.getString(R.string.chat_join, command.message)
+            "disconnect" -> context.getString(R.string.chat_disconnect, command.message, command.duration)
+            "send_msg_error" -> context.getString(R.string.chat_send_msg_error, command.message)
+            "socket_error" -> context.getString(R.string.chat_socket_error, command.message)
             "clearmsg" -> context.getString(R.string.chat_clearmsg, command.message, command.duration)
             "clearchat" -> context.getString(R.string.chat_clear)
             "timeout" -> context.getString(R.string.chat_timeout, command.message, TwitchApiHelper.getDurationFromSeconds(context, command.duration))
             "ban" -> context.getString(R.string.chat_ban, command.message)
             else -> command.message
         }
-        adapter.messages?.add(LiveChatMessage(message = message, color = "#999999", isAction = true, emotes = command.emotes, timestamp = command.timestamp))
+        adapter.messages?.add(LiveChatMessage(message = message, color = "#999999", isAction = true, emotes = command.emotes, timestamp = command.timestamp, fullMsg = command.fullMsg))
         notifyMessageAdded()
     }
 
@@ -298,10 +301,10 @@ class ChatView : ConstraintLayout {
     }
 
     fun enableChatInteraction(enableMessaging: Boolean) {
-        adapter.setOnClickListener { original, formatted, userId ->
+        adapter.setOnClickListener { original, formatted, userId, fullMsg ->
             editText.hideKeyboard()
             editText.clearFocus()
-            MessageClickedDialog.newInstance(enableMessaging, original, formatted, userId).show(fragment.childFragmentManager, null)
+            MessageClickedDialog.newInstance(enableMessaging, original, formatted, userId, fullMsg).show(fragment.childFragmentManager, null)
         }
         if (enableMessaging) {
             editText.addTextChangedListener(onTextChanged = { text, _, _, _ ->

@@ -18,19 +18,16 @@ import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.fragment_channel.*
 import kotlinx.android.synthetic.main.fragment_media.*
-import kotlinx.android.synthetic.main.fragment_media.appBar
-import kotlinx.android.synthetic.main.fragment_media.search
-import kotlinx.android.synthetic.main.fragment_videos_list_item.view.*
 
 
 abstract class MediaFragment : Fragment(), Scrollable {
 
     private var previousItem = -1
     private var currentFragment: Fragment? = null
+    open var hideSpinner = false
 
     open val spinnerItems: Array<String>
         get() = resources.getStringArray(R.array.spinnerMedia)
@@ -58,6 +55,9 @@ abstract class MediaFragment : Fragment(), Scrollable {
                     newFragment
                 } else {
                     childFragmentManager.findFragmentById(R.id.fragmentContainer)
+                }
+                if (hideSpinner) {
+                    spinner.gone()
                 }
             }
 

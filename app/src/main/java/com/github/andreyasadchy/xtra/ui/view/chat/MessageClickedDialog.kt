@@ -36,10 +36,12 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         private const val KEY_USERID = "userid"
         private val savedUsers = mutableListOf<User>()
 
-        fun newInstance(messagingEnabled: Boolean, originalMessage: CharSequence, formattedMessage: CharSequence, userId: String?) = MessageClickedDialog().apply {
-            arguments = bundleOf(KEY_MESSAGING to messagingEnabled, KEY_ORIGINAL to originalMessage, KEY_FORMATTED to formattedMessage, KEY_USERID to userId)
+        fun newInstance(messagingEnabled: Boolean, originalMessage: CharSequence, formattedMessage: CharSequence, userId: String?, fullMsg: String?) = MessageClickedDialog().apply {
+            arguments = bundleOf(KEY_MESSAGING to messagingEnabled, KEY_ORIGINAL to originalMessage, KEY_FORMATTED to formattedMessage, KEY_USERID to userId); this.fullMsg = fullMsg
         }
     }
+
+    var fullMsg: String? = null
 
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<MessageClickedViewModel> { viewModelFactory }
@@ -97,6 +99,13 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         copyClip.setOnClickListener {
             clipboard?.setPrimaryClip(ClipData.newPlainText("label", if (userId != null) msg.substring(msg.indexOf(':') + 2) else msg))
             dismiss()
+        }
+        if (requireContext().prefs().getBoolean(C.DEBUG_CHAT_FULLMSG, false) && fullMsg != null) {
+            copyFullMsg.visible()
+            copyFullMsg.setOnClickListener {
+                clipboard?.setPrimaryClip(ClipData.newPlainText("label", fullMsg))
+                dismiss()
+            }
         }
     }
 

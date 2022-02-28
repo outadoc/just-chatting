@@ -75,4 +75,5 @@ object C {
     const val API_USEHELIX = "api_usehelix"
     const val HELIX_CLIENT_ID = "helix_client_id"
     const val GQL_CLIENT_ID = "gql_client_id"
+    const val DEBUG_CHAT_FULLMSG = "debug_chat_fullmsg"
 }

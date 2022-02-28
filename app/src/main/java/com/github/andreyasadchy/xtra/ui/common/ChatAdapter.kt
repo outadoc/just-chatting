@@ -66,7 +66,7 @@ class ChatAdapter(
     private var loggedInUser: String? = null
     private val scaledEmoteSize = (emoteSize * 0.78f).toInt()
 
-    private var messageClickListener: ((CharSequence, CharSequence, String?) -> Unit)? = null
+    private var messageClickListener: ((CharSequence, CharSequence, String?, String?) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.chat_list_item, parent, false))
@@ -103,6 +103,7 @@ class ChatAdapter(
                 badgesCount++
             }
         }
+        val fullMsg = chatMessage.fullMsg
         val userId = chatMessage.userId
         val userName = chatMessage.displayName
         val userNameLength = userName?.length ?: 0
@@ -244,27 +245,27 @@ class ChatAdapter(
         } catch (e: Exception) {
 //            Crashlytics.logException(e)
         }
-        holder.bind(originalMessage, builder, userId)
-        loadImages(holder, images, originalMessage, builder, userId)
+        holder.bind(originalMessage, builder, userId, fullMsg)
+        loadImages(holder, images, originalMessage, builder, userId, fullMsg)
     }
 
     override fun getItemCount(): Int = messages?.size ?: 0
 
-    private fun loadImages(holder: ViewHolder, images: List<Image>, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?) {
+    private fun loadImages(holder: ViewHolder, images: List<Image>, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
         images.forEach {
             if (it.type == "image/webp" && animateGifs) {
-                loadWebp(holder, it, originalMessage, builder, userId)
+                loadWebp(holder, it, originalMessage, builder, userId, fullMsg)
             } else {
                 if (it.type == "image/gif" && animateGifs) {
-                    loadGif(holder, it, originalMessage, builder, userId)
+                    loadGif(holder, it, originalMessage, builder, userId, fullMsg)
                 } else {
-                    loadDrawable(holder, it, originalMessage, builder, userId)
+                    loadDrawable(holder, it, originalMessage, builder, userId, fullMsg)
                 }
             }
         }
     }
 
-    private fun loadWebp(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?) {
+    private fun loadWebp(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
         GlideApp.with(fragment)
             .asWebp()
             .load(image.url)
@@ -298,19 +299,19 @@ class ChatAdapter(
                         builder.setSpan(ImageSpan(resource), image.start, image.end, SPAN_EXCLUSIVE_EXCLUSIVE)
                     } catch (e: IndexOutOfBoundsException) {
                     }
-                    holder.bind(originalMessage, builder, userId)
+                    holder.bind(originalMessage, builder, userId, fullMsg)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
 
                 override fun onLoadFailed(errorDrawable: Drawable?) {
-                    loadDrawable(holder, image, originalMessage, builder, userId)
+                    loadDrawable(holder, image, originalMessage, builder, userId, fullMsg)
                 }
             })
     }
 
-    private fun loadGif(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?) {
+    private fun loadGif(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
         GlideApp.with(fragment)
             .asGif()
             .load(image.url)
@@ -344,19 +345,19 @@ class ChatAdapter(
                         builder.setSpan(ImageSpan(resource), image.start, image.end, SPAN_EXCLUSIVE_EXCLUSIVE)
                     } catch (e: IndexOutOfBoundsException) {
                     }
-                    holder.bind(originalMessage, builder, userId)
+                    holder.bind(originalMessage, builder, userId, fullMsg)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
                 }
 
                 override fun onLoadFailed(errorDrawable: Drawable?) {
-                    loadDrawable(holder, image, originalMessage, builder, userId)
+                    loadDrawable(holder, image, originalMessage, builder, userId, fullMsg)
                 }
             })
     }
 
-    private fun loadDrawable(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?) {
+    private fun loadDrawable(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
         GlideApp.with(fragment)
             .load(image.url)
             .diskCacheStrategy(DiskCacheStrategy.DATA)
@@ -381,7 +382,7 @@ class ChatAdapter(
                         builder.setSpan(ImageSpan(resource), image.start, image.end, SPAN_EXCLUSIVE_EXCLUSIVE)
                     } catch (e: IndexOutOfBoundsException) {
                     }
-                    holder.bind(originalMessage, builder, userId)
+                    holder.bind(originalMessage, builder, userId, fullMsg)
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {
@@ -409,7 +410,7 @@ class ChatAdapter(
         this.loggedInUser = username
     }
 
-    fun setOnClickListener(listener: (CharSequence, CharSequence, String?) -> Unit) {
+    fun setOnClickListener(listener: (CharSequence, CharSequence, String?, String?) -> Unit) {
         messageClickListener = listener
     }
 
@@ -472,11 +473,11 @@ class ChatAdapter(
 
         val textView = itemView as TextView
 
-        fun bind(originalMessage: CharSequence, formattedMessage: SpannableStringBuilder, userId: String?) {
+        fun bind(originalMessage: CharSequence, formattedMessage: SpannableStringBuilder, userId: String?, fullMsg: String?) {
             textView.apply {
                 text = formattedMessage
                 movementMethod = LinkMovementMethod.getInstance()
-                setOnClickListener { messageClickListener?.invoke(originalMessage, formattedMessage, userId) }
+                setOnClickListener { messageClickListener?.invoke(originalMessage, formattedMessage, userId, fullMsg) }
             }
         }
     }

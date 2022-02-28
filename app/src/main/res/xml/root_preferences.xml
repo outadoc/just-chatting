@@ -410,4 +410,12 @@
         android:title="@string/api_gql"
         app:useSimpleSummaryProvider="true"
         app:iconSpaceReserved="false" />
+
+    <PreferenceCategory android:title="@string/settings_debug" app:iconSpaceReserved="false"/>
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="debug_chat_fullmsg"
+        android:title="@string/show_copy_fullmsg"
+        app:iconSpaceReserved="false"/>
+
 </androidx.preference.PreferenceScreen>

@@ -238,4 +238,10 @@
     <string name="show_clearmsg">Show deletions of single messages</string>
     <string name="show_usernotice">Show user notices (subs, raids)</string>
     <string name="player_gamesbutton">Show games button on vods</string>
+    <string name="copy_fullmsg">Copy full message</string>
+    <string name="settings_debug">DEBUG</string>
+    <string name="show_copy_fullmsg">Copy full IRC messages</string>
+    <string name="chat_disconnect">Disconnecting from %1$s - %2$s</string>
+    <string name="chat_send_msg_error">Error sending message - %s</string>
+    <string name="chat_socket_error">Error while closing socket - %s</string>
 </resources>

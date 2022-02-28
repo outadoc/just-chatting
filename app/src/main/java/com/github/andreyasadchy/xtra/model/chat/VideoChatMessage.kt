@@ -58,6 +58,9 @@ data class VideoChatMessage(
     override val timestamp: Long?
         get() = null
 
+    override val fullMsg: String
+        get() = messageObj.toString()
+
     data class Commenter(
             @SerializedName("display_name")
             val displayName: String,

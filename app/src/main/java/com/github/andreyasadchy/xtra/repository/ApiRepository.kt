@@ -45,7 +45,8 @@ class ApiRepository @Inject constructor(
     private val api: HelixApi,
     private val gql: GraphQLRepository,
     private val misc: MiscApi,
-    private val localFollows: LocalFollowRepository) : TwitchService {
+    private val localFollows: LocalFollowRepository,
+    private val offlineRepository: OfflineRepository) : TwitchService {
 
     override fun loadTopGames(clientId: String?, userToken: String?, coroutineScope: CoroutineScope): Listing<Game> {
         val factory = GamesDataSource.Factory(clientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, api, coroutineScope)
@@ -170,7 +171,7 @@ class ApiRepository @Inject constructor(
     }
 
     override fun loadFollowedChannels(gqlClientId: String?, helixClientId: String?, userToken: String?, userId: String, sort: com.github.andreyasadchy.xtra.model.helix.follows.Sort, order: Order, coroutineScope: CoroutineScope): Listing<Follow> {
-        val factory = FollowedChannelsDataSource.Factory(localFollows, gqlClientId, helixClientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, sort, order, api, coroutineScope)
+        val factory = FollowedChannelsDataSource.Factory(localFollows, offlineRepository, gqlClientId, helixClientId, userToken?.let { TwitchApiHelper.addTokenPrefix(it) }, userId, sort, order, api, coroutineScope)
         val config = PagedList.Config.Builder()
                 .setPageSize(40)
                 .setInitialLoadSizeHint(40)

@@ -1,8 +1,15 @@
 package com.github.andreyasadchy.xtra.repository.datasource
 
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.paging.DataSource
 import com.apollographql.apollo3.api.Optional
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.UserLastBroadcastQuery
+import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
@@ -10,10 +17,17 @@ import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
 import com.github.andreyasadchy.xtra.model.helix.follows.Sort
 import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
+import com.github.andreyasadchy.xtra.repository.OfflineRepository
+import com.github.andreyasadchy.xtra.util.DownloadUtils
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.File
 
 class FollowedChannelsDataSource(
     private val localFollows: LocalFollowRepository,
+    private val offlineRepository: OfflineRepository,
     private val gqlClientId: String?,
     private val helixClientId: String?,
     private val userToken: String?,
@@ -54,8 +68,15 @@ class FollowedChannelsDataSource(
                             for (user in get) {
                                 val item = list.find { it.to_id == user?.id }
                                 if (item != null) {
-                                    if (item.profileImageURL == null) {
-                                        item.profileImageURL = user?.profileImageURL
+                                    if (item.followLocal) {
+                                        if (item.profileImageURL == null || item.profileImageURL?.contains("image_manager_disk_cache") == true) {
+                                            val appContext = XtraApp.INSTANCE.applicationContext
+                                            item.to_id?.let { id -> user?.profileImageURL?.let { profileImageURL -> updateLocalUser(appContext, id, profileImageURL) } }
+                                        }
+                                    } else {
+                                        if (item.profileImageURL == null) {
+                                            item.profileImageURL = user?.profileImageURL
+                                        }
                                     }
                                     item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
                                 }
@@ -124,8 +145,41 @@ class FollowedChannelsDataSource(
         }
     }
 
+    private fun updateLocalUser(context: Context, userId: String, profileImageURL: String) {
+        GlobalScope.launch {
+            try {
+                try {
+                    Glide.with(context)
+                        .asBitmap()
+                        .load(TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage"))
+                        .into(object: CustomTarget<Bitmap>() {
+                            override fun onLoadCleared(placeholder: Drawable?) {
+
+                            }
+
+                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                DownloadUtils.savePng(context, "profile_pics", userId, resource)
+                            }
+                        })
+                } catch (e: Exception) {
+
+                }
+                val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${userId}.png").absolutePath
+                localFollows.getFollowById(userId)?.let { localFollows.updateFollow(it.apply {
+                    channelLogo = downloadedLogo }) }
+                for (i in offlineRepository.getVideosByUserId(userId.toInt())) {
+                    offlineRepository.updateVideo(i.apply {
+                        channelLogo = downloadedLogo })
+                }
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
     class Factory(
         private val localFollows: LocalFollowRepository,
+        private val offlineRepository: OfflineRepository,
         private val gqlClientId: String?,
         private val helixClientId: String?,
         private val userToken: String?,
@@ -136,6 +190,6 @@ class FollowedChannelsDataSource(
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
 
         override fun create(): DataSource<Int, Follow> =
-                FollowedChannelsDataSource(localFollows, gqlClientId, helixClientId, userToken, userId, sort, order, api, coroutineScope).also(sourceLiveData::postValue)
+                FollowedChannelsDataSource(localFollows, offlineRepository, gqlClientId, helixClientId, userToken, userId, sort, order, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

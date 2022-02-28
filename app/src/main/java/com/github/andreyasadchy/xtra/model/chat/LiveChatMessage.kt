@@ -12,5 +12,6 @@ data class LiveChatMessage(
     override val isFirst: Boolean = false,
     override val emotes: List<TwitchEmote>? = null,
     override val badges: List<Badge>? = null,
-    override val timestamp: Long? = null) : ChatMessage
+    override val timestamp: Long? = null,
+    override val fullMsg: String? = null) : ChatMessage
 

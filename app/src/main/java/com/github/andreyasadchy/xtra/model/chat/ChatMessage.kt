@@ -13,4 +13,5 @@ interface ChatMessage {
     val emotes: List<TwitchEmote>?
     val badges: List<Badge>?
     val timestamp: Long?
+    val fullMsg: String?
 }

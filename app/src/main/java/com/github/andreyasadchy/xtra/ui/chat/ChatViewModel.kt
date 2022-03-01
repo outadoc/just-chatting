@@ -246,6 +246,7 @@ class ChatViewModel @Inject constructor(
             private val showClearChat: Boolean) : ChatController() {
 
         private var chat: LiveChatThread? = null
+        private var loggedInChat: LoggedInChatThread? = null
         private val allEmotesMap = mutableMapOf<String, Emote>()
 
         val chatters = ConcurrentHashMap<String?, Chatter>()
@@ -255,7 +256,7 @@ class ChatViewModel @Inject constructor(
         }
 
         override fun send(message: CharSequence) {
-            chat?.send(message)
+            loggedInChat?.send(message)
             val usedEmotes = hashSetOf<RecentEmote>()
             val currentTime = System.currentTimeMillis()
             message.split(' ').forEach { word ->
@@ -268,11 +269,13 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(channelLogin, user.name.nullIfEmpty(), user.token.nullIfEmpty(), showUserNotice, showClearMsg, showClearChat, this, this, this, this)
+            chat = TwitchApiHelper.startChat(user.name.nullIfEmpty(), channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this)
+            loggedInChat = user.name.nullIfEmpty()?.let { TwitchApiHelper.startLoggedInChat(it, user.token.nullIfEmpty(), channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this) }
         }
 
         override fun pause() {
             chat?.disconnect()
+            loggedInChat?.disconnect()
         }
 
         override fun stop() {

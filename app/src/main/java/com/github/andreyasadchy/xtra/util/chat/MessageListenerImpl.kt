@@ -12,7 +12,7 @@ class MessageListenerImpl(
     private val callbackCommand: OnCommandReceivedListener,
     private val showUserNotice: Boolean,
     private val showClearMsg: Boolean,
-    private val showClearChat: Boolean) : LiveChatThread.OnMessageReceivedListener {
+    private val showClearChat: Boolean) : LiveChatThread.OnMessageReceivedListener, LoggedInChatThread.OnMessageReceivedListener {
     
     override fun onMessage(message: String) {
         val parts = message.substring(1).split(" ".toRegex(), 2)
@@ -127,6 +127,8 @@ class MessageListenerImpl(
         val msgId = prefixes["msg-id"]
         callbackCommand.onCommand(Command(
             message = messageInfo.substring(messageInfo.indexOf(":", messageInfo.indexOf(":") + 1) + 1),
+            duration = msgId,
+            type = "notice",
             fullMsg = message
         ))
     }

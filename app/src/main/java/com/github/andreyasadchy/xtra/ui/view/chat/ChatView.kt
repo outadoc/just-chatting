@@ -28,6 +28,7 @@ import com.github.andreyasadchy.xtra.util.chat.RoomState
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
 import kotlinx.android.synthetic.main.view_chat.view.*
+import java.util.*
 import kotlin.math.max
 
 var MAX_ADAPTER_COUNT = 200
@@ -191,11 +192,17 @@ class ChatView : ConstraintLayout {
     }
 
     fun notifyCommand(command: Command) {
+        val lang = Locale.getDefault().language
         val message = when (command.type) {
             "join" -> context.getString(R.string.chat_join, command.message)
             "disconnect" -> context.getString(R.string.chat_disconnect, command.message, command.duration)
             "send_msg_error" -> context.getString(R.string.chat_send_msg_error, command.message)
             "socket_error" -> context.getString(R.string.chat_socket_error, command.message)
+            "notice" -> if (lang == "ar" || lang == "es" || lang == "ja" || lang == "pt" || lang == "ru") {
+                TwitchApiHelper.getNoticeString(context, command.duration, command.message) ?: command.message
+            } else {
+                command.message
+            }
             "clearmsg" -> context.getString(R.string.chat_clearmsg, command.message, command.duration)
             "clearchat" -> context.getString(R.string.chat_clear)
             "timeout" -> context.getString(R.string.chat_timeout, command.message, TwitchApiHelper.getDurationFromSeconds(context, command.duration))
@@ -383,6 +390,7 @@ class ChatView : ConstraintLayout {
             editText.text.clear()
             if (text.isNotEmpty()) {
                 it.send(text)
+                adapter.messages?.let { messages -> recyclerView.scrollToPosition(messages.lastIndex) }
                 true
             } else {
                 false

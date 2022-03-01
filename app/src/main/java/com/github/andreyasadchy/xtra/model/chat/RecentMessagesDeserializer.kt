@@ -12,6 +12,7 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import java.lang.reflect.Type
+import java.util.*
 
 class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
 
@@ -26,7 +27,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                 message.contains("USERNOTICE") -> onUserNotice(appContext, message)
                 message.contains("CLEARMSG") -> onClearMessage(appContext, message)
                 message.contains("CLEARCHAT") -> onClearChat(appContext, message)
-                message.contains("NOTICE") -> onNotice(message)
+                message.contains("NOTICE") -> onNotice(appContext, message)
                 else -> null
             }
             if (liveMsg != null) {
@@ -145,7 +146,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
         }
     }
 
-    private fun onNotice(message: String): LiveChatMessage {
+    private fun onNotice(context: Context, message: String): LiveChatMessage {
         val parts = message.substring(1).split(" ".toRegex(), 2)
         val prefix = parts[0]
         val prefixes = splitAndMakeMap(prefix, ";", "=")
@@ -153,8 +154,14 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
         val msgId = prefixes["msg-id"]
         val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
         val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
+        val msg = messageInfo.substring(if (msgIndex != -1) msgIndex + 1 else index2 + 1)
+        val lang = Locale.getDefault().language
         return LiveChatMessage(
-            message = messageInfo.substring(if (msgIndex != -1) msgIndex + 1 else index2 + 1),
+            message = if (lang == "ar" || lang == "es" || lang == "ja" || lang == "pt" || lang == "ru") {
+                TwitchApiHelper.getNoticeString(context, msgId, msg) ?: msg
+            } else {
+                msg
+            },
             color = "#999999",
             isAction = true,
             fullMsg = message

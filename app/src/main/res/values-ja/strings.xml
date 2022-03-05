@@ -381,7 +381,7 @@
     <string name="irc_notice_usage_followers_on">例: “/followers” フォロワー限定モードを有効にします。 (フォローしている “期間” のユーザーのみチャット可能) 例: “30m”, “1 week”, “5 days 12 hours”. 3ヶ月以内であることが条件です。</string>
     <string name="irc_notice_usage_help">例: “/help” このルームで使用できるコマンドを一覧で表示します。</string>
     <string name="irc_notice_usage_host">例: “/host &lt;channel&gt;” 他のチャンネルをホストします。解除するには “/unhost” を使用します。</string>
-    <string name="irc_notice_usage_marker">例: “/marker &lt;optional comment&gt;” タイムスタンプにストリームマーカーを追加します。 (オプションで140文字以内のコメント付けられます) マーカーを使うと、ハイライトでの編集が容易になります。</string>
+    <string name="irc_notice_usage_marker">例: “/marker &lt;optional comment&gt;” 現在のタイムスタンプにストリームマーカーを追加します。 (オプションで140文字以内のコメントを追加できます) マーカーを使うと、ハイライトでの編集が容易になります。</string>
     <string name="irc_notice_usage_me">例: “/me &lt;message&gt;” - 三人称で動作を表現する。</string>
     <string name="irc_notice_usage_mod">例: “/mod &lt;username&gt;” - ユーザーにモデレーターの権限を付与します。このチャンネルのモデレーターを一覧で表示するには “/mods” を使用してください。</string>
     <string name="irc_notice_usage_mods">例: “/mods” このチャンネルのモデレーターを一覧で表示します。</string>

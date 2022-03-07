@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.common.MediaFragment
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
+import com.github.andreyasadchy.xtra.ui.follow.games.FollowedGamesFragment
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
 
 class FollowMediaFragment : MediaFragment() {
@@ -14,7 +15,8 @@ class FollowMediaFragment : MediaFragment() {
     override fun onSpinnerItemSelected(position: Int): Fragment {
         return when (position) {
             0 -> FollowedStreamsFragment()
-            else -> FollowedChannelsFragment()
+            1 -> FollowedChannelsFragment()
+            else -> FollowedGamesFragment()
         }
     }
 }

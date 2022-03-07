@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
@@ -19,13 +18,24 @@
             app:layout_scrollFlags="scroll|enterAlways">
 
             <ImageView
-                android:id="@+id/menubutton"
+                android:id="@+id/menu"
                 style="@style/MenuButton"/>
 
             <ImageView
                 android:id="@+id/search"
                 style="@style/Search" />
 
+            <ImageButton
+                android:id="@+id/followGame"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="end"
+                android:src="@drawable/baseline_favorite_border_black_24"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:layout_marginEnd="7dp"
+                android:visibility="gone"
+                tools:visibility="visible"
+                app:tint="?attr/textColor" />
         </androidx.appcompat.widget.Toolbar>
 
         <Spinner

@@ -149,7 +149,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             }
         }
         if (requireContext().prefs().getBoolean(C.UI_FOLLOW, true)) {
-            initializeFollow(this, viewModel, follow, User.get(activity), context?.prefs()?.getString(C.HELIX_CLIENT_ID, ""))
+            initializeFollow(this, viewModel, follow, User.get(activity), requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""))
         }
     }
 

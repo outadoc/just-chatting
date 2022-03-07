@@ -6,19 +6,24 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.repository.Listing
+import com.github.andreyasadchy.xtra.repository.LocalFollowGameRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.type.ClipsPeriod
 import com.github.andreyasadchy.xtra.type.Language
 import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
+import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
+import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import javax.inject.Inject
 
 class ClipsViewModel @Inject constructor(
         context: Application,
-        private val repository: TwitchService) : PagedListViewModel<Clip>() {
+        private val repository: TwitchService,
+        private val localFollowsGame: LocalFollowGameRepository) : PagedListViewModel<Clip>(), FollowViewModel {
 
     private val _sortText = MutableLiveData<CharSequence>()
     val sortText: LiveData<CharSequence>
@@ -65,9 +70,9 @@ class ClipsViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.view_count), context.getString(R.string.this_week))
     }
 
-    fun loadClips(useHelix: Boolean, clientId: String?, channelId: String? = null, channelLogin: String? = null, gameId: String? = null, token: String? = null) {
+    fun loadClips(useHelix: Boolean, clientId: String?, channelId: String? = null, channelLogin: String? = null, gameId: String? = null, gameName: String? = null, token: String? = null) {
         if (filter.value == null) {
-            filter.value = Filter(useHelix = useHelix, clientId = clientId, token = token, channelId = channelId, channelLogin = channelLogin, gameId = gameId)
+            filter.value = Filter(useHelix = useHelix, clientId = clientId, token = token, channelId = channelId, channelLogin = channelLogin, gameId = gameId, gameName = gameName)
         } else {
             filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, channelId = channelId, channelLogin = channelLogin, gameId = gameId).let {
                 if (filter.value != it)
@@ -88,6 +93,25 @@ class ClipsViewModel @Inject constructor(
         val channelId: String?,
         val channelLogin: String?,
         val gameId: String?,
+        val gameName: String?,
         val period: Period = Period.WEEK,
         val languageIndex: Int = 0)
+
+    override val userId: String?
+        get() { return filter.value?.gameId }
+    override val userLogin: String?
+        get() = null
+    override val userName: String?
+        get() { return filter.value?.gameName }
+    override val channelLogo: String?
+        get() = null
+    override val game: Boolean
+        get() = true
+    override lateinit var follow: FollowLiveData
+
+    override fun setUser(user: User, helixClientId: String?, gqlClientId: String?) {
+        if (!this::follow.isInitialized) {
+            follow = FollowLiveData(localFollowsGame = localFollowsGame, userId = userId, userLogin = userLogin, userName = userName, channelLogo = channelLogo, repository = repository, helixClientId = helixClientId, user = user, gqlClientId = gqlClientId, viewModelScope = viewModelScope)
+        }
+    }
 }

@@ -8,7 +8,6 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
-import com.github.andreyasadchy.xtra.ui.streams.common.StreamsFragment
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_streams_list_item.view.*
 
@@ -59,7 +58,7 @@ class StreamsAdapter(
                     val text = TextView(context)
                     text.text = tag.name
                     if (tag.id != null) {
-                        text.setOnClickListener { fragment.parentFragmentManager.beginTransaction().replace(R.id.fragmentContainer, StreamsFragment.newInstance(tags = listOf(tag.id), gameId = fragment.parentFragment?.arguments?.getString(C.GAME_ID), gameName = fragment.parentFragment?.arguments?.getString(C.GAME_NAME))).commit() }
+                        text.setOnClickListener { gameClickListener.openGame(tags = listOf(tag.id), id = fragment.parentFragment?.arguments?.getString(C.GAME_ID), name = fragment.parentFragment?.arguments?.getString(C.GAME_NAME)) }
                     }
                     tagsLayout.addView(text)
                 }

@@ -7,7 +7,7 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 @Entity(tableName = "local_follows")
-data class LocalFollow(
+data class LocalFollowChannel(
     @PrimaryKey
     val user_id: String,
     var user_login: String? = null,

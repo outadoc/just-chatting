@@ -70,7 +70,7 @@
     <string name="error_stream">Ошибка при загрузке стрима</string>
     <string name="follow_tab_login_prompt">Здесь будут отображаться Ваши подписки</string>
     <string name="followed_at">Следует в %s</string>
-    <string name="followers">%подписчиков</string>
+    <string name="followers">%s подписчиков</string>
     <string name="following">Подписки</string>
     <string name="forward">Перемотка вперед</string>
     <string name="from">От:</string>

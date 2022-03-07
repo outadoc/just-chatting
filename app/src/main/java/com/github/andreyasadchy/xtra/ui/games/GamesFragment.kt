@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_games.*
 class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapter<Game>>(), Scrollable {
 
     interface OnGameSelectedListener {
-        fun openGame(id: String?, name: String?)
+        fun openGame(id: String?, name: String?, tags: List<String>? = null, updateLocal: Boolean = false)
     }
 
     interface OnTagGames {

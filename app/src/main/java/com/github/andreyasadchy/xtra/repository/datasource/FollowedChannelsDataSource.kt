@@ -16,7 +16,7 @@ import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloCli
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
 import com.github.andreyasadchy.xtra.model.helix.follows.Sort
-import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
+import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.util.DownloadUtils
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 class FollowedChannelsDataSource(
-    private val localFollows: LocalFollowRepository,
+    private val localFollowsChannel: LocalFollowChannelRepository,
     private val offlineRepository: OfflineRepository,
     private val gqlClientId: String?,
     private val helixClientId: String?,
@@ -41,7 +41,7 @@ class FollowedChannelsDataSource(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Follow>) {
         loadInitial(params, callback) {
             val list = mutableListOf<Follow>()
-            for (i in localFollows.loadFollows()) {
+            for (i in localFollowsChannel.loadFollows()) {
                 list.add(Follow(to_id = i.user_id, to_login = i.user_login, to_name = i.user_name, profileImageURL = i.channelLogo, followLocal = true))
             }
             if (userId != "") {
@@ -165,7 +165,7 @@ class FollowedChannelsDataSource(
 
                 }
                 val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${userId}.png").absolutePath
-                localFollows.getFollowById(userId)?.let { localFollows.updateFollow(it.apply {
+                localFollowsChannel.getFollowById(userId)?.let { localFollowsChannel.updateFollow(it.apply {
                     channelLogo = downloadedLogo }) }
                 for (i in offlineRepository.getVideosByUserId(userId.toInt())) {
                     offlineRepository.updateVideo(i.apply {
@@ -178,7 +178,7 @@ class FollowedChannelsDataSource(
     }
 
     class Factory(
-        private val localFollows: LocalFollowRepository,
+        private val localFollowsChannel: LocalFollowChannelRepository,
         private val offlineRepository: OfflineRepository,
         private val gqlClientId: String?,
         private val helixClientId: String?,
@@ -190,6 +190,6 @@ class FollowedChannelsDataSource(
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
 
         override fun create(): DataSource<Int, Follow> =
-                FollowedChannelsDataSource(localFollows, offlineRepository, gqlClientId, helixClientId, userToken, userId, sort, order, api, coroutineScope).also(sourceLiveData::postValue)
+                FollowedChannelsDataSource(localFollowsChannel, offlineRepository, gqlClientId, helixClientId, userToken, userId, sort, order, api, coroutineScope).also(sourceLiveData::postValue)
     }
 }

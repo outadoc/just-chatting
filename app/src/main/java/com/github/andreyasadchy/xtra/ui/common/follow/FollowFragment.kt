@@ -9,10 +9,10 @@ import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.visible
 
 interface FollowFragment {
-    fun initializeFollow(fragment: Fragment, viewModel: FollowViewModel, followButton: ImageButton, user: User, clientId: String?) {
+    fun initializeFollow(fragment: Fragment, viewModel: FollowViewModel, followButton: ImageButton, user: User, helixClientId: String? = null, gqlClientId: String? = null) {
         val context = fragment.requireContext()
         with(viewModel) {
-            setUser(user, clientId)
+            setUser(user, helixClientId, gqlClientId)
             followButton.visible()
             var initialized = false
             val channelName = userName
@@ -24,12 +24,20 @@ interface FollowFragment {
                 }
                 followButton.setOnClickListener {
                     if (!following) {
-                        follow.saveFollow(context)
+                        if (game) {
+                            follow.saveFollowGame(context)
+                        } else {
+                            follow.saveFollowChannel(context)
+                        }
                         follow.value = true
                     } else {
                         if (channelName != null) {
                             FragmentUtils.showUnfollowDialog(context, channelName) {
-                                follow.deleteFollow(context)
+                                if (game) {
+                                    follow.deleteFollowGame(context)
+                                } else {
+                                    follow.deleteFollowChannel(context)
+                                }
                                 follow.value = false
                             }
                         }

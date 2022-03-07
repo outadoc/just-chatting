@@ -10,6 +10,7 @@ import com.github.andreyasadchy.xtra.ui.download.ClipDownloadViewModel
 import com.github.andreyasadchy.xtra.ui.download.VideoDownloadViewModel
 import com.github.andreyasadchy.xtra.ui.downloads.DownloadsViewModel
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsViewModel
+import com.github.andreyasadchy.xtra.ui.follow.games.FollowedGamesViewModel
 import com.github.andreyasadchy.xtra.ui.games.GamesViewModel
 import com.github.andreyasadchy.xtra.ui.main.MainViewModel
 import com.github.andreyasadchy.xtra.ui.player.clip.ClipPlayerViewModel
@@ -144,4 +145,9 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(FollowedChannelsViewModel::class)
     abstract fun bindFollowedChannelsViewModel(followedChannelsViewModel: FollowedChannelsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(FollowedGamesViewModel::class)
+    abstract fun bindFollowedGamesViewModel(followedGamesViewModel: FollowedGamesViewModel): ViewModel
 }

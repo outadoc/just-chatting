@@ -93,7 +93,7 @@
     <string name="source_vod_start">開始: %s</string>
     <string name="source_vod_end">終了: %s</string>
     <string name="stream_ended">配信は終了しました</string>
-    <string name="viewers">%s 視聴者</string>
+    <string name="viewers_count">%s 視聴者</string>
     <string name="views">%s 視聴</string>
     <string name="download_pending">保留中</string>
     <string name="downloading_progress">ダウンロード中: %d%%</string>
@@ -413,4 +413,11 @@
     <string name="irc_notice_whisper_limit_per_sec">ウィスパーを送信したばかりです。少し待ってから送信してください。</string>
     <string name="irc_notice_whisper_restricted">設定により制限されているため、ウィスパーを送信できません。</string>
     <string name="irc_notice_whisper_restricted_recipient">受信者側の設定により、ウィスパーを送信できません。</string>
+    <string name="broadcaster">Broadcaster</string>
+    <string name="viewers">Viewers</string>
+    <string name="vips">Vips</string>
+    <string name="moderators">Moderators</string>
+    <string name="staff">Staff</string>
+    <string name="user_count">%s users in chat</string>
+    <string name="position">Position: %s</string>
 </resources>

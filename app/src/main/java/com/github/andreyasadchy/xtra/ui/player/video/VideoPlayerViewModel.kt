@@ -10,7 +10,7 @@ import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
-import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
+import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
@@ -26,7 +26,7 @@ class VideoPlayerViewModel @Inject constructor(
     context: Application,
     private val playerRepository: PlayerRepository,
     repository: TwitchService,
-    localFollows: LocalFollowRepository) : HlsPlayerViewModel(context, repository, localFollows) {
+    localFollowsChannel: LocalFollowChannelRepository) : HlsPlayerViewModel(context, repository, localFollowsChannel) {
 
     private lateinit var video: Video
     val videoInfo: VideoDownloadInfo?

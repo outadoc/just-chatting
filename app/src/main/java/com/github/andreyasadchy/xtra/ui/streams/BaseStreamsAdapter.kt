@@ -16,7 +16,7 @@ abstract class BaseStreamsAdapter(
         protected val fragment: Fragment,
         private val clickListener: BaseStreamsFragment.OnStreamSelectedListener,
         private val channelClickListener: OnChannelSelectedListener,
-        private val gameClickListener: GamesFragment.OnGameSelectedListener) : BasePagedListAdapter<Stream>(
+        val gameClickListener: GamesFragment.OnGameSelectedListener) : BasePagedListAdapter<Stream>(
         object : DiffUtil.ItemCallback<Stream>() {
             override fun areItemsTheSame(oldItem: Stream, newItem: Stream): Boolean =
                     oldItem.id == newItem.id

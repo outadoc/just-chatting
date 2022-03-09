@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
@@ -60,23 +60,25 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
     }
 
     override fun initialize() {
-        val usehelix = prefs.getBoolean(C.API_USEHELIX, true)
+        val useHelix = prefs.getBoolean(C.API_USEHELIX, true)
         val loggedIn = prefs.getString(C.USERNAME, "") != ""
         viewModel.startStream(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, "") ?: "", stream, prefs.getBoolean(C.AD_BLOCKER, true),
             prefs.getBoolean(C.TOKEN_RANDOM_DEVICEID, true), prefs.getString(C.TOKEN_XDEVICEID, "") ?: "", prefs.getString(C.TOKEN_DEVICEID, "") ?: "",
-            prefs.getString(C.TOKEN_PLAYERTYPE, "") ?: "", prefs.getString(C.GQL_CLIENT_ID, "") ?: "", usehelix, loggedIn)
+            prefs.getString(C.TOKEN_PLAYERTYPE, "") ?: "", prefs.getString(C.GQL_CLIENT_ID, "") ?: "", useHelix, loggedIn)
         super.initialize()
         val settings = requireView().findViewById<ImageButton>(R.id.settings)
         val restart = requireView().findViewById<ImageButton>(R.id.restart)
-        viewModel.loaded.observe(viewLifecycleOwner, Observer {
+        val viewersLayout = requireView().findViewById<LinearLayout>(R.id.viewersLayout)
+        viewModel.loaded.observe(viewLifecycleOwner) {
             if (it) settings.enable() else settings.disable()
-        })
-        val iconpref = prefs.getBoolean(C.PLAYER_VIEWERICON, false)
-        val icon = requireView().findViewById<ImageView>(R.id.viewericon)
+        }
+        val icon = requireView().findViewById<ImageView>(R.id.viewerIcon)
         viewModel.stream.observe(viewLifecycleOwner) {
             if (it?.viewer_count != null) {
                 viewers.text = TwitchApiHelper.formatCount(requireContext(), it.viewer_count)
-                if (iconpref) icon.visible()
+                if (prefs.getBoolean(C.PLAYER_VIEWERICON, false)) {
+                    icon.visible()
+                }
             } else {
                 viewers.text = null
                 icon.gone()

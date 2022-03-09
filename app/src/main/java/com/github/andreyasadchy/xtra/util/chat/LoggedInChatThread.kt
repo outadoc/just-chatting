@@ -15,8 +15,8 @@ class LoggedInChatThread(
     private val channelName: String,
     private val listener: OnMessageReceivedListener) : Thread(), ChatView.MessageSenderCallback {
     private var socketOut: Socket? = null
-    private var readerOut: BufferedReader? = null
-    private var writerOut: BufferedWriter? = null
+    private lateinit var readerOut: BufferedReader
+    private lateinit var writerOut: BufferedWriter
     private val hashChannelName: String = "#$channelName"
     private val messageSenderExecutor: Executor = Executors.newSingleThreadExecutor()
     private var isActive = true
@@ -32,12 +32,12 @@ class LoggedInChatThread(
             try {
                 connect()
                 while (true) {
-                    val messageOut = readerOut!!.readLine()!!
+                    val messageOut = readerOut.readLine()!!
                     messageOut.run {
                         when {
                             contains("NOTICE") -> listener.onNotice(this)
                             contains("USERSTATE") -> listener.onUserState(this)
-                            startsWith("PING") -> handlePing(writerOut!!)
+                            startsWith("PING") -> handlePing(writerOut)
                         }
                     }
                 }
@@ -63,7 +63,7 @@ class LoggedInChatThread(
             }
             write("CAP REQ :twitch.tv/tags twitch.tv/commands", writerOut)
             write("JOIN $hashChannelName", writerOut)
-            writerOut?.flush()
+            writerOut.flush()
             Log.d(TAG, "Successfully connected to - $hashChannelName")
         } catch (e: IOException) {
             Log.e(TAG, "Error connecting to Twitch IRC", e)
@@ -96,7 +96,7 @@ class LoggedInChatThread(
         messageSenderExecutor.execute {
             try {
                 write("PRIVMSG $hashChannelName :$message", writerOut)
-                writerOut?.flush()
+                writerOut.flush()
                 Log.d(TAG, "Sent message to $hashChannelName: $message")
             } catch (e: IOException) {
                 Log.e(TAG, "Error sending message", e)

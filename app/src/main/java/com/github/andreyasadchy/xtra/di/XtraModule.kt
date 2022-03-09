@@ -6,6 +6,8 @@ import com.apollographql.apollo3.network.okHttpClient
 import com.github.andreyasadchy.xtra.BuildConfig
 import com.github.andreyasadchy.xtra.api.*
 import com.github.andreyasadchy.xtra.model.chat.*
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResponse
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDeserializer
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataDeserializer
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameDataDeserializer
@@ -146,6 +148,7 @@ class XtraModule {
                 .registerTypeAdapter(GameClipsDataResponse::class.java, GameClipsDataDeserializer())
                 .registerTypeAdapter(ChannelVideosDataResponse::class.java, ChannelVideosDataDeserializer())
                 .registerTypeAdapter(ChannelClipsDataResponse::class.java, ChannelClipsDataDeserializer())*/
+                .registerTypeAdapter(ChannelViewerListDataResponse::class.java, ChannelViewerListDeserializer())
                 .registerTypeAdapter(SearchChannelDataResponse::class.java, SearchChannelDataDeserializer())
                 .registerTypeAdapter(SearchGameDataResponse::class.java, SearchGameDataDeserializer())
                 .registerTypeAdapter(TagGameDataResponse::class.java, TagGameDataDeserializer())

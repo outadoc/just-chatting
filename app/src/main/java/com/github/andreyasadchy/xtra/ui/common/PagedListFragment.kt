@@ -46,7 +46,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
         }
         recyclerView.let {
             it.adapter = adapter
-            if (scrollTop.isEnabled) {
+            if (scrollTop?.isEnabled == true) {
                 it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         super.onScrollStateChanged(recyclerView, newState)
@@ -72,24 +72,24 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
     override fun initialize() {
         viewModel.list.observe(viewLifecycleOwner, Observer {
             adapter.submitList(it)
-            nothingHere.isVisible = it.isEmpty()
+            nothingHere?.isVisible = it.isEmpty()
         })
         viewModel.loadingState.observe(viewLifecycleOwner, Observer {
             val isLoading = it == LoadingState.LOADING
             val isListEmpty = adapter.currentList.isNullOrEmpty()
             if (isLoading) {
-                nothingHere.gone()
+                nothingHere?.gone()
             }
-            progressBar.isVisible = isLoading && isListEmpty
-            if (swipeRefresh.isEnabled) {
+            progressBar?.isVisible = isLoading && isListEmpty
+            if (swipeRefresh?.isEnabled == true) {
                 swipeRefresh.isRefreshing = isLoading && !isListEmpty
             }
         })
         viewModel.pagingState.observe(viewLifecycleOwner, Observer(adapter::setPagingState))
-        if (swipeRefresh.isEnabled) {
+        if (swipeRefresh?.isEnabled == true) {
             swipeRefresh.setOnRefreshListener { viewModel.refresh() }
         }
-        if (scrollTop.isEnabled) {
+        if (scrollTop?.isEnabled == true) {
             scrollTop.setOnClickListener {
                 (parentFragment as? Scrollable)?.scrollToTop()
                 it.gone()

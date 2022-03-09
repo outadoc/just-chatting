@@ -28,13 +28,14 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/viewersLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true">
 
         <ImageView
-            android:id="@+id/viewericon"
+            android:id="@+id/viewerIcon"
             style="@style/PlayerViewers"
             android:layout_marginEnd="2dp"
             android:layout_marginBottom="10dp"

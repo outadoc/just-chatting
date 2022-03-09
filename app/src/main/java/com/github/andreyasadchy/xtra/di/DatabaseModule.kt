@@ -5,7 +5,8 @@ import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.github.andreyasadchy.xtra.db.*
-import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
+import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
+import com.github.andreyasadchy.xtra.repository.LocalFollowGameRepository
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import dagger.Module
 import dagger.Provides
@@ -16,11 +17,15 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesRepository(videosDao: VideosDao, requestsDao: RequestsDao, localFollowsDao: LocalFollowsDao): OfflineRepository = OfflineRepository(videosDao, requestsDao, localFollowsDao)
+    fun providesRepository(videosDao: VideosDao, requestsDao: RequestsDao, localFollowsChannelDao: LocalFollowsChannelDao): OfflineRepository = OfflineRepository(videosDao, requestsDao, localFollowsChannelDao)
 
     @Singleton
     @Provides
-    fun providesLocalFollowsRepository(localFollowsDao: LocalFollowsDao, videosDao: VideosDao): LocalFollowRepository = LocalFollowRepository(localFollowsDao, videosDao)
+    fun providesLocalFollowsChannelRepository(localFollowsChannelDao: LocalFollowsChannelDao, videosDao: VideosDao): LocalFollowChannelRepository = LocalFollowChannelRepository(localFollowsChannelDao, videosDao)
+
+    @Singleton
+    @Provides
+    fun providesLocalFollowsGameRepository(localFollowsGameDao: LocalFollowsGameDao): LocalFollowGameRepository = LocalFollowGameRepository(localFollowsGameDao)
 
     @Singleton
     @Provides
@@ -40,7 +45,11 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesLocalFollowsDao(database: AppDatabase): LocalFollowsDao = database.localFollows()
+    fun providesLocalFollowsChannelDao(database: AppDatabase): LocalFollowsChannelDao = database.localFollowsChannel()
+
+    @Singleton
+    @Provides
+    fun providesLocalFollowsGameDao(database: AppDatabase): LocalFollowsGameDao = database.localFollowsGame()
 
     @Singleton
     @Provides
@@ -55,6 +64,11 @@ class DatabaseModule {
                         object : Migration(10, 11) {
                             override fun migrate(database: SupportSQLiteDatabase) {
                                 database.execSQL("ALTER TABLE videos ADD COLUMN videoId TEXT DEFAULT null")
+                            }
+                        },
+                        object : Migration(11, 12) {
+                            override fun migrate(database: SupportSQLiteDatabase) {
+                                database.execSQL("CREATE TABLE IF NOT EXISTS local_follows_games (game_id TEXT NOT NULL, game_name TEXT, boxArt TEXT, PRIMARY KEY (game_id))")
                             }
                         }
                     )

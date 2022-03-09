@@ -8,6 +8,7 @@ object C {
     const val CHANNEL_DISPLAYNAME = "channel_displayname"
     const val CHANNEL_PROFILEIMAGE = "channel_profileimage"
     const val CHANNEL_UPDATELOCAL = "channel_updatelocal"
+    const val GAMES_LIST = "games_list"
     const val GET_GAME_TAGS = "get_game_tags"
     const val TAGS = "tags"
     const val TOKEN = "token"

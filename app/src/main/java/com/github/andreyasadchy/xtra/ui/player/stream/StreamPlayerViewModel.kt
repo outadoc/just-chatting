@@ -4,12 +4,13 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.model.helix.channel.ChannelViewerList
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserFactory
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistTracker
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
-import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
+import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
@@ -26,7 +27,7 @@ class StreamPlayerViewModel @Inject constructor(
     context: Application,
     private val playerRepository: PlayerRepository,
     repository: TwitchService,
-    localFollows: LocalFollowRepository) : HlsPlayerViewModel(context, repository, localFollows) {
+    localFollowsChannel: LocalFollowChannelRepository) : HlsPlayerViewModel(context, repository, localFollowsChannel) {
 
     private val _stream = MutableLiveData<Stream?>()
     val stream: MutableLiveData<Stream?>
@@ -81,6 +82,27 @@ class StreamPlayerViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    val viewerList = MutableLiveData<ChannelViewerList?>()
+    private var isLoading = false
+
+    fun loadViewerList(): MutableLiveData<ChannelViewerList?> {
+        if (!isLoading && gqlClientId.isNotBlank() && stream.value?.user_login != null) {
+            isLoading = true
+            viewerList.value = null
+            viewModelScope.launch {
+                try {
+                    val get = repository.loadChannelViewerListGQL(gqlClientId, stream.value!!.user_login)
+                    viewerList.postValue(get)
+                } catch (e: Exception) {
+                    _errors.postValue(e)
+                } finally {
+                    isLoading = false
+                }
+            }
+        }
+        return viewerList
     }
 
     override fun changeQuality(index: Int) {

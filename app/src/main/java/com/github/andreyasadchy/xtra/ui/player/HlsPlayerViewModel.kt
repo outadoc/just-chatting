@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
-import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
+import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
@@ -29,7 +29,7 @@ private const val VIDEO_RENDERER = 0
 abstract class HlsPlayerViewModel(
     context: Application,
     val repository: TwitchService,
-    private val localFollows: LocalFollowRepository) : PlayerViewModel(context), FollowViewModel {
+    private val localFollowsChannel: LocalFollowChannelRepository) : PlayerViewModel(context), FollowViewModel {
 
     protected val helper = PlayerHelper()
     val loaded: LiveData<Boolean>
@@ -150,9 +150,9 @@ abstract class HlsPlayerViewModel(
         }
     }
 
-    override fun setUser(user: User, clientId: String?) {
+    override fun setUser(user: User, helixClientId: String?, gqlClientId: String?) {
         if (!this::follow.isInitialized) {
-            follow = FollowLiveData(localFollows, userId, userLogin, userName, channelLogo, repository, clientId, user, viewModelScope)
+            follow = FollowLiveData(localFollowsChannel = localFollowsChannel, userId = userId, userLogin = userLogin, userName = userName, channelLogo = channelLogo, repository = repository, helixClientId = helixClientId, user = user, viewModelScope = viewModelScope)
         }
     }
 

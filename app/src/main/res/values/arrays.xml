@@ -9,6 +9,7 @@
     <string-array name="spinnerFollowed">
         <item>@string/live</item>
         <item>@string/channels</item>
+        <item>@string/games</item>
     </string-array>
 
     <string-array name="themeEntries">

@@ -81,7 +81,7 @@
     <string name="source_vod_start">Comienzo: %s</string>
     <string name="source_vod_end">Fin: %s</string>
     <string name="stream_ended">La transmisión ha terminado</string>
-    <string name="viewers">%s espectadores</string>
+    <string name="viewers_count">%s espectadores</string>
     <string name="views">%s vistas</string>
     <string name="download_pending">Pendiente</string>
     <string name="downloading_progress">Descargando: %d%%</string>
@@ -428,4 +428,11 @@ Removes a timeout on a user.</string>
     <string name="irc_notice_whisper_limit_per_sec">You are sending whispers too fast. Try again in a second.</string>
     <string name="irc_notice_whisper_restricted">Your settings prevent you from sending this whisper.</string>
     <string name="irc_notice_whisper_restricted_recipient">That user’s settings prevent them from receiving this whisper.</string>
+    <string name="broadcaster">Broadcaster</string>
+    <string name="viewers">Viewers</string>
+    <string name="vips">Vips</string>
+    <string name="moderators">Moderators</string>
+    <string name="staff">Staff</string>
+    <string name="user_count">%s users in chat</string>
+    <string name="position">Position: %s</string>
 </resources>

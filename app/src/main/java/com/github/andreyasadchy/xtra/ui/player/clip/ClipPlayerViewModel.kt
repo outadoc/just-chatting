@@ -11,7 +11,7 @@ import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.GraphQLRepository
-import com.github.andreyasadchy.xtra.repository.LocalFollowRepository
+import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
@@ -31,7 +31,7 @@ class ClipPlayerViewModel @Inject constructor(
     context: Application,
     private val graphQLRepository: GraphQLRepository,
     private val repository: TwitchService,
-    private val localFollows: LocalFollowRepository) : PlayerViewModel(context), FollowViewModel {
+    private val localFollowsChannel: LocalFollowChannelRepository) : PlayerViewModel(context), FollowViewModel {
 
     private lateinit var clip: Clip
     private val factory: ProgressiveMediaSource.Factory = ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -129,9 +129,9 @@ class ClipPlayerViewModel @Inject constructor(
         }
     }
 
-    override fun setUser(user: User, clientId: String?) {
+    override fun setUser(user: User, helixClientId: String?, gqlClientId: String?) {
         if (!this::follow.isInitialized) {
-            follow = FollowLiveData(localFollows, userId, userLogin, userName, channelLogo, repository, clientId, user, viewModelScope)
+            follow = FollowLiveData(localFollowsChannel = localFollowsChannel, userId = userId, userLogin = userLogin, userName = userName, channelLogo = channelLogo, repository = repository, helixClientId = helixClientId, user = user, viewModelScope = viewModelScope)
         }
     }
 

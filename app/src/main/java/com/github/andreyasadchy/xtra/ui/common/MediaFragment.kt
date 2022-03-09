@@ -64,7 +64,7 @@ abstract class MediaFragment : Fragment(), Scrollable {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         search.setOnClickListener { activity.openSearch() }
-        menubutton.setOnClickListener { it ->
+        menu.setOnClickListener { it ->
             PopupMenu(activity, it).apply {
                 inflate(R.menu.top_menu)
                 menu.findItem(R.id.login).title = if (isLoggedIn) getString(R.string.log_out) else getString(R.string.log_in)

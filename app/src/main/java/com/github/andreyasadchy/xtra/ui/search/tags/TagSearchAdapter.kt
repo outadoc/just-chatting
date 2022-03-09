@@ -7,7 +7,6 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.tag.Tag
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
-import com.github.andreyasadchy.xtra.ui.streams.common.StreamsFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.visible
@@ -16,7 +15,7 @@ import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.*
 class TagSearchAdapter(
         private val fragment: Fragment,
         private val gamesListener: GamesFragment.OnTagGames,
-        private val streamsListener: StreamsFragment.OnTagStreams) : BasePagedListAdapter<Tag>(
+        private val streamsListener: GamesFragment.OnGameSelectedListener) : BasePagedListAdapter<Tag>(
         object : DiffUtil.ItemCallback<Tag>() {
             override fun areItemsTheSame(oldItem: Tag, newItem: Tag): Boolean =
                     oldItem.id == newItem.id
@@ -38,7 +37,7 @@ class TagSearchAdapter(
                 if (item.scope == "CATEGORY") {
                     setOnClickListener { gamesListener.openTagGames(listOf(item.id)) }
                 } else {
-                    setOnClickListener { streamsListener.openTagStreams(tags = listOf(item.id), gameId = fragment.parentFragment?.arguments?.getString(C.GAME_ID), gameName = fragment.parentFragment?.arguments?.getString(C.GAME_NAME)) }
+                    setOnClickListener { streamsListener.openGame(tags = listOf(item.id), id = fragment.parentFragment?.arguments?.getString(C.GAME_ID), name = fragment.parentFragment?.arguments?.getString(C.GAME_NAME)) }
                 }
             }
         }

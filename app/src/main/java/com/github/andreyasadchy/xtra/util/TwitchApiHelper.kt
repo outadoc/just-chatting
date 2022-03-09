@@ -212,7 +212,7 @@ object TwitchApiHelper {
 
     fun formatViewersCount(context: Context, count: Int): String {
         return if (count > 1000 && context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) {
-            context.getString(R.string.viewers, formatCountIfMoreThanAThousand(count))
+            context.getString(R.string.viewers_count, formatCountIfMoreThanAThousand(count))
         } else {
             context.resources.getQuantityString(R.plurals.viewers, count, count)
         }

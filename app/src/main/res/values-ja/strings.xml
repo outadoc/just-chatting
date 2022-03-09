@@ -93,6 +93,7 @@
     <string name="source_vod_start">開始: %s</string>
     <string name="source_vod_end">終了: %s</string>
     <string name="stream_ended">配信は終了しました</string>
+    <string name="viewers">%s 視聴者</string>
     <string name="viewers_count">%s 視聴者</string>
     <string name="views">%s 視聴</string>
     <string name="download_pending">保留中</string>
@@ -381,7 +382,7 @@
     <string name="irc_notice_usage_followers_on">例: “/followers” フォロワー限定モードを有効にします。 (フォローしている “期間” のユーザーのみチャット可能) 例: “30m”, “1 week”, “5 days 12 hours”. 3ヶ月以内であることが条件です。</string>
     <string name="irc_notice_usage_help">例: “/help” このルームで使用できるコマンドを一覧で表示します。</string>
     <string name="irc_notice_usage_host">例: “/host &lt;channel&gt;” 他のチャンネルをホストします。解除するには “/unhost” を使用します。</string>
-    <string name="irc_notice_usage_marker">例: “/marker &lt;optional comment&gt;” 現在のタイムスタンプにストリームマーカーを追加します。 (オプションで140文字以内のコメントを追加できます) マーカーを使うと、ハイライトでの編集が容易になります。</string>
+    <string name="irc_notice_usage_marker">例: “/marker &lt;optional comment&gt;” 現在のタイムスタンプにストリームマーカーを追加します。 (オプションで140文字以内のコメントを添付できます) マーカーを使うと、ハイライトでの編集が容易になります。</string>
     <string name="irc_notice_usage_me">例: “/me &lt;message&gt;” - 三人称で動作を表現する。</string>
     <string name="irc_notice_usage_mod">例: “/mod &lt;username&gt;” - ユーザーにモデレーターの権限を付与します。このチャンネルのモデレーターを一覧で表示するには “/mods” を使用してください。</string>
     <string name="irc_notice_usage_mods">例: “/mods” このチャンネルのモデレーターを一覧で表示します。</string>
@@ -413,11 +414,11 @@
     <string name="irc_notice_whisper_limit_per_sec">ウィスパーを送信したばかりです。少し待ってから送信してください。</string>
     <string name="irc_notice_whisper_restricted">設定により制限されているため、ウィスパーを送信できません。</string>
     <string name="irc_notice_whisper_restricted_recipient">受信者側の設定により、ウィスパーを送信できません。</string>
-    <string name="broadcaster">Broadcaster</string>
-    <string name="viewers">Viewers</string>
-    <string name="vips">Vips</string>
-    <string name="moderators">Moderators</string>
-    <string name="staff">Staff</string>
-    <string name="user_count">%s users in chat</string>
-    <string name="position">Position: %s</string>
+    <string name="broadcaster">配信者</string>
+    <string name="viewers">視聴者</string>
+    <string name="vips">VIP</string>
+    <string name="moderators">モデレーター</string>
+    <string name="staff">スタッフ</string>
+    <string name="user_count">%s 参加者</string>
+    <string name="position">位置: %s</string>
 </resources>

@@ -93,7 +93,6 @@
     <string name="source_vod_start">開始: %s</string>
     <string name="source_vod_end">終了: %s</string>
     <string name="stream_ended">配信は終了しました</string>
-    <string name="viewers">%s 視聴者</string>
     <string name="viewers_count">%s 視聴者</string>
     <string name="views">%s 視聴</string>
     <string name="download_pending">保留中</string>

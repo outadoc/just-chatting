@@ -229,7 +229,7 @@
     <string name="videos">Видео</string>
     <string name="view_count">По количеству просмотров</string>
     <string name="view_profile">Открыть профиль</string>
-    <string name="viewers">%s зрителей</string>
+    <string name="viewers_count">%s зрителей</string>
     <string name="views">%s просмотров</string>
     <string name="watch_live">Прямой эфир</string>
     <string name="watch_rerun">Смотрите повтор</string>
@@ -428,4 +428,11 @@ Removes a timeout on a user.</string>
     <string name="irc_notice_whisper_limit_per_sec">You are sending whispers too fast. Try again in a second.</string>
     <string name="irc_notice_whisper_restricted">Your settings prevent you from sending this whisper.</string>
     <string name="irc_notice_whisper_restricted_recipient">That user’s settings prevent them from receiving this whisper.</string>
+    <string name="broadcaster">Broadcaster</string>
+    <string name="viewers">Viewers</string>
+    <string name="vips">Vips</string>
+    <string name="moderators">Moderators</string>
+    <string name="staff">Staff</string>
+    <string name="user_count">%s users in chat</string>
+    <string name="position">Position: %s</string>
 </resources>

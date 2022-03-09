@@ -7,7 +7,7 @@
     </plurals>
     <plurals name="viewers">
         <item quantity="one">مُشاهدين%s</item>
-        <item quantity="other">@string/viewers</item>
+        <item quantity="other">@string/viewers_count</item>
     </plurals>
     <plurals name="hours">
         <item quantity="one">%d ساعة</item>
@@ -16,5 +16,9 @@
     <plurals name="minutes">
         <item quantity="one">%d دقيقة</item>
         <item quantity="other">%d دقائق</item>
+    </plurals>
+    <plurals name="broadcasters">
+        <item quantity="one">%d broadcaster</item>
+        <item quantity="other">%d broadcasters</item>
     </plurals>
 </resources>

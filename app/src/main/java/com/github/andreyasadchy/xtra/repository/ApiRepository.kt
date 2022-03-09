@@ -12,6 +12,7 @@ import com.github.andreyasadchy.xtra.model.chat.CheerEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.model.chat.VideoMessagesResponse
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
+import com.github.andreyasadchy.xtra.model.helix.channel.ChannelViewerList
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
@@ -401,6 +402,10 @@ class ApiRepository @Inject constructor(
 
     override suspend fun loadVodGamesGQL(clientId: String?, videoId: String?): List<Game> = withContext(Dispatchers.IO) {
         gql.loadVodGames(clientId, videoId).data
+    }
+
+    override suspend fun loadChannelViewerListGQL(clientId: String?, channelLogin: String?): ChannelViewerList = withContext(Dispatchers.IO) {
+        gql.loadChannelViewerList(clientId, channelLogin).data
     }
 
     override fun loadTagsGQL(clientId: String?, getGameTags: Boolean, gameId: String?, gameName: String?, query: String?, coroutineScope: CoroutineScope): Listing<Tag> {

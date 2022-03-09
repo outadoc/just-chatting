@@ -4,6 +4,7 @@ import com.github.andreyasadchy.xtra.model.chat.CheerEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.model.chat.VideoMessagesResponse
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
+import com.github.andreyasadchy.xtra.model.helix.channel.ChannelViewerList
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
@@ -57,6 +58,7 @@ interface TwitchService {
     fun loadChannelClipsGQLQuery(clientId: String?, channelId: String?, sort: ClipsPeriod?, coroutineScope: CoroutineScope): Listing<Clip>
 
     suspend fun loadVodGamesGQL(clientId: String?, videoId: String?): List<Game>?
+    suspend fun loadChannelViewerListGQL(clientId: String?, channelLogin: String?): ChannelViewerList
     fun loadTagsGQL(clientId: String?, getGameTags: Boolean, gameId: String?, gameName: String?, query: String?, coroutineScope: CoroutineScope): Listing<Tag>
     fun loadTopGamesGQL(clientId: String?, tags: List<String>?, coroutineScope: CoroutineScope): Listing<Game>
     fun loadTopStreamsGQL(clientId: String?, tags: List<String>?, thumbnailsEnabled: Boolean, coroutineScope: CoroutineScope): Listing<Stream>

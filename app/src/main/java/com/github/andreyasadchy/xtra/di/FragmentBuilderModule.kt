@@ -10,6 +10,7 @@ import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.follow.games.FollowedGamesFragment
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.ui.player.clip.ClipPlayerFragment
+import com.github.andreyasadchy.xtra.ui.player.games.PlayerGamesFragment
 import com.github.andreyasadchy.xtra.ui.player.offline.OfflinePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.video.VideoPlayerFragment
@@ -101,4 +102,7 @@ abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun contributeFollowedGamesFragment(): FollowedGamesFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributePlayerGamesFragment(): PlayerGamesFragment
 }

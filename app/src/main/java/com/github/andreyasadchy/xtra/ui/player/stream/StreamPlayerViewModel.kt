@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.helix.channel.ChannelViewerList
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserFactory
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistTracker
@@ -82,27 +81,6 @@ class StreamPlayerViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    val viewerList = MutableLiveData<ChannelViewerList?>()
-    private var isLoading = false
-
-    fun loadViewerList(): MutableLiveData<ChannelViewerList?> {
-        if (!isLoading && gqlClientId.isNotBlank() && stream.value?.user_login != null) {
-            isLoading = true
-            viewerList.value = null
-            viewModelScope.launch {
-                try {
-                    val get = repository.loadChannelViewerListGQL(gqlClientId, stream.value!!.user_login)
-                    viewerList.postValue(get)
-                } catch (e: Exception) {
-                    _errors.postValue(e)
-                } finally {
-                    isLoading = false
-                }
-            }
-        }
-        return viewerList
     }
 
     override fun changeQuality(index: Int) {

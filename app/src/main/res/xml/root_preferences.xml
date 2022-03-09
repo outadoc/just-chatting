@@ -234,6 +234,12 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:key="player_viewerlist"
+        android:title="@string/player_viewerlist"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
         android:key="player_channel"
         android:title="@string/player_channel"
         app:iconSpaceReserved="false"/>

@@ -446,4 +446,5 @@ Removes a timeout on a user.</string>
     <string name="broadcaster">Broadcaster</string>
     <string name="user_count">%s users in chat</string>
     <string name="position">Position: %s</string>
+    <string name="player_viewerlist">Open viewer list from view count</string>
 </resources>

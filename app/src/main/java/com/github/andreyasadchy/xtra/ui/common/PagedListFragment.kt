@@ -20,8 +20,6 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
     protected abstract val viewModel: VM
     protected abstract val adapter: Adapter
 
-    private var isTouched = false
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
@@ -50,7 +48,6 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                 it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         super.onScrollStateChanged(recyclerView, newState)
-                        isTouched = newState == RecyclerView.SCROLL_STATE_DRAGGING
                         scrollTop.isVisible = shouldShowButton()
                     }
                 })

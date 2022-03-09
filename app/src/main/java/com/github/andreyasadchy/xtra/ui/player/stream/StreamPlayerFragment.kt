@@ -90,6 +90,11 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         restart.setOnClickListener {
             viewModel.restartPlayer()
         }
+        if (prefs.getBoolean(C.PLAYER_VIEWERLIST, true)) {
+            viewersLayout.setOnClickListener {
+                stream.user_login?.let { login -> FragmentUtils.showPlayerViewerListDialog(childFragmentManager, login, viewModel.repository) }
+            }
+        }
     }
 
     override fun changeVolume(volume: Float) {

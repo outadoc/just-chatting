@@ -420,4 +420,5 @@
     <string name="staff">スタッフ</string>
     <string name="user_count">%s 参加者</string>
     <string name="position">位置: %s</string>
+    <string name="player_viewerlist">視聴者数から視聴者一覧を開く</string>
 </resources>

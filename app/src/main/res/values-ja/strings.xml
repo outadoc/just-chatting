@@ -421,4 +421,6 @@
     <string name="user_count">%s 参加者</string>
     <string name="position">位置: %s</string>
     <string name="player_viewerlist">視聴者数から視聴者一覧を開く</string>
+    <string name="use_followpager">Use tabs layout for following page</string>
+    <string name="default_follow_tab">Default following tab</string>
 </resources>

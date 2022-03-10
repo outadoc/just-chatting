@@ -21,9 +21,12 @@ abstract class MediaPagerFragment : BaseNetworkFragment(), ItemAwarePagerFragmen
         return inflater.inflate(R.layout.fragment_media_pager, container, false)
     }
 
-    protected fun setAdapter(adapter: ItemAwareFragmentPagerAdapter) {
+    protected fun setAdapter(adapter: ItemAwareFragmentPagerAdapter, currentItem: Int? = null) {
         this.adapter = adapter
         viewPager.adapter = adapter
+        if (currentItem != null) {
+            viewPager.currentItem = currentItem
+        }
         viewPager.offscreenPageLimit = adapter.count
     }
 

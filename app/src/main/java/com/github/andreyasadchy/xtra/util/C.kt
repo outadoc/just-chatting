@@ -28,6 +28,8 @@ object C {
     const val UI_TRUNCATEVIEWCOUNT = "ui_truncateviewcount"
     const val UI_BROADCASTERSCOUNT = "ui_broadcasterscount"
     const val UI_STARTONFOLLOWED = "ui_startonfollowed"
+    const val UI_FOLLOW_DEFAULT_PAGE = "ui_follow_default_page"
+    const val UI_FOLLOWPAGER = "ui_followpager"
     const val UI_STATUSBAR = "ui_statusbar"
     const val UI_NAVBAR = "ui_navbar"
     const val UI_LANGUAGE = "ui_language"

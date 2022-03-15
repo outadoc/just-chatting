@@ -12,7 +12,6 @@ Xtra is a Twitch player and browser for Android.
 You can find released APKs [here](https://github.com/crackededed/Xtra/releases/tag/latest). Requires Android 5 or higher.
 
 [Here](https://github.com/crackededed/Xtra/releases/tag/api16) is a version for Android 4.1.
-You will need Google Play services installed to watch streams on Android 4.
 
 [Xtra subreddit](https://www.reddit.com/r/XtraForTwitch)
 

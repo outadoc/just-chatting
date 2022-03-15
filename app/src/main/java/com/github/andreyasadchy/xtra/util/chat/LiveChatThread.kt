@@ -43,7 +43,9 @@ class LiveChatThread(
                 }
             } catch (e: IOException) {
                 Log.d(TAG, "Disconnecting from $hashChannelName")
-                listener.onCommand(message = channelName, duration = e.toString(), type = "disconnect", fullMsg = e.stackTraceToString())
+                if (e.message != "Socket closed" && e.message != "Connection reset") {
+                    listener.onCommand(message = channelName, duration = e.toString(), type = "disconnect", fullMsg = e.stackTraceToString())
+                }
                 close()
                 sleep(1000L)
             } catch (e: Exception) {

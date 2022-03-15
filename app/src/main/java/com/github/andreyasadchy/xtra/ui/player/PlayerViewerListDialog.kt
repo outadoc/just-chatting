@@ -33,8 +33,6 @@ class PlayerViewerListDialog @Inject constructor(val repository: TwitchService) 
         }
     }
 
-    private val staffListItems = mutableListOf<String>()
-    private var staffListOffset = 0
     private val moderatorsListItems = mutableListOf<String>()
     private var moderatorsListOffset = 0
     private val vipsListItems = mutableListOf<String>()
@@ -59,26 +57,13 @@ class PlayerViewerListDialog @Inject constructor(val repository: TwitchService) 
                     broadcasterText.gone()
                     broadcasterList.gone()
                 }
-                if (fullList.staff.isNotEmpty()) {
-                    staffText.visible()
-                    staffList.apply {
-                        visible()
-                        adapter = Adapter(context, staffListItems)
-                    }
-                    loadItems(fullList, staffList)
-                } else {
-                    staffText.gone()
-                    staffList.gone()
-                }
                 if (fullList.moderators.isNotEmpty()) {
                     moderatorsText.visible()
                     moderatorsList.apply {
                         visible()
                         adapter = Adapter(context, moderatorsListItems)
                     }
-                    if (fullList.staff.size <= 100) {
-                        loadItems(fullList, moderatorsList)
-                    }
+                    loadItems(fullList, moderatorsList)
                 } else {
                     moderatorsText.gone()
                     moderatorsList.gone()
@@ -89,7 +74,7 @@ class PlayerViewerListDialog @Inject constructor(val repository: TwitchService) 
                         visible()
                         adapter = Adapter(context, vipsListItems)
                     }
-                    if ((fullList.staff.size + fullList.moderators.size) <= 100) {
+                    if (fullList.moderators.size <= 100) {
                         loadItems(fullList, vipsList)
                     }
                 } else {
@@ -102,7 +87,7 @@ class PlayerViewerListDialog @Inject constructor(val repository: TwitchService) 
                         visible()
                         adapter = Adapter(context, viewerListItems)
                     }
-                    if ((fullList.staff.size + fullList.moderators.size + fullList.vips.size) <= 100) {
+                    if ((fullList.moderators.size + fullList.vips.size) <= 100) {
                         loadItems(fullList, viewersList)
                     }
                 } else {
@@ -118,7 +103,6 @@ class PlayerViewerListDialog @Inject constructor(val repository: TwitchService) 
                 scrollView.viewTreeObserver.addOnScrollChangedListener {
                     if (!scrollView.canScrollVertically(1)) {
                         when {
-                            staffListOffset != fullList.staff.size -> loadItems(fullList, staffList)
                             moderatorsListOffset != fullList.moderators.size -> loadItems(fullList, moderatorsList)
                             vipsListOffset != fullList.vips.size -> loadItems(fullList, vipsList)
                             viewerListOffset != fullList.viewers.size -> loadItems(fullList, viewersList)
@@ -152,13 +136,6 @@ class PlayerViewerListDialog @Inject constructor(val repository: TwitchService) 
 
     private fun loadItems(fullList: ChannelViewerList, recyclerView: RecyclerView) {
         when (recyclerView) {
-            staffList -> {
-                val remaining = fullList.staff.size - staffListOffset
-                val add = if (remaining > 100) { 100 } else { remaining }
-                staffListItems.addAll(fullList.staff.subList(staffListOffset, staffListOffset + add))
-                staffListOffset += add
-                staffList.adapter?.let { it.notifyItemRangeChanged(it.itemCount - add, add) }
-            }
             moderatorsList -> {
                 val remaining = fullList.moderators.size - moderatorsListOffset
                 val add = if (remaining > 100) { 100 } else { remaining }

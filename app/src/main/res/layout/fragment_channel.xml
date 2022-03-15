@@ -221,6 +221,18 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
+                    android:id="@+id/lastBroadcast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="7dp"
+                    android:gravity="center_horizontal"
+                    android:textAlignment="gravity"
+                    android:textColor="?attr/secondaryTextColor"
+                    android:visibility="gone"
+                    tools:text="Last broadcast %s"
+                    tools:visibility="visible" />
+
+                <TextView
                     android:id="@+id/watchLive"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"

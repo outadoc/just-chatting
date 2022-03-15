@@ -28,5 +28,8 @@ query StreamUser($id: [ID!]) {
                 displayName
             }
         }
+        lastBroadcast {
+            startedAt
+        }
     }
 }

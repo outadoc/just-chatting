@@ -113,7 +113,6 @@
     <string name="period">Период</string>
     <string name="permission_denied">Необходимые разрешения не были предоставлены</string>
     <string name="picture_in_picture">Картинка в картинке</string>
-    <string name="play_services_not_available">Сервисы Google Play недоступны. Некоторые функции могут работать неправильно</string>
     <string name="playback_speed">Скорость воспроизведения</string>
     <string name="playback_will_stop">Воспроизведение остановится через %s</string>
     <string name="playback_will_stop_hours_minutes">Воспроизведение остановится через %1$s %2$s</string>
@@ -432,7 +431,6 @@ Removes a timeout on a user.</string>
     <string name="viewers">Зрители</string>
     <string name="vips">ВИПы</string>
     <string name="moderators">Модераторы</string>
-    <string name="staff">Сотрудники</string>
     <string name="user_count">%s участников в чате</string>
     <string name="position">Позиция: %s</string>
     <string name="player_viewerlist">Открывать список зрителей из счётчика просмотров</string>

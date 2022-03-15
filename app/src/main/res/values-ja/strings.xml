@@ -224,7 +224,6 @@
     <string name="days">日</string>
     <string name="seconds">秒</string>
     <string name="show_uptime">配信の経過時間を表示</string>
-    <string name="play_services_not_available">Google Playサービスはご利用になれません。一部の機能が正常に動作しない場合があります</string>
     <string name="chatFirstMsgEntries1">種類の表示と背景色の変更</string>
     <string name="chatFirstMsgEntries2">背景色の変更</string>
     <string name="chatFirstMsgEntries3">通常のメッセージとして表示</string>
@@ -417,7 +416,6 @@
     <string name="viewers">視聴者</string>
     <string name="vips">VIP</string>
     <string name="moderators">モデレーター</string>
-    <string name="staff">スタッフ</string>
     <string name="user_count">%s 参加者</string>
     <string name="position">位置: %s</string>
     <string name="player_viewerlist">視聴者数から視聴者一覧を開く</string>

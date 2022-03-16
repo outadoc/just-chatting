@@ -224,7 +224,6 @@
     <string name="days">d</string>
     <string name="seconds">s</string>
     <string name="show_uptime">Show stream uptime</string>
-    <string name="play_services_not_available">Google Play Services are not available. Some functions may not work correctly</string>
     <string name="chatFirstMsgEntries1">Show type and change background color</string>
     <string name="chatFirstMsgEntries2">Change background color</string>
     <string name="chatFirstMsgEntries3">Show as normal messages</string>
@@ -439,7 +438,6 @@ Removes a timeout on a user.</string>
     <string name="irc_notice_whisper_limit_per_sec">You are sending whispers too fast. Try again in a second.</string>
     <string name="irc_notice_whisper_restricted">Your settings prevent you from sending this whisper.</string>
     <string name="irc_notice_whisper_restricted_recipient">That user’s settings prevent them from receiving this whisper.</string>
-    <string name="staff">Staff</string>
     <string name="moderators">Moderators</string>
     <string name="vips">Vips</string>
     <string name="viewers">Viewers</string>

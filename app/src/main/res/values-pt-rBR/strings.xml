@@ -231,7 +231,6 @@
     <string name="show_tags">Show tags</string>
     <string name="recentMsg_enable">Load recent messages</string>
     <string name="recentMsg_limit">Recent message limit</string>
-    <string name="play_services_not_available">Google Play Services are not available. Some functions may not work correctly</string>
     <string name="followed_at">Followed at %s</string>
     <string name="last_broadcast_date">Last broadcast %s</string>
     <string name="show_clearchat">Show timeouts and bans</string>
@@ -432,7 +431,6 @@ Removes a timeout on a user.</string>
     <string name="viewers">Viewers</string>
     <string name="vips">Vips</string>
     <string name="moderators">Moderators</string>
-    <string name="staff">Staff</string>
     <string name="user_count">%s users in chat</string>
     <string name="position">Position: %s</string>
     <string name="player_viewerlist">Open viewer list from view count</string>

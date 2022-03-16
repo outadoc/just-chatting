@@ -12,7 +12,6 @@ class ChannelViewerListDeserializer : JsonDeserializer<ChannelViewerListDataResp
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ChannelViewerListDataResponse {
         val broadcasters = mutableListOf<String>()
-        val staff = mutableListOf<String>()
         val moderators = mutableListOf<String>()
         val vips = mutableListOf<String>()
         val viewers = mutableListOf<String>()
@@ -20,10 +19,6 @@ class ChannelViewerListDeserializer : JsonDeserializer<ChannelViewerListDataResp
         dataJson.getAsJsonArray("broadcasters").forEach {
             val obj = it.asJsonObject
             if (!(obj.get("login").isJsonNull)) { broadcasters.add(obj.getAsJsonPrimitive("login").asString) }
-        }
-        dataJson.getAsJsonArray("staff").forEach {
-            val obj = it.asJsonObject
-            if (!(obj.get("login").isJsonNull)) { staff.add(obj.getAsJsonPrimitive("login").asString) }
         }
         dataJson.getAsJsonArray("moderators").forEach {
             val obj = it.asJsonObject
@@ -38,6 +33,6 @@ class ChannelViewerListDeserializer : JsonDeserializer<ChannelViewerListDataResp
             if (!(obj.get("login").isJsonNull)) { viewers.add(obj.getAsJsonPrimitive("login").asString) }
         }
         val count = if (!(dataJson.get("count").isJsonNull)) { dataJson.getAsJsonPrimitive("count").asInt } else null
-        return ChannelViewerListDataResponse(ChannelViewerList(broadcasters, staff, moderators, vips, viewers, count))
+        return ChannelViewerListDataResponse(ChannelViewerList(broadcasters, moderators, vips, viewers, count))
     }
 }

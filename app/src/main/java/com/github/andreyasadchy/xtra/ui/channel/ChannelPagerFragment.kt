@@ -164,6 +164,16 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 watchLive.setOnClickListener { activity.startStream(stream) }
             } else {
                 watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID), user_login = requireArguments().getString(C.CHANNEL_LOGIN), user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))) }
+                if (stream?.lastBroadcast != null) {
+                    TwitchApiHelper.formatTimeString(requireContext(), stream.lastBroadcast).let {
+                        if (it != null)  {
+                            lastBroadcast.visible()
+                            lastBroadcast.text = requireContext().getString(R.string.last_broadcast_date, it)
+                        } else {
+                            lastBroadcast.gone()
+                        }
+                    }
+                }
             }
         }
         stream?.channelLogo.let {

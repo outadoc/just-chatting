@@ -292,7 +292,7 @@ class ChatViewModel @Inject constructor(
         }
 
         override fun onUserState(sets: List<String>?) {
-            if (!emoteSetsAdded && helixClientId != null && user.token.nullIfEmpty() != null) {
+            if (helixClientId != null && user.token.nullIfEmpty() != null) {
                 if (savedEmoteSets != sets) {
                     viewModelScope.launch {
                         val emotes = mutableListOf<Emote>()
@@ -318,19 +318,21 @@ class ChatViewModel @Inject constructor(
                         }
                     }
                 } else {
-                    val emotes = mutableListOf<Emote>()
-                    savedEmotesFromSets?.let { emotes.addAll(it) }
-                    if (emotes.isNotEmpty()) {
-                        emoteSetsAdded = true
-                        val items = emotes.filter { it.ownerId == channelId }
-                        for (item in items.asReversed()) {
-                            emotes.add(0, item)
-                        }
-                        addEmotes(emotes)
-                        viewModelScope.launch {
-                            try {
-                                emotesFromSets.value = emotes!!
-                            } catch (e: Exception) {
+                    if (!emoteSetsAdded) {
+                        val emotes = mutableListOf<Emote>()
+                        savedEmotesFromSets?.let { emotes.addAll(it) }
+                        if (emotes.isNotEmpty()) {
+                            emoteSetsAdded = true
+                            val items = emotes.filter { it.ownerId == channelId }
+                            for (item in items.asReversed()) {
+                                emotes.add(0, item)
+                            }
+                            addEmotes(emotes)
+                            viewModelScope.launch {
+                                try {
+                                    emotesFromSets.value = emotes!!
+                                } catch (e: Exception) {
+                                }
                             }
                         }
                     }

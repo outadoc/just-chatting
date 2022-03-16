@@ -47,27 +47,6 @@
             tools:visibility="visible" />
 
         <TextView
-            android:id="@+id/staffText"
-            style="@style/VideoTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:textAlignment="viewStart"
-            android:visibility="gone"
-            android:text="@string/staff"
-            tools:visibility="visible" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/staffList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:visibility="gone"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/fragment_viewer_list_item"
-            tools:visibility="visible" />
-
-        <TextView
             android:id="@+id/moderatorsText"
             style="@style/VideoTitle"
             android:layout_width="match_parent"

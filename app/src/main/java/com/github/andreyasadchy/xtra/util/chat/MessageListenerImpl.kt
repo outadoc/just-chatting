@@ -181,9 +181,8 @@ class MessageListenerImpl(
         val prefix = parts[0]
         val prefixes = splitAndMakeMap(prefix, ";", "=")
         val sets = prefixes["emote-sets"]
-        var list: List<String>? = null
-        if (sets != null && list == null) {
-            list = sets.split(",".toRegex()).dropLastWhile { it.isEmpty() }
+        if (sets != null) {
+            val list: List<String> = sets.split(",".toRegex()).dropLastWhile { it.isEmpty() }
             callbackUserState.onUserState(list)
         }
     }

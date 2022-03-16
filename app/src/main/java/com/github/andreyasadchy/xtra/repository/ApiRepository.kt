@@ -287,7 +287,8 @@ class ApiRepository @Inject constructor(
             Stream(id = get.users?.first()?.stream?.id, user_id = channelId, user_login = get.users?.first()?.login, user_name = get.users?.first()?.displayName,
                 game_id = get.users?.first()?.stream?.game?.id, game_name = get.users?.first()?.stream?.game?.displayName, type = get.users?.first()?.stream?.type,
                 title = get.users?.first()?.stream?.title, viewer_count = get.users?.first()?.stream?.viewersCount, started_at = get.users?.first()?.stream?.createdAt,
-                thumbnail_url = get.users?.first()?.stream?.previewImageURL, profileImageURL = get.users?.first()?.profileImageURL, channelUser = user)
+                thumbnail_url = get.users?.first()?.stream?.previewImageURL, profileImageURL = get.users?.first()?.profileImageURL, channelUser = user,
+                lastBroadcast = get.users?.first()?.lastBroadcast?.startedAt?.toString())
         } else null
     }
 

@@ -43,30 +43,35 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         val showClearChat = requireContext().prefs().getBoolean(C.CHAT_SHOW_CLEARCHAT, true)
         val enableRecentMsg = requireContext().prefs().getBoolean(C.CHAT_RECENT, true)
         val recentMsgLimit = requireContext().prefs().getInt(C.CHAT_RECENT_LIMIT, 100)
+        val disableChat = requireContext().prefs().getBoolean(C.CHAT_DISABLE, false)
         val isLive = args.getBoolean(KEY_IS_LIVE)
-        val enableChat = if (isLive) {
-            viewModel.startLive(user, useHelix, helixClientId, gqlClientId, channelId, chLogin, chName, showUserNotice, showClearMsg, showClearChat, enableRecentMsg, recentMsgLimit.toString())
-            chatView.init(this)
-            chatView.setCallback(viewModel)
-            if (userIsLoggedIn) {
-                chatView.setUsername(user.name)
-                chatView.setChatters(viewModel.chatters)
-                val emotesObserver = Observer(chatView::addEmotes)
-                viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
-                viewModel.recentEmotes.observe(viewLifecycleOwner, emotesObserver)
-                viewModel.newChatter.observe(viewLifecycleOwner, Observer(chatView::addChatter))
-            }
-            true
+        val enableChat = if (disableChat) {
+            false
         } else {
-            args.getString(KEY_VIDEO_ID).let {
-                if (it != null) {
-                    chatView.init(this)
-                    val getCurrentPosition = (parentFragment as ChatReplayPlayerFragment)::getCurrentPosition
-                    viewModel.startReplay(user, useHelix, helixClientId, gqlClientId, channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
-                    true
-                } else {
-                    chatView.chatReplayUnavailable.visible()
-                    false
+            if (isLive) {
+                viewModel.startLive(user, useHelix, helixClientId, gqlClientId, channelId, chLogin, chName, showUserNotice, showClearMsg, showClearChat, enableRecentMsg, recentMsgLimit.toString())
+                chatView.init(this)
+                chatView.setCallback(viewModel)
+                if (userIsLoggedIn) {
+                    chatView.setUsername(user.name)
+                    chatView.setChatters(viewModel.chatters)
+                    val emotesObserver = Observer(chatView::addEmotes)
+                    viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
+                    viewModel.recentEmotes.observe(viewLifecycleOwner, emotesObserver)
+                    viewModel.newChatter.observe(viewLifecycleOwner, Observer(chatView::addChatter))
+                }
+                true
+            } else {
+                args.getString(KEY_VIDEO_ID).let {
+                    if (it != null) {
+                        chatView.init(this)
+                        val getCurrentPosition = (parentFragment as ChatReplayPlayerFragment)::getCurrentPosition
+                        viewModel.startReplay(user, useHelix, helixClientId, gqlClientId, channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
+                        true
+                    } else {
+                        chatView.chatReplayUnavailable.visible()
+                        false
+                    }
                 }
             }
         }

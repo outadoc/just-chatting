@@ -196,6 +196,10 @@ class ChatView : ConstraintLayout {
         val message = when (command.type) {
             "join" -> context.getString(R.string.chat_join, command.message)
             "disconnect" -> context.getString(R.string.chat_disconnect, command.message, command.duration)
+            "disconnect_command" -> {
+                adapter.messages?.clear()
+                context.getString(R.string.disconnected)
+            }
             "send_msg_error" -> context.getString(R.string.chat_send_msg_error, command.message)
             "socket_error" -> context.getString(R.string.chat_socket_error, command.message)
             "notice" -> if (lang == "ar" || lang == "es" || lang == "ja" || lang == "pt" || lang == "ru") {

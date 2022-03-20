@@ -256,14 +256,21 @@ class ChatViewModel @Inject constructor(
         }
 
         override fun send(message: CharSequence) {
-            loggedInChat?.send(message)
-            val usedEmotes = hashSetOf<RecentEmote>()
-            val currentTime = System.currentTimeMillis()
-            message.split(' ').forEach { word ->
-                allEmotesMap[word]?.let { usedEmotes.add(RecentEmote(word, it.url, currentTime)) }
-            }
-            if (usedEmotes.isNotEmpty()) {
-                playerRepository.insertRecentEmotes(usedEmotes)
+            if (message.toString() == "/dc" || message.toString() == "/disconnect") {
+                chat?.disconnect()
+                loggedInChat?.disconnect()
+                roomState.postValue(RoomState(null, null, null, null, null))
+                command.postValue(Command(type = "disconnect_command"))
+            } else {
+                loggedInChat?.send(message)
+                val usedEmotes = hashSetOf<RecentEmote>()
+                val currentTime = System.currentTimeMillis()
+                message.split(' ').forEach { word ->
+                    allEmotesMap[word]?.let { usedEmotes.add(RecentEmote(word, it.url, currentTime)) }
+                }
+                if (usedEmotes.isNotEmpty()) {
+                    playerRepository.insertRecentEmotes(usedEmotes)
+                }
             }
         }
 
@@ -380,7 +387,7 @@ class ChatViewModel @Inject constructor(
             chatReplayManager?.stop()
         }
 
-        override fun onUserState(list: List<String>?) {
+        override fun onUserState(sets: List<String>?) {
         }
 
         override fun onRoomState(list: RoomState) {

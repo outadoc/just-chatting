@@ -54,6 +54,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
     private lateinit var hideChat: ImageButton
     private lateinit var toggleChatBar: ImageButton
     private lateinit var pauseButton: ImageButton
+    private var disableChat: Boolean = false
 
     protected abstract val layoutId: Int
     protected abstract val chatContainerId: Int
@@ -114,11 +115,12 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         aspectRatioFrameLayout = view.findViewById(R.id.aspectRatioFrameLayout)
         aspectRatioFrameLayout.setAspectRatio(16f / 9f)
         pauseButton = view.findViewById(R.id.exo_pause)
+        disableChat = prefs.getBoolean(C.CHAT_DISABLE, false)
         val isNotOfflinePlayer = this !is OfflinePlayerFragment
         if (this is StreamPlayerFragment && !prefs.getBoolean(C.PLAYER_PAUSE, false)) {
             pauseButton.layoutParams.height = 0
         }
-        if (prefs.getBoolean(C.PLAYER_DOUBLETAP, true)) {
+        if (prefs.getBoolean(C.PLAYER_DOUBLETAP, true) && !disableChat) {
             playerView.setOnDoubleTapListener {
                 if (!isPortrait && slidingLayout.isMaximized && isNotOfflinePlayer) {
                     if (chatLayout.isVisible) {
@@ -186,7 +188,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         }
         if (this is StreamPlayerFragment) {
             if (User.get(activity) !is NotLoggedIn) {
-                if (prefs.getBoolean(C.PLAYER_CHATBARTOGGLE, true)) {
+                if (prefs.getBoolean(C.PLAYER_CHATBARTOGGLE, true) && !disableChat) {
                     toggleChatBar = view.findViewById(R.id.toggleChatBar)
                     toggleChatBar.visible()
                     toggleChatBar.apply { setOnClickListener { toggleChatBar() } }
@@ -400,7 +402,14 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                     height = LinearLayout.LayoutParams.MATCH_PARENT
                     weight = 0f
                 }
-                setPreferredChatVisibility()
+                if (disableChat) {
+                    hideChat.gone()
+                    showChat.gone()
+                    chatLayout.gone()
+                    slidingLayout.maximizedSecondViewVisibility = View.GONE
+                } else {
+                    setPreferredChatVisibility()
+                }
                 val recycleview = requireView().findViewById<RecyclerView>(R.id.recyclerView)
                 val btndwn = requireView().findViewById<Button>(R.id.btnDown)
                 if (chatLayout.isVisible && btndwn != null && !btndwn.isVisible && recycleview.adapter?.itemCount != null)

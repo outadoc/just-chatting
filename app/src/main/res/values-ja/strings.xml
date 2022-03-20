@@ -424,4 +424,6 @@
     <string name="sleep_timer_lock">Lock screen after</string>
     <string name="sleep_timer_lock_permissions">Lock screen after (requires admin permissions)</string>
     <string name="admin_settings">Enable/disable as device admin app</string>
+    <string name="disable_chat">Disable chat</string>
+    <string name="disconnected">Disconnected</string>
 </resources>

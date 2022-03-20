@@ -421,4 +421,7 @@
     <string name="player_viewerlist">視聴者数から視聴者一覧を開く</string>
     <string name="use_followpager">Use tabs layout for following page</string>
     <string name="default_follow_tab">Default following tab</string>
+    <string name="sleep_timer_lock">Lock screen after</string>
+    <string name="sleep_timer_lock_permissions">Lock screen after (requires admin permissions)</string>
+    <string name="admin_settings">Enable/disable as device admin app</string>
 </resources>

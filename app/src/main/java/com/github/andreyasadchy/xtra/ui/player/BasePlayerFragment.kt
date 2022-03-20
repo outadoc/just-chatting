@@ -1,10 +1,13 @@
 package com.github.andreyasadchy.xtra.ui.player
 
+import android.app.admin.DevicePolicyManager
+import android.content.Context
 import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +18,6 @@ import android.widget.TextView
 import androidx.core.content.edit
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
@@ -51,7 +53,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
     private lateinit var showChat: ImageButton
     private lateinit var hideChat: ImageButton
     private lateinit var toggleChatBar: ImageButton
-    private lateinit var pause: ImageButton
+    private lateinit var pauseButton: ImageButton
 
     protected abstract val layoutId: Int
     protected abstract val chatContainerId: Int
@@ -109,24 +111,22 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         slidingLayout.maximizedSecondViewVisibility = if (prefs.getBoolean(C.KEY_CHAT_OPENED, true)) View.VISIBLE else View.GONE //TODO
         playerView = view.findViewById(R.id.playerView)
         chatLayout = view.findViewById(chatContainerId)
-        pause = view.findViewById(R.id.exo_pause)
         aspectRatioFrameLayout = view.findViewById(R.id.aspectRatioFrameLayout)
         aspectRatioFrameLayout.setAspectRatio(16f / 9f)
+        pauseButton = view.findViewById(R.id.exo_pause)
         val isNotOfflinePlayer = this !is OfflinePlayerFragment
         if (this is StreamPlayerFragment && !prefs.getBoolean(C.PLAYER_PAUSE, false)) {
-            pause.layoutParams.height = 0
-            pause.layoutParams.width = 0
+            pauseButton.layoutParams.height = 0
         }
         if (prefs.getBoolean(C.PLAYER_DOUBLETAP, true)) {
             playerView.setOnDoubleTapListener {
                 if (!isPortrait && slidingLayout.isMaximized && isNotOfflinePlayer) {
                     if (chatLayout.isVisible) {
-                        playerView.hideController()
                         hideChat()
                     } else {
-                        playerView.hideController()
                         showChat()
                     }
+                    playerView.hideController()
                 }
             }
         }
@@ -157,22 +157,24 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
             }
         }
         initLayout()
+        playerView.controllerAutoShow = controllerAutoShow
         if (isNotOfflinePlayer) {
             view.findViewById<ImageButton>(R.id.settings).disable()
         }
-        view.findViewById<TextView>(R.id.channel).apply {
-            text = channelName
-            setOnClickListener {
-                activity.viewChannel(channelId, channelLogin, channelName, channelImage, !isNotOfflinePlayer)
-                slidingLayout.minimize()
-            }
-        }
-        playerView.controllerAutoShow = controllerAutoShow
-        view.findViewById<ImageButton>(R.id.minimize).setOnClickListener { minimize() }
-        if (!prefs.getBoolean(C.PLAYER_MINIMIZE, true)) {
+        if (prefs.getBoolean(C.PLAYER_MINIMIZE, true)) {
+            view.findViewById<ImageButton>(R.id.minimize).setOnClickListener { minimize() }
+        } else {
             view.findViewById<ImageButton>(R.id.minimize).gone()
         }
-        if (!prefs.getBoolean(C.PLAYER_CHANNEL, true)) {
+        if (prefs.getBoolean(C.PLAYER_CHANNEL, true)) {
+            view.findViewById<TextView>(R.id.channel).apply {
+                text = channelName
+                setOnClickListener {
+                    activity.viewChannel(channelId, channelLogin, channelName, channelImage, !isNotOfflinePlayer)
+                    slidingLayout.minimize()
+                }
+            }
+        } else {
             view.findViewById<TextView>(R.id.channel).gone()
         }
         if (prefs.getBoolean(C.PLAYER_VOLUMEBUTTON, false)) {
@@ -259,10 +261,10 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
     override fun initialize() {
         val activity = requireActivity() as MainActivity
         val view = requireView()
-        viewModel.currentPlayer.observe(viewLifecycleOwner, Observer {
+        viewModel.currentPlayer.observe(viewLifecycleOwner) {
             playerView.player = it
-        })
-        viewModel.playerMode.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.playerMode.observe(viewLifecycleOwner) {
             if (it == PlayerMode.NORMAL) {
                 playerView.controllerHideOnTouch = true
                 playerView.controllerShowTimeoutMs = controllerShowTimeoutMs
@@ -271,14 +273,18 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 playerView.controllerShowTimeoutMs = -1
                 playerView.showController()
             }
-        })
+        }
         if (this !is OfflinePlayerFragment && prefs.getBoolean(C.PLAYER_FOLLOW, true)) {
             initializeFollow(this, (viewModel as FollowViewModel), view.findViewById(R.id.follow), User.get(activity), prefs.getString(C.HELIX_CLIENT_ID, ""))
         }
         if (this !is ClipPlayerFragment && prefs.getBoolean(C.PLAYER_SLEEP, true)) {
-            viewModel.sleepTimer.observe(viewLifecycleOwner, Observer {
+            viewModel.sleepTimer.observe(viewLifecycleOwner) {
+                onMinimize()
                 activity.closePlayer()
-            })
+                if (prefs.getBoolean(C.SLEEP_TIMER_LOCK, true)) {
+                    lockScreen()
+                }
+            }
             view.findViewById<ImageButton>(R.id.sleepTimer).setOnClickListener {
                 SleepTimerDialog.show(childFragmentManager, viewModel.timerTimeLeft)
             }
@@ -313,7 +319,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
 
     }
 
-    override fun onSleepTimerChanged(durationMs: Long, hours: Int, minutes: Int) {
+    override fun onSleepTimerChanged(durationMs: Long, hours: Int, minutes: Int, lockScreen: Boolean) {
         val context = requireContext()
         if (durationMs > 0L) {
             context.toast(when {
@@ -323,6 +329,9 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
             })
         } else if (viewModel.timerTimeLeft > 0L) {
             context.toast(R.string.timer_canceled)
+        }
+        if (lockScreen != prefs.getBoolean(C.SLEEP_TIMER_LOCK, true)) {
+            prefs.edit { putBoolean(C.SLEEP_TIMER_LOCK, lockScreen) }
         }
         viewModel.setTimer(durationMs)
     }
@@ -476,9 +485,17 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         }
     }
 
-    private companion object {
-        const val KEY_CHAT_OPENED = "ChatOpened"
+    private fun lockScreen() {
+        if ((requireContext().getSystemService(Context.POWER_SERVICE) as PowerManager).isInteractive) {
+            try {
+                (requireContext().getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager).lockNow()
+            } catch (e: SecurityException) {
 
+            }
+        }
+    }
+
+    private companion object {
         const val REQUEST_FOLLOW = 0
     }
 }

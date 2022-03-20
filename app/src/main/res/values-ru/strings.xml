@@ -436,4 +436,7 @@ Removes a timeout on a user.</string>
     <string name="player_viewerlist">Открывать список зрителей из счётчика просмотров</string>
     <string name="use_followpager">Использовать размещение вкладок ждя следующей страницы</string>
     <string name="default_follow_tab">Стандартная вкладка отслеживания</string>
+    <string name="sleep_timer_lock">Lock screen after</string>
+    <string name="sleep_timer_lock_permissions">Lock screen after (requires admin permissions)</string>
+    <string name="admin_settings">Enable/disable as device admin app</string>
 </resources>

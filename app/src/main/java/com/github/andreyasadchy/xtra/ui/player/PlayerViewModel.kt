@@ -89,7 +89,6 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
             timer = Timer().apply {
                 timerEndTime = System.currentTimeMillis() + duration
                 schedule(duration) {
-                    player.release()
                     stopBackgroundAudio()
                     _sleepTimer.postValue(true)
                 }

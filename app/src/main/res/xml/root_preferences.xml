@@ -439,4 +439,10 @@
         android:title="@string/show_copy_fullmsg"
         app:iconSpaceReserved="false"/>
 
+    <PreferenceCategory app:iconSpaceReserved="false"/>
+    <Preference
+        android:key="admin_settings"
+        android:title="@string/admin_settings"
+        app:iconSpaceReserved="false" />
+
 </androidx.preference.PreferenceScreen>

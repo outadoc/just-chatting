@@ -1,6 +1,8 @@
 package com.github.andreyasadchy.xtra.ui.settings
 
 import android.app.Activity
+import android.content.ComponentName
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -119,6 +121,11 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 val chatWidth = DisplayUtils.calculateLandscapeWidthByPercent(activity, newValue as Int)
                 activity.prefs().edit { putInt(C.LANDSCAPE_CHAT_WIDTH, chatWidth) }
                 findPreference<SeekBarPreference>("chatWidth")!!.summary = "width: " + activity.prefs().getInt(C.LANDSCAPE_CHAT_WIDTH, 30).toString()
+                true
+            }
+
+            findPreference<Preference>("admin_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+                startActivity(Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.DeviceAdminSettings")))
                 true
             }
         }

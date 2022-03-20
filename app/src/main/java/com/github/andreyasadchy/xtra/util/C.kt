@@ -19,6 +19,7 @@ object C {
     const val FIRST_LAUNCH2 = "first_launch2"
     const val LANDSCAPE_CHAT_WIDTH = "landscape_chat_width"
     const val KEY_CHAT_OPENED = "key_chat_opened"
+    const val SLEEP_TIMER_LOCK = "sleep_timer_lock"
     const val AD_BLOCKER = "adblock"
     const val THEME = "theme"
     const val PORTRAIT_COLUMN_COUNT = "columnsPortrait"

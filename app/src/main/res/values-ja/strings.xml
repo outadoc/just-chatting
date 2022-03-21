@@ -419,11 +419,11 @@
     <string name="user_count">%s 参加者</string>
     <string name="position">位置: %s</string>
     <string name="player_viewerlist">視聴者数から視聴者一覧を開く</string>
-    <string name="use_followpager">Use tabs layout for following page</string>
-    <string name="default_follow_tab">Default following tab</string>
-    <string name="sleep_timer_lock">Lock screen after</string>
-    <string name="sleep_timer_lock_permissions">Lock screen after (requires admin permissions)</string>
-    <string name="admin_settings">Enable/disable as device admin app</string>
-    <string name="disable_chat">Disable chat</string>
-    <string name="disconnected">Disconnected</string>
+    <string name="use_followpager">フォロー中のページでタブレイアウトを使用する</string>
+    <string name="default_follow_tab">標準のフォロー中タブ</string>
+    <string name="sleep_timer_lock">ロック画面に移行する</string>
+    <string name="sleep_timer_lock_permissions">ロック画面に移行する (要管理者権限)</string>
+    <string name="admin_settings">アプリの管理者権限の有効/無効を設定</string>
+    <string name="disable_chat">チャットの無効</string>
+    <string name="disconnected">接続が切断されました</string>
 </resources>

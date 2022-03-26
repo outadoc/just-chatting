@@ -24,7 +24,7 @@ class FollowedChannelsViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Follow>> = Transformations.map(filter) {
-        repository.loadFollowedChannels(it.gqlClientId, it.helixClientId, it.user.token, it.user.id, it.sort, it.order, viewModelScope)
+        repository.loadFollowedChannels(it.user.id, it.helixClientId, it.user.helixToken, it.gqlClientId, it.sort, it.order, viewModelScope)
     }
     val sort: Sort
         get() = filter.value!!.sort
@@ -35,21 +35,21 @@ class FollowedChannelsViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_order, context.getString(R.string.last_broadcast), context.getString(R.string.descending))
     }
 
-    fun setUser(gqlClientId: String?, helixClientId: String?, user: User) {
+    fun setUser(user: User, helixClientId: String?, gqlClientId: String?) {
         if (filter.value == null) {
-            filter.value = Filter(gqlClientId, helixClientId, user)
+            filter.value = Filter(user, helixClientId, gqlClientId)
         }
     }
 
-    fun filter(gqlClientId: String?, helixClientId: String?, user: User, sort: Sort, order: Order, text: CharSequence) {
-        filter.value = filter.value?.copy(gqlClientId = gqlClientId, helixClientId = helixClientId, user = user, sort = sort, order = order)
+    fun filter(sort: Sort, order: Order, text: CharSequence) {
+        filter.value = filter.value?.copy(sort = sort, order = order)
         _sortText.value = text
     }
 
     private data class Filter(
-        val gqlClientId: String?,
-        val helixClientId: String?,
         val user: User,
+        val helixClientId: String?,
+        val gqlClientId: String?,
         val sort: Sort = Sort.LAST_BROADCAST,
         val order: Order = Order.DESC)
 }

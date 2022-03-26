@@ -77,7 +77,7 @@ class VideosSortDialog : ExpandingBottomSheetDialogFragment(), RadioButtonDialog
                     period.gone()
                     selectLang.gone()
                 } else {
-                    if (requireContext().prefs().getString(C.USERNAME, "") == "") {
+                    if (requireContext().prefs().getString(C.TOKEN, "").isNullOrBlank()) {
                         period.gone()
                     }
                 }

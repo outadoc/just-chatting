@@ -65,16 +65,26 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun validate(clientId: String?, activity: Activity) {
+    fun validate(helixClientId: String?, gqlClientId: String?, activity: Activity) {
         val user = User.get(activity)
         if (user is NotValidated) {
             viewModelScope.launch {
                 try {
-                    val response = authRepository.validate(user.token)
-                    if (response?.clientId == clientId) {
-                        User.validated()
-                    } else {
-                        throw IllegalStateException("401")
+                    if (!user.helixToken.isNullOrBlank()) {
+                        val response = authRepository.validate(TwitchApiHelper.addTokenPrefixHelix(user.helixToken))
+                        if (response?.clientId == helixClientId) {
+                            User.validated()
+                        } else {
+                            throw IllegalStateException("401")
+                        }
+                    }
+                    if (!user.gqlToken.isNullOrBlank()) {
+                        val response = authRepository.validate(TwitchApiHelper.addTokenPrefixGQL(user.gqlToken))
+                        if (response?.clientId == gqlClientId) {
+                            User.validated()
+                        } else {
+                            throw IllegalStateException("401")
+                        }
                     }
                 } catch (e: Exception) {
                     if ((e is IllegalStateException && e.message == "401") || (e is HttpException && e.code() == 401)) {

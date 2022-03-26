@@ -7,8 +7,8 @@ import androidx.paging.DataSource
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
-import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.model.helix.game.Game
+import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.LocalFollowGameRepository
 import com.github.andreyasadchy.xtra.util.DownloadUtils
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
@@ -19,11 +19,10 @@ import java.io.File
 
 class FollowedGamesDataSource(
     private val localFollowsGame: LocalFollowGameRepository,
+    private val userId: String?,
     private val gqlClientId: String?,
-    private val helixClientId: String?,
-    private val userToken: String?,
-    private val userId: String,
-    private val api: HelixApi,
+    private val gqlToken: String?,
+    private val gqlApi: GraphQLRepository,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Game>(coroutineScope) {
     private var offset: String? = null
 
@@ -107,14 +106,13 @@ class FollowedGamesDataSource(
 
     class Factory(
         private val localFollowsGame: LocalFollowGameRepository,
+        private val userId: String?,
         private val gqlClientId: String?,
-        private val helixClientId: String?,
-        private val userToken: String?,
-        private val userId: String,
-        private val api: HelixApi,
+        private val gqlToken: String?,
+        private val gqlApi: GraphQLRepository,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Game, FollowedGamesDataSource>() {
 
         override fun create(): DataSource<Int, Game> =
-                FollowedGamesDataSource(localFollowsGame, gqlClientId, helixClientId, userToken, userId, api, coroutineScope).also(sourceLiveData::postValue)
+                FollowedGamesDataSource(localFollowsGame, userId, gqlClientId, gqlToken, gqlApi, coroutineScope).also(sourceLiveData::postValue)
     }
 }

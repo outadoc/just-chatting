@@ -37,13 +37,21 @@ class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewM
         viewModel.sortText.observe(viewLifecycleOwner) {
             sortText.text = it
         }
-        viewModel.setUser(gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), user = User.get(requireContext()))
+        viewModel.setUser(
+            user = User.get(requireContext()),
+            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+        )
         sortBar.setOnClickListener { FollowedChannelsSortDialog.newInstance(viewModel.sort, viewModel.order).show(childFragmentManager, null) }
     }
 
     override fun onChange(sort: Sort, sortText: CharSequence, order: Order, orderText: CharSequence) {
         adapter.submitList(null)
-        viewModel.filter(gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), user = User.get(requireContext()), sort = sort, order = order, text = getString(R.string.sort_and_order, sortText, orderText))
+        viewModel.filter(
+            sort = sort,
+            order = order,
+            text = getString(R.string.sort_and_order, sortText, orderText)
+        )
     }
 
     override fun scrollToTop() {

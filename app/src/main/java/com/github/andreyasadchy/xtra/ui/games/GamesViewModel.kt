@@ -1,5 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.games
 
+import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -15,19 +16,11 @@ class GamesViewModel @Inject constructor(
 
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Game>> = Transformations.map(filter) {
-        if (it.useHelix) {
-            repository.loadTopGames(it.clientId, it.token, viewModelScope)
-        } else {
-            if (it.tags == null && !it.showTags) {
-                repository.loadTopGamesGQLQuery(it.clientId, viewModelScope)
-            } else {
-                repository.loadTopGamesGQL(it.clientId, it.tags, viewModelScope)
-            }
-        }
+        repository.loadTopGames(it.helixClientId, it.helixToken, it.gqlClientId, it.tags, it.apiPref, viewModelScope)
     }
 
-    fun loadGames(useHelix: Boolean, showTags: Boolean, clientId: String?, token: String? = null, tags: List<String>? = null) {
-        Filter(useHelix, showTags, clientId, token, tags).let {
+    fun loadGames(helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null, tags: List<String>? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
+        Filter(helixClientId, helixToken, gqlClientId, tags, apiPref).let {
             if (filter.value != it) {
                 filter.value = it
             }
@@ -35,9 +28,9 @@ class GamesViewModel @Inject constructor(
     }
 
     private data class Filter(
-        val useHelix: Boolean,
-        val showTags: Boolean,
-        val clientId: String?,
-        val token: String?,
-        val tags: List<String>?)
+        val helixClientId: String?,
+        val helixToken: String?,
+        val gqlClientId: String?,
+        val tags: List<String>?,
+        val apiPref: ArrayList<Pair<Long?, String?>?>)
 }

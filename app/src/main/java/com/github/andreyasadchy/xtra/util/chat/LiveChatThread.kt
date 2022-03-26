@@ -8,7 +8,7 @@ import java.util.*
 private const val TAG = "LiveChatThread"
 
 class LiveChatThread(
-    private val userName: String?,
+    private val loggedIn: Boolean,
     private val channelName: String,
     private val listener: OnMessageReceivedListener) : Thread() {
     private var socketIn: Socket? = null
@@ -35,7 +35,7 @@ class LiveChatThread(
                             contains("USERNOTICE") -> listener.onUserNotice(this)
                             contains("CLEARMSG") -> listener.onClearMessage(this)
                             contains("CLEARCHAT") -> listener.onClearChat(this)
-                            contains("NOTICE") && userName == null -> listener.onNotice(this)
+                            contains("NOTICE") && !loggedIn -> listener.onNotice(this)
                             contains("ROOMSTATE") -> listener.onRoomState(this)
                             startsWith("PING") -> handlePing(writerIn)
                         }

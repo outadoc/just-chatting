@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.videos.channel
 
 import android.app.Application
+import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -27,17 +28,16 @@ class ChannelVideosViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Video>> = Transformations.map(filter) {
-        if (it.useHelix) {
-            repository.loadChannelVideos(it.clientId, it.token, it.channelId, it.period, it.broadcastType, it.sort, viewModelScope)
-        } else {
-            repository.loadChannelVideosGQLQuery(it.clientId, it.channelId,
-                when (it.broadcastType) {
-                    BroadcastType.ARCHIVE -> com.github.andreyasadchy.xtra.type.BroadcastType.ARCHIVE
-                    BroadcastType.HIGHLIGHT -> com.github.andreyasadchy.xtra.type.BroadcastType.HIGHLIGHT
-                    BroadcastType.UPLOAD -> com.github.andreyasadchy.xtra.type.BroadcastType.UPLOAD
-                    else -> null },
-                when (it.sort) { Sort.TIME -> VideoSort.TIME else -> VideoSort.VIEWS }, viewModelScope)
-        }
+        repository.loadChannelVideos(it.channelId, it.channelLogin, it.helixClientId, it.helixToken, it.period, it.broadcastType, it.sort, it.gqlClientId,
+            when (it.broadcastType) {
+                BroadcastType.ARCHIVE -> com.github.andreyasadchy.xtra.type.BroadcastType.ARCHIVE
+                BroadcastType.HIGHLIGHT -> com.github.andreyasadchy.xtra.type.BroadcastType.HIGHLIGHT
+                BroadcastType.UPLOAD -> com.github.andreyasadchy.xtra.type.BroadcastType.UPLOAD
+                else -> null },
+            when (it.sort) { Sort.TIME -> VideoSort.TIME else -> VideoSort.VIEWS },
+            if (it.broadcastType == BroadcastType.ALL) { null }
+            else { it.broadcastType.value.uppercase() }, it.sort.value.uppercase(),
+            it.apiPref, viewModelScope)
     }
     val sort: Sort
         get() = filter.value!!.sort
@@ -50,22 +50,24 @@ class ChannelVideosViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.upload_date), context.getString(R.string.all_time))
     }
 
-    fun setChannelId(useHelix: Boolean, clientId: String?, channelId: String, token: String? = null) {
+    fun setChannelId(channelId: String? = null, channelLogin: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
         if (filter.value?.channelId != channelId) {
-            filter.value = Filter(useHelix, clientId, token, channelId = channelId)
+            filter.value = Filter(channelId, channelLogin, helixClientId, helixToken, gqlClientId, apiPref)
         }
     }
 
-    fun filter(useHelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, text: CharSequence, token: String? = null) {
-        filter.value = filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, sort = sort, period = period, broadcastType = type)
+    fun filter(sort: Sort, period: Period, type: BroadcastType, text: CharSequence) {
+        filter.value = filter.value?.copy(sort = sort, period = period, broadcastType = type)
         _sortText.value = text
     }
 
     private data class Filter(
-        val useHelix: Boolean,
-        val clientId: String?,
-        val token: String?,
-        val channelId: String,
+        val channelId: String?,
+        val channelLogin: String?,
+        val helixClientId: String?,
+        val helixToken: String?,
+        val gqlClientId: String?,
+        val apiPref: ArrayList<Pair<Long?, String?>?>,
         val sort: Sort = Sort.TIME,
         val period: Period = Period.ALL,
         val broadcastType: BroadcastType = BroadcastType.ALL)

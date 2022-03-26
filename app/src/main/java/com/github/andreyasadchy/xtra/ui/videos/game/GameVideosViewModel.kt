@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.videos.game
 
 import android.app.Application
+import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -36,22 +37,21 @@ class GameVideosViewModel @Inject constructor(
         val language = if (languageIndex != 0) {
             langValues.elementAt(languageIndex)
         } else null
-        if (it.useHelix) {
-            repository.loadVideos(it.clientId, it.token, it.gameId, it.period, it.broadcastType, language?.lowercase(), it.sort, viewModelScope)
-        } else {
-            repository.loadGameVideosGQLQuery(it.clientId, it.gameId,
-                if (language != null) {
-                    val langList = mutableListOf<String>()
-                    langList.add(language)
-                    langList
-                } else null,
-                when (it.broadcastType) {
-                    BroadcastType.ARCHIVE -> com.github.andreyasadchy.xtra.type.BroadcastType.ARCHIVE
-                    BroadcastType.HIGHLIGHT -> com.github.andreyasadchy.xtra.type.BroadcastType.HIGHLIGHT
-                    BroadcastType.UPLOAD -> com.github.andreyasadchy.xtra.type.BroadcastType.UPLOAD
-                    else -> null },
-                when (it.sort) { Sort.TIME -> VideoSort.TIME else -> VideoSort.VIEWS }, viewModelScope)
-        }
+        repository.loadGameVideos(it.gameId, it.gameName, it.helixClientId, it.helixToken, it.period, it.broadcastType, language?.lowercase(), it.sort, it.gqlClientId,
+            if (language != null) {
+                val langList = mutableListOf<String>()
+                langList.add(language)
+                langList
+            } else null,
+            when (it.broadcastType) {
+                BroadcastType.ARCHIVE -> com.github.andreyasadchy.xtra.type.BroadcastType.ARCHIVE
+                BroadcastType.HIGHLIGHT -> com.github.andreyasadchy.xtra.type.BroadcastType.HIGHLIGHT
+                BroadcastType.UPLOAD -> com.github.andreyasadchy.xtra.type.BroadcastType.UPLOAD
+                else -> null },
+            when (it.sort) { Sort.TIME -> VideoSort.TIME else -> VideoSort.VIEWS },
+            if (it.broadcastType == BroadcastType.ALL) { null }
+            else { it.broadcastType.value.uppercase() },
+            it.sort.value.uppercase(), it.apiPref, viewModelScope)
     }
     val sort: Sort
         get() = filter.value!!.sort
@@ -66,23 +66,24 @@ class GameVideosViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.view_count), context.getString(R.string.this_week))
     }
 
-    fun setGame(useHelix: Boolean, clientId: String?, gameId: String? = null, gameName: String? = null, token: String? = null) {
+    fun setGame(gameId: String? = null, gameName: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
         if (filter.value?.gameId != gameId) {
-            filter.value = Filter(useHelix = useHelix, clientId = clientId, token = token, gameId = gameId, gameName = gameName)
+            filter.value = Filter(gameId, gameName, helixClientId, helixToken, gqlClientId, apiPref)
         }
     }
 
-    fun filter(useHelix: Boolean, clientId: String?, sort: Sort, period: Period, type: BroadcastType, languageIndex: Int, text: CharSequence, token: String? = null) {
-        filter.value = filter.value?.copy(useHelix = useHelix, clientId = clientId, token = token, sort = sort, period = period, broadcastType = type, languageIndex = languageIndex)
+    fun filter(sort: Sort, period: Period, type: BroadcastType, languageIndex: Int, text: CharSequence) {
+        filter.value = filter.value?.copy(sort = sort, period = period, broadcastType = type, languageIndex = languageIndex)
         _sortText.value = text
     }
 
     private data class Filter(
-        val useHelix: Boolean,
-        val clientId: String?,
-        val token: String?,
         val gameId: String?,
         val gameName: String?,
+        val helixClientId: String?,
+        val helixToken: String?,
+        val gqlClientId: String?,
+        val apiPref: ArrayList<Pair<Long?, String?>?>,
         val sort: Sort = Sort.VIEWS,
         val period: Period = Period.WEEK,
         val broadcastType: BroadcastType = BroadcastType.ALL,

@@ -145,14 +145,13 @@ class ClipPlayerViewModel @Inject constructor(
         }
     }
 
-    fun loadVideo(useHelix: Boolean, clientId: String?, token: String? = null) {
+    fun loadVideo(helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null) {
         if (!loadingVideo) {
             loadingVideo = true
             viewModelScope.launch {
                 try {
                     if (clip.video_id != null) {
-                        val video = if (useHelix) repository.loadVideo(clientId, token, clip.video_id!!)
-                        else repository.loadVideoGQLQuery(clientId, clip.video_id!!)
+                        val video = repository.loadVideo(clip.video_id!!, helixClientId, helixToken, gqlClientId)
                         _video.postValue(video)
                     }
                 } catch (e: Exception) {

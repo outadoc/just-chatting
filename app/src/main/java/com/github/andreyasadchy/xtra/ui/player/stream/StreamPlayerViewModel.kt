@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserF
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistTracker
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
 import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
+import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class StreamPlayerViewModel @Inject constructor(
     context: Application,
     private val playerRepository: PlayerRepository,
+    private val gql: GraphQLRepository,
     repository: TwitchService,
     localFollowsChannel: LocalFollowChannelRepository) : HlsPlayerViewModel(context, repository, localFollowsChannel) {
 
@@ -53,7 +55,7 @@ class StreamPlayerViewModel @Inject constructor(
         .setPlaylistTrackerFactory(DefaultHlsPlaylistTracker.FACTORY)
         .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(6))
 
-    fun startStream(clientId: String?, token: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xDeviceId: String, deviceId: String, playerType: String, gqlClientId: String, useHelix: Boolean, loggedIn: Boolean) {
+    fun startStream(helixClientId: String?, helixToken: String, stream: Stream, useAdBlock: Boolean, randomDeviceId: Boolean, xDeviceId: String, deviceId: String, playerType: String, gqlClientId: String) {
         this.useAdBlock = useAdBlock
         this.randomDeviceId = randomDeviceId
         this.xDeviceId = xDeviceId
@@ -66,12 +68,14 @@ class StreamPlayerViewModel @Inject constructor(
             viewModelScope.launch {
                 while (isActive) {
                     try {
-                        val s = stream.user_id?.let {
-                            if (useHelix && loggedIn) {
-                                repository.loadStream(clientId, token, it)
-                            } else {
-                                repository.loadStreamGQLQuery(gqlClientId, it)
+                        val s = when {
+                            stream.user_id != null -> {
+                                repository.loadStream(stream.user_id, stream.user_login, helixClientId, helixToken, gqlClientId)
                             }
+                            stream.user_login != null -> {
+                                Stream(viewer_count = gql.loadViewerCount(gqlClientId, stream.user_login).viewers)
+                            }
+                            else -> null
                         }
                         _stream.postValue(s)
                         delay(300000L)

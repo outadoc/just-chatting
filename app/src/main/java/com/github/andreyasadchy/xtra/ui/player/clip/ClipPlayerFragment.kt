@@ -53,10 +53,10 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (childFragmentManager.findFragmentById(R.id.chatFragmentContainer) == null && !requireContext().prefs().getBoolean(C.API_USEHELIX, true) || requireContext().prefs().getString(C.USERNAME, "") == "") {
+        if (childFragmentManager.findFragmentById(R.id.chatFragmentContainer) == null && clip.videoOffsetSeconds != null) {
             childFragmentManager.beginTransaction().replace(R.id.chatFragmentContainer, ChatFragment.newInstance(channelId, clip.video_id, clip.videoOffsetSeconds?.toDouble())).commit()
         }
-        if (clip.video_id == null || clip.video_id == "") {
+        if (clip.video_id.isNullOrBlank()) {
             watchVideo.gone()
         }
     }
@@ -80,18 +80,14 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
         settings.setOnClickListener {
             FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities.keys, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
         }
-        if (clip.video_id != null && clip.video_id != "") {
+        if (!clip.video_id.isNullOrBlank()) {
             viewModel.video.observe(viewLifecycleOwner) {
                 if (it != null) {
                     (requireActivity() as MainActivity).startVideo(it, (clip.videoOffsetSeconds?.toDouble() ?: 0.0) * 1000.0 + viewModel.player.currentPosition)
                 }
             }
             watchVideo.setOnClickListener {
-                if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-                    viewModel.loadVideo(useHelix = true, clientId = prefs.getString(C.HELIX_CLIENT_ID, ""), token = prefs.getString(C.TOKEN, ""))
-                } else {
-                    viewModel.loadVideo(useHelix = false, clientId = prefs.getString(C.GQL_CLIENT_ID, ""))
-                }
+                viewModel.loadVideo(helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""), helixToken = prefs.getString(C.TOKEN, ""), gqlClientId = prefs.getString(C.GQL_CLIENT_ID, ""))
             }
         }
     }

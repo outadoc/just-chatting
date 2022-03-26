@@ -122,6 +122,23 @@
         <item>@string/chatFirstMsgEntries3</item>
     </string-array>
 
+    <string-array name="loginApiEntries">
+        <item>@string/both</item>
+        <item>GQL</item>
+        <item>Helix</item>
+    </string-array>
+
+    <string-array name="timestampEntries">
+        <item>@string/timestamp_format_0</item>
+        <item>@string/timestamp_format_1</item>
+        <item>@string/timestamp_format_2</item>
+        <item>@string/timestamp_format_3</item>
+        <item>@string/timestamp_format_4</item>
+        <item>@string/timestamp_format_5</item>
+        <item>@string/timestamp_format_6</item>
+        <item>@string/timestamp_format_7</item>
+    </string-array>
+
     <string-array name="timestampValues">
         <item>0</item>
         <item>1</item>
@@ -133,15 +150,35 @@
         <item>7</item>
     </string-array>
 
-    <string-array name="timestampEntries">
-        <item>h:mm</item>
-        <item>hh:mm</item>
-        <item>h:mm:ss</item>
-        <item>hh:mm:ss</item>
-        <item>h:mm am/pm</item>
-        <item>hh:mm am/pm</item>
-        <item>h:mm:ss am/pm</item>
-        <item>hh:mm:ss am/pm</item>
+    <string-array name="gqlUserLanguageEntries">
+        <item>@string/all</item>
+        <item>العربية</item>
+        <item>American sign language</item>
+        <item>Български</item>
+        <item>čeština</item>
+        <item>Dansk</item>
+        <item>Deutsch</item>
+        <item>Eλληνικά</item>
+        <item>English</item>
+        <item>Español</item>
+        <item>Suomi</item>
+        <item>Français</item>
+        <item>Magyar</item>
+        <item>Italiano</item>
+        <item>日本語</item>
+        <item>한국어</item>
+        <item>Nederlands</item>
+        <item>Norsk</item>
+        <item>Polski</item>
+        <item>Português</item>
+        <item>Pусский</item>
+        <item>Slovenčina</item>
+        <item>Svenska</item>
+        <item>ภาษาไทย</item>
+        <item>Türkçe</item>
+        <item>Tiếng việt</item>
+        <item>中文</item>
+        <item>@string/other</item>
     </string-array>
 
     <string-array name="gqlUserLanguageValues">
@@ -173,36 +210,5 @@
         <item>VI</item>
         <item>ZH</item>
         <item>OTHER</item>
-    </string-array>
-
-    <string-array name="gqlUserLanguageEntries">
-        <item>All</item>
-        <item>العربية</item>
-        <item>American sign language</item>
-        <item>Български</item>
-        <item>čeština</item>
-        <item>Dansk</item>
-        <item>Deutsch</item>
-        <item>Eλληνικά</item>
-        <item>English</item>
-        <item>Español</item>
-        <item>Suomi</item>
-        <item>Français</item>
-        <item>Magyar</item>
-        <item>Italiano</item>
-        <item>日本語</item>
-        <item>한국어</item>
-        <item>Nederlands</item>
-        <item>Norsk</item>
-        <item>Polski</item>
-        <item>Português</item>
-        <item>Pусский</item>
-        <item>Slovenčina</item>
-        <item>Svenska</item>
-        <item>ภาษาไทย</item>
-        <item>Türkçe</item>
-        <item>Tiếng việt</item>
-        <item>中文</item>
-        <item>Other</item>
     </string-array>
 </resources>

@@ -28,13 +28,13 @@ import java.io.File
 class FollowedChannelsDataSource(
     private val localFollowsChannel: LocalFollowChannelRepository,
     private val offlineRepository: OfflineRepository,
-    private val gqlClientId: String?,
+    private val userId: String?,
     private val helixClientId: String?,
-    private val userToken: String?,
-    private val userId: String,
+    private val helixToken: String?,
+    private val helixApi: HelixApi,
+    private val gqlClientId: String?,
     private val sort: Sort,
     private val order: Order,
-    private val api: HelixApi,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Follow>(coroutineScope) {
     private var offset: String? = null
 
@@ -44,8 +44,8 @@ class FollowedChannelsDataSource(
             for (i in localFollowsChannel.loadFollows()) {
                 list.add(Follow(to_id = i.user_id, to_login = i.user_login, to_name = i.user_name, profileImageURL = i.channelLogo, followLocal = true))
             }
-            if (userId != "") {
-                val get = api.getFollowedChannels(helixClientId, userToken, userId, 100, offset)
+            if (!helixToken.isNullOrBlank()) {
+                val get = helixApi.getFollowedChannels(helixClientId, helixToken, userId, 100, offset)
                 if (get.data != null) {
                     for (i in get.data) {
                         val item = list.find { it.to_id == i.to_id }
@@ -106,8 +106,8 @@ class FollowedChannelsDataSource(
         loadRange(params, callback) {
             val list = mutableListOf<Follow>()
             if (offset != null && offset != "") {
-                if (userId != "") {
-                    val get = api.getFollowedChannels(helixClientId, userToken, userId, 100, offset)
+                if (!helixToken.isNullOrBlank()) {
+                    val get = helixApi.getFollowedChannels(helixClientId, helixToken, userId, 100, offset)
                     if (get.data != null) {
                         for (i in get.data) {
                             val item = list.find { it.to_id == i.to_id }
@@ -180,16 +180,16 @@ class FollowedChannelsDataSource(
     class Factory(
         private val localFollowsChannel: LocalFollowChannelRepository,
         private val offlineRepository: OfflineRepository,
-        private val gqlClientId: String?,
+        private val userId: String?,
         private val helixClientId: String?,
-        private val userToken: String?,
-        private val userId: String,
+        private val helixToken: String?,
+        private val helixApi: HelixApi,
+        private val gqlClientId: String?,
         private val sort: Sort,
         private val order: Order,
-        private val api: HelixApi,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
 
         override fun create(): DataSource<Int, Follow> =
-                FollowedChannelsDataSource(localFollowsChannel, offlineRepository, gqlClientId, helixClientId, userToken, userId, sort, order, api, coroutineScope).also(sourceLiveData::postValue)
+                FollowedChannelsDataSource(localFollowsChannel, offlineRepository, userId, helixClientId, helixToken, helixApi, gqlClientId, sort, order, coroutineScope).also(sourceLiveData::postValue)
     }
 }

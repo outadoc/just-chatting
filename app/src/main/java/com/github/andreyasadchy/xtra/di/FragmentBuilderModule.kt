@@ -24,7 +24,6 @@ import com.github.andreyasadchy.xtra.ui.streams.common.StreamsFragment
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
 import com.github.andreyasadchy.xtra.ui.videos.channel.ChannelVideosFragment
 import com.github.andreyasadchy.xtra.ui.videos.game.GameVideosFragment
-import com.github.andreyasadchy.xtra.ui.videos.top.TopVideosFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -61,9 +60,6 @@ abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun contributeVideosFragment(): GameVideosFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributeTopVideosFragment(): TopVideosFragment
 
     @ContributesAndroidInjector
     abstract fun contributeDownloadsFragment(): DownloadsFragment

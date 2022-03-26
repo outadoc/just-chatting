@@ -6,9 +6,10 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
 
-sealed class User(val id: String,
-                  val name: String,
-                  val token: String) {
+sealed class User(val id: String?,
+                  val login: String?,
+                  val helixToken: String?,
+                  val gqlToken: String?) {
 
     companion object {
         private var user: User? = null
@@ -17,12 +18,13 @@ sealed class User(val id: String,
             return user ?: with(context.prefs()) {
                 val id = getString(C.USER_ID, null)
                 if (id != null) {
-                    val name = getString(C.USERNAME, null)!!
-                    val token = getString(C.TOKEN, null)!!
+                    val name = getString(C.USERNAME, null)
+                    val helixToken = getString(C.TOKEN, null)
+                    val gqlToken = getString(C.GQL_TOKEN, null)
                     if (TwitchApiHelper.checkedValidation) {
-                        LoggedIn(id, name, token)
+                        LoggedIn(id, name, helixToken, gqlToken)
                     } else {
-                        NotValidated(id, name, token)
+                        NotValidated(id, name, helixToken, gqlToken)
                     }
                 } else {
                     NotLoggedIn()
@@ -35,12 +37,14 @@ sealed class User(val id: String,
             context.prefs().edit {
                 if (user != null) {
                     putString(C.USER_ID, user.id)
-                    putString(C.USERNAME, user.name)
-                    putString(C.TOKEN, user.token)
+                    putString(C.USERNAME, user.login)
+                    putString(C.TOKEN, user.helixToken)
+                    putString(C.GQL_TOKEN, user.gqlToken)
                 } else {
                     putString(C.USER_ID, null)
                     putString(C.USERNAME, null)
                     putString(C.TOKEN, null)
+                    putString(C.GQL_TOKEN, null)
                 }
             }
         }
@@ -57,22 +61,24 @@ sealed class User(val id: String,
         other as User
 
         if (id != other.id) return false
-        if (name != other.name) return false
-        if (token != other.token) return false
+        if (login != other.login) return false
+        if (helixToken != other.helixToken) return false
+        if (gqlToken != other.gqlToken) return false
 
         return true
     }
 
     override fun hashCode(): Int {
         var result = id.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + token.hashCode()
+        result = 31 * result + login.hashCode()
+        result = 31 * result + helixToken.hashCode()
+        result = 31 * result + gqlToken.hashCode()
         return result
     }
 }
 
-class LoggedIn(id: String, name: String, token: String) : User(id, name, token) {
-    constructor(user: NotValidated) : this(user.id, user.name, user.token)
+class LoggedIn(id: String?, login: String?, helixToken: String?, gqlToken: String?) : User(id, login, helixToken, gqlToken) {
+    constructor(user: NotValidated) : this(user.id, user.login, user.helixToken, user.gqlToken)
 }
-class NotValidated(id: String, name: String, token: String) : User(id, name, token)
-class NotLoggedIn : User("", "", "")
+class NotValidated(id: String?, login: String?, helixToken: String?, gqlToken: String?) : User(id, login, helixToken, gqlToken)
+class NotLoggedIn : User(null, null, null, null)

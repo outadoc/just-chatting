@@ -22,6 +22,8 @@
 -dontwarn com.github.andreyasadchy.xtra.ui.**
 -keep class com.iheartradio.m3u8.** { *; }
 
+-keep class com.woxthebox.draglistview.** { *; }
+
 -keep public class com.bumptech.glide.integration.webp.WebpImage { *; }
 -keep public class com.bumptech.glide.integration.webp.WebpFrame { *; }
 -keep public class com.bumptech.glide.integration.webp.WebpBitmapFactory { *; }

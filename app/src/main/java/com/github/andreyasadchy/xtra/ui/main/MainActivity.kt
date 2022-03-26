@@ -104,6 +104,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
         }
         if (prefs.getBoolean(C.FIRST_LAUNCH2, true)) {
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.root_preferences, false)
+            PreferenceManager.setDefaultValues(this@MainActivity, R.xml.api_preferences, true)
             prefs.edit {
                 putBoolean(C.FIRST_LAUNCH2, false)
                 putInt(C.LANDSCAPE_CHAT_WIDTH, DisplayUtils.calculateLandscapeWidthByPercent(this@MainActivity, 30))
@@ -133,7 +134,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
         viewModel.isNetworkAvailable.observe(this, Observer {
             it.getContentIfNotHandled()?.let { online ->
                 if (online) {
-                    viewModel.validate(prefs.getString(C.HELIX_CLIENT_ID, ""), this)
+                    viewModel.validate(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.GQL_CLIENT_ID, ""), this)
                 }
                 if (flag) {
                     shortToast(if (online) R.string.connection_restored else R.string.no_connection)

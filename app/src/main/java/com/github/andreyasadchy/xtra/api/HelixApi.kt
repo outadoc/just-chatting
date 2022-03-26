@@ -42,7 +42,7 @@ interface HelixApi {
     suspend fun getTopVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("game_id") gameId: String?, @Query("period") period: com.github.andreyasadchy.xtra.model.helix.video.Period?, @Query("type") broadcastType: BroadcastType?, @Query("language") language: String?, @Query("sort") sort: Sort?, @Query("first") limit: Int, @Query("after") offset: String?): VideosResponse
 
     @GET("videos")
-    suspend fun getChannelVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") channelId: String, @Query("period") period: com.github.andreyasadchy.xtra.model.helix.video.Period?, @Query("type") broadcastType: BroadcastType?, @Query("sort") sort: Sort?, @Query("first") limit: Int, @Query("after") offset: String?): VideosResponse
+    suspend fun getChannelVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") channelId: String?, @Query("period") period: com.github.andreyasadchy.xtra.model.helix.video.Period?, @Query("type") broadcastType: BroadcastType?, @Query("sort") sort: Sort?, @Query("first") limit: Int, @Query("after") offset: String?): VideosResponse
 
     @GET("users")
     suspend fun getUserById(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") ids: List<String>): UsersResponse
@@ -57,7 +57,7 @@ interface HelixApi {
     suspend fun getUserFollows(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("to_id") userId: String, @Query("from_id") channelId: String): FollowResponse
 
     @GET("users/follows")
-    suspend fun getFollowedChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("from_id") userId: String, @Query("first") limit: Int, @Query("after") offset: String?): FollowResponse
+    suspend fun getFollowedChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("from_id") userId: String?, @Query("first") limit: Int, @Query("after") offset: String?): FollowResponse
 
     @GET("chat/emotes/set")
     suspend fun getEmotesFromSet(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("emote_set_id") setIds: List<String>): EmoteSetResponse

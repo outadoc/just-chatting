@@ -88,20 +88,47 @@ class ChatViewModel @Inject constructor(
     val chatters: Collection<Chatter>
         get() = (chat as LiveChatController).chatters.values
 
-    fun startLive(user: User, useHelix: Boolean, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
+    fun startLive(user: User, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
         if (chat == null && channelLogin != null && channelName != null) {
-            chat = LiveChatController(user, helixClientId, channelId, channelLogin, channelName, showUserNotice, showClearMsg, showClearChat)
+            chat = LiveChatController(
+                user = user,
+                helixClientId = helixClientId,
+                channelId = channelId,
+                channelLogin = channelLogin,
+                displayName = channelName,
+                showUserNotice = showUserNotice,
+                showClearMsg = showClearMsg,
+                showClearChat = showClearChat
+            )
             if (channelId != null) {
-                init(useHelix, helixClientId, gqlClientId, user.token.nullIfEmpty(), channelId, channelLogin, enableRecentMsg, recentMsgLimit)
+                init(
+                    helixClientId = helixClientId,
+                    helixToken = user.helixToken?.nullIfEmpty(),
+                    gqlClientId = gqlClientId,
+                    channelId = channelId,
+                    channelLogin = channelLogin,
+                    enableRecentMsg = enableRecentMsg,
+                    recentMsgLimit = recentMsgLimit
+                )
             }
         }
     }
 
-    fun startReplay(user: User, useHelix: Boolean, helixClientId: String?, gqlClientId: String, channelId: String?, videoId: String, startTime: Double, getCurrentPosition: () -> Double) {
+    fun startReplay(user: User, helixClientId: String?, gqlClientId: String, channelId: String?, videoId: String, startTime: Double, getCurrentPosition: () -> Double) {
         if (chat == null) {
-            chat = VideoChatController(gqlClientId, videoId, startTime, getCurrentPosition)
+            chat = VideoChatController(
+                clientId = gqlClientId,
+                videoId = videoId,
+                startTime = startTime,
+                getCurrentPosition = getCurrentPosition
+            )
             if (channelId != null) {
-                init(useHelix, helixClientId, gqlClientId, user.token.nullIfEmpty(), channelId)
+                init(
+                    helixClientId = helixClientId,
+                    helixToken = user.helixToken?.nullIfEmpty(),
+                    gqlClientId = gqlClientId,
+                    channelId = channelId
+                )
             }
         }
     }
@@ -123,7 +150,7 @@ class ChatViewModel @Inject constructor(
         super.onCleared()
     }
 
-    private fun init(useHelix: Boolean, helixClientId: String?, gqlClientId: String, token: String?, channelId: String, channelLogin: String? = null, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
+    private fun init(helixClientId: String?, helixToken: String?, gqlClientId: String, channelId: String, channelLogin: String? = null, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
         chat?.start()
         viewModelScope.launch {
             if (channelLogin != null && enableRecentMsg == true && recentMsgLimit != null) {
@@ -223,8 +250,7 @@ class ChatViewModel @Inject constructor(
             (chat as? LiveChatController)?.addEmotes(list)
             _otherEmotes.postValue(list)
             try {
-                val get = if (useHelix) repository.loadCheerEmotes(helixClientId, token, channelId)
-                else repository.loadCheerEmotesGQLQuery(gqlClientId, channelId)
+                val get = repository.loadCheerEmotes(channelId, helixClientId, helixToken, gqlClientId)
                 if (get != null) {
                     cheerEmotes.postValue(get!!)
                 }
@@ -276,8 +302,10 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(user.name.nullIfEmpty(), channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this)
-            loggedInChat = user.name.nullIfEmpty()?.let { TwitchApiHelper.startLoggedInChat(it, user.token.nullIfEmpty(), channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this) }
+            chat = TwitchApiHelper.startChat(user is LoggedIn, channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this)
+            if (user is LoggedIn) {
+                loggedInChat = TwitchApiHelper.startLoggedInChat(user.login, user.gqlToken?.nullIfEmpty() ?: user.helixToken, channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this)
+            }
         }
 
         override fun pause() {
@@ -299,13 +327,13 @@ class ChatViewModel @Inject constructor(
         }
 
         override fun onUserState(sets: List<String>?) {
-            if (helixClientId != null && user.token.nullIfEmpty() != null) {
+            if (helixClientId != null && user.helixToken?.nullIfEmpty() != null) {
                 if (savedEmoteSets != sets) {
                     viewModelScope.launch {
                         val emotes = mutableListOf<Emote>()
                         sets?.asReversed()?.chunked(25)?.forEach {
                             try {
-                                val list = repository.loadEmotesFromSet(helixClientId, user.token, it)
+                                val list = repository.loadEmotesFromSet(helixClientId, user.helixToken, it)
                                 if (list != null) {
                                     emotes.addAll(list)
                                 }

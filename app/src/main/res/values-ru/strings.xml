@@ -11,8 +11,6 @@
     <string name="animated_emotes">Анимированные смайлы</string>
     <string name="api_gql">ИД клиента GQL</string>
     <string name="api_helix">ИД клиента Helix</string>
-    <string name="api_helix_summary">Используется для отслеживаемых каналов и смайлов подписчиков всё равно</string>
-    <string name="api_usehelix">Использовать helix api при входе в систему</string>
     <string name="apply">Применить</string>
     <string name="are_you_sure">Вы действительно хотите удалить это видео?</string>
     <string name="ascending">По возрастанию</string>
@@ -161,7 +159,6 @@
     <string name="select_quality">Выберите качество</string>
     <string name="set">Старт</string>
     <string name="settings">Настройки</string>
-    <string name="settings_api">API</string>
     <string name="settings_chat">ЧАТ</string>
     <string name="settings_player">ПЛЕЕР</string>
     <string name="settings_token">ЗАГОЛОВКИ ПЛЕЙЛИCТА</string>
@@ -441,4 +438,26 @@ Removes a timeout on a user.</string>
     <string name="admin_settings">Enable/disable as device admin app</string>
     <string name="disable_chat">Disable chat</string>
     <string name="disconnected">Disconnected</string>
+    <string name="other">Other</string>
+    <string name="both">Both</string>
+    <string name="timestamp_format_0">h:mm</string>
+    <string name="timestamp_format_1">hh:mm</string>
+    <string name="timestamp_format_2">h:mm:ss</string>
+    <string name="timestamp_format_3">hh:mm:ss</string>
+    <string name="timestamp_format_4">h:mm am/pm</string>
+    <string name="timestamp_format_5">hh:mm am/pm</string>
+    <string name="timestamp_format_6">h:mm:ss am/pm</string>
+    <string name="timestamp_format_7">hh:mm:ss am/pm</string>
+    <string name="api_login">Get token for selected apis</string>
+    <string name="api_helix_redirect">Helix redirect url</string>
+    <string name="api_gql_redirect">GQL redirect url</string>
+    <string name="api_settings">Api settings</string>
+    <string name="streams">Streams</string>
+    <string name="game_streams">Game streams</string>
+    <string name="game_videos">Game videos</string>
+    <string name="game_clips">Game clips</string>
+    <string name="channel_videos">Channel videos</string>
+    <string name="channel_clips">Channel clips</string>
+    <string name="search_channels">Search channels</string>
+    <string name="search_games">Search games</string>
 </resources>

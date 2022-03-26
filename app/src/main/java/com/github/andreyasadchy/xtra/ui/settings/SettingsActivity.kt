@@ -11,6 +11,7 @@ import androidx.core.content.edit
 import androidx.preference.*
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.Utils
+import com.github.andreyasadchy.xtra.ui.settings.api.DragListFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.DisplayUtils
 import com.github.andreyasadchy.xtra.util.applyTheme
@@ -126,6 +127,15 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
 
             findPreference<Preference>("admin_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                 startActivity(Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.DeviceAdminSettings")))
+                true
+            }
+
+            findPreference<Preference>("api_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+                parentFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.settings, DragListFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit()
                 true
             }
         }

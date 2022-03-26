@@ -8,18 +8,15 @@ import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
-import com.github.andreyasadchy.xtra.repository.TwitchService
 import kotlinx.coroutines.CoroutineScope
 
 class FollowedStreamsDataSource(
-    private val useHelix: Boolean,
     private val localFollowsChannel: LocalFollowChannelRepository,
-    private val repository: TwitchService,
-    private val gqlClientId: String?,
+    private val userId: String?,
     private val helixClientId: String?,
-    private val userToken: String?,
-    private val userId: String,
-    private val api: HelixApi,
+    private val helixToken: String?,
+    private val helixApi: HelixApi,
+    private val gqlClientId: String?,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Stream>(coroutineScope) {
     private var offset: String? = null
 
@@ -34,30 +31,28 @@ class FollowedStreamsDataSource(
                 }
                 for (localIds in ids.chunked(100)) {
                     val streams = mutableListOf<Stream>()
-                    if (useHelix) {
-                        api.getStreams(helixClientId, userToken, localIds).data?.let { streams.addAll(it) }
-                    } else {
-                        val get = apolloClient(XtraModule(), gqlClientId).query(StreamsQuery(Optional.Present(localIds))).execute().data?.users
-                        if (get != null) {
-                            for (i in get) {
-                                streams.add(
-                                    Stream(id = i?.stream?.id, user_id = i?.id, user_login = i?.login, user_name = i?.displayName,
-                                        game_id = i?.stream?.game?.id, game_name = i?.stream?.game?.displayName, type = i?.stream?.type,
-                                        title = i?.stream?.title, viewer_count = i?.stream?.viewersCount, started_at = i?.stream?.createdAt,
-                                        thumbnail_url = i?.stream?.previewImageURL, profileImageURL = i?.profileImageURL))
-                            }
+/*                    if (useHelix) {
+                        helixApi.getStreams(helixClientId, helixToken, localIds).data?.let { streams.addAll(it) }*/
+                    val get = apolloClient(XtraModule(), gqlClientId).query(StreamsQuery(Optional.Present(localIds))).execute().data?.users
+                    if (get != null) {
+                        for (i in get) {
+                            streams.add(
+                                Stream(id = i?.stream?.id, user_id = i?.id, user_login = i?.login, user_name = i?.displayName,
+                                    game_id = i?.stream?.game?.id, game_name = i?.stream?.game?.displayName, type = i?.stream?.type,
+                                    title = i?.stream?.title, viewer_count = i?.stream?.viewersCount, started_at = i?.stream?.createdAt,
+                                    thumbnail_url = i?.stream?.previewImageURL, profileImageURL = i?.profileImageURL))
                         }
                     }
                     for (i in streams) {
                         if (i.viewer_count != null) {
-                            if (useHelix) { i.user_id?.let { userIds.add(it) } }
+/*                            if (useHelix) { i.user_id?.let { userIds.add(it) } }*/
                             list.add(i)
                         }
                     }
                 }
             }
-            if (userId != "") {
-                val get = api.getFollowedStreams(helixClientId, userToken, userId, 100, offset)
+            if (!helixToken.isNullOrBlank()) {
+                val get = helixApi.getFollowedStreams(helixClientId, helixToken, userId, 100, offset)
                 if (get.data != null) {
                     for (i in get.data) {
                         val item = list.find { it.user_id == i.user_id }
@@ -71,7 +66,7 @@ class FollowedStreamsDataSource(
             }
             if (userIds.isNotEmpty()) {
                 for (ids in userIds.chunked(100)) {
-                    val users = api.getUserById(helixClientId, userToken, ids).data
+                    val users = helixApi.getUserById(helixClientId, helixToken, ids).data
                     if (users != null) {
                         for (i in users) {
                             val item = list.find { it.user_id == i.id }
@@ -92,8 +87,8 @@ class FollowedStreamsDataSource(
             val list = mutableListOf<Stream>()
             if (offset != null && offset != "") {
                 val userIds = mutableListOf<String>()
-                if (userId != "") {
-                    val get = api.getFollowedStreams(helixClientId, userToken, userId, 100, offset)
+                if (!helixToken.isNullOrBlank()) {
+                    val get = helixApi.getFollowedStreams(helixClientId, helixToken, userId, 100, offset)
                     if (get.data != null) {
                         for (i in get.data) {
                             val item = list.find { it.user_id == i.user_id }
@@ -107,7 +102,7 @@ class FollowedStreamsDataSource(
                 }
                 if (userIds.isNotEmpty()) {
                     for (ids in userIds.chunked(100)) {
-                        val users = api.getUserById(helixClientId, userToken, ids).data
+                        val users = helixApi.getUserById(helixClientId, helixToken, ids).data
                         if (users != null) {
                             for (i in users) {
                                 val item = list.find { it.user_id == i.id }
@@ -124,17 +119,15 @@ class FollowedStreamsDataSource(
     }
 
     class Factory(
-        private val useHelix: Boolean,
         private val localFollowsChannel: LocalFollowChannelRepository,
-        private val repository: TwitchService,
-        private val gqlClientId: String?,
+        private val userId: String?,
         private val helixClientId: String?,
-        private val userToken: String?,
-        private val user_id: String,
-        private val api: HelixApi,
+        private val helixToken: String?,
+        private val helixApi: HelixApi,
+        private val gqlClientId: String?,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Stream, FollowedStreamsDataSource>() {
 
         override fun create(): DataSource<Int, Stream> =
-                FollowedStreamsDataSource(useHelix, localFollowsChannel, repository, gqlClientId, helixClientId, userToken, user_id, api, coroutineScope).also(sourceLiveData::postValue)
+                FollowedStreamsDataSource(localFollowsChannel, userId, helixClientId, helixToken, helixApi, gqlClientId, coroutineScope).also(sourceLiveData::postValue)
     }
 }

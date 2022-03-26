@@ -10,7 +10,7 @@ import java.util.concurrent.Executors
 private const val TAG = "LoggedInChatThread"
 
 class LoggedInChatThread(
-    private val userName: String,
+    private val userLogin: String?,
     private val userToken: String?,
     private val channelName: String,
     private val listener: OnMessageReceivedListener) : Thread(), ChatView.MessageSenderCallback {
@@ -59,7 +59,7 @@ class LoggedInChatThread(
                 readerOut = BufferedReader(InputStreamReader(getInputStream()))
                 writerOut = BufferedWriter(OutputStreamWriter(getOutputStream()))
                 write("PASS oauth:$userToken", writerOut)
-                write("NICK $userName", writerOut)
+                write("NICK $userLogin", writerOut)
             }
             write("CAP REQ :twitch.tv/tags twitch.tv/commands", writerOut)
             write("JOIN $hashChannelName", writerOut)

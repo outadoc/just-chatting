@@ -11,6 +11,7 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosFragment
 import com.github.andreyasadchy.xtra.ui.videos.VideosSortDialog
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.fragment_media.*
 import kotlinx.android.synthetic.main.fragment_videos.*
@@ -25,11 +26,14 @@ class GameVideosFragment : BaseVideosFragment<GameVideosViewModel>(), VideosSort
         viewModel.sortText.observe(viewLifecycleOwner) {
             sortText.text = it
         }
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.setGame(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME), token = requireContext().prefs().getString(C.TOKEN, ""))
-        } else {
-            viewModel.setGame(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME))
-        }
+        viewModel.setGame(
+            gameId = arguments?.getString(C.GAME_ID),
+            gameName = arguments?.getString(C.GAME_NAME),
+            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+            helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+            apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_GAME_VIDEOS, ""), TwitchApiHelper.gameVideosApiDefaults)
+        )
         sortBar.setOnClickListener { VideosSortDialog.newInstance(sort = viewModel.sort, period = viewModel.period, type = viewModel.type, languageIndex = viewModel.languageIndex).show(childFragmentManager, null) }
         val activity = requireActivity() as MainActivity
         if (requireContext().prefs().getBoolean(C.UI_FOLLOW, true)) {
@@ -39,10 +43,12 @@ class GameVideosFragment : BaseVideosFragment<GameVideosViewModel>(), VideosSort
 
     override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType, languageIndex: Int) {
         adapter.submitList(null)
-        if (period != Period.WEEK || requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.filter(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), sort = sort, period = period, type = type, languageIndex = languageIndex, text = getString(R.string.sort_and_period, sortText, periodText), token = requireContext().prefs().getString(C.TOKEN, ""))
-        } else {
-            viewModel.filter(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), sort = sort, period = period, type = type, languageIndex = languageIndex, text = getString(R.string.sort_and_period, sortText, periodText))
-        }
+        viewModel.filter(
+            sort = sort,
+            period = period,
+            type = type,
+            languageIndex = languageIndex,
+            text = getString(R.string.sort_and_period, sortText, periodText)
+        )
     }
 }

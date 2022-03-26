@@ -35,7 +35,6 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         val channelId = args.getString(KEY_CHANNEL)
         val user = User.get(requireContext())
         val userIsLoggedIn = user is LoggedIn
-        val useHelix = requireContext().prefs().getBoolean(C.API_USEHELIX, true) && userIsLoggedIn
         val helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, "")
         val gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: ""
         val showUserNotice = requireContext().prefs().getBoolean(C.CHAT_SHOW_USERNOTICE, true)
@@ -49,11 +48,11 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
             false
         } else {
             if (isLive) {
-                viewModel.startLive(user, useHelix, helixClientId, gqlClientId, channelId, chLogin, chName, showUserNotice, showClearMsg, showClearChat, enableRecentMsg, recentMsgLimit.toString())
+                viewModel.startLive(user, helixClientId, gqlClientId, channelId, chLogin, chName, showUserNotice, showClearMsg, showClearChat, enableRecentMsg, recentMsgLimit.toString())
                 chatView.init(this)
                 chatView.setCallback(viewModel)
                 if (userIsLoggedIn) {
-                    chatView.setUsername(user.name)
+                    user.login?.let { chatView.setUsername(it) }
                     chatView.setChatters(viewModel.chatters)
                     val emotesObserver = Observer(chatView::addEmotes)
                     viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
@@ -66,7 +65,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
                     if (it != null) {
                         chatView.init(this)
                         val getCurrentPosition = (parentFragment as ChatReplayPlayerFragment)::getCurrentPosition
-                        viewModel.startReplay(user, useHelix, helixClientId, gqlClientId, channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
+                        viewModel.startReplay(user, helixClientId, gqlClientId, channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
                         true
                     } else {
                         chatView.chatReplayUnavailable.visible()

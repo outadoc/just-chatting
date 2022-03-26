@@ -20,6 +20,7 @@ import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 import kotlinx.android.synthetic.main.fragment_games.*
@@ -99,10 +100,12 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
 
     override fun initialize() {
         super.initialize()
-        if (arguments?.getStringArray(C.TAGS) == null && requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.loadGames(useHelix = true, showTags = requireContext().prefs().getBoolean(C.UI_TAGS, true), clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""))
-        } else {
-            viewModel.loadGames(useHelix = false, showTags = requireContext().prefs().getBoolean(C.UI_TAGS, true), clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), tags = arguments?.getStringArray(C.TAGS)?.toList())
-        }
+        viewModel.loadGames(
+            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+            helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+            tags = arguments?.getStringArray(C.TAGS)?.toList(),
+            apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_GAMES, ""), TwitchApiHelper.gamesApiDefaults)
+        )
     }
 }

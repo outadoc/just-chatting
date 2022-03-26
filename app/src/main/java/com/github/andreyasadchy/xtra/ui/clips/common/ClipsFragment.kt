@@ -14,6 +14,7 @@ import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.videos.VideosSortDialog
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.fragment_clips.*
 import kotlinx.android.synthetic.main.fragment_media.*
@@ -40,11 +41,17 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>(), VideosSortDialog.OnFi
         viewModel.sortText.observe(viewLifecycleOwner) {
             sortText.text = it
         }
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.loadClips(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), channelId = arguments?.getString(C.CHANNEL_ID), channelLogin = arguments?.getString(C.CHANNEL_LOGIN), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME), token = requireContext().prefs().getString(C.TOKEN, ""))
-        } else {
-            viewModel.loadClips(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelId = arguments?.getString(C.CHANNEL_ID), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME))
-        }
+        viewModel.loadClips(
+            channelId = arguments?.getString(C.CHANNEL_ID),
+            channelLogin = arguments?.getString(C.CHANNEL_LOGIN),
+            gameId = arguments?.getString(C.GAME_ID),
+            gameName = arguments?.getString(C.GAME_NAME),
+            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+            helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+            channelApiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_CHANNEL_CLIPS, ""), TwitchApiHelper.channelClipsApiDefaults),
+            gameApiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_GAME_CLIPS, ""), TwitchApiHelper.gameClipsApiDefaults)
+        )
         sortBar.setOnClickListener { VideosSortDialog.newInstance(period = viewModel.period, languageIndex = viewModel.languageIndex, clipChannel = arguments?.getString(C.CHANNEL_ID) != null).show(childFragmentManager, null) }
         val activity = requireActivity() as MainActivity
         if (adapter is ClipsAdapter && requireContext().prefs().getBoolean(C.UI_FOLLOW, true)) {
@@ -54,10 +61,10 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>(), VideosSortDialog.OnFi
 
     override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType, languageIndex: Int) {
         adapter.submitList(null)
-        if (languageIndex == 0 && requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.filter(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), period = period, languageIndex = languageIndex, text = getString(R.string.sort_and_period, sortText, periodText), token = requireContext().prefs().getString(C.TOKEN, ""))
-        } else {
-            viewModel.filter(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), period = period, languageIndex = languageIndex, text = getString(R.string.sort_and_period, sortText, periodText))
-        }
+        viewModel.filter(
+            period = period,
+            languageIndex = languageIndex,
+            text = getString(R.string.sort_and_period, sortText, periodText)
+        )
     }
 }

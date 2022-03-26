@@ -10,6 +10,7 @@ import com.github.andreyasadchy.xtra.ui.videos.BaseVideosAdapter
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosFragment
 import com.github.andreyasadchy.xtra.ui.videos.VideosSortDialog
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.fragment_videos.*
 import kotlinx.android.synthetic.main.sort_bar.*
@@ -29,20 +30,24 @@ class ChannelVideosFragment : BaseVideosFragment<ChannelVideosViewModel>(), Vide
         viewModel.sortText.observe(viewLifecycleOwner) {
             sortText.text = it
         }
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.setChannelId(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), channelId = requireArguments().getString(C.CHANNEL_ID) ?: "", token = requireContext().prefs().getString(C.TOKEN, ""))
-        } else {
-            viewModel.setChannelId(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelId = requireArguments().getString(C.CHANNEL_ID) ?: "")
-        }
+        viewModel.setChannelId(
+            channelId = requireArguments().getString(C.CHANNEL_ID),
+            channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),
+            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+            helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+            apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_CHANNEL_VIDEOS, ""), TwitchApiHelper.channelVideosApiDefaults)
+        )
         sortBar.setOnClickListener { VideosSortDialog.newInstance(sort = viewModel.sort, period = viewModel.period, type = viewModel.type).show(childFragmentManager, null) }
     }
 
     override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType, languageIndex: Int) {
         adapter.submitList(null)
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.filter(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), sort = sort, period = period, type = type, text = getString(R.string.sort_and_period, sortText, periodText), token = requireContext().prefs().getString(C.TOKEN, ""))
-        } else {
-            viewModel.filter(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), sort = sort, period = period, type = type, text = getString(R.string.sort_and_period, sortText, periodText))
-        }
+        viewModel.filter(
+            sort = sort,
+            period = period,
+            type = type,
+            text = getString(R.string.sort_and_period, sortText, periodText)
+        )
     }
 }

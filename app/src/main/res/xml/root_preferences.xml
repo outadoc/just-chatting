@@ -414,28 +414,15 @@
         app:useSimpleSummaryProvider="true"
         app:iconSpaceReserved="false" />
 
-    <PreferenceCategory android:title="@string/settings_api" app:iconSpaceReserved="false"/>
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="api_usehelix"
-        android:summary="@string/api_helix_summary"
-        android:title="@string/api_usehelix"
-        app:iconSpaceReserved="false"/>
-
-    <EditTextPreference
-        android:defaultValue="ilfexgv3nnljz3isbm257gzwrzr7bi"
-        android:key="helix_client_id"
-        android:maxLines="1"
-        android:title="@string/api_helix"
-        app:useSimpleSummaryProvider="true"
+    <Preference
+        android:key="api_settings"
+        android:title="@string/api_settings"
+        app:allowDividerAbove="true"
         app:iconSpaceReserved="false" />
 
-    <EditTextPreference
-        android:defaultValue="kimne78kx3ncx6brgo4mv6wki5h1ko"
-        android:key="gql_client_id"
-        android:maxLines="1"
-        android:title="@string/api_gql"
-        app:useSimpleSummaryProvider="true"
+    <Preference
+        android:key="admin_settings"
+        android:title="@string/admin_settings"
         app:iconSpaceReserved="false" />
 
     <PreferenceCategory android:title="@string/settings_debug" app:iconSpaceReserved="false"/>
@@ -444,11 +431,5 @@
         android:key="debug_chat_fullmsg"
         android:title="@string/show_copy_fullmsg"
         app:iconSpaceReserved="false"/>
-
-    <PreferenceCategory app:iconSpaceReserved="false"/>
-    <Preference
-        android:key="admin_settings"
-        android:title="@string/admin_settings"
-        app:iconSpaceReserved="false" />
 
 </androidx.preference.PreferenceScreen>

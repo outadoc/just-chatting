@@ -64,14 +64,13 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         val msg = args.getCharSequence(KEY_ORIGINAL)!!
         val userId = args.getString(KEY_USERID)
         val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
-        val useHelix = requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != ""
         if (userId != null) {
             val item = savedUsers.find { it.id == userId }
             if (item != null) {
                 updateUserLayout(item)
             } else {
-                viewModel.loadUser(useHelix = useHelix, clientId = requireContext().prefs().getString(if (useHelix) C.HELIX_CLIENT_ID else C.GQL_CLIENT_ID, ""),
-                    token = if (useHelix) requireContext().prefs().getString(C.TOKEN, "") else null, channelId = userId).observe(viewLifecycleOwner) { user ->
+                viewModel.loadUser(channelId = userId, helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+                    gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")).observe(viewLifecycleOwner) { user ->
                     if (user != null) {
                         savedUsers.add(user)
                         updateUserLayout(user)

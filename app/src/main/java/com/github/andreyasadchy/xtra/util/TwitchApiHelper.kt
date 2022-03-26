@@ -2,6 +2,7 @@ package com.github.andreyasadchy.xtra.util
 
 import android.content.Context
 import android.text.format.DateUtils
+import androidx.core.util.Pair
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.util.chat.*
@@ -181,11 +182,11 @@ object TwitchApiHelper {
         return DateUtils.formatDateTime(context, date, format)
     }
 
-    fun startChat(userName: String?, channelName: String, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener): LiveChatThread {
-        return LiveChatThread(userName, channelName, MessageListenerImpl(newMessageListener, UserStateListener, RoomStateListener, CommandListener, showUserNotice, showClearMsg, showClearChat)).apply { start() }
+    fun startChat(loggedIn: Boolean, channelName: String, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener): LiveChatThread {
+        return LiveChatThread(loggedIn, channelName, MessageListenerImpl(newMessageListener, UserStateListener, RoomStateListener, CommandListener, showUserNotice, showClearMsg, showClearChat)).apply { start() }
     }
 
-    fun startLoggedInChat(userName: String, userToken: String?, channelName: String, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener): LoggedInChatThread {
+    fun startLoggedInChat(userName: String?, userToken: String?, channelName: String, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener): LoggedInChatThread {
         return LoggedInChatThread(userName, userToken, channelName, MessageListenerImpl(newMessageListener, UserStateListener, RoomStateListener, CommandListener, showUserNotice, showClearMsg, showClearChat)).apply { start() }
     }
 
@@ -200,7 +201,8 @@ object TwitchApiHelper {
         return offset
     }
 
-    fun addTokenPrefix(token: String) = "Bearer $token"
+    fun addTokenPrefixHelix(token: String) = "Bearer $token"
+    fun addTokenPrefixGQL(token: String) = "OAuth $token"
 
     fun formatViewsCount(context: Context, count: Int): String {
         return if (count > 1000 && context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) {
@@ -238,6 +240,48 @@ object TwitchApiHelper {
         val truncated = count / (divider / 10)
         val hasDecimal = truncated / 10.0 != (truncated / 10).toDouble()
         return if (hasDecimal) "${truncated / 10.0}$suffix" else "${truncated / 10}$suffix"
+    }
+
+    val gamesApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
+    val streamsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
+    val gameStreamsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
+    val gameVideosApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+    val gameClipsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+    val channelVideosApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+    val channelClipsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+    val searchChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.HELIX), Pair(1, C.GQL))
+    val searchGamesApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.HELIX))
+
+    fun listFromPrefs(pref: String?, defaults: ArrayList<Pair<Long?, String?>?>): ArrayList<Pair<Long?, String?>?> {
+        return if (!pref.isNullOrBlank()) {
+            val list = ArrayList<Pair<Long?, String?>?>()
+            val split = splitAndMakeMap(pref)
+            for (i in split.sortedBy { it?.first }) {
+                val item = defaults.find { it?.second == i?.second }
+                if (item != null) {
+                    list.add(i)
+                }
+            }
+            for (i in defaults.sortedBy { it?.first }) {
+                val item = list.find { it?.second == i?.second }
+                if (item == null) {
+                    i?.first?.toInt()?.let { list.add(it, i) }
+                }
+            }
+            list
+        } else {
+            defaults
+        }
+    }
+
+    private fun splitAndMakeMap(string: String): ArrayList<Pair<Long?, String?>?> {
+        val list = string.split(",".toRegex()).dropLastWhile { it.isEmpty() }
+        val map = arrayListOf<Pair<Long?, String?>?>()
+        for (pair in list) {
+            val kv = pair.split(":".toRegex()).dropLastWhile { it.isEmpty() }
+            map.add(Pair(kv[0].toLong(), kv[1]))
+        }
+        return map
     }
 
     fun getNoticeString(context: Context, msgId: String?, message: String?): String? {

@@ -10,6 +10,7 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
 import com.github.andreyasadchy.xtra.ui.streams.StreamsCompactAdapter
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_media.*
@@ -37,11 +38,17 @@ class StreamsFragment : BaseStreamsFragment<StreamsViewModel>(), FollowFragment 
 
     override fun initialize() {
         super.initialize()
-        if (arguments?.getStringArray(C.TAGS) == null && requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.loadStreams(useHelix = true, showTags = requireContext().prefs().getBoolean(C.UI_TAGS, true), clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME), thumbnailsEnabled = !compactStreams)
-        } else {
-            viewModel.loadStreams(useHelix = false, showTags = requireContext().prefs().getBoolean(C.UI_TAGS, true), clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME), tags = arguments?.getStringArray(C.TAGS)?.toList(), thumbnailsEnabled = !compactStreams)
-        }
+        viewModel.loadStreams(
+            gameId = arguments?.getString(C.GAME_ID),
+            gameName = arguments?.getString(C.GAME_NAME),
+            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+            helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+            tags = arguments?.getStringArray(C.TAGS)?.toList(),
+            apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_STREAMS, ""), TwitchApiHelper.streamsApiDefaults),
+            gameApiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_GAME_STREAMS, ""), TwitchApiHelper.gameStreamsApiDefaults),
+            thumbnailsEnabled = !compactStreams
+        )
         val activity = requireActivity() as MainActivity
         sortBar.visible()
         if (arguments?.getString(C.GAME_ID) != null && arguments?.getString(C.GAME_NAME) != null) {

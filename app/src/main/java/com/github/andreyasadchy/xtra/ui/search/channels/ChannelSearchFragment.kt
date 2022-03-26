@@ -12,6 +12,7 @@ import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.search.Searchable
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
@@ -32,11 +33,13 @@ class ChannelSearchFragment : PagedListFragment<ChannelSearch, ChannelSearchView
 
     override fun search(query: String) {
         if (query.isNotEmpty()) { //TODO same query doesn't fire
-            if (requireContext().prefs().getString(C.USERNAME, "") != "") {
-                viewModel.setQuery(true, requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), query, requireContext().prefs().getString(C.TOKEN, ""))
-            } else {
-                viewModel.setQuery(false, requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), query)
-            }
+            viewModel.setQuery(
+                query = query,
+                helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+                helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+                gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+                apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_SEARCH_CHANNEL, ""), TwitchApiHelper.searchChannelsApiDefaults)
+            )
         } else {
             adapter.submitList(null)
             nothingHere?.gone()

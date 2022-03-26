@@ -129,22 +129,17 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
     override fun initialize() {
         val activity = requireActivity() as MainActivity
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.loadStream(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), channelId = requireArguments().getString(C.CHANNEL_ID), channelLogin = requireArguments().getString(C.CHANNEL_LOGIN), channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))
-        } else {
-            viewModel.loadStream(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), channelId = requireArguments().getString(C.CHANNEL_ID), channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))
-        }
+        viewModel.loadStream(channelId = requireArguments().getString(C.CHANNEL_ID), channelLogin = requireArguments().getString(C.CHANNEL_LOGIN), channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE), helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), helixToken = requireContext().prefs().getString(C.TOKEN, ""), gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))
         viewModel.stream.observe(viewLifecycleOwner) { stream ->
             updateStreamLayout(stream)
             if (stream?.channelUser != null) {
                 updateUserLayout(stream.channelUser)
-            }
-        }
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.loadUser(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""), channelId = requireArguments().getString(C.CHANNEL_ID))
-            viewModel.user.observe(viewLifecycleOwner) { user ->
-                if (user != null) {
-                    updateUserLayout(user)
+            } else {
+                viewModel.loadUser(channelId = requireArguments().getString(C.CHANNEL_ID), helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), helixToken = requireContext().prefs().getString(C.TOKEN, ""), gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))
+                viewModel.user.observe(viewLifecycleOwner) { user ->
+                    if (user != null) {
+                        updateUserLayout(user)
+                    }
                 }
             }
         }
@@ -307,11 +302,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
     }
 
     override fun onNetworkRestored() {
-        if (requireContext().prefs().getBoolean(C.API_USEHELIX, true) && requireContext().prefs().getString(C.USERNAME, "") != "") {
-            viewModel.retry(useHelix = true, clientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), token = requireContext().prefs().getString(C.TOKEN, ""))
-        } else {
-            viewModel.retry(useHelix = false, clientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))
-        }
+        viewModel.retry(helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), helixToken = requireContext().prefs().getString(C.TOKEN, ""), gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

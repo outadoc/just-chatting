@@ -6,14 +6,10 @@ import com.apollographql.apollo3.network.okHttpClient
 import com.github.andreyasadchy.xtra.BuildConfig
 import com.github.andreyasadchy.xtra.api.*
 import com.github.andreyasadchy.xtra.model.chat.*
-import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResponse
-import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDeserializer
+import com.github.andreyasadchy.xtra.model.gql.channel.*
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataDeserializer
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
-import com.github.andreyasadchy.xtra.model.gql.game.GameDataDeserializer
-import com.github.andreyasadchy.xtra.model.gql.game.GameDataResponse
-import com.github.andreyasadchy.xtra.model.gql.game.GameStreamsDataDeserializer
-import com.github.andreyasadchy.xtra.model.gql.game.GameStreamsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.game.*
 import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenDeserializer
 import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenResponse
 import com.github.andreyasadchy.xtra.model.gql.playlist.VideoPlaylistTokenDeserializer
@@ -144,10 +140,10 @@ class XtraModule {
                 .registerTypeAdapter(GameDataResponse::class.java, GameDataDeserializer())
                 .registerTypeAdapter(StreamDataResponse::class.java, StreamDataDeserializer())
                 .registerTypeAdapter(GameStreamsDataResponse::class.java, GameStreamsDataDeserializer())
-/*                .registerTypeAdapter(GameVideosDataResponse::class.java, GameVideosDataDeserializer())
+                .registerTypeAdapter(GameVideosDataResponse::class.java, GameVideosDataDeserializer())
                 .registerTypeAdapter(GameClipsDataResponse::class.java, GameClipsDataDeserializer())
                 .registerTypeAdapter(ChannelVideosDataResponse::class.java, ChannelVideosDataDeserializer())
-                .registerTypeAdapter(ChannelClipsDataResponse::class.java, ChannelClipsDataDeserializer())*/
+                .registerTypeAdapter(ChannelClipsDataResponse::class.java, ChannelClipsDataDeserializer())
                 .registerTypeAdapter(ChannelViewerListDataResponse::class.java, ChannelViewerListDeserializer())
                 .registerTypeAdapter(SearchChannelDataResponse::class.java, SearchChannelDataDeserializer())
                 .registerTypeAdapter(SearchGameDataResponse::class.java, SearchGameDataDeserializer())

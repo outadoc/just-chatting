@@ -33,7 +33,10 @@ class FollowedGamesFragment : PagedListFragment<Game, FollowedGamesViewModel, Ba
     override fun initialize() {
         super.initialize()
         sortBar.gone()
-        viewModel.setUser(gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), user = User.get(requireContext()))
+        viewModel.setUser(
+            user = User.get(requireContext()),
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+        )
     }
 
     override fun scrollToTop() {

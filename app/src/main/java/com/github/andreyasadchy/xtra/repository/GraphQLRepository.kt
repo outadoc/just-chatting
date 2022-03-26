@@ -12,6 +12,7 @@ import com.github.andreyasadchy.xtra.model.gql.game.GameVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.search.SearchChannelDataResponse
 import com.github.andreyasadchy.xtra.model.gql.search.SearchGameDataResponse
 import com.github.andreyasadchy.xtra.model.gql.stream.StreamDataResponse
+import com.github.andreyasadchy.xtra.model.gql.stream.ViewersDataResponse
 import com.github.andreyasadchy.xtra.model.gql.tag.*
 import com.github.andreyasadchy.xtra.model.gql.vod.VodGamesDataResponse
 import com.google.gson.JsonArray
@@ -380,6 +381,22 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
             })
         }
         return graphQL.getVodGames(clientId, json)
+    }
+
+    suspend fun loadViewerCount(clientId: String?, channel: String?): ViewersDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "UseViewCount")
+            add("variables", JsonObject().apply {
+                addProperty("channelLogin", channel)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "00b11c9c428f79ae228f30080a06ffd8226a1f068d6f52fbc057cbde66e994c2")
+                })
+            })
+        }
+        return graphQL.getViewerCount(clientId, json)
     }
 
     suspend fun loadChannelPanel(channelId: String): String? = withContext(Dispatchers.IO) {

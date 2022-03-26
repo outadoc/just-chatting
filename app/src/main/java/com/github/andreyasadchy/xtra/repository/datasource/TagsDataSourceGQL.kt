@@ -1,10 +1,8 @@
-package com.github.andreyasadchy.xtra.repository.datasourceGQL
+package com.github.andreyasadchy.xtra.repository.datasource
 
 import androidx.paging.DataSource
 import com.github.andreyasadchy.xtra.model.helix.tag.Tag
 import com.github.andreyasadchy.xtra.repository.GraphQLRepository
-import com.github.andreyasadchy.xtra.repository.datasource.BaseDataSourceFactory
-import com.github.andreyasadchy.xtra.repository.datasource.BasePositionalDataSource
 import kotlinx.coroutines.CoroutineScope
 
 class TagsDataSourceGQL private constructor(

@@ -1,5 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.search.games
 
+import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -13,27 +14,27 @@ import javax.inject.Inject
 class GameSearchViewModel @Inject constructor(
         private val repository: TwitchService) : PagedListViewModel<Game>() {
 
-    private var useHelix = false
     private val query = MutableLiveData<String>()
-    private var clientId = MutableLiveData<String>()
-    private var token = MutableLiveData<String>()
+    private var helixClientId = MutableLiveData<String>()
+    private var helixToken = MutableLiveData<String>()
+    private var gqlClientId = MutableLiveData<String>()
+    private var apiPref = MutableLiveData<ArrayList<Pair<Long?, String?>?>>()
     override val result: LiveData<Listing<Game>> = Transformations.map(query) {
-        if (useHelix) {
-            repository.loadSearchGames(clientId.value, token.value, it, viewModelScope)
-        } else {
-            repository.loadSearchGamesGQL(clientId.value, it, viewModelScope)
-        }
+        repository.loadSearchGames(it, helixClientId.value, helixToken.value, gqlClientId.value, apiPref.value, viewModelScope)
     }
 
-    fun setQuery(useHelix: Boolean, clientId: String?, query: String, token: String? = null) {
-        if (this.useHelix != useHelix) {
-            this.useHelix = useHelix
+    fun setQuery(query: String, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
+        if (this.helixClientId.value != helixClientId) {
+            this.helixClientId.value = helixClientId
         }
-        if (this.clientId.value != clientId) {
-            this.clientId.value = clientId
+        if (this.helixToken.value != helixToken) {
+            this.helixToken.value = helixToken
         }
-        if (this.token.value != token) {
-            this.token.value = token
+        if (this.gqlClientId.value != gqlClientId) {
+            this.gqlClientId.value = gqlClientId
+        }
+        if (this.apiPref.value != apiPref) {
+            this.apiPref.value = apiPref
         }
         if (this.query.value != query) {
             this.query.value = query

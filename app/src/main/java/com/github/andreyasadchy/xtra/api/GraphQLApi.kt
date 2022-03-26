@@ -13,6 +13,7 @@ import com.github.andreyasadchy.xtra.model.gql.playlist.VideoPlaylistTokenRespon
 import com.github.andreyasadchy.xtra.model.gql.search.SearchChannelDataResponse
 import com.github.andreyasadchy.xtra.model.gql.search.SearchGameDataResponse
 import com.github.andreyasadchy.xtra.model.gql.stream.StreamDataResponse
+import com.github.andreyasadchy.xtra.model.gql.stream.ViewersDataResponse
 import com.github.andreyasadchy.xtra.model.gql.tag.*
 import com.github.andreyasadchy.xtra.model.gql.vod.VodGamesDataResponse
 import com.google.gson.JsonArray
@@ -83,6 +84,9 @@ interface GraphQLApi {
 
     @POST(".")
     suspend fun getVodGames(@Header("Client-ID") clientId: String?, @Body json: JsonObject): VodGamesDataResponse
+
+    @POST(".")
+    suspend fun getViewerCount(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ViewersDataResponse
 
     @POST(".")
     suspend fun getChannelPanel(@Body json: JsonArray): Response<ResponseBody>

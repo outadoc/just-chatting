@@ -4,6 +4,10 @@ import com.github.andreyasadchy.xtra.model.gql.channel.ChannelClipsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResponse
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedChannelsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedGamesDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedStreamsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameClipsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameStreamsDataResponse
@@ -87,6 +91,18 @@ interface GraphQLApi {
 
     @POST(".")
     suspend fun getViewerCount(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ViewersDataResponse
+
+    @POST(".")
+    suspend fun getFollowedStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedStreamsDataResponse
+
+    @POST(".")
+    suspend fun getFollowedVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedVideosDataResponse
+
+    @POST(".")
+    suspend fun getFollowedChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedChannelsDataResponse
+
+    @POST(".")
+    suspend fun getFollowedGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedGamesDataResponse
 
     @POST(".")
     suspend fun getChannelPanel(@Body json: JsonArray): Response<ResponseBody>

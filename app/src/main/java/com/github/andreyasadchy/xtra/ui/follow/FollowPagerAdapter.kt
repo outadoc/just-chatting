@@ -8,6 +8,7 @@ import com.github.andreyasadchy.xtra.ui.common.pagers.ItemAwareFragmentPagerAdap
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.follow.games.FollowedGamesFragment
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
+import com.github.andreyasadchy.xtra.ui.videos.followed.FollowedVideosFragment
 
 class FollowPagerAdapter(
         private val context: Context,
@@ -17,6 +18,7 @@ class FollowPagerAdapter(
         val id = when (position) {
             0 -> R.string.games
             1 -> R.string.live
+            2 -> R.string.videos
             else -> R.string.channels
         }
         return context.getString(id)
@@ -26,10 +28,11 @@ class FollowPagerAdapter(
         val fragment: Fragment = when (position) {
             0 -> FollowedGamesFragment()
             1 -> FollowedStreamsFragment()
+            2 -> FollowedVideosFragment()
             else -> FollowedChannelsFragment()
         }
         return fragment
     }
 
-    override fun getCount(): Int = 3
+    override fun getCount(): Int = 4
 }

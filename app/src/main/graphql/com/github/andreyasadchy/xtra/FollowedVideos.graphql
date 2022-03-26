@@ -1,0 +1,31 @@
+query FollowedVideos($id: ID, $languages: [String!], $first: Int, $after: Cursor) {
+    user(id: $id) {
+        followedVideos(first: $first, after: $after, languages: $languages, types: ARCHIVE, sort: TIME) {
+            edges {
+                cursor
+                node {
+                    id
+                    broadcastType
+                    title
+                    createdAt
+                    previewThumbnailURL
+                    viewCount
+                    lengthSeconds
+                    owner {
+                        id
+                        login
+                        displayName
+                        profileImageURL(width: 300)
+                    }
+                    game {
+                        id
+                        displayName
+                    }
+                }
+            }
+            pageInfo {
+                hasNextPage
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+query FollowedGames($id: ID, $first: Int) {
+    user(id: $id) {
+        followedGames(first: $first, type: ALL) {
+            nodes {
+                id
+                displayName
+                boxArtURL
+                viewersCount
+                broadcastersCount
+            }
+        }
+    }
+}

@@ -471,4 +471,8 @@ Removes a timeout on a user.</string>
     <string name="channel_clips">Channel clips</string>
     <string name="search_channels">Search channels</string>
     <string name="search_games">Search games</string>
+    <string name="followed_streams">Followed streams</string>
+    <string name="followed_videos">Followed videos</string>
+    <string name="followed_channels">Followed channels</string>
+    <string name="followed_games">Followed games</string>
 </resources>

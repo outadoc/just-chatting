@@ -6,10 +6,18 @@
         <item>@string/clips</item>
     </string-array>
 
-    <string-array name="spinnerFollowed">
+    <string-array name="spinnerFollowedEntries">
         <item>@string/live</item>
+        <item>@string/videos</item>
         <item>@string/channels</item>
         <item>@string/games</item>
+    </string-array>
+
+    <string-array name="spinnerFollowedValues">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
     </string-array>
 
     <string-array name="themeEntries">

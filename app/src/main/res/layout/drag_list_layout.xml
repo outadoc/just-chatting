@@ -139,5 +139,61 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <TextView
+            android:id="@+id/apiSettingsText10"
+            style="@style/VideoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp" />
+
+        <com.woxthebox.draglistview.DragListView
+            android:id="@+id/apiSettingsList10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/apiSettingsText11"
+            style="@style/VideoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp" />
+
+        <com.woxthebox.draglistview.DragListView
+            android:id="@+id/apiSettingsList11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/apiSettingsText12"
+            style="@style/VideoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp" />
+
+        <com.woxthebox.draglistview.DragListView
+            android:id="@+id/apiSettingsList12"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/apiSettingsText13"
+            style="@style/VideoTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp" />
+
+        <com.woxthebox.draglistview.DragListView
+            android:id="@+id/apiSettingsList13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.follow.channels
 
 import android.app.Application
+import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -24,7 +25,7 @@ class FollowedChannelsViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Follow>> = Transformations.map(filter) {
-        repository.loadFollowedChannels(it.user.id, it.helixClientId, it.user.helixToken, it.gqlClientId, it.sort, it.order, viewModelScope)
+        repository.loadFollowedChannels(it.user.id, it.helixClientId, it.user.helixToken, it.gqlClientId, it.user.gqlToken, it.apiPref, it.sort, it.order, viewModelScope)
     }
     val sort: Sort
         get() = filter.value!!.sort
@@ -35,9 +36,9 @@ class FollowedChannelsViewModel @Inject constructor(
         _sortText.value = context.getString(R.string.sort_and_order, context.getString(R.string.last_broadcast), context.getString(R.string.descending))
     }
 
-    fun setUser(user: User, helixClientId: String?, gqlClientId: String?) {
+    fun setUser(user: User, helixClientId: String?, gqlClientId: String?, apiPref: ArrayList<Pair<Long?, String?>?>) {
         if (filter.value == null) {
-            filter.value = Filter(user, helixClientId, gqlClientId)
+            filter.value = Filter(user, helixClientId, gqlClientId, apiPref)
         }
     }
 
@@ -50,6 +51,7 @@ class FollowedChannelsViewModel @Inject constructor(
         val user: User,
         val helixClientId: String?,
         val gqlClientId: String?,
+        val apiPref: ArrayList<Pair<Long?, String?>?>,
         val sort: Sort = Sort.LAST_BROADCAST,
         val order: Order = Order.DESC)
 }

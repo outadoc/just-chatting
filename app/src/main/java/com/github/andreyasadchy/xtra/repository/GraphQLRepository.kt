@@ -5,6 +5,10 @@ import com.github.andreyasadchy.xtra.api.GraphQLApi
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelClipsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedChannelsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedGamesDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedStreamsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameClipsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameStreamsDataResponse
@@ -397,6 +401,75 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
             })
         }
         return graphQL.getViewerCount(clientId, json)
+    }
+
+    suspend fun loadFollowedStreams(clientId: String?, token: String?, limit: Int?, cursor: String?): FollowedStreamsDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "FollowingLive_CurrentUser")
+            add("variables", JsonObject().apply {
+                addProperty("cursor", cursor)
+                addProperty("limit", limit)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "40ac5a060fa06ba73e07bf8dd8c3cf6aca4494aeed2222c986ed47ffddf31f51")
+                })
+            })
+        }
+        return graphQL.getFollowedStreams(clientId, token, json)
+    }
+
+    suspend fun loadFollowedVideos(clientId: String?, token: String?, limit: Int?, cursor: String?): FollowedVideosDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "FollowedVideos_CurrentUser")
+            add("variables", JsonObject().apply {
+                addProperty("cursor", cursor)
+                addProperty("limit", limit)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "a8e02d4cc25511e9997842c80333e15ba0bb9e11b4199e31c5207317faff9618")
+                })
+            })
+        }
+        return graphQL.getFollowedVideos(clientId, token, json)
+    }
+
+    suspend fun loadFollowedChannels(clientId: String?, token: String?, limit: Int?, cursor: String?): FollowedChannelsDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "ChannelFollows")
+            add("variables", JsonObject().apply {
+                addProperty("cursor", cursor)
+                addProperty("limit", limit)
+                addProperty("order", "DESC")
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "4b9cb31b54b9213e5760f2f6e9e935ad09924cac2f78aac51f8a64d85f028ed0")
+                })
+            })
+        }
+        return graphQL.getFollowedChannels(clientId, token, json)
+    }
+
+    suspend fun loadFollowedGames(clientId: String?, token: String?, limit: Int?): FollowedGamesDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "FollowingGames_CurrentUser")
+            add("variables", JsonObject().apply {
+                addProperty("limit", limit)
+                addProperty("type", "ALL")
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "8446d4d234005813dc1f024f487ce95434c3e4202f451dd42777935b5ed035ce")
+                })
+            })
+        }
+        return graphQL.getFollowedGames(clientId, token, json)
     }
 
     suspend fun loadChannelPanel(channelId: String): String? = withContext(Dispatchers.IO) {

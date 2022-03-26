@@ -13,7 +13,8 @@ class FollowPagerFragment(private val defaultItem: Int?) : MediaPagerFragment() 
         setAdapter(adapter = FollowPagerAdapter(activity, childFragmentManager),
             currentItem = when (defaultItem) {
                 1 -> 2
-                2 -> 0
+                2 -> 3
+                3 -> 0
                 else -> 1
             })
     }

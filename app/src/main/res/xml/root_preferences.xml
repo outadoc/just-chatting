@@ -82,8 +82,8 @@
 
     <ListPreference
         android:defaultValue="0"
-        android:entries="@array/spinnerFollowed"
-        android:entryValues="@array/cutoutmodeValues"
+        android:entries="@array/spinnerFollowedEntries"
+        android:entryValues="@array/spinnerFollowedValues"
         android:key="ui_follow_default_page"
         android:summary="%s"
         android:title="@string/default_follow_tab"

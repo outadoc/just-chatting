@@ -58,6 +58,14 @@ class DragListFragment : Fragment() {
         views.add(Pair(view.findViewById(R.id.apiSettingsList8), Pair(C.API_PREF_SEARCH_CHANNEL, TwitchApiHelper.searchChannelsApiDefaults)))
         view.findViewById<TextView>(R.id.apiSettingsText9).text = requireContext().getString(R.string.search_games)
         views.add(Pair(view.findViewById(R.id.apiSettingsList9), Pair(C.API_PREF_SEARCH_GAMES, TwitchApiHelper.searchGamesApiDefaults)))
+        view.findViewById<TextView>(R.id.apiSettingsText10).text = requireContext().getString(R.string.followed_streams)
+        views.add(Pair(view.findViewById(R.id.apiSettingsList10), Pair(C.API_PREF_FOLLOWED_STREAMS, TwitchApiHelper.followedStreamsApiDefaults)))
+        view.findViewById<TextView>(R.id.apiSettingsText11).text = requireContext().getString(R.string.followed_videos)
+        views.add(Pair(view.findViewById(R.id.apiSettingsList11), Pair(C.API_PREF_FOLLOWED_VIDEOS, TwitchApiHelper.followedVideosApiDefaults)))
+        view.findViewById<TextView>(R.id.apiSettingsText12).text = requireContext().getString(R.string.followed_channels)
+        views.add(Pair(view.findViewById(R.id.apiSettingsList12), Pair(C.API_PREF_FOLLOWED_CHANNELS, TwitchApiHelper.followedChannelsApiDefaults)))
+        view.findViewById<TextView>(R.id.apiSettingsText13).text = requireContext().getString(R.string.followed_games)
+        views.add(Pair(view.findViewById(R.id.apiSettingsList13), Pair(C.API_PREF_FOLLOWED_GAMES, TwitchApiHelper.followedGamesApiDefaults)))
         for (i in views) {
             setupListRecyclerView(i.first, i.second)
         }

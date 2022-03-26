@@ -251,6 +251,10 @@ object TwitchApiHelper {
     val channelClipsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
     val searchChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.HELIX), Pair(1, C.GQL))
     val searchGamesApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.HELIX))
+    val followedStreamsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+    val followedVideosApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL))
+    val followedChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+    val followedGamesApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY))
 
     fun listFromPrefs(pref: String?, defaults: ArrayList<Pair<Long?, String?>?>): ArrayList<Pair<Long?, String?>?> {
         return if (!pref.isNullOrBlank()) {

@@ -15,6 +15,7 @@ import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 import kotlinx.android.synthetic.main.fragment_followed_channels.*
@@ -40,7 +41,8 @@ class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewM
         viewModel.setUser(
             user = User.get(requireContext()),
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+            apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_FOLLOWED_CHANNELS, ""), TwitchApiHelper.followedChannelsApiDefaults),
         )
         sortBar.setOnClickListener { FollowedChannelsSortDialog.newInstance(viewModel.sort, viewModel.order).show(childFragmentManager, null) }
     }

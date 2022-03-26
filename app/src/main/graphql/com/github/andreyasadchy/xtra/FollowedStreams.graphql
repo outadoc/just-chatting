@@ -1,0 +1,30 @@
+query FollowedStreams($id: ID, $first: Int, $after: Cursor) {
+    user(id: $id) {
+        followedLiveUsers(first: $first, after: $after) {
+            edges {
+                cursor
+                node {
+                    id
+                    login
+                    displayName
+                    profileImageURL(width: 300)
+                    stream {
+                        id
+                        type
+                        title
+                        viewersCount
+                        createdAt
+                        previewImageURL
+                        game {
+                            id
+                            displayName
+                        }
+                    }
+                }
+            }
+            pageInfo {
+                hasNextPage
+            }
+        }
+    }
+}

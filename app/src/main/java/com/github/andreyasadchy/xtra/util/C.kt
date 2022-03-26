@@ -96,5 +96,9 @@ object C {
     const val API_PREF_CHANNEL_CLIPS = "api_pref_channel_clips"
     const val API_PREF_SEARCH_CHANNEL = "api_pref_search_channel"
     const val API_PREF_SEARCH_GAMES = "api_pref_search_games"
+    const val API_PREF_FOLLOWED_STREAMS = "api_pref_followed_streams"
+    const val API_PREF_FOLLOWED_VIDEOS = "api_pref_followed_videos"
+    const val API_PREF_FOLLOWED_CHANNELS = "api_pref_followed_channels"
+    const val API_PREF_FOLLOWED_GAMES = "api_pref_followed_games"
     const val DEBUG_CHAT_FULLMSG = "debug_chat_fullmsg"
 }

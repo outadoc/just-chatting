@@ -6,6 +6,7 @@ import com.github.andreyasadchy.xtra.ui.common.MediaFragment
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.follow.games.FollowedGamesFragment
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
+import com.github.andreyasadchy.xtra.ui.videos.followed.FollowedVideosFragment
 import kotlinx.android.synthetic.main.fragment_media.*
 
 class FollowMediaFragment(
@@ -15,7 +16,7 @@ class FollowMediaFragment(
     private var firstLaunch = true
 
     override val spinnerItems: Array<String>
-        get() = resources.getStringArray(R.array.spinnerFollowed)
+        get() = resources.getStringArray(R.array.spinnerFollowedEntries)
 
     override fun onSpinnerItemSelected(position: Int): Fragment {
         if (followPager) {
@@ -29,6 +30,7 @@ class FollowMediaFragment(
         return when (position) {
             0 -> FollowedStreamsFragment()
             1 -> FollowedChannelsFragment()
+            2 -> FollowedVideosFragment()
             else -> FollowedGamesFragment()
         }
     }

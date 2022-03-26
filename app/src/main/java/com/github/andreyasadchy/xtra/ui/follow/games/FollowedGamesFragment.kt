@@ -13,6 +13,7 @@ import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
@@ -35,7 +36,8 @@ class FollowedGamesFragment : PagedListFragment<Game, FollowedGamesViewModel, Ba
         sortBar.gone()
         viewModel.setUser(
             user = User.get(requireContext()),
-            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+            apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_FOLLOWED_GAMES, ""), TwitchApiHelper.followedGamesApiDefaults)
         )
     }
 

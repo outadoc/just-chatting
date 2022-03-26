@@ -1,21 +1,16 @@
 package com.github.andreyasadchy.xtra.repository.datasource
 
-import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import androidx.core.util.Pair
 import androidx.paging.DataSource
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import com.apollographql.apollo3.api.Optional
+import com.github.andreyasadchy.xtra.FollowedGamesQuery
+import com.github.andreyasadchy.xtra.di.XtraModule
+import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientWithTokenFactory.apolloClientWithToken
 import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.LocalFollowGameRepository
-import com.github.andreyasadchy.xtra.util.DownloadUtils
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.C
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.io.File
 
 class FollowedGamesDataSource(
     private val localFollowsGame: LocalFollowGameRepository,
@@ -23,8 +18,9 @@ class FollowedGamesDataSource(
     private val gqlClientId: String?,
     private val gqlToken: String?,
     private val gqlApi: GraphQLRepository,
+    private val apiPref: ArrayList<Pair<Long?, String?>?>,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Game>(coroutineScope) {
-    private var offset: String? = null
+    private var api: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Game>) {
         loadInitial(params, callback) {
@@ -32,75 +28,70 @@ class FollowedGamesDataSource(
             for (i in localFollowsGame.loadFollows()) {
                 list.add(Game(id = i.game_id, name = i.game_name, box_art_url = i.boxArt, followLocal = true))
             }
-/*            if (userId != "") {
-                val get = api.getFollowedChannels(helixClientId, userToken, userId, 100, offset)
-                if (get.data != null) {
-                    for (i in get.data) {
-                        val item = list.find { it.to_id == i.to_id }
-                        if (item == null) {
-                            i.followTwitch = true
-                            list.add(i)
-                        } else {
-                            item.followTwitch = true
-                        }
-                    }
-                    offset = get.pagination?.cursor
+            val remote = try {
+                when (apiPref.elementAt(0)?.second) {
+                    C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
+                    C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
+                    else -> mutableListOf()
                 }
-            }*/
+            } catch (e: Exception) {
+                try {
+                    when (apiPref.elementAt(1)?.second) {
+                        C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
+                        C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
+                        else -> mutableListOf()
+                    }
+                } catch (e: Exception) {
+                    mutableListOf()
+                }
+            }
+            if (!remote.isNullOrEmpty()) {
+                for (i in remote) {
+                    val item = list.find { it.id == i.id }
+                    if (item == null) {
+                        i.followTwitch = true
+                        list.add(i)
+                    } else {
+                        item.followTwitch = true
+                    }
+                }
+            }
             list.sortBy { it.name }
             list
         }
     }
 
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Game>) {
-        loadRange(params, callback) {
-            val list = mutableListOf<Game>()
-/*            if (offset != null && offset != "") {
-                if (userId != "") {
-                    val get = api.getFollowedChannels(helixClientId, userToken, userId, 100, offset)
-                    if (get.data != null) {
-                        for (i in get.data) {
-                            val item = list.find { it.to_id == i.to_id }
-                            if (item == null) {
-                                i.followTwitch = true
-                                list.add(i)
-                            } else {
-                                item.followTwitch = true
-                            }
-                        }
-                        offset = get.pagination?.cursor
-                    }
-                }
-            }*/
-            list
+    private suspend fun gqlQueryInitial(params: LoadInitialParams): List<Game> {
+        api = C.GQL_QUERY
+        val get1 = apolloClientWithToken(XtraModule(), gqlClientId, gqlToken)
+            .query(FollowedGamesQuery(id = Optional.Present(userId), first = Optional.Present(100))).execute().data?.user?.followedGames
+        val get = get1?.nodes
+        val list = mutableListOf<Game>()
+        if (get != null) {
+            for (i in get) {
+                list.add(
+                    Game(
+                        id = i?.id,
+                        name = i?.displayName,
+                        box_art_url = i?.boxArtURL,
+                        viewersCount = i?.viewersCount,
+                        broadcastersCount = i?.broadcastersCount
+                    )
+                )
+            }
         }
+        return list
     }
 
-    private fun updateLocalGame(context: Context, gameId: String, box_art_url: String) {
-        GlobalScope.launch {
-            try {
-                try {
-                    Glide.with(context)
-                        .asBitmap()
-                        .load(TwitchApiHelper.getTemplateUrl(box_art_url, "game"))
-                        .into(object: CustomTarget<Bitmap>() {
-                            override fun onLoadCleared(placeholder: Drawable?) {
+    private suspend fun gqlInitial(params: LoadInitialParams): List<Game> {
+        api = C.GQL
+        val get = gqlApi.loadFollowedGames(gqlClientId, gqlToken, 100)
+        return get.data
+    }
 
-                            }
-
-                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                DownloadUtils.savePng(context, "box_art", gameId, resource)
-                            }
-                        })
-                } catch (e: Exception) {
-
-                }
-                val downloadedLogo = File(context.filesDir.toString() + File.separator + "box_art" + File.separator + "${gameId}.png").absolutePath
-                localFollowsGame.getFollowById(gameId)?.let { localFollowsGame.updateFollow(it.apply {
-                    boxArt = downloadedLogo }) }
-            } catch (e: Exception) {
-
-            }
+    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Game>) {
+        loadRange(params, callback) {
+            mutableListOf()
         }
     }
 
@@ -110,9 +101,10 @@ class FollowedGamesDataSource(
         private val gqlClientId: String?,
         private val gqlToken: String?,
         private val gqlApi: GraphQLRepository,
+        private val apiPref: ArrayList<Pair<Long?, String?>?>,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Game, FollowedGamesDataSource>() {
 
         override fun create(): DataSource<Int, Game> =
-                FollowedGamesDataSource(localFollowsGame, userId, gqlClientId, gqlToken, gqlApi, coroutineScope).also(sourceLiveData::postValue)
+                FollowedGamesDataSource(localFollowsGame, userId, gqlClientId, gqlToken, gqlApi, apiPref, coroutineScope).also(sourceLiveData::postValue)
     }
 }

@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.model.gql.channel.*
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataDeserializer
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.*
 import com.github.andreyasadchy.xtra.model.gql.game.*
 import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenDeserializer
 import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenResponse
@@ -153,6 +154,10 @@ class XtraModule {
                 .registerTypeAdapter(TagSearchGameStreamDataResponse::class.java, TagSearchGameStreamDataDeserializer())
                 .registerTypeAdapter(TagSearchDataResponse::class.java, TagSearchDataDeserializer())
                 .registerTypeAdapter(VodGamesDataResponse::class.java, VodGamesDataDeserializer())
+                .registerTypeAdapter(FollowedStreamsDataResponse::class.java, FollowedStreamsDataDeserializer())
+                .registerTypeAdapter(FollowedVideosDataResponse::class.java, FollowedVideosDataDeserializer())
+                .registerTypeAdapter(FollowedChannelsDataResponse::class.java, FollowedChannelsDataDeserializer())
+                .registerTypeAdapter(FollowedGamesDataResponse::class.java, FollowedGamesDataDeserializer())
                 .create())
     }
 
@@ -170,10 +175,25 @@ class XtraModule {
         return builder.build()
     }
 
-    private class AuthorizationInterceptor(val clientId: String?): Interceptor {
+    @Singleton
+    @Provides
+    fun apolloClientWithToken(clientId: String?, token: String?): ApolloClient {
+        val builder = ApolloClient.Builder()
+            .serverUrl("https://gql.twitch.tv/gql/")
+            .okHttpClient(OkHttpClient.Builder().apply {
+                addInterceptor(AuthorizationInterceptor(clientId, token))
+                if (BuildConfig.DEBUG) {
+                    addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+                }
+            }.build())
+        return builder.build()
+    }
+
+    private class AuthorizationInterceptor(val clientId: String?, val token: String? = null): Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request().newBuilder().apply {
                 clientId?.let { addHeader("Client-ID", it) }
+                token?.let { addHeader("Authorization", it) }
             }.build()
             return chain.proceed(request)
         }

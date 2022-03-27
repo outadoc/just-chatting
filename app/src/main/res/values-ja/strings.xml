@@ -445,4 +445,8 @@
     <string name="channel_clips">チャンネルクリップ</string>
     <string name="search_channels">チャンネル検索</string>
     <string name="search_games">ゲーム検索</string>
+    <string name="followed_streams">フォロー済みの配信</string>
+    <string name="followed_videos">フォロー済みの動画</string>
+    <string name="followed_channels">フォロー済みのチャンネル</string>
+    <string name="followed_games">フォロー済みのゲーム</string>
 </resources>

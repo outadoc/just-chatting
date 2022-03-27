@@ -9,7 +9,7 @@ import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.util.*
-import kotlinx.android.synthetic.main.fragment_games_list_item.view.*
+import kotlinx.android.synthetic.main.fragment_followed_games_list_item.view.*
 
 class FollowedGamesAdapter(
         private val fragment: Fragment,
@@ -22,7 +22,7 @@ class FollowedGamesAdapter(
             override fun areContentsTheSame(oldItem: Game, newItem: Game): Boolean = true
         }) {
 
-    override val layoutId: Int = R.layout.fragment_games_list_item
+    override val layoutId: Int = R.layout.fragment_followed_games_list_item
 
     override fun bind(item: Game, view: View) {
         with(view) {
@@ -54,7 +54,7 @@ class FollowedGamesAdapter(
             if (item.tags != null && context.prefs().getBoolean(C.UI_TAGS, true)) {
                 tagsLayout.removeAllViews()
                 tagsLayout.visible()
-                for (tag in item.tags) {
+                for (tag in item.tags!!) {
                     val text = TextView(context)
                     text.text = tag.name
                     if (tag.id != null) {
@@ -64,6 +64,16 @@ class FollowedGamesAdapter(
                 }
             } else {
                 tagsLayout.gone()
+            }
+            if (item.followTwitch) {
+                twitchText.visible()
+            } else {
+                twitchText.gone()
+            }
+            if (item.followLocal) {
+                localText.visible()
+            } else {
+                localText.gone()
             }
         }
     }

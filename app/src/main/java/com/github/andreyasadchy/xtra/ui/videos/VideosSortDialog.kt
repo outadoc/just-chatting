@@ -18,6 +18,7 @@ import com.github.andreyasadchy.xtra.ui.clips.common.ClipsFragment
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
 import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
 import com.github.andreyasadchy.xtra.ui.videos.channel.ChannelVideosFragment
+import com.github.andreyasadchy.xtra.ui.videos.followed.FollowedVideosFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.gone
@@ -73,7 +74,7 @@ class VideosSortDialog : ExpandingBottomSheetDialogFragment(), RadioButtonDialog
                 sort.gone()
                 sortType.gone()
             } else {
-                if (parentFragment is ChannelVideosFragment) {
+                if (parentFragment is ChannelVideosFragment || parentFragment is FollowedVideosFragment) {
                     period.gone()
                     selectLang.gone()
                 } else {

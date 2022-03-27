@@ -54,7 +54,7 @@ class GameSearchAdapter(
             if (item.tags != null && context.prefs().getBoolean(C.UI_TAGS, true)) {
                 tagsLayout.removeAllViews()
                 tagsLayout.visible()
-                for (tag in item.tags) {
+                for (tag in item.tags!!) {
                     val text = TextView(context)
                     text.text = tag.name
                     if (tag.id != null) {

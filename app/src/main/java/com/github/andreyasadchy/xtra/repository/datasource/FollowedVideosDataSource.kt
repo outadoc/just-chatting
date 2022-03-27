@@ -8,6 +8,8 @@ import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientWithTokenFactory.apolloClientWithToken
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.GraphQLRepository
+import com.github.andreyasadchy.xtra.type.BroadcastType
+import com.github.andreyasadchy.xtra.type.VideoSort
 import com.github.andreyasadchy.xtra.util.C
 import kotlinx.coroutines.CoroutineScope
 
@@ -15,6 +17,8 @@ class FollowedVideosDataSource(
     private val userId: String?,
     private val gqlClientId: String?,
     private val gqlToken: String?,
+    private val gqlQueryType: BroadcastType?,
+    private val gqlQuerySort: VideoSort?,
     private val gqlApi: GraphQLRepository,
     private val apiPref: ArrayList<Pair<Long?, String?>?>,
     coroutineScope: CoroutineScope) : BasePositionalDataSource<Video>(coroutineScope) {
@@ -27,14 +31,14 @@ class FollowedVideosDataSource(
             try {
                 when (apiPref.elementAt(0)?.second) {
                     C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
-                    C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
+                    C.GQL -> if (!gqlToken.isNullOrBlank() && gqlQueryType == BroadcastType.ARCHIVE && gqlQuerySort == VideoSort.TIME) gqlInitial(params) else throw Exception()
                     else -> mutableListOf()
                 }
             } catch (e: Exception) {
                 try {
                     when (apiPref.elementAt(1)?.second) {
                         C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
-                        C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
+                        C.GQL -> if (!gqlToken.isNullOrBlank() && gqlQueryType == BroadcastType.ARCHIVE && gqlQuerySort == VideoSort.TIME) gqlInitial(params) else throw Exception()
                         else -> mutableListOf()
                     }
                 } catch (e: Exception) {
@@ -46,8 +50,9 @@ class FollowedVideosDataSource(
 
     private suspend fun gqlQueryInitial(params: LoadInitialParams): List<Video> {
         api = C.GQL_QUERY
+        val typeList = if (gqlQueryType != null) mutableListOf(gqlQueryType) else null
         val get1 = apolloClientWithToken(XtraModule(), gqlClientId, gqlToken)
-            .query(FollowedVideosQuery(id = Optional.Present(userId), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.user?.followedVideos
+            .query(FollowedVideosQuery(id = Optional.Present(userId), sort = Optional.Present(gqlQuerySort), type = Optional.Present(typeList), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.user?.followedVideos
         val get = get1?.edges
         val list = mutableListOf<Video>()
         if (get != null) {
@@ -94,8 +99,9 @@ class FollowedVideosDataSource(
     }
 
     private suspend fun gqlQueryRange(params: LoadRangeParams): List<Video> {
+        val typeList = if (gqlQueryType != null) mutableListOf(gqlQueryType) else null
         val get1 = apolloClientWithToken(XtraModule(), gqlClientId, gqlToken)
-            .query(FollowedVideosQuery(id = Optional.Present(userId), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.user?.followedVideos
+            .query(FollowedVideosQuery(id = Optional.Present(userId), sort = Optional.Present(gqlQuerySort), type = Optional.Present(typeList), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.user?.followedVideos
         val get = get1?.edges
         val list = mutableListOf<Video>()
         if (get != null && nextPage && offset != null && offset != "") {
@@ -136,11 +142,13 @@ class FollowedVideosDataSource(
         private val userId: String?,
         private val gqlClientId: String?,
         private val gqlToken: String?,
+        private val gqlQueryType: BroadcastType?,
+        private val gqlQuerySort: VideoSort?,
         private val gqlApi: GraphQLRepository,
         private val apiPref: ArrayList<Pair<Long?, String?>?>,
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Video, FollowedVideosDataSource>() {
 
         override fun create(): DataSource<Int, Video> =
-                FollowedVideosDataSource(userId, gqlClientId, gqlToken, gqlApi, apiPref, coroutineScope).also(sourceLiveData::postValue)
+                FollowedVideosDataSource(userId, gqlClientId, gqlToken, gqlQueryType, gqlQuerySort, gqlApi, apiPref, coroutineScope).also(sourceLiveData::postValue)
     }
 }

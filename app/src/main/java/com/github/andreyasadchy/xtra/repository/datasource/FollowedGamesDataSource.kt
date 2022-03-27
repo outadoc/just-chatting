@@ -53,6 +53,7 @@ class FollowedGamesDataSource(
                         list.add(i)
                     } else {
                         item.followTwitch = true
+                        item.tags = i.tags
                     }
                 }
             }

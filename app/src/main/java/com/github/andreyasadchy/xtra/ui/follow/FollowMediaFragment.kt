@@ -11,27 +11,46 @@ import kotlinx.android.synthetic.main.fragment_media.*
 
 class FollowMediaFragment(
     private val followPager: Boolean,
-    private val defaultItem: Int?) : MediaFragment() {
+    private val defaultItem: Int?,
+    private val loggedIn: Boolean) : MediaFragment() {
 
     private var firstLaunch = true
 
     override val spinnerItems: Array<String>
-        get() = resources.getStringArray(R.array.spinnerFollowedEntries)
+        get() = resources.getStringArray(if (loggedIn) R.array.spinnerFollowedEntries else R.array.spinnerFollowedEntriesNotLoggedIn)
 
     override fun onSpinnerItemSelected(position: Int): Fragment {
         if (followPager) {
             hideSpinner = true
-            return FollowPagerFragment(defaultItem)
+            return FollowPagerFragment(defaultItem, loggedIn)
         }
         if (firstLaunch && defaultItem != null) {
-            spinner.setSelection(defaultItem)
+            spinner.setSelection(
+                if (loggedIn) {
+                    defaultItem
+                } else {
+                    when (defaultItem) {
+                        2 -> 1
+                        3 -> 2
+                        else -> 0
+                    }
+                }
+            )
             firstLaunch = false
         }
-        return when (position) {
-            0 -> FollowedStreamsFragment()
-            1 -> FollowedChannelsFragment()
-            2 -> FollowedVideosFragment()
-            else -> FollowedGamesFragment()
+        return if (loggedIn) {
+            when (position) {
+                0 -> FollowedStreamsFragment()
+                1 -> FollowedVideosFragment()
+                2 -> FollowedChannelsFragment()
+                else -> FollowedGamesFragment()
+            }
+        } else {
+            when (position) {
+                0 -> FollowedStreamsFragment()
+                1 -> FollowedChannelsFragment()
+                else -> FollowedGamesFragment()
+            }
         }
     }
 }

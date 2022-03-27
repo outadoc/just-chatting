@@ -7,18 +7,18 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Game(
-        val id: String? = null,
-        val name: String? = null,
-        val box_art_url: String? = null,
+    val id: String? = null,
+    val name: String? = null,
+    val box_art_url: String? = null,
 
-        val viewersCount: Int? = null,
-        val broadcastersCount: Int? = null,
-        val tags: List<Tag>? = null,
-        val vodPosition: Int? = null,
-        val vodDuration: Int? = null,
+    val viewersCount: Int? = null,
+    val broadcastersCount: Int? = null,
+    var tags: List<Tag>? = null,
+    val vodPosition: Int? = null,
+    val vodDuration: Int? = null,
 
-        var followTwitch: Boolean = false,
-        val followLocal: Boolean = false) : Parcelable {
+    var followTwitch: Boolean = false,
+    val followLocal: Boolean = false) : Parcelable {
 
         val boxArt: String?
                 get() = TwitchApiHelper.getTemplateUrl(box_art_url, "game")

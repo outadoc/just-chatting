@@ -1,6 +1,6 @@
-query FollowedVideos($id: ID, $languages: [String!], $first: Int, $after: Cursor) {
+query FollowedVideos($id: ID, $languages: [String!], $sort: VideoSort, $type: [BroadcastType!], $first: Int, $after: Cursor) {
     user(id: $id) {
-        followedVideos(first: $first, after: $after, languages: $languages, types: ARCHIVE, sort: TIME) {
+        followedVideos(first: $first, after: $after, languages: $languages, types: $type, sort: $sort) {
             edges {
                 cursor
                 node {

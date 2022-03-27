@@ -364,7 +364,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
     private fun initNavigation() {
         fragNavController.apply {
-            rootFragments = listOf(GamesFragment(), TopFragment(), FollowMediaFragment(prefs.getBoolean(C.UI_FOLLOWPAGER, true), prefs.getString(C.UI_FOLLOW_DEFAULT_PAGE, "0")?.toInt()), DownloadsFragment())
+            rootFragments = listOf(GamesFragment(), TopFragment(), FollowMediaFragment(prefs.getBoolean(C.UI_FOLLOWPAGER, true), prefs.getString(C.UI_FOLLOW_DEFAULT_PAGE, "0")?.toInt(), !User.get(this@MainActivity).gqlToken.isNullOrBlank()), DownloadsFragment())
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
             transactionListener = object : FragNavController.TransactionListener {
                 override fun onFragmentTransaction(fragment: Fragment?, transactionType: FragNavController.TransactionType) {

@@ -53,6 +53,8 @@ class FollowedGamesDataSource(
                         list.add(i)
                     } else {
                         item.followTwitch = true
+                        item.viewersCount = i.viewersCount
+                        item.broadcastersCount = i.broadcastersCount
                         item.tags = i.tags
                     }
                 }

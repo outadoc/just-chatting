@@ -11,8 +11,8 @@ data class Game(
     val name: String? = null,
     val box_art_url: String? = null,
 
-    val viewersCount: Int? = null,
-    val broadcastersCount: Int? = null,
+    var viewersCount: Int? = null,
+    var broadcastersCount: Int? = null,
     var tags: List<Tag>? = null,
     val vodPosition: Int? = null,
     val vodDuration: Int? = null,

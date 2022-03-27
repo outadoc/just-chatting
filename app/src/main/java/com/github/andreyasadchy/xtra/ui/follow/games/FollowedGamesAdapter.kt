@@ -41,13 +41,13 @@ class FollowedGamesAdapter(
             }
             if (item.viewersCount != null) {
                 viewers.visible()
-                viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewersCount)
+                viewers.text = TwitchApiHelper.formatViewersCount(context, item.viewersCount!!)
             } else {
                 viewers.gone()
             }
             if (item.broadcastersCount != null && context.prefs().getBoolean(C.UI_BROADCASTERSCOUNT, true)) {
                 broadcastersCount.visible()
-                broadcastersCount.text = resources.getQuantityString(R.plurals.broadcasters, item.broadcastersCount, item.broadcastersCount)
+                broadcastersCount.text = resources.getQuantityString(R.plurals.broadcasters, item.broadcastersCount!!, item.broadcastersCount)
             } else {
                 broadcastersCount.gone()
             }

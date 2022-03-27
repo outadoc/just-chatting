@@ -36,7 +36,7 @@ class FollowedStreamsDataSource(
             val localIds = localFollowsChannel.loadFollows().map { it.user_id }
             val local = if (localIds.isNotEmpty()) {
                 try {
-                    if (!gqlToken.isNullOrBlank()) gqlQueryLocal(localIds) else throw Exception()
+                    gqlQueryLocal(localIds)
                 } catch (e: Exception) {
                     try {
                         if (!helixToken.isNullOrBlank()) helixLocal(localIds) else throw Exception()

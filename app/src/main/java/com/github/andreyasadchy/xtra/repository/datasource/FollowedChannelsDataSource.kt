@@ -93,30 +93,30 @@ class FollowedChannelsDataSource(
                     }
                 }
             }
+            val allIds = mutableListOf<String>()
             for (i in list) {
-                val allIds = mutableListOf<String>()
                 if (i.profileImageURL == null || i.profileImageURL?.contains("image_manager_disk_cache") == true || i.lastBroadcast == null) {
                     i.to_id?.let { allIds.add(it) }
                 }
-                if (allIds.isNotEmpty()) {
-                    for (ids in allIds.chunked(100)) {
-                        val get = apolloClient(XtraModule(), gqlClientId).query(UserLastBroadcastQuery(Optional.Present(ids))).execute().data?.users
-                        if (get != null) {
-                            for (user in get) {
-                                val item = list.find { it.to_id == user?.id }
-                                if (item != null) {
-                                    if (item.followLocal) {
-                                        if (item.profileImageURL == null || item.profileImageURL?.contains("image_manager_disk_cache") == true) {
-                                            val appContext = XtraApp.INSTANCE.applicationContext
-                                            item.to_id?.let { id -> user?.profileImageURL?.let { profileImageURL -> updateLocalUser(appContext, id, profileImageURL) } }
-                                        }
-                                    } else {
-                                        if (item.profileImageURL == null) {
-                                            item.profileImageURL = user?.profileImageURL
-                                        }
+            }
+            if (allIds.isNotEmpty()) {
+                for (ids in allIds.chunked(100)) {
+                    val get = apolloClient(XtraModule(), gqlClientId).query(UserLastBroadcastQuery(Optional.Present(ids))).execute().data?.users
+                    if (get != null) {
+                        for (user in get) {
+                            val item = list.find { it.to_id == user?.id }
+                            if (item != null) {
+                                if (item.followLocal) {
+                                    if (item.profileImageURL == null || item.profileImageURL?.contains("image_manager_disk_cache") == true) {
+                                        val appContext = XtraApp.INSTANCE.applicationContext
+                                        item.to_id?.let { id -> user?.profileImageURL?.let { profileImageURL -> updateLocalUser(appContext, id, profileImageURL) } }
                                     }
-                                    item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
+                                } else {
+                                    if (item.profileImageURL == null) {
+                                        item.profileImageURL = user?.profileImageURL
+                                    }
                                 }
+                                item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
                             }
                         }
                     }

@@ -126,7 +126,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
 
                 override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                     loginIfValidUrl(url, gqlAuthUrl, apiSetting)
-                    return super.shouldOverrideUrlLoading(view, url)
+                    return false
                 }
 
                 override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {

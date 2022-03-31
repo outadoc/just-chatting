@@ -26,14 +26,14 @@ class SearchGamesDataSource private constructor(
                 when (apiPref?.elementAt(0)?.second) {
                     C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                     C.GQL -> gqlInitial(params)
-                    else -> mutableListOf()
+                    else -> throw Exception()
                 }
             } catch (e: Exception) {
                 try {
                     when (apiPref?.elementAt(1)?.second) {
                         C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                         C.GQL -> gqlInitial(params)
-                        else -> mutableListOf()
+                        else -> throw Exception()
                     }
                 } catch (e: Exception) {
                     mutableListOf()

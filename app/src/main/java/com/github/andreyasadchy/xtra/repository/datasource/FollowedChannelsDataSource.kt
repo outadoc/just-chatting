@@ -59,7 +59,7 @@ class FollowedChannelsDataSource(
                     C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                     C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
                     C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
-                    else -> mutableListOf()
+                    else -> throw Exception()
                 }
             } catch (e: Exception) {
                 try {
@@ -67,7 +67,7 @@ class FollowedChannelsDataSource(
                         C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                         C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
                         C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
-                        else -> mutableListOf()
+                        else -> throw Exception()
                     }
                 } catch (e: Exception) {
                     try {
@@ -75,7 +75,7 @@ class FollowedChannelsDataSource(
                             C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                             C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
                             C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
-                            else -> mutableListOf()
+                            else -> throw Exception()
                         }
                     } catch (e: Exception) {
                         mutableListOf()
@@ -90,6 +90,8 @@ class FollowedChannelsDataSource(
                         list.add(i)
                     } else {
                         item.followTwitch = true
+                        item.followed_at = i.followed_at
+                        item.lastBroadcast = i.lastBroadcast
                     }
                 }
             }

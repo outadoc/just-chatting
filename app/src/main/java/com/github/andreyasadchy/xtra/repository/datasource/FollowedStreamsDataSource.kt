@@ -53,7 +53,7 @@ class FollowedStreamsDataSource(
                     C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                     C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
                     C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
-                    else -> mutableListOf()
+                    else -> throw Exception()
                 }
             } catch (e: Exception) {
                 try {
@@ -61,7 +61,7 @@ class FollowedStreamsDataSource(
                         C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                         C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
                         C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
-                        else -> mutableListOf()
+                        else -> throw Exception()
                     }
                 } catch (e: Exception) {
                     try {
@@ -69,7 +69,7 @@ class FollowedStreamsDataSource(
                             C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                             C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
                             C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
-                            else -> mutableListOf()
+                            else -> throw Exception()
                         }
                     } catch (e: Exception) {
                         mutableListOf()

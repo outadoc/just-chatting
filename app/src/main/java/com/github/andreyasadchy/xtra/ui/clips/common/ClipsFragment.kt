@@ -29,7 +29,7 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>(), VideosSortDialog.OnFi
             lastSelectedItem = it
             showDownloadDialog()
         }
-        if (arguments?.getString(C.CHANNEL_ID) != null) {
+        if (arguments?.getString(C.CHANNEL_ID) != null || arguments?.getString(C.CHANNEL_LOGIN) != null) {
             ChannelClipsAdapter(this, activity, activity, showDialog)
         } else {
             ClipsAdapter(this, activity, activity, activity, showDialog)

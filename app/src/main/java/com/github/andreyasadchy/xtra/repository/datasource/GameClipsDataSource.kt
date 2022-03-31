@@ -40,7 +40,7 @@ class GameClipsDataSource(
                     C.HELIX -> if (!helixToken.isNullOrBlank() && gqlQueryLanguages.isNullOrEmpty()) helixInitial(params) else throw Exception()
                     C.GQL_QUERY -> gqlQueryInitial(params)
                     C.GQL -> if (gqlQueryLanguages.isNullOrEmpty()) gqlInitial(params) else throw Exception()
-                    else -> mutableListOf()
+                    else -> throw Exception()
                 }
             } catch (e: Exception) {
                 try {
@@ -48,7 +48,7 @@ class GameClipsDataSource(
                         C.HELIX -> if (!helixToken.isNullOrBlank() && gqlQueryLanguages.isNullOrEmpty()) helixInitial(params) else throw Exception()
                         C.GQL_QUERY -> gqlQueryInitial(params)
                         C.GQL -> if (gqlQueryLanguages.isNullOrEmpty()) gqlInitial(params) else throw Exception()
-                        else -> mutableListOf()
+                        else -> throw Exception()
                     }
                 } catch (e: Exception) {
                     try {
@@ -56,7 +56,7 @@ class GameClipsDataSource(
                             C.HELIX -> if (!helixToken.isNullOrBlank() && gqlQueryLanguages.isNullOrEmpty()) helixInitial(params) else throw Exception()
                             C.GQL_QUERY -> gqlQueryInitial(params)
                             C.GQL -> if (gqlQueryLanguages.isNullOrEmpty()) gqlInitial(params) else throw Exception()
-                            else -> mutableListOf()
+                            else -> throw Exception()
                         }
                     } catch (e: Exception) {
                         mutableListOf()

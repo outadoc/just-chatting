@@ -52,7 +52,7 @@ class FollowedChannelsAdapter(
                 userStream.gone()
             }
             if (item.followed_at != null) {
-                val text = TwitchApiHelper.formatTimeString(context, item.followed_at)
+                val text = TwitchApiHelper.formatTimeString(context, item.followed_at!!)
                 if (text != null) {
                     userFollowed.visible()
                     userFollowed.text = context.getString(R.string.followed_at, text)

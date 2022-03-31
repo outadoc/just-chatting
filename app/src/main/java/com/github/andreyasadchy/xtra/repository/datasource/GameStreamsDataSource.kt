@@ -34,7 +34,7 @@ class GameStreamsDataSource private constructor(
                     C.HELIX -> if (!helixToken.isNullOrBlank() && tags.isNullOrEmpty()) helixInitial(params) else throw Exception()
                     C.GQL_QUERY -> if (tags.isNullOrEmpty()) gqlQueryInitial(params) else throw Exception()
                     C.GQL -> gqlInitial(params)
-                    else -> mutableListOf()
+                    else -> throw Exception()
                 }
             } catch (e: Exception) {
                 try {
@@ -42,7 +42,7 @@ class GameStreamsDataSource private constructor(
                         C.HELIX -> if (!helixToken.isNullOrBlank() && tags.isNullOrEmpty()) helixInitial(params) else throw Exception()
                         C.GQL_QUERY -> if (tags.isNullOrEmpty()) gqlQueryInitial(params) else throw Exception()
                         C.GQL -> gqlInitial(params)
-                        else -> mutableListOf()
+                        else -> throw Exception()
                     }
                 } catch (e: Exception) {
                     try {
@@ -50,7 +50,7 @@ class GameStreamsDataSource private constructor(
                             C.HELIX -> if (!helixToken.isNullOrBlank() && tags.isNullOrEmpty()) helixInitial(params) else throw Exception()
                             C.GQL_QUERY -> if (tags.isNullOrEmpty()) gqlQueryInitial(params) else throw Exception()
                             C.GQL -> gqlInitial(params)
-                            else -> mutableListOf()
+                            else -> throw Exception()
                         }
                     } catch (e: Exception) {
                         mutableListOf()

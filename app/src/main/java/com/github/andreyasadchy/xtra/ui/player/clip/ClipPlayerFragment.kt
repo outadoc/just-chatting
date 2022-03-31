@@ -83,7 +83,12 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
         if (!clip.video_id.isNullOrBlank()) {
             viewModel.video.observe(viewLifecycleOwner) {
                 if (it != null) {
-                    (requireActivity() as MainActivity).startVideo(it, (clip.videoOffsetSeconds?.toDouble() ?: 0.0) * 1000.0 + viewModel.player.currentPosition)
+                    (requireActivity() as MainActivity).startVideo(it, (
+                            if (clip.videoOffsetSeconds != null) {
+                                (clip.videoOffsetSeconds?.toDouble() ?: 0.0) * 1000.0 + viewModel.player.currentPosition
+                            } else {
+                                0.0
+                            }))
                 }
             }
             watchVideo.setOnClickListener {

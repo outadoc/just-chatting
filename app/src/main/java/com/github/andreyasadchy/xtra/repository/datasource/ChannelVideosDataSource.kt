@@ -44,7 +44,7 @@ class ChannelVideosDataSource (
                     C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                     C.GQL_QUERY -> if (helixPeriod == Period.ALL) gqlQueryInitial(params) else throw Exception()
                     C.GQL -> if (helixPeriod == Period.ALL) gqlInitial(params) else throw Exception()
-                    else -> mutableListOf()
+                    else -> throw Exception()
                 }
             } catch (e: Exception) {
                 try {
@@ -52,7 +52,7 @@ class ChannelVideosDataSource (
                         C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                         C.GQL_QUERY -> if (helixPeriod == Period.ALL) gqlQueryInitial(params) else throw Exception()
                         C.GQL -> if (helixPeriod == Period.ALL) gqlInitial(params) else throw Exception()
-                        else -> mutableListOf()
+                        else -> throw Exception()
                     }
                 } catch (e: Exception) {
                     try {
@@ -60,7 +60,7 @@ class ChannelVideosDataSource (
                             C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                             C.GQL_QUERY -> if (helixPeriod == Period.ALL) gqlQueryInitial(params) else throw Exception()
                             C.GQL -> if (helixPeriod == Period.ALL) gqlInitial(params) else throw Exception()
-                            else -> mutableListOf()
+                            else -> throw Exception()
                         }
                     } catch (e: Exception) {
                         mutableListOf()

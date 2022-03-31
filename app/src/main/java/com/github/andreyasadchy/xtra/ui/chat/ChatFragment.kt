@@ -62,7 +62,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
                 true
             } else {
                 args.getString(KEY_VIDEO_ID).let {
-                    if (it != null) {
+                    if (it != null && args.getString(KEY_START_TIME) != "empty") {
                         chatView.init(this)
                         val getCurrentPosition = (parentFragment as ChatReplayPlayerFragment)::getCurrentPosition
                         viewModel.startReplay(user, helixClientId, gqlClientId, channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
@@ -138,7 +138,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         }
 
         fun newInstance(channelId: String?, videoId: String?, startTime: Double?) = ChatFragment().apply {
-            arguments = bundleOf(KEY_IS_LIVE to false, KEY_CHANNEL to channelId, KEY_VIDEO_ID to videoId, KEY_START_TIME to startTime)
+            arguments = bundleOf(KEY_IS_LIVE to false, KEY_CHANNEL to channelId, KEY_VIDEO_ID to videoId, KEY_START_TIME to (startTime ?: "empty"))
         }
     }
 }

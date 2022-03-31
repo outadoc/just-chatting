@@ -46,7 +46,7 @@ class GameVideosDataSource private constructor(
                     C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                     C.GQL_QUERY -> if (helixPeriod == Period.WEEK) gqlQueryInitial(params) else throw Exception()
                     C.GQL -> if (helixLanguage.isNullOrBlank() && gqlQueryLanguages.isNullOrEmpty() && helixPeriod == Period.WEEK) gqlInitial(params) else throw Exception()
-                    else -> mutableListOf()
+                    else -> throw Exception()
                 }
             } catch (e: Exception) {
                 try {
@@ -54,7 +54,7 @@ class GameVideosDataSource private constructor(
                         C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                         C.GQL_QUERY -> if (helixPeriod == Period.WEEK) gqlQueryInitial(params) else throw Exception()
                         C.GQL -> if (helixLanguage.isNullOrBlank() && gqlQueryLanguages.isNullOrEmpty() && helixPeriod == Period.WEEK) gqlInitial(params) else throw Exception()
-                        else -> mutableListOf()
+                        else -> throw Exception()
                     }
                 } catch (e: Exception) {
                     try {
@@ -62,7 +62,7 @@ class GameVideosDataSource private constructor(
                             C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                             C.GQL_QUERY -> if (helixPeriod == Period.WEEK) gqlQueryInitial(params) else throw Exception()
                             C.GQL -> if (helixLanguage.isNullOrBlank() && gqlQueryLanguages.isNullOrEmpty() && helixPeriod == Period.WEEK) gqlInitial(params) else throw Exception()
-                            else -> mutableListOf()
+                            else -> throw Exception()
                         }
                     } catch (e: Exception) {
                         mutableListOf()

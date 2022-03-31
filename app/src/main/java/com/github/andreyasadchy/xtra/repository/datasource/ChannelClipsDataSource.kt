@@ -38,7 +38,7 @@ class ChannelClipsDataSource(
                     C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                     C.GQL_QUERY -> gqlQueryInitial(params)
                     C.GQL -> gqlInitial(params)
-                    else -> mutableListOf()
+                    else -> throw Exception()
                 }
             } catch (e: Exception) {
                 try {
@@ -46,7 +46,7 @@ class ChannelClipsDataSource(
                         C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                         C.GQL_QUERY -> gqlQueryInitial(params)
                         C.GQL -> gqlInitial(params)
-                        else -> mutableListOf()
+                        else -> throw Exception()
                     }
                 } catch (e: Exception) {
                     try {
@@ -54,7 +54,7 @@ class ChannelClipsDataSource(
                             C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
                             C.GQL_QUERY -> gqlQueryInitial(params)
                             C.GQL -> gqlInitial(params)
-                            else -> mutableListOf()
+                            else -> throw Exception()
                         }
                     } catch (e: Exception) {
                         mutableListOf()

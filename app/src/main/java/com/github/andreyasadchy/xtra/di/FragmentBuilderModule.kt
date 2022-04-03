@@ -20,6 +20,7 @@ import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchFragment
 import com.github.andreyasadchy.xtra.ui.search.games.GameSearchFragment
 import com.github.andreyasadchy.xtra.ui.search.tags.BaseTagSearchFragment
 import com.github.andreyasadchy.xtra.ui.search.tags.TagSearchFragment
+import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.ui.streams.common.StreamsFragment
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
 import com.github.andreyasadchy.xtra.ui.videos.channel.ChannelVideosFragment
@@ -31,6 +32,9 @@ import dagger.android.ContributesAndroidInjector
 
 @Module
 abstract class FragmentBuilderModule {
+
+    @ContributesAndroidInjector
+    abstract fun contributeSettingsFragment(): SettingsActivity.SettingsFragment
 
     @ContributesAndroidInjector
     abstract fun contributeGamesFragment(): GamesFragment

@@ -475,4 +475,9 @@ Removes a timeout on a user.</string>
     <string name="followed_videos">Followed videos</string>
     <string name="followed_channels">Followed channels</string>
     <string name="followed_games">Followed games</string>
+    <string name="save_video_positions">Save watched video positions</string>
+    <string name="clear_video_positions">Clear video positions</string>
+    <string name="cleared">Cleared</string>
+    <string name="irc_msgid_highlighted_message">Highlighted message</string>
+    <string name="irc_msgid_announcement">Announcement</string>
 </resources>

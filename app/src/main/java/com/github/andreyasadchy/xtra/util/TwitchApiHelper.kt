@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.format.DateUtils
 import androidx.core.util.Pair
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.util.chat.*
 import java.lang.Integer.parseInt
@@ -286,6 +287,15 @@ object TwitchApiHelper {
             map.add(Pair(kv[0].toLong(), kv[1]))
         }
         return map
+    }
+
+    fun getMessageIdString(msgId: String?): String? {
+        val appContext = XtraApp.INSTANCE.applicationContext
+        return when (msgId) {
+            "highlighted-message" -> appContext.getString(R.string.irc_msgid_highlighted_message)
+            "announcement" -> appContext.getString(R.string.irc_msgid_announcement)
+            else -> null
+        }
     }
 
     fun getNoticeString(context: Context, msgId: String?, message: String?): String? {

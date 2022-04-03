@@ -8,17 +8,24 @@ import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.*
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.ui.settings.api.DragListFragment
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.DisplayUtils
-import com.github.andreyasadchy.xtra.util.applyTheme
-import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.*
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_settings.*
+import javax.inject.Inject
 
-class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
+class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback, HasAndroidInjector, Injectable {
+
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,7 +49,10 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         return true
     }
 
-    class SettingsFragment : PreferenceFragmentCompat() {
+    class SettingsFragment : PreferenceFragmentCompat(), Injectable {
+
+        @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+        private val viewModel by viewModels<SettingsViewModel> { viewModelFactory }
 
         private var changed = false
 
@@ -125,6 +135,12 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 true
             }
 
+            findPreference<Preference>("clear_video_positions")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+                viewModel.deletePositions()
+                requireContext().toast(R.string.cleared)
+                true
+            }
+
             findPreference<Preference>("admin_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                 startActivity(Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.DeviceAdminSettings")))
                 true
@@ -155,6 +171,10 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         companion object {
             const val KEY_CHANGED = "changed"
         }
+    }
+
+    override fun androidInjector(): AndroidInjector<Any> {
+        return dispatchingAndroidInjector
     }
 
 //    class SettingsSubScreenFragment : PreferenceFragmentCompat() {

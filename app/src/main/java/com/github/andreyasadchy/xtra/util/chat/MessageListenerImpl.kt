@@ -14,61 +14,79 @@ class MessageListenerImpl(
     private val showClearMsg: Boolean,
     private val showClearChat: Boolean) : LiveChatThread.OnMessageReceivedListener, LoggedInChatThread.OnMessageReceivedListener {
     
-    override fun onMessage(message: String) {
-        val parts = message.substring(1).split(" ".toRegex(), 2)
-        val prefix = parts[0]
-        val prefixes = splitAndMakeMap(prefix, ";", "=")
-        val messageInfo = parts[1] //:<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
-        val userName = messageInfo.substring(1, messageInfo.indexOf("!"))
-        val userMessage: String
-        val isAction: Boolean
-        messageInfo.substring(messageInfo.indexOf(":", messageInfo.indexOf(":") + 1) + 1).let { //from <message>
-            if (!it.startsWith(ACTION)) {
-                userMessage = it
-                isAction = false
+    override fun onMessage(message: String, userNotice: Boolean) {
+        if (!userNotice || (userNotice && showUserNotice)) {
+            val parts = message.substring(1).split(" ".toRegex(), 2)
+            val prefix = parts[0]
+            val prefixes = splitAndMakeMap(prefix, ";", "=")
+            val messageInfo = parts[1] //:<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
+            val userLogin = prefixes["login"] ?: try {
+                messageInfo.substring(1, messageInfo.indexOf("!"))
+            } catch (e: Exception) {
+                null
+            }
+            val systemMsg = prefixes["system-msg"]?.replace("\\s", " ")
+            val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
+            if (msgIndex == -1 && userNotice) { // no user message & is user notice
+                callbackCommand.onCommand(Command(
+                    message = systemMsg ?: messageInfo,
+                    timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                    fullMsg = message
+                ))
             } else {
-                userMessage = it.substring(8, it.lastIndex)
-                isAction = true
-            }
-        }
-        var emotesList: MutableList<TwitchEmote>? = null
-        val emotes = prefixes["emotes"]
-        if (emotes != null) {
-            val entries = splitAndMakeMap(emotes, "/", ":").entries
-            emotesList = ArrayList(entries.size)
-            entries.forEach { emote ->
-                emote.value?.split(",")?.forEach { indexes ->
-                    val index = indexes.split("-")
-                    emotesList.add(TwitchEmote(emote.key, index[0].toInt(), index[1].toInt()))
+                val userMessage: String
+                val isAction: Boolean
+                messageInfo.substring(msgIndex + 1).let { //from <message>
+                    if (!it.startsWith(ACTION)) {
+                        userMessage = it
+                        isAction = false
+                    } else {
+                        userMessage = it.substring(8, it.lastIndex)
+                        isAction = true
+                    }
                 }
-            }
-        }
-        var badgesList: MutableList<Badge>? = null
-        val badges = prefixes["badges"]
-        if (badges != null) {
-            val entries = splitAndMakeMap(badges, ",", "/").entries
-            badgesList = ArrayList(entries.size)
-            entries.forEach {
-                it.value?.let { value ->
-                    badgesList.add(Badge(it.key, value))
+                var emotesList: MutableList<TwitchEmote>? = null
+                val emotes = prefixes["emotes"]
+                if (emotes != null) {
+                    val entries = splitAndMakeMap(emotes, "/", ":").entries
+                    emotesList = ArrayList(entries.size)
+                    entries.forEach { emote ->
+                        emote.value?.split(",")?.forEach { indexes ->
+                            val index = indexes.split("-")
+                            emotesList.add(TwitchEmote(emote.key, index[0].toInt(), index[1].toInt()))
+                        }
+                    }
                 }
+                var badgesList: MutableList<Badge>? = null
+                val badges = prefixes["badges"]
+                if (badges != null) {
+                    val entries = splitAndMakeMap(badges, ",", "/").entries
+                    badgesList = ArrayList(entries.size)
+                    entries.forEach {
+                        it.value?.let { value ->
+                            badgesList.add(Badge(it.key, value))
+                        }
+                    }
+                }
+                callback.onMessage(LiveChatMessage(
+                    id = prefixes["id"],
+                    userId = prefixes["user-id"],
+                    login = userLogin,
+                    displayName = prefixes["display-name"]?.replace("\\s", " "),
+                    message = userMessage,
+                    color = prefixes["color"],
+                    isAction = isAction,
+                    isReward = prefixes["custom-reward-id"] != null,
+                    isFirst = prefixes["first-msg"] == "1",
+                    msgId = prefixes["msg-id"],
+                    systemMsg = systemMsg,
+                    emotes = emotesList,
+                    badges = badgesList,
+                    timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                    fullMsg = message
+                ))
             }
         }
-        callback.onMessage(LiveChatMessage(
-            id = prefixes["id"],
-            userId = prefixes["user-id"],
-            userName = userName,
-            displayName = prefixes["display-name"]?.replace("\\s", " "),
-            message = userMessage,
-            color = prefixes["color"],
-            isAction = isAction,
-            isReward = prefixes["custom-reward-id"] != null,
-            isFirst = prefixes["first-msg"] == "1",
-            emotes = emotesList,
-            badges = badgesList,
-            timestamp = prefixes["tmi-sent-ts"]?.toLong(),
-            fullMsg = message
-        ))
     }
 
     override fun onCommand(message: String, duration: String?, type: String?, fullMsg: String?) {
@@ -131,36 +149,6 @@ class MessageListenerImpl(
             type = "notice",
             fullMsg = message
         ))
-    }
-
-    override fun onUserNotice(message: String) {
-        if (showUserNotice) {
-            val parts = message.substring(1).split(" ".toRegex(), 2)
-            val prefix = parts[0]
-            val prefixes = splitAndMakeMap(prefix, ";", "=")
-            val system = prefixes["system-msg"]?.replace("\\s", " ")
-            val messageInfo = parts[1]
-            val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
-            val msg = if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else null
-            var emotesList: MutableList<TwitchEmote>? = null
-            val emotes = prefixes["emotes"]
-            if (emotes != null && system != null && msg != null) {
-                val entries = splitAndMakeMap(emotes, "/", ":").entries
-                emotesList = ArrayList(entries.size)
-                entries.forEach { emote ->
-                    emote.value?.split(",")?.forEach { indexes ->
-                        val index = indexes.split("-")
-                        emotesList.add(TwitchEmote(emote.key, index[0].toInt() + system.length + 1, index[1].toInt() + system.length + 1))
-                    }
-                }
-            }
-            callbackCommand.onCommand(Command(
-                message = if (system != null) if (msg != null) "$system $msg" else system else message,
-                emotes = emotesList,
-                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
-                fullMsg = message
-            ))
-        }
     }
 
     override fun onRoomState(message: String) {

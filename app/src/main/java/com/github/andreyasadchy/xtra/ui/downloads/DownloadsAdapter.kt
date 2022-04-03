@@ -11,10 +11,7 @@ import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.ui.common.BaseListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.visible
+import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_downloads_list_item.view.*
 
 class DownloadsAdapter(
@@ -100,11 +97,15 @@ class DownloadsAdapter(
                 gameName.gone()
             }
             if (item.duration != null) {
-                progressBar.visible()
-                progressBar.progress = (item.lastWatchPosition.toFloat() / item.duration * 100).toInt()
                 item.sourceStartPosition?.let {
                     sourceStart.text = context.getString(R.string.source_vod_start, DateUtils.formatElapsedTime(it / 1000L))
                     sourceEnd.text = context.getString(R.string.source_vod_end, DateUtils.formatElapsedTime((it + item.duration) / 1000L))
+                }
+                if (context.prefs().getBoolean(C.PLAYER_USE_VIDEOPOSITIONS, true) && item.lastWatchPosition != null && item.duration > 0L) {
+                    progressBar.progress = (item.lastWatchPosition!!.toFloat() / item.duration * 100).toInt()
+                    progressBar.visible()
+                } else {
+                    progressBar.gone()
                 }
             } else {
                 progressBar.gone()

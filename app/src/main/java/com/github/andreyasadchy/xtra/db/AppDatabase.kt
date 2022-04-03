@@ -9,7 +9,7 @@ import com.github.andreyasadchy.xtra.model.offline.LocalFollowGame
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.model.offline.Request
 
-@Database(entities = [OfflineVideo::class, Request::class, RecentEmote::class, VideoPosition::class, LocalFollowChannel::class, LocalFollowGame::class], version = 12)
+@Database(entities = [OfflineVideo::class, Request::class, RecentEmote::class, VideoPosition::class, LocalFollowChannel::class, LocalFollowGame::class], version = 13)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun videos(): VideosDao

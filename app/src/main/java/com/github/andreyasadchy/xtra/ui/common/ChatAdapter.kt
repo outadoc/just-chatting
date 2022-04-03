@@ -78,6 +78,17 @@ class ChatAdapter(
         val images = ArrayList<Image>()
         var imageIndex = 0
         var badgesCount = 0
+        val msgId = chatMessage.msgId?.let { TwitchApiHelper.getMessageIdString(it) ?: chatMessage.msgId }
+        val systemMsg = chatMessage.systemMsg
+        if (systemMsg != null) {
+            builder.append("$systemMsg \n")
+            imageIndex += systemMsg.length + 2
+        } else {
+            if (msgId != null) {
+                builder.append("$msgId \n")
+                imageIndex += msgId.length + 2
+            }
+        }
         if (chatMessage.isFirst && firstmsgVisibility == "0") {
             builder.append("$firstChatMsg \n")
             imageIndex += firstChatMsg.length + 2
@@ -189,7 +200,7 @@ class ChatAdapter(
                             builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), builderIndex, endIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
                         }
                         loggedInUser?.let {
-                            if (!wasMentioned && value.contains(it, true) && chatMessage.userName != it) {
+                            if (!wasMentioned && value.contains(it, true) && chatMessage.login != it) {
                                 wasMentioned = true
                             }
                         }
@@ -229,16 +240,19 @@ class ChatAdapter(
                 builder.setSpan(ForegroundColorSpan(color), if (userName != null) userNameEndIndex + 1 else 0, builder.length, SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             if (chatMessage.isFirst && firstmsgVisibility?.toInt() ?: 0 < 2) {
-                holder.textView.setBackgroundColor(Color.parseColor("#80404040"))
+                holder.textView.setBackgroundColor(Color.parseColor("#800a4028"))
             } else {
                 if (chatMessage.isReward && firstmsgVisibility?.toInt() ?: 0 < 2) {
-                    holder.textView.setBackgroundColor(R.attr.colorAccent)
+                    holder.textView.setBackgroundColor(Color.parseColor("#802863ca"))
                 } else {
-                    if (wasMentioned && userId != null) {
-                        builder.setSpan(ForegroundColorSpan(Color.WHITE), 0, builder.length, SPAN_INCLUSIVE_INCLUSIVE)
-                        holder.textView.setBackgroundColor(Color.RED)
+                    if (chatMessage.systemMsg != null || chatMessage.msgId != null) {
+                        holder.textView.setBackgroundColor(Color.parseColor("#80404040"))
                     } else {
-                        holder.textView.background = null
+                        if (wasMentioned && userId != null) {
+                            holder.textView.setBackgroundColor(Color.parseColor("#940025"))
+                        } else {
+                            holder.textView.background = null
+                        }
                     }
                 }
             }

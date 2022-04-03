@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
@@ -12,6 +11,8 @@ import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.download.HasDownloadDialog
 import com.github.andreyasadchy.xtra.ui.download.VideoDownloadDialog
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 
 abstract class BaseVideosFragment<VM : BaseVideosViewModel> : PagedListFragment<Video, VM, BaseVideosAdapter>(), Scrollable, HasDownloadDialog {
@@ -36,9 +37,11 @@ abstract class BaseVideosFragment<VM : BaseVideosViewModel> : PagedListFragment<
 
     override fun initialize() {
         super.initialize()
-        viewModel.positions.observe(viewLifecycleOwner, Observer {
-            adapter.setVideoPositions(it)
-        })
+        if (requireContext().prefs().getBoolean(C.PLAYER_USE_VIDEOPOSITIONS, true)) {
+            viewModel.positions.observe(viewLifecycleOwner) {
+                adapter.setVideoPositions(it)
+            }
+        }
     }
 
     override fun scrollToTop() {

@@ -27,4 +27,7 @@ interface VideosDao {
 
     @Query("UPDATE videos SET last_watch_position = :position WHERE id = :id")
     fun updatePosition(id: Int, position: Long)
+
+    @Query("UPDATE videos SET last_watch_position = null")
+    fun deletePositions()
 }

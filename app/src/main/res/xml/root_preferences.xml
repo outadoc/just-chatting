@@ -373,6 +373,17 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:key="player_use_videopositions"
+        android:title="@string/save_video_positions"
+        app:iconSpaceReserved="false"/>
+
+    <Preference
+        android:key="clear_video_positions"
+        android:title="@string/clear_video_positions"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
         android:key="adblock"
         android:summary="@string/adblock_desc"
         android:title="@string/adblock"

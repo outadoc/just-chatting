@@ -15,4 +15,7 @@ interface VideoPositionsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(position: VideoPosition)
+
+    @Query("DELETE FROM video_positions")
+    fun deleteAll()
 }

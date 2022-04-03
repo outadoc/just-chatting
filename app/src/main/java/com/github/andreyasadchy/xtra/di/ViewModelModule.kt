@@ -21,6 +21,7 @@ import com.github.andreyasadchy.xtra.ui.player.video.VideoPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchViewModel
 import com.github.andreyasadchy.xtra.ui.search.games.GameSearchViewModel
 import com.github.andreyasadchy.xtra.ui.search.tags.TagSearchViewModel
+import com.github.andreyasadchy.xtra.ui.settings.SettingsViewModel
 import com.github.andreyasadchy.xtra.ui.streams.common.StreamsViewModel
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsViewModel
 import com.github.andreyasadchy.xtra.ui.videos.channel.ChannelVideosViewModel
@@ -41,6 +42,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SettingsViewModel::class)
+    abstract fun bindSettingsViewModel(settingsViewModel: SettingsViewModel): ViewModel
 
     @Binds
     @IntoMap

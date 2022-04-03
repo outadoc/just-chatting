@@ -60,6 +60,7 @@ object C {
     const val PLAYER_VOLUMEBUTTON = "player_volumebutton"
     const val PLAYER_GAMESBUTTON = "player_gamesbutton"
     const val PLAYER_VIEWERLIST = "player_viewerlist"
+    const val PLAYER_USE_VIDEOPOSITIONS = "player_use_videopositions"
     const val ANIMATED_EMOTES = "animatedGifEmotes"
     const val CHAT_RANDOMCOLOR = "chat_randomcolor"
     const val CHAT_BOLDNAMES = "chat_boldnames"

@@ -31,8 +31,8 @@ class LiveChatThread(
                     val messageIn = readerIn.readLine()!!
                     messageIn.run {
                         when {
-                            contains("PRIVMSG") -> listener.onMessage(this)
-                            contains("USERNOTICE") -> listener.onUserNotice(this)
+                            contains("PRIVMSG") -> listener.onMessage(this, false)
+                            contains("USERNOTICE") -> listener.onMessage(this, true)
                             contains("CLEARMSG") -> listener.onClearMessage(this)
                             contains("CLEARCHAT") -> listener.onClearChat(this)
                             contains("NOTICE") && !loggedIn -> listener.onNotice(this)
@@ -96,12 +96,11 @@ class LiveChatThread(
     }
 
     interface OnMessageReceivedListener {
-        fun onMessage(message: String)
+        fun onMessage(message: String, userNotice: Boolean)
         fun onCommand(message: String, duration: String?, type: String?, fullMsg: String?)
         fun onClearMessage(message: String)
         fun onClearChat(message: String)
         fun onNotice(message: String)
-        fun onUserNotice(message: String)
         fun onRoomState(message: String)
         fun onUserState(message: String)
     }

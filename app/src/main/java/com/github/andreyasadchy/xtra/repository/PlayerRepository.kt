@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.api.GraphQLApi
 import com.github.andreyasadchy.xtra.api.MiscApi
 import com.github.andreyasadchy.xtra.api.TTVLolApi
@@ -14,6 +15,8 @@ import com.github.andreyasadchy.xtra.db.VideoPositionsDao
 import com.github.andreyasadchy.xtra.model.VideoPosition
 import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.model.gql.playlist.VideoPlaylistTokenResponse
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
@@ -163,8 +166,11 @@ class PlayerRepository @Inject constructor(
     }
 
     fun saveVideoPosition(position: VideoPosition) {
-        GlobalScope.launch {
-            videoPositions.insert(position)
+        val appContext = XtraApp.INSTANCE.applicationContext
+        if (appContext.prefs().getBoolean(C.PLAYER_USE_VIDEOPOSITIONS, true)) {
+            GlobalScope.launch {
+                videoPositions.insert(position)
+            }
         }
     }
 

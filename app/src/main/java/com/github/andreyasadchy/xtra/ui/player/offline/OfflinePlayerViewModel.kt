@@ -9,6 +9,8 @@ import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
 import com.github.andreyasadchy.xtra.ui.player.PlayerViewModel
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import javax.inject.Inject
@@ -21,6 +23,7 @@ class OfflinePlayerViewModel @Inject constructor(
     val qualities = mutableListOf(context.getString(R.string.source), context.getString(R.string.audio_only))
 
     fun setVideo(video: OfflineVideo) {
+        val context = getApplication<Application>()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { //TODO update exoplayer
             qualities.removeLast()
         }
@@ -33,7 +36,7 @@ class OfflinePlayerViewModel @Inject constructor(
             }
             mediaSource = mediaSourceFactory.createMediaSource(video.url.toUri())
             play()
-            player.seekTo(video.lastWatchPosition)
+            player.seekTo(if (context.prefs().getBoolean(C.PLAYER_USE_VIDEOPOSITIONS, true)) video.lastWatchPosition ?: 0 else 0)
         }
     }
 

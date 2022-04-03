@@ -1,13 +1,16 @@
 package com.github.andreyasadchy.xtra.repository
 
 import android.content.Context
+import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.db.LocalFollowsChannelDao
 import com.github.andreyasadchy.xtra.db.RequestsDao
 import com.github.andreyasadchy.xtra.db.VideosDao
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.model.offline.Request
 import com.github.andreyasadchy.xtra.ui.download.DownloadService
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.DownloadUtils
+import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -51,7 +54,10 @@ class OfflineRepository @Inject constructor(
     }
 
     fun updateVideoPosition(id: Int, position: Long) {
-        GlobalScope.launch { videosDao.updatePosition(id, position) }
+        val appContext = XtraApp.INSTANCE.applicationContext
+        if (appContext.prefs().getBoolean(C.PLAYER_USE_VIDEOPOSITIONS, true)) {
+            GlobalScope.launch { videosDao.updatePosition(id, position) }
+        }
     }
 
     fun resumeDownloads(context: Context, wifiOnly: Boolean) {

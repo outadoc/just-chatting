@@ -25,7 +25,7 @@ data class VideoChatMessage(
         @SerializedName("more_replies")
         val moreReplies: Boolean) : ChatMessage {
 
-    override val userName: String
+    override val login: String
         get() = commenter?.name.orEmpty()
 
     override val message: String
@@ -54,6 +54,12 @@ data class VideoChatMessage(
 
     override val isFirst: Boolean
         get() = false
+
+    override val msgId: String?
+        get() = null
+
+    override val systemMsg: String?
+        get() = null
 
     override val timestamp: Long?
         get() = null

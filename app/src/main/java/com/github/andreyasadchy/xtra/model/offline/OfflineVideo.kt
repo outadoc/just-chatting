@@ -33,7 +33,7 @@ data class OfflineVideo(
     @ColumnInfo(name = "download_date")
     val downloadDate: Long,
     @ColumnInfo(name = "last_watch_position")
-    var lastWatchPosition: Long,
+    var lastWatchPosition: Long?,
     var progress: Int,
     @ColumnInfo(name = "max_progress")
     val maxProgress: Int,

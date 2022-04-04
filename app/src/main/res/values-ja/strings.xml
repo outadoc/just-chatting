@@ -454,4 +454,5 @@
     <string name="cleared">消去しました</string>
     <string name="irc_msgid_highlighted_message">ハイライトメッセージ</string>
     <string name="irc_msgid_announcement">お知らせ</string>
+    <string name="debug_secondview">移動可能なPIP</string>
 </resources>

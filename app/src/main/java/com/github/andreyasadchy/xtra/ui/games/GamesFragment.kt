@@ -21,6 +21,7 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.*
 import kotlinx.android.synthetic.main.fragment_games.*
@@ -51,7 +52,9 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        scrollTop.isEnabled = false
+        if (arguments?.getStringArray(C.TAGS).isNullOrEmpty()) {
+            scrollTop.isEnabled = false
+        }
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
         val isLoggedIn = User.get(activity) !is NotLoggedIn
@@ -100,6 +103,12 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
 
     override fun initialize() {
         super.initialize()
+        if (!arguments?.getStringArray(C.TAGS).isNullOrEmpty()) {
+            scrollTop.setOnClickListener {
+                scrollToTop()
+                it.gone()
+            }
+        }
         viewModel.loadGames(
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
             helixToken = requireContext().prefs().getString(C.TOKEN, ""),

@@ -391,9 +391,10 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
                 val currentFragment = fragNavController.currentFrag
                 when (it.itemId) {
                     R.id.fragment_games -> {
-                        when (currentFragment) {
-                            is GamesFragment -> currentFragment.scrollToTop()
-                            else -> fragNavController.clearStack()
+                        if (currentFragment is GamesFragment && currentFragment.arguments?.getStringArray(C.TAGS).isNullOrEmpty()) {
+                            currentFragment.scrollToTop()
+                        } else {
+                            fragNavController.clearStack()
                         }
                     }
                     else -> if (fragNavController.isRootFragment) {

@@ -29,10 +29,14 @@ class GameFragment : MediaFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
-        toolbar.apply {
-            title = requireArguments().getString(C.GAME_NAME)
-            navigationIcon = Utils.getNavigationIcon(activity)
-            setNavigationOnClickListener { activity.popFragment() }
+        if (!requireArguments().getString(C.GAME_ID).isNullOrBlank() || !requireArguments().getString(C.GAME_NAME).isNullOrBlank()) {
+            toolbar.apply {
+                title = requireArguments().getString(C.GAME_NAME)
+                navigationIcon = Utils.getNavigationIcon(activity)
+                setNavigationOnClickListener { activity.popFragment() }
+            }
+        } else {
+            hideSpinner = true
         }
     }
 

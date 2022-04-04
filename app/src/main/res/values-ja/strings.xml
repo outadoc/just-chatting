@@ -449,4 +449,9 @@
     <string name="followed_videos">フォロー済みの動画</string>
     <string name="followed_channels">フォロー済みのチャンネル</string>
     <string name="followed_games">フォロー済みのゲーム</string>
+    <string name="save_video_positions">視聴済みの動画位置の保存</string>
+    <string name="clear_video_positions">動画位置の消去</string>
+    <string name="cleared">消去しました</string>
+    <string name="irc_msgid_highlighted_message">ハイライトメッセージ</string>
+    <string name="irc_msgid_announcement">お知らせ</string>
 </resources>

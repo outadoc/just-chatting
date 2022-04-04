@@ -18,8 +18,10 @@ import androidx.core.view.postDelayed
 import androidx.customview.widget.ViewDragHelper
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.isClick
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.isKeyboardShown
+import com.github.andreyasadchy.xtra.util.prefs
 import com.google.android.exoplayer2.ui.DefaultTimeBar
 
 private const val BOTTOM_MARGIN = 75f //before scaling
@@ -27,6 +29,7 @@ private const val ANIMATION_DURATION = 250L
 
 class SlidingLayout : LinearLayout {
 
+    private var debug = false
     private val viewDragHelper = ViewDragHelper.create(this, 1f, SlidingCallback())
     private lateinit var dragView: View
     private var secondView: View? = null
@@ -226,6 +229,7 @@ class SlidingLayout : LinearLayout {
     }
 
     private fun init() {
+        debug = context.prefs().getBoolean(C.DEBUG_SECONDVIEW, false)
         dragView.post {
             topBound = paddingTop
             if (isPortrait) { //portrait
@@ -325,7 +329,7 @@ class SlidingLayout : LinearLayout {
         }
 
         override fun clampViewPositionVertical(child: View, top: Int, dy: Int): Int {
-            return if (isMaximized) Math.min(Math.max(top, topBound), bottomBound) else child.top
+            return if (isMaximized) Math.min(Math.max(top, topBound), bottomBound) else if (debug) top else child.top
         }
 
         override fun clampViewPositionHorizontal(child: View, left: Int, dx: Int): Int {
@@ -348,6 +352,10 @@ class SlidingLayout : LinearLayout {
                     else -> smoothSlideTo(0, 0)
                 }
             } else {
+                if (debug) {
+                    pivotX += releasedChild.left
+                    pivotY += releasedChild.top
+                }
                 when {
                     xvel > 1500 -> closeTo(width)
                     xvel < -1500 -> closeTo(-dragView.width)

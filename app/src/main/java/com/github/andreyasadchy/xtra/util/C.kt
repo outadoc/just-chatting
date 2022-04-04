@@ -102,4 +102,5 @@ object C {
     const val API_PREF_FOLLOWED_CHANNELS = "api_pref_followed_channels"
     const val API_PREF_FOLLOWED_GAMES = "api_pref_followed_games"
     const val DEBUG_CHAT_FULLMSG = "debug_chat_fullmsg"
+    const val DEBUG_SECONDVIEW = "debug_secondview"
 }

@@ -443,4 +443,10 @@
         android:title="@string/show_copy_fullmsg"
         app:iconSpaceReserved="false"/>
 
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="debug_secondview"
+        android:title="@string/debug_secondview"
+        app:iconSpaceReserved="false"/>
+
 </androidx.preference.PreferenceScreen>

@@ -104,6 +104,8 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     isAction = isAction,
                     isReward = prefixes["custom-reward-id"] != null,
                     isFirst = prefixes["first-msg"] == "1",
+                    msgId = prefixes["msg-id"],
+                    systemMsg = systemMsg,
                     emotes = emotesList,
                     badges = badgesList,
                     timestamp = prefixes["tmi-sent-ts"]?.toLong(),

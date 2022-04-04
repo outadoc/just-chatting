@@ -454,4 +454,5 @@
     <string name="cleared">Cleared</string>
     <string name="irc_msgid_highlighted_message">Highlighted message</string>
     <string name="irc_msgid_announcement">Announcement</string>
+    <string name="debug_secondview">Movable in app PIP</string>
 </resources>

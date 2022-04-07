@@ -6,7 +6,10 @@ import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
+import com.github.andreyasadchy.xtra.ui.main.MainActivity
+import com.github.andreyasadchy.xtra.ui.videos.BaseVideosAdapter
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosFragment
+import com.github.andreyasadchy.xtra.ui.videos.VideosAdapter
 import com.github.andreyasadchy.xtra.ui.videos.VideosSortDialog
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
@@ -17,6 +20,17 @@ import kotlinx.android.synthetic.main.sort_bar.*
 class FollowedVideosFragment : BaseVideosFragment<FollowedVideosViewModel>(), VideosSortDialog.OnFilter {
 
     override val viewModel by viewModels<FollowedVideosViewModel> { viewModelFactory }
+
+    override val adapter: BaseVideosAdapter by lazy {
+        val activity = requireActivity() as MainActivity
+        VideosAdapter(this, activity, activity, activity, {
+            lastSelectedItem = it
+            showDownloadDialog()
+        }, {
+            lastSelectedItem = it
+            viewModel.saveBookmark(requireContext(), it)
+        })
+    }
 
     override fun initialize() {
         super.initialize()

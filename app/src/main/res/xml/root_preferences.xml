@@ -97,6 +97,12 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:key="ui_bookmark_time_left"
+        android:title="@string/show_vod_time_left"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
         android:key="ui_follow"
         android:title="@string/show_follow_button"
         app:iconSpaceReserved="false"/>

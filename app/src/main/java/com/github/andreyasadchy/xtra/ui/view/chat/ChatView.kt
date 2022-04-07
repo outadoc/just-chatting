@@ -377,6 +377,9 @@ class ChatView : ConstraintLayout {
                 }
             }
             messagingEnabled = true
+            if (!context.prefs().getBoolean(C.KEY_CHAT_BAR_VISIBLE, true)) {
+                messageView.gone()
+            }
         }
     }
 

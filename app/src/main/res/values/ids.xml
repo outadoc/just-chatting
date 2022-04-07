@@ -13,6 +13,7 @@
     <item name="channel" type="id" />
     <item name="fullscreenToggle" type="id" />
     <item name="download" type="id" />
+    <item name="bookmark" type="id" />
     <item name="aspectRatio" type="id" />
     <item name="sleepTimer" type="id" />
     <item name="toggleChatBar" type="id" />

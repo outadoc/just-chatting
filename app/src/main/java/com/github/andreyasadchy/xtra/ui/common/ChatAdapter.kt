@@ -455,6 +455,10 @@ class ChatAdapter(
         super.onDetachedFromRecyclerView(recyclerView)
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
     private fun getRandomColor(): Int =
         if (randomColor) {
             twitchColors[random.nextInt(twitchColors.size)]

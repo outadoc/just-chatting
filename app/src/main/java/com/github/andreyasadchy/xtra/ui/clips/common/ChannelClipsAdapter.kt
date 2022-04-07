@@ -76,10 +76,16 @@ class ChannelClipsAdapter(
             } else {
                 gameName.gone()
             }
-            options.setOnClickListener {
+            options.setOnClickListener { it ->
                 PopupMenu(context, it).apply {
                     inflate(R.menu.media_item)
-                    setOnMenuItemClickListener { showDownloadDialog(item); true }
+                    setOnMenuItemClickListener {
+                        when(it.itemId) {
+                            R.id.download -> showDownloadDialog(item)
+                            else -> menu.close()
+                        }
+                        true
+                    }
                     show()
                 }
             }

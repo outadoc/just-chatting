@@ -21,7 +21,8 @@ class VideosAdapter(
     private val clickListener: BaseVideosFragment.OnVideoSelectedListener,
     private val gameClickListener: GamesFragment.OnGameSelectedListener,
     private val channelClickListener: OnChannelSelectedListener,
-    private val showDownloadDialog: (Video) -> Unit) : BaseVideosAdapter(
+    private val showDownloadDialog: (Video) -> Unit,
+    private val saveBookmark: (Video) -> Unit) : BaseVideosAdapter(
         object : DiffUtil.ItemCallback<Video>() {
             override fun areItemsTheSame(oldItem: Video, newItem: Video): Boolean =
                     oldItem.id == newItem.id
@@ -111,10 +112,20 @@ class VideosAdapter(
             } else {
                 gameName.gone()
             }
-            options.setOnClickListener {
+            options.setOnClickListener { it ->
                 PopupMenu(context, it).apply {
                     inflate(R.menu.media_item)
-                    setOnMenuItemClickListener { showDownloadDialog(item); true }
+                    if (item.id.isNotBlank()) {
+                        menu.findItem(R.id.bookmark).isVisible = true
+                    }
+                    setOnMenuItemClickListener {
+                        when(it.itemId) {
+                            R.id.download -> showDownloadDialog(item)
+                            R.id.bookmark -> saveBookmark(item)
+                            else -> menu.close()
+                        }
+                        true
+                    }
                     show()
                 }
             }

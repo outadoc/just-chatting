@@ -32,7 +32,6 @@
     <string name="uploaded_date">Uploaded %s</string>
     <string name="downloaded_date">Downloaded %s</string>
     <string name="welcome">Welcome</string>
-    <string name="login_prompt">Log in to Twitch to see your followed channels</string>
     <string name="log_in">Log in</string>
     <string name="log_out">Log out</string>
     <string name="skip">Skip</string>
@@ -49,11 +48,8 @@
     <string name="token_expired">Your session has expired. Please log in again</string>
     <string name="no_connection">No Internet connection</string>
     <string name="connection_restored">Back online</string>
-    <string name="follow_tab_login_prompt">Your followed channels will be shown here</string>
-    <string name="downloads_empty">Your downloaded videos will be shown here</string>
     <string name="notification_downloads_channel_title">Downloads</string>
     <string name="notification_downloads_channel_id" translatable="false">xtra_downloads_channel</string>
-    <string name="old_notification_downloads_channel_id" translatable="false">xtra_download_channel</string>
     <string name="storage_permission_title">The app needs storage permission</string>
     <string name="storage_permission_message">Storage permission is required to download videos.</string>
     <string name="permission_denied">Required permissions were denied</string>
@@ -481,4 +477,9 @@ Removes a timeout on a user.</string>
     <string name="irc_msgid_highlighted_message">Highlighted message</string>
     <string name="irc_msgid_announcement">Announcement</string>
     <string name="debug_secondview">Movable in app PIP</string>
+    <string name="bookmarked">Bookmarked</string>
+    <string name="add_bookmark">Add bookmark</string>
+    <string name="show_vod_time_left">Show time left on bookmarked vods</string>
+    <string name="vod_time_left">Auto deleted in %s</string>
+    <string name="vod_ignore_user">Ignore auto deletion for this user</string>
 </resources>

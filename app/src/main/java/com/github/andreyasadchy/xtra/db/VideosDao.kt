@@ -8,10 +8,16 @@ import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 interface VideosDao {
 
     @Query("SELECT * FROM videos ORDER BY id DESC")
-    fun getAll(): LiveData<List<OfflineVideo>>
+    fun getAllLiveData(): LiveData<List<OfflineVideo>>
+
+    @Query("SELECT * FROM videos ORDER BY id DESC")
+    fun getAll(): List<OfflineVideo>
 
     @Query("SELECT * FROM videos WHERE id = :id")
     fun getById(id: Int): OfflineVideo?
+
+    @Query("SELECT * FROM videos WHERE videoId = :videoId")
+    fun getByVideoId(videoId: String): List<OfflineVideo>
 
     @Query("SELECT * FROM videos WHERE channel_id = :id")
     fun getByUserId(id: Int): List<OfflineVideo>

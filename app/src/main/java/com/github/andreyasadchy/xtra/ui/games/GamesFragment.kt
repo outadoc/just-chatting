@@ -52,10 +52,10 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         if (arguments?.getStringArray(C.TAGS).isNullOrEmpty()) {
             scrollTop.isEnabled = false
         }
-        super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
         val isLoggedIn = User.get(activity) !is NotLoggedIn
         search.setOnClickListener { activity.openSearch() }

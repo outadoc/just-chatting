@@ -4,12 +4,9 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.github.andreyasadchy.xtra.model.VideoPosition
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
-import com.github.andreyasadchy.xtra.model.offline.LocalFollowChannel
-import com.github.andreyasadchy.xtra.model.offline.LocalFollowGame
-import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
-import com.github.andreyasadchy.xtra.model.offline.Request
+import com.github.andreyasadchy.xtra.model.offline.*
 
-@Database(entities = [OfflineVideo::class, Request::class, RecentEmote::class, VideoPosition::class, LocalFollowChannel::class, LocalFollowGame::class], version = 13)
+@Database(entities = [OfflineVideo::class, Request::class, RecentEmote::class, VideoPosition::class, LocalFollowChannel::class, LocalFollowGame::class, VodBookmarkIgnoredUser::class], version = 14)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun videos(): VideosDao
@@ -18,4 +15,5 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun videoPositions(): VideoPositionsDao
     abstract fun localFollowsChannel(): LocalFollowsChannelDao
     abstract fun localFollowsGame(): LocalFollowsGameDao
+    abstract fun vodBookmarkIgnoredUsers(): VodBookmarkIgnoredUsersDao
 }

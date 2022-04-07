@@ -59,14 +59,12 @@
     <string name="downloading">Скачивание</string>
     <string name="downloading_progress">Скачивание: %d%%</string>
     <string name="downloads">Скачивания</string>
-    <string name="downloads_empty">Здесь будут отображаться скачанные видео</string>
     <string name="duration">Длительность: %s</string>
     <string name="emotequality">Качество смайлов и значков</string>
     <string name="enter_url">Введите ссылку</string>
     <string name="error">Ошибка: %s</string>
     <string name="error_loading_user">Ошибка при загрузке профиля пользователя</string>
     <string name="error_stream">Ошибка при загрузке стрима</string>
-    <string name="follow_tab_login_prompt">Здесь будут отображаться ваши отслеживаемые каналы</string>
     <string name="followed_at">Отслеживается в %s</string>
     <string name="followers">%s отслеживающих</string>
     <string name="following">Отслеживается</string>
@@ -89,7 +87,6 @@
     <string name="log_in">Войти</string>
     <string name="log_out">Выйти</string>
     <string name="login_problem_solution">Вы можете выполнить авторизацию через сторонний браузер. После авторизации должна появится страница с ошибкой. Скопируйте ссылку, вернитесь в приложение и нажмите на кнопку \"Ввести ссылку\". Вставьте ссылку и нажмите \"Войти\"</string>
-    <string name="login_prompt">Авторизуйтесь в Twitch для доступа к вашему отслеживаемому</string>
     <string name="logout_msg">Авторизован как %s</string>
     <string name="logout_title">Выйти?</string>
     <string name="message_limit">Ограничение сообщений</string>
@@ -470,4 +467,9 @@ Removes a timeout on a user.</string>
     <string name="irc_msgid_highlighted_message">Highlighted message</string>
     <string name="irc_msgid_announcement">Announcement</string>
     <string name="debug_secondview">Movable in app PIP</string>
+    <string name="bookmarked">Bookmarked</string>
+    <string name="add_bookmark">Add bookmark</string>
+    <string name="show_vod_time_left">Show time left on bookmarked vods</string>
+    <string name="vod_time_left">Auto deleted in %s</string>
+    <string name="vod_ignore_user">Ignore auto deletion for this user</string>
 </resources>

@@ -82,9 +82,26 @@ object DownloadUtils {
             }
             val downloadedThumbnail = File(context.filesDir.toString() + File.separator + "thumbnails" + File.separator + "${id}.png").absolutePath
             val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${channelId}.png").absolutePath
-            OfflineVideo(offlinePath, url, startPosition, title, channelId, channelLogin, channelName, downloadedLogo, downloadedThumbnail, gameId, gameName,
-                duration, uploadDate?.let { TwitchApiHelper.parseIso8601Date(it) }, System.currentTimeMillis(), null, 0,
-                if (segmentTo != null && segmentFrom != null) segmentTo - segmentFrom + 1 else 100, type = type, videoId = id)
+            OfflineVideo(
+                url = offlinePath,
+                sourceUrl = url,
+                sourceStartPosition = startPosition,
+                name = title,
+                channelId = channelId,
+                channelLogin = channelLogin,
+                channelName = channelName,
+                channelLogo = downloadedLogo,
+                thumbnail = downloadedThumbnail,
+                gameId = gameId,
+                gameName = gameName,
+                duration = duration,
+                uploadDate = uploadDate?.let { TwitchApiHelper.parseIso8601Date(it) },
+                downloadDate = System.currentTimeMillis(),
+                progress = OfflineVideo.STATUS_PENDING,
+                maxProgress = if (segmentTo != null && segmentFrom != null) segmentTo - segmentFrom + 1 else 100,
+                type = type,
+                videoId = id
+            )
         }
     }
 

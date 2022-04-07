@@ -24,6 +24,7 @@ import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.Video
+import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.repository.datasource.*
 import com.github.andreyasadchy.xtra.type.ClipsPeriod
 import com.github.andreyasadchy.xtra.type.Language
@@ -46,7 +47,8 @@ class ApiRepository @Inject constructor(
     private val misc: MiscApi,
     private val localFollowsChannel: LocalFollowChannelRepository,
     private val localFollowsGame: LocalFollowGameRepository,
-    private val offlineRepository: OfflineRepository) : TwitchService {
+    private val offlineRepository: OfflineRepository,
+    private val vodBookmarkIgnoredUsersRepository: VodBookmarkIgnoredUsersRepository) : TwitchService {
 
     override fun loadTopGames(helixClientId: String?, helixToken: String?, gqlClientId: String?, tags: List<String>?, apiPref: ArrayList<Pair<Long?, String?>?>, coroutineScope: CoroutineScope): Listing<Game> {
         val factory = GamesDataSource.Factory(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, helix, gqlClientId, tags, gql, apiPref, coroutineScope)
@@ -201,6 +203,17 @@ class ApiRepository @Inject constructor(
             .setPageSize(40)
             .setInitialLoadSizeHint(40)
             .setPrefetchDistance(10)
+            .setEnablePlaceholders(false)
+            .build()
+        return Listing.create(factory, config)
+    }
+
+    override fun loadOfflineVideos(helixClientId: String?, helixToken: String?, gqlClientId: String?, vodTimeLeft: Boolean?, currentList: List<OfflineVideo>?, coroutineScope: CoroutineScope): Listing<OfflineVideo> {
+        val factory = OfflineVideosDataSource.Factory(offlineRepository, vodBookmarkIgnoredUsersRepository, helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, helix, gqlClientId, vodTimeLeft, currentList, coroutineScope)
+        val config = PagedList.Config.Builder()
+            .setPageSize(15)
+            .setInitialLoadSizeHint(15)
+            .setPrefetchDistance(5)
             .setEnablePlaceholders(false)
             .build()
         return Listing.create(factory, config)

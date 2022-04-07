@@ -126,10 +126,6 @@ class DownloadService : IntentService(TAG) {
         notificationManager = NotificationManagerCompat.from(this)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val oldChannelId = getString(R.string.old_notification_downloads_channel_id)
-            if (manager.getNotificationChannel(oldChannelId) != null) { //TODO remove later
-                manager.deleteNotificationChannel(oldChannelId)
-            }
             if (manager.getNotificationChannel(channelId) == null) {
                 NotificationChannel(channelId, getString(R.string.notification_downloads_channel_title), NotificationManager.IMPORTANCE_DEFAULT).apply {
                     setSound(null, null)

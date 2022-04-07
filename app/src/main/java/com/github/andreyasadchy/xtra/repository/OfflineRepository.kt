@@ -25,10 +25,16 @@ class OfflineRepository @Inject constructor(
         private val requestsDao: RequestsDao,
         private val localFollowsChannelDao: LocalFollowsChannelDao) {
 
+    fun loadAllVideosLiveData() = videosDao.getAllLiveData()
+
     fun loadAllVideos() = videosDao.getAll()
 
     suspend fun getVideoById(id: Int) = withContext(Dispatchers.IO) {
         videosDao.getById(id)
+    }
+
+    suspend fun getVideosByVideoId(videoId: String) = withContext(Dispatchers.IO) {
+        videosDao.getByVideoId(videoId)
     }
 
     suspend fun getVideosByUserId(id: Int) = withContext(Dispatchers.IO) {
@@ -42,9 +48,13 @@ class OfflineRepository @Inject constructor(
     fun deleteVideo(context: Context, video: OfflineVideo) {
         GlobalScope.launch {
             videosDao.delete(video)
-            File(context.filesDir.toString() + File.separator + "thumbnails" + File.separator + "${video.videoId}.png").delete()
-            if (video.channelId != null && localFollowsChannelDao.getById(video.channelId) == null) {
-                File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${video.channelId}.png").delete()
+            if (video.channelId != null) {
+                if (videosDao.getByUserId(video.channelId.toInt()).isNullOrEmpty()) {
+                    File(context.filesDir.toString() + File.separator + "thumbnails" + File.separator + "${video.videoId}.png").delete()
+                }
+                if (localFollowsChannelDao.getById(video.channelId) == null) {
+                    File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${video.channelId}.png").delete()
+                }
             }
         }
     }

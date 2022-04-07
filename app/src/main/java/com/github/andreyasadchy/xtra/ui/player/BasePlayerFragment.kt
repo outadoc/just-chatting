@@ -451,8 +451,10 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
             chatLayout.clearFocus()
             chatLayout.viewPager.gone() // emote menu
             messageView.gone()
+            prefs.edit { putBoolean(C.KEY_CHAT_BAR_VISIBLE, false) }
         } else {
             messageView?.visible()
+            prefs.edit { putBoolean(C.KEY_CHAT_BAR_VISIBLE, true) }
         }
     }
 
@@ -480,6 +482,10 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         chatLayout.visible()
         prefs.edit { putBoolean(C.KEY_CHAT_OPENED, true) }
         slidingLayout.maximizedSecondViewVisibility = View.VISIBLE
+        val recycleview = requireView().findViewById<RecyclerView>(R.id.recyclerView)
+        val btndwn = requireView().findViewById<Button>(R.id.btnDown)
+        if (chatLayout.isVisible && btndwn != null && !btndwn.isVisible && recycleview.adapter?.itemCount != null)
+            recycleview.scrollToPosition(recycleview.adapter?.itemCount!! - 1) // scroll down
     }
 
     private fun showStatusBar() {

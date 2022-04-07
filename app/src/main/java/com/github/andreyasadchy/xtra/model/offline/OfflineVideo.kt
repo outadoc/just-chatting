@@ -12,34 +12,37 @@ import kotlinx.android.parcel.Parcelize
 data class OfflineVideo(
     val url: String,
     @ColumnInfo(name = "source_url")
-    val sourceUrl: String,
+    val sourceUrl: String? = null,
     @ColumnInfo(name = "source_start_position")
-    val sourceStartPosition: Long?,
-    val name: String?,
+    val sourceStartPosition: Long? = null,
+    val name: String? = null,
     @ColumnInfo(name = "channel_id")
-    val channelId: String?,
+    val channelId: String? = null,
     @ColumnInfo(name = "channel_login")
-    var channelLogin: String?,
+    var channelLogin: String? = null,
     @ColumnInfo(name = "channel_name")
-    var channelName: String?,
+    var channelName: String? = null,
     @ColumnInfo(name = "channel_logo")
-    var channelLogo: String?,
-    val thumbnail: String?,
-    val gameId: String?,
-    val gameName: String?,
-    val duration: Long?,
+    var channelLogo: String? = null,
+    val thumbnail: String? = null,
+    val gameId: String? = null,
+    val gameName: String? = null,
+    val duration: Long? = null,
     @ColumnInfo(name = "upload_date")
-    val uploadDate: Long?,
+    val uploadDate: Long? = null,
     @ColumnInfo(name = "download_date")
-    val downloadDate: Long,
+    val downloadDate: Long? = null,
     @ColumnInfo(name = "last_watch_position")
-    var lastWatchPosition: Long?,
+    var lastWatchPosition: Long? = null,
     var progress: Int,
     @ColumnInfo(name = "max_progress")
     val maxProgress: Int,
-    var status: Int = STATUS_PENDING,
-    val type: String?,
-    val videoId: String?) : Parcelable {
+    var status: Int? = null,
+    val type: String? = null,
+    val videoId: String? = null,
+    @ColumnInfo(name = "is_bookmark")
+    var bookmark: Boolean? = null,
+    var userType: String? = null) : Parcelable {
 
     @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)

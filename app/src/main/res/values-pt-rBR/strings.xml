@@ -30,7 +30,6 @@
     <string name="uploaded_date">Enviado %s</string>
     <string name="downloaded_date">Baixado %s</string>
     <string name="welcome">Bem-vindo</string>
-    <string name="login_prompt">Faça login na Twitch para ver os canais que você segue</string>
     <string name="log_in">Entrar</string>
     <string name="log_out">Sair</string>
     <string name="skip">Pular</string>
@@ -47,8 +46,6 @@
     <string name="token_expired">Sua sessão expirou. Por favor faça login novamente</string>
     <string name="no_connection">Sem conexão à Internet</string>
     <string name="connection_restored">Online novamente</string>
-    <string name="follow_tab_login_prompt">Seus canais seguidos serão mostrados aqui</string>
-    <string name="downloads_empty">Seus vídeos baixados serão mostrados aqui</string>
     <string name="notification_downloads_channel_title">Downloads</string>
     <string name="storage_permission_title">O aplicativo precisa de permissão de armazenamento</string>
     <string name="storage_permission_message">É necessária permissão de armazenamento para baixar vídeos.</string>
@@ -470,4 +467,9 @@ Removes a timeout on a user.</string>
     <string name="irc_msgid_highlighted_message">Highlighted message</string>
     <string name="irc_msgid_announcement">Announcement</string>
     <string name="debug_secondview">Movable in app PIP</string>
+    <string name="bookmarked">Bookmarked</string>
+    <string name="add_bookmark">Add bookmark</string>
+    <string name="show_vod_time_left">Show time left on bookmarked vods</string>
+    <string name="vod_time_left">Auto deleted in %s</string>
+    <string name="vod_ignore_user">Ignore auto deletion for this user</string>
 </resources>

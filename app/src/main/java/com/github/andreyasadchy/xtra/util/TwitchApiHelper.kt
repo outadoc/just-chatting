@@ -124,6 +124,19 @@ object TwitchApiHelper {
         } else null
     }
 
+    fun getVodTimeLeft(context: Context, input: Long?, days: Int): String? {
+        return if (input != null) {
+            val currentTime = Calendar.getInstance(TimeZone.getTimeZone("UTC")).time.time
+            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
+            calendar.time = Date(input)
+            calendar.add(Calendar.DAY_OF_MONTH, days)
+            val diff = ((calendar.time.time - currentTime) / 1000)
+            return if (diff >= 0) {
+                getDurationFromSeconds(context, diff.toString(), true)
+            } else null
+        } else null
+    }
+
     fun getTimestamp(input: Long, timestampFormat: String?): String? {
         val pattern = when (timestampFormat) {
             "0" -> "H:mm"

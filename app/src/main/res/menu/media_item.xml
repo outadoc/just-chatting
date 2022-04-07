@@ -3,4 +3,8 @@
     <item
         android:id="@+id/download"
         android:title="@string/download" />
+    <item
+        android:id="@+id/bookmark"
+        android:title="@string/add_bookmark"
+        android:visible="false" />
 </menu>

@@ -92,12 +92,15 @@ class ClipsAdapter(
             } else {
                 gameName.gone()
             }
-            options.setOnClickListener {
-                PopupMenu(context, options).apply {
+            options.setOnClickListener { it ->
+                PopupMenu(context, it).apply {
                     inflate(R.menu.media_item)
                     setOnMenuItemClickListener {
-                        showDownloadDialog(item)
-                        return@setOnMenuItemClickListener true
+                        when(it.itemId) {
+                            R.id.download -> showDownloadDialog(item)
+                            else -> menu.close()
+                        }
+                        true
                     }
                     show()
                 }

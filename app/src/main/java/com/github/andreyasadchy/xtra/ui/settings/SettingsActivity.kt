@@ -137,7 +137,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
 
             findPreference<Preference>("clear_video_positions")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                 viewModel.deletePositions()
-                requireContext().toast(R.string.cleared)
+                requireContext().shortToast(R.string.cleared)
                 true
             }
 

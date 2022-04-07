@@ -15,14 +15,29 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@tools:sample/backgrounds/scenic" />
 
-        <com.github.andreyasadchy.xtra.util.TextWithCanvas
-            android:id="@+id/date"
-            style="@style/ThumbnailItem"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
             android:layout_marginBottom="5dp"
+            android:gravity="bottom|start"
+            android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="@id/thumbnail"
             app:layout_constraintStart_toStartOf="parent"
-            tools:text="Uploaded: July 16" />
+            app:layout_constraintVertical_bias="1.0">
+
+            <com.github.andreyasadchy.xtra.util.TextWithCanvas
+                android:id="@+id/timeLeft"
+                style="@style/ThumbnailItem"
+                tools:text="Auto deleted in 2d 13h 40m" />
+
+            <com.github.andreyasadchy.xtra.util.TextWithCanvas
+                android:id="@+id/date"
+                style="@style/ThumbnailItem"
+                tools:layout_marginTop="5dp"
+                tools:text="Uploaded: July 16" />
+
+        </LinearLayout>
 
         <com.github.andreyasadchy.xtra.util.TextWithCanvas
             android:id="@+id/downloadDate"
@@ -42,30 +57,35 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="13:37" />
 
-        <com.github.andreyasadchy.xtra.util.TextWithCanvas
-            android:id="@+id/sourceStart"
-            style="@style/ThumbnailItem"
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginEnd="10dp"
+            android:gravity="top|end"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="13:37:69" />
+            app:layout_constraintVertical_bias="1.0">
 
-        <com.github.andreyasadchy.xtra.util.TextWithCanvas
-            android:id="@+id/sourceEnd"
-            style="@style/ThumbnailItem"
-            android:layout_marginTop="5dp"
-            app:layout_constraintEnd_toEndOf="@id/sourceStart"
-            app:layout_constraintTop_toBottomOf="@id/sourceStart"
-            tools:text="69:13:37" />
+            <com.github.andreyasadchy.xtra.util.TextWithCanvas
+                android:id="@+id/sourceStart"
+                style="@style/ThumbnailItem"
+                tools:text="13:37:69" />
 
-        <com.github.andreyasadchy.xtra.util.TextWithCanvas
-            android:id="@+id/type"
-            style="@style/ThumbnailItem"
-            android:layout_marginTop="5dp"
-            app:layout_constraintEnd_toEndOf="@id/sourceEnd"
-            app:layout_constraintTop_toBottomOf="@id/sourceEnd"
-            tools:text="type" />
+            <com.github.andreyasadchy.xtra.util.TextWithCanvas
+                android:id="@+id/sourceEnd"
+                style="@style/ThumbnailItem"
+                tools:layout_marginTop="5dp"
+                tools:text="69:13:37" />
+
+            <com.github.andreyasadchy.xtra.util.TextWithCanvas
+                android:id="@+id/type"
+                style="@style/ThumbnailItem"
+                tools:layout_marginTop="5dp"
+                tools:text="type" />
+
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progressBar"

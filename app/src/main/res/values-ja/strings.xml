@@ -32,7 +32,6 @@
     <string name="uploaded_date">アップロード済み %s</string>
     <string name="downloaded_date">ダウンロード済み %s</string>
     <string name="welcome">ようこそ</string>
-    <string name="login_prompt">Twitchにログインしてフォローしているチャンネルを視聴する</string>
     <string name="log_in">ログイン</string>
     <string name="log_out">ログアウト</string>
     <string name="skip">スキップ</string>
@@ -49,11 +48,8 @@
     <string name="token_expired">セッションは終了しました。再度ログインしてください</string>
     <string name="no_connection">インターネット接続がありません</string>
     <string name="connection_restored">オンラインに戻りました</string>
-    <string name="follow_tab_login_prompt">あなたがフォローしているチャンネルがここに表示されます</string>
-    <string name="downloads_empty">ダウンロードした動画はここに表示されます</string>
     <string name="notification_downloads_channel_title">ダウンロード</string>
     <string name="notification_downloads_channel_id" translatable="false">xtra_downloads_channel</string>
-    <string name="old_notification_downloads_channel_id" translatable="false">xtra_download_channel</string>
     <string name="storage_permission_title">アプリにストレージの許可が必要です</string>
     <string name="storage_permission_message">動画をダウンロードするにはストレージの許可が必要です。</string>
     <string name="permission_denied">必要なパーミッションが拒否されました</string>
@@ -455,4 +451,9 @@
     <string name="irc_msgid_highlighted_message">ハイライトメッセージ</string>
     <string name="irc_msgid_announcement">お知らせ</string>
     <string name="debug_secondview">移動可能なPIP</string>
+    <string name="bookmarked">ブックマーク済み</string>
+    <string name="add_bookmark">ブックマークの追加</string>
+    <string name="show_vod_time_left">ブックマークしたVODの残り時間を表示する</string>
+    <string name="vod_time_left">自動で削除されました %s</string>
+    <string name="vod_ignore_user">このユーザーの自動削除を無視する</string>
 </resources>

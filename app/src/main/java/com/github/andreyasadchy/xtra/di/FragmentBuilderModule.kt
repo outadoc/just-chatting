@@ -5,7 +5,6 @@ import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.clips.common.ClipsFragment
 import com.github.andreyasadchy.xtra.ui.download.ClipDownloadDialog
 import com.github.andreyasadchy.xtra.ui.download.VideoDownloadDialog
-import com.github.andreyasadchy.xtra.ui.downloads.DownloadsFragment
 import com.github.andreyasadchy.xtra.ui.follow.FollowPagerFragment
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.follow.games.FollowedGamesFragment
@@ -15,6 +14,9 @@ import com.github.andreyasadchy.xtra.ui.player.games.PlayerGamesFragment
 import com.github.andreyasadchy.xtra.ui.player.offline.OfflinePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.video.VideoPlayerFragment
+import com.github.andreyasadchy.xtra.ui.saved.SavedPagerFragment
+import com.github.andreyasadchy.xtra.ui.saved.bookmarks.BookmarksFragment
+import com.github.andreyasadchy.xtra.ui.saved.downloads.DownloadsFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchFragment
 import com.github.andreyasadchy.xtra.ui.search.games.GameSearchFragment
@@ -73,6 +75,9 @@ abstract class FragmentBuilderModule {
     abstract fun contributeDownloadsFragment(): DownloadsFragment
 
     @ContributesAndroidInjector
+    abstract fun contributeBookmarksFragment(): BookmarksFragment
+
+    @ContributesAndroidInjector
     abstract fun contributeVideoDownloadDialog(): VideoDownloadDialog
 
     @ContributesAndroidInjector
@@ -113,4 +118,7 @@ abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun contributeFollowPagerFragment(): FollowPagerFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeSavedPagerFragment(): SavedPagerFragment
 }

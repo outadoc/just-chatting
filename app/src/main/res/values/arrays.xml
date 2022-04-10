@@ -26,6 +26,16 @@
         <item>3</item>
     </string-array>
 
+    <string-array name="spinnerSavedEntries">
+        <item>@string/bookmarks</item>
+        <item>@string/downloads</item>
+    </string-array>
+
+    <string-array name="spinnerSavedValues">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
+
     <string-array name="themeEntries">
         <item>@string/dark</item>
         <item>@string/amoled</item>

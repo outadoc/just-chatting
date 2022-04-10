@@ -18,7 +18,7 @@ class MessageClickedViewModel @Inject constructor(private val repository: Twitch
             isLoading = true
             viewModelScope.launch {
                 try {
-                    val u = repository.loadUserById(channelId, helixClientId, helixToken, gqlClientId)
+                    val u = repository.loadUsersById(mutableListOf(channelId), helixClientId, helixToken, gqlClientId)?.firstOrNull()
                     user.postValue(u)
                 } catch (e: Exception) {
                     _errors.postValue(e)

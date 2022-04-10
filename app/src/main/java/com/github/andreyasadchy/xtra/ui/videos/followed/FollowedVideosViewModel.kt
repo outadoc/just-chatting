@@ -18,15 +18,14 @@ import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.Video
-import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
+import com.github.andreyasadchy.xtra.model.offline.Bookmark
+import com.github.andreyasadchy.xtra.repository.BookmarksRepository
 import com.github.andreyasadchy.xtra.repository.Listing
-import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.type.VideoSort
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosViewModel
 import com.github.andreyasadchy.xtra.util.DownloadUtils
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -36,7 +35,7 @@ class FollowedVideosViewModel @Inject constructor(
         context: Application,
         private val repository: TwitchService,
         playerRepository: PlayerRepository,
-        private val offlineRepository: OfflineRepository) : BaseVideosViewModel(playerRepository) {
+        private val bookmarksRepository: BookmarksRepository) : BaseVideosViewModel(playerRepository, bookmarksRepository) {
 
     private val _sortText = MutableLiveData<CharSequence>()
     val sortText: LiveData<CharSequence>
@@ -83,11 +82,9 @@ class FollowedVideosViewModel @Inject constructor(
 
     fun saveBookmark(context: Context, video: Video) {
         GlobalScope.launch {
-            val items = offlineRepository.getVideosByVideoId(video.id).filter { it.bookmark == true }
-            if (!items.isNullOrEmpty()) {
-                for (i in items) {
-                    offlineRepository.deleteVideo(context, i)
-                }
+            val item = bookmarksRepository.getBookmarkById(video.id)
+            if (item != null) {
+                bookmarksRepository.deleteBookmark(item)
             } else {
                 try {
                     Glide.with(context)
@@ -125,27 +122,21 @@ class FollowedVideosViewModel @Inject constructor(
                 }
                 val downloadedThumbnail = File(context.filesDir.toString() + File.separator + "thumbnails" + File.separator + "${video.id}.png").absolutePath
                 val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${video.channelId}.png").absolutePath
-                val duration = video.duration?.let { TwitchApiHelper.getDuration(it) }
-                val createdAt = video.createdAt?.let { TwitchApiHelper.parseIso8601Date(it) }
-                offlineRepository.saveVideo(
-                    OfflineVideo(
-                        url = "",
-                        name = video.title,
-                        channelId = video.channelId,
-                        channelLogin = video.channelLogin,
-                        channelName = video.channelName,
-                        channelLogo = downloadedLogo,
-                        thumbnail = downloadedThumbnail,
-                        gameId = video.gameId,
-                        gameName = video.gameName,
-                        duration = duration,
-                        uploadDate = createdAt,
-                        progress = 0,
-                        maxProgress = 0,
-                        type = video.type,
-                        videoId = video.id,
-                        bookmark = true
-                    )
+                bookmarksRepository.saveBookmark(
+                    Bookmark(
+                    id = video.id,
+                    userId = video.channelId,
+                    userLogin = video.channelLogin,
+                    userName = video.channelName,
+                    userLogo = downloadedLogo,
+                    gameId = video.gameId,
+                    gameName = video.gameName,
+                    title = video.title,
+                    createdAt = video.createdAt,
+                    thumbnail = downloadedThumbnail,
+                    type = video.type,
+                    duration = video.duration,
+                )
                 )
             }
         }

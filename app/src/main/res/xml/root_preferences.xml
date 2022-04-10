@@ -95,6 +95,21 @@
         android:title="@string/use_followpager"
         app:iconSpaceReserved="false"/>
 
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/spinnerSavedEntries"
+        android:entryValues="@array/spinnerSavedValues"
+        android:key="ui_saved_default_page"
+        android:summary="%s"
+        android:title="@string/default_saved_tab"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="ui_savedpager"
+        android:title="@string/use_savedpager"
+        app:iconSpaceReserved="false"/>
+
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="ui_bookmark_time_left"

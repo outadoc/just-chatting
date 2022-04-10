@@ -75,7 +75,7 @@ class ChannelPagerViewModel @Inject constructor(
         if (channelId != null) {
             viewModelScope.launch {
                 try {
-                    val user = repository.loadUserById(channelId, helixClientId, helixToken, gqlClientId)
+                    val user = repository.loadUsersById(mutableListOf(channelId), helixClientId, helixToken, gqlClientId)?.firstOrNull()
                     _user.postValue(user)
                 } catch (e: Exception) {
 

@@ -33,6 +33,9 @@ abstract class BaseVideosFragment<VM : BaseVideosViewModel> : PagedListFragment<
                 adapter.setVideoPositions(it)
             }
         }
+        viewModel.bookmarks.observe(viewLifecycleOwner) {
+            adapter.setBookmarksList(it)
+        }
     }
 
     override fun scrollToTop() {

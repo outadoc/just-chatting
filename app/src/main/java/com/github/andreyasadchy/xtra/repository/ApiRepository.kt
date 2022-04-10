@@ -24,7 +24,6 @@ import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.Video
-import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.repository.datasource.*
 import com.github.andreyasadchy.xtra.type.ClipsPeriod
 import com.github.andreyasadchy.xtra.type.Language
@@ -47,8 +46,7 @@ class ApiRepository @Inject constructor(
     private val misc: MiscApi,
     private val localFollowsChannel: LocalFollowChannelRepository,
     private val localFollowsGame: LocalFollowGameRepository,
-    private val offlineRepository: OfflineRepository,
-    private val vodBookmarkIgnoredUsersRepository: VodBookmarkIgnoredUsersRepository) : TwitchService {
+    private val offlineRepository: OfflineRepository) : TwitchService {
 
     override fun loadTopGames(helixClientId: String?, helixToken: String?, gqlClientId: String?, tags: List<String>?, apiPref: ArrayList<Pair<Long?, String?>?>, coroutineScope: CoroutineScope): Listing<Game> {
         val factory = GamesDataSource.Factory(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, helix, gqlClientId, tags, gql, apiPref, coroutineScope)
@@ -208,17 +206,6 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadOfflineVideos(helixClientId: String?, helixToken: String?, gqlClientId: String?, vodTimeLeft: Boolean?, currentList: List<OfflineVideo>?, coroutineScope: CoroutineScope): Listing<OfflineVideo> {
-        val factory = OfflineVideosDataSource.Factory(offlineRepository, vodBookmarkIgnoredUsersRepository, helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, helix, gqlClientId, vodTimeLeft, currentList, coroutineScope)
-        val config = PagedList.Config.Builder()
-            .setPageSize(15)
-            .setInitialLoadSizeHint(15)
-            .setPrefetchDistance(5)
-            .setEnablePlaceholders(false)
-            .build()
-        return Listing.create(factory, config)
-    }
-
     override suspend fun loadGameBoxArt(gameId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): String? = withContext(Dispatchers.IO) {
         try {
             apolloClient(XtraModule(), gqlClientId).query(GameBoxArtQuery(Optional.Present(gameId))).execute().data?.game?.boxArtURL
@@ -285,32 +272,67 @@ class ApiRepository @Inject constructor(
                     profileImageURL = get.video?.owner?.profileImageURL)
             } else null
         } catch (e: Exception) {
-            helix.getVideo(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, videoId).data?.firstOrNull()
+            helix.getVideos(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, mutableListOf(videoId)).data?.firstOrNull()
         }
     }
 
-    override suspend fun loadUserById(channelId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): User? = withContext(Dispatchers.IO) {
+    override suspend fun loadVideos(ids: List<String>, helixClientId: String?, helixToken: String?): List<Video>? = withContext(Dispatchers.IO) {
+        helix.getVideos(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, ids).data
+    }
+
+    override suspend fun loadUsersById(ids: List<String>, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<User>? = withContext(Dispatchers.IO) {
         try {
-            val get = apolloClient(XtraModule(), gqlClientId).query(UserQuery(Optional.Present(channelId))).execute().data
+            val get = apolloClient(XtraModule(), gqlClientId).query(UsersQuery(Optional.Present(ids))).execute().data?.users
             if (get != null) {
-                User(id = channelId, login = get.user?.login, display_name = get.user?.displayName, profile_image_url = get.user?.profileImageURL,
-                    bannerImageURL = get.user?.bannerImageURL, view_count = get.user?.profileViewCount, created_at = get.user?.createdAt?.toString(),
-                    followers_count = get.user?.followers?.totalCount,
-                    broadcaster_type = when {
-                        get.user?.roles?.isPartner == true -> "partner"
-                        get.user?.roles?.isAffiliate == true -> "affiliate"
-                        else -> null
-                    },
-                    type = when {
-                        get.user?.roles?.isStaff == true -> "staff"
-                        get.user?.roles?.isSiteAdmin == true -> "admin"
-                        get.user?.roles?.isGlobalMod == true -> "global_mod"
-                        else -> null
-                    }
-                )
+                val list = mutableListOf<User>()
+                for (i in get) {
+                    list.add(
+                        User(id = i?.id, login = i?.login, display_name = i?.displayName, profile_image_url = i?.profileImageURL,
+                            bannerImageURL = i?.bannerImageURL, view_count = i?.profileViewCount, created_at = i?.createdAt?.toString(),
+                            followers_count = i?.followers?.totalCount,
+                            broadcaster_type = when {
+                                i?.roles?.isPartner == true -> "partner"
+                                i?.roles?.isAffiliate == true -> "affiliate"
+                                else -> null
+                            },
+                            type = when {
+                                i?.roles?.isStaff == true -> "staff"
+                                i?.roles?.isSiteAdmin == true -> "admin"
+                                i?.roles?.isGlobalMod == true -> "global_mod"
+                                else -> null
+                            }))
+                }
+                list
             } else null
         } catch (e: Exception) {
-            helix.getUserById(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, mutableListOf(channelId)).data?.firstOrNull()
+            helix.getUsersById(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, ids).data
+        }
+    }
+
+    override suspend fun loadUserTypes(ids: List<String>, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<User>? = withContext(Dispatchers.IO) {
+        try {
+            val get = apolloClient(XtraModule(), gqlClientId).query(UserTypeQuery(Optional.Present(ids))).execute().data?.users
+            if (get != null) {
+                val list = mutableListOf<User>()
+                for (i in get) {
+                    list.add(
+                        User(id = i?.id,
+                            broadcaster_type = when {
+                                i?.roles?.isPartner == true -> "partner"
+                                i?.roles?.isAffiliate == true -> "affiliate"
+                                else -> null
+                            },
+                            type = when {
+                                i?.roles?.isStaff == true -> "staff"
+                                i?.roles?.isSiteAdmin == true -> "admin"
+                                i?.roles?.isGlobalMod == true -> "global_mod"
+                                else -> null
+                            }))
+                }
+                list
+            } else null
+        } catch (e: Exception) {
+            helix.getUsersById(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, ids).data
         }
     }
 

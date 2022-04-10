@@ -17,7 +17,6 @@ import com.github.andreyasadchy.xtra.model.helix.video.BroadcastType
 import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.Video
-import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.type.ClipsPeriod
 import com.github.andreyasadchy.xtra.type.Language
 import com.github.andreyasadchy.xtra.type.VideoSort
@@ -38,12 +37,13 @@ interface TwitchService {
     fun loadFollowedVideos(userId: String?, gqlClientId: String?, gqlToken: String?, gqlQueryType: com.github.andreyasadchy.xtra.type.BroadcastType?, gqlQuerySort: VideoSort?, apiPref: ArrayList<Pair<Long?, String?>?>, coroutineScope: CoroutineScope): Listing<Video>
     fun loadFollowedChannels(userId: String?, helixClientId: String?, helixToken: String?, gqlClientId: String?, gqlToken: String?, apiPref: ArrayList<Pair<Long?, String?>?>, sort: com.github.andreyasadchy.xtra.model.helix.follows.Sort, order: Order, coroutineScope: CoroutineScope): Listing<Follow>
     fun loadFollowedGames(userId: String?, gqlClientId: String?, gqlToken: String?, apiPref: ArrayList<Pair<Long?, String?>?>, coroutineScope: CoroutineScope): Listing<Game>
-    fun loadOfflineVideos(helixClientId: String?, helixToken: String?, gqlClientId: String?, vodTimeLeft: Boolean?, currentList: List<OfflineVideo>?, coroutineScope: CoroutineScope): Listing<OfflineVideo>
     suspend fun loadGameBoxArt(gameId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): String?
     suspend fun loadStream(channelId: String, channelLogin: String?, helixClientId: String?, helixToken: String?, gqlClientId: String?) : Stream?
     suspend fun loadStreamWithUser(channelId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): Stream?
     suspend fun loadVideo(videoId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): Video?
-    suspend fun loadUserById(channelId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): User?
+    suspend fun loadVideos(ids: List<String>, helixClientId: String?, helixToken: String?): List<Video>?
+    suspend fun loadUsersById(ids: List<String>, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<User>?
+    suspend fun loadUserTypes(ids: List<String>, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<User>?
     suspend fun loadCheerEmotes(userId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<CheerEmote>?
     suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setIds: List<String>): List<TwitchEmote>?
     suspend fun loadUserFollows(clientId: String?, userToken: String?, userId: String, channelId: String): Boolean

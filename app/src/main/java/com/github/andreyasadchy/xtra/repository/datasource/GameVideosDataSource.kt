@@ -82,7 +82,7 @@ class GameVideosDataSource private constructor(
             i.user_id?.let { ids.add(it) }
         }
         if (ids.isNotEmpty()) {
-            val users = helixApi.getUserById(helixClientId, helixToken, ids).data
+            val users = helixApi.getUsersById(helixClientId, helixToken, ids).data
             if (users != null) {
                 for (i in users) {
                     val items = list.filter { it.user_id == i.id }
@@ -154,7 +154,7 @@ class GameVideosDataSource private constructor(
                 i.user_id?.let { ids.add(it) }
             }
             if (ids.isNotEmpty()) {
-                val users = helixApi.getUserById(helixClientId, helixToken, ids).data
+                val users = helixApi.getUsersById(helixClientId, helixToken, ids).data
                 if (users != null) {
                     for (i in users) {
                         val items = list.filter { it.user_id == i.id }

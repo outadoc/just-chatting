@@ -37,12 +37,9 @@ data class OfflineVideo(
     var progress: Int,
     @ColumnInfo(name = "max_progress")
     val maxProgress: Int,
-    var status: Int? = null,
+    var status: Int = STATUS_PENDING,
     val type: String? = null,
-    val videoId: String? = null,
-    @ColumnInfo(name = "is_bookmark")
-    var bookmark: Boolean? = null,
-    var userType: String? = null) : Parcelable {
+    val videoId: String? = null) : Parcelable {
 
     @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)

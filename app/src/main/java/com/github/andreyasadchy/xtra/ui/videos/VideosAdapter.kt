@@ -117,6 +117,11 @@ class VideosAdapter(
                     inflate(R.menu.media_item)
                     if (item.id.isNotBlank()) {
                         menu.findItem(R.id.bookmark).isVisible = true
+                        if (bookmarks?.find { it.id == item.id } != null) {
+                            menu.findItem(R.id.bookmark).title = context.getString(R.string.remove_bookmark)
+                        } else {
+                            menu.findItem(R.id.bookmark).title = context.getString(R.string.add_bookmark)
+                        }
                     }
                     setOnMenuItemClickListener {
                         when(it.itemId) {

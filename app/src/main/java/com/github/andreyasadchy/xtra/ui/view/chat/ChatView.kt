@@ -22,6 +22,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
+import com.github.andreyasadchy.xtra.ui.view.SlidingLayout
 import com.github.andreyasadchy.xtra.util.*
 import com.github.andreyasadchy.xtra.util.chat.Command
 import com.github.andreyasadchy.xtra.util.chat.RoomState
@@ -377,7 +378,7 @@ class ChatView : ConstraintLayout {
                 }
             }
             messagingEnabled = true
-            if (!context.prefs().getBoolean(C.KEY_CHAT_BAR_VISIBLE, true)) {
+            if (parent.parent is SlidingLayout && !context.prefs().getBoolean(C.KEY_CHAT_BAR_VISIBLE, true)) {
                 messageView.gone()
             }
         }

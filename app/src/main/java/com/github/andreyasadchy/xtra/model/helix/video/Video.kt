@@ -9,24 +9,19 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Video(
     override val id: String,
-    val stream_id: String? = null,
     val user_id: String? = null,
     val user_login: String? = null,
     val user_name: String? = null,
     override val title: String? = null,
     val description: String? = null,
     @SerializedName("created_at")
-        val createdAt: String? = null,
-    @SerializedName("published_at")
-        val publishedAt: String? = null,
+    val createdAt: String? = null,
     val thumbnail_url: String? = null,
-    val viewable: String? = null,
     val view_count: Int? = null,
-    val language: String? = null,
     override val type: String? = null,
     val duration: String? = null,
     @SerializedName("muted_segments")
-        val mutedSegments: List<MutedSegment>? = null,
+    val mutedSegments: List<MutedSegment>? = null,
 
     override val gameId: String? = null,
     override val gameName: String? = null,

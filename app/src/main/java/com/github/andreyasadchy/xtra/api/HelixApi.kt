@@ -36,7 +36,7 @@ interface HelixApi {
     suspend fun getClips(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("broadcaster_id") channelId: String?, @Query("game_id") gameId: String?, @Query("started_at") started_at: String?, @Query("ended_at") ended_at: String?, @Query("first") limit: Int, @Query("after") cursor: String?): ClipsResponse
 
     @GET("videos")
-    suspend fun getVideo(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") videoId: String): VideosResponse
+    suspend fun getVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") ids: List<String>): VideosResponse
 
     @GET("videos")
     suspend fun getTopVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("game_id") gameId: String?, @Query("period") period: com.github.andreyasadchy.xtra.model.helix.video.Period?, @Query("type") broadcastType: BroadcastType?, @Query("language") language: String?, @Query("sort") sort: Sort?, @Query("first") limit: Int, @Query("after") offset: String?): VideosResponse
@@ -45,7 +45,7 @@ interface HelixApi {
     suspend fun getChannelVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") channelId: String?, @Query("period") period: com.github.andreyasadchy.xtra.model.helix.video.Period?, @Query("type") broadcastType: BroadcastType?, @Query("sort") sort: Sort?, @Query("first") limit: Int, @Query("after") offset: String?): VideosResponse
 
     @GET("users")
-    suspend fun getUserById(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") ids: List<String>): UsersResponse
+    suspend fun getUsersById(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") ids: List<String>): UsersResponse
 
     @GET("search/categories")
     suspend fun getGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("query") query: String, @Query("first") limit: Int, @Query("after") offset: String?): GamesResponse

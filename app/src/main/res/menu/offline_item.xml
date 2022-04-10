@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/delete"
-        android:title="@string/delete" />
+        android:id="@+id/download"
+        android:title="@string/download"
+        android:visible="false" />
     <item
         android:id="@+id/vodIgnore"
         android:title="@string/vod_ignore_user"
         android:visible="false" />
+    <item
+        android:id="@+id/delete"
+        android:title="@string/delete" />
 </menu>

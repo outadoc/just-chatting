@@ -8,7 +8,6 @@ import com.github.andreyasadchy.xtra.ui.clips.common.ClipsViewModel
 import com.github.andreyasadchy.xtra.ui.common.GenericViewModelFactory
 import com.github.andreyasadchy.xtra.ui.download.ClipDownloadViewModel
 import com.github.andreyasadchy.xtra.ui.download.VideoDownloadViewModel
-import com.github.andreyasadchy.xtra.ui.downloads.DownloadsViewModel
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsViewModel
 import com.github.andreyasadchy.xtra.ui.follow.games.FollowedGamesViewModel
 import com.github.andreyasadchy.xtra.ui.games.GamesViewModel
@@ -18,6 +17,8 @@ import com.github.andreyasadchy.xtra.ui.player.games.PlayerGamesViewModel
 import com.github.andreyasadchy.xtra.ui.player.offline.OfflinePlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.video.VideoPlayerViewModel
+import com.github.andreyasadchy.xtra.ui.saved.bookmarks.BookmarksViewModel
+import com.github.andreyasadchy.xtra.ui.saved.downloads.DownloadsViewModel
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchViewModel
 import com.github.andreyasadchy.xtra.ui.search.games.GameSearchViewModel
 import com.github.andreyasadchy.xtra.ui.search.tags.TagSearchViewModel
@@ -102,6 +103,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DownloadsViewModel::class)
     abstract fun bindDownloadsViewModel(downloadsViewModel: DownloadsViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BookmarksViewModel::class)
+    abstract fun bindBookmarksViewModel(bookmarksViewModel: BookmarksViewModel): ViewModel
 
     @Binds
     @IntoMap

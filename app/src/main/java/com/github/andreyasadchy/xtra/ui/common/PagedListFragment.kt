@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.repository.LoadingState
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.follow.FollowPagerFragment
+import com.github.andreyasadchy.xtra.ui.saved.SavedMediaFragment
+import com.github.andreyasadchy.xtra.ui.saved.SavedPagerFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.search.tags.BaseTagSearchFragment
 import com.github.andreyasadchy.xtra.ui.top.TopFragment
@@ -40,7 +42,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                 })
             }
         })
-        if (!requireContext().prefs().getBoolean(C.UI_SCROLLTOP, true) || parentFragment is TopFragment || parentFragment is FollowMediaFragment || parentFragment is FollowPagerFragment || parentFragment is SearchFragment || parentFragment is BaseTagSearchFragment) {
+        if (!requireContext().prefs().getBoolean(C.UI_SCROLLTOP, true) || parentFragment is TopFragment || parentFragment is FollowMediaFragment || parentFragment is FollowPagerFragment || parentFragment is SavedMediaFragment || parentFragment is SavedPagerFragment || parentFragment is SearchFragment || parentFragment is BaseTagSearchFragment) {
             scrollTop.isEnabled = false
         }
         recyclerView.let {
@@ -68,11 +70,11 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
     }
 
     override fun initialize() {
-        viewModel.list.observe(viewLifecycleOwner, Observer {
+        viewModel.list.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             nothingHere?.isVisible = it.isEmpty()
-        })
-        viewModel.loadingState.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.loadingState.observe(viewLifecycleOwner) {
             val isLoading = it == LoadingState.LOADING
             val isListEmpty = adapter.currentList.isNullOrEmpty()
             if (isLoading) {
@@ -82,7 +84,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
             if (swipeRefresh?.isEnabled == true) {
                 swipeRefresh.isRefreshing = isLoading && !isListEmpty
             }
-        })
+        }
         viewModel.pagingState.observe(viewLifecycleOwner, Observer(adapter::setPagingState))
         if (swipeRefresh?.isEnabled == true) {
             swipeRefresh.setOnRefreshListener { viewModel.refresh() }

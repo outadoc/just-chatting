@@ -124,11 +124,12 @@ object TwitchApiHelper {
         } else null
     }
 
-    fun getVodTimeLeft(context: Context, input: Long?, days: Int): String? {
-        return if (input != null) {
+    fun getVodTimeLeft(context: Context, input: String?, days: Int): String? {
+        val time = input?.let { parseIso8601Date(it) }
+        return if (time != null) {
             val currentTime = Calendar.getInstance(TimeZone.getTimeZone("UTC")).time.time
             val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-            calendar.time = Date(input)
+            calendar.time = Date(time)
             calendar.add(Calendar.DAY_OF_MONTH, days)
             val diff = ((calendar.time.time - currentTime) / 1000)
             return if (diff >= 0) {

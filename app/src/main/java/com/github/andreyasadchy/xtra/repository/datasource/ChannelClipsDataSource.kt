@@ -76,7 +76,7 @@ class ChannelClipsDataSource(
             i.game_id?.let { gameIds.add(it) }
         }
         if (userIds.isNotEmpty()) {
-            val users = helixApi.getUserById(helixClientId, helixToken, userIds).data
+            val users = helixApi.getUsersById(helixClientId, helixToken, userIds).data
             if (users != null) {
                 for (i in users) {
                     val items = list.filter { it.broadcaster_id == i.id }
@@ -164,7 +164,7 @@ class ChannelClipsDataSource(
                 i.game_id?.let { gameIds.add(it) }
             }
             if (userIds.isNotEmpty()) {
-                val users = helixApi.getUserById(helixClientId, helixToken, userIds).data
+                val users = helixApi.getUsersById(helixClientId, helixToken, userIds).data
                 if (users != null) {
                     for (i in users) {
                         val items = list.filter { it.broadcaster_id == i.id }

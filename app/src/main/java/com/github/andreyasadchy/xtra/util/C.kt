@@ -33,6 +33,8 @@ object C {
     const val UI_STARTONFOLLOWED = "ui_startonfollowed"
     const val UI_FOLLOW_DEFAULT_PAGE = "ui_follow_default_page"
     const val UI_FOLLOWPAGER = "ui_followpager"
+    const val UI_SAVED_DEFAULT_PAGE = "ui_saved_default_page"
+    const val UI_SAVEDPAGER = "ui_savedpager"
     const val UI_STATUSBAR = "ui_statusbar"
     const val UI_NAVBAR = "ui_navbar"
     const val UI_LANGUAGE = "ui_language"

@@ -86,7 +86,7 @@ class FollowedStreamsDataSource(
                 if (api == C.HELIX) {
                     val userIds = remote.mapNotNull { it.user_id }
                     for (ids in userIds.chunked(100)) {
-                        val users = helixApi.getUserById(helixClientId, helixToken, ids).data
+                        val users = helixApi.getUsersById(helixClientId, helixToken, ids).data
                         if (users != null) {
                             for (i in users) {
                                 val item = list.find { it.user_id == i.id }
@@ -165,7 +165,7 @@ class FollowedStreamsDataSource(
             if (api == C.HELIX && list.isNotEmpty()) {
                 val userIds = list.mapNotNull { it.user_id }
                 for (ids in userIds.chunked(100)) {
-                    val users = helixApi.getUserById(helixClientId, helixToken, ids).data
+                    val users = helixApi.getUsersById(helixClientId, helixToken, ids).data
                     if (users != null) {
                         for (i in users) {
                             val item = list.find { it.user_id == i.id }
@@ -261,7 +261,7 @@ class FollowedStreamsDataSource(
         if (streams.isNotEmpty()) {
             val userIds = streams.mapNotNull { it.user_id }
             for (streamIds in userIds.chunked(100)) {
-                val users = helixApi.getUserById(helixClientId, helixToken, streamIds).data
+                val users = helixApi.getUsersById(helixClientId, helixToken, streamIds).data
                 if (users != null) {
                     for (i in users) {
                         val item = streams.find { it.user_id == i.id }

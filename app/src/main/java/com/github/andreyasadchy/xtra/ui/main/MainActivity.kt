@@ -30,7 +30,6 @@ import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
 import com.github.andreyasadchy.xtra.ui.download.HasDownloadDialog
-import com.github.andreyasadchy.xtra.ui.downloads.DownloadsFragment
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.games.GameFragment
 import com.github.andreyasadchy.xtra.ui.games.GamesFragment
@@ -39,6 +38,8 @@ import com.github.andreyasadchy.xtra.ui.player.clip.ClipPlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.offline.OfflinePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.video.VideoPlayerFragment
+import com.github.andreyasadchy.xtra.ui.saved.SavedMediaFragment
+import com.github.andreyasadchy.xtra.ui.saved.downloads.DownloadsFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.search.tags.BaseTagSearchFragment
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
@@ -364,7 +365,12 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
     private fun initNavigation() {
         fragNavController.apply {
-            rootFragments = listOf(GamesFragment(), TopFragment(), FollowMediaFragment.newInstance(prefs.getBoolean(C.UI_FOLLOWPAGER, true), prefs.getString(C.UI_FOLLOW_DEFAULT_PAGE, "0")?.toInt(), !User.get(this@MainActivity).gqlToken.isNullOrBlank()), DownloadsFragment())
+            rootFragments = listOf(
+                GamesFragment(),
+                TopFragment(),
+                FollowMediaFragment.newInstance(prefs.getBoolean(C.UI_FOLLOWPAGER, true), prefs.getString(C.UI_FOLLOW_DEFAULT_PAGE, "0")?.toInt(), !User.get(this@MainActivity).gqlToken.isNullOrBlank()),
+                SavedMediaFragment.newInstance(prefs.getBoolean(C.UI_SAVEDPAGER, true), prefs.getString(C.UI_SAVED_DEFAULT_PAGE, "0")?.toInt())
+            )
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
             transactionListener = object : FragNavController.TransactionListener {
                 override fun onFragmentTransaction(fragment: Fragment?, transactionType: FragNavController.TransactionType) {

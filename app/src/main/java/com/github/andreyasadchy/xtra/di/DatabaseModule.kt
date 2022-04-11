@@ -15,11 +15,11 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesRepository(videosDao: VideosDao, requestsDao: RequestsDao, localFollowsChannelDao: LocalFollowsChannelDao): OfflineRepository = OfflineRepository(videosDao, requestsDao, localFollowsChannelDao)
+    fun providesRepository(videosDao: VideosDao, requestsDao: RequestsDao, localFollowsChannelDao: LocalFollowsChannelDao, bookmarksDao: BookmarksDao): OfflineRepository = OfflineRepository(videosDao, requestsDao, localFollowsChannelDao, bookmarksDao)
 
     @Singleton
     @Provides
-    fun providesLocalFollowsChannelRepository(localFollowsChannelDao: LocalFollowsChannelDao, videosDao: VideosDao): LocalFollowChannelRepository = LocalFollowChannelRepository(localFollowsChannelDao, videosDao)
+    fun providesLocalFollowsChannelRepository(localFollowsChannelDao: LocalFollowsChannelDao, videosDao: VideosDao, bookmarksDao: BookmarksDao): LocalFollowChannelRepository = LocalFollowChannelRepository(localFollowsChannelDao, videosDao, bookmarksDao)
 
     @Singleton
     @Provides
@@ -27,7 +27,7 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesBookmarksRepository(bookmarksDao: BookmarksDao): BookmarksRepository = BookmarksRepository(bookmarksDao)
+    fun providesBookmarksRepository(bookmarksDao: BookmarksDao, localFollowsChannelDao: LocalFollowsChannelDao, videosDao: VideosDao): BookmarksRepository = BookmarksRepository(bookmarksDao, localFollowsChannelDao, videosDao)
 
     @Singleton
     @Provides

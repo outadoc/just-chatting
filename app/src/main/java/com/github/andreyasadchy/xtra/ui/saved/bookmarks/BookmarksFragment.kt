@@ -52,7 +52,7 @@ class BookmarksFragment : Fragment(), Injectable, Scrollable {
         recyclerView.adapter = adapter
         (recyclerView.itemAnimator as SimpleItemAnimator).supportsChangeAnimations = false
         viewModel.bookmarks.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
+            adapter.submitList(it.reversed())
             nothingHere?.isVisible = it.isEmpty()
             if (requireContext().prefs().getBoolean(C.UI_BOOKMARK_TIME_LEFT, true)) {
                 viewModel.loadUsers(

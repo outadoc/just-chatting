@@ -19,6 +19,7 @@ import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientWithTokenFactory.
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
 import com.github.andreyasadchy.xtra.model.helix.follows.Sort
+import com.github.andreyasadchy.xtra.repository.BookmarksRepository
 import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
@@ -33,6 +34,7 @@ import java.io.File
 class FollowedChannelsDataSource(
     private val localFollowsChannel: LocalFollowChannelRepository,
     private val offlineRepository: OfflineRepository,
+    private val bookmarksRepository: BookmarksRepository,
     private val userId: String?,
     private val helixClientId: String?,
     private val helixToken: String?,
@@ -293,6 +295,10 @@ class FollowedChannelsDataSource(
                     offlineRepository.updateVideo(i.apply {
                         channelLogo = downloadedLogo })
                 }
+                for (i in bookmarksRepository.getBookmarksByUserId(userId)) {
+                    bookmarksRepository.updateBookmark(i.apply {
+                        userLogo = downloadedLogo })
+                }
             } catch (e: Exception) {
 
             }
@@ -302,6 +308,7 @@ class FollowedChannelsDataSource(
     class Factory(
         private val localFollowsChannel: LocalFollowChannelRepository,
         private val offlineRepository: OfflineRepository,
+        private val bookmarksRepository: BookmarksRepository,
         private val userId: String?,
         private val helixClientId: String?,
         private val helixToken: String?,
@@ -315,6 +322,6 @@ class FollowedChannelsDataSource(
         private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
 
         override fun create(): DataSource<Int, Follow> =
-                FollowedChannelsDataSource(localFollowsChannel, offlineRepository, userId, helixClientId, helixToken, helixApi, gqlClientId, gqlToken, gqlApi, apiPref, sort, order, coroutineScope).also(sourceLiveData::postValue)
+                FollowedChannelsDataSource(localFollowsChannel, offlineRepository, bookmarksRepository, userId, helixClientId, helixToken, helixApi, gqlClientId, gqlToken, gqlApi, apiPref, sort, order, coroutineScope).also(sourceLiveData::postValue)
     }
 }

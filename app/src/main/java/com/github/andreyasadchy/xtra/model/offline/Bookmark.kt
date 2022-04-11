@@ -11,9 +11,9 @@ data class Bookmark(
     @PrimaryKey
     val id: String,
     val userId: String? = null,
-    val userLogin: String? = null,
-    val userName: String? = null,
-    val userLogo: String? = null,
+    var userLogin: String? = null,
+    var userName: String? = null,
+    var userLogo: String? = null,
     val gameId: String? = null,
     val gameName: String? = null,
     val title: String? = null,

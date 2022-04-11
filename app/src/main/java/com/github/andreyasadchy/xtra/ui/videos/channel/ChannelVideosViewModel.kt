@@ -90,7 +90,7 @@ class ChannelVideosViewModel @Inject constructor(
         GlobalScope.launch {
             val item = bookmarksRepository.getBookmarkById(video.id)
             if (item != null) {
-                bookmarksRepository.deleteBookmark(item)
+                bookmarksRepository.deleteBookmark(context, item)
             } else {
                 try {
                     Glide.with(context)

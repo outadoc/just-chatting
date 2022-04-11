@@ -45,7 +45,7 @@ class BookmarksFragment : Fragment(), Injectable, Scrollable {
             AlertDialog.Builder(activity)
                 .setTitle(delete)
                 .setMessage(getString(R.string.are_you_sure))
-                .setPositiveButton(delete) { _, _ -> viewModel.delete(it) }
+                .setPositiveButton(delete) { _, _ -> viewModel.delete(requireContext(), it) }
                 .setNegativeButton(getString(android.R.string.cancel), null)
                 .show()
         })

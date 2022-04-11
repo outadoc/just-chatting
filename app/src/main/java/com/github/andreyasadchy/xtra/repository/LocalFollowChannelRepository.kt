@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.repository
 
 import android.content.Context
+import com.github.andreyasadchy.xtra.db.BookmarksDao
 import com.github.andreyasadchy.xtra.db.LocalFollowsChannelDao
 import com.github.andreyasadchy.xtra.db.VideosDao
 import com.github.andreyasadchy.xtra.model.offline.LocalFollowChannel
@@ -15,7 +16,8 @@ import javax.inject.Singleton
 @Singleton
 class LocalFollowChannelRepository @Inject constructor(
     private val localFollowsChannelDao: LocalFollowsChannelDao,
-    private val videosDao: VideosDao) {
+    private val videosDao: VideosDao,
+    private val bookmarksDao: BookmarksDao) {
 
     fun loadFollows() = localFollowsChannelDao.getAll()
 
@@ -29,10 +31,10 @@ class LocalFollowChannelRepository @Inject constructor(
 
     fun deleteFollow(context: Context, item: LocalFollowChannel) {
         GlobalScope.launch {
-            localFollowsChannelDao.delete(item)
-            if (videosDao.getByUserId(item.user_id.toInt()).isNullOrEmpty()) {
+            if (item.user_id.isNotBlank() && bookmarksDao.getByUserId(item.user_id).isNullOrEmpty() && videosDao.getByUserId(item.user_id.toInt()).isNullOrEmpty()) {
                 File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${item.user_id}.png").delete()
             }
+            localFollowsChannelDao.delete(item)
         }
     }
 

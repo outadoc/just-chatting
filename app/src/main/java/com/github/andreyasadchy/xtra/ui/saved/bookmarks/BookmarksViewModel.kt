@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.saved.bookmarks
 
 import android.app.Application
+import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -35,8 +36,8 @@ class BookmarksViewModel @Inject internal constructor(
     val videos: MutableLiveData<List<Video>>
         get() = _video
 
-    fun delete(bookmark: Bookmark) {
-        bookmarksRepository.deleteBookmark(bookmark)
+    fun delete(context: Context, bookmark: Bookmark) {
+        bookmarksRepository.deleteBookmark(context, bookmark)
     }
 
     fun vodIgnoreUser(userId: String) {

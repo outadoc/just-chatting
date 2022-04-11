@@ -2,6 +2,7 @@ package com.github.andreyasadchy.xtra.repository
 
 import android.content.Context
 import com.github.andreyasadchy.xtra.XtraApp
+import com.github.andreyasadchy.xtra.db.BookmarksDao
 import com.github.andreyasadchy.xtra.db.LocalFollowsChannelDao
 import com.github.andreyasadchy.xtra.db.RequestsDao
 import com.github.andreyasadchy.xtra.db.VideosDao
@@ -23,7 +24,8 @@ import javax.inject.Singleton
 class OfflineRepository @Inject constructor(
         private val videosDao: VideosDao,
         private val requestsDao: RequestsDao,
-        private val localFollowsChannelDao: LocalFollowsChannelDao) {
+        private val localFollowsChannelDao: LocalFollowsChannelDao,
+        private val bookmarksDao: BookmarksDao) {
 
     fun loadAllVideos() = videosDao.getAll()
 
@@ -41,11 +43,13 @@ class OfflineRepository @Inject constructor(
 
     fun deleteVideo(context: Context, video: OfflineVideo) {
         GlobalScope.launch {
-            videosDao.delete(video)
-            File(context.filesDir.toString() + File.separator + "thumbnails" + File.separator + "${video.videoId}.png").delete()
-            if (video.channelId != null && localFollowsChannelDao.getById(video.channelId) == null) {
+            if (!video.videoId.isNullOrBlank() && bookmarksDao.getById(video.videoId) == null) {
+                File(context.filesDir.toString() + File.separator + "thumbnails" + File.separator + "${video.videoId}.png").delete()
+            }
+            if (!video.channelId.isNullOrBlank() && localFollowsChannelDao.getById(video.channelId) == null && bookmarksDao.getByUserId(video.channelId).isNullOrEmpty()) {
                 File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${video.channelId}.png").delete()
             }
+            videosDao.delete(video)
         }
     }
 

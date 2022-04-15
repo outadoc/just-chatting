@@ -22,14 +22,13 @@ class BaseTagSearchFragment : MediaPagerFragment() {
 
     companion object {
         fun newInstance(getGameTags: Boolean, gameId: String?, gameName: String?) = BaseTagSearchFragment().apply {
-            bundle.putBoolean(C.GET_GAME_TAGS, getGameTags)
-            bundle.putString(C.GAME_ID, gameId)
-            bundle.putString(C.GAME_NAME, gameName)
-            arguments = bundle
+            arguments = Bundle().apply {
+                putBoolean(C.GET_GAME_TAGS, getGameTags)
+                putString(C.GAME_ID, gameId)
+                putString(C.GAME_NAME, gameName)
+            }
         }
     }
-
-    val bundle = Bundle()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_search, container, false)

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.github.andreyasadchy.xtra.R
@@ -28,11 +27,11 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         return inflater.inflate(R.layout.fragment_chat, container, false).also { chatView = it as ChatView }
     }
 
-    var chLogin: String? = null
-    var chName: String? = null
     override fun initialize() {
         val args = requireArguments()
-        val channelId = args.getString(KEY_CHANNEL)
+        val channelId = args.getString(KEY_CHANNEL_ID)
+        val channelLogin = args.getString(KEY_CHANNEL_LOGIN)
+        val channelName = args.getString(KEY_CHANNEL_NAME)
         val user = User.get(requireContext())
         val userIsLoggedIn = user is LoggedIn
         val helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, "")
@@ -48,7 +47,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
             false
         } else {
             if (isLive) {
-                viewModel.startLive(user, helixClientId, gqlClientId, channelId, chLogin, chName, showUserNotice, showClearMsg, showClearChat, enableRecentMsg, recentMsgLimit.toString())
+                viewModel.startLive(user, helixClientId, gqlClientId, channelId, channelLogin, channelName, showUserNotice, showClearMsg, showClearChat, enableRecentMsg, recentMsgLimit.toString())
                 chatView.init(this)
                 chatView.setCallback(viewModel)
                 if (userIsLoggedIn) {
@@ -62,7 +61,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
                 true
             } else {
                 args.getString(KEY_VIDEO_ID).let {
-                    if (it != null && args.getString(KEY_START_TIME) != "empty") {
+                    if (it != null && !args.getBoolean(KEY_START_TIME_EMPTY)) {
                         chatView.init(this)
                         val getCurrentPosition = (parentFragment as ChatReplayPlayerFragment)::getCurrentPosition
                         viewModel.startReplay(user, helixClientId, gqlClientId, channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
@@ -129,16 +128,34 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
 
     companion object {
         private const val KEY_IS_LIVE = "isLive"
-        private const val KEY_CHANNEL = "channel"
+        private const val KEY_CHANNEL_ID = "channel_id"
+        private const val KEY_CHANNEL_LOGIN = "channel_login"
+        private const val KEY_CHANNEL_NAME = "channel_name"
         private const val KEY_VIDEO_ID = "videoId"
+        private const val KEY_START_TIME_EMPTY = "startTime_empty"
         private const val KEY_START_TIME = "startTime"
 
         fun newInstance(channelId: String?, channelLogin: String?, channelName: String?) = ChatFragment().apply {
-            arguments = bundleOf(KEY_IS_LIVE to true, KEY_CHANNEL to channelId); chLogin = channelLogin ; chName = channelName
+            arguments = Bundle().apply {
+                putBoolean(KEY_IS_LIVE, true)
+                putString(KEY_CHANNEL_ID, channelId)
+                putString(KEY_CHANNEL_LOGIN, channelLogin)
+                putString(KEY_CHANNEL_NAME, channelName)
+            }
         }
 
         fun newInstance(channelId: String?, videoId: String?, startTime: Double?) = ChatFragment().apply {
-            arguments = bundleOf(KEY_IS_LIVE to false, KEY_CHANNEL to channelId, KEY_VIDEO_ID to videoId, KEY_START_TIME to (startTime ?: "empty"))
+            arguments = Bundle().apply {
+                putBoolean(KEY_IS_LIVE, false)
+                putString(KEY_CHANNEL_ID, channelId)
+                putString(KEY_VIDEO_ID, videoId)
+                if (startTime != null) {
+                    putBoolean(KEY_START_TIME_EMPTY, false)
+                    putDouble(KEY_START_TIME, startTime)
+                } else {
+                    putBoolean(KEY_START_TIME_EMPTY, true)
+                }
+            }
         }
     }
 }

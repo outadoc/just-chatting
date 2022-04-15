@@ -25,13 +25,13 @@ class PlayerGamesDialog : ExpandingBottomSheetDialogFragment() {
 
         fun newInstance(gamesList: List<Game>): PlayerGamesDialog {
             return PlayerGamesDialog().apply {
-                bundle.putParcelableArrayList(C.GAMES_LIST, ArrayList(gamesList))
-                arguments = bundle
+                arguments = Bundle().apply {
+                    putParcelableArrayList(C.GAMES_LIST, ArrayList(gamesList))
+                }
             }
         }
     }
 
-    var bundle = Bundle()
     lateinit var listener: PlayerSeekListener
 
     override fun onAttach(context: Context) {

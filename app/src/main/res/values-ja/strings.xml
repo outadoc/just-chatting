@@ -460,4 +460,5 @@
     <string name="default_saved_tab">Default saved tab</string>
     <string name="vod_remove_ignore">Remove from ignore list</string>
     <string name="remove_bookmark">Remove bookmark</string>
+    <string name="saved">Saved</string>
 </resources>

@@ -17,15 +17,15 @@ class GameFragment : MediaFragment() {
 
     companion object {
         fun newInstance(id: String?, name: String?, tags: List<String>?, updateLocal: Boolean) = GameFragment().apply {
-            bundle.putString(C.GAME_ID, id)
-            bundle.putString(C.GAME_NAME, name)
-            bundle.putStringArray(C.TAGS, tags?.toTypedArray())
-            bundle.putBoolean(C.CHANNEL_UPDATELOCAL, updateLocal)
-            arguments = bundle
+            arguments = Bundle().apply {
+                putString(C.GAME_ID, id)
+                putString(C.GAME_NAME, name)
+                putStringArray(C.TAGS, tags?.toTypedArray())
+                putBoolean(C.CHANNEL_UPDATELOCAL, updateLocal)
+            }
         }
     }
 
-    var bundle = Bundle()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity

@@ -38,12 +38,12 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
 
     companion object {
         fun newInstance(tags: List<String>?) = GamesFragment().apply {
-            bundle.putStringArray(C.TAGS, tags?.toTypedArray())
-            arguments = bundle
+            arguments = Bundle().apply {
+                putStringArray(C.TAGS, tags?.toTypedArray())
+            }
         }
     }
 
-    val bundle = Bundle()
     override val viewModel by viewModels<GamesViewModel> { viewModelFactory }
     override val adapter: BasePagedListAdapter<Game> by lazy { GamesAdapter(this, requireActivity() as MainActivity, requireActivity() as MainActivity) }
 
@@ -52,10 +52,10 @@ class GamesFragment : PagedListFragment<Game, GamesViewModel, BasePagedListAdapt
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         if (arguments?.getStringArray(C.TAGS).isNullOrEmpty()) {
             scrollTop.isEnabled = false
         }
+        super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
         val isLoggedIn = User.get(activity) !is NotLoggedIn
         search.setOnClickListener { activity.openSearch() }

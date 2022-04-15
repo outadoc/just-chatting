@@ -34,16 +34,16 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
     companion object {
         fun newInstance(id: String?, login: String?, name: String?, channelLogo: String?, updateLocal: Boolean = false) = ChannelPagerFragment().apply {
-            bundle.putString(C.CHANNEL_ID, id)
-            bundle.putString(C.CHANNEL_LOGIN, login)
-            bundle.putString(C.CHANNEL_DISPLAYNAME, name)
-            bundle.putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
-            bundle.putBoolean(C.CHANNEL_UPDATELOCAL, updateLocal)
-            arguments = bundle
+            arguments = Bundle().apply {
+                putString(C.CHANNEL_ID, id)
+                putString(C.CHANNEL_LOGIN, login)
+                putString(C.CHANNEL_DISPLAYNAME, name)
+                putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
+                putBoolean(C.CHANNEL_UPDATELOCAL, updateLocal)
+            }
         }
     }
 
-    val bundle = Bundle()
     private val viewModel by viewModels<ChannelPagerViewModel> { viewModelFactory }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -176,8 +176,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 userLayout.visible()
                 userImage.visible()
                 userImage.loadImage(this, it, circle = true)
-                bundle.putString(C.CHANNEL_PROFILEIMAGE, it)
-                arguments = bundle
+                requireArguments().putString(C.CHANNEL_PROFILEIMAGE, it)
             } else {
                 userImage.gone()
             }
@@ -187,14 +186,12 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 userLayout.visible()
                 userName.visible()
                 userName.text = it
-                bundle.putString(C.CHANNEL_DISPLAYNAME, it)
-                arguments = bundle
+                requireArguments().putString(C.CHANNEL_DISPLAYNAME, it)
             }
         }
         stream?.user_login.let {
             if (it != null && it != requireArguments().getString(C.CHANNEL_LOGIN)) {
-                bundle.putString(C.CHANNEL_LOGIN, it)
-                arguments = bundle
+                requireArguments().putString(C.CHANNEL_LOGIN, it)
             }
         }
         if (stream?.title != null) {
@@ -241,8 +238,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             userLayout.visible()
             userImage.visible()
             userImage.loadImage(this, user.channelLogo, circle = true)
-            bundle.putString(C.CHANNEL_PROFILEIMAGE, user.channelLogo)
-            arguments = bundle
+            requireArguments().putString(C.CHANNEL_PROFILEIMAGE, user.channelLogo)
         }
         if (user.bannerImageURL != null) {
             bannerImage.visible()

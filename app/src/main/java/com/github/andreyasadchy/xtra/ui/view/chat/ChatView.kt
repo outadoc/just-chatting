@@ -33,6 +33,7 @@ import java.util.*
 import kotlin.math.max
 
 var MAX_ADAPTER_COUNT = 200
+var MAX_LIST_COUNT = MAX_ADAPTER_COUNT + 1
 var emoteQuality = 4
 var animateGifs = true
 
@@ -114,8 +115,8 @@ class ChatView : ConstraintLayout {
     fun notifyMessageAdded() {
         adapter.messages!!.apply {
             adapter.notifyItemInserted(lastIndex)
-            if (size >= MAX_ADAPTER_COUNT + 1) {
-                val removeCount = size - MAX_ADAPTER_COUNT + 1
+            if (size >= MAX_LIST_COUNT) {
+                val removeCount = size - MAX_ADAPTER_COUNT
                 repeat(removeCount) {
                     removeAt(0)
                 }

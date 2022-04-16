@@ -460,4 +460,5 @@
     <string name="default_saved_tab">標準で保存タブ</string>
     <string name="vod_remove_ignore">無視リストから削除する</string>
     <string name="remove_bookmark">ブックマークの削除</string>
+    <string name="saved">保存</string>
 </resources>

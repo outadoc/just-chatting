@@ -25,13 +25,13 @@ jobs:
       uses: actions/upload-artifact@v2.3.1
       with:
         name: full
-        path: app/build/intermediates/apk/full/release/*.apk
+        path: app/build/outputs/apk/full/release/*.apk
 
     - name: Upload a Build Artifact (eng)
       uses: actions/upload-artifact@v2.3.1
       with:
         name: eng
-        path: app/build/intermediates/apk/english-only/release/*.apk
+        path: app/build/outputs/apk/english-only/release/*.apk
 
   release:
     name: Release APK

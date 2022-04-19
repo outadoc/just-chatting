@@ -21,26 +21,39 @@ jobs:
     - name: Build with Gradle
       run: ./gradlew assembleRelease
 
-    - name: Upload a Build Artifact
+    - name: Upload a Build Artifact (full)
       uses: actions/upload-artifact@v2.3.1
       with:
-        name: apk
-        path: app/build/outputs/apk/release/*.apk
-        
+        name: full
+        path: app/build/outputs/apk/release/app-full-release.apk
+
+    - name: Upload a Build Artifact (eng)
+      uses: actions/upload-artifact@v2.3.1
+      with:
+        name: eng
+        path: app/build/outputs/apk/release/app-english-only-release.apk
+
   release:
     name: Release APK
     needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Download APK from build
+      - name: Download APK from build (full)
         uses: actions/download-artifact@v1
         with:
-          name: apk  
-      
+          name: full
+
+      - name: Download APK from build (eng)
+        uses: actions/download-artifact@v1
+        with:
+          name: eng
+
       - name: Automatic Releases
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           automatic_release_tag: "latest"
           prerelease: false
-          files: apk/*.apk
+          files: |
+            full/*.apk
+            eng/*.apk

@@ -461,4 +461,5 @@
     <string name="vod_remove_ignore">無視リストから削除する</string>
     <string name="remove_bookmark">ブックマークの削除</string>
     <string name="saved">保存</string>
+    <string name="refresh">更新</string>
 </resources>

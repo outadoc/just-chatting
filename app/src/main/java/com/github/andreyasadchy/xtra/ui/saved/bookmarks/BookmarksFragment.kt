@@ -37,6 +37,14 @@ class BookmarksFragment : Fragment(), Injectable, Scrollable {
         super.onActivityCreated(savedInstanceState)
         val activity = requireActivity() as MainActivity
         val adapter = BookmarksAdapter(this, activity, activity, activity, {
+            viewModel.loadVideo(
+                context = requireContext(),
+                helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+                helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+                gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+                videoId = it
+            )
+        }, {
             VideoDownloadDialog.newInstance(it).show(childFragmentManager, null)
         }, {
             viewModel.vodIgnoreUser(it)
@@ -54,19 +62,6 @@ class BookmarksFragment : Fragment(), Injectable, Scrollable {
         viewModel.bookmarks.observe(viewLifecycleOwner) {
             adapter.submitList(it.reversed())
             nothingHere?.isVisible = it.isEmpty()
-            if (requireContext().prefs().getBoolean(C.UI_BOOKMARK_TIME_LEFT, true)) {
-                viewModel.loadUsers(
-                    helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-                    helixToken = requireContext().prefs().getString(C.TOKEN, ""),
-                    gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
-                )
-            }
-            if (!requireContext().prefs().getString(C.TOKEN, "").isNullOrEmpty()) {
-                viewModel.loadVideos(
-                    helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-                    helixToken = requireContext().prefs().getString(C.TOKEN, ""),
-                )
-            }
         }
         if (requireContext().prefs().getBoolean(C.PLAYER_USE_VIDEOPOSITIONS, true)) {
             viewModel.positions.observe(viewLifecycleOwner) {
@@ -77,14 +72,18 @@ class BookmarksFragment : Fragment(), Injectable, Scrollable {
             viewModel.ignoredUsers.observe(viewLifecycleOwner) {
                 adapter.setIgnoredUsers(it)
             }
-            viewModel.users.observe(viewLifecycleOwner) {
-                adapter.setLoadedUsers(it)
-            }
+            viewModel.loadUsers(
+                helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+                helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+                gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+            )
         }
         if (!requireContext().prefs().getString(C.TOKEN, "").isNullOrEmpty()) {
-            viewModel.videos.observe(viewLifecycleOwner) {
-                adapter.setLoadedVideos(it)
-            }
+            viewModel.loadVideos(
+                context = requireContext(),
+                helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+                helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+            )
         }
         adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
             override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {

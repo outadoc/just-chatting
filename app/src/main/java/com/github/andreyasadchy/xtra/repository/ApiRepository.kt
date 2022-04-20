@@ -269,8 +269,9 @@ class ApiRepository @Inject constructor(
         try {
             val get = apolloClient(XtraModule(), gqlClientId).query(VideoQuery(Optional.Present(videoId))).execute().data
             if (get != null) {
-                Video(id = get.video?.id ?: "", user_id = get.video?.owner?.id, user_login = get.video?.owner?.login, user_name = get.video?.owner?.displayName,
-                    profileImageURL = get.video?.owner?.profileImageURL)
+                Video(id = videoId, user_id = get.video?.owner?.id, user_login = get.video?.owner?.login, user_name = get.video?.owner?.displayName,
+                    profileImageURL = get.video?.owner?.profileImageURL, title = get.video?.title, createdAt = get.video?.createdAt, thumbnail_url = get.video?.previewThumbnailURL,
+                    type = get.video?.broadcastType.toString(), duration = get.video?.lengthSeconds.toString())
             } else null
         } catch (e: Exception) {
             helix.getVideos(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, mutableListOf(videoId)).data?.firstOrNull()

@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.model.offline.Bookmark
 import com.github.andreyasadchy.xtra.model.offline.VodBookmarkIgnoredUser
@@ -32,6 +31,7 @@ class BookmarksAdapter(
     private val clickListener: BaseVideosFragment.OnVideoSelectedListener,
     private val channelClickListener: OnChannelSelectedListener,
     private val gameClickListener: GamesFragment.OnGameSelectedListener,
+    private val refreshVideo: (String) -> Unit,
     private val showDownloadDialog: (Video) -> Unit,
     private val vodIgnoreUser: (String) -> Unit,
     private val deleteVideo: (Bookmark) -> Unit) : BaseListAdapter<Bookmark>(
@@ -65,39 +65,15 @@ class BookmarksAdapter(
         }
     }
 
-    private var users: List<User>? = null
-
-    fun setLoadedUsers(list: List<User>) {
-        this.users = list
-        if (!currentList.isNullOrEmpty()) {
-            notifyDataSetChanged()
-        }
-    }
-
-    private var videos: List<Video>? = null
-
-    fun setLoadedVideos(list: List<Video>) {
-        this.videos = list
-        if (!currentList.isNullOrEmpty()) {
-            notifyDataSetChanged()
-        }
-    }
-
     override fun bind(item: Bookmark, view: View) {
         val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.userId, item.userLogin, item.userName, item.userLogo, updateLocal = true) }
         val gameListener: (View) -> Unit = { gameClickListener.openGame(item.gameId, item.gameName) }
         with(view) {
-            val loadedVideo = videos?.find { it.id == item.id }
-            val getDuration = if (loadedVideo?.duration != null) {
-                TwitchApiHelper.getDuration(loadedVideo.duration)
-            } else {
-                item.duration?.let { TwitchApiHelper.getDuration(it) }
-            }
+            val getDuration = item.duration?.let { TwitchApiHelper.getDuration(it) }
             val position = positions?.get(item.id.toLong())
             val ignore = ignored?.find { it.user_id == item.userId } != null
-            val loadedUser = users?.find { it.id == item.userId }
-            val userType = loadedUser?.type ?: loadedUser?.broadcaster_type
-            setOnClickListener { clickListener.startVideo(loadedVideo ?: Video(
+            val userType = item.userType ?: item.userBroadcasterType
+            setOnClickListener { clickListener.startVideo(Video(
                 id = item.id,
                 user_id = item.userId,
                 user_login = item.userLogin,
@@ -112,7 +88,7 @@ class BookmarksAdapter(
                 duration = item.duration,
             ), position?.toDouble()) }
             setOnLongClickListener { deleteVideo(item); true }
-            thumbnail.loadImage(fragment, loadedVideo?.thumbnail ?: item.thumbnail, diskCacheStrategy = DiskCacheStrategy.AUTOMATIC)
+            thumbnail.loadImage(fragment, item.thumbnail, diskCacheStrategy = DiskCacheStrategy.NONE)
             if (item.createdAt != null) {
                 val text = TwitchApiHelper.formatTimeString(context, item.createdAt)
                 if (text != null) {
@@ -159,7 +135,7 @@ class BookmarksAdapter(
             }
             if (item.userLogo != null)  {
                 userImage.visible()
-                userImage.loadImage(fragment, item.userLogo, circle = true)
+                userImage.loadImage(fragment, item.userLogo, circle = true, diskCacheStrategy = DiskCacheStrategy.NONE)
                 userImage.setOnClickListener(channelListener)
             } else {
                 userImage.gone()
@@ -194,6 +170,7 @@ class BookmarksAdapter(
                 PopupMenu(context, it).apply {
                     inflate(R.menu.offline_item)
                     if (item.id.isNotBlank()) {
+                        menu.findItem(R.id.refresh).isVisible = true
                         menu.findItem(R.id.download).isVisible = true
                     }
                     if (item.type?.lowercase() == "archive" && item.userId != null && context.prefs().getBoolean(C.UI_BOOKMARK_TIME_LEFT, true)) {
@@ -222,6 +199,7 @@ class BookmarksAdapter(
                                 duration = item.duration,
                             ))
                             R.id.vodIgnore -> item.userId?.let { id -> vodIgnoreUser(id) }
+                            R.id.refresh -> refreshVideo(item.id)
                             else -> menu.close()
                         }
                         true

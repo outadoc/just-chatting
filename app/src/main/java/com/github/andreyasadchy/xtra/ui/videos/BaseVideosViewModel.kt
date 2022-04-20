@@ -10,5 +10,5 @@ abstract class BaseVideosViewModel(
     private val bookmarksRepository: BookmarksRepository) : PagedListViewModel<Video>() {
 
     val positions = playerRepository.loadVideoPositions()
-    val bookmarks = bookmarksRepository.loadBookmarks()
+    val bookmarks = bookmarksRepository.loadBookmarksLiveData()
 }

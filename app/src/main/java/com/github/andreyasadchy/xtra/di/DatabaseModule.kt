@@ -110,6 +110,12 @@ class DatabaseModule {
                                 database.execSQL("ALTER TABLE videos1 RENAME TO videos")
                                 database.execSQL("CREATE TABLE IF NOT EXISTS bookmarks (id TEXT NOT NULL, userId TEXT, userLogin TEXT, userName TEXT, userLogo TEXT, gameId TEXT, gameName TEXT, title TEXT, createdAt TEXT, thumbnail TEXT, type TEXT, duration TEXT, PRIMARY KEY (id))")
                             }
+                        },
+                        object : Migration(15, 16) {
+                            override fun migrate(database: SupportSQLiteDatabase) {
+                                database.execSQL("ALTER TABLE bookmarks ADD COLUMN userType TEXT DEFAULT null")
+                                database.execSQL("ALTER TABLE bookmarks ADD COLUMN userBroadcasterType TEXT DEFAULT null")
+                            }
                         }
                     )
                     .build()

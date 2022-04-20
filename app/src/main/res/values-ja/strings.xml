@@ -461,4 +461,5 @@
     <string name="vod_remove_ignore">Remove from ignore list</string>
     <string name="remove_bookmark">Remove bookmark</string>
     <string name="saved">Saved</string>
+    <string name="refresh">Refresh</string>
 </resources>

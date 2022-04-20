@@ -7,6 +7,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatReplayPlayerFragment
 import com.github.andreyasadchy.xtra.ui.download.ClipDownloadDialog
@@ -81,18 +82,18 @@ class ClipPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPl
             FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities.keys, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
         }
         if (!clip.video_id.isNullOrBlank()) {
-            viewModel.video.observe(viewLifecycleOwner) {
-                if (it != null) {
-                    (requireActivity() as MainActivity).startVideo(it, (
-                            if (clip.videoOffsetSeconds != null) {
-                                (clip.videoOffsetSeconds?.toDouble() ?: 0.0) * 1000.0 + viewModel.player.currentPosition
-                            } else {
-                                0.0
-                            }))
-                }
-            }
             watchVideo.setOnClickListener {
-                viewModel.loadVideo(helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""), helixToken = prefs.getString(C.TOKEN, ""), gqlClientId = prefs.getString(C.GQL_CLIENT_ID, ""))
+                (requireActivity() as MainActivity).startVideo(Video(
+                    id = clip.video_id!!,
+                    user_id = clip.broadcaster_id,
+                    user_login = clip.broadcaster_login,
+                    user_name = clip.broadcaster_name,
+                    profileImageURL = clip.profileImageURL
+                ), (if (clip.videoOffsetSeconds != null) {
+                    (clip.videoOffsetSeconds?.toDouble() ?: 0.0) * 1000.0 + viewModel.player.currentPosition
+                } else {
+                    0.0
+                }))
             }
         }
     }

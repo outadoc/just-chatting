@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
@@ -29,7 +30,7 @@ class FollowedGamesAdapter(
             setOnClickListener { listener.openGame(id = item.id, name = item.name, updateLocal = true) }
             if (item.boxArt != null)  {
                 gameImage.visible()
-                gameImage.loadImage(fragment, item.boxArt)
+                gameImage.loadImage(fragment, item.boxArt, diskCacheStrategy = DiskCacheStrategy.NONE)
             } else {
                 gameImage.gone()
             }

@@ -8,7 +8,10 @@ import com.github.andreyasadchy.xtra.model.offline.Bookmark
 interface BookmarksDao {
 
     @Query("SELECT * FROM bookmarks")
-    fun getAll(): LiveData<List<Bookmark>>
+    fun getAllLiveData(): LiveData<List<Bookmark>>
+
+    @Query("SELECT * FROM bookmarks")
+    fun getAll(): List<Bookmark>
 
     @Query("SELECT * FROM bookmarks WHERE id = :id")
     fun getById(id: String): Bookmark?

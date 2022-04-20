@@ -3,6 +3,7 @@ package com.github.andreyasadchy.xtra.ui.follow.channels
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
@@ -30,7 +31,7 @@ class FollowedChannelsAdapter(
             setOnClickListener { listener.viewChannel(item.to_id, item.to_login, item.to_name, item.channelLogo, item.followLocal) }
             if (item.channelLogo != null)  {
                 userImage.visible()
-                userImage.loadImage(fragment, item.channelLogo, circle = true)
+                userImage.loadImage(fragment, item.channelLogo, circle = true, diskCacheStrategy = DiskCacheStrategy.NONE)
             } else {
                 userImage.gone()
             }

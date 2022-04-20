@@ -66,7 +66,7 @@ class DownloadsAdapter(
             }
             if (item.channelLogo != null)  {
                 userImage.visible()
-                userImage.loadImage(fragment, item.channelLogo, circle = true)
+                userImage.loadImage(fragment, item.channelLogo, circle = true, diskCacheStrategy = DiskCacheStrategy.NONE)
                 userImage.setOnClickListener(channelListener)
             } else {
                 userImage.gone()

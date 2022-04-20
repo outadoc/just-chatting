@@ -13,6 +13,8 @@ data class Bookmark(
     val userId: String? = null,
     var userLogin: String? = null,
     var userName: String? = null,
+    var userType: String? = null,
+    var userBroadcasterType: String? = null,
     var userLogo: String? = null,
     val gameId: String? = null,
     val gameName: String? = null,

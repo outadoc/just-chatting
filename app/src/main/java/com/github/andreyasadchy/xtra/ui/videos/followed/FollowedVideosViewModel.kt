@@ -80,7 +80,7 @@ class FollowedVideosViewModel @Inject constructor(
         val period: Period = Period.ALL,
         val broadcastType: BroadcastType = BroadcastType.ALL)
 
-    fun saveBookmark(context: Context, video: Video) {
+    fun saveBookmark(context: Context, helixClientId: String? = null, helixToken: String? = null, video: Video) {
         GlobalScope.launch {
             val item = bookmarksRepository.getBookmarkById(video.id)
             if (item != null) {
@@ -120,6 +120,7 @@ class FollowedVideosViewModel @Inject constructor(
                 } catch (e: Exception) {
 
                 }
+                val userTypes = video.channelId?.let { repository.loadUserTypes(mutableListOf(it), helixClientId, helixToken, filter.value?.gqlClientId) }?.first()
                 val downloadedThumbnail = File(context.filesDir.toString() + File.separator + "thumbnails" + File.separator + "${video.id}.png").absolutePath
                 val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${video.channelId}.png").absolutePath
                 bookmarksRepository.saveBookmark(
@@ -128,6 +129,8 @@ class FollowedVideosViewModel @Inject constructor(
                     userId = video.channelId,
                     userLogin = video.channelLogin,
                     userName = video.channelName,
+                    userType = userTypes?.type,
+                    userBroadcasterType = userTypes?.broadcaster_type,
                     userLogo = downloadedLogo,
                     gameId = video.gameId,
                     gameName = video.gameName,

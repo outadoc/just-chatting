@@ -44,7 +44,6 @@ class ClipPlayerViewModel @Inject constructor(
     private val _video = MutableLiveData<Video?>()
     val video: MutableLiveData<Video?>
         get() = _video
-    private var loadingVideo = false
 
     override val userId: String?
         get() { return clip.broadcaster_id }
@@ -141,24 +140,6 @@ class ClipPlayerViewModel @Inject constructor(
             context.shortToast(R.string.player_error)
             if (qualityIndex < helper.urls.size - 1) {
                 changeQuality(++qualityIndex)
-            }
-        }
-    }
-
-    fun loadVideo(helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null) {
-        if (!loadingVideo) {
-            loadingVideo = true
-            viewModelScope.launch {
-                try {
-                    if (clip.video_id != null) {
-                        val video = repository.loadVideo(clip.video_id!!, helixClientId, helixToken, gqlClientId)
-                        _video.postValue(video)
-                    }
-                } catch (e: Exception) {
-
-                } finally {
-                    loadingVideo = false
-                }
             }
         }
     }

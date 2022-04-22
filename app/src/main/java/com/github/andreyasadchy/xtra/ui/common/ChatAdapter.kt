@@ -20,6 +20,8 @@ import android.widget.TextView
 import androidx.core.text.getSpans
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
+import coil.imageLoader
+import coil.request.ImageRequest
 import com.bumptech.glide.integration.webp.decoder.WebpDrawable
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.gif.GifDrawable
@@ -44,7 +46,8 @@ class ChatAdapter(
         private val timestampFormat: String?,
         private val firstmsgVisibility: String?,
         private val firstChatMsg: String,
-        private val rewardChatMsg: String) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+        private val rewardChatMsg: String,
+        private val imageLibrary: String?) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
         set(value) {
@@ -267,16 +270,55 @@ class ChatAdapter(
 
     private fun loadImages(holder: ViewHolder, images: List<Image>, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
         images.forEach {
-            if (it.type == "image/webp" && animateGifs) {
-                loadWebp(holder, it, originalMessage, builder, userId, fullMsg)
-            } else {
-                if (it.type == "image/gif" && animateGifs) {
-                    loadGif(holder, it, originalMessage, builder, userId, fullMsg)
-                } else {
-                    loadDrawable(holder, it, originalMessage, builder, userId, fullMsg)
+            when (imageLibrary) {
+                "0" -> loadCoil(holder, it, originalMessage, builder, userId, fullMsg)
+                else -> {
+                    if (it.type == "image/webp" && animateGifs) {
+                        loadWebp(holder, it, originalMessage, builder, userId, fullMsg)
+                    } else {
+                        if (it.type == "image/gif" && animateGifs) {
+                            loadGif(holder, it, originalMessage, builder, userId, fullMsg)
+                        } else {
+                            loadDrawable(holder, it, originalMessage, builder, userId, fullMsg)
+                        }
+                    }
                 }
             }
         }
+    }
+
+    private fun loadCoil(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
+        val request = ImageRequest.Builder(fragment.requireContext())
+            .data(image.url)
+            .target(
+                onSuccess = { result ->
+                    val width: Int
+                    val height: Int
+                    if (image.isEmote) {
+                        val size = calculateEmoteSize(result)
+                        width = size.first
+                        height = size.second
+                    } else {
+                        width = badgeSize
+                        height = badgeSize
+                    }
+                    if (image.zerowidth && enableZeroWidth) {
+                        result.setBounds(-90, 0, width - 90, height)
+                    } else {
+                        result.setBounds(0, 0, width, height)
+                    }
+                    try {
+                        builder.setSpan(ImageSpan(result), image.start, image.end, SPAN_EXCLUSIVE_EXCLUSIVE)
+                        if (animateGifs) {
+                            (result as? coil.drawable.ScaleDrawable)?.start()
+                        }
+                    } catch (e: IndexOutOfBoundsException) {
+                    }
+                    holder.bind(originalMessage, builder, userId, fullMsg)
+                },
+            )
+            .build()
+        fragment.requireContext().imageLoader.enqueue(request)
     }
 
     private fun loadWebp(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
@@ -431,6 +473,7 @@ class ChatAdapter(
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
+            //(it.drawable as? coil.drawable.ScaleDrawable)?.start()
             (it.drawable as? GifDrawable)?.start()
             (it.drawable as? WebpDrawable)?.start()
         }
@@ -439,6 +482,7 @@ class ChatAdapter(
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
         super.onViewDetachedFromWindow(holder)
         (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
+            //(it.drawable as? coil.drawable.ScaleDrawable)?.stop()
             (it.drawable as? GifDrawable)?.stop()
             (it.drawable as? WebpDrawable)?.stop()
         }
@@ -448,6 +492,7 @@ class ChatAdapter(
         val childCount = recyclerView.childCount
         for (i in 0 until childCount) {
             ((recyclerView.getChildAt(i) as TextView).text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
+                //(it.drawable as? coil.drawable.ScaleDrawable)?.stop()
                 (it.drawable as? GifDrawable)?.stop()
                 (it.drawable as? WebpDrawable)?.stop()
             }

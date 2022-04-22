@@ -478,4 +478,5 @@ Removes a timeout on a user.</string>
     <string name="remove_bookmark">Remove bookmark</string>
     <string name="saved">Saved</string>
     <string name="refresh">Refresh</string>
+    <string name="image_library">Image library</string>
 </resources>

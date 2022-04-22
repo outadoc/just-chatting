@@ -83,7 +83,7 @@ class ChatView : ConstraintLayout {
         adapter = ChatAdapter(fragment, context.convertDpToPixels(29.5f), context.convertDpToPixels(18.5f), context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
             context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true), context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
             context.prefs().getString(C.CHAT_TIMESTAMP_FORMAT, "0"), context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0"), context.getString(R.string.chat_first),
-            context.getString(R.string.chat_reward))
+            context.getString(R.string.chat_reward), context.prefs().getString(C.CHAT_IMAGE_LIBRARY, "1"))
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null

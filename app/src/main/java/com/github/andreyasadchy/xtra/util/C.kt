@@ -66,6 +66,7 @@ object C {
     const val PLAYER_VIEWERLIST = "player_viewerlist"
     const val PLAYER_USE_VIDEOPOSITIONS = "player_use_videopositions"
     const val ANIMATED_EMOTES = "animatedGifEmotes"
+    const val CHAT_IMAGE_LIBRARY = "chat_image_library"
     const val CHAT_RANDOMCOLOR = "chat_randomcolor"
     const val CHAT_BOLDNAMES = "chat_boldnames"
     const val CHAT_QUALITY = "chat_quality"

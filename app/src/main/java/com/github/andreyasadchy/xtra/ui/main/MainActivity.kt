@@ -115,6 +115,14 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
                 }
             }
         }
+        if (prefs.getBoolean(C.FIRST_LAUNCH, true)) {
+            prefs.edit {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+                    putString(C.CHAT_IMAGE_LIBRARY, "1")
+                }
+                putBoolean(C.FIRST_LAUNCH, false)
+            }
+        }
         applyTheme()
         setContentView(R.layout.activity_main)
 

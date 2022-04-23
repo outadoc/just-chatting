@@ -17,6 +17,7 @@ object C {
     const val USER_ID = "user_id"
     const val DOWNLOAD_STORAGE = "downloadStorage"
     const val ASPECT_RATIO_LANDSCAPE = "aspectRatioLandscape"
+    const val FIRST_LAUNCH = "first_launch"
     const val FIRST_LAUNCH2 = "first_launch2"
     const val LANDSCAPE_CHAT_WIDTH = "landscape_chat_width"
     const val KEY_CHAT_OPENED = "key_chat_opened"

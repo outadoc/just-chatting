@@ -272,6 +272,17 @@ class ChatAdapter(
         images.forEach {
             when (imageLibrary) {
                 "0" -> loadCoil(holder, it, originalMessage, builder, userId, fullMsg)
+                "1" -> {
+                    if (it.type == "image/webp") {
+                        if (animateGifs) {
+                            loadWebp(holder, it, originalMessage, builder, userId, fullMsg)
+                        } else {
+                            loadDrawable(holder, it, originalMessage, builder, userId, fullMsg)
+                        }
+                    } else {
+                        loadCoil(holder, it, originalMessage, builder, userId, fullMsg)
+                    }
+                }
                 else -> {
                     if (it.type == "image/webp" && animateGifs) {
                         loadWebp(holder, it, originalMessage, builder, userId, fullMsg)

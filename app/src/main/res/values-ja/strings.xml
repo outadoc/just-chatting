@@ -463,4 +463,7 @@
     <string name="saved">保存</string>
     <string name="refresh">更新</string>
     <string name="image_library">画像ライブラリー</string>
+    <string name="imageLibraryEntries1">Coil (recommended Android 9+)</string>
+    <string name="imageLibraryEntries2">Coil + Glide WebP (recommended below Android 9)</string>
+    <string name="imageLibraryEntries3">Glide</string>
 </resources>

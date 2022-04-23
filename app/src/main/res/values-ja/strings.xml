@@ -186,7 +186,7 @@
     <string name="speed1.5" translatable="false">1.5x</string>
     <string name="speed1.75" translatable="false">1.75x</string>
     <string name="speed2" translatable="false">2.0x</string>
-    <string name="saved_value">保存された値</string>
+    <string name="saved_value">保存した値</string>
     <string name="playerQualityEntries1">360p以下</string>
     <string name="playerQualityEntries2">480p以下</string>
     <string name="playerQualityEntries3">720p以下</string>
@@ -445,22 +445,22 @@
     <string name="followed_videos">フォロー済みの動画</string>
     <string name="followed_channels">フォロー済みのチャンネル</string>
     <string name="followed_games">フォロー済みのゲーム</string>
-    <string name="save_video_positions">Save watched video positions</string>
-    <string name="clear_video_positions">Clear video positions</string>
-    <string name="cleared">Cleared</string>
-    <string name="irc_msgid_highlighted_message">Highlighted message</string>
-    <string name="irc_msgid_announcement">Announcement</string>
-    <string name="debug_secondview">Movable in app PIP</string>
-    <string name="add_bookmark">Add bookmark</string>
-    <string name="show_vod_time_left">Show time left on bookmarked vods</string>
-    <string name="vod_time_left">Auto deleted in %s</string>
-    <string name="vod_ignore_user">Ignore auto deletion for this user</string>
-    <string name="bookmarks">Bookmarks</string>
-    <string name="use_savedpager">Use tabs layout for saved page</string>
-    <string name="default_saved_tab">Default saved tab</string>
-    <string name="vod_remove_ignore">Remove from ignore list</string>
-    <string name="remove_bookmark">Remove bookmark</string>
-    <string name="saved">Saved</string>
-    <string name="refresh">Refresh</string>
-    <string name="image_library">Image library</string>
+    <string name="save_video_positions">視聴済みの動画位置の保存</string>
+    <string name="clear_video_positions">動画位置の消去</string>
+    <string name="cleared">消去しました</string>
+    <string name="irc_msgid_highlighted_message">ハイライトメッセージ</string>
+    <string name="irc_msgid_announcement">お知らせ</string>
+    <string name="debug_secondview">移動可能なPIP</string>
+    <string name="add_bookmark">ブックマークの追加</string>
+    <string name="show_vod_time_left">ブックマークしたVODの残り時間を表示する</string>
+    <string name="vod_time_left">自動で削除されました %s</string>
+    <string name="vod_ignore_user">このユーザーの自動削除を無視する</string>
+    <string name="bookmarks">ブックマーク</string>
+    <string name="use_savedpager">保存するページにタブレイアウトを使用する</string>
+    <string name="default_saved_tab">標準で保存タブ</string>
+    <string name="vod_remove_ignore">無視リストから削除する</string>
+    <string name="remove_bookmark">ブックマークの削除</string>
+    <string name="saved">保存</string>
+    <string name="refresh">更新</string>
+    <string name="image_library">画像ライブラリー</string>
 </resources>

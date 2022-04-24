@@ -463,7 +463,7 @@
     <string name="saved">保存</string>
     <string name="refresh">更新</string>
     <string name="image_library">画像ライブラリー</string>
-    <string name="imageLibraryEntries1">コイル (Android 9+ 推奨)</string>
-    <string name="imageLibraryEntries2">コイル + グライド WebP (Android 9+ 推奨)</string>
+    <string name="imageLibraryEntries1">コイル (Android 9 以上推奨)</string>
+    <string name="imageLibraryEntries2">コイル + グライド WebP (Android 9 未満推奨)</string>
     <string name="imageLibraryEntries3">グライド</string>
 </resources>

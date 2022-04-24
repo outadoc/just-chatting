@@ -484,7 +484,7 @@ class ChatAdapter(
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
         (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-            //(it.drawable as? coil.drawable.ScaleDrawable)?.start()
+            (it.drawable as? coil.drawable.ScaleDrawable)?.start()
             (it.drawable as? GifDrawable)?.start()
             (it.drawable as? WebpDrawable)?.start()
         }
@@ -493,7 +493,7 @@ class ChatAdapter(
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
         super.onViewDetachedFromWindow(holder)
         (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-            //(it.drawable as? coil.drawable.ScaleDrawable)?.stop()
+            (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
             (it.drawable as? GifDrawable)?.stop()
             (it.drawable as? WebpDrawable)?.stop()
         }
@@ -503,7 +503,7 @@ class ChatAdapter(
         val childCount = recyclerView.childCount
         for (i in 0 until childCount) {
             ((recyclerView.getChildAt(i) as TextView).text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-                //(it.drawable as? coil.drawable.ScaleDrawable)?.stop()
+                (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
                 (it.drawable as? GifDrawable)?.stop()
                 (it.drawable as? WebpDrawable)?.stop()
             }

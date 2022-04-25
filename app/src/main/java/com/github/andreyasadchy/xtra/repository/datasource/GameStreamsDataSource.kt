@@ -86,8 +86,7 @@ class GameStreamsDataSource private constructor(
 
     private suspend fun gqlQueryInitial(params: LoadInitialParams): List<Stream> {
         api = C.GQL_QUERY
-        val get1 = apolloClient(XtraModule(), gqlClientId)
-            .query(GameStreamsQuery(id = Optional.Present(gameId), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.streams
+        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameStreamsQuery(id = Optional.Present(if (!gameId.isNullOrBlank()) gameId else null), name = Optional.Present(if (gameId.isNullOrBlank() && !gameName.isNullOrBlank()) gameName else null), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.streams
         val get = get1?.edges
         val list = mutableListOf<Stream>()
         if (get != null) {
@@ -155,7 +154,7 @@ class GameStreamsDataSource private constructor(
     }
 
     private suspend fun gqlQueryRange(params: LoadRangeParams): List<Stream> {
-        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameStreamsQuery(id = Optional.Present(gameId), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.streams
+        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameStreamsQuery(id = Optional.Present(if (!gameId.isNullOrBlank()) gameId else null), name = Optional.Present(if (gameId.isNullOrBlank() && !gameName.isNullOrBlank()) gameName else null), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.streams
         val get = get1?.edges
         val list = mutableListOf<Stream>()
         if (get != null && nextPage && offset != null && offset != "") {

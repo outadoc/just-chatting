@@ -99,7 +99,7 @@ class GameVideosDataSource private constructor(
     private suspend fun gqlQueryInitial(params: LoadInitialParams): List<Video> {
         api = C.GQL_QUERY
         val typeList = if (gqlQueryType != null) mutableListOf(gqlQueryType) else null
-        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameVideosQuery(id = Optional.Present(gameId), languages = Optional.Present(gqlQueryLanguages), sort = Optional.Present(gqlQuerySort), type = Optional.Present(typeList), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.videos
+        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameVideosQuery(id = Optional.Present(if (!gameId.isNullOrBlank()) gameId else null), name = Optional.Present(if (gameId.isNullOrBlank() && !gameName.isNullOrBlank()) gameName else null), languages = Optional.Present(gqlQueryLanguages), sort = Optional.Present(gqlQuerySort), type = Optional.Present(typeList), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.videos
         val get = get1?.edges
         val list = mutableListOf<Video>()
         if (get != null) {
@@ -171,7 +171,7 @@ class GameVideosDataSource private constructor(
 
     private suspend fun gqlQueryRange(params: LoadRangeParams): List<Video> {
         val typeList = if (gqlQueryType != null) mutableListOf(gqlQueryType) else null
-        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameVideosQuery(id = Optional.Present(gameId), languages = Optional.Present(gqlQueryLanguages), sort = Optional.Present(gqlQuerySort), type = Optional.Present(typeList), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.videos
+        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameVideosQuery(id = Optional.Present(if (!gameId.isNullOrBlank()) gameId else null), name = Optional.Present(if (gameId.isNullOrBlank() && !gameName.isNullOrBlank()) gameName else null), languages = Optional.Present(gqlQueryLanguages), sort = Optional.Present(gqlQuerySort), type = Optional.Present(typeList), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.videos
         val get = get1?.edges
         val list = mutableListOf<Video>()
         if (get != null && nextPage && offset != null && offset != "") {

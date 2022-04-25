@@ -5,6 +5,8 @@ import com.github.andreyasadchy.xtra.api.GraphQLApi
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelClipsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResponse
+import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
+import com.github.andreyasadchy.xtra.model.gql.clip.ClipVideoResponse
 import com.github.andreyasadchy.xtra.model.gql.followed.FollowedChannelsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.followed.FollowedGamesDataResponse
 import com.github.andreyasadchy.xtra.model.gql.followed.FollowedStreamsDataResponse
@@ -32,7 +34,6 @@ private const val TAG = "GraphQLRepository"
 class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
 
     suspend fun loadClipUrls(clientId: String, slug: String): Map<String, String> = withContext(Dispatchers.IO) {
-        Log.d(TAG, "Loading clip urls for clip: $slug")
         val array = JsonArray(1)
         val videoAccessTokenOperation = JsonObject().apply {
             addProperty("operationName", "VideoAccessToken_Clip")
@@ -47,8 +48,40 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
             })
         }
         array.add(videoAccessTokenOperation)
-        val response = graphQL.getClipData(clientId, array)
+        val response = graphQL.getClipUrls(clientId, array)
         response.videos.associateBy({ if (it.frameRate != 60) "${it.quality}p" else "${it.quality}p${it.frameRate}" }, { it.url })
+    }
+
+    suspend fun loadClipData(clientId: String?, slug: String): ClipDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "ChannelClipCore")
+            add("variables", JsonObject().apply {
+                addProperty("clipSlug", slug)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "16d402536bdd88b9db9a7cc87da5769607676abf22ad46b6cfab57a2b8b0b20e")
+                })
+            })
+        }
+        return graphQL.getClipData(clientId, json)
+    }
+
+    suspend fun loadClipVideo(clientId: String?, slug: String): ClipVideoResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "ChatClip")
+            add("variables", JsonObject().apply {
+                addProperty("clipSlug", slug)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "9aa558e066a22227c5ef2c0a8fded3aaa57d35181ad15f63df25bff516253a90")
+                })
+            })
+        }
+        return graphQL.getClipVideo(clientId, json)
     }
 
     suspend fun loadTopGames(clientId: String?, tags: List<String>?, limit: Int?, cursor: String?): GameDataResponse {

@@ -4,6 +4,8 @@ import com.github.andreyasadchy.xtra.model.gql.channel.ChannelClipsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResponse
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
+import com.github.andreyasadchy.xtra.model.gql.clip.ClipUrlsResponse
+import com.github.andreyasadchy.xtra.model.gql.clip.ClipVideoResponse
 import com.github.andreyasadchy.xtra.model.gql.followed.FollowedChannelsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.followed.FollowedGamesDataResponse
 import com.github.andreyasadchy.xtra.model.gql.followed.FollowedStreamsDataResponse
@@ -39,7 +41,13 @@ interface GraphQLApi {
     suspend fun getVideoAccessToken(@Header("Client-ID") clientId: String?, @HeaderMap headers: Map<String, String>, @Body json: JsonArray): VideoPlaylistTokenResponse
 
     @POST(".")
-    suspend fun getClipData(@Header("Client-ID") clientId: String?, @Body json: JsonArray): ClipDataResponse
+    suspend fun getClipUrls(@Header("Client-ID") clientId: String?, @Body json: JsonArray): ClipUrlsResponse
+
+    @POST(".")
+    suspend fun getClipData(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ClipDataResponse
+
+    @POST(".")
+    suspend fun getClipVideo(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ClipVideoResponse
 
     @POST(".")
     suspend fun getTopGames(@Header("Client-ID") clientId: String?, @Body json: JsonObject): GameDataResponse

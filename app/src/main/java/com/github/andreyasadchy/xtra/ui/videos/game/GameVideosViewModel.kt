@@ -76,7 +76,7 @@ class GameVideosViewModel @Inject constructor(
     }
 
     fun setGame(gameId: String? = null, gameName: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
-        if (filter.value?.gameId != gameId) {
+        if (filter.value?.gameId != gameId || filter.value?.gameName != gameName) {
             filter.value = Filter(gameId, gameName, helixClientId, helixToken, gqlClientId, apiPref)
         }
     }

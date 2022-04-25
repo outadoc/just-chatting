@@ -10,6 +10,8 @@ import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.NotValidated
 import com.github.andreyasadchy.xtra.model.User
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
+import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.AuthRepository
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
@@ -37,6 +39,16 @@ class MainViewModel @Inject constructor(
     var isPlayerOpened = false
         private set
 
+    private val _video = MutableLiveData<Video?>()
+    val video: MutableLiveData<Video?>
+        get() = _video
+    private val _clip = MutableLiveData<Clip?>()
+    val clip: MutableLiveData<Clip?>
+        get() = _clip
+    private val _user = MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>()
+    val user: MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>
+        get() = _user
+
     init {
         offlineRepository.resumeDownloads(application, false)
     }
@@ -62,6 +74,42 @@ class MainViewModel @Inject constructor(
     fun setNetworkAvailable(available: Boolean) {
         if (_isNetworkAvailable.value?.peekContent() != available) {
             _isNetworkAvailable.value = Event(available)
+        }
+    }
+
+    fun loadVideo(videoId: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null) {
+        _video.value = null
+        viewModelScope.launch {
+            try {
+                val video = videoId?.let { repository.loadVideo(it, helixClientId, helixToken, gqlClientId) }
+                _video.postValue(video)
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    fun loadClip(clipId: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null) {
+        _clip.value = null
+        viewModelScope.launch {
+            try {
+                val clip = clipId?.let { repository.loadClip(it, helixClientId, helixToken, gqlClientId) }
+                _clip.postValue(clip)
+            } catch (e: Exception) {
+
+            }
+        }
+    }
+
+    fun loadUser(login: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null) {
+        _user.value = null
+        viewModelScope.launch {
+            try {
+                val user = login?.let { repository.loadUsersByLogin(mutableListOf(login), helixClientId, helixToken, gqlClientId) }?.firstOrNull()
+                _user.postValue(user)
+            } catch (e: Exception) {
+
+            }
         }
     }
 

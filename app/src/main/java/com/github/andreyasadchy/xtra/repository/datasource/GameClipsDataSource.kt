@@ -68,7 +68,7 @@ class GameClipsDataSource(
 
     private suspend fun helixInitial(params: LoadInitialParams): List<Clip> {
         api = C.HELIX
-        val get = helixApi.getClips(helixClientId, helixToken, null, gameId, started_at, ended_at, params.requestedLoadSize, offset)
+        val get = helixApi.getClips(clientId = helixClientId, token = helixToken, gameId = gameId, started_at = started_at, ended_at = ended_at, limit = params.requestedLoadSize, cursor = offset)
         val list = mutableListOf<Clip>()
         get.data?.let { list.addAll(it) }
         val userIds = mutableListOf<String>()
@@ -93,7 +93,7 @@ class GameClipsDataSource(
 
     private suspend fun gqlQueryInitial(params: LoadInitialParams): List<Clip> {
         api = C.GQL_QUERY
-        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameClipsQuery(id = Optional.Present(gameId), languages = Optional.Present(gqlQueryLanguages), sort = Optional.Present(gqlQueryPeriod), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.clips
+        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameClipsQuery(id = Optional.Present(if (!gameId.isNullOrBlank()) gameId else null), name = Optional.Present(if (gameId.isNullOrBlank() && !gameName.isNullOrBlank()) gameName else null), languages = Optional.Present(gqlQueryLanguages), sort = Optional.Present(gqlQueryPeriod), first = Optional.Present(params.requestedLoadSize), after = Optional.Present(offset))).execute().data?.game?.clips
         val get = get1?.edges
         val list = mutableListOf<Clip>()
         if (get != null) {
@@ -140,7 +140,7 @@ class GameClipsDataSource(
     }
 
     private suspend fun helixRange(params: LoadRangeParams): List<Clip> {
-        val get = helixApi.getClips(helixClientId, helixToken, null, gameId, started_at, ended_at, params.loadSize, offset)
+        val get = helixApi.getClips(clientId = helixClientId, token = helixToken, gameId = gameId, started_at = started_at, ended_at = ended_at, limit = params.loadSize, cursor = offset)
         val list = mutableListOf<Clip>()
         if (offset != null && offset != "") {
             get.data?.let { list.addAll(it) }
@@ -166,7 +166,7 @@ class GameClipsDataSource(
     }
 
     private suspend fun gqlQueryRange(params: LoadRangeParams): List<Clip> {
-        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameClipsQuery(id = Optional.Present(gameId), languages = Optional.Present(gqlQueryLanguages), sort = Optional.Present(gqlQueryPeriod), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.clips
+        val get1 = apolloClient(XtraModule(), gqlClientId).query(GameClipsQuery(id = Optional.Present(if (!gameId.isNullOrBlank()) gameId else null), name = Optional.Present(if (gameId.isNullOrBlank() && !gameName.isNullOrBlank()) gameName else null), languages = Optional.Present(gqlQueryLanguages), sort = Optional.Present(gqlQueryPeriod), first = Optional.Present(params.loadSize), after = Optional.Present(offset))).execute().data?.game?.clips
         val get = get1?.edges
         val list = mutableListOf<Clip>()
         if (get != null && nextPage && offset != null && offset != "") {

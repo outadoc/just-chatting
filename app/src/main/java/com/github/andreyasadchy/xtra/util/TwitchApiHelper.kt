@@ -74,14 +74,22 @@ object TwitchApiHelper {
         }
     }
 
-    fun getDuration(duration: String): Long {
-        return try {
-            parseLong(duration)
-        } catch (e: NumberFormatException) {
-            val h = duration.substringBefore("h", "0").takeLast(2).filter { it.isDigit() }.toInt()
-            val m = duration.substringBefore("m", "0").takeLast(2).filter { it.isDigit() }.toInt()
-            val s = duration.substringBefore("s", "0").takeLast(2).filter { it.isDigit() }.toInt()
-            ((h * 3600) + (m * 60) + s).toLong()
+    fun getDuration(duration: String?): Long? {
+        return if (duration.isNullOrBlank()) {
+            null
+        } else {
+            try {
+                parseLong(duration)
+            } catch (e: Exception) {
+                try {
+                    val h = duration.substringBefore("h", "0").takeLast(2).filter { it.isDigit() }.toInt()
+                    val m = duration.substringBefore("m", "0").takeLast(2).filter { it.isDigit() }.toInt()
+                    val s = duration.substringBefore("s", "0").takeLast(2).filter { it.isDigit() }.toInt()
+                    ((h * 3600) + (m * 60) + s).toLong()
+                } catch (e: Exception) {
+                    null
+                }
+            }
         }
     }
 

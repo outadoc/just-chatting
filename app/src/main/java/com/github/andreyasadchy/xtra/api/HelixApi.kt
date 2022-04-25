@@ -33,7 +33,7 @@ interface HelixApi {
     suspend fun getFollowedStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("user_id") userId: String?, @Query("first") limit: Int, @Query("after") offset: String?): StreamsResponse
 
     @GET("clips")
-    suspend fun getClips(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("broadcaster_id") channelId: String?, @Query("game_id") gameId: String?, @Query("started_at") started_at: String?, @Query("ended_at") ended_at: String?, @Query("first") limit: Int, @Query("after") cursor: String?): ClipsResponse
+    suspend fun getClips(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") ids: List<String>? = null, @Query("broadcaster_id") channelId: String? = null, @Query("game_id") gameId: String? = null, @Query("started_at") started_at: String? = null, @Query("ended_at") ended_at: String? = null, @Query("first") limit: Int? = null, @Query("after") cursor: String? = null): ClipsResponse
 
     @GET("videos")
     suspend fun getVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") ids: List<String>): VideosResponse
@@ -46,6 +46,9 @@ interface HelixApi {
 
     @GET("users")
     suspend fun getUsersById(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("id") ids: List<String>): UsersResponse
+
+    @GET("users")
+    suspend fun getUsersByLogin(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("login") logins: List<String>): UsersResponse
 
     @GET("search/categories")
     suspend fun getGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("query") query: String, @Query("first") limit: Int, @Query("after") offset: String?): GamesResponse

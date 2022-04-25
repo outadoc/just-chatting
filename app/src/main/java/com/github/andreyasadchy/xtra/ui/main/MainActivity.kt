@@ -5,6 +5,7 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.Rect
 import android.net.ConnectivityManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -12,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.github.andreyasadchy.xtra.R
@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
             }
         }
         var flag = notInitialized && !isNetworkAvailable
-        viewModel.isNetworkAvailable.observe(this, Observer {
+        viewModel.isNetworkAvailable.observe(this) {
             it.getContentIfNotHandled()?.let { online ->
                 if (online) {
                     viewModel.validate(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.GQL_CLIENT_ID, ""), this)
@@ -151,9 +151,10 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
                     flag = true
                 }
             }
-        })
+        }
         registerReceiver(networkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         restorePlayerFragment()
+        handleIntent(intent)
     }
 
     override fun onResume() {
@@ -268,10 +269,57 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     }
 
     private fun handleIntent(intent: Intent?) {
-        intent?.also {
-            when (it.getIntExtra(KEY_CODE, -1)) {
+        if (intent?.action == Intent.ACTION_VIEW) {
+            val url = intent.data.toString()
+            when {
+                url.contains("twitch.tv/videos/") -> {
+                    val id = url.substringAfter("twitch.tv/videos/").substringBefore("?")
+                    val offset = url.substringAfter("?t=").nullIfEmpty()?.let { (TwitchApiHelper.getDuration(it)?.toDouble() ?: 0.0) * 1000.0 }
+                    viewModel.loadVideo(id, prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, ""), prefs.getString(C.GQL_CLIENT_ID, ""))
+                    viewModel.video.observe(this) { video ->
+                        if (video != null && video.id.isNotBlank()) {
+                            startVideo(video, offset)
+                        }
+                    }
+                }
+                url.contains("/clip/") -> {
+                    val id = url.substringAfter("/clip/").substringBefore("?")
+                    viewModel.loadClip(id, prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, ""), prefs.getString(C.GQL_CLIENT_ID, ""))
+                    viewModel.clip.observe(this) { clip ->
+                        if (clip != null && clip.id.isNotBlank()) {
+                            startClip(clip)
+                        }
+                    }
+                }
+                url.contains("clips.twitch.tv/") -> {
+                    val id = url.substringAfter("clips.twitch.tv/").substringBefore("?")
+                    viewModel.loadClip(id, prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, ""), prefs.getString(C.GQL_CLIENT_ID, ""))
+                    viewModel.clip.observe(this) { clip ->
+                        if (clip != null && clip.id.isNotBlank()) {
+                            startClip(clip)
+                        }
+                    }
+                }
+                url.contains("twitch.tv/directory/game/") -> {
+                    val name = url.substringAfter("twitch.tv/directory/game/").substringBefore("/")
+                    openGame(id = null, name = Uri.decode(name))
+                }
+                else -> {
+                    val login = url.substringAfter("twitch.tv/").substringBefore("/")
+                    if (login.isNotBlank()) {
+                        viewModel.loadUser(login, prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, ""), prefs.getString(C.GQL_CLIENT_ID, ""))
+                        viewModel.user.observe(this) { user ->
+                            if (user != null && (!user.id.isNullOrBlank() || !user.login.isNullOrBlank())) {
+                                viewChannel(id = user.id, login = user.login, name = user.display_name, channelLogo = user.channelLogo)
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            when (intent?.getIntExtra(KEY_CODE, -1)) {
                 INTENT_OPEN_DOWNLOADS_TAB -> navBar.selectedItemId = R.id.fragment_downloads
-                INTENT_OPEN_DOWNLOADED_VIDEO -> startOfflineVideo(it.getParcelableExtra(KEY_VIDEO)!!)
+                INTENT_OPEN_DOWNLOADED_VIDEO -> startOfflineVideo(intent.getParcelableExtra(KEY_VIDEO)!!)
                 INTENT_OPEN_PLAYER -> playerFragment!!.maximize() //TODO if was closed need to reopen
             }
         }

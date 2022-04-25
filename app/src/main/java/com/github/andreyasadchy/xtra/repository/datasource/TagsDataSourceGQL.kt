@@ -17,7 +17,7 @@ class TagsDataSourceGQL private constructor(
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Tag>) {
         loadInitial(params, callback) {
             if (gameId != null && gameName != null) {
-                if (query.isNullOrEmpty()) {
+                if (query.isNullOrBlank()) {
                     val get = api.loadGameStreamTags(clientId, gameName)
                     get.data.ifEmpty { mutableListOf() }
                 } else {
@@ -25,7 +25,7 @@ class TagsDataSourceGQL private constructor(
                     search.data.ifEmpty { mutableListOf() }
                 }
             } else {
-                if (query.isNullOrEmpty()) {
+                if (query.isNullOrBlank()) {
                     if (getGameTags) {
                         if (savedGameTags == null) {
                             val get = api.loadGameTags(clientId)

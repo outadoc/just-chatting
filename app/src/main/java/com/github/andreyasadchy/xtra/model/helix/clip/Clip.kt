@@ -8,8 +8,6 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Clip(
         override val id: String,
-        val url: String? = null,
-        val embed_url: String? = null,
         val broadcaster_id: String? = null,
         val broadcaster_name: String? = null,
         val creator_id: String? = null,

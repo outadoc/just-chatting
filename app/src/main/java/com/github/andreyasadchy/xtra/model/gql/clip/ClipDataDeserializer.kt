@@ -1,5 +1,6 @@
 package com.github.andreyasadchy.xtra.model.gql.clip
 
+import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -10,15 +11,15 @@ class ClipDataDeserializer : JsonDeserializer<ClipDataResponse> {
 
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ClipDataResponse {
-        val videos = mutableListOf<ClipDataResponse.Video>()
-        val videosJson = json.asJsonArray.first().asJsonObject.getAsJsonObject("data").getAsJsonObject("clip").getAsJsonArray("videoQualities")
-        videosJson.forEach {
-            val video = it.asJsonObject
-            videos.add(ClipDataResponse.Video(
-                    video.getAsJsonPrimitive("frameRate").asInt,
-                    video.getAsJsonPrimitive("quality").asString,
-                    video.getAsJsonPrimitive("sourceURL").asString.replace(Regex("https://[^/]+"),"https://clips-media-assets2.twitch.tv")))
-        }
-        return ClipDataResponse(videos)
+        val obj = json.asJsonObject.getAsJsonObject("data").getAsJsonObject("clip")
+        val data = (Clip(
+            id = "",
+            broadcaster_id = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("id").asString } else null,
+            broadcaster_login = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("login").asString } else null,
+            broadcaster_name = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("displayName").asString } else null,
+            profileImageURL = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("profileImageURL").asString } else null,
+            videoOffsetSeconds = if (!(obj.get("videoOffsetSeconds").isJsonNull)) { obj.getAsJsonPrimitive("videoOffsetSeconds").asInt } else null,
+        ))
+        return ClipDataResponse(data)
     }
 }

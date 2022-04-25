@@ -1,11 +1,11 @@
 type Query {
   games(first: Int, after: Cursor): Games
+  game(id: ID, name: String): GameNode
   streams(languages: [Language!], first: Int, after: Cursor): Streams
   videos(language: Language, first: Int, after: Cursor): Videos
-  game(id: ID, name: String, first: Int, after: Cursor): GameNode
-  user(id: ID, login: String): User
-  users(ids: [ID!]): [User]
   video(id: ID): VideoNode
+  users(ids: [ID!], logins: [String!]): [User]
+  user(id: ID, login: String): User
 }
 
 type User {

@@ -282,9 +282,23 @@ class ApiRepository @Inject constructor(
         helix.getVideos(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, ids).data
     }
 
+    override suspend fun loadClip(clipId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): Clip? = withContext(Dispatchers.IO) {
+        try {
+            var user: Clip? = null
+            try {
+                user = gql.loadClipData(gqlClientId, clipId).data
+            } catch (e: Exception) {}
+            val video = gql.loadClipVideo(gqlClientId, clipId).data
+            Clip(id = clipId, broadcaster_id = user?.broadcaster_id, broadcaster_login = user?.broadcaster_login, broadcaster_name = user?.broadcaster_name,
+                profileImageURL = user?.profileImageURL, video_id = video?.video_id, duration = video?.duration, videoOffsetSeconds = video?.videoOffsetSeconds ?: user?.videoOffsetSeconds)
+        } catch (e: Exception) {
+            helix.getClips(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, mutableListOf(clipId)).data?.firstOrNull()
+        }
+    }
+
     override suspend fun loadUsersById(ids: List<String>, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<User>? = withContext(Dispatchers.IO) {
         try {
-            val get = apolloClient(XtraModule(), gqlClientId).query(UsersQuery(Optional.Present(ids))).execute().data?.users
+            val get = apolloClient(XtraModule(), gqlClientId).query(UsersQuery(ids = Optional.Present(ids))).execute().data?.users
             if (get != null) {
                 val list = mutableListOf<User>()
                 for (i in get) {
@@ -308,6 +322,35 @@ class ApiRepository @Inject constructor(
             } else null
         } catch (e: Exception) {
             helix.getUsersById(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, ids).data
+        }
+    }
+
+    override suspend fun loadUsersByLogin(logins: List<String>, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<User>? = withContext(Dispatchers.IO) {
+        try {
+            val get = apolloClient(XtraModule(), gqlClientId).query(UsersQuery(logins = Optional.Present(logins))).execute().data?.users
+            if (get != null) {
+                val list = mutableListOf<User>()
+                for (i in get) {
+                    list.add(
+                        User(id = i?.id, login = i?.login, display_name = i?.displayName, profile_image_url = i?.profileImageURL,
+                            bannerImageURL = i?.bannerImageURL, view_count = i?.profileViewCount, created_at = i?.createdAt?.toString(),
+                            followers_count = i?.followers?.totalCount,
+                            broadcaster_type = when {
+                                i?.roles?.isPartner == true -> "partner"
+                                i?.roles?.isAffiliate == true -> "affiliate"
+                                else -> null
+                            },
+                            type = when {
+                                i?.roles?.isStaff == true -> "staff"
+                                i?.roles?.isSiteAdmin == true -> "admin"
+                                i?.roles?.isGlobalMod == true -> "global_mod"
+                                else -> null
+                            }))
+                }
+                list
+            } else null
+        } catch (e: Exception) {
+            helix.getUsersByLogin(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, logins).data
         }
     }
 

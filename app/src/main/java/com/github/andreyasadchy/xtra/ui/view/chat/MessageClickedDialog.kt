@@ -26,7 +26,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
     interface OnButtonClickListener {
         fun onReplyClicked(userName: String)
         fun onCopyMessageClicked(message: String)
-        fun onViewProfileClicked(id: String?, login: String?, name: String?, profileImage: String?)
+        fun onViewProfileClicked(id: String?, login: String?, name: String?, channelLogo: String?)
     }
 
     companion object {

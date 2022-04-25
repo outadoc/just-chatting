@@ -107,8 +107,8 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         chatView.setMessage(message)
     }
 
-    override fun onViewProfileClicked(id: String?, login: String?, name: String?, profileImage: String?) {
-        (requireActivity() as MainActivity).viewChannel(id, login, name, profileImage)
+    override fun onViewProfileClicked(id: String?, login: String?, name: String?, channelLogo: String?) {
+        (requireActivity() as MainActivity).viewChannel(id, login, name, channelLogo)
         (parentFragment as? BasePlayerFragment)?.minimize()
     }
 

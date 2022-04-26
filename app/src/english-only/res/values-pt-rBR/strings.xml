@@ -82,7 +82,6 @@
     <string name="video_subscribers_only">This video is only available to subscribers</string>
     <string name="player_error">Player error. Retrying</string>
     <string name="picture_in_picture">Picture-in-Picture</string>
-    <string name="continue_playback">Continue playback outside of the app</string>
     <string name="adblock_not_working">TTV.LOL is offline. Disable Adblock to view streams in the meantime</string>
     <string name="adblock_desc">Uses the TTV.LOL api to load streams</string>
     <string name="adblock">Use Adblocker</string>
@@ -172,7 +171,6 @@
     <string name="settings_player">PLAYER</string>
     <string name="settings_token">PLAYLIST HEADERS</string>
     <string name="settings_token_summary">for livestreams only, disable adblock</string>
-    <string name="not_supported">Not supported</string>
     <string name="token_random_deviceid">Random device id</string>
     <string name="api_helix">Helix client id</string>
     <string name="api_gql">GQL client id</string>
@@ -492,4 +490,6 @@ Removes a timeout on a user.</string>
     <string name="imageLibraryEntries1">Coil (recommended Android 9+)</string>
     <string name="imageLibraryEntries2">Coil + Glide WebP (recommended below Android 9)</string>
     <string name="imageLibraryEntries3">Glide</string>
+    <string name="background_playback">Background playback</string>
+    <string name="disabled">Disabled</string>
 </resources>

@@ -135,6 +135,10 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
         return runBlocking(Dispatchers.Main) { viewModel.currentPlayer.value!!.currentPosition / 1000.0 }
     }
 
+    fun startAudioOnly() {
+        viewModel.startAudioOnly()
+    }
+
     companion object {
         private const val KEY_VIDEO = "video"
         private const val KEY_OFFSET = "offset"

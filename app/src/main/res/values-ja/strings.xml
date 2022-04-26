@@ -82,7 +82,6 @@
     <string name="video_subscribers_only">このビデオはサブスクライバーのみ視聴可能です</string>
     <string name="player_error">プレイヤーエラーです。再試行します</string>
     <string name="picture_in_picture">ピクチャーインピクチャー</string>
-    <string name="continue_playback">アプリ外でも再生を続ける</string>
     <string name="adblock_not_working">TTV.LOLはオフラインです。Adblockを無効にすると配信を視聴することができます</string>
     <string name="adblock_desc">TTV.LOLのAPIを使用して配信を読み込みます</string>
     <string name="adblock">Adblockを使用する</string>
@@ -172,7 +171,6 @@
     <string name="settings_player">プレイヤー</string>
     <string name="settings_token">プレイリストのヘッダー</string>
     <string name="settings_token_summary">ライブ配信のみ、Adblockを無効</string>
-    <string name="not_supported">サポートされていません</string>
     <string name="token_random_deviceid">ランダムなデバイスID</string>
     <string name="api_helix">HelixクライアントID</string>
     <string name="api_gql">GQLクライアントID</string>
@@ -466,4 +464,6 @@
     <string name="imageLibraryEntries1">Coil (recommended Android 9+)</string>
     <string name="imageLibraryEntries2">Coil + Glide WebP (recommended below Android 9)</string>
     <string name="imageLibraryEntries3">Glide</string>
+    <string name="background_playback">Background playback</string>
+    <string name="disabled">Disabled</string>
 </resources>

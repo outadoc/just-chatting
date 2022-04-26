@@ -75,7 +75,6 @@
     <string name="video_subscribers_only">Este vídeo está disponível apenas para assinantes e não pode ser visualizado no aplicativo devido às restrições da Twitch</string>
     <string name="player_error">Erro no player. Tentando novamente</string>
     <string name="picture_in_picture">Picture-in-Picture</string>
-    <string name="continue_playback">Continuar a reprodução fora do aplicativo</string>
     <string name="source_vod_start">Começo: %s</string>
     <string name="source_vod_end">Final: %s</string>
     <string name="stream_ended">A stream terminou</string>
@@ -159,7 +158,6 @@
     <string name="cutoutmode_desc">Display content inside of the cutout area</string>
     <string name="cutoutmode_always">Always - Both portrait and landscape modes</string>
     <string name="adblock_not_working">TTV.LOL is offline. Disable Adblock to view streams in the meantime</string>
-    <string name="not_supported">Not supported</string>
     <string name="settings_token">PLAYLIST HEADERS</string>
     <string name="token_random_deviceid">Random device id</string>
     <string name="settings_token_summary">for livestreams only, disable adblock</string>
@@ -482,4 +480,6 @@ Removes a timeout on a user.</string>
     <string name="imageLibraryEntries1">Coil (recommended Android 9+)</string>
     <string name="imageLibraryEntries2">Coil + Glide WebP (recommended below Android 9)</string>
     <string name="imageLibraryEntries3">Glide</string>
+    <string name="background_playback">Background playback</string>
+    <string name="disabled">Disabled</string>
 </resources>

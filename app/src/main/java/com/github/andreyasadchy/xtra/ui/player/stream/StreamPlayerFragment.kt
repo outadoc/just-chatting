@@ -137,6 +137,10 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         }
     }
 
+    fun startAudioOnly() {
+        viewModel.startAudioOnly()
+    }
+
     companion object {
         private const val KEY_STREAM = "stream"
 

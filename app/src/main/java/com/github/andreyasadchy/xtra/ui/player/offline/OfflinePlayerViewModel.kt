@@ -47,6 +47,7 @@ class OfflinePlayerViewModel @Inject constructor(
             player.seekTo(playbackPosition)
         } else {
             hideBackgroundAudio()
+            changeQuality(qualityIndex)
         }
     }
 
@@ -73,6 +74,11 @@ class OfflinePlayerViewModel @Inject constructor(
             startBackgroundAudio(video.url, video.channelName, video.name, video.channelLogo, true, AudioPlayerService.TYPE_OFFLINE, video.id)
             PlayerMode.AUDIO_ONLY
         }
+    }
+
+    fun startAudioOnly() {
+        startBackgroundAudio(video.url, video.channelName, video.name, video.channelLogo, true, AudioPlayerService.TYPE_OFFLINE, video.id)
+        _playerMode.value = PlayerMode.AUDIO_ONLY
     }
 
     override fun onCleared() {

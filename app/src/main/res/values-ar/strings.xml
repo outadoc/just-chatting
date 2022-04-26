@@ -74,7 +74,6 @@
     <string name="chat_replay_unavailable">إعادة تشغيل الدردشة غير متاحة</string>
     <string name="video_subscribers_only">هذا الفيديو متاح فقط للمشتركين</string>
     <string name="picture_in_picture">التشغيل في الخلفية</string>
-    <string name="continue_playback">مُتابعة التشغيل خارج التطبيق(في الخلفية)</string>
     <string name="source_vod_start">البداية: %s</string>
     <string name="source_vod_end">النهاية: %s</string>
     <string name="stream_ended">إنتهى البث المباشر</string>
@@ -159,7 +158,6 @@
     <string name="cutoutmode_desc">Display content inside of the cutout area</string>
     <string name="cutoutmode_always">Always - Both portrait and landscape modes</string>
     <string name="adblock_not_working">TTV.LOL is offline. Disable Adblock to view streams in the meantime</string>
-    <string name="not_supported">Not supported</string>
     <string name="settings_token">PLAYLIST HEADERS</string>
     <string name="token_random_deviceid">Random device id</string>
     <string name="settings_token_summary">for livestreams only, disable adblock</string>
@@ -482,4 +480,6 @@ Removes a timeout on a user.</string>
     <string name="imageLibraryEntries1">Coil (recommended Android 9+)</string>
     <string name="imageLibraryEntries2">Coil + Glide WebP (recommended below Android 9)</string>
     <string name="imageLibraryEntries3">Glide</string>
+    <string name="background_playback">Background playback</string>
+    <string name="disabled">Disabled</string>
 </resources>

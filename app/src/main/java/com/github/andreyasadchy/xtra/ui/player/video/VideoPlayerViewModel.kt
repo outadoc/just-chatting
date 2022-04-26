@@ -111,12 +111,14 @@ class VideoPlayerViewModel @Inject constructor(
                     player.seekTo(playbackPosition)
                 }
             }
-            else -> {
-                (player.currentManifest as? HlsManifest)?.let {
-                    startBackgroundAudio(helper.urls.values.last(), video.user_name, video.title, video.channelLogo, true, AudioPlayerService.TYPE_VIDEO, video.id.toLong())
-                    _playerMode.value = PlayerMode.AUDIO_ONLY
-                }
-            }
+            else -> startAudioOnly()
+        }
+    }
+
+    fun startAudioOnly() {
+        (player.currentManifest as? HlsManifest)?.let {
+            startBackgroundAudio(helper.urls.values.last(), video.user_name, video.title, video.channelLogo, true, AudioPlayerService.TYPE_VIDEO, video.id.toLong())
+            _playerMode.value = PlayerMode.AUDIO_ONLY
         }
     }
 
@@ -126,6 +128,7 @@ class VideoPlayerViewModel @Inject constructor(
             super.onResume()
         } else if (playerMode.value == PlayerMode.AUDIO_ONLY) {
             hideBackgroundAudio()
+            changeQuality(qualityIndex)
         }
         if (playerMode.value != PlayerMode.AUDIO_ONLY) {
             player.seekTo(playbackPosition)

@@ -93,9 +93,14 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 true
             }
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
-                findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.isEnabled = false
-                findPreference<SwitchPreferenceCompat>(C.PICTURE_IN_PICTURE)!!.summary = resources.getString(R.string.not_supported)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { //TODO update exoplayer
+                findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntries(R.array.backgroundPlayback12Entries)
+                findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntryValues(R.array.backgroundPlayback12Values)
+            } else {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+                    findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntries(R.array.backgroundPlaybackNoPipEntries)
+                    findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntryValues(R.array.backgroundPlaybackNoPipValues)
+                }
             }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {

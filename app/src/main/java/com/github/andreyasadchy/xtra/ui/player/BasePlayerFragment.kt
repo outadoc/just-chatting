@@ -357,7 +357,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
     }
 
     fun enterPictureInPicture(): Boolean {
-        return slidingLayout.isMaximized && prefs.getBoolean(C.PICTURE_IN_PICTURE, true) && shouldEnterPictureInPicture
+        return slidingLayout.isMaximized && shouldEnterPictureInPicture
     }
 
     private fun initLayout() {

@@ -40,7 +40,6 @@
     <string name="compact_streams_title">Компактный интерфейс трансляций на экране подписок</string>
     <string name="connection_error">Ошибка подключения. Пожалуйста, попробуйте ещё раз</string>
     <string name="connection_restored">Соединение восстановлено</string>
-    <string name="continue_playback">Продолжить воспроизведение вне приложения</string>
     <string name="copy_clip">Копировать в буфер обмена</string>
     <string name="copy_message">Скопировать сообщение</string>
     <string name="created_at">Создано в %s</string>
@@ -97,7 +96,6 @@
     <string name="no_browser_found">Не удалось найти установленный браузер</string>
     <string name="no_connection">Отсутствует Интернет-соединение</string>
     <string name="no_storage_detected">Хранилище телефона не доступно (вероятнее всего телефон подключён к компьютеру).</string>
-    <string name="not_supported">Не поддерживается</string>
     <string name="nothing_here">Здесь пусто</string>
     <string name="notification_downloads_channel_title">Загрузки</string>
     <string name="notification_playback_channel_title">Воспроизведение</string>
@@ -482,4 +480,6 @@ Removes a timeout on a user.</string>
     <string name="imageLibraryEntries1">Coil (recommended Android 9+)</string>
     <string name="imageLibraryEntries2">Coil + Glide WebP (recommended below Android 9)</string>
     <string name="imageLibraryEntries3">Glide</string>
+    <string name="background_playback">Background playback</string>
+    <string name="disabled">Disabled</string>
 </resources>

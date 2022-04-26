@@ -79,6 +79,10 @@ class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerS
         viewModel.setVolume(volume)
     }
 
+    fun startAudioOnly() {
+        viewModel.startAudioOnly()
+    }
+
     companion object {
         private const val KEY_VIDEO = "video"
 

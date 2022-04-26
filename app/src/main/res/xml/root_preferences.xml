@@ -367,11 +367,12 @@
         android:title="@string/player_pause"
         app:iconSpaceReserved="false"/>
 
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="pictureInPicture"
-        android:summary="@string/continue_playback"
-        android:title="@string/picture_in_picture"
+    <ListPreference
+        android:entries="@array/backgroundPlaybackEntries"
+        android:entryValues="@array/backgroundPlaybackValues"
+        android:key="player_background_playback"
+        android:summary="%s"
+        android:title="@string/background_playback"
         app:iconSpaceReserved="false"/>
 
     <ListPreference

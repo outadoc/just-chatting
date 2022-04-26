@@ -92,13 +92,7 @@ class StreamPlayerViewModel @Inject constructor(
         super.changeQuality(index)
         when {
             index < qualities.size - 2 -> setVideoQuality(index)
-            index < qualities.size - 1 -> {
-                (player.currentManifest as? HlsManifest)?.let {
-                    val s = _stream.value!!
-                    startBackgroundAudio(helper.urls.values.last(), s.user_name, s.title, s.channelLogo, false, AudioPlayerService.TYPE_STREAM, null)
-                    _playerMode.value = AUDIO_ONLY
-                }
-            }
+            index < qualities.size - 1 -> startAudioOnly()
             else -> {
                 if (playerMode.value == NORMAL) {
                     player.stop()
@@ -110,12 +104,21 @@ class StreamPlayerViewModel @Inject constructor(
         }
     }
 
+    fun startAudioOnly() {
+        (player.currentManifest as? HlsManifest)?.let {
+            val s = _stream.value!!
+            startBackgroundAudio(helper.urls.values.last(), s.user_name, s.title, s.channelLogo, false, AudioPlayerService.TYPE_STREAM, null)
+            _playerMode.value = AUDIO_ONLY
+        }
+    }
+
     override fun onResume() {
         isResumed = true
         if (playerMode.value == NORMAL) {
             loadStream(stream.value ?: return)
         } else if (playerMode.value == AUDIO_ONLY) {
             hideBackgroundAudio()
+            changeQuality(qualityIndex)
         }
     }
 

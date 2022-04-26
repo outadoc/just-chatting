@@ -123,6 +123,16 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
                 putBoolean(C.FIRST_LAUNCH, false)
             }
         }
+        if (prefs.getBoolean(C.FIRST_LAUNCH1, true)) {
+            prefs.edit {
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+                    putString(C.PLAYER_BACKGROUND_PLAYBACK, "1")
+                } else {
+                    putString(C.PLAYER_BACKGROUND_PLAYBACK, "0")
+                }
+                putBoolean(C.FIRST_LAUNCH1, false)
+            }
+        }
         applyTheme()
         setContentView(R.layout.activity_main)
 
@@ -254,15 +264,23 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         playerFragment.let {
-            if (it != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && it.enterPictureInPicture()) {
-                try {
-                    val params = PictureInPictureParams.Builder()
+            if (prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "0") {
+                if (it != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE) && it.enterPictureInPicture()) {
+                    try {
+                        val params = PictureInPictureParams.Builder()
                             .setSourceRectHint(Rect(0, 0, it.playerWidth, it.playerHeight))
 //                            .setAspectRatio(Rational(it.playerWidth, it.playerHeight))
                             .build()
-                    enterPictureInPictureMode(params)
-                } catch (e: IllegalStateException) {
-                    //device doesn't support PIP
+                        enterPictureInPictureMode(params)
+                    } catch (e: IllegalStateException) {
+                        //device doesn't support PIP
+                    }
+                }
+            } else {
+                if (prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "1") {
+                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) { //TODO update exoplayer
+                        (it as? StreamPlayerFragment)?.startAudioOnly() ?: (it as? VideoPlayerFragment)?.startAudioOnly() ?: (it as? OfflinePlayerFragment)?.startAudioOnly()
+                    }
                 }
             }
         }

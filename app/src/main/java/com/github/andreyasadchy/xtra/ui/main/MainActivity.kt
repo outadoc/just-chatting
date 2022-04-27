@@ -433,7 +433,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
             if (playerFragment == null) {
                 playerFragment = supportFragmentManager.findFragmentById(R.id.playerContainer) as BasePlayerFragment?
             } else {
-                if (playerFragment?.slidingLayout?.secondView?.isVisible == false) {
+                if (playerFragment?.slidingLayout?.secondView?.isVisible == false && prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "0") {
                     playerFragment?.maximize()
                 }
             }

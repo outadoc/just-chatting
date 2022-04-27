@@ -32,7 +32,7 @@ class SlidingLayout : LinearLayout {
     private var debug = false
     private val viewDragHelper = ViewDragHelper.create(this, 1f, SlidingCallback())
     private lateinit var dragView: View
-    private var secondView: View? = null
+    var secondView: View? = null
 
     private var timeBar: DefaultTimeBar? = null
     private var topBound = 0

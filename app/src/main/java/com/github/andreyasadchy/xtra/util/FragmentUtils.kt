@@ -23,7 +23,7 @@ object FragmentUtils {
             labels.map(context::getString),
             labels.toIntArray(),
             checkedIndex
-        ).show(fragmentManager, null)
+        ).show(fragmentManager, "closeOnPip")
     }
 
     /**
@@ -35,7 +35,7 @@ object FragmentUtils {
             labels,
             null,
             checkedIndex
-        ).show(fragmentManager, null)
+        ).show(fragmentManager, "closeOnPip")
     }
 
     fun showUnfollowDialog(context: Context, channelName: String, positiveCallback: () -> Unit) {
@@ -51,18 +51,18 @@ object FragmentUtils {
             qualities,
             quality,
             speed
-        ).show(fragmentManager, null)
+        ).show(fragmentManager, "closeOnPip")
     }
 
     fun showPlayerVolumeDialog(fragmentManager: FragmentManager) {
-        PlayerVolumeDialog.newInstance().show(fragmentManager, null)
+        PlayerVolumeDialog.newInstance().show(fragmentManager, "closeOnPip")
     }
 
     fun showPlayerGamesDialog(fragmentManager: FragmentManager, gamesList: List<Game>) {
-        PlayerGamesDialog.newInstance(gamesList).show(fragmentManager, null)
+        PlayerGamesDialog.newInstance(gamesList).show(fragmentManager, "closeOnPip")
     }
 
     fun showPlayerViewerListDialog(fragmentManager: FragmentManager, login: String, repository: TwitchService) {
-        PlayerViewerListDialog.newInstance(login, repository).show(fragmentManager, null)
+        PlayerViewerListDialog.newInstance(login, repository).show(fragmentManager, "closeOnPip")
     }
 }

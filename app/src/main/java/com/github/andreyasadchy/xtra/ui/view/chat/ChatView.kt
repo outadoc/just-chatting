@@ -317,7 +317,7 @@ class ChatView : ConstraintLayout {
         adapter.setOnClickListener { original, formatted, userId, fullMsg ->
             editText.hideKeyboard()
             editText.clearFocus()
-            MessageClickedDialog.newInstance(enableMessaging, original, formatted, userId, fullMsg).show(fragment.childFragmentManager, null)
+            MessageClickedDialog.newInstance(enableMessaging, original, formatted, userId, fullMsg).show(fragment.childFragmentManager, "closeOnPip")
         }
         if (enableMessaging) {
             editText.addTextChangedListener(onTextChanged = { text, _, _, _ ->

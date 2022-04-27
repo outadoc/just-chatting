@@ -12,6 +12,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
@@ -48,11 +49,13 @@ import com.github.andreyasadchy.xtra.ui.top.TopFragment
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosFragment
 import com.github.andreyasadchy.xtra.ui.view.SlidingLayout
 import com.github.andreyasadchy.xtra.util.*
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_media_pager.view.*
 import java.util.*
 import javax.inject.Inject
 
@@ -274,6 +277,15 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
                         if (!it.enterPictureInPicture()) {
                             it.maximize()
                         }
+                        // player dialog
+                        (it.childFragmentManager.findFragmentByTag("closeOnPip") as? BottomSheetDialogFragment?)?.dismiss()
+                        // player chat message dialog
+                        (it.childFragmentManager.findFragmentById(R.id.chatFragmentContainer)?.childFragmentManager?.findFragmentByTag("closeOnPip") as? BottomSheetDialogFragment?)?.dismiss()
+                        // channel chat message dialog
+                        val fragment = fragNavController.currentFrag as? ChannelPagerFragment?
+                        if (fragment != null) {
+                            ((fragment.childFragmentManager.findFragmentByTag("android:switcher:" + fragment.view?.viewPager?.id + ":" + fragment.view?.viewPager?.currentItem) as? ChatFragment?)?.childFragmentManager?.findFragmentByTag("closeOnPip") as? BottomSheetDialogFragment?)?.dismiss()
+                        }
                         try {
                             val params = PictureInPictureParams.Builder()
                                 .setSourceRectHint(Rect(0, 0, it.playerWidth, it.playerHeight))
@@ -417,8 +429,14 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     }
 
     private fun restorePlayerFragment() {
-        if (viewModel.isPlayerOpened && playerFragment == null) {
-            playerFragment = supportFragmentManager.findFragmentById(R.id.playerContainer) as BasePlayerFragment?
+        if (viewModel.isPlayerOpened) {
+            if (playerFragment == null) {
+                playerFragment = supportFragmentManager.findFragmentById(R.id.playerContainer) as BasePlayerFragment?
+            } else {
+                if (playerFragment?.slidingLayout?.secondView?.isVisible == false) {
+                    playerFragment?.maximize()
+                }
+            }
         }
     }
 

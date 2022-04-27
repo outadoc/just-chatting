@@ -1,5 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.main
 
+import android.app.ActivityManager
 import android.app.PictureInPictureParams
 import android.content.*
 import android.content.pm.PackageManager
@@ -263,23 +264,31 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        playerFragment.let {
-            if (prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "0") {
-                if (it != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE) && it.enterPictureInPicture()) {
-                    try {
-                        val params = PictureInPictureParams.Builder()
-                            .setSourceRectHint(Rect(0, 0, it.playerWidth, it.playerHeight))
+        val tasks = (getSystemService(ACTIVITY_SERVICE) as ActivityManager).getRunningTasks(1)
+        val top = tasks[0].topActivity?.packageName
+        val isBackground = !top.isNullOrBlank() && top != packageName
+        playerFragment?.let {
+            if (isBackground || it.enterPictureInPicture()) {
+                if (prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "0") {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+                        if (!it.enterPictureInPicture()) {
+                            it.maximize()
+                        }
+                        try {
+                            val params = PictureInPictureParams.Builder()
+                                .setSourceRectHint(Rect(0, 0, it.playerWidth, it.playerHeight))
 //                            .setAspectRatio(Rational(it.playerWidth, it.playerHeight))
-                            .build()
-                        enterPictureInPictureMode(params)
-                    } catch (e: IllegalStateException) {
-                        //device doesn't support PIP
+                                .build()
+                            enterPictureInPictureMode(params)
+                        } catch (e: IllegalStateException) {
+                            //device doesn't support PIP
+                        }
                     }
-                }
-            } else {
-                if (prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "1") {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) { //TODO update exoplayer
-                        (it as? StreamPlayerFragment)?.startAudioOnly() ?: (it as? VideoPlayerFragment)?.startAudioOnly() ?: (it as? OfflinePlayerFragment)?.startAudioOnly()
+                } else {
+                    if (prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "1") {
+                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) { //TODO update exoplayer
+                            (it as? StreamPlayerFragment)?.startAudioOnly() ?: (it as? VideoPlayerFragment)?.startAudioOnly() ?: (it as? OfflinePlayerFragment)?.startAudioOnly()
+                        }
                     }
                 }
             }

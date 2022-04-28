@@ -49,9 +49,8 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                 null
             }
             val systemMsg = prefixes["system-msg"]?.replace("\\s", " ")
-            val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
-            val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
-            if (msgIndex == -1 && index2 == -1 && userNotice) { // no user message & is user notice
+            val msgIndex = messageInfo.indexOf(" ", messageInfo.indexOf("#", messageInfo.indexOf(":") + 1) + 1)
+            if (msgIndex == -1 && userNotice) { // no user message & is user notice
                 return LiveChatMessage(
                     message = systemMsg ?: messageInfo,
                     color = "#999999",
@@ -62,7 +61,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             } else {
                 val userMessage: String
                 val isAction: Boolean
-                messageInfo.substring(if (msgIndex != -1) msgIndex + 1 else index2 + 1).let { //from <message>
+                messageInfo.substring(if (messageInfo.substring(msgIndex + 1).startsWith(":")) msgIndex + 2 else msgIndex + 1).let { //from <message>
                     if (!it.startsWith(MessageListenerImpl.ACTION)) {
                         userMessage = it
                         isAction = false

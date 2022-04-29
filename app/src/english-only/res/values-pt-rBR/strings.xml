@@ -492,4 +492,20 @@ Removes a timeout on a user.</string>
     <string name="imageLibraryEntries3">Glide</string>
     <string name="background_playback">Background playback</string>
     <string name="disabled">Disabled</string>
+    <string name="player_minspeedlive">Live min playback speed</string>
+    <string name="player_minspeedlive_summary">The minimum playback speed the player can use to fall back when trying to reach the target live offset. Leave empty for default</string>
+    <string name="player_maxspeedlive">Live max playback speed</string>
+    <string name="player_maxspeedlive_summary">The maximum playback speed the player can use to catch up when trying to reach the target live offset. Leave empty for default</string>
+    <string name="player_targetoffset">Live target offset</string>
+    <string name="player_targetoffset_summary">The player will attempt to get close to this live offset during playback if possible. Leave empty for default</string>
+    <string name="player_buffer_min">Min Buffer</string>
+    <string name="player_buffer_min_summary">The minimum duration of media that the player will attempt to ensure is buffered at all times, in milliseconds</string>
+    <string name="player_buffer_max">Max Buffer</string>
+    <string name="player_buffer_max_summary">The maximum duration of media that the player will attempt to buffer, in milliseconds</string>
+    <string name="player_buffer_playback">Buffer for playback</string>
+    <string name="player_buffer_playback_summary">The duration of media that must be buffered for playback to start or resume following a user action such as a seek, in milliseconds</string>
+    <string name="player_buffer_rebuffer">Rebuffer</string>
+    <string name="player_buffer_rebuffer_summary">The default duration of media that must be buffered for playback to resume after a rebuffer, in milliseconds</string>
+    <string name="buffer_settings">Buffer settings</string>
+    <string name="player_buttons">Player buttons</string>
 </resources>

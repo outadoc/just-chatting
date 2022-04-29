@@ -1,7 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.player.offline
 
 import android.app.Application
-import android.os.Build
 import androidx.core.net.toUri
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
@@ -11,6 +10,7 @@ import com.github.andreyasadchy.xtra.ui.player.PlayerMode
 import com.github.andreyasadchy.xtra.ui.player.PlayerViewModel
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.prefs
+import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import javax.inject.Inject
@@ -24,9 +24,6 @@ class OfflinePlayerViewModel @Inject constructor(
 
     fun setVideo(video: OfflineVideo) {
         val context = getApplication<Application>()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { //TODO update exoplayer
-            qualities.removeLast()
-        }
         if (!this::video.isInitialized) {
             this.video = video
             val mediaSourceFactory = if (video.vod) {
@@ -34,7 +31,7 @@ class OfflinePlayerViewModel @Inject constructor(
             } else {
                 ProgressiveMediaSource.Factory(dataSourceFactory)
             }
-            mediaSource = mediaSourceFactory.createMediaSource(video.url.toUri())
+            mediaSource = mediaSourceFactory.createMediaSource(MediaItem.fromUri(video.url.toUri()))
             play()
             player.seekTo(if (context.prefs().getBoolean(C.PLAYER_USE_VIDEOPOSITIONS, true)) video.lastWatchPosition ?: 0 else 0)
         }

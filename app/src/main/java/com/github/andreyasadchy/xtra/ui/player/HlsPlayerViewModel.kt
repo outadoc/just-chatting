@@ -1,13 +1,11 @@
 package com.github.andreyasadchy.xtra.ui.player
 
 import android.app.Application
-import android.os.Build
 import androidx.core.content.edit
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.player.lowlatency.HlsManifest
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
@@ -19,6 +17,7 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.prefs
 import com.google.android.exoplayer2.Timeline
 import com.google.android.exoplayer2.source.TrackGroupArray
+import com.google.android.exoplayer2.source.hls.HlsManifest
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray
 import java.util.*
@@ -116,7 +115,8 @@ abstract class HlsPlayerViewModel(
         }
     }
 
-    override fun onTimelineChanged(timeline: Timeline, manifest: Any?, reason: Int) {
+    override fun onTimelineChanged(timeline: Timeline, reason: Int) {
+        val manifest = player.currentManifest
         if (helper.urls.isEmpty() && manifest is HlsManifest) {
             manifest.masterPlaylist.let {
                 val context = getApplication<Application>()
@@ -135,9 +135,7 @@ abstract class HlsPlayerViewModel(
                 }
                 helper.urls = urls.apply {
                     remove(audioOnly)?.let { url ->
-                        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) { //TODO update exoplayer
-                            put(audioOnly, url) //move audio option to bottom
-                        }
+                        put(audioOnly, url) //move audio option to bottom
                     }
                 }
                 qualities = LinkedList(urls.keys).apply {

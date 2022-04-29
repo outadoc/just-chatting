@@ -179,7 +179,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         } else {
             view.findViewById<TextView>(R.id.channel).gone()
         }
-        if (prefs.getBoolean(C.PLAYER_VOLUMEBUTTON, false)) {
+        if (prefs.getBoolean(C.PLAYER_VOLUMEBUTTON, true)) {
             view.findViewById<ImageButton>(R.id.volumeButton).setOnClickListener {
                 FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
             }
@@ -217,8 +217,8 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 }
             }
         } else {
-            val rewind = prefs.getString("playerRewind", "10000")!!.toInt()
-            val forward = prefs.getString("playerForward", "10000")!!.toInt()
+            val rewind = prefs.getString(C.PLAYER_REWIND, "10000")!!.toInt()
+            val forward = prefs.getString(C.PLAYER_FORWARD, "10000")!!.toInt()
             val rewindImage = when {
                 rewind <= 5000 -> R.drawable.baseline_replay_5_black_48
                 rewind <= 10000 -> R.drawable.baseline_replay_10_black_48
@@ -228,10 +228,6 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 forward <= 5000 -> R.drawable.baseline_forward_5_black_48
                 forward <= 10000 -> R.drawable.baseline_forward_10_black_48
                 else -> R.drawable.baseline_forward_30_black_48
-            }
-            playerView.apply {
-                setRewindIncrementMs(rewind)
-                setFastForwardIncrementMs(forward)
             }
             view.findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_rew).setImageResource(rewindImage)
             view.findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_ffwd).setImageResource(forwardImage)

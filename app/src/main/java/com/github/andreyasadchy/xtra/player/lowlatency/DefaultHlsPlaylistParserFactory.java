@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2018 The Android Open Source Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,16 @@
  */
 package com.github.andreyasadchy.xtra.player.lowlatency;
 
-import com.google.android.exoplayer2.source.hls.playlist.HlsMasterPlaylist;
+import androidx.annotation.Nullable;
+
+import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
+import com.google.android.exoplayer2.source.hls.playlist.HlsMultivariantPlaylist;
 import com.google.android.exoplayer2.source.hls.playlist.HlsPlaylist;
 import com.google.android.exoplayer2.source.hls.playlist.HlsPlaylistParserFactory;
 import com.google.android.exoplayer2.upstream.ParsingLoadable;
 
-public class DefaultHlsPlaylistParserFactory implements HlsPlaylistParserFactory {
+/** Default implementation for {@link HlsPlaylistParserFactory}. */
+public final class DefaultHlsPlaylistParserFactory implements HlsPlaylistParserFactory {
 
     @Override
     public ParsingLoadable.Parser<HlsPlaylist> createPlaylistParser() {
@@ -28,7 +32,9 @@ public class DefaultHlsPlaylistParserFactory implements HlsPlaylistParserFactory
     }
 
     @Override
-    public ParsingLoadable.Parser<HlsPlaylist> createPlaylistParser(HlsMasterPlaylist masterPlaylist) {
-        return new HlsPlaylistParser(masterPlaylist);
+    public ParsingLoadable.Parser<HlsPlaylist> createPlaylistParser(
+            HlsMultivariantPlaylist multivariantPlaylist,
+            @Nullable HlsMediaPlaylist previousMediaPlaylist) {
+        return new HlsPlaylistParser(multivariantPlaylist, previousMediaPlaylist);
     }
 }

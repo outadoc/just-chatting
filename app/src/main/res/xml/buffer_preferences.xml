@@ -1,0 +1,67 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <EditTextPreference
+        android:defaultValue="1000"
+        android:key="player_buffer_min"
+        android:singleLine="true"
+        android:title="@string/player_buffer_min"
+        app:dialogMessage="@string/player_buffer_min_summary"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+    <EditTextPreference
+        android:defaultValue="50000"
+        android:key="player_buffer_max"
+        android:singleLine="true"
+        android:title="@string/player_buffer_max"
+        app:dialogMessage="@string/player_buffer_max_summary"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+    <EditTextPreference
+        android:defaultValue="1000"
+        android:key="player_buffer_playback"
+        android:singleLine="true"
+        android:title="@string/player_buffer_playback"
+        app:dialogMessage="@string/player_buffer_playback_summary"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+    <EditTextPreference
+        android:defaultValue="1000"
+        android:key="player_buffer_rebuffer"
+        android:singleLine="true"
+        android:title="@string/player_buffer_rebuffer"
+        app:dialogMessage="@string/player_buffer_rebuffer_summary"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+    <EditTextPreference
+        android:defaultValue=""
+        android:key="player_live_min_speed"
+        android:singleLine="true"
+        android:title="@string/player_minspeedlive"
+        app:dialogMessage="@string/player_minspeedlive_summary"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+    <EditTextPreference
+        android:defaultValue=""
+        android:key="player_live_max_speed"
+        android:singleLine="true"
+        android:title="@string/player_maxspeedlive"
+        app:dialogMessage="@string/player_maxspeedlive_summary"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+    <EditTextPreference
+        android:defaultValue="1000"
+        android:key="player_live_target_offset"
+        android:singleLine="true"
+        android:title="@string/player_targetoffset"
+        app:dialogMessage="@string/player_targetoffset_summary"
+        app:useSimpleSummaryProvider="true"
+        app:iconSpaceReserved="false" />
+
+</androidx.preference.PreferenceScreen>

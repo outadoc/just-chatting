@@ -17,16 +17,15 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.model.VideoPosition
-import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserFactory
-import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistTracker
-import com.github.andreyasadchy.xtra.player.lowlatency.HlsMediaSource
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.source.MediaSource
+import com.google.android.exoplayer2.source.hls.HlsMediaSource
+import com.google.android.exoplayer2.source.hls.playlist.DefaultHlsPlaylistParserFactory
+import com.google.android.exoplayer2.source.hls.playlist.DefaultHlsPlaylistTracker
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.ui.PlayerNotificationManager
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
@@ -56,9 +55,9 @@ class AudioPlayerService : Service() {
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
-        player = ExoPlayerFactory.newSimpleInstance(this, DefaultTrackSelector().apply {
+        player = ExoPlayer.Builder(this).setTrackSelector(DefaultTrackSelector(this).apply {
             parameters = buildUponParameters().setRendererDisabled(0, true).build()
-        })
+        }).build()
     }
 
     override fun onDestroy() {
@@ -97,7 +96,7 @@ class AudioPlayerService : Service() {
             TYPE_OFFLINE -> videoId = intent.getIntExtra(KEY_VIDEO_ID, -1)
         }
         player.apply {
-            addListener(object : Player.EventListener {
+            addListener(object : Player.Listener  {
                 override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
                     if (restorePosition && playbackState == Player.STATE_READY) {
                         restorePosition = false
@@ -105,15 +104,17 @@ class AudioPlayerService : Service() {
                     }
                 }
 
-                override fun onPlayerError(error: ExoPlaybackException) {
+                override fun onPlayerError(error: PlaybackException) {
                     if (usePlayPause && !restorePosition) { //if it's a vod and didn't already save position
                         currentPlaybackPosition = player.currentPosition
                         restorePosition = true
                     }
-                    prepare(mediaSource)
+                    setMediaSource(mediaSource)
+                    prepare()
                 }
             })
-            prepare(mediaSource)
+            setMediaSource(mediaSource)
+            prepare()
             playWhenReady = true
             if (currentPlaybackPosition > 0) {
                 player.seekTo(currentPlaybackPosition)
@@ -137,31 +138,24 @@ class AudioPlayerService : Service() {
                         }
                     }
                 },
-            !usePlayPause
+            !usePlayPause,
+            null,
+            smallIconResourceId = R.drawable.baseline_audiotrack_black_24,
+            playActionIconResourceId = R.drawable.exo_notification_play,
+            pauseActionIconResourceId = R.drawable.exo_notification_pause,
+            stopActionIconResourceId = R.drawable.exo_notification_stop,
+            rewindActionIconResourceId = R.drawable.exo_notification_rewind,
+            fastForwardActionIconResourceId = R.drawable.exo_notification_fastforward,
+            previousActionIconResourceId = R.drawable.exo_notification_previous,
+            nextActionIconResourceId = R.drawable.exo_notification_next,
+            null
         ).apply {
-            setUseNavigationActions(false)
+            setUseNextAction(false)
+            setUsePreviousAction(false)
             setUsePlayPauseActions(usePlayPause)
             setUseStopAction(true)
-            setFastForwardIncrementMs(0)
-            setRewindIncrementMs(0)
-            setSmallIcon(R.drawable.baseline_audiotrack_black_24)
-            setControlDispatcher(object : DefaultControlDispatcher() {
-                override fun dispatchStop(player: Player, reset: Boolean): Boolean {
-                    connection.let {
-                        //TODO TEMP FIX, REWORK SERVICE BINDING NORMALLY
-                        if (it != null) {
-                            try {
-                                XtraApp.INSTANCE.unbindService(it)
-                            } catch (e: Exception) {
-                                playerNotificationManager.setPlayer(null)
-                            }
-                        } else {
-                            playerNotificationManager.setPlayer(null)
-                        }
-                    }
-                    return true
-                }
-            })
+            setUseFastForwardAction(false)
+            setUseRewindAction(false)
         }
         return AudioBinder()
     }
@@ -172,7 +166,7 @@ class AudioPlayerService : Service() {
                 .setPlaylistParserFactory(DefaultHlsPlaylistParserFactory())
                 .setPlaylistTrackerFactory(DefaultHlsPlaylistTracker.FACTORY)
                 .setLoadErrorHandlingPolicy(DefaultLoadErrorHandlingPolicy(6))
-                .createMediaSource(playlistUrl)
+                .createMediaSource(MediaItem.fromUri(playlistUrl))
     }
 
     inner class AudioBinder : Binder() {
@@ -191,11 +185,12 @@ class AudioPlayerService : Service() {
         fun restartPlayer() {
             player.stop()
             createMediaSource()
-            player.prepare(mediaSource)
+            player.setMediaSource(mediaSource)
+            player.prepare()
         }
     }
 
-    private class CustomPlayerNotificationManager(context: Context, channelId: String, notificationId: Int, mediaDescriptionAdapter: MediaDescriptionAdapter, notificationListener: NotificationListener, private val isLive: Boolean) : PlayerNotificationManager(context, channelId, notificationId, mediaDescriptionAdapter, notificationListener) {
+    private class CustomPlayerNotificationManager(context: Context, channelId: String, notificationId: Int, mediaDescriptionAdapter: MediaDescriptionAdapter, notificationListener: NotificationListener, private val isLive: Boolean, customActionReceiver: CustomActionReceiver?, smallIconResourceId: Int, playActionIconResourceId: Int, pauseActionIconResourceId: Int, stopActionIconResourceId: Int, rewindActionIconResourceId: Int, fastForwardActionIconResourceId: Int, previousActionIconResourceId: Int, nextActionIconResourceId: Int, groupKey: String?) : PlayerNotificationManager(context, channelId, notificationId, mediaDescriptionAdapter, notificationListener, customActionReceiver, smallIconResourceId, playActionIconResourceId, pauseActionIconResourceId, stopActionIconResourceId, rewindActionIconResourceId, fastForwardActionIconResourceId, previousActionIconResourceId, nextActionIconResourceId, groupKey) {
         override fun createNotification(player: Player, builder: NotificationCompat.Builder?, ongoing: Boolean, largeIcon: Bitmap?): NotificationCompat.Builder? {
             return super.createNotification(player, builder, ongoing, largeIcon)?.apply { mActions[if (isLive) 0 else 1].icon = R.drawable.baseline_close_black_36 }
         }

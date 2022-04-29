@@ -1,0 +1,88 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_viewerlist"
+        android:title="@string/player_viewerlist"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_channel"
+        android:title="@string/player_channel"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_minimize"
+        android:title="@string/player_minimize"
+        android:icon="@drawable/baseline_expand_more_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_download"
+        android:title="@string/player_download"
+        android:icon="@drawable/ic_file_download_black_24dp" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_follow"
+        android:title="@string/show_follow_button"
+        android:icon="@drawable/baseline_favorite_border_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_sleep"
+        android:title="@string/player_sleep"
+        android:icon="@drawable/baseline_alarm_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_aspect"
+        android:title="@string/player_aspect"
+        android:icon="@drawable/baseline_aspect_ratio_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_gamesbutton"
+        android:title="@string/player_gamesbutton"
+        android:icon="@drawable/baseline_format_list_bulleted_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_volumebutton"
+        android:title="@string/player_volumebutton"
+        android:icon="@drawable/baseline_volume_up_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_chatbartoggle"
+        android:title="@string/player_chatbartoggle"
+        android:icon="@drawable/baseline_keyboard_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_chattoggle"
+        android:title="@string/player_chattoggle"
+        android:icon="@drawable/baseline_speaker_notes_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_fullscreen"
+        android:title="@string/player_fullscreen"
+        android:icon="@drawable/baseline_fullscreen_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_viewericon"
+        android:title="@string/player_viewericon"
+        android:icon="@drawable/baseline_person_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="player_pause"
+        android:title="@string/player_pause"
+        app:iconSpaceReserved="false"/>
+
+</androidx.preference.PreferenceScreen>

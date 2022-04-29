@@ -22,16 +22,6 @@
         <item>2</item>
     </string-array>
 
-    <string-array name="backgroundPlayback12Entries">
-        <item>@string/picture_in_picture</item>
-        <item>@string/disabled</item>
-    </string-array>
-
-    <string-array name="backgroundPlayback12Values">
-        <item>0</item>
-        <item>2</item>
-    </string-array>
-
     <string-array name="imageLibraryEntries">
         <item>@string/imageLibraryEntries1</item>
         <item>@string/imageLibraryEntries2</item>

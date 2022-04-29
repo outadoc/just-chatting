@@ -93,14 +93,9 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 true
             }
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { //TODO update exoplayer
-                findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntries(R.array.backgroundPlayback12Entries)
-                findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntryValues(R.array.backgroundPlayback12Values)
-            } else {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
-                    findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntries(R.array.backgroundPlaybackNoPipEntries)
-                    findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntryValues(R.array.backgroundPlaybackNoPipValues)
-                }
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+                findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntries(R.array.backgroundPlaybackNoPipEntries)
+                findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntryValues(R.array.backgroundPlaybackNoPipValues)
             }
 
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
@@ -146,6 +141,24 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 true
             }
 
+            findPreference<Preference>("player_button_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+                parentFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.settings, PlayerButtonSettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
+                true
+            }
+
+            findPreference<Preference>("buffer_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+                parentFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.settings, BufferSettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
+                true
+            }
+
             findPreference<Preference>("admin_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                 startActivity(Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.DeviceAdminSettings")))
                 true
@@ -182,9 +195,15 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         return dispatchingAndroidInjector
     }
 
-//    class SettingsSubScreenFragment : PreferenceFragmentCompat() {
-//        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-//            setPreferencesFromResource(R.xml.root_preferences, rootKey)
-//        }
-//    }
+    class PlayerButtonSettingsFragment : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.player_button_preferences, rootKey)
+        }
+    }
+
+    class BufferSettingsFragment : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.buffer_preferences, rootKey)
+        }
+    }
 }

@@ -63,7 +63,7 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
         viewModel.startStream(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, "") ?: "", stream, prefs.getBoolean(C.AD_BLOCKER, true),
             prefs.getBoolean(C.TOKEN_RANDOM_DEVICEID, true), prefs.getString(C.TOKEN_XDEVICEID, "") ?: "", prefs.getString(C.TOKEN_DEVICEID, "") ?: "",
             prefs.getString(C.TOKEN_PLAYERTYPE, "") ?: "", prefs.getString(C.GQL_CLIENT_ID, "") ?: "", prefs.getString(C.PLAYER_LIVE_MIN_SPEED, ""),
-            prefs.getString(C.PLAYER_LIVE_MAX_SPEED, ""), prefs.getString(C.PLAYER_LIVE_TARGET_OFFSET, "1000"))
+            prefs.getString(C.PLAYER_LIVE_MAX_SPEED, ""), prefs.getString(C.PLAYER_LIVE_TARGET_OFFSET, "5000"))
         super.initialize()
         val settings = requireView().findViewById<ImageButton>(R.id.settings)
         val restart = requireView().findViewById<ImageButton>(R.id.restart)

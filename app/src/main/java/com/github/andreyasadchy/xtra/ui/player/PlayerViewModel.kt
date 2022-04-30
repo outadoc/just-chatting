@@ -40,10 +40,10 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
     protected val trackSelector = DefaultTrackSelector(context)
     private val rewind = context.prefs().getString(C.PLAYER_REWIND, "10000")!!.toLong()
     private val forward = context.prefs().getString(C.PLAYER_FORWARD, "10000")!!.toLong()
-    private val minBuffer = context.prefs().getString(C.PLAYER_BUFFER_MIN, "1000")?.toIntOrNull() ?: 1000
+    private val minBuffer = context.prefs().getString(C.PLAYER_BUFFER_MIN, "15000")?.toIntOrNull() ?: 15000
     private val maxBuffer = context.prefs().getString(C.PLAYER_BUFFER_MAX, "50000")?.toIntOrNull() ?: 50000
-    private val playbackBuffer = context.prefs().getString(C.PLAYER_BUFFER_PLAYBACK, "1000")?.toIntOrNull() ?: 1000
-    private val rebuffer = context.prefs().getString(C.PLAYER_BUFFER_REBUFFER, "1000")?.toIntOrNull() ?: 1000
+    private val playbackBuffer = context.prefs().getString(C.PLAYER_BUFFER_PLAYBACK, "2000")?.toIntOrNull() ?: 2000
+    private val rebuffer = context.prefs().getString(C.PLAYER_BUFFER_REBUFFER, "5000")?.toIntOrNull() ?: 5000
     val player: ExoPlayer = ExoPlayer.Builder(context).setTrackSelector(trackSelector).setLoadControl(DefaultLoadControl.Builder()
         .setBufferDurationsMs(minBuffer, maxBuffer, playbackBuffer, rebuffer)
         .build()).setSeekBackIncrementMs(rewind).setSeekForwardIncrementMs(rewind).build()

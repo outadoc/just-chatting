@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <EditTextPreference
-        android:defaultValue="1000"
+        android:defaultValue="15000"
         android:key="player_buffer_min"
         android:singleLine="true"
         android:title="@string/player_buffer_min"
@@ -20,7 +20,7 @@
         app:iconSpaceReserved="false" />
 
     <EditTextPreference
-        android:defaultValue="1000"
+        android:defaultValue="2000"
         android:key="player_buffer_playback"
         android:singleLine="true"
         android:title="@string/player_buffer_playback"
@@ -29,7 +29,7 @@
         app:iconSpaceReserved="false" />
 
     <EditTextPreference
-        android:defaultValue="1000"
+        android:defaultValue="5000"
         android:key="player_buffer_rebuffer"
         android:singleLine="true"
         android:title="@string/player_buffer_rebuffer"
@@ -56,7 +56,7 @@
         app:iconSpaceReserved="false" />
 
     <EditTextPreference
-        android:defaultValue="1000"
+        android:defaultValue="5000"
         android:key="player_live_target_offset"
         android:singleLine="true"
         android:title="@string/player_targetoffset"

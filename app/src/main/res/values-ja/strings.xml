@@ -467,9 +467,9 @@
     <string name="background_playback">バックグラウンド再生</string>
     <string name="disabled">無効</string>
     <string name="player_minspeedlive">ライブの最小再生速度</string>
-    <string name="player_minspeedlive_summary">目標のライブオフセットに到達しようとするとき、プレイヤーがフォールバックするために使用する最小の再生速度。デフォルトは空欄</string>
+    <string name="player_minspeedlive_summary">目標のライブオフセットに到達しようとするとき、プレイヤーがフォールバックするために使用する再生速度の最小値。デフォルトは空欄</string>
     <string name="player_maxspeedlive">ライブの最大再生速度</string>
-    <string name="player_maxspeedlive_summary">目標のライブオフセットに到達しようとするとき、プレイヤーが追いつくために使用する最大の再生速度。デフォルトは空欄</string>
+    <string name="player_maxspeedlive_summary">目標のライブオフセットに到達しようとするとき、プレイヤーが追いつくために使用する再生速度の最大値。デフォルトは空欄</string>
     <string name="player_targetoffset">ライブのターゲットオフセット</string>
     <string name="player_targetoffset_summary">プレイヤーは、可能であれば再生中に目標のライブオフセットに近づきます。デフォルトは空欄</string>
     <string name="player_buffer_min">最小バッファ</string>

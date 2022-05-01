@@ -107,7 +107,7 @@ public final class HlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
     private static final String TAG_SESSION_KEY = "#EXT-X-SESSION-KEY";
     private static final String TAG_BYTERANGE = "#EXT-X-BYTERANGE";
     private static final String TAG_GAP = "#EXT-X-GAP";
-    private static final String TAG_PREFETCH = "#EXT-X-TWITCH-PREFETCH";
+    private static final String TAG_PREFETCH = "#EXT-X-TWITCH-PREFETCH"; // low latency
     private static final String TAG_SKIP = "#EXT-X-SKIP";
     private static final String TAG_PRELOAD_HINT = "#EXT-X-PRELOAD-HINT";
     private static final String TAG_RENDITION_REPORT = "#EXT-X-RENDITION-REPORT";
@@ -749,7 +749,7 @@ public final class HlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                 }
                 segmentByteRangeLength = C.LENGTH_UNSET;
             } else if (line.startsWith(TAG_TARGET_DURATION)) {
-                targetDurationUs = 2 * C.MICROS_PER_SECOND;
+                targetDurationUs = 2 * C.MICROS_PER_SECOND; // low latency
             } else if (line.startsWith(TAG_MEDIA_SEQUENCE)) {
                 mediaSequence = parseLongAttr(line, REGEX_MEDIA_SEQUENCE);
                 segmentMediaSequence = mediaSequence;
@@ -963,13 +963,13 @@ public final class HlsPlaylistParser implements ParsingLoadable.Parser<HlsPlayli
                 if (partByteRangeLength != C.LENGTH_UNSET) {
                     partByteRangeOffset += partByteRangeLength;
                 }
-            } else if (!line.startsWith("#") || line.startsWith(TAG_PREFETCH)) {
+            } else if (!line.startsWith("#") || line.startsWith(TAG_PREFETCH)) { // low latency
                 @Nullable
                 String segmentEncryptionIV =
                         getSegmentEncryptionIV(
                                 segmentMediaSequence, fullSegmentEncryptionKeyUri, fullSegmentEncryptionIV);
                 segmentMediaSequence++;
-                if (line.startsWith(TAG_PREFETCH)) {
+                if (line.startsWith(TAG_PREFETCH)) { // low latency
                     segmentDurationUs = targetDurationUs;
                     line = line.substring(line.indexOf(':') + 1);
                 }

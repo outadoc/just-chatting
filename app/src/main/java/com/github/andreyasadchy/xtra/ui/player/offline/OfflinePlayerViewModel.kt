@@ -44,7 +44,9 @@ class OfflinePlayerViewModel @Inject constructor(
             player.seekTo(playbackPosition)
         } else {
             hideBackgroundAudio()
-            changeQuality(qualityIndex)
+            if (qualityIndex == 0) {
+                changeQuality(qualityIndex)
+            }
         }
     }
 

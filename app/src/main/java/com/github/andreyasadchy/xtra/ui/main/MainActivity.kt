@@ -267,13 +267,30 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
         }
     }
 
+    private fun isBackgroundRunning(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return false
+        } else {
+            val am = getSystemService(ACTIVITY_SERVICE) as ActivityManager
+            val runningProcesses = am.runningAppProcesses
+            for (processInfo in runningProcesses) {
+                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    for (activeProcess in processInfo.pkgList) {
+                        if (activeProcess == packageName) {
+                            //If your app is the process in foreground, then it's not in running in background
+                            return false
+                        }
+                    }
+                }
+            }
+            return true
+        }
+    }
+
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
-        val tasks = (getSystemService(ACTIVITY_SERVICE) as ActivityManager).getRunningTasks(1)
-        val top = tasks[0].topActivity?.packageName
-        val isBackground = !top.isNullOrBlank() && top != packageName
         playerFragment?.let {
-            if (isBackground || it.enterPictureInPicture()) {
+            if (isBackgroundRunning() || it.enterPictureInPicture()) {
                 if (prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "0") {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
                         if (!it.enterPictureInPicture()) {

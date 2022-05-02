@@ -125,7 +125,9 @@ class StreamPlayerViewModel @Inject constructor(
             loadStream(stream.value ?: return)
         } else if (playerMode.value == AUDIO_ONLY) {
             hideBackgroundAudio()
-            changeQuality(qualityIndex)
+            if (qualityIndex < qualities.size - 2) {
+                changeQuality(qualityIndex)
+            }
         }
     }
 

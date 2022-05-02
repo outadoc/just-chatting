@@ -130,7 +130,9 @@ class VideoPlayerViewModel @Inject constructor(
             super.onResume()
         } else if (playerMode.value == PlayerMode.AUDIO_ONLY) {
             hideBackgroundAudio()
-            changeQuality(qualityIndex)
+            if (qualityIndex != qualities.lastIndex) {
+                changeQuality(qualityIndex)
+            }
         }
         if (playerMode.value != PlayerMode.AUDIO_ONLY) {
             player.seekTo(playbackPosition)

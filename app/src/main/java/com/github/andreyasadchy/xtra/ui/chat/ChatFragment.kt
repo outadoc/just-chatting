@@ -119,11 +119,15 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
     }
 
     override fun onMovedToBackground() {
-        viewModel.stop()
+        if (!requireArguments().getBoolean(KEY_IS_LIVE) || !requireContext().prefs().getBoolean(C.PLAYER_KEEP_CHAT_OPEN, false) || requireContext().prefs().getBoolean(C.CHAT_DISABLE, false)) {
+            viewModel.stop()
+        }
     }
 
     override fun onMovedToForeground() {
-        viewModel.start()
+        if (!requireArguments().getBoolean(KEY_IS_LIVE) || !requireContext().prefs().getBoolean(C.PLAYER_KEEP_CHAT_OPEN, false) || requireContext().prefs().getBoolean(C.CHAT_DISABLE, false)) {
+            viewModel.start()
+        }
     }
 
     companion object {

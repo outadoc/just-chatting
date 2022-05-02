@@ -155,12 +155,11 @@ abstract class HlsPlayerViewModel(
     }
 
     override fun onPause() {
-        isResumed = false
         if (playerMode.value == NORMAL) {
             helper.loaded.value = false
             super.onPause()
         } else if (playerMode.value == AUDIO_ONLY) {
-            showBackgroundAudio()
+            showAudioNotification()
         }
     }
 

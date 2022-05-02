@@ -64,6 +64,7 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
     protected var binder: AudioPlayerService.AudioBinder? = null
 
     protected var isResumed = true
+    var userLeaveHint = false
 
     private var timer: Timer? = null
     private val _sleepTimer = MutableLiveData<Boolean>()
@@ -121,7 +122,7 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
         }
     }
 
-    protected fun startBackgroundAudio(playlistUrl: String, channelName: String?, title: String?, imageUrl: String?, usePlayPause: Boolean, type: Int, videoId: Number?) {
+    protected fun startBackgroundAudio(playlistUrl: String, channelName: String?, title: String?, imageUrl: String?, usePlayPause: Boolean, type: Int, videoId: Number?, showNotification: Boolean) {
         val context = XtraApp.INSTANCE //TODO
         val intent = Intent(context, AudioPlayerService::class.java).apply {
             putExtra(AudioPlayerService.KEY_PLAYLIST_URL, playlistUrl)
@@ -142,6 +143,9 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
             override fun onServiceConnected(name: ComponentName, service: IBinder) {
                 binder = service as AudioPlayerService.AudioBinder
                 _currentPlayer.value = service.player
+                if (showNotification) {
+                    showAudioNotification()
+                }
             }
         }
         AudioPlayerService.connection = connection
@@ -155,11 +159,11 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
         }
     }
 
-    protected fun showBackgroundAudio() {
+    protected fun showAudioNotification() {
         binder?.showNotification()
     }
 
-    protected fun hideBackgroundAudio() {
+    protected fun hideAudioNotification() {
         if (AudioPlayerService.connection != null) {
             binder?.hideNotification()
         } else {

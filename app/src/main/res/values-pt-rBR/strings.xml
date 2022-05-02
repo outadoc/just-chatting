@@ -498,4 +498,6 @@ Removes a timeout on a user.</string>
     <string name="player_buffer_rebuffer_summary">The default duration of media that must be buffered for playback to resume after a rebuffer, in milliseconds</string>
     <string name="buffer_settings">Buffer settings</string>
     <string name="player_buttons">Player buttons</string>
+    <string name="keep_chat_open">Keep chat connected in the background</string>
+    <string name="lock_screen_audio">Keep audio playing when screen is off</string>
 </resources>

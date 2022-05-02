@@ -39,11 +39,12 @@ class OfflinePlayerViewModel @Inject constructor(
 
     override fun onResume() {
         isResumed = true
+        userLeaveHint = false
         if (playerMode.value == PlayerMode.NORMAL) {
             super.onResume()
             player.seekTo(playbackPosition)
         } else {
-            hideBackgroundAudio()
+            hideAudioNotification()
             if (qualityIndex == 0) {
                 changeQuality(qualityIndex)
             }
@@ -54,29 +55,33 @@ class OfflinePlayerViewModel @Inject constructor(
         isResumed = false
         if (playerMode.value == PlayerMode.NORMAL) {
             playbackPosition = player.currentPosition
-            super.onPause()
+            val context = getApplication<Application>()
+            if (!userLeaveHint && context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO, true)) {
+                startAudioOnly(true)
+            } else {
+                super.onPause()
+            }
         } else {
-            showBackgroundAudio()
+            showAudioNotification()
         }
     }
 
     override fun changeQuality(index: Int) {
         qualityIndex = index
-        _playerMode.value = if (qualityIndex == 0) {
+        if (qualityIndex == 0) {
             playbackPosition = currentPlayer.value!!.currentPosition
             stopBackgroundAudio()
             _currentPlayer.value = player
             play()
             player.seekTo(playbackPosition)
-            PlayerMode.NORMAL
+            _playerMode.value = PlayerMode.NORMAL
         } else {
-            startBackgroundAudio(video.url, video.channelName, video.name, video.channelLogo, true, AudioPlayerService.TYPE_OFFLINE, video.id)
-            PlayerMode.AUDIO_ONLY
+            startAudioOnly()
         }
     }
 
-    fun startAudioOnly() {
-        startBackgroundAudio(video.url, video.channelName, video.name, video.channelLogo, true, AudioPlayerService.TYPE_OFFLINE, video.id)
+    fun startAudioOnly(showNotification: Boolean = false) {
+        startBackgroundAudio(video.url, video.channelName, video.name, video.channelLogo, true, AudioPlayerService.TYPE_OFFLINE, video.id, showNotification)
         _playerMode.value = PlayerMode.AUDIO_ONLY
     }
 

@@ -506,6 +506,10 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         }
     }
 
+    fun setUserLeaveHint() {
+        viewModel.userLeaveHint = true
+    }
+
     private companion object {
         const val REQUEST_FOLLOW = 0
     }

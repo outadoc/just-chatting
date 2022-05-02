@@ -272,6 +272,12 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
+        android:key="player_keep_chat_open"
+        android:title="@string/keep_chat_open"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
         android:key="chat_disable"
         android:title="@string/disable_chat"
         app:iconSpaceReserved="false"/>
@@ -294,6 +300,12 @@
         android:key="player_background_playback"
         android:summary="%s"
         android:title="@string/background_playback"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_lock_screen_audio"
+        android:title="@string/lock_screen_audio"
         app:iconSpaceReserved="false"/>
 
     <ListPreference

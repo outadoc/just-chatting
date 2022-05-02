@@ -13,6 +13,8 @@ import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
 import com.github.andreyasadchy.xtra.ui.player.HlsPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode.*
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.toast
 import com.google.android.exoplayer2.MediaItem
 import com.google.android.exoplayer2.source.hls.HlsManifest
@@ -111,23 +113,34 @@ class StreamPlayerViewModel @Inject constructor(
         }
     }
 
-    fun startAudioOnly() {
+    fun startAudioOnly(showNotification: Boolean = false) {
         (player.currentManifest as? HlsManifest)?.let {
             val s = _stream.value!!
-            startBackgroundAudio(helper.urls.values.last(), s.user_name, s.title, s.channelLogo, false, AudioPlayerService.TYPE_STREAM, null)
+            startBackgroundAudio(helper.urls.values.last(), s.user_name, s.title, s.channelLogo, false, AudioPlayerService.TYPE_STREAM, null, showNotification)
             _playerMode.value = AUDIO_ONLY
         }
     }
 
     override fun onResume() {
         isResumed = true
+        userLeaveHint = false
         if (playerMode.value == NORMAL) {
             loadStream(stream.value ?: return)
         } else if (playerMode.value == AUDIO_ONLY) {
-            hideBackgroundAudio()
+            hideAudioNotification()
             if (qualityIndex < qualities.size - 2) {
                 changeQuality(qualityIndex)
             }
+        }
+    }
+
+    override fun onPause() {
+        isResumed = false
+        val context = getApplication<Application>()
+        if (!userLeaveHint && playerMode.value == NORMAL && context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO, true)) {
+            startAudioOnly(true)
+        } else {
+            super.onPause()
         }
     }
 

@@ -291,6 +291,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
         super.onUserLeaveHint()
         playerFragment?.let {
             if (isBackgroundRunning() || it.enterPictureInPicture()) {
+                it.setUserLeaveHint()
                 if (prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "0") {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
                         if (!it.enterPictureInPicture()) {

@@ -14,6 +14,8 @@ import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
 import com.github.andreyasadchy.xtra.ui.player.HlsPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.toast
 import com.google.android.exoplayer2.ExoPlaybackException
 import com.google.android.exoplayer2.MediaItem
@@ -117,19 +119,20 @@ class VideoPlayerViewModel @Inject constructor(
         }
     }
 
-    fun startAudioOnly() {
+    fun startAudioOnly(showNotification: Boolean = false) {
         (player.currentManifest as? HlsManifest)?.let {
-            startBackgroundAudio(helper.urls.values.last(), video.user_name, video.title, video.channelLogo, true, AudioPlayerService.TYPE_VIDEO, video.id.toLong())
+            startBackgroundAudio(helper.urls.values.last(), video.user_name, video.title, video.channelLogo, true, AudioPlayerService.TYPE_VIDEO, video.id.toLong(), showNotification)
             _playerMode.value = PlayerMode.AUDIO_ONLY
         }
     }
 
     override fun onResume() {
         isResumed = true
+        userLeaveHint = false
         if (playerMode.value == PlayerMode.NORMAL) {
             super.onResume()
         } else if (playerMode.value == PlayerMode.AUDIO_ONLY) {
-            hideBackgroundAudio()
+            hideAudioNotification()
             if (qualityIndex != qualities.lastIndex) {
                 changeQuality(qualityIndex)
             }
@@ -140,10 +143,16 @@ class VideoPlayerViewModel @Inject constructor(
     }
 
     override fun onPause() {
+        isResumed = false
         if (playerMode.value != PlayerMode.AUDIO_ONLY) {
             playbackPosition = player.currentPosition
         }
-        super.onPause()
+        val context = getApplication<Application>()
+        if (!userLeaveHint && playerMode.value == PlayerMode.NORMAL && context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO, true)) {
+            startAudioOnly(true)
+        } else {
+            super.onPause()
+        }
     }
 
     override fun onPlayerError(error: PlaybackException) {

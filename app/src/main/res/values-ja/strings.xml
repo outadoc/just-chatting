@@ -467,11 +467,11 @@
     <string name="background_playback">バックグラウンド再生</string>
     <string name="disabled">無効</string>
     <string name="player_minspeedlive">ライブの最小再生速度</string>
-    <string name="player_minspeedlive_summary">目標のライブオフセットに到達しようとするとき、プレイヤーがフォールバックするために使用する再生速度の最小値。デフォルトは空欄</string>
+    <string name="player_minspeedlive_summary">目標のライブオフセットに到達しようとするとき、プレイヤーが元に戻るために使用する再生速度の最小値。標準では空欄</string>
     <string name="player_maxspeedlive">ライブの最大再生速度</string>
-    <string name="player_maxspeedlive_summary">目標のライブオフセットに到達しようとするとき、プレイヤーが追いつくために使用する再生速度の最大値。デフォルトは空欄</string>
+    <string name="player_maxspeedlive_summary">目標のライブオフセットに到達しようとするとき、プレイヤーが追いつくために使用する再生速度の最大値。標準では空欄</string>
     <string name="player_targetoffset">ライブのターゲットオフセット</string>
-    <string name="player_targetoffset_summary">プレイヤーは、可能であれば再生中に目標のライブオフセットに近づきます。デフォルトは空欄</string>
+    <string name="player_targetoffset_summary">プレイヤーは可能であれば再生中に目標のライブオフセットに近づきます。標準では空欄</string>
     <string name="player_buffer_min">最小バッファ</string>
     <string name="player_buffer_min_summary">プレイヤーが常にバッファリングしようとするメディアの最小継続時間。単位はミリ秒</string>
     <string name="player_buffer_max">最大バッファ</string>
@@ -479,7 +479,9 @@
     <string name="player_buffer_playback">再生バッファ</string>
     <string name="player_buffer_playback_summary">シーク等のユーザーアクションに続いて再生を開始または再開するために必要なメディアのバッファリングする時間。単位はミリ秒</string>
     <string name="player_buffer_rebuffer">リバッファ</string>
-    <string name="player_buffer_rebuffer_summary">リバッファ後に再生を再開するためにバッファリングされなければならないメディアのデフォルトの持続時間。単位はミリ秒</string>
+    <string name="player_buffer_rebuffer_summary">リバッファ後に再生を再開するためにバッファリングされなければならないメディアの標準継続時間。単位はミリ秒</string>
     <string name="buffer_settings">バッファ設定</string>
     <string name="player_buttons">プレイヤーボタン</string>
+    <string name="keep_chat_open">バックグラウンドでチャットの接続を維持する</string>
+    <string name="lock_screen_audio">画面消灯時に音声の再生を続ける</string>
 </resources>

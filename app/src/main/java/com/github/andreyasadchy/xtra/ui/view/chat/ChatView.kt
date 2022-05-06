@@ -204,7 +204,7 @@ class ChatView : ConstraintLayout {
             }
             "send_msg_error" -> context.getString(R.string.chat_send_msg_error, command.message)
             "socket_error" -> context.getString(R.string.chat_socket_error, command.message)
-            "notice" -> if (lang == "ar" || lang == "es" || lang == "ja" || lang == "pt" || lang == "ru") {
+            "notice" -> if (lang == "ar" || lang == "es" || lang == "ja" || lang == "pt" || lang == "ru" || lang == "tr") {
                 TwitchApiHelper.getNoticeString(context, command.duration, command.message) ?: command.message
             } else {
                 command.message

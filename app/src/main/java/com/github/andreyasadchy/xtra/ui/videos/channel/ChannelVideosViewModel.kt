@@ -18,15 +18,14 @@ import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.model.offline.Bookmark
-import com.github.andreyasadchy.xtra.repository.BookmarksRepository
-import com.github.andreyasadchy.xtra.repository.Listing
-import com.github.andreyasadchy.xtra.repository.PlayerRepository
-import com.github.andreyasadchy.xtra.repository.TwitchService
+import com.github.andreyasadchy.xtra.model.offline.SortChannel
+import com.github.andreyasadchy.xtra.repository.*
 import com.github.andreyasadchy.xtra.type.VideoSort
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosViewModel
 import com.github.andreyasadchy.xtra.util.DownloadUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import javax.inject.Inject
 
@@ -35,7 +34,8 @@ class ChannelVideosViewModel @Inject constructor(
         context: Application,
         private val repository: TwitchService,
         playerRepository: PlayerRepository,
-        private val bookmarksRepository: BookmarksRepository) : BaseVideosViewModel(playerRepository, bookmarksRepository) {
+        private val bookmarksRepository: BookmarksRepository,
+        private val sortChannelRepository: SortChannelRepository) : BaseVideosViewModel(playerRepository, bookmarksRepository) {
 
     private val _sortText = MutableLiveData<CharSequence>()
     val sortText: LiveData<CharSequence>
@@ -59,20 +59,77 @@ class ChannelVideosViewModel @Inject constructor(
         get() = filter.value!!.period
     val type: BroadcastType
         get() = filter.value!!.broadcastType
+    val saveSort: Boolean
+        get() = filter.value?.saveSort == true
 
-    init {
-        _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.upload_date), context.getString(R.string.all_time))
-    }
-
-    fun setChannelId(channelId: String? = null, channelLogin: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
+    fun setChannelId(context: Context, channelId: String? = null, channelLogin: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
         if (filter.value?.channelId != channelId) {
-            filter.value = Filter(channelId, channelLogin, helixClientId, helixToken, gqlClientId, apiPref)
+            var sortValues = channelId?.let { runBlocking { sortChannelRepository.getById(it) } }
+            if (sortValues?.saveSort != true) {
+                sortValues = runBlocking { sortChannelRepository.getById("default") }
+            }
+            filter.value = Filter(
+                channelId = channelId,
+                channelLogin = channelLogin,
+                helixClientId = helixClientId,
+                helixToken = helixToken,
+                gqlClientId = gqlClientId,
+                apiPref = apiPref,
+                saveSort = sortValues?.saveSort,
+                sort = when (sortValues?.videoSort) {
+                    Sort.VIEWS.value -> Sort.VIEWS
+                    else -> Sort.TIME
+                },
+                broadcastType = when (sortValues?.videoType) {
+                    BroadcastType.ARCHIVE.value -> BroadcastType.ARCHIVE
+                    BroadcastType.HIGHLIGHT.value -> BroadcastType.HIGHLIGHT
+                    BroadcastType.UPLOAD.value -> BroadcastType.UPLOAD
+                    else -> BroadcastType.ALL
+                }
+            )
+            _sortText.value = context.getString(R.string.sort_and_period,
+                when (sortValues?.videoSort) {
+                    Sort.VIEWS.value -> context.getString(R.string.view_count)
+                    else -> context.getString(R.string.upload_date)
+                }, context.getString(R.string.all_time)
+            )
         }
     }
 
-    fun filter(sort: Sort, period: Period, type: BroadcastType, text: CharSequence) {
-        filter.value = filter.value?.copy(sort = sort, period = period, broadcastType = type)
+    fun filter(sort: Sort, type: BroadcastType, text: CharSequence, saveSort: Boolean) {
+        filter.value = filter.value?.copy(saveSort = saveSort, sort = sort, broadcastType = type)
         _sortText.value = text
+        viewModelScope.launch {
+            val sortValues = filter.value?.channelId?.let { sortChannelRepository.getById(it) }
+            if (saveSort) {
+                (sortValues?.apply {
+                    this.saveSort = saveSort
+                    videoSort = sort.value
+                    videoType = type.value
+                } ?: filter.value?.channelId?.let { SortChannel(
+                    id = it,
+                    saveSort = saveSort,
+                    videoSort = sort.value,
+                    videoType = type.value)
+                })?.let { sortChannelRepository.save(it) }
+            } else {
+                (sortValues?.apply {
+                    this.saveSort = saveSort
+                } ?: filter.value?.channelId?.let { SortChannel(
+                    id = it,
+                    saveSort = saveSort)
+                })?.let { sortChannelRepository.save(it) }
+                val sortDefaults = sortChannelRepository.getById("default")
+                (sortDefaults?.apply {
+                    videoSort = sort.value
+                    videoType = type.value
+                } ?: SortChannel(
+                    id = "default",
+                    videoSort = sort.value,
+                    videoType = type.value
+                )).let { sortChannelRepository.save(it) }
+            }
+        }
     }
 
     private data class Filter(
@@ -82,6 +139,7 @@ class ChannelVideosViewModel @Inject constructor(
         val helixToken: String?,
         val gqlClientId: String?,
         val apiPref: ArrayList<Pair<Long?, String?>?>,
+        val saveSort: Boolean?,
         val sort: Sort = Sort.TIME,
         val period: Period = Period.ALL,
         val broadcastType: BroadcastType = BroadcastType.ALL)

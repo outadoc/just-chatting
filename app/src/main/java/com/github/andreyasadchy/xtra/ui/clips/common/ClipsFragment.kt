@@ -42,6 +42,7 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>(), VideosSortDialog.OnFi
             sortText.text = it
         }
         viewModel.loadClips(
+            context = requireContext(),
             channelId = arguments?.getString(C.CHANNEL_ID),
             channelLogin = arguments?.getString(C.CHANNEL_LOGIN),
             gameId = arguments?.getString(C.GAME_ID),
@@ -52,19 +53,20 @@ class ClipsFragment : BaseClipsFragment<ClipsViewModel>(), VideosSortDialog.OnFi
             channelApiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_CHANNEL_CLIPS, ""), TwitchApiHelper.channelClipsApiDefaults),
             gameApiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_GAME_CLIPS, ""), TwitchApiHelper.gameClipsApiDefaults)
         )
-        sortBar.setOnClickListener { VideosSortDialog.newInstance(period = viewModel.period, languageIndex = viewModel.languageIndex, clipChannel = arguments?.getString(C.CHANNEL_ID) != null).show(childFragmentManager, null) }
+        sortBar.setOnClickListener { VideosSortDialog.newInstance(period = viewModel.period, languageIndex = viewModel.languageIndex, clipChannel = arguments?.getString(C.CHANNEL_ID) != null, saveSort = viewModel.saveSort).show(childFragmentManager, null) }
         val activity = requireActivity() as MainActivity
         if (adapter is ClipsAdapter && requireContext().prefs().getBoolean(C.UI_FOLLOW, true)) {
             parentFragment?.followGame?.let { initializeFollow(this, viewModel, it, User.get(activity), requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.GQL_CLIENT_ID, "")) }
         }
     }
 
-    override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType, languageIndex: Int) {
+    override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType, languageIndex: Int, saveSort: Boolean) {
         adapter.submitList(null)
         viewModel.filter(
             period = period,
             languageIndex = languageIndex,
-            text = getString(R.string.sort_and_period, sortText, periodText)
+            text = getString(R.string.sort_and_period, sortText, periodText),
+            saveSort = saveSort
         )
     }
 }

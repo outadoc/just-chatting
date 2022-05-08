@@ -19,15 +19,14 @@ import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.model.offline.Bookmark
-import com.github.andreyasadchy.xtra.repository.BookmarksRepository
-import com.github.andreyasadchy.xtra.repository.Listing
-import com.github.andreyasadchy.xtra.repository.PlayerRepository
-import com.github.andreyasadchy.xtra.repository.TwitchService
+import com.github.andreyasadchy.xtra.model.offline.SortChannel
+import com.github.andreyasadchy.xtra.repository.*
 import com.github.andreyasadchy.xtra.type.VideoSort
 import com.github.andreyasadchy.xtra.ui.videos.BaseVideosViewModel
 import com.github.andreyasadchy.xtra.util.DownloadUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import javax.inject.Inject
 
@@ -35,7 +34,8 @@ class FollowedVideosViewModel @Inject constructor(
         context: Application,
         private val repository: TwitchService,
         playerRepository: PlayerRepository,
-        private val bookmarksRepository: BookmarksRepository) : BaseVideosViewModel(playerRepository, bookmarksRepository) {
+        private val bookmarksRepository: BookmarksRepository,
+        private val sortChannelRepository: SortChannelRepository) : BaseVideosViewModel(playerRepository, bookmarksRepository) {
 
     private val _sortText = MutableLiveData<CharSequence>()
     val sortText: LiveData<CharSequence>
@@ -57,19 +57,47 @@ class FollowedVideosViewModel @Inject constructor(
     val type: BroadcastType
         get() = filter.value!!.broadcastType
 
-    init {
-        _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.upload_date), context.getString(R.string.all_time))
-    }
-
-    fun setUser(user: User, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
+    fun setUser(context: Context, user: User, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
         if (filter.value == null) {
-            filter.value = Filter(user, gqlClientId, apiPref)
+            val sortValues = runBlocking { sortChannelRepository.getById("followed_videos") }
+            filter.value = Filter(
+                user = user,
+                gqlClientId = gqlClientId,
+                apiPref = apiPref,
+                sort = when (sortValues?.videoSort) {
+                    Sort.VIEWS.value -> Sort.VIEWS
+                    else -> Sort.TIME
+                },
+                broadcastType = when (sortValues?.videoType) {
+                    BroadcastType.ARCHIVE.value -> BroadcastType.ARCHIVE
+                    BroadcastType.HIGHLIGHT.value -> BroadcastType.HIGHLIGHT
+                    BroadcastType.UPLOAD.value -> BroadcastType.UPLOAD
+                    else -> BroadcastType.ALL
+                }
+            )
+            _sortText.value = context.getString(R.string.sort_and_period,
+                when (sortValues?.videoSort) {
+                    Sort.VIEWS.value -> context.getString(R.string.view_count)
+                    else -> context.getString(R.string.upload_date)
+                }, context.getString(R.string.all_time)
+            )
         }
     }
 
     fun filter(sort: Sort, period: Period, type: BroadcastType, text: CharSequence) {
         filter.value = filter.value?.copy(sort = sort, period = period, broadcastType = type)
         _sortText.value = text
+        viewModelScope.launch {
+            val sortDefaults = sortChannelRepository.getById("followed_videos")
+            (sortDefaults?.apply {
+                videoSort = sort.value
+                videoType = type.value
+            } ?: SortChannel(
+                id = "followed_videos",
+                videoSort = sort.value,
+                videoType = type.value
+            )).let { sortChannelRepository.save(it) }
+        }
     }
 
     private data class Filter(

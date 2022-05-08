@@ -34,6 +34,7 @@ class ChannelVideosFragment : BaseVideosFragment<ChannelVideosViewModel>(), Vide
             sortText.text = it
         }
         viewModel.setChannelId(
+            context = requireContext(),
             channelId = requireArguments().getString(C.CHANNEL_ID),
             channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
@@ -41,16 +42,16 @@ class ChannelVideosFragment : BaseVideosFragment<ChannelVideosViewModel>(), Vide
             gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
             apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_CHANNEL_VIDEOS, ""), TwitchApiHelper.channelVideosApiDefaults)
         )
-        sortBar.setOnClickListener { VideosSortDialog.newInstance(sort = viewModel.sort, period = viewModel.period, type = viewModel.type).show(childFragmentManager, null) }
+        sortBar.setOnClickListener { VideosSortDialog.newInstance(sort = viewModel.sort, period = viewModel.period, type = viewModel.type, saveSort = viewModel.saveSort).show(childFragmentManager, null) }
     }
 
-    override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType, languageIndex: Int) {
+    override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType, languageIndex: Int, saveSort: Boolean) {
         adapter.submitList(null)
         viewModel.filter(
             sort = sort,
-            period = period,
             type = type,
-            text = getString(R.string.sort_and_period, sortText, periodText)
+            text = getString(R.string.sort_and_period, sortText, periodText),
+            saveSort = saveSort
         )
     }
 }

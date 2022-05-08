@@ -19,6 +19,7 @@ import com.github.andreyasadchy.xtra.model.helix.video.Period
 import com.github.andreyasadchy.xtra.model.helix.video.Sort
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.model.offline.Bookmark
+import com.github.andreyasadchy.xtra.model.offline.SortGame
 import com.github.andreyasadchy.xtra.repository.*
 import com.github.andreyasadchy.xtra.type.VideoSort
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
@@ -27,6 +28,7 @@ import com.github.andreyasadchy.xtra.ui.videos.BaseVideosViewModel
 import com.github.andreyasadchy.xtra.util.DownloadUtils
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.io.File
 import javax.inject.Inject
 
@@ -35,7 +37,8 @@ class GameVideosViewModel @Inject constructor(
         private val repository: TwitchService,
         playerRepository: PlayerRepository,
         private val localFollowsGame: LocalFollowGameRepository,
-        private val bookmarksRepository: BookmarksRepository) : BaseVideosViewModel(playerRepository, bookmarksRepository), FollowViewModel {
+        private val bookmarksRepository: BookmarksRepository,
+        private val sortGameRepository: SortGameRepository) : BaseVideosViewModel(playerRepository, bookmarksRepository), FollowViewModel {
 
     private val _sortText = MutableLiveData<CharSequence>()
     val sortText: LiveData<CharSequence>
@@ -70,20 +73,102 @@ class GameVideosViewModel @Inject constructor(
         get() = filter.value!!.broadcastType
     val languageIndex: Int
         get() = filter.value!!.languageIndex
+    val saveSort: Boolean
+        get() = filter.value?.saveSort == true
 
-    init {
-        _sortText.value = context.getString(R.string.sort_and_period, context.getString(R.string.view_count), context.getString(R.string.this_week))
-    }
-
-    fun setGame(gameId: String? = null, gameName: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
+    fun setGame(context: Context, gameId: String? = null, gameName: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
         if (filter.value?.gameId != gameId || filter.value?.gameName != gameName) {
-            filter.value = Filter(gameId, gameName, helixClientId, helixToken, gqlClientId, apiPref)
+            var sortValues = gameId?.let { runBlocking { sortGameRepository.getById(it) } }
+            if (sortValues?.saveSort != true) {
+                sortValues = runBlocking { sortGameRepository.getById("default") }
+            }
+            filter.value = Filter(
+                gameId = gameId,
+                gameName = gameName,
+                helixClientId = helixClientId,
+                helixToken = helixToken,
+                gqlClientId = gqlClientId,
+                apiPref = apiPref,
+                saveSort = sortValues?.saveSort,
+                sort = when (sortValues?.videoSort) {
+                    Sort.TIME.value -> Sort.TIME
+                    else -> Sort.VIEWS
+                },
+                period = if (helixToken.isNullOrBlank()) {
+                    Period.WEEK
+                } else {
+                    when (sortValues?.videoPeriod) {
+                        Period.DAY.value -> Period.DAY
+                        Period.MONTH.value -> Period.MONTH
+                        Period.ALL.value -> Period.ALL
+                        else -> Period.WEEK
+                    }
+                },
+                broadcastType = when (sortValues?.videoType) {
+                    BroadcastType.ARCHIVE.value -> BroadcastType.ARCHIVE
+                    BroadcastType.HIGHLIGHT.value -> BroadcastType.HIGHLIGHT
+                    BroadcastType.UPLOAD.value -> BroadcastType.UPLOAD
+                    else -> BroadcastType.ALL
+                },
+                languageIndex = sortValues?.videoLanguageIndex ?: 0
+            )
+            _sortText.value = context.getString(R.string.sort_and_period,
+                when (sortValues?.videoSort) {
+                    Sort.TIME.value -> context.getString(R.string.upload_date)
+                    else -> context.getString(R.string.view_count)
+                },
+                when (sortValues?.videoPeriod) {
+                    Period.DAY.value -> context.getString(R.string.today)
+                    Period.MONTH.value -> context.getString(R.string.this_month)
+                    Period.ALL.value -> context.getString(R.string.all_time)
+                    else -> context.getString(R.string.this_week)
+                }
+            )
         }
     }
 
-    fun filter(sort: Sort, period: Period, type: BroadcastType, languageIndex: Int, text: CharSequence) {
-        filter.value = filter.value?.copy(sort = sort, period = period, broadcastType = type, languageIndex = languageIndex)
+    fun filter(sort: Sort, period: Period, type: BroadcastType, languageIndex: Int, text: CharSequence, saveSort: Boolean) {
+        filter.value = filter.value?.copy(saveSort = saveSort, sort = sort, period = period, broadcastType = type, languageIndex = languageIndex)
         _sortText.value = text
+        viewModelScope.launch {
+            val sortValues = filter.value?.gameId?.let { sortGameRepository.getById(it) }
+            if (saveSort) {
+                (sortValues?.apply {
+                    this.saveSort = saveSort
+                    videoSort = sort.value
+                    if (!filter.value?.helixToken.isNullOrBlank()) videoPeriod = period.value
+                    videoType = type.value
+                    videoLanguageIndex = languageIndex
+                } ?: filter.value?.gameId?.let { SortGame(
+                    id = it,
+                    saveSort = saveSort,
+                    videoSort = sort.value,
+                    videoPeriod = if (filter.value?.helixToken.isNullOrBlank()) null else period.value,
+                    videoType = type.value,
+                    videoLanguageIndex = languageIndex)
+                })?.let { sortGameRepository.save(it) }
+            } else {
+                (sortValues?.apply {
+                    this.saveSort = saveSort
+                } ?: filter.value?.gameId?.let { SortGame(
+                    id = it,
+                    saveSort = saveSort)
+                })?.let { sortGameRepository.save(it) }
+                val sortDefaults = sortGameRepository.getById("default")
+                (sortDefaults?.apply {
+                    videoSort = sort.value
+                    if (!filter.value?.helixToken.isNullOrBlank()) videoPeriod = period.value
+                    videoType = type.value
+                    videoLanguageIndex = languageIndex
+                } ?: SortGame(
+                    id = "default",
+                    videoSort = sort.value,
+                    videoPeriod = if (filter.value?.helixToken.isNullOrBlank()) null else period.value,
+                    videoType = type.value,
+                    videoLanguageIndex = languageIndex
+                )).let { sortGameRepository.save(it) }
+            }
+        }
     }
 
     private data class Filter(
@@ -93,6 +178,7 @@ class GameVideosViewModel @Inject constructor(
         val helixToken: String?,
         val gqlClientId: String?,
         val apiPref: ArrayList<Pair<Long?, String?>?>,
+        val saveSort: Boolean?,
         val sort: Sort = Sort.VIEWS,
         val period: Period = Period.WEEK,
         val broadcastType: BroadcastType = BroadcastType.ALL,

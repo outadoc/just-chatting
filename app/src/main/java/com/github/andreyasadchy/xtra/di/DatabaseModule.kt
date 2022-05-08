@@ -35,6 +35,14 @@ class DatabaseModule {
 
     @Singleton
     @Provides
+    fun providesSortChannelRepository(sortChannelDao: SortChannelDao): SortChannelRepository = SortChannelRepository(sortChannelDao)
+
+    @Singleton
+    @Provides
+    fun providesSortGameRepository(sortGameDao: SortGameDao): SortGameRepository = SortGameRepository(sortGameDao)
+
+    @Singleton
+    @Provides
     fun providesVideosDao(database: AppDatabase): VideosDao = database.videos()
 
     @Singleton
@@ -64,6 +72,14 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun providesVodBookmarkIgnoredUsersDao(database: AppDatabase): VodBookmarkIgnoredUsersDao = database.vodBookmarkIgnoredUsers()
+
+    @Singleton
+    @Provides
+    fun providesSortChannelDao(database: AppDatabase): SortChannelDao = database.sortChannelDao()
+
+    @Singleton
+    @Provides
+    fun providesSortGameDao(database: AppDatabase): SortGameDao = database.sortGameDao()
 
     @Singleton
     @Provides
@@ -115,6 +131,12 @@ class DatabaseModule {
                             override fun migrate(database: SupportSQLiteDatabase) {
                                 database.execSQL("ALTER TABLE bookmarks ADD COLUMN userType TEXT DEFAULT null")
                                 database.execSQL("ALTER TABLE bookmarks ADD COLUMN userBroadcasterType TEXT DEFAULT null")
+                            }
+                        },
+                        object : Migration(16, 17) {
+                            override fun migrate(database: SupportSQLiteDatabase) {
+                                database.execSQL("CREATE TABLE IF NOT EXISTS sort_channel (id TEXT NOT NULL, saveSort INTEGER, videoSort TEXT, videoType TEXT, clipPeriod TEXT, PRIMARY KEY (id))")
+                                database.execSQL("CREATE TABLE IF NOT EXISTS sort_game (id TEXT NOT NULL, saveSort INTEGER, videoSort TEXT, videoPeriod TEXT, videoType TEXT, videoLanguageIndex INTEGER, clipPeriod TEXT, clipLanguageIndex INTEGER, PRIMARY KEY (id))")
                             }
                         }
                     )

@@ -484,4 +484,7 @@
     <string name="player_buttons">プレイヤーボタン</string>
     <string name="keep_chat_open">バックグラウンドでチャットの接続を維持する</string>
     <string name="lock_screen_audio">画面消灯時に音声の再生を続ける</string>
+    <string name="save_sort_channel">Remember choices for this channel</string>
+    <string name="save_sort_game">Remember choices for this game</string>
+    <string name="lock_screen_audio_paused">Start audio player when video is paused</string>
 </resources>

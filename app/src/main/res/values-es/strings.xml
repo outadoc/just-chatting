@@ -500,4 +500,7 @@ Removes a timeout on a user.</string>
     <string name="player_buttons">Player buttons</string>
     <string name="keep_chat_open">Keep chat connected in the background</string>
     <string name="lock_screen_audio">Keep audio playing when screen is off</string>
+    <string name="save_sort_channel">Remember choices for this channel</string>
+    <string name="save_sort_game">Remember choices for this game</string>
+    <string name="lock_screen_audio_paused">Start audio player when video is paused</string>
 </resources>

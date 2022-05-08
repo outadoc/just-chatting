@@ -56,7 +56,8 @@ class OfflinePlayerViewModel @Inject constructor(
         if (playerMode.value == PlayerMode.NORMAL) {
             playbackPosition = player.currentPosition
             val context = getApplication<Application>()
-            if (!userLeaveHint && context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO, true)) {
+            if (!userLeaveHint && context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO, true) &&
+                (context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO_PAUSED, false) || player.isPlaying && !context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO_PAUSED, false))) {
                 startAudioOnly(true)
             } else {
                 super.onPause()

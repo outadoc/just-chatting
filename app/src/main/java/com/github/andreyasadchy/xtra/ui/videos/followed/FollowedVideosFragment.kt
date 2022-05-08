@@ -42,6 +42,7 @@ class FollowedVideosFragment : BaseVideosFragment<FollowedVideosViewModel>(), Vi
             sortText.text = it
         }
         viewModel.setUser(
+            context = requireContext(),
             user = User.get(requireContext()),
             gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
             apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_FOLLOWED_VIDEOS, ""), TwitchApiHelper.followedVideosApiDefaults)
@@ -49,7 +50,7 @@ class FollowedVideosFragment : BaseVideosFragment<FollowedVideosViewModel>(), Vi
         sortBar.setOnClickListener { VideosSortDialog.newInstance(sort = viewModel.sort, period = viewModel.period, type = viewModel.type).show(childFragmentManager, null) }
     }
 
-    override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType, languageIndex: Int) {
+    override fun onChange(sort: Sort, sortText: CharSequence, period: Period, periodText: CharSequence, type: BroadcastType, languageIndex: Int, saveSort: Boolean) {
         adapter.submitList(null)
         viewModel.filter(
             sort = sort,

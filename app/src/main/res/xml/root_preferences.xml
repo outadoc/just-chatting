@@ -308,6 +308,13 @@
         android:title="@string/lock_screen_audio"
         app:iconSpaceReserved="false"/>
 
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:dependency="player_lock_screen_audio"
+        android:key="player_lock_screen_audio_paused"
+        android:title="@string/lock_screen_audio_paused"
+        app:iconSpaceReserved="false"/>
+
     <ListPreference
         android:defaultValue="10000"
         android:key="playerRewind"

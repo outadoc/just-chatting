@@ -39,6 +39,7 @@ class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewM
             sortText.text = it
         }
         viewModel.setUser(
+            context = requireContext(),
             user = User.get(requireContext()),
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
             gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),

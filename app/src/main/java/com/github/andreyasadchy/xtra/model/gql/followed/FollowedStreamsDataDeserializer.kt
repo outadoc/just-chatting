@@ -27,7 +27,7 @@ class FollowedStreamsDataDeserializer : JsonDeserializer<FollowedStreamsDataResp
                 game_name = if (!(obj.get("stream").isJsonNull)) { obj.getAsJsonObject("stream").getAsJsonObject("game").getAsJsonPrimitive("displayName").asString } else null,
                 type = if (!(obj.get("stream").isJsonNull)) { obj.getAsJsonObject("stream").getAsJsonPrimitive("type").asString } else null,
                 title = if (!(obj.get("stream").isJsonNull)) { obj.getAsJsonObject("stream").getAsJsonPrimitive("title").asString } else null,
-                viewer_count = if (!(obj.get("stream").isJsonNull)) { obj.getAsJsonObject("stream").getAsJsonPrimitive("viewersCount").asInt } else 0,
+                viewer_count = if (!(obj.get("stream").isJsonNull)) { obj.getAsJsonObject("stream").getAsJsonPrimitive("viewersCount").asInt } else null,
                 thumbnail_url = if (!(obj.get("stream").isJsonNull)) { obj.getAsJsonObject("stream").getAsJsonPrimitive("previewImageURL").asString } else null,
                 profileImageURL = if (!(obj.get("profileImageURL").isJsonNull)) { obj.getAsJsonPrimitive("profileImageURL").asString } else null,
                 tags = if (!(obj.get("stream").isJsonNull)) {

@@ -22,7 +22,7 @@ class SearchGameDataDeserializer : JsonDeserializer<SearchGameDataResponse> {
                 id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else null,
                 name = if (!(obj.get("displayName").isJsonNull)) { obj.getAsJsonPrimitive("displayName").asString } else null,
                 box_art_url = if (!(obj.get("boxArtURL").isJsonNull)) { obj.getAsJsonPrimitive("boxArtURL").asString } else null,
-                viewersCount = if (!(obj.get("viewersCount").isJsonNull)) { obj.getAsJsonPrimitive("viewersCount").asInt } else 0,
+                viewersCount = if (!(obj.get("viewersCount").isJsonNull)) { obj.getAsJsonPrimitive("viewersCount").asInt } else null,
                 tags = if (!(obj.get("tags").isJsonNull)) {
                     val tags = mutableListOf<Tag>()
                     obj.getAsJsonArray("tags").forEach { tag ->

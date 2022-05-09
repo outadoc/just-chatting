@@ -486,5 +486,4 @@
     <string name="lock_screen_audio">画面消灯時に音声の再生を続ける</string>
     <string name="save_sort_channel">チャンネルの選択肢を記憶しておく</string>
     <string name="save_sort_game">ゲームの選択肢を記憶しておく</string>
-    <string name="lock_screen_audio_paused">ビデオの一時停止時にオーディオプレイヤーを起動する</string>
 </resources>

@@ -99,6 +99,10 @@ abstract class PlayerViewModel(context: Application) : BaseAndroidViewModel(cont
         }
     }
 
+    fun isPaused(): Boolean {
+        return !player.isPlaying && player.playbackState == Player.STATE_READY
+    }
+
     open fun onResume() {
         play()
     }

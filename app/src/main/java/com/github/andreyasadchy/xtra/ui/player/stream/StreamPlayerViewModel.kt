@@ -137,7 +137,7 @@ class StreamPlayerViewModel @Inject constructor(
     override fun onPause() {
         isResumed = false
         val context = getApplication<Application>()
-        if (!userLeaveHint && playerMode.value == NORMAL && context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO, true)) {
+        if (!userLeaveHint && !isPaused() && playerMode.value == NORMAL && context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO, true)) {
             startAudioOnly(true)
         } else {
             super.onPause()

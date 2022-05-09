@@ -319,7 +319,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
                         }
                     }
                 } else {
-                    if (prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "1") {
+                    if (prefs.getString(C.PLAYER_BACKGROUND_PLAYBACK, "0") == "1" && !it.isPaused()) {
                         (it as? StreamPlayerFragment)?.startAudioOnly() ?: (it as? VideoPlayerFragment)?.startAudioOnly() ?: (it as? OfflinePlayerFragment)?.startAudioOnly()
                     }
                 }

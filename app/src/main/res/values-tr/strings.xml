@@ -512,5 +512,4 @@ Bir kullanıcı üzerindeki zaman aşımını kaldırır.</string>
     <string name="lock_screen_audio">Ekran kapalıyken ses çalmaya devam et</string>
     <string name="save_sort_game">Remember choices for this game</string>
     <string name="save_sort_channel">Remember choices for this channel</string>
-    <string name="lock_screen_audio_paused">Start audio player when video is paused</string>
 </resources>

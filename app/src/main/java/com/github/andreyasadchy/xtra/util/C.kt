@@ -77,7 +77,6 @@ object C {
     const val PLAYER_BUFFER_PLAYBACK = "player_buffer_playback"
     const val PLAYER_BUFFER_REBUFFER = "player_buffer_rebuffer"
     const val PLAYER_LOCK_SCREEN_AUDIO = "player_lock_screen_audio"
-    const val PLAYER_LOCK_SCREEN_AUDIO_PAUSED = "player_lock_screen_audio_paused"
     const val PLAYER_KEEP_CHAT_OPEN = "player_keep_chat_open"
     const val ANIMATED_EMOTES = "animatedGifEmotes"
     const val CHAT_IMAGE_LIBRARY = "chat_image_library"

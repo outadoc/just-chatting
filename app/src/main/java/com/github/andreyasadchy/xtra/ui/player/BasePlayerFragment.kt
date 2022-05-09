@@ -510,6 +510,10 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         viewModel.userLeaveHint = true
     }
 
+    fun isPaused(): Boolean {
+        return viewModel.isPaused()
+    }
+
     private companion object {
         const val REQUEST_FOLLOW = 0
     }

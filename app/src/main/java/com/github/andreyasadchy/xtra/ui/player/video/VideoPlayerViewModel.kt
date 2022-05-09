@@ -148,8 +148,7 @@ class VideoPlayerViewModel @Inject constructor(
             playbackPosition = player.currentPosition
         }
         val context = getApplication<Application>()
-        if (!userLeaveHint && playerMode.value == PlayerMode.NORMAL && context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO, true) &&
-            (context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO_PAUSED, false) || player.isPlaying && !context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO_PAUSED, false))) {
+        if (!userLeaveHint && !isPaused() && playerMode.value == PlayerMode.NORMAL && context.prefs().getBoolean(C.PLAYER_LOCK_SCREEN_AUDIO, true)) {
             startAudioOnly(true)
         } else {
             super.onPause()

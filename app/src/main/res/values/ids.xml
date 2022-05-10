@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="slidingLayout" type="id" />
-    <item name="showChat" type="id" />
-    <item name="hideChat" type="id" />
-    <item name="minimize" type="id" />
-    <item name="settings" type="id" />
-    <item name="follow" type="id" />
     <item name="topRightPanel" type="id" />
     <item name="topLeftPanel" type="id" />
     <item name="botRightPanel" type="id" />
     <item name="botLeftPanel" type="id" />
-    <item name="channel" type="id" />
-    <item name="fullscreenToggle" type="id" />
-    <item name="download" type="id" />
-    <item name="bookmark" type="id" />
-    <item name="aspectRatio" type="id" />
-    <item name="sleepTimer" type="id" />
-    <item name="toggleChatBar" type="id" />
-    <item name="restart" type="id" />
-    <item name="volumeButton" type="id" />
-    <item name="gamesButton" type="id" />
+    <item name="playerMinimize" type="id" />
+    <item name="playerChannel" type="id" />
+    <item name="playerDownload" type="id" />
+    <item name="playerFollow" type="id" />
+    <item name="playerSleepTimer" type="id" />
+    <item name="playerAspectRatio" type="id" />
+    <item name="playerSettings" type="id" />
+    <item name="playerMenu" type="id" />
+    <item name="playerGames" type="id" />
+    <item name="playerRestart" type="id" />
+    <item name="playerVolume" type="id" />
+    <item name="playerChatBarToggle" type="id" />
+    <item name="playerChatToggle" type="id" />
+    <item name="playerFullscreenToggle" type="id" />
 </resources>

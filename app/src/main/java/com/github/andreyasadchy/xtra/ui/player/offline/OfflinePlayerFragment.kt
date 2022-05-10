@@ -6,14 +6,16 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
+import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
 import com.github.andreyasadchy.xtra.ui.player.PlayerSettingsDialog
 import com.github.andreyasadchy.xtra.ui.player.PlayerVolumeDialog
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
-import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.visible
 
-class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener {
+class OfflinePlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnSortOptionChanged, PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener {
 //    override fun play(obj: Parcelable) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }
@@ -48,10 +50,19 @@ class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerS
     override fun initialize() {
         viewModel.setVideo(video)
         super.initialize()
-        requireView().findViewById<ImageButton>(R.id.gamesButton).gone()
-        requireView().findViewById<ImageButton>(R.id.download).gone()
-        requireView().findViewById<ImageButton>(R.id.settings).setOnClickListener {
-            FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
+        val settings = requireView().findViewById<ImageButton>(R.id.playerSettings)
+        val playerMenu = requireView().findViewById<ImageButton>(R.id.playerMenu)
+        if (prefs.getBoolean(C.PLAYER_SETTINGS, true)) {
+            settings.visible()
+            settings.setOnClickListener {
+                FragmentUtils.showRadioButtonDialogFragment(childFragmentManager, viewModel.qualities, viewModel.qualityIndex)
+            }
+        }
+        if (prefs.getBoolean(C.PLAYER_MENU, true)) {
+            playerMenu.visible()
+            playerMenu.setOnClickListener {
+                FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
+            }
         }
     }
 
@@ -65,6 +76,10 @@ class OfflinePlayerFragment : BasePlayerFragment(), PlayerSettingsDialog.PlayerS
 
     override fun onMovedToBackground() {
         viewModel.onPause()
+    }
+
+    override fun onChange(requestCode: Int, index: Int, text: CharSequence, tag: Int?) {
+        viewModel.changeQuality(index)
     }
 
     override fun onChangeQuality(index: Int) {

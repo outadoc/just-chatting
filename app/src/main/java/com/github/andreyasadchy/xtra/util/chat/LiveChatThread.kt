@@ -15,7 +15,7 @@ class LiveChatThread(
     private lateinit var readerIn: BufferedReader
     private lateinit var writerIn: BufferedWriter
     private val hashChannelName: String = "#$channelName"
-    private var isActive = true
+    var isActive = true
 
     override fun run() {
 

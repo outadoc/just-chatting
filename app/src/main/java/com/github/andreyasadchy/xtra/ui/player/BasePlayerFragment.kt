@@ -50,10 +50,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
     private lateinit var chatLayout: ViewGroup
     private lateinit var fullscreenToggle: ImageButton
     private lateinit var playerAspectRatioToggle: ImageButton
-    private lateinit var showChat: ImageButton
-    private lateinit var hideChat: ImageButton
-    private lateinit var toggleChatBar: ImageButton
-    private lateinit var pauseButton: ImageButton
+    private lateinit var chatToggle: ImageButton
     private var disableChat: Boolean = false
 
     protected abstract val layoutId: Int
@@ -61,7 +58,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
 
     protected abstract val viewModel: PlayerViewModel
 
-    protected var isPortrait = false
+    var isPortrait = false
         private set
     private var isKeyboardShown = false
 
@@ -114,33 +111,11 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         chatLayout = view.findViewById(chatContainerId)
         aspectRatioFrameLayout = view.findViewById(R.id.aspectRatioFrameLayout)
         aspectRatioFrameLayout.setAspectRatio(16f / 9f)
-        pauseButton = view.findViewById(R.id.exo_pause)
-        disableChat = prefs.getBoolean(C.CHAT_DISABLE, false)
-        val isNotOfflinePlayer = this !is OfflinePlayerFragment
-        if (this is StreamPlayerFragment && !prefs.getBoolean(C.PLAYER_PAUSE, false)) {
-            pauseButton.layoutParams.height = 0
-        }
-        if (prefs.getBoolean(C.PLAYER_DOUBLETAP, true) && !disableChat) {
-            playerView.setOnDoubleTapListener {
-                if (!isPortrait && slidingLayout.isMaximized && isNotOfflinePlayer) {
-                    if (chatLayout.isVisible) {
-                        hideChat()
-                    } else {
-                        showChat()
-                    }
-                    playerView.hideController()
-                }
-            }
-        }
         chatWidthLandscape = prefs.getInt(C.LANDSCAPE_CHAT_WIDTH, 0)
-        hideChat = view.findViewById<ImageButton>(R.id.hideChat).apply {
-            setOnClickListener { hideChat() }
-        }
-        showChat = view.findViewById<ImageButton>(R.id.showChat).apply {
-            setOnClickListener { showChat() }
-        }
-        fullscreenToggle = view.findViewById<ImageButton>(R.id.fullscreenToggle).apply {
-            setOnClickListener {
+        fullscreenToggle = view.findViewById(R.id.playerFullscreenToggle)
+        if (prefs.getBoolean(C.PLAYER_FULLSCREEN, true)) {
+            fullscreenToggle.visible()
+            fullscreenToggle.setOnClickListener {
                 activity.apply {
                     if (isPortrait) {
                         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
@@ -151,47 +126,68 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 }
             }
         }
-        playerAspectRatioToggle = view.findViewById<ImageButton>(R.id.aspectRatio).apply {
-            setOnClickListener {
-                resizeMode = (resizeMode + 1).let { if (it < 5) it else 0 }
-                playerView.resizeMode = resizeMode
-                prefs.edit { putInt(C.ASPECT_RATIO_LANDSCAPE, resizeMode) }
+        playerAspectRatioToggle = view.findViewById(R.id.playerAspectRatio)
+        if (prefs.getBoolean(C.PLAYER_ASPECT, true)) {
+            playerAspectRatioToggle.setOnClickListener {
+                setResizeMode()
             }
         }
+        chatToggle = view.findViewById(R.id.playerChatToggle)
+        disableChat = prefs.getBoolean(C.CHAT_DISABLE, false)
         initLayout()
         playerView.controllerAutoShow = controllerAutoShow
-        if (isNotOfflinePlayer) {
-            view.findViewById<ImageButton>(R.id.settings).disable()
+        if (this !is OfflinePlayerFragment) {
+            view.findViewById<ImageButton>(R.id.playerSettings).disable()
+            if (this !is StreamPlayerFragment) {
+                view.findViewById<ImageButton>(R.id.playerDownload).disable()
+            }
+        }
+        if (prefs.getBoolean(C.PLAYER_DOUBLETAP, true) && !disableChat) {
+            playerView.setOnDoubleTapListener {
+                if (!isPortrait && slidingLayout.isMaximized && this !is OfflinePlayerFragment) {
+                    if (chatLayout.isVisible) {
+                        hideChat()
+                    } else {
+                        showChat()
+                    }
+                    playerView.hideController()
+                }
+            }
         }
         if (prefs.getBoolean(C.PLAYER_MINIMIZE, true)) {
-            view.findViewById<ImageButton>(R.id.minimize).setOnClickListener { minimize() }
-        } else {
-            view.findViewById<ImageButton>(R.id.minimize).gone()
+            view.findViewById<ImageButton>(R.id.playerMinimize).apply {
+                visible()
+                setOnClickListener { minimize() }
+            }
         }
         if (prefs.getBoolean(C.PLAYER_CHANNEL, true)) {
-            view.findViewById<TextView>(R.id.channel).apply {
+            view.findViewById<TextView>(R.id.playerChannel).apply {
+                visible()
                 text = channelName
                 setOnClickListener {
-                    activity.viewChannel(channelId, channelLogin, channelName, channelImage, !isNotOfflinePlayer)
+                    activity.viewChannel(channelId, channelLogin, channelName, channelImage, this@BasePlayerFragment is OfflinePlayerFragment)
                     slidingLayout.minimize()
                 }
             }
-        } else {
-            view.findViewById<TextView>(R.id.channel).gone()
         }
         if (prefs.getBoolean(C.PLAYER_VOLUMEBUTTON, true)) {
-            view.findViewById<ImageButton>(R.id.volumeButton).setOnClickListener {
-                FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
+            view.findViewById<ImageButton>(R.id.playerVolume).apply {
+                visible()
+                setOnClickListener {
+                    showVolumeDialog()
+                }
             }
-        } else {
-            view.findViewById<ImageButton>(R.id.volumeButton).gone()
         }
         if (this is StreamPlayerFragment) {
+            if (!prefs.getBoolean(C.PLAYER_PAUSE, false)) {
+                view.findViewById<ImageButton>(R.id.exo_pause).layoutParams.height = 0
+            }
             if (User.get(activity) !is NotLoggedIn) {
-                if (prefs.getBoolean(C.PLAYER_CHATBARTOGGLE, true) && !disableChat) {
-                    toggleChatBar = view.findViewById(R.id.toggleChatBar)
-                    toggleChatBar.visible()
-                    toggleChatBar.apply { setOnClickListener { toggleChatBar() } }
+                if (prefs.getBoolean(C.PLAYER_CHATBARTOGGLE, false) && !disableChat) {
+                    view.findViewById<ImageButton>(R.id.playerChatBarToggle).apply {
+                        visible()
+                        setOnClickListener { toggleChatBar() }
+                    }
                 }
                 slidingLayout.viewTreeObserver.addOnGlobalLayoutListener {
                     if (slidingLayout.isKeyboardShown) {
@@ -231,9 +227,6 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
             }
             view.findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_rew).setImageResource(rewindImage)
             view.findViewById<ImageButton>(com.google.android.exoplayer2.ui.R.id.exo_ffwd).setImageResource(forwardImage)
-            if (isNotOfflinePlayer) {
-                view.findViewById<ImageButton>(R.id.download).disable()
-            }
         }
     }
 
@@ -273,9 +266,9 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
             }
         }
         if (this !is OfflinePlayerFragment && prefs.getBoolean(C.PLAYER_FOLLOW, true)) {
-            initializeFollow(this, (viewModel as FollowViewModel), view.findViewById(R.id.follow), User.get(activity), prefs.getString(C.HELIX_CLIENT_ID, ""))
+            initializeFollow(this, (viewModel as FollowViewModel), view.findViewById(R.id.playerFollow), User.get(activity), prefs.getString(C.HELIX_CLIENT_ID, ""))
         }
-        if (this !is ClipPlayerFragment && prefs.getBoolean(C.PLAYER_SLEEP, true)) {
+        if (this !is ClipPlayerFragment) {
             viewModel.sleepTimer.observe(viewLifecycleOwner) {
                 onMinimize()
                 activity.closePlayer()
@@ -283,11 +276,14 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                     lockScreen()
                 }
             }
-            view.findViewById<ImageButton>(R.id.sleepTimer).setOnClickListener {
-                SleepTimerDialog.show(childFragmentManager, viewModel.timerTimeLeft)
+            if (prefs.getBoolean(C.PLAYER_SLEEP, true)) {
+                view.findViewById<ImageButton>(R.id.playerSleepTimer).apply {
+                    visible()
+                    setOnClickListener {
+                        showSleepTimerDialog()
+                    }
+                }
             }
-        } else {
-            view.findViewById<ImageButton>(R.id.sleepTimer).gone()
         }
     }
 
@@ -344,6 +340,20 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
 
     //    abstract fun play(obj: Parcelable) //TODO instead maybe add livedata in mainactivity and observe it
 
+    fun setResizeMode() {
+        resizeMode = (resizeMode + 1).let { if (it < 5) it else 0 }
+        playerView.resizeMode = resizeMode
+        prefs.edit { putInt(C.ASPECT_RATIO_LANDSCAPE, resizeMode) }
+    }
+
+    fun showSleepTimerDialog() {
+        SleepTimerDialog.show(childFragmentManager, viewModel.timerTimeLeft)
+    }
+
+    fun showVolumeDialog() {
+        FragmentUtils.showPlayerVolumeDialog(childFragmentManager)
+    }
+
     fun minimize() {
         slidingLayout.minimize()
     }
@@ -370,17 +380,18 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 weight = 1f
             }
             chatLayout.visible()
-            if (prefs.getBoolean(C.PLAYER_FULLSCREEN, true)) {
+            if (fullscreenToggle.isVisible) {
                 fullscreenToggle.setImageResource(R.drawable.baseline_fullscreen_black_24)
-            } else {
-                fullscreenToggle.gone()
             }
-            playerAspectRatioToggle.gone()
-            hideChat.gone()
-            showChat.gone()
+            if (playerAspectRatioToggle.isVisible) {
+                playerAspectRatioToggle.gone()
+            }
+            if (chatToggle.isVisible) {
+                chatToggle.gone()
+            }
             showStatusBar()
-            resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             aspectRatioFrameLayout.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH
+            resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
         } else {
             requireActivity().window.decorView.setOnSystemUiVisibilityChangeListener {
                 if (!isKeyboardShown && slidingLayout.isMaximized) {
@@ -399,29 +410,24 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                     weight = 0f
                 }
                 if (disableChat) {
-                    hideChat.gone()
-                    showChat.gone()
                     chatLayout.gone()
                     slidingLayout.maximizedSecondViewVisibility = View.GONE
                 } else {
                     setPreferredChatVisibility()
                 }
-                val recycleview = requireView().findViewById<RecyclerView>(R.id.recyclerView)
-                val btndwn = requireView().findViewById<Button>(R.id.btnDown)
-                if (chatLayout.isVisible && btndwn != null && !btndwn.isVisible && recycleview.adapter?.itemCount != null)
-                    recycleview.scrollToPosition(recycleview.adapter?.itemCount!! - 1) // scroll down
+                val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
+                val btnDown = requireView().findViewById<Button>(R.id.btnDown)
+                if (chatLayout.isVisible && btnDown != null && !btnDown.isVisible && recyclerView.adapter?.itemCount != null) {
+                    recyclerView.scrollToPosition(recyclerView.adapter?.itemCount!! - 1) // scroll down
+                }
             } else {
                 chatLayout.gone()
             }
-            if (prefs.getBoolean(C.PLAYER_FULLSCREEN, true)) {
+            if (fullscreenToggle.isVisible) {
                 fullscreenToggle.setImageResource(R.drawable.baseline_fullscreen_exit_black_24)
-            } else {
-                fullscreenToggle.gone()
             }
-            if (prefs.getBoolean(C.PLAYER_ASPECT, true)) {
+            if (playerAspectRatioToggle.hasOnClickListeners()) {
                 playerAspectRatioToggle.visible()
-            } else {
-                playerAspectRatioToggle.gone()
             }
             slidingLayout.post {
                 if (slidingLayout.isMaximized) {
@@ -440,7 +446,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         if (prefs.getBoolean(C.KEY_CHAT_OPENED, true)) showChat() else hideChat()
     }
 
-    private fun toggleChatBar() {
+    fun toggleChatBar() {
         val messageView = view?.findViewById<LinearLayout>(R.id.messageView)
         if (messageView?.isVisible == true) {
             chatLayout.hideKeyboard()
@@ -454,34 +460,31 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         }
     }
 
-    private fun hideChat() {
+    fun hideChat() {
         if (prefs.getBoolean(C.PLAYER_CHATTOGGLE, true)) {
-            hideChat.gone()
-            showChat.visible()
-        } else {
-            hideChat.gone()
-            showChat.gone()
+            chatToggle.visible()
+            chatToggle.setImageResource(R.drawable.baseline_speaker_notes_black_24)
+            chatToggle.setOnClickListener { showChat() }
         }
         chatLayout.gone()
         prefs.edit { putBoolean(C.KEY_CHAT_OPENED, false) }
         slidingLayout.maximizedSecondViewVisibility = View.GONE
     }
 
-    private fun showChat() {
+    fun showChat() {
         if (prefs.getBoolean(C.PLAYER_CHATTOGGLE, true)) {
-            hideChat.visible()
-            showChat.gone()
-        } else {
-            hideChat.gone()
-            showChat.gone()
+            chatToggle.visible()
+            chatToggle.setImageResource(R.drawable.baseline_speaker_notes_off_black_24)
+            chatToggle.setOnClickListener { hideChat() }
         }
         chatLayout.visible()
         prefs.edit { putBoolean(C.KEY_CHAT_OPENED, true) }
         slidingLayout.maximizedSecondViewVisibility = View.VISIBLE
-        val recycleview = requireView().findViewById<RecyclerView>(R.id.recyclerView)
-        val btndwn = requireView().findViewById<Button>(R.id.btnDown)
-        if (chatLayout.isVisible && btndwn != null && !btndwn.isVisible && recycleview.adapter?.itemCount != null)
-            recycleview.scrollToPosition(recycleview.adapter?.itemCount!! - 1) // scroll down
+        val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
+        val btnDown = requireView().findViewById<Button>(R.id.btnDown)
+        if (chatLayout.isVisible && btnDown != null && !btnDown.isVisible && recyclerView.adapter?.itemCount != null) {
+            recyclerView.scrollToPosition(recyclerView.adapter?.itemCount!! - 1) // scroll down
+        }
     }
 
     private fun showStatusBar() {

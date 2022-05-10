@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <SwitchPreferenceCompat
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="player_viewerlist"
         android:title="@string/player_viewerlist"
         app:iconSpaceReserved="false"/>
@@ -20,7 +20,7 @@
         android:icon="@drawable/baseline_expand_more_black_24" />
 
     <SwitchPreferenceCompat
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="player_download"
         android:title="@string/player_download"
         android:icon="@drawable/ic_file_download_black_24dp" />
@@ -32,7 +32,7 @@
         android:icon="@drawable/baseline_favorite_border_black_24" />
 
     <SwitchPreferenceCompat
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="player_sleep"
         android:title="@string/player_sleep"
         android:icon="@drawable/baseline_alarm_black_24" />
@@ -45,9 +45,27 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:key="player_settings"
+        android:title="@string/show_quality_options"
+        android:icon="@drawable/baseline_settings_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_menu"
+        android:title="@string/show_player_menu"
+        android:icon="@drawable/baseline_more_vert_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
         android:key="player_gamesbutton"
         android:title="@string/player_gamesbutton"
         android:icon="@drawable/baseline_format_list_bulleted_black_24" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_restart"
+        android:title="@string/show_restart"
+        android:icon="@drawable/baseline_replay_black_24" />
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
@@ -56,7 +74,7 @@
         android:icon="@drawable/baseline_volume_up_black_24" />
 
     <SwitchPreferenceCompat
-        android:defaultValue="true"
+        android:defaultValue="false"
         android:key="player_chatbartoggle"
         android:title="@string/player_chatbartoggle"
         android:icon="@drawable/baseline_keyboard_black_24" />

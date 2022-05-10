@@ -77,7 +77,6 @@ abstract class HlsPlayerViewModel(
     override fun onTracksChanged(trackGroups: TrackGroupArray, trackSelections: TrackSelectionArray) {
         if (trackSelector.currentMappedTrackInfo != null) {
             if (helper.loaded.value != true) {
-                helper.loaded.value = true
                 val context = getApplication<Application>()
                 val defaultQuality = context.prefs().getString(C.PLAYER_DEFAULTQUALITY, "saved")
                 val savedQuality = context.prefs().getString(C.PLAYER_QUALITY, "720p60")
@@ -108,6 +107,7 @@ abstract class HlsPlayerViewModel(
                     }
                 }
                 qualityIndex = index
+                helper.loaded.value = true
             }
             if (qualityIndex != 0) {
                 updateVideoQuality()

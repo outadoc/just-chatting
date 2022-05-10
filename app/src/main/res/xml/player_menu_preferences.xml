@@ -1,0 +1,76 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="player_menu_quality"
+        android:title="@string/quality"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_menu_speed"
+        android:title="@string/playback_speed"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_menu_viewer_list"
+        android:title="@string/viewer_list"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="player_menu_games"
+        android:title="@string/vod_games"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_menu_download"
+        android:title="@string/download"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_menu_sleep"
+        android:title="@string/sleep_timer"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="player_menu_aspect"
+        android:title="@string/aspect_ratio"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="player_menu_volume"
+        android:title="@string/volume"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="player_menu_restart"
+        android:title="@string/restart_player"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="player_menu_chat_bar"
+        android:title="@string/toggle_chat_bar"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="player_menu_chat_toggle"
+        android:title="@string/toggle_chat"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="player_menu_chat_disconnect"
+        android:title="@string/disconnect_chat"
+        app:iconSpaceReserved="false"/>
+
+</androidx.preference.PreferenceScreen>

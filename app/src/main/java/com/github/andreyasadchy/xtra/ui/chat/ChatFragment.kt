@@ -88,6 +88,14 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         }
     }
 
+    fun isActive(): Boolean? {
+        return (viewModel.chat as? ChatViewModel.LiveChatController)?.isActive()
+    }
+
+    fun disconnect() {
+        (viewModel.chat as? ChatViewModel.LiveChatController)?.disconnect()
+    }
+
     fun hideKeyboard() {
         chatView.hideKeyboard()
         chatView.clearFocus()

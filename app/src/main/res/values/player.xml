@@ -24,18 +24,6 @@
         <item name="android:layout_height">100dp</item>
     </style>
 
-    <style name="PlayerPlay" parent="PlayerLargeImage">
-        <item name="android:id">@id/exo_play</item>
-        <item name="android:src">@drawable/baseline_play_arrow_black_48</item>
-        <item name="android:layout_centerInParent">true</item>
-    </style>
-
-    <style name="PlayerPause" parent="PlayerLargeImage">
-        <item name="android:id">@id/exo_pause</item>
-        <item name="android:src">@drawable/baseline_pause_black_48</item>
-        <item name="android:layout_centerInParent">true</item>
-    </style>
-
     <style name="PlayerTopRightPanel">
         <item name="android:id">@id/topRightPanel</item>
         <item name="android:layout_width">wrap_content</item>
@@ -88,32 +76,6 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="PlayerMinimize" parent="PlayerSmallImage">
-        <item name="android:id">@id/minimize</item>
-        <item name="android:src">@drawable/baseline_expand_more_black_48</item>
-    </style>
-
-    <style name="PlayerSettings" parent="PlayerSmallImage">
-        <item name="android:id">@id/settings</item>
-        <item name="android:src">@drawable/baseline_settings_black_24</item>
-    </style>
-
-    <style name="PlayerDownload" parent="PlayerSmallImage">
-        <item name="android:id">@id/download</item>
-        <item name="android:src">@drawable/ic_file_download_black_24dp</item>
-    </style>
-
-    <style name="PlayerFollow" parent="PlayerSmallImage">
-        <item name="android:id">@id/follow</item>
-        <item name="android:src">@drawable/baseline_favorite_border_black_24</item>
-        <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="PlayerSleep" parent="PlayerSmallImage">
-        <item name="android:id">@id/sleepTimer</item>
-        <item name="android:src">@drawable/baseline_alarm_black_24</item>
-    </style>
-
     <style name="PlayerText">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -155,25 +117,6 @@
         <item name="android:layout_toStartOf">@id/exo_duration</item>
     </style>
 
-    <style name="PlayerFullscreenToggle" parent="PlayerSmallImage">
-        <item name="android:id">@id/fullscreenToggle</item>
-    </style>
-
-    <style name="PlayerGames" parent="PlayerSmallImage">
-        <item name="android:id">@id/gamesButton</item>
-        <item name="android:src">@drawable/baseline_format_list_bulleted_black_24</item>
-    </style>
-
-    <style name="PlayerRestart" parent="PlayerSmallImage">
-        <item name="android:id">@id/restart</item>
-        <item name="android:src">@drawable/baseline_replay_black_24</item>
-    </style>
-
-    <style name="PlayerVolume" parent="PlayerSmallImage">
-        <item name="android:id">@id/volumeButton</item>
-        <item name="android:src">@drawable/baseline_volume_up_black_24</item>
-    </style>
-
     <style name="PlayerRewind" parent="PlayerLargeImage">
         <item name="android:id">@id/exo_rew</item>
         <item name="android:layout_centerVertical">true</item>
@@ -190,42 +133,16 @@
         <item name="android:layout_marginRight">30dp</item>
     </style>
 
-    <style name="PlayerChannel" parent="PlayerText">
-        <item name="android:id">@id/channel</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">30dp</item>
-        <item name="android:layout_toRightOf">@id/minimize</item>
-        <item name="android:layout_toEndOf">@id/minimize</item>
-        <item name="android:layout_marginStart">5dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginTop">7dp</item>
-        <item name="android:layout_marginEnd">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textSize">20sp</item>
+    <style name="PlayerPlay" parent="PlayerLargeImage">
+        <item name="android:id">@id/exo_play</item>
+        <item name="android:src">@drawable/baseline_play_arrow_black_48</item>
+        <item name="android:layout_centerInParent">true</item>
     </style>
 
-    <style name="PlayerToggleChatBar" parent="PlayerSmallImage">
-        <item name="android:id">@id/toggleChatBar</item>
-        <item name="android:src">@drawable/baseline_keyboard_black_24</item>
-        <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="PlayerHideChat" parent="PlayerSmallImage">
-        <item name="android:id">@id/hideChat</item>
-        <item name="android:src">@drawable/baseline_speaker_notes_off_black_24</item>
-        <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="PlayerShowChat" parent="PlayerSmallImage">
-        <item name="android:id">@id/showChat</item>
-        <item name="android:src">@drawable/baseline_speaker_notes_black_24</item>
-        <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="PlayerRatio" parent="PlayerSmallImage">
-        <item name="android:id">@id/aspectRatio</item>
-        <item name="android:src">@drawable/baseline_aspect_ratio_black_24</item>
+    <style name="PlayerPause" parent="PlayerLargeImage">
+        <item name="android:id">@id/exo_pause</item>
+        <item name="android:src">@drawable/baseline_pause_black_48</item>
+        <item name="android:layout_centerInParent">true</item>
     </style>
 
     <style name="PlayerShadow">
@@ -235,10 +152,103 @@
         <item name="android:alpha">0.4</item>
     </style>
 
+    <style name="PlayerChannel" parent="PlayerText">
+        <item name="android:id">@id/playerChannel</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">30dp</item>
+        <item name="android:layout_toRightOf">@id/playerMinimize</item>
+        <item name="android:layout_toEndOf">@id/playerMinimize</item>
+        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:layout_marginLeft">5dp</item>
+        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:layout_marginEnd">5dp</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerMenu" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerMenu</item>
+        <item name="android:src">@drawable/baseline_more_vert_black_24</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerMinimize" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerMinimize</item>
+        <item name="android:src">@drawable/baseline_expand_more_black_48</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerSettings" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerSettings</item>
+        <item name="android:src">@drawable/baseline_settings_black_24</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerDownload" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerDownload</item>
+        <item name="android:src">@drawable/ic_file_download_black_24dp</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerFollow" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerFollow</item>
+        <item name="android:src">@drawable/baseline_favorite_border_black_24</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerSleep" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerSleepTimer</item>
+        <item name="android:src">@drawable/baseline_alarm_black_24</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerFullscreenToggle" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerFullscreenToggle</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerChatToggle" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerChatToggle</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerGames" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerGames</item>
+        <item name="android:src">@drawable/baseline_format_list_bulleted_black_24</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerRestart" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerRestart</item>
+        <item name="android:src">@drawable/baseline_replay_black_24</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerVolume" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerVolume</item>
+        <item name="android:src">@drawable/baseline_volume_up_black_24</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerChatBarToggle" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerChatBarToggle</item>
+        <item name="android:src">@drawable/baseline_keyboard_black_24</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="PlayerRatio" parent="PlayerSmallImage">
+        <item name="android:id">@id/playerAspectRatio</item>
+        <item name="android:src">@drawable/baseline_aspect_ratio_black_24</item>
+        <item name="android:visibility">gone</item>
+    </style>
+
     <style name="PlayerViewers" parent="PlayerImage">
         <item name="android:layout_width">30dp</item>
         <item name="android:layout_height">30dp</item>
         <item name="android:src">@drawable/baseline_person_black_36</item>
+        <item name="android:visibility">gone</item>
     </style>
 
 </resources>

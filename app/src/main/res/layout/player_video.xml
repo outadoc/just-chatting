@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <View style="@style/PlayerShadow" />
     <ImageButton style="@style/PlayerPlay"/>
@@ -11,26 +11,45 @@
     <ImageButton style="@style/PlayerForward"/>
 
     <RelativeLayout style="@style/PlayerTopLeftPanel">
-        <ImageButton style="@style/PlayerMinimize" />
-        <TextView style="@style/PlayerChannel" />
+        <ImageButton
+            style="@style/PlayerMinimize"
+            tools:visibility="visible" />
+        <TextView
+            style="@style/PlayerChannel"
+            tools:visibility="visible" />
     </RelativeLayout>
 
     <LinearLayout style="@style/PlayerTopRightPanel">
-        <ImageButton style="@style/PlayerDownload" />
+        <ImageButton
+            style="@style/PlayerDownload"
+            tools:visibility="visible" />
         <ImageButton
             style="@style/PlayerFollow"
             tools:visibility="visible" />
-        <ImageButton style="@style/PlayerSleep" />
-        <ImageButton style="@style/PlayerRatio" />
-        <ImageButton style="@style/PlayerSettings" />
+        <ImageButton
+            style="@style/PlayerSleep"
+            tools:visibility="visible" />
+        <ImageButton
+            style="@style/PlayerRatio"
+            tools:visibility="visible" />
+        <ImageButton
+            style="@style/PlayerSettings"
+            tools:visibility="visible" />
+        <ImageButton
+            style="@style/PlayerMenu"
+            tools:visibility="visible" />
     </LinearLayout>
 
     <LinearLayout style="@style/PlayerBotLeftPanel"
         android:layout_marginBottom="5dp"
         android:layout_alignParentBottom="false"
         android:layout_above="@id/exo_progress" >
-        <ImageButton style="@style/PlayerGames"/>
-        <ImageButton style="@style/PlayerVolume"/>
+        <ImageButton
+            style="@style/PlayerGames"
+            tools:visibility="visible" />
+        <ImageButton
+            style="@style/PlayerVolume"
+            tools:visibility="visible" />
     </LinearLayout>
 
     <TextView style="@style/PlayerPosition"/>
@@ -43,8 +62,13 @@
         android:layout_marginBottom="5dp"
         android:layout_alignParentBottom="false"
         android:layout_above="@id/exo_progress" >
-        <ImageButton style="@style/PlayerShowChat" />
-        <ImageButton style="@style/PlayerHideChat" />
-        <ImageButton style="@style/PlayerFullscreenToggle"/>
+        <ImageButton
+            style="@style/PlayerChatToggle"
+            tools:src="@drawable/baseline_speaker_notes_black_24"
+            tools:visibility="visible" />
+        <ImageButton
+            style="@style/PlayerFullscreenToggle"
+            tools:src="@drawable/baseline_fullscreen_black_24"
+            tools:visibility="visible" />
     </LinearLayout>
 </RelativeLayout>

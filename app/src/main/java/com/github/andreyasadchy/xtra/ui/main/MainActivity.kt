@@ -113,6 +113,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.root_preferences, false)
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.api_preferences, true)
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.player_button_preferences, true)
+            PreferenceManager.setDefaultValues(this@MainActivity, R.xml.player_menu_preferences, true)
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.buffer_preferences, true)
             prefs.edit {
                 putBoolean(C.FIRST_LAUNCH2, false)

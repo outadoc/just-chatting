@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatReplayPlayerFragment
+import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
 import com.github.andreyasadchy.xtra.ui.download.HasDownloadDialog
 import com.github.andreyasadchy.xtra.ui.download.VideoDownloadDialog
 import com.github.andreyasadchy.xtra.ui.player.*
@@ -16,7 +17,7 @@ import com.github.andreyasadchy.xtra.util.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
-class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPlayerFragment, PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener, PlayerGamesDialog.PlayerSeekListener {
+class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayPlayerFragment, RadioButtonDialogFragment.OnSortOptionChanged, PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener, PlayerGamesDialog.PlayerSeekListener {
 //    override fun play(obj: Parcelable) {
 //        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //    }
@@ -57,36 +58,51 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
     override fun initialize() {
         viewModel.setVideo(requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: "", video, requireArguments().getDouble(KEY_OFFSET))
         super.initialize()
-        val view = requireView()
-        val settings = view.findViewById<ImageButton>(R.id.settings)
-        val download = view.findViewById<ImageButton>(R.id.download)
-        val gamesButton = view.findViewById<ImageButton>(R.id.gamesButton)
+        val settings = requireView().findViewById<ImageButton>(R.id.playerSettings)
+        val playerMenu = requireView().findViewById<ImageButton>(R.id.playerMenu)
+        val download = requireView().findViewById<ImageButton>(R.id.playerDownload)
+        val gamesButton = requireView().findViewById<ImageButton>(R.id.playerGames)
         viewModel.loaded.observe(viewLifecycleOwner) {
             if (it) {
                 settings.enable()
                 download.enable()
+                (childFragmentManager.findFragmentByTag("closeOnPip") as? PlayerSettingsDialog?)?.setQualities(viewModel.qualities, viewModel.qualityIndex)
             } else {
                 download.disable()
                 settings.disable()
             }
         }
-        if (prefs.getBoolean(C.PLAYER_DOWNLOAD, true)) {
-            download.setOnClickListener { showDownloadDialog() }
-        } else {
-            download.gone()
+        if (prefs.getBoolean(C.PLAYER_SETTINGS, true)) {
+            settings.visible()
+            settings.setOnClickListener {
+                FragmentUtils.showRadioButtonDialogFragment(childFragmentManager, viewModel.qualities, viewModel.qualityIndex)
+            }
         }
-        settings.setOnClickListener {
-            FragmentUtils.showPlayerSettingsDialog(childFragmentManager, viewModel.qualities, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
+        if (prefs.getBoolean(C.PLAYER_MENU, true)) {
+            playerMenu.visible()
+            playerMenu.setOnClickListener {
+                FragmentUtils.showPlayerSettingsDialog(childFragmentManager, if (viewModel.loaded.value == true) viewModel.qualities else null, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed, !viewModel.gamesList.value.isNullOrEmpty())
+            }
         }
-        gamesButton.gone()
+        if (prefs.getBoolean(C.PLAYER_DOWNLOAD, false)) {
+            download.visible()
+            download.setOnClickListener {
+                showDownloadDialog()
+            }
+        }
         if (prefs.getBoolean(C.PLAYER_GAMESBUTTON, true)) {
             viewModel.loadGamesList(prefs.getString(C.GQL_CLIENT_ID, ""), video.id).observe(viewLifecycleOwner) { list ->
                 if (list.isNotEmpty()) {
                     gamesButton.visible()
                     gamesButton.setOnClickListener { FragmentUtils.showPlayerGamesDialog(childFragmentManager, list) }
+                    (childFragmentManager.findFragmentByTag("closeOnPip") as? PlayerSettingsDialog?)?.setVodGames()
                 }
             }
         }
+    }
+
+    override fun onChange(requestCode: Int, index: Int, text: CharSequence, tag: Int?) {
+        viewModel.changeQuality(index)
     }
 
     override fun onChangeQuality(index: Int) {

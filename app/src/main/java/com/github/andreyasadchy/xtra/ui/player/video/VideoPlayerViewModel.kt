@@ -57,7 +57,7 @@ class VideoPlayerViewModel @Inject constructor(
     override val channelLogo: String?
         get() { return video.channelLogo }
 
-    private val gamesList = MutableLiveData<List<Game>>()
+    val gamesList = MutableLiveData<List<Game>>()
     private var isLoading = false
 
     fun loadGamesList(clientId: String?, videoId: String): MutableLiveData<List<Game>> {

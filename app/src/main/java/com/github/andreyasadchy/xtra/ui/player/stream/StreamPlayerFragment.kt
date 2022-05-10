@@ -13,14 +13,15 @@ import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
+import com.github.andreyasadchy.xtra.ui.player.PlayerSettingsDialog
 import com.github.andreyasadchy.xtra.ui.player.PlayerVolumeDialog
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.player_stream.*
 
-class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnSortOptionChanged, PlayerVolumeDialog.PlayerVolumeListener {
+class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnSortOptionChanged, PlayerSettingsDialog.PlayerSettingsListener, PlayerVolumeDialog.PlayerVolumeListener {
 
     override val viewModel by viewModels<StreamPlayerViewModel> { viewModelFactory }
-    private lateinit var chatFragment: ChatFragment
+    lateinit var chatFragment: ChatFragment
     private lateinit var stream: Stream
     override val channelId: String?
         get() = stream.user_id
@@ -65,35 +66,61 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
             prefs.getString(C.TOKEN_PLAYERTYPE, "") ?: "", prefs.getString(C.GQL_CLIENT_ID, "") ?: "", prefs.getString(C.PLAYER_LIVE_MIN_SPEED, ""),
             prefs.getString(C.PLAYER_LIVE_MAX_SPEED, ""), prefs.getString(C.PLAYER_LIVE_TARGET_OFFSET, "5000"))
         super.initialize()
-        val settings = requireView().findViewById<ImageButton>(R.id.settings)
-        val restart = requireView().findViewById<ImageButton>(R.id.restart)
+        val settings = requireView().findViewById<ImageButton>(R.id.playerSettings)
+        val playerMenu = requireView().findViewById<ImageButton>(R.id.playerMenu)
+        val restart = requireView().findViewById<ImageButton>(R.id.playerRestart)
         val viewersLayout = requireView().findViewById<LinearLayout>(R.id.viewersLayout)
+        val viewerIcon = requireView().findViewById<ImageView>(R.id.viewerIcon)
         viewModel.loaded.observe(viewLifecycleOwner) {
-            if (it) settings.enable() else settings.disable()
+            if (it) {
+                settings.enable()
+                (childFragmentManager.findFragmentByTag("closeOnPip") as? PlayerSettingsDialog?)?.setQualities(viewModel.qualities, viewModel.qualityIndex)
+            } else {
+                settings.disable()
+            }
         }
-        val icon = requireView().findViewById<ImageView>(R.id.viewerIcon)
         viewModel.stream.observe(viewLifecycleOwner) {
             if (it?.viewer_count != null) {
                 viewers.text = TwitchApiHelper.formatCount(requireContext(), it.viewer_count)
                 if (prefs.getBoolean(C.PLAYER_VIEWERICON, true)) {
-                    icon.visible()
+                    viewerIcon.visible()
                 }
             } else {
                 viewers.text = null
-                icon.gone()
+                viewerIcon.gone()
             }
         }
-        settings.setOnClickListener {
-            FragmentUtils.showRadioButtonDialogFragment(childFragmentManager, viewModel.qualities, viewModel.qualityIndex)
+        if (prefs.getBoolean(C.PLAYER_SETTINGS, true)) {
+            settings.visible()
+            settings.setOnClickListener {
+                FragmentUtils.showRadioButtonDialogFragment(childFragmentManager, viewModel.qualities, viewModel.qualityIndex)
+            }
         }
-        restart.setOnClickListener {
-            viewModel.restartPlayer()
+        if (prefs.getBoolean(C.PLAYER_MENU, true)) {
+            playerMenu.visible()
+            playerMenu.setOnClickListener {
+                FragmentUtils.showPlayerSettingsDialog(childFragmentManager, if (viewModel.loaded.value == true) viewModel.qualities else null, viewModel.qualityIndex, viewModel.currentPlayer.value!!.playbackParameters.speed)
+            }
         }
-        if (prefs.getBoolean(C.PLAYER_VIEWERLIST, true)) {
+        if (prefs.getBoolean(C.PLAYER_RESTART, true)) {
+            restart.visible()
+            restart.setOnClickListener {
+                restartPlayer()
+            }
+        }
+        if (prefs.getBoolean(C.PLAYER_VIEWERLIST, false)) {
             viewersLayout.setOnClickListener {
-                stream.user_login?.let { login -> FragmentUtils.showPlayerViewerListDialog(childFragmentManager, login, viewModel.repository) }
+                openViewerList()
             }
         }
+    }
+
+    fun restartPlayer() {
+        viewModel.restartPlayer()
+    }
+
+    fun openViewerList() {
+        stream.user_login?.let { login -> FragmentUtils.showPlayerViewerListDialog(childFragmentManager, login, viewModel.repository) }
     }
 
     override fun changeVolume(volume: Float) {
@@ -123,6 +150,12 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
 //                TODO hide player
 //            }
     }
+
+    override fun onChangeQuality(index: Int) {
+        viewModel.changeQuality(index)
+    }
+
+    override fun onChangeSpeed(speed: Float) {}
 
     override fun onMovedToForeground() {
         viewModel.onResume()

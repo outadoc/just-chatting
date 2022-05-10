@@ -294,6 +294,11 @@
         android:title="@string/player_buttons"
         app:iconSpaceReserved="false" />
 
+    <Preference
+        android:key="player_menu_settings"
+        android:title="@string/player_menu"
+        app:iconSpaceReserved="false" />
+
     <ListPreference
         android:entries="@array/backgroundPlaybackEntries"
         android:entryValues="@array/backgroundPlaybackValues"

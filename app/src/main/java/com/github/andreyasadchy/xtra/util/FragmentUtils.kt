@@ -46,11 +46,12 @@ object FragmentUtils {
             .show()
     }
 
-    fun showPlayerSettingsDialog(fragmentManager: FragmentManager, qualities: Collection<CharSequence>, quality: Int, speed: Float) {
+    fun showPlayerSettingsDialog(fragmentManager: FragmentManager, qualities: Collection<CharSequence>?, quality: Int, speed: Float, vodGames: Boolean = false) {
         PlayerSettingsDialog.newInstance(
             qualities,
             quality,
-            speed
+            speed,
+            vodGames
         ).show(fragmentManager, "closeOnPip")
     }
 

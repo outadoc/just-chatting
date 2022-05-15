@@ -70,16 +70,7 @@ android {
     lint {
         disable 'ContentDescription'
     }
-    flavorDimensions 'ver'
-    productFlavors {
-        full {
-            dimension 'ver'
-        }
-        'english-only' {
-            dimension 'ver'
-            versionNameSuffix '-eng'
-        }
-    }
+    namespace 'com.github.andreyasadchy.xtra'
 }
 
 dependencies {

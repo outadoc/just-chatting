@@ -6,6 +6,7 @@ import android.widget.ImageButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatReplayPlayerFragment
@@ -56,7 +57,12 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
     }
 
     override fun initialize() {
-        viewModel.setVideo(requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: "", video, requireArguments().getDouble(KEY_OFFSET))
+        viewModel.setVideo(
+            gqlClientId = prefs.getString(C.GQL_CLIENT_ID, ""),
+            gqlToken = if (prefs.getBoolean(C.TOKEN_INCLUDE_TOKEN_VIDEO, true)) User.get(requireContext()).gqlToken else null,
+            video = video,
+            offset = requireArguments().getDouble(KEY_OFFSET)
+        )
         super.initialize()
         val settings = requireView().findViewById<ImageButton>(R.id.playerSettings)
         val playerMenu = requireView().findViewById<ImageButton>(R.id.playerMenu)

@@ -169,8 +169,6 @@
     <string name="settings_ui">UI</string>
     <string name="settings_chat">CHAT</string>
     <string name="settings_player">PLAYER</string>
-    <string name="settings_token">PLAYLIST HEADERS</string>
-    <string name="settings_token_summary">for livestreams only, disable adblock</string>
     <string name="token_random_deviceid">Random device id</string>
     <string name="api_helix">Helix client id</string>
     <string name="api_gql">GQL client id</string>
@@ -528,4 +526,7 @@ Removes a timeout on a user.</string>
     <string name="restart_player">Restart player</string>
     <string name="show_quality_options">Show quality options</string>
     <string name="show_restart">Show restart button</string>
+    <string name="token_settings">Playback access token headers</string>
+    <string name="settings_token_summary">disable adblock to use</string>
+    <string name="include_gql_token">Include GQL token</string>
 </resources>

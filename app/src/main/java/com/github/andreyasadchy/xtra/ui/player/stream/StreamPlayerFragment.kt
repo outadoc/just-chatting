@@ -8,6 +8,7 @@ import android.widget.LinearLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
@@ -61,10 +62,21 @@ class StreamPlayerFragment : BasePlayerFragment(), RadioButtonDialogFragment.OnS
     }
 
     override fun initialize() {
-        viewModel.startStream(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, "") ?: "", stream, prefs.getBoolean(C.AD_BLOCKER, true),
-            prefs.getBoolean(C.TOKEN_RANDOM_DEVICEID, true), prefs.getString(C.TOKEN_XDEVICEID, "") ?: "", prefs.getString(C.TOKEN_DEVICEID, "") ?: "",
-            prefs.getString(C.TOKEN_PLAYERTYPE, "") ?: "", prefs.getString(C.GQL_CLIENT_ID, "") ?: "", prefs.getString(C.PLAYER_LIVE_MIN_SPEED, ""),
-            prefs.getString(C.PLAYER_LIVE_MAX_SPEED, ""), prefs.getString(C.PLAYER_LIVE_TARGET_OFFSET, "5000"))
+        viewModel.startStream(
+            user = User.get(requireContext()),
+            includeToken = prefs.getBoolean(C.TOKEN_INCLUDE_TOKEN_STREAM, false),
+            helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""),
+            gqlClientId = prefs.getString(C.GQL_CLIENT_ID, ""),
+            stream = stream,
+            useAdBlock = prefs.getBoolean(C.AD_BLOCKER, true),
+            randomDeviceId = prefs.getBoolean(C.TOKEN_RANDOM_DEVICEID, true),
+            xDeviceId = prefs.getString(C.TOKEN_XDEVICEID, ""),
+            deviceId = prefs.getString(C.TOKEN_DEVICEID, ""),
+            playerType = prefs.getString(C.TOKEN_PLAYERTYPE, ""),
+            minSpeed = prefs.getString(C.PLAYER_LIVE_MIN_SPEED, ""),
+            maxSpeed = prefs.getString(C.PLAYER_LIVE_MAX_SPEED, ""),
+            targetOffset = prefs.getString(C.PLAYER_LIVE_TARGET_OFFSET, "5000")
+        )
         super.initialize()
         val settings = requireView().findViewById<ImageButton>(R.id.playerSettings)
         val playerMenu = requireView().findViewById<ImageButton>(R.id.playerMenu)

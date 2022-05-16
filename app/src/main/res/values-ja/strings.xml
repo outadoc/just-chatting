@@ -169,8 +169,6 @@
     <string name="settings_ui">UI</string>
     <string name="settings_chat">チャット</string>
     <string name="settings_player">プレイヤー</string>
-    <string name="settings_token">プレイリストのヘッダー</string>
-    <string name="settings_token_summary">ライブ配信のみ、Adblockを無効</string>
     <string name="token_random_deviceid">ランダムなデバイスID</string>
     <string name="api_helix">HelixクライアントID</string>
     <string name="api_gql">GQLクライアントID</string>
@@ -502,4 +500,7 @@
     <string name="restart_player">Restart player</string>
     <string name="show_quality_options">Show quality options</string>
     <string name="show_restart">Show restart button</string>
+    <string name="token_settings">Playback access token headers</string>
+    <string name="settings_token_summary">disable adblock to use</string>
+    <string name="include_gql_token">Include GQL token</string>
 </resources>

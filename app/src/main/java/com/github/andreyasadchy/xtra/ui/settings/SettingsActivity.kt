@@ -168,6 +168,15 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 true
             }
 
+            findPreference<Preference>("token_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+                parentFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.settings, TokenSettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
+                true
+            }
+
             findPreference<Preference>("admin_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
                 startActivity(Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.DeviceAdminSettings")))
                 true
@@ -219,6 +228,12 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
     class BufferSettingsFragment : PreferenceFragmentCompat() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.buffer_preferences, rootKey)
+        }
+    }
+
+    class TokenSettingsFragment : PreferenceFragmentCompat() {
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.token_preferences, rootKey)
         }
     }
 }

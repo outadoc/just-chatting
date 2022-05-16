@@ -42,7 +42,7 @@ class ClipDownloadDialog : BaseDownloadDialog() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         with(requireArguments()) {
-            viewModel.init(context?.prefs()?.getString(C.GQL_CLIENT_ID, "") ?: "", getParcelable(KEY_CLIP)!!, getSerializable(KEY_QUALITIES) as Map<String, String>?)
+            viewModel.init(requireContext().prefs().getString(C.GQL_CLIENT_ID, ""), getParcelable(KEY_CLIP)!!, getSerializable(KEY_QUALITIES) as Map<String, String>?)
         }
         viewModel.qualities.observe(viewLifecycleOwner, Observer {
             (requireView() as ConstraintLayout).children.forEach { v -> v.isVisible = v.id != R.id.progressBar && v.id != R.id.storageSelectionContainer }

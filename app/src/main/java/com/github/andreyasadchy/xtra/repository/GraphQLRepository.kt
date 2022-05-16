@@ -33,7 +33,7 @@ private const val TAG = "GraphQLRepository"
 @Singleton
 class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
 
-    suspend fun loadClipUrls(clientId: String, slug: String): Map<String, String> = withContext(Dispatchers.IO) {
+    suspend fun loadClipUrls(clientId: String?, slug: String?): Map<String, String> = withContext(Dispatchers.IO) {
         val array = JsonArray(1)
         val videoAccessTokenOperation = JsonObject().apply {
             addProperty("operationName", "VideoAccessToken_Clip")
@@ -49,10 +49,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         }
         array.add(videoAccessTokenOperation)
         val response = graphQL.getClipUrls(clientId, array)
-        response.videos.associateBy({ if (it.frameRate != 60) "${it.quality}p" else "${it.quality}p${it.frameRate}" }, { it.url })
+        response.videos.associateBy({ if (it.frameRate < 60) "${it.quality}p" else "${it.quality}p${it.frameRate}" }, { it.url })
     }
 
-    suspend fun loadClipData(clientId: String?, slug: String): ClipDataResponse {
+    suspend fun loadClipData(clientId: String?, slug: String?): ClipDataResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "ChannelClipCore")
             add("variables", JsonObject().apply {
@@ -68,7 +68,7 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getClipData(clientId, json)
     }
 
-    suspend fun loadClipVideo(clientId: String?, slug: String): ClipVideoResponse {
+    suspend fun loadClipVideo(clientId: String?, slug: String?): ClipVideoResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "ChatClip")
             add("variables", JsonObject().apply {

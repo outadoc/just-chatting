@@ -1,0 +1,51 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory android:title="@string/streams" android:summary="@string/settings_token_summary" app:iconSpaceReserved="false"/>
+    <EditTextPreference
+        android:defaultValue="twitch-web-wall-mason"
+        android:dependency="token_random_deviceid"
+        android:key="token_xdeviceid"
+        android:maxLines="1"
+        android:title="X-Device-Id"
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
+
+    <EditTextPreference
+        android:defaultValue="twitch-web-wall-mason"
+        android:dependency="token_random_deviceid"
+        android:key="token_deviceid"
+        android:maxLines="1"
+        android:title="Device-ID"
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:disableDependentsState="true"
+        android:key="token_random_deviceid"
+        android:title="@string/token_random_deviceid"
+        app:iconSpaceReserved="false" />
+
+    <EditTextPreference
+        android:defaultValue="site"
+        android:key="token_playertype"
+        android:maxLines="1"
+        android:title="playerType"
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
+
+    <SwitchPreferenceCompat
+        android:defaultValue="false"
+        android:key="token_include_token_stream"
+        android:title="@string/include_gql_token"
+        app:iconSpaceReserved="false" />
+
+    <PreferenceCategory android:title="@string/videos" app:iconSpaceReserved="false"/>
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="token_include_token_video"
+        android:title="@string/include_gql_token"
+        app:iconSpaceReserved="false" />
+
+</androidx.preference.PreferenceScreen>

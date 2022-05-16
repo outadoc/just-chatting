@@ -361,48 +361,17 @@
         android:key="adblock"
         android:summary="@string/adblock_desc"
         android:title="@string/adblock"
-        android:disableDependentsState="true"
         app:iconSpaceReserved="false"/>
 
-    <PreferenceCategory android:title="@string/settings_token" android:summary="@string/settings_token_summary" app:iconSpaceReserved="false"/>
-    <EditTextPreference
-        android:defaultValue="twitch-web-wall-mason"
-        android:key="token_xdeviceid"
-        android:maxLines="1"
-        android:title="X-Device-Id"
-        android:dependency="token_random_deviceid"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
-
-    <EditTextPreference
-        android:defaultValue="twitch-web-wall-mason"
-        android:key="token_deviceid"
-        android:maxLines="1"
-        android:title="Device-ID"
-        android:dependency="token_random_deviceid"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="token_random_deviceid"
-        android:title="@string/token_random_deviceid"
-        android:dependency="adblock"
-        android:disableDependentsState="true"
-        app:iconSpaceReserved="false"/>
-
-    <EditTextPreference
-        android:defaultValue="site"
-        android:key="token_playertype"
-        android:maxLines="1"
-        android:title="playerType"
-        app:useSimpleSummaryProvider="true"
+    <Preference
+        android:key="token_settings"
+        android:title="@string/token_settings"
+        app:allowDividerAbove="true"
         app:iconSpaceReserved="false" />
 
     <Preference
         android:key="api_settings"
         android:title="@string/api_settings"
-        app:allowDividerAbove="true"
         app:iconSpaceReserved="false" />
 
     <Preference

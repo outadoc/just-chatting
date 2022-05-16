@@ -20,6 +20,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.VideoDownloadInfo
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.util.C
@@ -61,7 +62,11 @@ class VideoDownloadDialog : BaseDownloadDialog() {
         })
         requireArguments().getParcelable<VideoDownloadInfo?>(KEY_VIDEO_INFO).let {
             if (it == null) {
-                viewModel.setVideo(requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: "", requireArguments().getParcelable(KEY_VIDEO)!!)
+                viewModel.setVideo(
+                    gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
+                    gqlToken = if (requireContext().prefs().getBoolean(C.TOKEN_INCLUDE_TOKEN_VIDEO, true)) User.get(requireContext()).gqlToken else null,
+                    video = requireArguments().getParcelable(KEY_VIDEO)!!
+                )
             } else {
                 viewModel.setVideoInfo(it)
             }

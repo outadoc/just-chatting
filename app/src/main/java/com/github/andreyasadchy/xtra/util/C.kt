@@ -113,6 +113,8 @@ object C {
     const val TOKEN_DEVICEID = "token_deviceid"
     const val TOKEN_RANDOM_DEVICEID = "token_random_deviceid"
     const val TOKEN_PLAYERTYPE = "token_playertype"
+    const val TOKEN_INCLUDE_TOKEN_STREAM = "token_include_token_stream"
+    const val TOKEN_INCLUDE_TOKEN_VIDEO = "token_include_token_video"
     const val HELIX = "Helix"
     const val GQL_QUERY = "GQL custom query"
     const val GQL = "GQL"

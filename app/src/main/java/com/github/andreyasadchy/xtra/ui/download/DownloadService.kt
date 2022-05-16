@@ -12,6 +12,7 @@ import androidx.annotation.StringRes
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.offline.OfflineVideo
 import com.github.andreyasadchy.xtra.model.offline.Request
 import com.github.andreyasadchy.xtra.repository.OfflineRepository
@@ -171,7 +172,11 @@ class DownloadService : IntentService(TAG) {
             })
             GlobalScope.launch {
                 try {
-                    val response = playerRepository.loadVideoPlaylist(applicationContext.prefs().getString(C.GQL_CLIENT_ID, "") ?: "", request.videoId!!)
+                    val response = playerRepository.loadVideoPlaylist(
+                        gqlClientId = applicationContext.prefs().getString(C.GQL_CLIENT_ID, ""),
+                        gqlToken = if (applicationContext.prefs().getBoolean(C.TOKEN_INCLUDE_TOKEN_VIDEO, true)) User.get(applicationContext).gqlToken else null,
+                        videoId = request.videoId!!
+                    )
                     playlist = URL("https://.*\\.m3u8".toRegex().find(response.body()!!.string())!!.value).openStream().use {
                         PlaylistParser(it, Format.EXT_M3U, Encoding.UTF_8, ParsingMode.LENIENT).parse().mediaPlaylist
                     }

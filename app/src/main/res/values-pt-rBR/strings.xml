@@ -158,9 +158,7 @@
     <string name="cutoutmode_desc">Display content inside of the cutout area</string>
     <string name="cutoutmode_always">Always - Both portrait and landscape modes</string>
     <string name="adblock_not_working">TTV.LOL is offline. Disable Adblock to view streams in the meantime</string>
-    <string name="settings_token">PLAYLIST HEADERS</string>
     <string name="token_random_deviceid">Random device id</string>
-    <string name="settings_token_summary">for livestreams only, disable adblock</string>
     <string name="playback_speed">Velocidade de reprodução</string>
     <string name="quality">Qualidade</string>
     <string name="speed1">Normal</string>
@@ -518,4 +516,7 @@ Removes a timeout on a user.</string>
     <string name="restart_player">Restart player</string>
     <string name="show_quality_options">Show quality options</string>
     <string name="show_restart">Show restart button</string>
+    <string name="token_settings">Playback access token headers</string>
+    <string name="settings_token_summary">disable adblock to use</string>
+    <string name="include_gql_token">Include GQL token</string>
 </resources>

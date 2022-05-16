@@ -111,10 +111,11 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
         }
         if (prefs.getBoolean(C.FIRST_LAUNCH2, true)) {
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.root_preferences, false)
-            PreferenceManager.setDefaultValues(this@MainActivity, R.xml.api_preferences, true)
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.player_button_preferences, true)
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.player_menu_preferences, true)
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.buffer_preferences, true)
+            PreferenceManager.setDefaultValues(this@MainActivity, R.xml.token_preferences, true)
+            PreferenceManager.setDefaultValues(this@MainActivity, R.xml.api_preferences, true)
             prefs.edit {
                 putBoolean(C.FIRST_LAUNCH2, false)
                 putInt(C.LANDSCAPE_CHAT_WIDTH, DisplayUtils.calculateLandscapeWidthByPercent(this@MainActivity, 30))

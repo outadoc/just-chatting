@@ -156,8 +156,6 @@
     <string name="settings">Настройки</string>
     <string name="settings_chat">ЧАТ</string>
     <string name="settings_player">ПЛЕЕР</string>
-    <string name="settings_token">ЗАГОЛОВКИ ПЛЕЙЛИCТА</string>
-    <string name="settings_token_summary">только для прямых трансляций, отключите блокировщик</string>
     <string name="settings_ui">ИНТЕРФЕЙС</string>
     <string name="show_clearchat">Показывать тайм-ауты и запреты</string>
     <string name="show_clearmsg">Показывать удаления отдельных сообщений</string>
@@ -518,4 +516,7 @@ Removes a timeout on a user.</string>
     <string name="restart_player">Restart player</string>
     <string name="show_quality_options">Show quality options</string>
     <string name="show_restart">Show restart button</string>
+    <string name="token_settings">Playback access token headers</string>
+    <string name="settings_token_summary">disable adblock to use</string>
+    <string name="include_gql_token">Include GQL token</string>
 </resources>

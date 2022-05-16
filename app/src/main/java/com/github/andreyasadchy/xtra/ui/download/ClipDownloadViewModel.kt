@@ -27,7 +27,7 @@ class ClipDownloadViewModel @Inject constructor(
 
     private lateinit var clip: Clip
 
-    fun init(clientId: String, clip: Clip, qualities: Map<String, String>?) {
+    fun init(clientId: String?, clip: Clip, qualities: Map<String, String>?) {
         if (!this::clip.isInitialized) {
             this.clip = clip
             if (qualities == null) {

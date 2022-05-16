@@ -169,8 +169,6 @@
     <string name="settings_ui">ARAYÜZ</string>
     <string name="settings_chat">SOHBET</string>
     <string name="settings_player">OYNATICI</string>
-    <string name="settings_token">OYNATMA LİSTESİ BAŞLIKLARI</string>
-    <string name="settings_token_summary">sadece canlı yayınlar için, reklam engellemeyi devre dışı bırak</string>
     <string name="token_random_deviceid">Rastgele cihaz kimliği</string>
     <string name="api_helix">Helix istemci kimliği</string>
     <string name="api_gql">GQL istemci kimliği</string>
@@ -528,4 +526,7 @@ Bir kullanıcı üzerindeki zaman aşımını kaldırır.</string>
     <string name="restart_player">Restart player</string>
     <string name="show_quality_options">Show quality options</string>
     <string name="show_restart">Show restart button</string>
+    <string name="settings_token_summary">disable adblock to use</string>
+    <string name="token_settings">Playback access token headers</string>
+    <string name="include_gql_token">Include GQL token</string>
 </resources>

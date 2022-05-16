@@ -162,6 +162,9 @@ class XtraModule {
                 .registerTypeAdapter(FollowedVideosDataResponse::class.java, FollowedVideosDataDeserializer())
                 .registerTypeAdapter(FollowedChannelsDataResponse::class.java, FollowedChannelsDataDeserializer())
                 .registerTypeAdapter(FollowedGamesDataResponse::class.java, FollowedGamesDataDeserializer())
+                .registerTypeAdapter(FollowUserDataResponse::class.java, FollowUserDataDeserializer())
+                .registerTypeAdapter(FollowingUserDataResponse::class.java, FollowingUserDataDeserializer())
+                .registerTypeAdapter(FollowingGameDataResponse::class.java, FollowingGameDataDeserializer())
                 .create())
     }
 

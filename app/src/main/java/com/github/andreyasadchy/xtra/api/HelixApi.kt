@@ -57,7 +57,7 @@ interface HelixApi {
     suspend fun getChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("query") query: String, @Query("first") limit: Int, @Query("after") offset: String?): ChannelSearchResponse
 
     @GET("users/follows")
-    suspend fun getUserFollows(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("to_id") userId: String, @Query("from_id") channelId: String): FollowResponse
+    suspend fun getUserFollows(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("to_id") userId: String?, @Query("from_id") channelId: String?): FollowResponse
 
     @GET("users/follows")
     suspend fun getFollowedChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Query("from_id") userId: String?, @Query("first") limit: Int, @Query("after") offset: String?): FollowResponse

@@ -38,6 +38,7 @@
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="token_include_token_stream"
+        android:summary="@string/sub_only_summary"
         android:title="@string/include_gql_token"
         app:iconSpaceReserved="false" />
 
@@ -45,6 +46,7 @@
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="token_include_token_video"
+        android:summary="@string/sub_only_summary"
         android:title="@string/include_gql_token"
         app:iconSpaceReserved="false" />
 

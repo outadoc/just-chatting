@@ -503,4 +503,9 @@
     <string name="token_settings">再生時のアクセストークンのヘッダー</string>
     <string name="settings_token_summary">Adblockを無効化し使用する</string>
     <string name="include_gql_token">GQLのトークンを含める</string>
+    <string name="sub_only_summary">For sub only content</string>
+    <string name="follow_button">Follow button</string>
+    <string name="hide">Hide</string>
+    <string name="follow_account">Follow using twitch account</string>
+    <string name="follow_local">Follow locally</string>
 </resources>

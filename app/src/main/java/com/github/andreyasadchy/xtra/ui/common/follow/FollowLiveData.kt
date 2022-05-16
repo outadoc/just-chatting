@@ -31,20 +31,33 @@ class FollowLiveData(
     private val helixClientId: String? = null,
     private val user: User,
     private val gqlClientId: String? = null,
+    private val setting: Int,
     private val viewModelScope: CoroutineScope) : MutableLiveData<Boolean>()  {
 
     init {
         viewModelScope.launch {
             try {
-                // val isFollowing = userId?.let { repository.loadUserFollows(clientId, user.token, it, user.id) }
-                val isLocalFollowing = userId?.let {
-                    if (localFollowsGame != null) {
-                        localFollowsGame.getFollowById(it)
-                    } else {
-                        localFollowsChannel?.getFollowById(it)
+                val isFollowing = if (setting == 0 && !user.gqlToken.isNullOrBlank()) {
+                    when {
+                        localFollowsGame != null && !user.gqlToken.isNullOrBlank() && !userName.isNullOrBlank() -> {
+                            repository.loadGameFollowing(gqlClientId, user.gqlToken, userName)
+                        }
+                        localFollowsChannel != null && ((!user.helixToken.isNullOrBlank() && !userId.isNullOrBlank() && !user.id.isNullOrBlank()) ||
+                                (!user.gqlToken.isNullOrBlank() && !userLogin.isNullOrBlank())) && user.id != userId -> {
+                            repository.loadUserFollowing(helixClientId, user.helixToken, userId, user.id, gqlClientId, user.gqlToken, userLogin)
+                        }
+                        else -> false
                     }
-                } != null
-                super.setValue(isLocalFollowing)
+                } else {
+                    userId?.let {
+                        if (localFollowsGame != null) {
+                            localFollowsGame.getFollowById(it)
+                        } else {
+                            localFollowsChannel?.getFollowById(it)
+                        }
+                    } != null
+                }
+                super.setValue(isFollowing)
             } catch (e: Exception) {
 
             }
@@ -54,25 +67,29 @@ class FollowLiveData(
     fun saveFollowChannel(context: Context) {
         GlobalScope.launch {
             try {
-                if (userId != null) {
-                    try {
-                        Glide.with(context)
-                            .asBitmap()
-                            .load(channelLogo)
-                            .into(object: CustomTarget<Bitmap>() {
-                                override fun onLoadCleared(placeholder: Drawable?) {
+                if (setting == 0 && !user.gqlToken.isNullOrBlank()) {
+                    repository.followUser(gqlClientId, user.gqlToken, userId)
+                } else {
+                    if (userId != null) {
+                        try {
+                            Glide.with(context)
+                                .asBitmap()
+                                .load(channelLogo)
+                                .into(object: CustomTarget<Bitmap>() {
+                                    override fun onLoadCleared(placeholder: Drawable?) {
 
-                                }
+                                    }
 
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                    DownloadUtils.savePng(context, "profile_pics", userId, resource)
-                                }
-                            })
-                    } catch (e: Exception) {
+                                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                        DownloadUtils.savePng(context, "profile_pics", userId, resource)
+                                    }
+                                })
+                        } catch (e: Exception) {
 
+                        }
+                        val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${userId}.png").absolutePath
+                        localFollowsChannel?.saveFollow(LocalFollowChannel(userId, userLogin, userName, downloadedLogo))
                     }
-                    val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${userId}.png").absolutePath
-                    localFollowsChannel?.saveFollow(LocalFollowChannel(userId, userLogin, userName, downloadedLogo))
                 }
             } catch (e: Exception) {
 
@@ -83,8 +100,12 @@ class FollowLiveData(
     fun deleteFollowChannel(context: Context) {
         viewModelScope.launch {
             try {
-                if (userId != null) {
-                    localFollowsChannel?.getFollowById(userId)?.let { localFollowsChannel.deleteFollow(context, it) }
+                if (setting == 0 && !user.gqlToken.isNullOrBlank()) {
+                    repository.unfollowUser(gqlClientId, user.gqlToken, userId)
+                } else {
+                    if (userId != null) {
+                        localFollowsChannel?.getFollowById(userId)?.let { localFollowsChannel.deleteFollow(context, it) }
+                    }
                 }
             } catch (e: Exception) {
 
@@ -95,31 +116,35 @@ class FollowLiveData(
     fun saveFollowGame(context: Context) {
         GlobalScope.launch {
             try {
-                if (userId != null) {
-                    if (channelLogo == null) {
-                        val get = repository.loadGameBoxArt(userId, helixClientId, user.helixToken, gqlClientId)
-                        if (get != null) {
-                            channelLogo = TwitchApiHelper.getTemplateUrl(get, "game")
+                if (setting == 0 && !user.gqlToken.isNullOrBlank()) {
+                    repository.followGame(gqlClientId, user.gqlToken, userId)
+                } else {
+                    if (userId != null) {
+                        if (channelLogo == null) {
+                            val get = repository.loadGameBoxArt(userId, helixClientId, user.helixToken, gqlClientId)
+                            if (get != null) {
+                                channelLogo = TwitchApiHelper.getTemplateUrl(get, "game")
+                            }
                         }
+                        try {
+                            Glide.with(context)
+                                .asBitmap()
+                                .load(channelLogo)
+                                .into(object: CustomTarget<Bitmap>() {
+                                    override fun onLoadCleared(placeholder: Drawable?) {
+
+                                    }
+
+                                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                        DownloadUtils.savePng(context, "box_art", userId, resource)
+                                    }
+                                })
+                        } catch (e: Exception) {
+
+                        }
+                        val downloadedLogo = File(context.filesDir.toString() + File.separator + "box_art" + File.separator + "${userId}.png").absolutePath
+                        localFollowsGame?.saveFollow(LocalFollowGame(userId, userName, downloadedLogo))
                     }
-                    try {
-                        Glide.with(context)
-                            .asBitmap()
-                            .load(channelLogo)
-                            .into(object: CustomTarget<Bitmap>() {
-                                override fun onLoadCleared(placeholder: Drawable?) {
-
-                                }
-
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                    DownloadUtils.savePng(context, "box_art", userId, resource)
-                                }
-                            })
-                    } catch (e: Exception) {
-
-                    }
-                    val downloadedLogo = File(context.filesDir.toString() + File.separator + "box_art" + File.separator + "${userId}.png").absolutePath
-                    localFollowsGame?.saveFollow(LocalFollowGame(userId, userName, downloadedLogo))
                 }
             } catch (e: Exception) {
 
@@ -130,8 +155,12 @@ class FollowLiveData(
     fun deleteFollowGame(context: Context) {
         viewModelScope.launch {
             try {
-                if (userId != null) {
-                    localFollowsGame?.getFollowById(userId)?.let { localFollowsGame.deleteFollow(context, it) }
+                if (setting == 0 && !user.gqlToken.isNullOrBlank()) {
+                    repository.unfollowGame(gqlClientId, user.gqlToken, userId)
+                } else {
+                    if (userId != null) {
+                        localFollowsGame?.getFollowById(userId)?.let { localFollowsGame.deleteFollow(context, it) }
+                    }
                 }
             } catch (e: Exception) {
 

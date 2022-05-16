@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string-array name="followButtonEntries">
+        <item>@string/follow_account</item>
+        <item>@string/follow_local</item>
+        <item>@string/hide</item>
+    </string-array>
+
     <string-array name="backgroundPlaybackEntries">
         <item>@string/picture_in_picture</item>
         <item>@string/audio_only</item>

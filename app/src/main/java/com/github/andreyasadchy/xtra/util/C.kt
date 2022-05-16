@@ -41,7 +41,7 @@ object C {
     const val UI_NAVBAR = "ui_navbar"
     const val UI_LANGUAGE = "ui_language"
     const val UI_CUTOUTMODE = "ui_cutoutmode"
-    const val UI_FOLLOW = "ui_follow"
+    const val UI_FOLLOW_BUTTON = "ui_follow_button"
     const val UI_UPTIME = "ui_uptime"
     const val UI_TAGS = "ui_tags"
     const val UI_SCROLLTOP = "ui_scrolltop"

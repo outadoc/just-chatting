@@ -53,8 +53,16 @@ class StreamsFragment : BaseStreamsFragment<StreamsViewModel>(), FollowFragment 
         sortBar.visible()
         if (arguments?.getString(C.GAME_ID) != null && arguments?.getString(C.GAME_NAME) != null) {
             sortBar.setOnClickListener { activity.openTagSearch(gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME)) }
-            if (requireContext().prefs().getBoolean(C.UI_FOLLOW, true)) {
-                parentFragment?.followGame?.let { initializeFollow(this, viewModel, it, User.get(activity), requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.GQL_CLIENT_ID, "")) }
+            if ((requireContext().prefs().getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0) < 2) {
+                parentFragment?.followGame?.let { initializeFollow(
+                    fragment = this,
+                    viewModel = viewModel,
+                    followButton = it,
+                    setting = requireContext().prefs().getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0,
+                    user = User.get(activity),
+                    helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+                    gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+                ) }
             }
             if (arguments?.getBoolean(C.CHANNEL_UPDATELOCAL) == true) {
                 viewModel.updateLocalGame(requireContext())

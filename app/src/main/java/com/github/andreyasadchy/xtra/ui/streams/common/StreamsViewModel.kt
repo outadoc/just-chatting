@@ -70,9 +70,9 @@ class StreamsViewModel @Inject constructor(
         get() = true
     override lateinit var follow: FollowLiveData
 
-    override fun setUser(user: User, helixClientId: String?, gqlClientId: String?) {
+    override fun setUser(user: User, helixClientId: String?, gqlClientId: String?, setting: Int) {
         if (!this::follow.isInitialized) {
-            follow = FollowLiveData(localFollowsGame = localFollowsGame, userId = userId, userLogin = userLogin, userName = userName, channelLogo = channelLogo, repository = repository, helixClientId = helixClientId, user = user, gqlClientId = gqlClientId, viewModelScope = viewModelScope)
+            follow = FollowLiveData(localFollowsGame = localFollowsGame, userId = userId, userLogin = userLogin, userName = userName, channelLogo = channelLogo, repository = repository, helixClientId = helixClientId, user = user, gqlClientId = gqlClientId, setting = setting, viewModelScope = viewModelScope)
         }
     }
 

@@ -50,8 +50,16 @@ class GameVideosFragment : BaseVideosFragment<GameVideosViewModel>(), VideosSort
         )
         sortBar.setOnClickListener { VideosSortDialog.newInstance(sort = viewModel.sort, period = viewModel.period, type = viewModel.type, languageIndex = viewModel.languageIndex, saveSort = viewModel.saveSort).show(childFragmentManager, null) }
         val activity = requireActivity() as MainActivity
-        if (requireContext().prefs().getBoolean(C.UI_FOLLOW, true)) {
-            parentFragment?.followGame?.let { initializeFollow(this, viewModel, it, User.get(activity), requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), requireContext().prefs().getString(C.GQL_CLIENT_ID, "")) }
+        if ((requireContext().prefs().getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0) < 2) {
+            parentFragment?.followGame?.let { initializeFollow(
+                fragment = this,
+                viewModel = viewModel,
+                followButton = it,
+                setting = requireContext().prefs().getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0,
+                user = User.get(activity),
+                helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+                gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+            ) }
         }
     }
 

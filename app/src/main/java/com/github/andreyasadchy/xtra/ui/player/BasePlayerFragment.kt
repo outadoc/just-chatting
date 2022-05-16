@@ -265,8 +265,16 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 playerView.showController()
             }
         }
-        if (this !is OfflinePlayerFragment && prefs.getBoolean(C.PLAYER_FOLLOW, true)) {
-            initializeFollow(this, (viewModel as FollowViewModel), view.findViewById(R.id.playerFollow), User.get(activity), prefs.getString(C.HELIX_CLIENT_ID, ""))
+        if (this !is OfflinePlayerFragment && prefs.getBoolean(C.PLAYER_FOLLOW, true) && (requireContext().prefs().getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0) < 2) {
+            initializeFollow(
+                fragment = this,
+                viewModel = (viewModel as FollowViewModel),
+                followButton = view.findViewById(R.id.playerFollow),
+                setting = prefs.getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0,
+                user = User.get(activity),
+                helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""),
+                gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+            )
         }
         if (this !is ClipPlayerFragment) {
             viewModel.sleepTimer.observe(viewLifecycleOwner) {

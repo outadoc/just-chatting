@@ -11,5 +11,5 @@ interface FollowViewModel {
     val game: Boolean
         get() = false
 
-    fun setUser(user: User, helixClientId: String?, gqlClientId: String?)
+    fun setUser(user: User, helixClientId: String?, gqlClientId: String?, setting: Int)
 }

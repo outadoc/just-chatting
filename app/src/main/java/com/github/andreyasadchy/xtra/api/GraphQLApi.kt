@@ -6,10 +6,7 @@ import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResp
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipUrlsResponse
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipVideoResponse
-import com.github.andreyasadchy.xtra.model.gql.followed.FollowedChannelsDataResponse
-import com.github.andreyasadchy.xtra.model.gql.followed.FollowedGamesDataResponse
-import com.github.andreyasadchy.xtra.model.gql.followed.FollowedStreamsDataResponse
-import com.github.andreyasadchy.xtra.model.gql.followed.FollowedVideosDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.*
 import com.github.andreyasadchy.xtra.model.gql.game.GameClipsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameStreamsDataResponse
@@ -23,6 +20,7 @@ import com.github.andreyasadchy.xtra.model.gql.stream.ViewersDataResponse
 import com.github.andreyasadchy.xtra.model.gql.tag.*
 import com.github.andreyasadchy.xtra.model.gql.vod.VodGamesDataResponse
 import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -111,6 +109,24 @@ interface GraphQLApi {
 
     @POST(".")
     suspend fun getFollowedGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedGamesDataResponse
+
+    @POST(".")
+    suspend fun getFollowUser(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowUserDataResponse
+
+    @POST(".")
+    suspend fun getUnfollowUser(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): JsonElement
+
+    @POST(".")
+    suspend fun getFollowGame(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): JsonElement
+
+    @POST(".")
+    suspend fun getUnfollowGame(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): JsonElement
+
+    @POST(".")
+    suspend fun getFollowingUser(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowingUserDataResponse
+
+    @POST(".")
+    suspend fun getFollowingGame(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowingGameDataResponse
 
     @POST(".")
     suspend fun getChannelPanel(@Body json: JsonArray): Response<ResponseBody>

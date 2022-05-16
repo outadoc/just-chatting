@@ -7,10 +7,7 @@ import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResponse
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
 import com.github.andreyasadchy.xtra.model.gql.clip.ClipVideoResponse
-import com.github.andreyasadchy.xtra.model.gql.followed.FollowedChannelsDataResponse
-import com.github.andreyasadchy.xtra.model.gql.followed.FollowedGamesDataResponse
-import com.github.andreyasadchy.xtra.model.gql.followed.FollowedStreamsDataResponse
-import com.github.andreyasadchy.xtra.model.gql.followed.FollowedVideosDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.*
 import com.github.andreyasadchy.xtra.model.gql.game.GameClipsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameDataResponse
 import com.github.andreyasadchy.xtra.model.gql.game.GameStreamsDataResponse
@@ -22,6 +19,7 @@ import com.github.andreyasadchy.xtra.model.gql.stream.ViewersDataResponse
 import com.github.andreyasadchy.xtra.model.gql.tag.*
 import com.github.andreyasadchy.xtra.model.gql.vod.VodGamesDataResponse
 import com.google.gson.JsonArray
+import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -503,6 +501,111 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
             })
         }
         return graphQL.getFollowedGames(clientId, token, json)
+    }
+
+    suspend fun loadFollowUser(clientId: String?, token: String?, userId: String?): FollowUserDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "FollowButton_FollowUser")
+            add("variables", JsonObject().apply {
+                add("input", JsonObject().apply {
+                    addProperty("disableNotifications", false)
+                    addProperty("targetID", userId)
+                })
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "800e7346bdf7e5278a3c1d3f21b2b56e2639928f86815677a7126b093b2fdd08")
+                })
+            })
+        }
+        return graphQL.getFollowUser(clientId, token, json)
+    }
+
+    suspend fun loadUnfollowUser(clientId: String?, token: String?, userId: String?): JsonElement {
+        val json = JsonObject().apply {
+            addProperty("operationName", "FollowButton_UnfollowUser")
+            add("variables", JsonObject().apply {
+                add("input", JsonObject().apply {
+                    addProperty("targetID", userId)
+                })
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "f7dae976ebf41c755ae2d758546bfd176b4eeb856656098bb40e0a672ca0d880")
+                })
+            })
+        }
+        return graphQL.getUnfollowUser(clientId, token, json)
+    }
+
+    suspend fun loadFollowGame(clientId: String?, token: String?, gameId: String?): JsonElement {
+        val json = JsonObject().apply {
+            addProperty("operationName", "FollowGameButton_FollowGame")
+            add("variables", JsonObject().apply {
+                add("input", JsonObject().apply {
+                    addProperty("gameID", gameId)
+                })
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "b846b65ba4bc9a3561dbe2d069d95deed9b9e031bcfda2482d1bedd84a1c2eb3")
+                })
+            })
+        }
+        return graphQL.getFollowGame(clientId, token, json)
+    }
+
+    suspend fun loadUnfollowGame(clientId: String?, token: String?, gameId: String?): JsonElement {
+        val json = JsonObject().apply {
+            addProperty("operationName", "FollowGameButton_UnfollowGame")
+            add("variables", JsonObject().apply {
+                add("input", JsonObject().apply {
+                    addProperty("gameID", gameId)
+                })
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "811e02e396ebba0664f21ff002f2eff3c6f57e8af9aedb4f4dfa77cefd0db43d")
+                })
+            })
+        }
+        return graphQL.getUnfollowGame(clientId, token, json)
+    }
+
+    suspend fun loadFollowingUser(clientId: String?, token: String?, userLogin: String?): FollowingUserDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "ChannelSupportButtons")
+            add("variables", JsonObject().apply {
+                addProperty("channelLogin", userLogin)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "834a75e1c06cffada00f0900664a5033e392f6fb655fae8d2e25b21b340545a9")
+                })
+            })
+        }
+        return graphQL.getFollowingUser(clientId, token, json)
+    }
+
+    suspend fun loadFollowingGame(clientId: String?, token: String?, gameName: String?): FollowingGameDataResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "FollowGameButton_Game")
+            add("variables", JsonObject().apply {
+                addProperty("name", gameName)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "cfeda60899b6b867b2d7f30c8556778c4a9cc8268bd1aadd9f88134a0f642a02")
+                })
+            })
+        }
+        return graphQL.getFollowingGame(clientId, token, json)
     }
 
     suspend fun loadChannelPanel(channelId: String): String? = withContext(Dispatchers.IO) {

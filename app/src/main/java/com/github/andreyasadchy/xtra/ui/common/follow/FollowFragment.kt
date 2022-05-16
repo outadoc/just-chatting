@@ -9,10 +9,10 @@ import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.visible
 
 interface FollowFragment {
-    fun initializeFollow(fragment: Fragment, viewModel: FollowViewModel, followButton: ImageButton, user: User, helixClientId: String? = null, gqlClientId: String? = null) {
+    fun initializeFollow(fragment: Fragment, viewModel: FollowViewModel, followButton: ImageButton, setting: Int, user: User, helixClientId: String? = null, gqlClientId: String? = null) {
         val context = fragment.requireContext()
         with(viewModel) {
-            setUser(user, helixClientId, gqlClientId)
+            setUser(user, helixClientId, gqlClientId, setting)
             followButton.visible()
             var initialized = false
             val channelName = userName
@@ -22,23 +22,25 @@ interface FollowFragment {
                 } else {
                     initialized = true
                 }
-                followButton.setOnClickListener {
-                    if (!following) {
-                        if (game) {
-                            follow.saveFollowGame(context)
+                if (user.id != userId) {
+                    followButton.setOnClickListener {
+                        if (!following) {
+                            if (game) {
+                                follow.saveFollowGame(context)
+                            } else {
+                                follow.saveFollowChannel(context)
+                            }
+                            follow.value = true
                         } else {
-                            follow.saveFollowChannel(context)
-                        }
-                        follow.value = true
-                    } else {
-                        if (channelName != null) {
-                            FragmentUtils.showUnfollowDialog(context, channelName) {
-                                if (game) {
-                                    follow.deleteFollowGame(context)
-                                } else {
-                                    follow.deleteFollowChannel(context)
+                            if (channelName != null) {
+                                FragmentUtils.showUnfollowDialog(context, channelName) {
+                                    if (game) {
+                                        follow.deleteFollowGame(context)
+                                    } else {
+                                        follow.deleteFollowChannel(context)
+                                    }
+                                    follow.value = false
                                 }
-                                follow.value = false
                             }
                         }
                     }

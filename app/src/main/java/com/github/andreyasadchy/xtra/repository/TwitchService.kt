@@ -47,11 +47,16 @@ interface TwitchService {
     suspend fun loadUsersByLogin(logins: List<String>, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<User>?
     suspend fun loadUserTypes(ids: List<String>, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<User>?
     suspend fun loadCheerEmotes(userId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<CheerEmote>?
-    suspend fun loadEmotesFromSet(clientId: String?, userToken: String?, setIds: List<String>): List<TwitchEmote>?
-    suspend fun loadUserFollows(clientId: String?, userToken: String?, userId: String, channelId: String): Boolean
+    suspend fun loadEmotesFromSet(helixClientId: String?, helixToken: String?, setIds: List<String>): List<TwitchEmote>?
+    suspend fun loadUserFollowing(helixClientId: String?, helixToken: String?, userId: String?, channelId: String?, gqlClientId: String?, gqlToken: String?, userLogin: String?): Boolean
+    suspend fun loadGameFollowing(gqlClientId: String?, gqlToken: String?, gameName: String?): Boolean
     suspend fun loadVideoChatLog(gqlClientId: String?, videoId: String, offsetSeconds: Double): VideoMessagesResponse
     suspend fun loadVideoChatAfter(gqlClientId: String?, videoId: String, cursor: String): VideoMessagesResponse
     suspend fun loadVodGamesGQL(clientId: String?, videoId: String?): List<Game>?
     suspend fun loadChannelViewerListGQL(clientId: String?, channelLogin: String?): ChannelViewerList
+    suspend fun followUser(gqlClientId: String?, gqlToken: String?, userId: String?): Boolean
+    suspend fun unfollowUser(gqlClientId: String?, gqlToken: String?, userId: String?): Boolean
+    suspend fun followGame(gqlClientId: String?, gqlToken: String?, gameId: String?): Boolean
+    suspend fun unfollowGame(gqlClientId: String?, gqlToken: String?, gameId: String?): Boolean
     fun loadTagsGQL(clientId: String?, getGameTags: Boolean, gameId: String?, gameName: String?, query: String?, coroutineScope: CoroutineScope): Listing<Tag>
 }

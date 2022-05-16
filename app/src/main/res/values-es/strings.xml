@@ -519,4 +519,9 @@ Removes a timeout on a user.</string>
     <string name="token_settings">Playback access token headers</string>
     <string name="settings_token_summary">disable adblock to use</string>
     <string name="include_gql_token">Include GQL token</string>
+    <string name="sub_only_summary">For sub only content</string>
+    <string name="follow_button">Follow button</string>
+    <string name="hide">Hide</string>
+    <string name="follow_account">Follow using twitch account</string>
+    <string name="follow_local">Follow locally</string>
 </resources>

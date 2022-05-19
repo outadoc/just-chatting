@@ -508,4 +508,5 @@
     <string name="hide">Hide</string>
     <string name="follow_account">Follow using twitch account</string>
     <string name="follow_local">Follow locally</string>
+    <string name="chat_ssl">Connect using SSL</string>
 </resources>

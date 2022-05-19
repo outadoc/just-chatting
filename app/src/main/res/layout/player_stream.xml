@@ -5,17 +5,19 @@
     android:layout_height="match_parent">
 
     <View style="@style/PlayerShadow" />
-    <ImageButton style="@style/PlayerPlay"/>
+    <ImageButton
+        style="@style/PlayerPlay"
+        tools:visibility="gone" />
     <ImageButton style="@style/PlayerPause"/>
 
-    <RelativeLayout style="@style/PlayerTopLeftPanel">
+    <LinearLayout style="@style/PlayerTopLeftPanel">
         <ImageButton
             style="@style/PlayerMinimize"
             tools:visibility="visible" />
         <TextView
             style="@style/PlayerChannel"
             tools:visibility="visible" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout style="@style/PlayerTopRightPanel">
         <ImageButton

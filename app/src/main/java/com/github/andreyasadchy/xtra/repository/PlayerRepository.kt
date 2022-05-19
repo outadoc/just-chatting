@@ -82,7 +82,7 @@ class PlayerRepository @Inject constructor(
         val playlistQueryOptions = HashMap<String, String>()
         playlistQueryOptions["allow_source"] = "true"
         playlistQueryOptions["allow_audio_only"] = "true"
-        playlistQueryOptions["p"] = Random.nextInt(999999).toString()
+        playlistQueryOptions["p"] = Random.nextInt(9999999).toString()
         playlistQueryOptions["sig"] = accessToken.signature
         playlistQueryOptions["token"] = accessToken.token
         usher.getVideoPlaylist(videoId, playlistQueryOptions)

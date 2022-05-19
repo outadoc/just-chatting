@@ -88,9 +88,10 @@ class ChatViewModel @Inject constructor(
     val chatters: Collection<Chatter>
         get() = (chat as LiveChatController).chatters.values
 
-    fun startLive(user: User, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
+    fun startLive(useSSl: Boolean, user: User, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
         if (chat == null && channelLogin != null && channelName != null) {
             chat = LiveChatController(
+                useSSl = useSSl,
                 user = user,
                 helixClientId = helixClientId,
                 channelId = channelId,
@@ -262,6 +263,7 @@ class ChatViewModel @Inject constructor(
     }
 
     inner class LiveChatController(
+            private val useSSl: Boolean,
             private val user: User,
             private val helixClientId: String?,
             private val channelId: String?,
@@ -299,15 +301,17 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(user is LoggedIn, channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this)
+            chat = TwitchApiHelper.startChat(useSSl, user is LoggedIn, channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this)
             if (user is LoggedIn) {
-                loggedInChat = TwitchApiHelper.startLoggedInChat(user.login, user.gqlToken?.nullIfEmpty() ?: user.helixToken, channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this)
+                loggedInChat = TwitchApiHelper.startLoggedInChat(useSSl, user.login, user.gqlToken?.nullIfEmpty() ?: user.helixToken, channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this)
             }
         }
 
         override fun pause() {
-            chat?.disconnect()
-            loggedInChat?.disconnect()
+            viewModelScope.launch {
+                chat?.disconnect()
+                loggedInChat?.disconnect()
+            }
         }
 
         override fun stop() {
@@ -392,8 +396,10 @@ class ChatViewModel @Inject constructor(
 
         fun disconnect() {
             if (chat?.isActive == true) {
-                chat?.disconnect()
-                loggedInChat?.disconnect()
+                viewModelScope.launch {
+                    chat?.disconnect()
+                    loggedInChat?.disconnect()
+                }
                 roomState.postValue(RoomState(null, null, null, null, null))
                 command.postValue(Command(type = "disconnect_command"))
             }

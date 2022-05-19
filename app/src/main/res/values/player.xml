@@ -20,8 +20,8 @@
     </style>
 
     <style name="PlayerLargeImage" parent="PlayerImage">
-        <item name="android:layout_width">100dp</item>
-        <item name="android:layout_height">100dp</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
     </style>
 
     <style name="PlayerTopRightPanel">
@@ -120,8 +120,8 @@
     <style name="PlayerRewind" parent="PlayerLargeImage">
         <item name="android:id">@id/exo_rew</item>
         <item name="android:layout_centerVertical">true</item>
-        <item name="android:layout_marginLeft">30dp</item>
-        <item name="android:layout_marginStart">30dp</item>
+        <item name="android:layout_marginLeft">50dp</item>
+        <item name="android:layout_marginStart">50dp</item>
     </style>
 
     <style name="PlayerForward" parent="PlayerLargeImage">
@@ -129,8 +129,8 @@
         <item name="android:layout_centerVertical">true</item>
         <item name="android:layout_alignParentEnd">true</item>
         <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_marginEnd">30dp</item>
-        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:layout_marginEnd">50dp</item>
+        <item name="android:layout_marginRight">50dp</item>
     </style>
 
     <style name="PlayerPlay" parent="PlayerLargeImage">
@@ -156,14 +156,17 @@
         <item name="android:id">@id/playerChannel</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">30dp</item>
-        <item name="android:layout_toRightOf">@id/playerMinimize</item>
-        <item name="android:layout_toEndOf">@id/playerMinimize</item>
         <item name="android:layout_marginStart">5dp</item>
         <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginTop">7dp</item>
+        <item name="android:layout_marginTop">5dp</item>
         <item name="android:layout_marginEnd">5dp</item>
         <item name="android:layout_marginRight">5dp</item>
-        <item name="android:singleLine">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="autoSizeMaxTextSize">20sp</item>
+        <item name="autoSizeMinTextSize">1sp</item>
+        <item name="autoSizeStepGranularity">1sp</item>
+        <item name="autoSizeTextType">uniform</item>
         <item name="android:textSize">20sp</item>
         <item name="android:visibility">gone</item>
     </style>

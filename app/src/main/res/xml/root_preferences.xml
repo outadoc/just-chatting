@@ -280,6 +280,12 @@
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="chat_use_ssl"
+        android:title="@string/chat_ssl"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="chat_disable"
         android:title="@string/disable_chat"

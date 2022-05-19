@@ -1,13 +1,17 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.*
 import java.net.Socket
 import java.util.*
+import javax.net.ssl.SSLSocketFactory
 
 private const val TAG = "LiveChatThread"
 
 class LiveChatThread(
+    private val useSSl: Boolean,
     private val loggedIn: Boolean,
     private val channelName: String,
     private val listener: OnMessageReceivedListener) : Thread() {
@@ -43,7 +47,7 @@ class LiveChatThread(
                 }
             } catch (e: IOException) {
                 Log.d(TAG, "Disconnecting from $hashChannelName")
-                if (e.message != "Socket closed" && e.message != "Connection reset" && e.message != "recvfrom failed: ECONNRESET (Connection reset by peer)") {
+                if (e.message != "Socket closed" && e.message != "socket is closed" && e.message != "Connection reset" && e.message != "recvfrom failed: ECONNRESET (Connection reset by peer)") {
                     listener.onCommand(message = channelName, duration = e.toString(), type = "disconnect", fullMsg = e.stackTraceToString())
                 }
                 close()
@@ -56,9 +60,9 @@ class LiveChatThread(
     }
 
     private fun connect() {
-        Log.d(TAG, "Connecting to Twitch IRC")
+        Log.d(TAG, "Connecting to Twitch IRC - SSl $useSSl")
         try {
-            socketIn = Socket("irc.twitch.tv", 6667).apply {
+            socketIn = (if (useSSl) SSLSocketFactory.getDefault().createSocket("irc.twitch.tv", 6697) else Socket("irc.twitch.tv", 6667)).apply {
                 readerIn = BufferedReader(InputStreamReader(getInputStream()))
                 writerIn = BufferedWriter(OutputStreamWriter(getOutputStream()))
             }
@@ -74,7 +78,7 @@ class LiveChatThread(
         }
     }
 
-    fun disconnect() {
+    suspend fun disconnect() = withContext(Dispatchers.IO) {
         if (isActive) {
             isActive = false
             close()

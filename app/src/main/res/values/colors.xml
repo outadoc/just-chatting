@@ -14,4 +14,8 @@
     <color name="primaryBlue">#001446</color>
     <color name="secondaryBlue">#000F32</color>
     <color name="secondaryTextColorBlue">#46649B</color>
+    <color name="chatMessageFirst">#800a4028</color>
+    <color name="chatMessageReward">#800E4C68</color>
+    <color name="chatMessageNotice">#803E0E68</color>
+    <color name="chatMessageMention">#80680E0E</color>
 </resources>

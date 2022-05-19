@@ -243,16 +243,16 @@ class ChatAdapter(
                 builder.setSpan(ForegroundColorSpan(color), if (userName != null) userNameEndIndex + 1 else 0, builder.length, SPAN_EXCLUSIVE_EXCLUSIVE)
             }
             if (chatMessage.isFirst && firstmsgVisibility?.toInt() ?: 0 < 2) {
-                holder.textView.setBackgroundColor(Color.parseColor("#800a4028"))
+                holder.textView.setBackgroundResource(R.color.chatMessageFirst)
             } else {
                 if (chatMessage.isReward && firstmsgVisibility?.toInt() ?: 0 < 2) {
-                    holder.textView.setBackgroundColor(Color.parseColor("#802863ca"))
+                    holder.textView.setBackgroundResource(R.color.chatMessageReward)
                 } else {
                     if (chatMessage.systemMsg != null || chatMessage.msgId != null) {
-                        holder.textView.setBackgroundColor(Color.parseColor("#80404040"))
+                        holder.textView.setBackgroundResource(R.color.chatMessageNotice)
                     } else {
                         if (wasMentioned && userId != null) {
-                            holder.textView.setBackgroundColor(Color.parseColor("#940025"))
+                            holder.textView.setBackgroundResource(R.color.chatMessageMention)
                         } else {
                             holder.textView.background = null
                         }

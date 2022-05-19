@@ -5,19 +5,25 @@
     android:layout_height="match_parent">
 
     <View style="@style/PlayerShadow" />
-    <ImageButton style="@style/PlayerPlay"/>
+    <ImageButton
+        style="@style/PlayerPlay"
+        tools:visibility="gone" />
     <ImageButton style="@style/PlayerPause"/>
-    <ImageButton style="@style/PlayerRewind"/>
-    <ImageButton style="@style/PlayerForward"/>
+    <ImageButton
+        style="@style/PlayerRewind"
+        tools:src="@drawable/baseline_replay_10_black_48" />
+    <ImageButton
+        style="@style/PlayerForward"
+        tools:src="@drawable/baseline_forward_10_black_48" />
 
-    <RelativeLayout style="@style/PlayerTopLeftPanel">
+    <LinearLayout style="@style/PlayerTopLeftPanel">
         <ImageButton
             style="@style/PlayerMinimize"
             tools:visibility="visible" />
         <TextView
             style="@style/PlayerChannel"
             tools:visibility="visible" />
-    </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout style="@style/PlayerTopRightPanel">
         <ImageButton
@@ -40,10 +46,10 @@
             tools:visibility="visible" />
     </LinearLayout>
 
-    <LinearLayout style="@style/PlayerBotLeftPanel"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentBottom="false"
-        android:layout_above="@id/exo_progress" >
+    <LinearLayout
+        style="@style/PlayerBotLeftPanel"
+        android:layout_above="@id/exo_progress"
+        android:layout_alignParentBottom="false">
         <ImageButton
             style="@style/PlayerGames"
             tools:visibility="visible" />
@@ -52,16 +58,20 @@
             tools:visibility="visible" />
     </LinearLayout>
 
-    <TextView style="@style/PlayerPosition"/>
+    <TextView
+        style="@style/PlayerPosition"
+        tools:text="12:16" />
     <com.google.android.exoplayer2.ui.DefaultTimeBar
         android:id="@id/exo_progress"
         style="@style/PlayerProgress"/>
-    <TextView style="@style/PlayerDuration" />
+    <TextView
+        style="@style/PlayerDuration"
+        tools:text="1:12:16" />
 
-    <LinearLayout style="@style/PlayerBotRightPanel"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentBottom="false"
-        android:layout_above="@id/exo_progress" >
+    <LinearLayout
+        style="@style/PlayerBotRightPanel"
+        android:layout_above="@id/exo_progress"
+        android:layout_alignParentBottom="false">
         <ImageButton
             style="@style/PlayerChatToggle"
             tools:src="@drawable/baseline_speaker_notes_black_24"

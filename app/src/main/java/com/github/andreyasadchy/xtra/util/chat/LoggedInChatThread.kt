@@ -2,14 +2,18 @@ package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.io.*
 import java.net.Socket
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
+import javax.net.ssl.SSLSocketFactory
 
 private const val TAG = "LoggedInChatThread"
 
 class LoggedInChatThread(
+    private val useSSl: Boolean,
     private val userLogin: String?,
     private val userToken: String?,
     private val channelName: String,
@@ -53,9 +57,9 @@ class LoggedInChatThread(
     }
 
     private fun connect() {
-        Log.d(TAG, "Connecting to Twitch IRC")
+        Log.d(TAG, "Connecting to Twitch IRC - SSl $useSSl")
         try {
-            socketOut = Socket("irc.twitch.tv", 6667).apply {
+            socketOut = (if (useSSl) SSLSocketFactory.getDefault().createSocket("irc.twitch.tv", 6697) else Socket("irc.twitch.tv", 6667)).apply {
                 readerOut = BufferedReader(InputStreamReader(getInputStream()))
                 writerOut = BufferedWriter(OutputStreamWriter(getOutputStream()))
                 write("PASS oauth:$userToken", writerOut)
@@ -71,7 +75,7 @@ class LoggedInChatThread(
         }
     }
 
-    fun disconnect() {
+    suspend fun disconnect() = withContext(Dispatchers.IO) {
         if (isActive) {
             isActive = false
             close()

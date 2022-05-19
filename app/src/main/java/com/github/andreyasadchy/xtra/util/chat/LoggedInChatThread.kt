@@ -2,8 +2,6 @@ package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import java.io.*
 import java.net.Socket
 import java.util.concurrent.Executor
@@ -75,10 +73,14 @@ class LoggedInChatThread(
         }
     }
 
-    suspend fun disconnect() = withContext(Dispatchers.IO) {
+    fun disconnect() {
         if (isActive) {
-            isActive = false
-            close()
+            val thread = Thread {
+                isActive = false
+                close()
+            }
+            thread.start()
+            thread.join()
         }
     }
 

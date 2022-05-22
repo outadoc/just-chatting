@@ -525,7 +525,7 @@ Bir kullanıcı üzerindeki zaman aşımını kaldırır.</string>
     <string name="show_player_menu">Oynatıcı menü düğmesini göster</string>
     <string name="restart_player">Oynatıcıyı yeniden başlat</string>
     <string name="show_quality_options">Kalite seçeneklerini göster</string>
-    <string name="show_restart">Yeniden başlat düğmesini göster/string>
+    <string name="show_restart">Yeniden başlat düğmesini göster</string>
     <string name="settings_token_summary">kullanmak için reklam engelleyiciyi devre dışı bırak</string>
     <string name="token_settings">Oynatma erişim belirteci başlıkları</string>
     <string name="include_gql_token">GQL belirtecini dahil et</string>

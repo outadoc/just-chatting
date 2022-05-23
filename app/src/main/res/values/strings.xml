@@ -535,4 +535,7 @@ Removes a timeout on a user.</string>
     <string name="follow_local">Follow locally</string>
     <string name="hide">Hide</string>
     <string name="chat_ssl">Connect using SSL</string>
+    <string name="redeemed">Redeemed %s</string>
+    <string name="user_redeemed">%1$s redeemed %2$s</string>
+    <string name="enable_pubsub">Enable PubSub</string>
 </resources>

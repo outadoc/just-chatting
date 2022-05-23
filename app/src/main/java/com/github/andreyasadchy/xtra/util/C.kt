@@ -110,6 +110,7 @@ object C {
     const val CHAT_SHOW_CLEARCHAT = "chat_show_clearchat"
     const val CHAT_DISABLE = "chat_disable"
     const val CHAT_USE_SSL = "chat_use_ssl"
+    const val CHAT_PUBSUB_ENABLED = "chat_pubsub_enabled"
     const val TOKEN_XDEVICEID = "token_xdeviceid"
     const val TOKEN_DEVICEID = "token_deviceid"
     const val TOKEN_RANDOM_DEVICEID = "token_random_deviceid"

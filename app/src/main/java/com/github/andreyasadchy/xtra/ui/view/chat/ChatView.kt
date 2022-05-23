@@ -59,6 +59,8 @@ class ChatView : ConstraintLayout {
 
     private var messageCallback: MessageSenderCallback? = null
 
+    private val rewardList = mutableListOf<Pair<LiveChatMessage?, PubSubPointReward?>>()
+
     constructor(context: Context) : super(context) {
         init(context)
     }
@@ -80,10 +82,22 @@ class ChatView : ConstraintLayout {
         emoteQuality = context.prefs().getInt(C.CHAT_QUALITY, 3)
         animateGifs = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
-        adapter = ChatAdapter(fragment, context.convertDpToPixels(29.5f), context.convertDpToPixels(18.5f), context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
-            context.prefs().getBoolean(C.CHAT_BOLDNAMES, false), context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true), context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
-            context.prefs().getString(C.CHAT_TIMESTAMP_FORMAT, "0"), context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0"), context.getString(R.string.chat_first),
-            context.getString(R.string.chat_reward), context.prefs().getString(C.CHAT_IMAGE_LIBRARY, "0"))
+        adapter = ChatAdapter(
+            fragment = fragment,
+            emoteSize = context.convertDpToPixels(29.5f),
+            badgeSize = context.convertDpToPixels(18.5f),
+            randomColor = context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
+            boldNames = context.prefs().getBoolean(C.CHAT_BOLDNAMES, false),
+            enableZeroWidth = context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true),
+            enableTimestamps = context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
+            timestampFormat = context.prefs().getString(C.CHAT_TIMESTAMP_FORMAT, "0"),
+            firstMsgVisibility = context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0"),
+            firstChatMsg = context.getString(R.string.chat_first),
+            rewardChatMsg = context.getString(R.string.chat_reward),
+            redeemedChatMsg = context.getString(R.string.redeemed),
+            redeemedNoMsg = context.getString(R.string.user_redeemed),
+            imageLibrary = context.prefs().getString(C.CHAT_IMAGE_LIBRARY, "0")
+        )
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null
@@ -217,6 +231,34 @@ class ChatView : ConstraintLayout {
         }
         adapter.messages?.add(LiveChatMessage(message = message, color = "#999999", isAction = true, emotes = command.emotes, timestamp = command.timestamp, fullMsg = command.fullMsg))
         notifyMessageAdded()
+    }
+
+    fun notifyReward(message: ChatMessage) {
+        if (message is LiveChatMessage) {
+            val item = rewardList.find { it.second?.id == message.rewardId && it.second?.userId == message.userId }
+            if (item != null) {
+                message.apply { pointReward = item.second }.let {
+                    rewardList.remove(item)
+                    adapter.messages?.add(it)
+                    notifyMessageAdded()
+                }
+            } else {
+                rewardList.add(Pair(message, null))
+            }
+        } else {
+            if (message is PubSubPointReward) {
+                val item = rewardList.find { it.first?.rewardId == message.id && it.first?.userId == message.userId }
+                if (item != null) {
+                    item.first?.apply { pointReward = message }?.let {
+                        rewardList.remove(item)
+                        adapter.messages?.add(it)
+                        notifyMessageAdded()
+                    }
+                } else {
+                    rewardList.add(Pair(null, message))
+                }
+            }
+        }
     }
 
     fun addRecentMessages(list: List<LiveChatMessage>) {

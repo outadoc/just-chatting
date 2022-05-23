@@ -286,6 +286,12 @@
         app:iconSpaceReserved="false"/>
 
     <SwitchPreferenceCompat
+        android:defaultValue="true"
+        android:key="chat_pubsub_enabled"
+        android:title="@string/enable_pubsub"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="chat_disable"
         android:title="@string/disable_chat"

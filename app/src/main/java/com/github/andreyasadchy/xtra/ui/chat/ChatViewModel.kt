@@ -69,6 +69,7 @@ class ChatViewModel @Inject constructor(
     val emotesLoaded = MutableLiveData<Boolean>()
     val roomState = MutableLiveData<RoomState>()
     val command = MutableLiveData<Command>()
+    val reward = MutableLiveData<ChatMessage>()
 
     private val _chatMessages by lazy {
         MutableLiveData<MutableList<ChatMessage>>().apply { value = Collections.synchronizedList(ArrayList(MAX_ADAPTER_COUNT + 1)) }
@@ -88,10 +89,11 @@ class ChatViewModel @Inject constructor(
     val chatters: Collection<Chatter>
         get() = (chat as LiveChatController).chatters.values
 
-    fun startLive(useSSl: Boolean, user: User, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
+    fun startLive(useSSl: Boolean, usePubSub: Boolean, user: User, helixClientId: String?, gqlClientId: String, channelId: String?, channelLogin: String?, channelName: String?, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, enableRecentMsg: Boolean? = false, recentMsgLimit: String? = null) {
         if (chat == null && channelLogin != null && channelName != null) {
             chat = LiveChatController(
                 useSSl = useSSl,
+                usePubSub = usePubSub,
                 user = user,
                 helixClientId = helixClientId,
                 channelId = channelId,
@@ -264,6 +266,7 @@ class ChatViewModel @Inject constructor(
 
     inner class LiveChatController(
             private val useSSl: Boolean,
+            private val usePubSub: Boolean,
             private val user: User,
             private val helixClientId: String?,
             private val channelId: String?,
@@ -271,10 +274,11 @@ class ChatViewModel @Inject constructor(
             displayName: String,
             private val showUserNotice: Boolean,
             private val showClearMsg: Boolean,
-            private val showClearChat: Boolean) : ChatController() {
+            private val showClearChat: Boolean) : ChatController(), OnUserStateReceivedListener, OnRoomStateReceivedListener, OnCommandReceivedListener, OnRewardReceivedListener {
 
         private var chat: LiveChatThread? = null
         private var loggedInChat: LoggedInChatThread? = null
+        private var pubSub: PubSubWebSocket? = null
         private val allEmotesMap = mutableMapOf<String, Emote>()
 
         val chatters = ConcurrentHashMap<String?, Chatter>()
@@ -301,15 +305,19 @@ class ChatViewModel @Inject constructor(
 
         override fun start() {
             pause()
-            chat = TwitchApiHelper.startChat(useSSl, user is LoggedIn, channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this)
+            chat = TwitchApiHelper.startChat(useSSl, user is LoggedIn, channelLogin, showUserNotice, showClearMsg, showClearChat, usePubSub, this, this, this, this, this)
             if (user is LoggedIn) {
-                loggedInChat = TwitchApiHelper.startLoggedInChat(useSSl, user.login, user.gqlToken?.nullIfEmpty() ?: user.helixToken, channelLogin, showUserNotice, showClearMsg, showClearChat, this, this, this, this)
+                loggedInChat = TwitchApiHelper.startLoggedInChat(useSSl, user.login, user.gqlToken?.nullIfEmpty() ?: user.helixToken, channelLogin, showUserNotice, showClearMsg, showClearChat, usePubSub, this, this, this, this, this)
+            }
+            if (usePubSub && !channelId.isNullOrBlank()) {
+                TwitchApiHelper.startPubSub(channelId, viewModelScope, this, this)
             }
         }
 
         override fun pause() {
             chat?.disconnect()
             loggedInChat?.disconnect()
+            pubSub?.disconnect()
         }
 
         override fun stop() {
@@ -318,9 +326,9 @@ class ChatViewModel @Inject constructor(
 
         override fun onMessage(message: ChatMessage) {
             super.onMessage(message)
-            if (message.displayName != null && !chatters.containsKey(message.displayName)) {
-                val chatter = Chatter(message.displayName)
-                chatters[message.displayName] = chatter
+            if (message.userName != null && !chatters.containsKey(message.userName)) {
+                val chatter = Chatter(message.userName)
+                chatters[message.userName] = chatter
                 _newChatter.postValue(chatter)
             }
         }
@@ -382,6 +390,10 @@ class ChatViewModel @Inject constructor(
             command.postValue(list)
         }
 
+        override fun onReward(message: ChatMessage) {
+            reward.postValue(message)
+        }
+
         fun addEmotes(list: List<Emote>) {
             if (user is LoggedIn) {
                 allEmotesMap.putAll(list.associateBy { it.name })
@@ -396,6 +408,7 @@ class ChatViewModel @Inject constructor(
             if (chat?.isActive == true) {
                 chat?.disconnect()
                 loggedInChat?.disconnect()
+                pubSub?.disconnect()
                 roomState.postValue(RoomState(null, null, null, null, null))
                 command.postValue(Command(type = "disconnect_command"))
             }
@@ -426,18 +439,9 @@ class ChatViewModel @Inject constructor(
         override fun stop() {
             chatReplayManager?.stop()
         }
-
-        override fun onUserState(sets: List<String>?) {
-        }
-
-        override fun onRoomState(list: RoomState) {
-        }
-
-        override fun onCommand(list: Command) {
-        }
     }
 
-    abstract inner class ChatController : OnChatMessageReceivedListener, OnUserStateReceivedListener, OnRoomStateReceivedListener, OnCommandReceivedListener {
+    abstract inner class ChatController : OnChatMessageReceivedListener {
         abstract fun send(message: CharSequence)
         abstract fun start()
         abstract fun pause()

@@ -25,8 +25,14 @@ data class VideoChatMessage(
         @SerializedName("more_replies")
         val moreReplies: Boolean) : ChatMessage {
 
-    override val login: String
+    override val userId: String?
+        get() = commenter?.id
+
+    override val userLogin: String
         get() = commenter?.name.orEmpty()
+
+    override val userName: String
+        get() = commenter?.displayName.orEmpty()
 
     override val message: String
         get() = messageObj.body
@@ -42,27 +48,6 @@ data class VideoChatMessage(
 
     override val badges: List<Badge>?
         get() = messageObj.userBadges
-
-    override val displayName: String
-        get() = commenter?.displayName.orEmpty()
-
-    override val userId: String?
-        get() = commenter?.id
-
-    override val isReward: Boolean
-        get() = false
-
-    override val isFirst: Boolean
-        get() = false
-
-    override val msgId: String?
-        get() = null
-
-    override val systemMsg: String?
-        get() = null
-
-    override val timestamp: Long?
-        get() = null
 
     override val fullMsg: String
         get() = messageObj.toString()

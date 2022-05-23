@@ -535,4 +535,7 @@ Bir kullanıcı üzerindeki zaman aşımını kaldırır.</string>
     <string name="follow_account">Twitch hesabını kullanarak takip et</string>
     <string name="follow_local">Yerel olarak takip et</string>
     <string name="chat_ssl">SSL kullanarak bağlan</string>
+    <string name="redeemed">Redeemed %s</string>
+    <string name="user_redeemed">%1$s redeemed %2$s</string>
+    <string name="enable_pubsub">Enable PubSub</string>
 </resources>

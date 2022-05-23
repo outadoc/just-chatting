@@ -31,23 +31,26 @@ import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.ui.view.chat.animateGifs
+import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import java.util.*
 import kotlin.collections.set
 
 class ChatAdapter(
-        private val fragment: Fragment,
-        private val emoteSize: Int,
-        private val badgeSize: Int,
-        private val randomColor: Boolean,
-        private val boldNames: Boolean,
-        private val enableZeroWidth: Boolean,
-        private val enableTimestamps: Boolean,
-        private val timestampFormat: String?,
-        private val firstmsgVisibility: String?,
-        private val firstChatMsg: String,
-        private val rewardChatMsg: String,
-        private val imageLibrary: String?) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+    private val fragment: Fragment,
+    private val emoteSize: Int,
+    private val badgeSize: Int,
+    private val randomColor: Boolean,
+    private val boldNames: Boolean,
+    private val enableZeroWidth: Boolean,
+    private val enableTimestamps: Boolean,
+    private val timestampFormat: String?,
+    private val firstMsgVisibility: String?,
+    private val firstChatMsg: String,
+    private val rewardChatMsg: String,
+    private val redeemedChatMsg: String,
+    private val redeemedNoMsg: String,
+    private val imageLibrary: String?) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
         set(value) {
@@ -77,40 +80,57 @@ class ChatAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chatMessage = messages?.get(position) ?: return
+        val liveMessage = chatMessage as? LiveChatMessage
+        val pointReward = chatMessage as? PubSubPointReward ?: liveMessage?.pointReward
         val builder = SpannableStringBuilder()
         val images = ArrayList<Image>()
         var imageIndex = 0
         var badgesCount = 0
-        val msgId = chatMessage.msgId?.let { TwitchApiHelper.getMessageIdString(it) ?: chatMessage.msgId }
-        val systemMsg = chatMessage.systemMsg
+        val systemMsg = liveMessage?.systemMsg
         if (systemMsg != null) {
-            builder.append("$systemMsg \n")
-            imageIndex += systemMsg.length + 2
+            builder.append("$systemMsg\n")
+            imageIndex += systemMsg.length + 1
         } else {
+            val msgId = liveMessage?.msgId?.let { TwitchApiHelper.getMessageIdString(it) ?: liveMessage.msgId }
             if (msgId != null) {
-                builder.append("$msgId \n")
-                imageIndex += msgId.length + 2
+                builder.append("$msgId\n")
+                imageIndex += msgId.length + 1
             }
         }
-        if (chatMessage.isFirst && firstmsgVisibility == "0") {
-            builder.append("$firstChatMsg \n")
-            imageIndex += firstChatMsg.length + 2
+        if (liveMessage?.isFirst == true && firstMsgVisibility == "0") {
+            builder.append("$firstChatMsg\n")
+            imageIndex += firstChatMsg.length + 1
         }
-        if (chatMessage.isReward && firstmsgVisibility == "0") {
-            builder.append("$rewardChatMsg \n")
-            imageIndex += rewardChatMsg.length + 2
+        if (liveMessage?.rewardId != null && pointReward == null && firstMsgVisibility == "0") {
+            builder.append("$rewardChatMsg\n")
+            imageIndex += rewardChatMsg.length + 1
         }
-        val timestamp = chatMessage.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) }
+        if (!pointReward?.message.isNullOrBlank()) {
+            val string = redeemedChatMsg.format(pointReward?.rewardTitle)
+            builder.append("$string ")
+            imageIndex += string.length + 1
+            val url = when (emoteQuality) {
+                4 -> pointReward?.rewardImage?.url4
+                3 -> pointReward?.rewardImage?.url4
+                2 -> pointReward?.rewardImage?.url2
+                else -> pointReward?.rewardImage?.url1
+            }
+            url?.let {
+                builder.append("  ")
+                images.add(Image(it, imageIndex++, imageIndex++, false))
+                badgesCount++
+            }
+            builder.append("${pointReward?.rewardCost}\n")
+            imageIndex += (pointReward?.rewardCost?.toString()?.length ?: 0) + 1
+        }
+        val timestamp = liveMessage?.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) } ?: pointReward?.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) }
         if (enableTimestamps && timestamp != null) {
             builder.append("$timestamp ")
             builder.setSpan(ForegroundColorSpan(Color.parseColor("#999999")), imageIndex, imageIndex + timestamp.length, SPAN_INCLUSIVE_INCLUSIVE)
             imageIndex += timestamp.length + 1
         }
         chatMessage.badges?.forEach { chatBadge ->
-            var badge = channelBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
-            if (badge == null) {
-                badge = globalBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
-            }
+            val badge = channelBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version } ?: globalBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
             badge?.url?.let {
                 builder.append("  ")
                 images.add(Image(it, imageIndex++, imageIndex++, false))
@@ -119,13 +139,13 @@ class ChatAdapter(
         }
         val fullMsg = chatMessage.fullMsg
         val userId = chatMessage.userId
-        val userName = chatMessage.displayName
+        val userName = chatMessage.userName
         val userNameLength = userName?.length ?: 0
         val userNameEndIndex = imageIndex + userNameLength
         val originalMessage: String
         val userNameWithPostfixLength: Int
-        userName?.let { builder.append(it) }
-        if (userName != null) {
+        if (chatMessage !is PubSubPointReward && !userName.isNullOrBlank()) {
+            builder.append(userName)
             if (!chatMessage.isAction) {
                 builder.append(": ")
                 originalMessage = "$userName: ${chatMessage.message}"
@@ -136,18 +156,41 @@ class ChatAdapter(
                 userNameWithPostfixLength = userNameLength + 1
             }
         } else {
-            originalMessage = "${chatMessage.message}"
-            userNameWithPostfixLength = 0
-        }
-        builder.append(chatMessage.message)
-        val color = chatMessage.color.let { userColor ->
-            if (userColor == null) {
-                userColors[userName] ?: getRandomColor().also { if (userName != null) userColors[userName] = it }
+            if (chatMessage is PubSubPointReward && pointReward?.message.isNullOrBlank()) {
+                val string = redeemedNoMsg.format(userName, pointReward?.rewardTitle)
+                builder.append("$string ")
+                imageIndex += string.length + 1
+                val url = when (emoteQuality) {
+                    4 -> pointReward?.rewardImage?.url4
+                    3 -> pointReward?.rewardImage?.url4
+                    2 -> pointReward?.rewardImage?.url2
+                    else -> pointReward?.rewardImage?.url1
+                }
+                url?.let {
+                    builder.append("  ")
+                    images.add(Image(it, imageIndex++, imageIndex++, false))
+                    badgesCount++
+                }
+                builder.append("${pointReward?.rewardCost}")
+                imageIndex += pointReward?.rewardCost?.toString()?.length ?: 0
+                originalMessage = "$userName: ${chatMessage.message}"
+                userNameWithPostfixLength = string.length + (pointReward?.rewardCost?.toString()?.length ?: 0) + 3
+                builder.setSpan(ForegroundColorSpan(Color.parseColor("#999999")), userNameWithPostfixLength - userNameWithPostfixLength, userNameWithPostfixLength, SPAN_INCLUSIVE_INCLUSIVE)
             } else {
-                savedColors[userColor] ?: Color.parseColor(userColor).also { savedColors[userColor] = it }
+                originalMessage = "${chatMessage.message}"
+                userNameWithPostfixLength = 0
             }
         }
-        if (userName != null) {
+        builder.append(chatMessage.message)
+        val color = if (chatMessage is PubSubPointReward) null else
+            chatMessage.color.let { userColor ->
+                if (userColor == null) {
+                    userColors[userName] ?: getRandomColor().also { if (userName != null) userColors[userName] = it }
+                } else {
+                    savedColors[userColor] ?: Color.parseColor(userColor).also { savedColors[userColor] = it }
+                }
+            }
+        if (color != null && userName != null) {
             builder.setSpan(ForegroundColorSpan(color), imageIndex, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
             builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), imageIndex, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
         }
@@ -203,7 +246,7 @@ class ChatAdapter(
                             builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), builderIndex, endIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
                         }
                         loggedInUser?.let {
-                            if (!wasMentioned && value.contains(it, true) && chatMessage.login != it) {
+                            if (!wasMentioned && value.contains(it, true) && chatMessage.userLogin != it) {
                                 wasMentioned = true
                             }
                         }
@@ -239,25 +282,15 @@ class ChatAdapter(
                     }
                 }
             }
-            if (chatMessage.isAction) {
+            if (color != null && chatMessage.isAction) {
                 builder.setSpan(ForegroundColorSpan(color), if (userName != null) userNameEndIndex + 1 else 0, builder.length, SPAN_EXCLUSIVE_EXCLUSIVE)
             }
-            if (chatMessage.isFirst && firstmsgVisibility?.toInt() ?: 0 < 2) {
-                holder.textView.setBackgroundResource(R.color.chatMessageFirst)
-            } else {
-                if (chatMessage.isReward && firstmsgVisibility?.toInt() ?: 0 < 2) {
-                    holder.textView.setBackgroundResource(R.color.chatMessageReward)
-                } else {
-                    if (chatMessage.systemMsg != null || chatMessage.msgId != null) {
-                        holder.textView.setBackgroundResource(R.color.chatMessageNotice)
-                    } else {
-                        if (wasMentioned && userId != null) {
-                            holder.textView.setBackgroundResource(R.color.chatMessageMention)
-                        } else {
-                            holder.textView.background = null
-                        }
-                    }
-                }
+            when {
+                liveMessage?.isFirst == true && (firstMsgVisibility?.toInt() ?: 0) < 2 -> holder.textView.setBackgroundResource(R.color.chatMessageFirst)
+                liveMessage?.rewardId != null && (firstMsgVisibility?.toInt() ?: 0) < 2 -> holder.textView.setBackgroundResource(R.color.chatMessageReward)
+                liveMessage?.systemMsg != null || liveMessage?.msgId != null -> holder.textView.setBackgroundResource(R.color.chatMessageNotice)
+                wasMentioned && userId != null -> holder.textView.setBackgroundResource(R.color.chatMessageMention)
+                else -> holder.textView.background = null
             }
         } catch (e: Exception) {
 //            Crashlytics.logException(e)
@@ -485,8 +518,8 @@ class ChatAdapter(
         super.onViewAttachedToWindow(holder)
         if (animateGifs) {
             (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-                (it.drawable as? coil.drawable.ScaleDrawable)?.start()
-                (it.drawable as? GifDrawable)?.start()
+                (it.drawable as? coil.drawable.ScaleDrawable)?.start() ?:
+                (it.drawable as? GifDrawable)?.start() ?:
                 (it.drawable as? WebpDrawable)?.start()
             }
         }
@@ -496,8 +529,8 @@ class ChatAdapter(
         super.onViewDetachedFromWindow(holder)
         if (animateGifs) {
             (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-                (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
-                (it.drawable as? GifDrawable)?.stop()
+                (it.drawable as? coil.drawable.ScaleDrawable)?.stop() ?:
+                (it.drawable as? GifDrawable)?.stop() ?:
                 (it.drawable as? WebpDrawable)?.stop()
             }
         }
@@ -508,8 +541,8 @@ class ChatAdapter(
         if (animateGifs) {
             for (i in 0 until childCount) {
                 ((recyclerView.getChildAt(i) as TextView).text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-                    (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
-                    (it.drawable as? GifDrawable)?.stop()
+                    (it.drawable as? coil.drawable.ScaleDrawable)?.stop() ?:
+                    (it.drawable as? GifDrawable)?.stop() ?:
                     (it.drawable as? WebpDrawable)?.stop()
                 }
             }

@@ -509,4 +509,7 @@
     <string name="follow_account">Follow using twitch account</string>
     <string name="follow_local">Follow locally</string>
     <string name="chat_ssl">Connect using SSL</string>
+    <string name="redeemed">Redeemed %s</string>
+    <string name="user_redeemed">%1$s redeemed %2$s</string>
+    <string name="enable_pubsub">Enable PubSub</string>
 </resources>

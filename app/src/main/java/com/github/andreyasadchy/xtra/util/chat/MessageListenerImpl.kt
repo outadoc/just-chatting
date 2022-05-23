@@ -10,9 +10,11 @@ class MessageListenerImpl(
     private val callbackUserState: OnUserStateReceivedListener,
     private val callbackRoomState: OnRoomStateReceivedListener,
     private val callbackCommand: OnCommandReceivedListener,
+    private val callbackReward: OnRewardReceivedListener,
     private val showUserNotice: Boolean,
     private val showClearMsg: Boolean,
-    private val showClearChat: Boolean) : LiveChatThread.OnMessageReceivedListener, LoggedInChatThread.OnMessageReceivedListener {
+    private val showClearChat: Boolean,
+    private val usePubSub: Boolean) : LiveChatThread.OnMessageReceivedListener, LoggedInChatThread.OnMessageReceivedListener {
     
     override fun onMessage(message: String, userNotice: Boolean) {
         if (!userNotice || (userNotice && showUserNotice)) {
@@ -68,15 +70,16 @@ class MessageListenerImpl(
                         }
                     }
                 }
-                callback.onMessage(LiveChatMessage(
+                val rewardId = prefixes["custom-reward-id"]
+                val chatMessage = LiveChatMessage(
                     id = prefixes["id"],
                     userId = prefixes["user-id"],
-                    login = userLogin,
-                    displayName = prefixes["display-name"]?.replace("\\s", " "),
+                    userLogin = userLogin,
+                    userName = prefixes["display-name"]?.replace("\\s", " "),
                     message = userMessage,
                     color = prefixes["color"],
                     isAction = isAction,
-                    isReward = prefixes["custom-reward-id"] != null,
+                    rewardId = rewardId,
                     isFirst = prefixes["first-msg"] == "1",
                     msgId = prefixes["msg-id"],
                     systemMsg = systemMsg,
@@ -84,7 +87,12 @@ class MessageListenerImpl(
                     badges = badgesList,
                     timestamp = prefixes["tmi-sent-ts"]?.toLong(),
                     fullMsg = message
-                ))
+                )
+                if (rewardId.isNullOrBlank() || !usePubSub) {
+                    callback.onMessage(chatMessage)
+                } else {
+                    callbackReward.onReward(chatMessage)
+                }
             }
         }
     }

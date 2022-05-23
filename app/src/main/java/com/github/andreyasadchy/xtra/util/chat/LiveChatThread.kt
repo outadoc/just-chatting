@@ -37,7 +37,11 @@ class LiveChatThread(
                             contains("USERNOTICE") -> listener.onMessage(this, true)
                             contains("CLEARMSG") -> listener.onClearMessage(this)
                             contains("CLEARCHAT") -> listener.onClearChat(this)
-                            contains("NOTICE") && !loggedIn -> listener.onNotice(this)
+                            contains("NOTICE") -> {
+                                if (!loggedIn) {
+                                    listener.onNotice(this)
+                                }
+                            }
                             contains("ROOMSTATE") -> listener.onRoomState(this)
                             startsWith("PING") -> handlePing(writerIn)
                         }

@@ -37,7 +37,12 @@ class LoggedInChatThread(
                     val messageOut = readerOut.readLine()!!
                     messageOut.run {
                         when {
+                            contains("PRIVMSG") -> {}
+                            contains("USERNOTICE") -> {}
+                            contains("CLEARMSG") -> {}
+                            contains("CLEARCHAT") -> {}
                             contains("NOTICE") -> listener.onNotice(this)
+                            contains("ROOMSTATE") -> {}
                             contains("USERSTATE") -> listener.onUserState(this)
                             startsWith("PING") -> handlePing(writerOut)
                         }

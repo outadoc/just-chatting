@@ -81,10 +81,7 @@ class PubSubWebSocket(
     private inner class PubSubListener : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             listen()
-            coroutineScope.launch {
-                delay(270000)
-                ping()
-            }
+            ping()
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {

@@ -475,8 +475,8 @@ Removes a timeout on a user.</string>
     <string name="saved">Saved</string>
     <string name="refresh">Refresh</string>
     <string name="image_library">Image library</string>
-    <string name="imageLibraryEntries1">Coil (recommended Android 9+)</string>
-    <string name="imageLibraryEntries2">Coil + Glide WebP (recommended below Android 9)</string>
+    <string name="imageLibraryEntries1">Coil</string>
+    <string name="imageLibraryEntries2">Coil + Glide WebP</string>
     <string name="imageLibraryEntries3">Glide</string>
     <string name="background_playback">Background playback</string>
     <string name="disabled">Disabled</string>

@@ -33,6 +33,12 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
+        android:key="player_menu_bookmark"
+        android:title="@string/bookmark"
+        app:iconSpaceReserved="false"/>
+
+    <SwitchPreferenceCompat
+        android:defaultValue="true"
         android:key="player_menu_sleep"
         android:title="@string/sleep_timer"
         app:iconSpaceReserved="false"/>

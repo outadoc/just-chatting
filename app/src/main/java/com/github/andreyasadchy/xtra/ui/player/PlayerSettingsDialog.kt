@@ -132,8 +132,19 @@ class PlayerSettingsDialog : ExpandingBottomSheetDialogFragment(), RadioButtonDi
                 }
             }
         }
-        if (arguments.getBoolean(VOD_GAMES)) {
-            setVodGames()
+        if (parentFragment is VideoPlayerFragment) {
+            if (arguments.getBoolean(VOD_GAMES)) {
+                setVodGames()
+            }
+            if (requireContext().prefs().getBoolean(C.PLAYER_MENU_BOOKMARK, true)) {
+                (parentFragment as? VideoPlayerFragment)?.checkBookmark()
+                (parentFragment as? VideoPlayerFragment)?.isBookmarked()
+                menuBookmark.visible()
+                menuBookmark.setOnClickListener {
+                    (parentFragment as? VideoPlayerFragment)?.saveBookmark()
+                    dismiss()
+                }
+            }
         }
         if (parentFragment is HasDownloadDialog && requireContext().prefs().getBoolean(C.PLAYER_MENU_DOWNLOAD, true)) {
             menuDownload.visible()
@@ -195,6 +206,14 @@ class PlayerSettingsDialog : ExpandingBottomSheetDialogFragment(), RadioButtonDi
                 (parentFragment as? VideoPlayerFragment)?.view?.findViewById<ImageButton>(R.id.playerGames)?.performClick()
                 dismiss()
             }
+        }
+    }
+
+    fun setBookmarkText(isBookmarked: Boolean) {
+        if (isBookmarked) {
+            menuBookmark.text = requireContext().getString(R.string.remove_bookmark)
+        } else {
+            menuBookmark.text = requireContext().getString(R.string.add_bookmark)
         }
     }
 

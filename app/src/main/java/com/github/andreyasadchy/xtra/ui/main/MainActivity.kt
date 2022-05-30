@@ -56,7 +56,6 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_media_pager.view.*
-import java.util.*
 import javax.inject.Inject
 
 
@@ -97,18 +96,6 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         prefs = prefs()
-        val lang = prefs.getString(C.UI_LANGUAGE, "auto") ?: "auto"
-        if (lang != "auto") {
-            val config = resources.configuration
-            val locale = Locale(lang)
-            Locale.setDefault(locale)
-            config.setLocale(locale)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                createConfigurationContext(config)
-            }
-            resources.updateConfiguration(config, resources.displayMetrics)
-            application.resources.updateConfiguration(config, resources.displayMetrics)
-        }
         if (prefs.getBoolean(C.FIRST_LAUNCH2, true)) {
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.root_preferences, false)
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.player_button_preferences, true)

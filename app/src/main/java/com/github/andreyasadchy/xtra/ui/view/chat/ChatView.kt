@@ -34,7 +34,7 @@ import kotlin.math.max
 
 var MAX_ADAPTER_COUNT = 200
 var MAX_LIST_COUNT = MAX_ADAPTER_COUNT + 1
-var emoteQuality = 4
+var emoteQuality = "4"
 var animateGifs = true
 
 class ChatView : ConstraintLayout {
@@ -79,7 +79,7 @@ class ChatView : ConstraintLayout {
 
     fun init(fragment: Fragment) {
         this.fragment = fragment
-        emoteQuality = context.prefs().getInt(C.CHAT_QUALITY, 3)
+        emoteQuality = context.prefs().getString(C.CHAT_IMAGE_QUALITY, "4") ?: "4"
         animateGifs = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
         adapter = ChatAdapter(

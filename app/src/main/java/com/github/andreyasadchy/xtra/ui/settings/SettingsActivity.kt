@@ -22,10 +22,12 @@ import dagger.android.HasAndroidInjector
 import kotlinx.android.synthetic.main.activity_settings.*
 import javax.inject.Inject
 
-class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback, HasAndroidInjector, Injectable {
+class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+
+    var recreate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +35,9 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         setContentView(R.layout.activity_settings)
         toolbar.navigationIcon = Utils.getNavigationIcon(this)
         toolbar.setNavigationOnClickListener { onBackPressed() }
-        if (savedInstanceState == null) {
+        recreate = savedInstanceState?.getBoolean(SettingsFragment.KEY_CHANGED) == true
+        if (savedInstanceState == null || recreate) {
+            recreate = false
             supportFragmentManager
                     .beginTransaction()
                     .replace(R.id.settings, SettingsFragment())
@@ -41,12 +45,13 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         }
     }
 
-    override fun onPreferenceStartScreen(caller: PreferenceFragmentCompat, pref: PreferenceScreen): Boolean {
-//        supportFragmentManager.beginTransaction()
-//                .replace(R.id.settings, SettingsSubScreenFragment().apply { arguments = bundleOf(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT to pref.key) }, null)
-//                .addToBackStack(null)
-//                .commit()
-        return true
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean(SettingsFragment.KEY_CHANGED, recreate)
+    }
+
+    override fun androidInjector(): AndroidInjector<Any> {
+        return dispatchingAndroidInjector
     }
 
     class SettingsFragment : PreferenceFragmentCompat(), Injectable {
@@ -66,82 +71,63 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
             val activity = requireActivity()
-
             val changeListener = Preference.OnPreferenceChangeListener { _, _ ->
                 setResult()
                 true
             }
-            findPreference<ListPreference>(C.PORTRAIT_COLUMN_COUNT)!!.onPreferenceChangeListener = changeListener
-            findPreference<ListPreference>(C.LANDSCAPE_COLUMN_COUNT)!!.onPreferenceChangeListener = changeListener
 
-            findPreference<SwitchPreferenceCompat>(C.UI_STATUSBAR)!!.setOnPreferenceChangeListener { _, _ ->
+            findPreference<ListPreference>(C.UI_LANGUAGE)?.setOnPreferenceChangeListener { _, _ ->
+                (activity as? SettingsActivity)?.recreate = true
                 changed = true
-                activity.apply {
-                    applyTheme()
-                    recreate()
-                }
-                true
-            }
-            findPreference<SwitchPreferenceCompat>(C.UI_NAVBAR)!!.setOnPreferenceChangeListener { _, _ ->
-                changed = true
-                activity.apply {
-                    applyTheme()
-                    recreate()
-                }
+                activity.recreate()
                 true
             }
 
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
-                findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntries(R.array.backgroundPlaybackNoPipEntries)
-                findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)!!.setEntryValues(R.array.backgroundPlaybackNoPipValues)
-            }
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.isVisible = false
-            } else {
-                findPreference<ListPreference>(C.UI_CUTOUTMODE)!!.setOnPreferenceChangeListener { _, _ ->
-                    changed = true
-                    activity.apply {
-                        applyTheme()
-                        recreate()
+            findPreference<ListPreference>(C.UI_CUTOUTMODE)?.apply {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    setOnPreferenceChangeListener { _, _ ->
+                        changed = true
+                        activity.recreate()
+                        true
                     }
+                } else {
+                    isVisible = false
+                }
+            }
+
+            findPreference<Preference>("theme_settings")?.setOnPreferenceClickListener {
+                parentFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.settings, ThemeSettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
+                true
+            }
+
+            findPreference<SwitchPreferenceCompat>(C.UI_ROUNDUSERIMAGE)?.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_TRUNCATEVIEWCOUNT)?.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_UPTIME)?.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_TAGS)?.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_BROADCASTERSCOUNT)?.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_BOOKMARK_TIME_LEFT)?.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_SCROLLTOP)?.onPreferenceChangeListener = changeListener
+            findPreference<ListPreference>(C.PORTRAIT_COLUMN_COUNT)?.onPreferenceChangeListener = changeListener
+            findPreference<ListPreference>(C.LANDSCAPE_COLUMN_COUNT)?.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.COMPACT_STREAMS)?.onPreferenceChangeListener = changeListener
+
+            findPreference<SeekBarPreference>("chatWidth")?.apply {
+                summary = context.getString(R.string.pixels, activity.prefs().getInt(C.LANDSCAPE_CHAT_WIDTH, 30))
+                setOnPreferenceChangeListener { _, newValue ->
+                    setResult()
+                    val chatWidth = DisplayUtils.calculateLandscapeWidthByPercent(activity, newValue as Int)
+                    summary = context.getString(R.string.pixels, chatWidth)
+                    activity.prefs().edit { putInt(C.LANDSCAPE_CHAT_WIDTH, chatWidth) }
                     true
                 }
             }
 
-            findPreference<ListPreference>(C.UI_LANGUAGE)!!.setOnPreferenceChangeListener { _, _ ->
-                changed = true
-                activity.apply { recreate() }
-                true
-            }
-
-            findPreference<ListPreference>(C.THEME)!!.setOnPreferenceChangeListener { _, _ ->
-                changed = true
-                activity.apply {
-                    applyTheme()
-                    recreate()
-                }
-                true
-            }
-
-            findPreference<SeekBarPreference>("chatWidth")!!.summary = "width: " + activity.prefs().getInt(C.LANDSCAPE_CHAT_WIDTH, 30).toString()
-            findPreference<SeekBarPreference>("chatWidth")!!.setOnPreferenceChangeListener { _, newValue ->
-                setResult()
-                val chatWidth = DisplayUtils.calculateLandscapeWidthByPercent(activity, newValue as Int)
-                activity.prefs().edit { putInt(C.LANDSCAPE_CHAT_WIDTH, chatWidth) }
-                findPreference<SeekBarPreference>("chatWidth")!!.summary = "width: " + activity.prefs().getInt(C.LANDSCAPE_CHAT_WIDTH, 30).toString()
-                true
-            }
-
-            findPreference<Preference>("clear_video_positions")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                viewModel.deletePositions()
-                requireContext().shortToast(R.string.cleared)
-                true
-            }
-
-            findPreference<Preference>("player_button_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            findPreference<Preference>("player_button_settings")?.setOnPreferenceClickListener {
                 parentFragmentManager
                     .beginTransaction()
                     .replace(R.id.settings, PlayerButtonSettingsFragment())
@@ -150,7 +136,7 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 true
             }
 
-            findPreference<Preference>("player_menu_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            findPreference<Preference>("player_menu_settings")?.setOnPreferenceClickListener {
                 parentFragmentManager
                     .beginTransaction()
                     .replace(R.id.settings, PlayerMenuSettingsFragment())
@@ -159,7 +145,14 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 true
             }
 
-            findPreference<Preference>("buffer_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
+                findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)?.apply {
+                    setEntries(R.array.backgroundPlaybackNoPipEntries)
+                    setEntryValues(R.array.backgroundPlaybackNoPipValues)
+                }
+            }
+
+            findPreference<Preference>("buffer_settings")?.setOnPreferenceClickListener {
                 parentFragmentManager
                     .beginTransaction()
                     .replace(R.id.settings, BufferSettingsFragment())
@@ -168,7 +161,13 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 true
             }
 
-            findPreference<Preference>("token_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            findPreference<Preference>("clear_video_positions")?.setOnPreferenceChangeListener { _, _ ->
+                viewModel.deletePositions()
+                requireContext().shortToast(R.string.cleared)
+                true
+            }
+
+            findPreference<Preference>("token_settings")?.setOnPreferenceClickListener {
                 parentFragmentManager
                     .beginTransaction()
                     .replace(R.id.settings, TokenSettingsFragment())
@@ -177,17 +176,17 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
                 true
             }
 
-            findPreference<Preference>("admin_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
-                startActivity(Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.DeviceAdminSettings")))
-                true
-            }
-
-            findPreference<Preference>("api_settings")!!.onPreferenceClickListener = Preference.OnPreferenceClickListener {
+            findPreference<Preference>("api_settings")?.setOnPreferenceClickListener {
                 parentFragmentManager
                     .beginTransaction()
                     .replace(R.id.settings, DragListFragment.newInstance())
                     .addToBackStack(null)
                     .commit()
+                true
+            }
+
+            findPreference<Preference>("admin_settings")?.setOnPreferenceClickListener {
+                startActivity(Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.DeviceAdminSettings")))
                 true
             }
         }
@@ -209,8 +208,58 @@ class SettingsActivity : AppCompatActivity(), PreferenceFragmentCompat.OnPrefere
         }
     }
 
-    override fun androidInjector(): AndroidInjector<Any> {
-        return dispatchingAndroidInjector
+    class ThemeSettingsFragment : PreferenceFragmentCompat() {
+
+        private var changed = false
+
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            changed = savedInstanceState?.getBoolean(SettingsFragment.KEY_CHANGED) == true
+            if (changed) {
+                requireActivity().setResult(Activity.RESULT_OK)
+            }
+        }
+
+        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            setPreferencesFromResource(R.xml.theme_preferences, rootKey)
+            val activity = requireActivity()
+
+            findPreference<ListPreference>(C.THEME)?.setOnPreferenceChangeListener { _, _ ->
+                changed = true
+                activity.recreate()
+                true
+            }
+            findPreference<SwitchPreferenceCompat>(C.UI_THEME_FOLLOW_SYSTEM)?.setOnPreferenceChangeListener { _, _ ->
+                changed = true
+                activity.recreate()
+                true
+            }
+            findPreference<ListPreference>(C.UI_THEME_DARK_ON)?.setOnPreferenceChangeListener { _, _ ->
+                changed = true
+                activity.recreate()
+                true
+            }
+            findPreference<ListPreference>(C.UI_THEME_DARK_OFF)?.setOnPreferenceChangeListener { _, _ ->
+                changed = true
+                activity.recreate()
+                true
+            }
+            findPreference<SwitchPreferenceCompat>(C.UI_STATUSBAR)?.setOnPreferenceChangeListener { _, _ ->
+                changed = true
+                activity.recreate()
+                true
+            }
+            findPreference<SwitchPreferenceCompat>(C.UI_NAVBAR)?.setOnPreferenceChangeListener { _, _ ->
+                changed = true
+                activity.recreate()
+                true
+            }
+        }
+
+        override fun onSaveInstanceState(outState: Bundle) {
+            outState.putBoolean(SettingsFragment.KEY_CHANGED, changed)
+            super.onSaveInstanceState(outState)
+        }
     }
 
     class PlayerButtonSettingsFragment : PreferenceFragmentCompat() {

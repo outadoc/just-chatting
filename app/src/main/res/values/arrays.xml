@@ -28,6 +28,20 @@
         <item>2</item>
     </string-array>
 
+    <string-array name="imageQualityEntries">
+        <item>1x</item>
+        <item>2x</item>
+        <item>3x</item>
+        <item>4x</item>
+    </string-array>
+
+    <string-array name="imageQualityValues">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
     <string-array name="imageLibraryEntries">
         <item>@string/imageLibraryEntries1</item>
         <item>@string/imageLibraryEntries2</item>
@@ -143,14 +157,14 @@
     </string-array>
 
     <string-array name="languageEntries">
-        <item>auto</item>
-        <item>English</item>
-        <item>Arabic</item>
-        <item>Spanish</item>
-        <item>Japanese</item>
-        <item>Portuguese (Brazil)</item>
-        <item>Russian</item>
-        <item>Turkish</item>
+        <item>@string/lang_auto</item>
+        <item>@string/lang_en</item>
+        <item>@string/lang_ar</item>
+        <item>@string/lang_es</item>
+        <item>@string/lang_ja</item>
+        <item>@string/lang_pt</item>
+        <item>@string/lang_ru</item>
+        <item>@string/lang_tr</item>
     </string-array>
 
     <string-array name="language">
@@ -165,12 +179,18 @@
     </string-array>
 
     <string-array name="cutoutmodeEntries">
-        <item>@string/cutoutmode_default</item>
-        <item>@string/cutoutmode_always</item>
+        <item>@string/always</item>
+        <item>@string/portrait_only</item>
         <item>@string/never</item>
     </string-array>
 
     <string-array name="cutoutmodeValues">
+        <item>1</item>
+        <item>0</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="miscValues">
         <item>0</item>
         <item>1</item>
         <item>2</item>

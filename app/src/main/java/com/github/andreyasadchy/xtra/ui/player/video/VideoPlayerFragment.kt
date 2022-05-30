@@ -78,6 +78,10 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
                 settings.disable()
             }
         }
+        checkBookmark()
+        viewModel.bookmarkItem.observe(viewLifecycleOwner) {
+            (childFragmentManager.findFragmentByTag("closeOnPip") as? PlayerSettingsDialog?)?.setBookmarkText(it != null)
+        }
         if (prefs.getBoolean(C.PLAYER_SETTINGS, true)) {
             settings.visible()
             settings.setOnClickListener {
@@ -105,6 +109,18 @@ class VideoPlayerFragment : BasePlayerFragment(), HasDownloadDialog, ChatReplayP
                 }
             }
         }
+    }
+
+    fun checkBookmark() {
+        viewModel.checkBookmark()
+    }
+
+    fun isBookmarked() {
+        (childFragmentManager.findFragmentByTag("closeOnPip") as? PlayerSettingsDialog?)?.setBookmarkText(viewModel.bookmarkItem.value != null)
+    }
+
+    fun saveBookmark() {
+        viewModel.saveBookmark(requireContext(), prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, ""), prefs.getString(C.GQL_CLIENT_ID, ""))
     }
 
     override fun onChange(requestCode: Int, index: Int, text: CharSequence, tag: Int?) {

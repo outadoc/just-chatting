@@ -21,7 +21,7 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
                 val images = tier.asJsonObject.get("images").asJsonObject.get("dark").asJsonObject
                 val animated = animateGifs && images.toString().contains("animated")
                 val urls = images.get(if (animated) "animated" else "static").asJsonObject
-                val url = urls.get(when (emoteQuality) {4 -> ("4") 3 -> ("3") 2 -> ("2") else -> ("1")}).takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("3").takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("2").takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("1").asString
+                val url = urls.get(when (emoteQuality) {"4" -> ("4") "3" -> ("3") "2" -> ("2") else -> ("1")}).takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("3").takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("2").takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("1").asString
                 emotes.add(CheerEmote(name.asString, minBits.asInt, color.asString, if (animated) "image/gif" else "image/png", url))
             }
         }

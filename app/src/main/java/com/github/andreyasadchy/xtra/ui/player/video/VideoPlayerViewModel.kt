@@ -1,13 +1,21 @@
 package com.github.andreyasadchy.xtra.ui.player.video
 
 import android.app.Application
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.VideoDownloadInfo
 import com.github.andreyasadchy.xtra.model.VideoPosition
 import com.github.andreyasadchy.xtra.model.helix.game.Game
 import com.github.andreyasadchy.xtra.model.helix.video.Video
+import com.github.andreyasadchy.xtra.model.offline.Bookmark
+import com.github.andreyasadchy.xtra.repository.BookmarksRepository
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
@@ -15,6 +23,7 @@ import com.github.andreyasadchy.xtra.ui.player.AudioPlayerService
 import com.github.andreyasadchy.xtra.ui.player.HlsPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.player.PlayerMode
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.DownloadUtils
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.toast
 import com.google.android.exoplayer2.ExoPlaybackException
@@ -23,14 +32,17 @@ import com.google.android.exoplayer2.PlaybackException
 import com.google.android.exoplayer2.source.hls.HlsManifest
 import com.google.android.exoplayer2.source.hls.HlsMediaSource
 import com.google.android.exoplayer2.upstream.HttpDataSource
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 class VideoPlayerViewModel @Inject constructor(
     context: Application,
     private val playerRepository: PlayerRepository,
     repository: TwitchService,
-    localFollowsChannel: LocalFollowChannelRepository) : HlsPlayerViewModel(context, repository, localFollowsChannel) {
+    localFollowsChannel: LocalFollowChannelRepository,
+    private val bookmarksRepository: BookmarksRepository) : HlsPlayerViewModel(context, repository, localFollowsChannel) {
 
     private lateinit var video: Video
     val videoInfo: VideoDownloadInfo?
@@ -57,6 +69,7 @@ class VideoPlayerViewModel @Inject constructor(
     override val channelLogo: String?
         get() { return video.channelLogo }
 
+    val bookmarkItem = MutableLiveData<Bookmark>()
     val gamesList = MutableLiveData<List<Game>>()
     private var isLoading = false
 
@@ -173,5 +186,74 @@ class VideoPlayerViewModel @Inject constructor(
             playerRepository.saveVideoPosition(VideoPosition(video.id.toLong(), player.currentPosition))
         }
         super.onCleared()
+    }
+
+    fun checkBookmark() {
+        viewModelScope.launch {
+            bookmarkItem.postValue(bookmarksRepository.getBookmarkById(video.id))
+        }
+    }
+
+    fun saveBookmark(context: Context, helixClientId: String?, helixToken: String?, gqlClientId: String?) {
+        GlobalScope.launch {
+            if (bookmarkItem.value != null) {
+                bookmarksRepository.deleteBookmark(context, bookmarkItem.value!!)
+            } else {
+                try {
+                    Glide.with(context)
+                        .asBitmap()
+                        .load(video.thumbnail)
+                        .into(object: CustomTarget<Bitmap>() {
+                            override fun onLoadCleared(placeholder: Drawable?) {
+
+                            }
+
+                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                DownloadUtils.savePng(context, "thumbnails", video.id, resource)
+                            }
+                        })
+                } catch (e: Exception) {
+
+                }
+                try {
+                    if (video.channelId != null) {
+                        Glide.with(context)
+                            .asBitmap()
+                            .load(video.channelLogo)
+                            .into(object: CustomTarget<Bitmap>() {
+                                override fun onLoadCleared(placeholder: Drawable?) {
+
+                                }
+
+                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                    DownloadUtils.savePng(context, "profile_pics", video.channelId!!, resource)
+                                }
+                            })
+                    }
+                } catch (e: Exception) {
+
+                }
+                val userTypes = video.channelId?.let { repository.loadUserTypes(mutableListOf(it), helixClientId, helixToken, gqlClientId) }?.first()
+                val downloadedThumbnail = File(context.filesDir.toString() + File.separator + "thumbnails" + File.separator + "${video.id}.png").absolutePath
+                val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${video.channelId}.png").absolutePath
+                bookmarksRepository.saveBookmark(
+                    Bookmark(
+                    id = video.id,
+                    userId = video.channelId,
+                    userLogin = video.channelLogin,
+                    userName = video.channelName,
+                    userType = userTypes?.type,
+                    userBroadcasterType = userTypes?.broadcaster_type,
+                    userLogo = downloadedLogo,
+                    gameId = video.gameId,
+                    gameName = video.gameName,
+                    title = video.title,
+                    createdAt = video.createdAt,
+                    thumbnail = downloadedThumbnail,
+                    type = video.type,
+                    duration = video.duration,
+                ))
+            }
+        }
     }
 }

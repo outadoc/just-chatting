@@ -238,6 +238,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
             chatLayout.clearFocus()
             initLayout()
         }
+        (childFragmentManager.findFragmentByTag("closeOnPip") as? PlayerSettingsDialog?)?.dismiss()
     }
 
     override fun onPictureInPictureModeChanged(isInPictureInPictureMode: Boolean) {

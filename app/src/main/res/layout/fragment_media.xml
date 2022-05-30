@@ -40,7 +40,9 @@
 
         <Spinner
             android:id="@+id/spinner"
-            style="@style/MediaSpinner"/>
+            style="@style/MediaSpinner"
+            android:visibility="gone"
+            tools:visibility="visible" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

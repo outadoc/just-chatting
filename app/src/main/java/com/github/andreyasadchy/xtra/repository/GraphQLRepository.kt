@@ -2,6 +2,7 @@ package com.github.andreyasadchy.xtra.repository
 
 import android.util.Log
 import com.github.andreyasadchy.xtra.api.GraphQLApi
+import com.github.andreyasadchy.xtra.model.chat.EmoteCardResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelClipsDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResponse
@@ -432,6 +433,24 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
             })
         }
         return graphQL.getViewerCount(clientId, json)
+    }
+
+    suspend fun loadEmoteCard(clientId: String?, emoteId: String?): EmoteCardResponse {
+        val json = JsonObject().apply {
+            addProperty("operationName", "EmoteCard")
+            add("variables", JsonObject().apply {
+                addProperty("emoteID", emoteId)
+                addProperty("octaneEnabled", true)
+                addProperty("artistEnabled", true)
+            })
+            add("extensions", JsonObject().apply {
+                add("persistedQuery", JsonObject().apply {
+                    addProperty("version", 1)
+                    addProperty("sha256Hash", "556230dd63957761355ba54232c43f4781f31ed6686fc827053b9aa7b199848f")
+                })
+            })
+        }
+        return graphQL.getEmoteCard(clientId, json)
     }
 
     suspend fun loadFollowedStreams(clientId: String?, token: String?, limit: Int?, cursor: String?): FollowedStreamsDataResponse {

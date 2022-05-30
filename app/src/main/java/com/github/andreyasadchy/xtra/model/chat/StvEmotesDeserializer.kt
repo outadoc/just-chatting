@@ -15,7 +15,7 @@ class StvEmotesDeserializer : JsonDeserializer<StvEmotesResponse> {
         for (i in 0 until json.asJsonArray.size()) {
             val emote = json.asJsonArray.get(i).asJsonObject
             val urls = emote.getAsJsonArray("urls")
-            val quality = urls.get(when (emoteQuality) {4 -> 3 3 -> 2 2 -> 1 else -> 0}).asJsonArray
+            val quality = urls.get(when (emoteQuality) {"4" -> 3 "3" -> 2 "2" -> 1 else -> 0}).asJsonArray
             val url = quality.get(1)
             val visibility = emote.getAsJsonArray("visibility_simple")
             val zerowidth = visibility.toString().contains("ZERO_WIDTH")

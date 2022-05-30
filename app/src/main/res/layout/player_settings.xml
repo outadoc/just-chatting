@@ -90,6 +90,16 @@
             tools:visibility="visible" />
 
         <TextView
+            android:id="@+id/menuBookmark"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:padding="12dp"
+            android:visibility="gone"
+            tools:text="@string/add_bookmark"
+            tools:visibility="visible" />
+
+        <TextView
             android:id="@+id/menuTimer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

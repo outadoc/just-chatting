@@ -8,7 +8,7 @@ class BttvEmote(
         private val imageType: String) : Emote() {
 
     override val url: String
-        get() = "https://cdn.betterttv.net/emote/$id/${(when (emoteQuality) {4 -> ("3x") 3 -> ("2x") 2 -> ("2x") else -> ("1x")})}"
+        get() = "https://cdn.betterttv.net/emote/$id/${(when (emoteQuality) {"4" -> ("3x") "3" -> ("2x") "2" -> ("2x") else -> ("1x")})}"
 
     override val type: String
         get() = "image/$imageType"

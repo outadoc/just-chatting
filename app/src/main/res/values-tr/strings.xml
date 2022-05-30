@@ -134,10 +134,6 @@
     <string name="logout_title">Çıkış yap?</string>
     <string name="logout_msg">%s olarak giriş yapıldı</string>
     <string name="language">Dil</string>
-    <string name="cutoutmode">Ekranı kesme modu</string>
-    <string name="cutoutmode_desc">İçeriği kesme alanının içinde görüntüle</string>
-    <string name="cutoutmode_default">Varsayılan - Yalnızca dikey mod</string>
-    <string name="cutoutmode_always">Her zaman - Hem dikey hem de yatay modlar</string>
     <string name="never">Asla</string>
     <string name="blue">Mavi</string>
     <string name="statusBarColor">Durum çubuğu rengi</string>
@@ -152,7 +148,6 @@
     <string name="bold_usernames">Kalın kullanıcı adları</string>
     <string name="randomcolor">Rengi olmayan kullanıcılar için rastgele renk</string>
     <string name="zerowidth">Sıfır genişlikte ifadeler</string>
-    <string name="emotequality">İfade ve rozet kalitesi</string>
     <string name="message_limit">Mesaj sınırı</string>
     <string name="player_defaultquality">Varsayılan oynatıcı kalitesi</string>
     <string name="player_doubletap">Sohbeti değiştirmek için çift tıklayın</string>
@@ -538,4 +533,20 @@ Bir kullanıcı üzerindeki zaman aşımını kaldırır.</string>
     <string name="redeemed">Redeemed %s</string>
     <string name="user_redeemed">%1$s redeemed %2$s</string>
     <string name="enable_pubsub">Enable PubSub</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="dark_theme_on">Dark theme on</string>
+    <string name="dark_theme_off">Dark theme off</string>
+    <string name="follow_system_theme">Change based on device theme</string>
+    <string name="pixels">%d pixels</string>
+    <string name="image_quality">Image quality</string>
+    <string name="ignore_cutouts">Ignore display cutouts</string>
+    <string name="portrait_only">Portrait only</string>
+    <string name="lang_auto">System default</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ar">Arabic</string>
+    <string name="lang_es">Spanish</string>
+    <string name="lang_ja">Japanese</string>
+    <string name="lang_pt">Portuguese (Brazil)</string>
+    <string name="lang_ru">Russian</string>
+    <string name="lang_tr">Turkish</string>
 </resources>

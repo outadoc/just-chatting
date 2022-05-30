@@ -110,9 +110,9 @@ class ChatAdapter(
             builder.append("$string ")
             imageIndex += string.length + 1
             val url = when (emoteQuality) {
-                4 -> pointReward?.rewardImage?.url4
-                3 -> pointReward?.rewardImage?.url4
-                2 -> pointReward?.rewardImage?.url2
+                "4" -> pointReward?.rewardImage?.url4
+                "3" -> pointReward?.rewardImage?.url4
+                "2" -> pointReward?.rewardImage?.url2
                 else -> pointReward?.rewardImage?.url1
             }
             url?.let {
@@ -161,9 +161,9 @@ class ChatAdapter(
                 builder.append("$string ")
                 imageIndex += string.length + 1
                 val url = when (emoteQuality) {
-                    4 -> pointReward?.rewardImage?.url4
-                    3 -> pointReward?.rewardImage?.url4
-                    2 -> pointReward?.rewardImage?.url2
+                    "4" -> pointReward?.rewardImage?.url4
+                    "3" -> pointReward?.rewardImage?.url4
+                    "2" -> pointReward?.rewardImage?.url2
                     else -> pointReward?.rewardImage?.url1
                 }
                 url?.let {

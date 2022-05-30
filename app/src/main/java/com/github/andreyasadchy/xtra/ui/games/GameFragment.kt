@@ -2,6 +2,8 @@ package com.github.andreyasadchy.xtra.ui.games
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.ui.clips.common.ClipsFragment
@@ -10,8 +12,8 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.streams.common.StreamsFragment
 import com.github.andreyasadchy.xtra.ui.videos.game.GameVideosFragment
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_media.*
-
 
 class GameFragment : MediaFragment() {
 
@@ -35,8 +37,22 @@ class GameFragment : MediaFragment() {
                 navigationIcon = Utils.getNavigationIcon(activity)
                 setNavigationOnClickListener { activity.popFragment() }
             }
-        } else {
-            hideSpinner = true
+            spinner.visible()
+            spinner.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, spinnerItems)
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    currentFragment = if (position != previousItem && isResumed) {
+                        val newFragment = onSpinnerItemSelected(position)
+                        childFragmentManager.beginTransaction().replace(com.github.andreyasadchy.xtra.R.id.fragmentContainer, newFragment).commit()
+                        previousItem = position
+                        newFragment
+                    } else {
+                        childFragmentManager.findFragmentById(com.github.andreyasadchy.xtra.R.id.fragmentContainer)
+                    }
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+            }
         }
     }
 

@@ -7,7 +7,7 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import java.lang.reflect.Type
 
-class ChannelViewerListDeserializer : JsonDeserializer<ChannelViewerListDataResponse> {
+class ChannelViewerListDataDeserializer : JsonDeserializer<ChannelViewerListDataResponse> {
 
     @Throws(JsonParseException::class)
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): ChannelViewerListDataResponse {

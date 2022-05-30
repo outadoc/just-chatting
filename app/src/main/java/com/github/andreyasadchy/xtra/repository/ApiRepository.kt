@@ -384,7 +384,7 @@ class ApiRepository @Inject constructor(
     override suspend fun loadCheerEmotes(userId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<CheerEmote>? = withContext(Dispatchers.IO) {
         try {
             val emotes = mutableListOf<CheerEmote>()
-            val get = apolloClient(XtraModule(), gqlClientId).query(CheerEmotesQuery(Optional.Present(userId), Optional.Present(animateGifs), Optional.Present((when (emoteQuality) {4 -> 4 3 -> 3 2 -> 2 else -> 1}).toDouble()))).execute().data
+            val get = apolloClient(XtraModule(), gqlClientId).query(CheerEmotesQuery(Optional.Present(userId), Optional.Present(animateGifs), Optional.Present((when (emoteQuality) {"4" -> 4 "3" -> 3 "2" -> 2 else -> 1}).toDouble()))).execute().data
             if (get?.user?.cheer?.emotes != null) {
                 for (i in get.user.cheer.emotes) {
                     if (i?.tiers != null) {

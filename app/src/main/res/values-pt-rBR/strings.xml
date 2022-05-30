@@ -125,8 +125,6 @@
     <string name="logout_title">Log out?</string>
     <string name="logout_msg">Logged in as %s</string>
     <string name="language">Language</string>
-    <string name="cutoutmode">Display cutout mode</string>
-    <string name="cutoutmode_default">Default - Portrait mode only</string>
     <string name="never">Never</string>
     <string name="blue">Blue</string>
     <string name="statusBarColor">Status bar color</string>
@@ -136,9 +134,8 @@
     <string name="startonfollowed">Start on following page</string>
     <string name="show_follow_button">Show follow button</string>
     <string name="bold_usernames">Bold usernames</string>
-    <string name="randomcolor">Random color for users without color set</string>
+    <string name="randomcolor">Random color for users without color</string>
     <string name="zerowidth">Zero width emotes</string>
-    <string name="emotequality">Emote and badge quality</string>
     <string name="message_limit">Message limit</string>
     <string name="player_defaultquality">Default player quality</string>
     <string name="player_doubletap">Double tap to toggle chat</string>
@@ -155,8 +152,6 @@
     <string name="settings_ui">UI</string>
     <string name="settings_chat">CHAT</string>
     <string name="settings_player">PLAYER</string>
-    <string name="cutoutmode_desc">Display content inside of the cutout area</string>
-    <string name="cutoutmode_always">Always - Both portrait and landscape modes</string>
     <string name="adblock_not_working">TTV.LOL is offline. Disable Adblock to view streams in the meantime</string>
     <string name="token_random_deviceid">Random device id</string>
     <string name="playback_speed">Velocidade de reprodução</string>
@@ -528,4 +523,20 @@ Removes a timeout on a user.</string>
     <string name="redeemed">Redeemed %s</string>
     <string name="user_redeemed">%1$s redeemed %2$s</string>
     <string name="enable_pubsub">Enable PubSub</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="dark_theme_on">Dark theme on</string>
+    <string name="dark_theme_off">Dark theme off</string>
+    <string name="follow_system_theme">Change based on device theme</string>
+    <string name="pixels">%d pixels</string>
+    <string name="image_quality">Image quality</string>
+    <string name="ignore_cutouts">Ignore display cutouts</string>
+    <string name="portrait_only">Portrait only</string>
+    <string name="lang_auto">System default</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ar">Arabic</string>
+    <string name="lang_es">Spanish</string>
+    <string name="lang_ja">Japanese</string>
+    <string name="lang_pt">Portuguese (Brazil)</string>
+    <string name="lang_ru">Russian</string>
+    <string name="lang_tr">Turkish</string>
 </resources>

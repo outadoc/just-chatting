@@ -4,7 +4,7 @@
     <ListPreference
         android:defaultValue="0"
         android:entries="@array/loginApiEntries"
-        android:entryValues="@array/cutoutmodeValues"
+        android:entryValues="@array/miscValues"
         android:key="api_login"
         android:summary="%s"
         android:title="@string/api_login"

@@ -43,10 +43,6 @@
     <string name="copy_clip">Копировать в буфер обмена</string>
     <string name="copy_message">Скопировать сообщение</string>
     <string name="created_at">Создано в %s</string>
-    <string name="cutoutmode">Режим отключения дисплея</string>
-    <string name="cutoutmode_always">Всегда - в портретном и в альбомном режимах</string>
-    <string name="cutoutmode_default">По умолчанию - только портретный режим</string>
-    <string name="cutoutmode_desc">Отображать содержимое внутри области выреза</string>
     <string name="dark">Тёмная</string>
     <string name="days">д</string>
     <string name="delete">Удалить</string>
@@ -59,7 +55,6 @@
     <string name="downloading_progress">Скачивание: %d%%</string>
     <string name="downloads">Скачивания</string>
     <string name="duration">Длительность: %s</string>
-    <string name="emotequality">Качество смайлов и значков</string>
     <string name="enter_url">Введите ссылку</string>
     <string name="error">Ошибка: %s</string>
     <string name="error_loading_user">Ошибка при загрузке профиля пользователя</string>
@@ -528,4 +523,20 @@ Removes a timeout on a user.</string>
     <string name="redeemed">Redeemed %s</string>
     <string name="user_redeemed">%1$s redeemed %2$s</string>
     <string name="enable_pubsub">Enable PubSub</string>
+    <string name="bookmark">Bookmark</string>
+    <string name="dark_theme_on">Dark theme on</string>
+    <string name="dark_theme_off">Dark theme off</string>
+    <string name="follow_system_theme">Change based on device theme</string>
+    <string name="pixels">%d pixels</string>
+    <string name="image_quality">Image quality</string>
+    <string name="ignore_cutouts">Ignore display cutouts</string>
+    <string name="portrait_only">Portrait only</string>
+    <string name="lang_auto">System default</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ar">Arabic</string>
+    <string name="lang_es">Spanish</string>
+    <string name="lang_ja">Japanese</string>
+    <string name="lang_pt">Portuguese (Brazil)</string>
+    <string name="lang_ru">Russian</string>
+    <string name="lang_tr">Turkish</string>
 </resources>

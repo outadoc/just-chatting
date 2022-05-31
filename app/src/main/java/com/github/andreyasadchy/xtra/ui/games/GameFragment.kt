@@ -53,6 +53,15 @@ class GameFragment : MediaFragment() {
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
             }
+        } else {
+            currentFragment = if (previousItem != 0) {
+                val newFragment = onSpinnerItemSelected(0)
+                childFragmentManager.beginTransaction().replace(com.github.andreyasadchy.xtra.R.id.fragmentContainer, newFragment).commit()
+                previousItem = 0
+                newFragment
+            } else {
+                childFragmentManager.findFragmentById(com.github.andreyasadchy.xtra.R.id.fragmentContainer)
+            }
         }
     }
 

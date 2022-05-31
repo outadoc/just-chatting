@@ -38,7 +38,14 @@ class SavedMediaFragment : MediaFragment() {
         val pagerFragment = requireArguments().getBoolean(PAGER_FRAGMENT)
         val defaultItem = requireArguments().getInt(DEFAULT_ITEM)
         if (pagerFragment) {
-            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, SavedPagerFragment.newInstance(defaultItem)).commit()
+            currentFragment = if (previousItem != -2) {
+                val newFragment = SavedPagerFragment.newInstance(defaultItem)
+                childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, newFragment).commit()
+                previousItem = -2
+                newFragment
+            } else {
+                childFragmentManager.findFragmentById(R.id.fragmentContainer)
+            }
         } else {
             spinner.visible()
             spinner.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, spinnerItems)

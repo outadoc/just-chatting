@@ -43,7 +43,14 @@ class FollowMediaFragment : MediaFragment() {
         val defaultItem = requireArguments().getInt(DEFAULT_ITEM)
         val loggedIn = requireArguments().getBoolean(LOGGED_IN)
         if (followPager) {
-            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, FollowPagerFragment.newInstance(defaultItem, loggedIn)).commit()
+            currentFragment = if (previousItem != -2) {
+                val newFragment = FollowPagerFragment.newInstance(defaultItem, loggedIn)
+                childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, newFragment).commit()
+                previousItem = -2
+                newFragment
+            } else {
+                childFragmentManager.findFragmentById(R.id.fragmentContainer)
+            }
         } else {
             spinner.visible()
             spinner.adapter = ArrayAdapter(activity, android.R.layout.simple_spinner_dropdown_item, spinnerItems)

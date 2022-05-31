@@ -11,7 +11,14 @@ class TopFragment : MediaFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, StreamsFragment()).commit()
+        currentFragment = if (previousItem != 0) {
+            val newFragment = onSpinnerItemSelected(0)
+            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, newFragment).commit()
+            previousItem = 0
+            newFragment
+        } else {
+            childFragmentManager.findFragmentById(R.id.fragmentContainer)
+        }
     }
 
     override fun onSpinnerItemSelected(position: Int): Fragment {

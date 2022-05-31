@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
 
         val notInitialized = savedInstanceState == null
         initNavigation()
-        if ((User.get(this) !is NotLoggedIn && (prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1 < 2)) || (User.get(this) is NotLoggedIn && (prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1 == 0))) {
+        if ((User.get(this) !is NotLoggedIn && ((prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1) < 2)) || (User.get(this) is NotLoggedIn && ((prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1) == 0))) {
             fragNavController.initialize(INDEX_FOLLOWED, savedInstanceState)
             if (notInitialized) {
                 navBar.selectedItemId = R.id.fragment_follow
@@ -208,7 +208,7 @@ class MainActivity : AppCompatActivity(), GamesFragment.OnGameSelectedListener, 
     override fun onBackPressed() {
         if (!viewModel.isPlayerMaximized) {
             if (fragNavController.isRootFragment) {
-                if ((User.get(this) !is NotLoggedIn && (prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1 < 2)) || (User.get(this) is NotLoggedIn && (prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1 == 0))) {
+                if ((User.get(this) !is NotLoggedIn && ((prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1) < 2)) || (User.get(this) is NotLoggedIn && ((prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1) == 0))) {
                     if (fragNavController.currentStackIndex != INDEX_FOLLOWED) {
                         navBar.selectedItemId = R.id.fragment_follow
                     } else {

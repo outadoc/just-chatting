@@ -13,7 +13,6 @@ import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.repository.BookmarksRepository
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
-import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
@@ -26,7 +25,6 @@ import javax.inject.Inject
 class ChannelPagerViewModel @Inject constructor(
     private val repository: TwitchService,
     private val localFollowsChannel: LocalFollowChannelRepository,
-    private val offlineRepository: OfflineRepository,
     private val bookmarksRepository: BookmarksRepository) : ViewModel(), FollowViewModel {
 
     private val _stream = MutableLiveData<Stream?>()
@@ -121,12 +119,7 @@ class ChannelPagerViewModel @Inject constructor(
                         user_login = user.login
                         user_name = user.display_name
                         channelLogo = downloadedLogo }) }
-                    for (i in offlineRepository.getVideosByUserId(user.id.toInt())) {
-                        offlineRepository.updateVideo(i.apply {
-                            channelLogin = user.login
-                            channelName = user.display_name
-                            channelLogo = downloadedLogo })
-                    }
+
                     for (i in bookmarksRepository.getBookmarksByUserId(user.id)) {
                         bookmarksRepository.updateBookmark(i.apply {
                             userLogin = user.login

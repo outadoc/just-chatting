@@ -15,10 +15,6 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesRepository(videosDao: VideosDao, requestsDao: RequestsDao, localFollowsChannelDao: LocalFollowsChannelDao, bookmarksDao: BookmarksDao): OfflineRepository = OfflineRepository(videosDao, requestsDao, localFollowsChannelDao, bookmarksDao)
-
-    @Singleton
-    @Provides
     fun providesLocalFollowsChannelRepository(localFollowsChannelDao: LocalFollowsChannelDao, videosDao: VideosDao, bookmarksDao: BookmarksDao): LocalFollowChannelRepository = LocalFollowChannelRepository(localFollowsChannelDao, videosDao, bookmarksDao)
 
     @Singleton

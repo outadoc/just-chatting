@@ -34,12 +34,6 @@ import retrofit2.http.POST
 interface GraphQLApi {
 
     @POST(".")
-    suspend fun getStreamPlaybackAccessToken(@Header("Client-ID") clientId: String?, @HeaderMap headers: Map<String, String>, @Body json: JsonArray): StreamPlaylistTokenResponse
-
-    @POST(".")
-    suspend fun getVideoPlaybackAccessToken(@Header("Client-ID") clientId: String?, @HeaderMap headers: Map<String, String>, @Body json: JsonArray): VideoPlaylistTokenResponse
-
-    @POST(".")
     suspend fun getClipUrls(@Header("Client-ID") clientId: String?, @Body json: JsonArray): ClipUrlsResponse
 
     @POST(".")

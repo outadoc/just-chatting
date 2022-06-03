@@ -44,10 +44,6 @@
     volatile <fields>;
 }
 
--keepclassmembers class com.google.android.exoplayer2.source.hls.playlist.DefaultHlsPlaylistTracker {
-    <methods>;
-}
-
 -keepclassmembers enum com.iheartradio.m3u8.data.** {
     *;
 }

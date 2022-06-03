@@ -66,17 +66,6 @@ class XtraModule {
 
     @Singleton
     @Provides
-    fun providesUsherApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): UsherApi {
-        return Retrofit.Builder()
-                .baseUrl("https://usher.ttvnw.net/")
-                .client(client)
-                .addConverterFactory(gsonConverterFactory)
-                .build()
-                .create(UsherApi::class.java)
-    }
-
-    @Singleton
-    @Provides
     fun providesMiscApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): MiscApi {
         return Retrofit.Builder()
                 .baseUrl("https://api.twitch.tv/") //placeholder url
@@ -95,22 +84,6 @@ class XtraModule {
                 .addConverterFactory(gsonConverterFactory)
                 .build()
                 .create(IdApi::class.java)
-    }
-
-    @Singleton
-    @Provides
-    fun providesTTVLolApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): TTVLolApi {
-        return Retrofit.Builder()
-                .baseUrl("https://api.ttv.lol/")
-                .client(client.newBuilder().addInterceptor { chain ->
-                    val request = chain.request().newBuilder()
-                            .addHeader("X-Donate-To", "https://ttv.lol/donate")
-                            .build()
-                    chain.proceed(request)
-                }.build())
-                .addConverterFactory(gsonConverterFactory)
-                .build()
-                .create(TTVLolApi::class.java)
     }
 
     @Singleton

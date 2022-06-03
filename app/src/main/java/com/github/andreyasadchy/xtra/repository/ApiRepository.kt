@@ -37,16 +37,13 @@ import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val TAG = "ApiRepository"
-
 @Singleton
 class ApiRepository @Inject constructor(
     private val helix: HelixApi,
     private val gql: GraphQLRepository,
     private val misc: MiscApi,
     private val localFollowsChannel: LocalFollowChannelRepository,
-    private val localFollowsGame: LocalFollowGameRepository,
-    private val bookmarksRepository: BookmarksRepository) : TwitchService {
+    private val localFollowsGame: LocalFollowGameRepository) : TwitchService {
 
     override fun loadTopGames(helixClientId: String?, helixToken: String?, gqlClientId: String?, tags: List<String>?, apiPref: ArrayList<Pair<Long?, String?>?>, coroutineScope: CoroutineScope): Listing<Game> {
         val factory = GamesDataSource.Factory(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, helix, gqlClientId, tags, gql, apiPref, coroutineScope)
@@ -185,7 +182,7 @@ class ApiRepository @Inject constructor(
     }
 
     override fun loadFollowedChannels(userId: String?, helixClientId: String?, helixToken: String?, gqlClientId: String?, gqlToken: String?, apiPref: ArrayList<Pair<Long?, String?>?>, sort: com.github.andreyasadchy.xtra.model.helix.follows.Sort, order: Order, coroutineScope: CoroutineScope): Listing<Follow> {
-        val factory = FollowedChannelsDataSource.Factory(localFollowsChannel, bookmarksRepository, userId, helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, helix, gqlClientId, gqlToken?.let { TwitchApiHelper.addTokenPrefixGQL(it) }, gql, apiPref, sort, order, coroutineScope)
+        val factory = FollowedChannelsDataSource.Factory(localFollowsChannel, userId, helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, helix, gqlClientId, gqlToken?.let { TwitchApiHelper.addTokenPrefixGQL(it) }, gql, apiPref, sort, order, coroutineScope)
         val config = PagedList.Config.Builder()
             .setPageSize(40)
             .setInitialLoadSizeHint(40)

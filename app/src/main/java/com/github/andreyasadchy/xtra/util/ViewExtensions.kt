@@ -23,14 +23,12 @@ import com.bumptech.glide.signature.ObjectKey
 import com.github.andreyasadchy.xtra.GlideApp
 
 fun View.visible() {
+    // TODO replace with android ktx
     visibility = View.VISIBLE
 }
 
-fun View.invisible() {
-    visibility = View.INVISIBLE
-}
-
 fun View.gone() {
+    // TODO replace with android ktx
     visibility = View.GONE
 }
 
@@ -58,19 +56,6 @@ fun ImageView.loadImage(fragment: Fragment, url: String?, changes: Boolean = fal
         } catch (e: IllegalArgumentException) {
         }
         return
-    }
-}
-
-fun ImageView.loadBitmap(url: String) {
-    if (context.isActivityResumed) {
-        try {
-            GlideApp.with(context)
-                    .asBitmap()
-                    .load(url)
-                    .transition(BitmapTransitionOptions.withCrossFade())
-                    .into(this)
-        } catch (e: IllegalArgumentException) {
-        }
     }
 }
 
@@ -105,21 +90,6 @@ val View.isKeyboardShown: Boolean
         val keypadHeight = screenHeight - rect.bottom
         return keypadHeight > screenHeight * 0.15
     }
-
-fun ImageView.setTint(@ColorRes tint: Int) {
-    val color = ContextCompat.getColor(context, tint)
-    drawable.setTint(color)
-}
-
-fun ImageView.enable() {
-    isEnabled = true
-    setColorFilter(Color.WHITE)
-}
-
-fun ImageView.disable() {
-    isEnabled = false
-    setColorFilter(Color.GRAY)
-}
 
 class TextWithCanvas(context: Context, attrs: AttributeSet) : AppCompatTextView(context, attrs) {
     override fun draw(canvas: Canvas?) {

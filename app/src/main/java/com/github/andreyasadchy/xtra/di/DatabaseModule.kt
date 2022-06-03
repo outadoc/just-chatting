@@ -20,15 +20,6 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun providesLocalFollowsGameRepository(localFollowsGameDao: LocalFollowsGameDao): LocalFollowGameRepository = LocalFollowGameRepository(localFollowsGameDao)
-
-    @Singleton
-    @Provides
-    fun providesBookmarksRepository(bookmarksDao: BookmarksDao, localFollowsChannelDao: LocalFollowsChannelDao, videosDao: VideosDao): BookmarksRepository = BookmarksRepository(bookmarksDao, localFollowsChannelDao, videosDao)
-
-    @Singleton
-    @Provides
-    fun providesVodBookmarkIgnoredUsersRepository(vodBookmarkIgnoredUsersDao: VodBookmarkIgnoredUsersDao): VodBookmarkIgnoredUsersRepository = VodBookmarkIgnoredUsersRepository(vodBookmarkIgnoredUsersDao)
-
     @Singleton
     @Provides
     fun providesSortChannelRepository(sortChannelDao: SortChannelDao): SortChannelRepository = SortChannelRepository(sortChannelDao)
@@ -64,10 +55,6 @@ class DatabaseModule {
     @Singleton
     @Provides
     fun providesBookmarksDao(database: AppDatabase): BookmarksDao = database.bookmarks()
-
-    @Singleton
-    @Provides
-    fun providesVodBookmarkIgnoredUsersDao(database: AppDatabase): VodBookmarkIgnoredUsersDao = database.vodBookmarkIgnoredUsers()
 
     @Singleton
     @Provides

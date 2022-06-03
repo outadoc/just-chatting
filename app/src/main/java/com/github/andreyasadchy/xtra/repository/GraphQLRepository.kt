@@ -32,25 +32,6 @@ private const val TAG = "GraphQLRepository"
 @Singleton
 class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
 
-    suspend fun loadClipUrls(clientId: String?, slug: String?): Map<String, String> = withContext(Dispatchers.IO) {
-        val array = JsonArray(1)
-        val videoAccessTokenOperation = JsonObject().apply {
-            addProperty("operationName", "VideoAccessToken_Clip")
-            add("variables", JsonObject().apply {
-                addProperty("slug", slug)
-            })
-            add("extensions", JsonObject().apply {
-                add("persistedQuery", JsonObject().apply {
-                    addProperty("version", 1)
-                    addProperty("sha256Hash", "36b89d2507fce29e5ca551df756d27c1cfe079e2609642b4390aa4c35796eb11")
-                })
-            })
-        }
-        array.add(videoAccessTokenOperation)
-        val response = graphQL.getClipUrls(clientId, array)
-        response.videos.associateBy({ if (it.frameRate < 60) "${it.quality}p" else "${it.quality}p${it.frameRate}" }, { it.url })
-    }
-
     suspend fun loadClipData(clientId: String?, slug: String?): ClipDataResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "ChannelClipCore")
@@ -627,22 +608,4 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getFollowingGame(clientId, token, json)
     }
 
-    suspend fun loadChannelPanel(channelId: String): String? = withContext(Dispatchers.IO) {
-        Log.d(TAG, "Loading panel for channel: $channelId")
-        val array = JsonArray(1)
-        val panelOperation = JsonObject().apply {
-            addProperty("operationName", "ChannelPanels")
-            add("variables", JsonObject().apply {
-                addProperty("id", channelId)
-            })
-            add("extensions", JsonObject().apply {
-                add("persistedQuery", JsonObject().apply {
-                    addProperty("version", 1)
-                    addProperty("sha256Hash", "236b0ec07489e5172ee1327d114172f27aceca206a1a8053106d60926a7f622e")
-                })
-            })
-        }
-        array.add(panelOperation)
-        graphQL.getChannelPanel(array).body()?.string()
-    }
 }

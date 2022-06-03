@@ -7,6 +7,7 @@ import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
+@Suppress("unused")
 @Module(includes = [ViewModelModule::class])
 abstract class ActivityBuilderModule {
 

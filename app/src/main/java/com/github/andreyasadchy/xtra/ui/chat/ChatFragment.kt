@@ -12,11 +12,12 @@ import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
-import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
-import com.github.andreyasadchy.xtra.util.*
-import kotlinx.android.synthetic.main.view_chat.view.*
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.LifecycleListener
+import com.github.andreyasadchy.xtra.util.hideKeyboard
+import com.github.andreyasadchy.xtra.util.prefs
 
 class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDialog.OnButtonClickListener {
 
@@ -43,52 +44,32 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         val showClearChat = requireContext().prefs().getBoolean(C.CHAT_SHOW_CLEARCHAT, true)
         val enableRecentMsg = requireContext().prefs().getBoolean(C.CHAT_RECENT, true)
         val recentMsgLimit = requireContext().prefs().getInt(C.CHAT_RECENT_LIMIT, 100)
-        val disableChat = requireContext().prefs().getBoolean(C.CHAT_DISABLE, false)
         val isLive = args.getBoolean(KEY_IS_LIVE)
-        val enableChat = if (disableChat) {
-            false
-        } else {
-            if (isLive) {
-                viewModel.startLive(useSSl, usePubSub, user, helixClientId, gqlClientId, channelId, channelLogin, channelName, showUserNotice, showClearMsg, showClearChat, enableRecentMsg, recentMsgLimit.toString())
-                chatView.init(this)
-                chatView.setCallback(viewModel)
-                if (userIsLoggedIn) {
-                    user.login?.let { chatView.setUsername(it) }
-                    chatView.setChatters(viewModel.chatters)
-                    val emotesObserver = Observer(chatView::addEmotes)
-                    viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
-                    viewModel.recentEmotes.observe(viewLifecycleOwner, emotesObserver)
-                    viewModel.newChatter.observe(viewLifecycleOwner, Observer(chatView::addChatter))
-                }
-                true
-            } else {
-                args.getString(KEY_VIDEO_ID).let {
-                    if (it != null && !args.getBoolean(KEY_START_TIME_EMPTY)) {
-                        chatView.init(this)
-                        val getCurrentPosition = (parentFragment as ChatReplayPlayerFragment)::getCurrentPosition
-                        viewModel.startReplay(user, helixClientId, gqlClientId, channelId, it, args.getDouble(KEY_START_TIME), getCurrentPosition)
-                        true
-                    } else {
-                        chatView.chatReplayUnavailable.visible()
-                        false
-                    }
-                }
-            }
+
+        viewModel.startLive(useSSl, usePubSub, user, helixClientId, gqlClientId, channelId, channelLogin, channelName, showUserNotice, showClearMsg, showClearChat, enableRecentMsg, recentMsgLimit.toString())
+        chatView.init(this)
+        chatView.setCallback(viewModel)
+        if (userIsLoggedIn) {
+            user.login?.let { chatView.setUsername(it) }
+            chatView.setChatters(viewModel.chatters)
+            val emotesObserver = Observer(chatView::addEmotes)
+            viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
+            viewModel.recentEmotes.observe(viewLifecycleOwner, emotesObserver)
+            viewModel.newChatter.observe(viewLifecycleOwner, Observer(chatView::addChatter))
         }
-        if (enableChat) {
-            chatView.enableChatInteraction(isLive && userIsLoggedIn)
-            viewModel.chatMessages.observe(viewLifecycleOwner, Observer(chatView::submitList))
-            viewModel.newMessage.observe(viewLifecycleOwner) { chatView.notifyMessageAdded() }
-            viewModel.recentMessages.observe(viewLifecycleOwner) { chatView.addRecentMessages(it) }
-            viewModel.globalBadges.observe(viewLifecycleOwner, Observer(chatView::addGlobalBadges))
-            viewModel.channelBadges.observe(viewLifecycleOwner, Observer(chatView::addChannelBadges))
-            viewModel.otherEmotes.observe(viewLifecycleOwner, Observer(chatView::addEmotes))
-            viewModel.cheerEmotes.observe(viewLifecycleOwner, Observer(chatView::addCheerEmotes))
-            viewModel.emotesLoaded.observe(viewLifecycleOwner) { chatView.notifyEmotesLoaded() }
-            viewModel.roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
-            viewModel.command.observe(viewLifecycleOwner) { chatView.notifyCommand(it) }
-            viewModel.reward.observe(viewLifecycleOwner) { chatView.notifyReward(it) }
-        }
+
+        chatView.enableChatInteraction(isLive && userIsLoggedIn)
+        viewModel.chatMessages.observe(viewLifecycleOwner, Observer(chatView::submitList))
+        viewModel.newMessage.observe(viewLifecycleOwner) { chatView.notifyMessageAdded() }
+        viewModel.recentMessages.observe(viewLifecycleOwner) { chatView.addRecentMessages(it) }
+        viewModel.globalBadges.observe(viewLifecycleOwner, Observer(chatView::addGlobalBadges))
+        viewModel.channelBadges.observe(viewLifecycleOwner, Observer(chatView::addChannelBadges))
+        viewModel.otherEmotes.observe(viewLifecycleOwner, Observer(chatView::addEmotes))
+        viewModel.cheerEmotes.observe(viewLifecycleOwner, Observer(chatView::addCheerEmotes))
+        viewModel.emotesLoaded.observe(viewLifecycleOwner) { chatView.notifyEmotesLoaded() }
+        viewModel.roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
+        viewModel.command.observe(viewLifecycleOwner) { chatView.notifyCommand(it) }
+        viewModel.reward.observe(viewLifecycleOwner) { chatView.notifyReward(it) }
     }
 
     fun isActive(): Boolean? {
@@ -120,7 +101,6 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
 
     override fun onViewProfileClicked(id: String?, login: String?, name: String?, channelLogo: String?) {
         (requireActivity() as MainActivity).viewChannel(id, login, name, channelLogo)
-        (parentFragment as? BasePlayerFragment)?.minimize()
     }
 
     override fun onNetworkRestored() {
@@ -130,15 +110,9 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
     }
 
     override fun onMovedToBackground() {
-        if (!requireArguments().getBoolean(KEY_IS_LIVE) || !requireContext().prefs().getBoolean(C.PLAYER_KEEP_CHAT_OPEN, false) || requireContext().prefs().getBoolean(C.CHAT_DISABLE, false)) {
-            viewModel.stop()
-        }
     }
 
     override fun onMovedToForeground() {
-        if (!requireArguments().getBoolean(KEY_IS_LIVE) || !requireContext().prefs().getBoolean(C.PLAYER_KEEP_CHAT_OPEN, false) || requireContext().prefs().getBoolean(C.CHAT_DISABLE, false)) {
-            viewModel.start()
-        }
     }
 
     companion object {

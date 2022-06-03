@@ -32,7 +32,4 @@ class LocalFollowGameRepository @Inject constructor(
         }
     }
 
-    fun updateFollow(item: LocalFollowGame) {
-        GlobalScope.launch { localFollowsGameDao.update(item) }
-    }
 }

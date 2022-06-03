@@ -75,25 +75,6 @@ object TwitchApiHelper {
         }
     }
 
-    fun getDuration(duration: String?): Long? {
-        return if (duration.isNullOrBlank()) {
-            null
-        } else {
-            try {
-                parseLong(duration)
-            } catch (e: Exception) {
-                try {
-                    val h = duration.substringBefore("h", "0").takeLast(2).filter { it.isDigit() }.toInt()
-                    val m = duration.substringBefore("m", "0").takeLast(2).filter { it.isDigit() }.toInt()
-                    val s = duration.substringBefore("s", "0").takeLast(2).filter { it.isDigit() }.toInt()
-                    ((h * 3600) + (m * 60) + s).toLong()
-                } catch (e: Exception) {
-                    null
-                }
-            }
-        }
-    }
-
     fun getDurationFromSeconds(context: Context, input: String?, text: Boolean = true): String? {
         if (input != null) {
             val duration = try {
@@ -133,20 +114,6 @@ object TwitchApiHelper {
         } else null
     }
 
-    fun getVodTimeLeft(context: Context, input: String?, days: Int): String? {
-        val time = input?.let { parseIso8601Date(it) }
-        return if (time != null) {
-            val currentTime = Calendar.getInstance(TimeZone.getTimeZone("UTC")).time.time
-            val calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"))
-            calendar.time = Date(time)
-            calendar.add(Calendar.DAY_OF_MONTH, days)
-            val diff = ((calendar.time.time - currentTime) / 1000)
-            return if (diff >= 0) {
-                getDurationFromSeconds(context, diff.toString(), true)
-            } else null
-        } else null
-    }
-
     fun getTimestamp(input: Long, timestampFormat: String?): String? {
         val pattern = when (timestampFormat) {
             "0" -> "H:mm"
@@ -164,17 +131,6 @@ object TwitchApiHelper {
         } catch (e: Exception) {
             null
         }
-    }
-
-    fun getClipTime(period: Period? = null): String {
-        val days = when (period) {
-            Period.DAY -> -1
-            Period.WEEK -> -7
-            Period.MONTH -> -30
-            else -> 0 }
-        val calendar = Calendar.getInstance()
-        calendar.add(Calendar.DAY_OF_YEAR, days)
-        return SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).format(calendar.time)
     }
 
     fun parseIso8601Date(date: String): Long? {
@@ -216,17 +172,6 @@ object TwitchApiHelper {
 
     fun startPubSub(channelId: String, coroutineScope: CoroutineScope, newMessageListener: OnChatMessageReceivedListener, callbackReward: OnRewardReceivedListener): PubSubWebSocket {
         return PubSubWebSocket(channelId, coroutineScope, PubSubListenerImpl(newMessageListener, callbackReward)).apply { connect() }
-    }
-
-    fun parseClipOffset(url: String): Double {
-        val time = url.substringAfterLast('=').split("\\D".toRegex())
-        var offset = 0.0
-        var multiplier = 1.0
-        for (i in time.lastIndex - 1 downTo 0) {
-            offset += time[i].toDouble() * multiplier
-            multiplier *= 60
-        }
-        return offset
     }
 
     fun addTokenPrefixHelix(token: String) = "Bearer $token"

@@ -11,7 +11,6 @@ import com.github.andreyasadchy.xtra.model.chat.*
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
-import com.github.andreyasadchy.xtra.ui.player.ChatReplayManager
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.ui.view.chat.MAX_ADAPTER_COUNT
 import com.github.andreyasadchy.xtra.util.SingleLiveEvent
@@ -112,25 +111,6 @@ class ChatViewModel @Inject constructor(
                     channelLogin = channelLogin,
                     enableRecentMsg = enableRecentMsg,
                     recentMsgLimit = recentMsgLimit
-                )
-            }
-        }
-    }
-
-    fun startReplay(user: User, helixClientId: String?, gqlClientId: String, channelId: String?, videoId: String, startTime: Double, getCurrentPosition: () -> Double) {
-        if (chat == null) {
-            chat = VideoChatController(
-                clientId = gqlClientId,
-                videoId = videoId,
-                startTime = startTime,
-                getCurrentPosition = getCurrentPosition
-            )
-            if (channelId != null) {
-                init(
-                    helixClientId = helixClientId,
-                    helixToken = user.helixToken?.nullIfEmpty(),
-                    gqlClientId = gqlClientId,
-                    channelId = channelId
                 )
             }
         }
@@ -412,32 +392,6 @@ class ChatViewModel @Inject constructor(
                 roomState.postValue(RoomState(null, null, null, null, null))
                 command.postValue(Command(type = "disconnect_command"))
             }
-        }
-    }
-
-    private inner class VideoChatController(
-            private val clientId: String,
-            private val videoId: String,
-            private val startTime: Double,
-            private val getCurrentPosition: () -> Double) : ChatController() {
-
-        private var chatReplayManager: ChatReplayManager? = null
-
-        override fun send(message: CharSequence) {
-
-        }
-
-        override fun start() {
-            stop()
-            chatReplayManager = ChatReplayManager(clientId, repository, videoId, startTime, getCurrentPosition, this, { _chatMessages.postValue(ArrayList()) }, viewModelScope)
-        }
-
-        override fun pause() {
-            chatReplayManager?.stop()
-        }
-
-        override fun stop() {
-            chatReplayManager?.stop()
         }
     }
 

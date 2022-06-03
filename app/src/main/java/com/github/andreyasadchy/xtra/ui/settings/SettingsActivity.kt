@@ -116,42 +116,6 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
             findPreference<ListPreference>(C.LANDSCAPE_COLUMN_COUNT)?.onPreferenceChangeListener = changeListener
             findPreference<SwitchPreferenceCompat>(C.COMPACT_STREAMS)?.onPreferenceChangeListener = changeListener
 
-            findPreference<SeekBarPreference>("chatWidth")?.apply {
-                summary = context.getString(R.string.pixels, activity.prefs().getInt(C.LANDSCAPE_CHAT_WIDTH, 30))
-                setOnPreferenceChangeListener { _, newValue ->
-                    setResult()
-                    val chatWidth = DisplayUtils.calculateLandscapeWidthByPercent(activity, newValue as Int)
-                    summary = context.getString(R.string.pixels, chatWidth)
-                    activity.prefs().edit { putInt(C.LANDSCAPE_CHAT_WIDTH, chatWidth) }
-                    true
-                }
-            }
-
-            findPreference<Preference>("player_button_settings")?.setOnPreferenceClickListener {
-                parentFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.settings, PlayerButtonSettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
-                true
-            }
-
-            findPreference<Preference>("player_menu_settings")?.setOnPreferenceClickListener {
-                parentFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.settings, PlayerMenuSettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
-                true
-            }
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) {
-                findPreference<ListPreference>(C.PLAYER_BACKGROUND_PLAYBACK)?.apply {
-                    setEntries(R.array.backgroundPlaybackNoPipEntries)
-                    setEntryValues(R.array.backgroundPlaybackNoPipValues)
-                }
-            }
-
             findPreference<Preference>("buffer_settings")?.setOnPreferenceClickListener {
                 parentFragmentManager
                     .beginTransaction()
@@ -259,18 +223,6 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
         override fun onSaveInstanceState(outState: Bundle) {
             outState.putBoolean(SettingsFragment.KEY_CHANGED, changed)
             super.onSaveInstanceState(outState)
-        }
-    }
-
-    class PlayerButtonSettingsFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.player_button_preferences, rootKey)
-        }
-    }
-
-    class PlayerMenuSettingsFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.player_menu_preferences, rootKey)
         }
     }
 

@@ -16,7 +16,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun localFollowsChannel(): LocalFollowsChannelDao
     abstract fun localFollowsGame(): LocalFollowsGameDao
     abstract fun bookmarks(): BookmarksDao
-    abstract fun vodBookmarkIgnoredUsers(): VodBookmarkIgnoredUsersDao
     abstract fun sortChannelDao(): SortChannelDao
     abstract fun sortGameDao(): SortGameDao
 }

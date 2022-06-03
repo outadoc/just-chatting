@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.ui.follow.channels
 
-import android.app.Application
 import android.content.Context
 import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
@@ -22,9 +21,9 @@ import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class FollowedChannelsViewModel @Inject constructor(
-        context: Application,
-        private val repository: TwitchService,
-        private val sortChannelRepository: SortChannelRepository) : PagedListViewModel<Follow>() {
+    private val repository: TwitchService,
+    private val sortChannelRepository: SortChannelRepository
+) : PagedListViewModel<Follow>() {
 
     private val _sortText = MutableLiveData<CharSequence>()
     val sortText: LiveData<CharSequence>

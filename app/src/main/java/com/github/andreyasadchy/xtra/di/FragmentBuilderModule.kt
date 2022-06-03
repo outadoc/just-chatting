@@ -4,7 +4,6 @@ import com.github.andreyasadchy.xtra.ui.channel.ChannelPagerFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.follow.FollowPagerFragment
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
-import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchFragment
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
@@ -14,6 +13,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
 @Module
+@Suppress("unused")
 abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector
@@ -21,9 +21,6 @@ abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun contributeFollowedStreamsFragment(): FollowedStreamsFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributeStreamPlayerFragment(): StreamPlayerFragment
 
     @ContributesAndroidInjector
     abstract fun contributeSearchFragment(): SearchFragment

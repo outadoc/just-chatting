@@ -16,8 +16,4 @@
         <item quantity="one">%d minute</item>
         <item quantity="other">%d minutes</item>
     </plurals>
-    <plurals name="broadcasters">
-        <item quantity="one">%d broadcaster</item>
-        <item quantity="other">%d broadcasters</item>
-    </plurals>
 </resources>

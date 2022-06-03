@@ -111,9 +111,6 @@ dependencies {
     implementation 'androidx.webkit:webkit:1.4.0'
     implementation "com.apollographql.apollo3:apollo-runtime:$apollo_ver"
 
-    implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer"
-    implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayer"
-    implementation "com.google.android.exoplayer:exoplayer-ui:$exoplayer"
     implementation 'org.checkerframework:checker-qual:3.22.0'
 
     implementation "io.coil-kt:coil:$coil"

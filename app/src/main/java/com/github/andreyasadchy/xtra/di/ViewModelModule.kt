@@ -7,7 +7,6 @@ import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.common.GenericViewModelFactory
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsViewModel
 import com.github.andreyasadchy.xtra.ui.main.MainViewModel
-import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchViewModel
 import com.github.andreyasadchy.xtra.ui.settings.SettingsViewModel
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsViewModel
@@ -17,6 +16,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 
 @Module
+@Suppress("unused")
 abstract class ViewModelModule {
 
     @Binds
@@ -36,11 +36,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(FollowedStreamsViewModel::class)
     abstract fun bindFollowedStreamsViewModel(followedStreamsViewModel: FollowedStreamsViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(StreamPlayerViewModel::class)
-    abstract fun bindStreamPlayerViewModel(streamPlayerViewModel: StreamPlayerViewModel): ViewModel
 
     @Binds
     @IntoMap

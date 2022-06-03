@@ -38,7 +38,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
     }
 
     private fun onMessage(context: Context, message: String, userNotice: Boolean): LiveChatMessage? {
-        if (!userNotice || (userNotice && context.prefs().getBoolean(C.CHAT_SHOW_USERNOTICE, true))) {
+        if (!userNotice || context.prefs().getBoolean(C.CHAT_SHOW_USERNOTICE, true)) {
             val parts = message.substring(1).split(" ".toRegex(), 2)
             val prefix = parts[0]
             val prefixes = splitAndMakeMap(prefix, ";", "=")

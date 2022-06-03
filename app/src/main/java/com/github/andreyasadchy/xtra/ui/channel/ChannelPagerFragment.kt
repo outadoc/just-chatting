@@ -55,9 +55,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
         val activity = requireActivity() as MainActivity
         val user = User.get(activity)
         setAdapter(ChannelPagerAdapter(activity, childFragmentManager, requireArguments()))
-        if (activity.isInLandscapeOrientation) {
-            appBar.setExpanded(false, false)
-        }
+
         requireArguments().getString(C.CHANNEL_DISPLAYNAME).let {
             if (it != null) {
                 userLayout.visible()

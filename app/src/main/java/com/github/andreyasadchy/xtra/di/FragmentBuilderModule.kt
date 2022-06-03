@@ -8,7 +8,6 @@ import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchFragment
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
-import com.github.andreyasadchy.xtra.ui.streams.common.StreamsFragment
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import dagger.Module
@@ -22,9 +21,6 @@ abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun contributeFollowedStreamsFragment(): FollowedStreamsFragment
-
-    @ContributesAndroidInjector
-    abstract fun contributeStreamsFragment(): StreamsFragment
 
     @ContributesAndroidInjector
     abstract fun contributeStreamPlayerFragment(): StreamPlayerFragment

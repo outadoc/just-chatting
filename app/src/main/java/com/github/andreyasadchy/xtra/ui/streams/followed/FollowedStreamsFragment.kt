@@ -16,15 +16,6 @@ class FollowedStreamsFragment : BaseStreamsFragment<FollowedStreamsViewModel>() 
 
     override val viewModel by viewModels<FollowedStreamsViewModel> { viewModelFactory }
 
-    override val adapter: BasePagedListAdapter<Stream> by lazy {
-        if (!compactStreams) {
-            super.adapter
-        } else {
-            val activity = requireActivity() as MainActivity
-            StreamsCompactAdapter(this, activity, activity)
-        }
-    }
-
     private var compactStreams = false
 
     override fun onCreate(savedInstanceState: Bundle?) {

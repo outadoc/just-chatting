@@ -19,5 +19,5 @@ class SearchPagerAdapter(
         return ChannelSearchFragment()
     }
 
-    override fun getCount(): Int = 2
+    override fun getCount(): Int = 1
 }

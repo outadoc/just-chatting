@@ -9,7 +9,6 @@ import com.github.andreyasadchy.xtra.repository.LoadingState
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.follow.FollowPagerFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
-import com.github.andreyasadchy.xtra.ui.top.TopFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
@@ -39,7 +38,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                 })
             }
         })
-        if (!requireContext().prefs().getBoolean(C.UI_SCROLLTOP, true) || parentFragment is TopFragment || parentFragment is FollowMediaFragment || parentFragment is FollowPagerFragment || parentFragment is SearchFragment) {
+        if (!requireContext().prefs().getBoolean(C.UI_SCROLLTOP, true) || parentFragment is FollowMediaFragment || parentFragment is FollowPagerFragment || parentFragment is SearchFragment) {
             scrollTop.isEnabled = false
         }
         recyclerView.let {

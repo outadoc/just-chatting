@@ -18,20 +18,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
-import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.channel.ChannelPagerFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
-import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.player.BasePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
-import com.github.andreyasadchy.xtra.ui.top.TopFragment
 import com.github.andreyasadchy.xtra.ui.view.SlidingLayout
 import com.github.andreyasadchy.xtra.util.*
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -44,8 +41,7 @@ import kotlinx.android.synthetic.main.fragment_media_pager.view.*
 import javax.inject.Inject
 
 
-const val INDEX_TOP = FragNavController.TAB1
-const val INDEX_FOLLOWED = FragNavController.TAB2
+const val INDEX_FOLLOWED = FragNavController.TAB1
 
 class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedListener, OnChannelSelectedListener, HasAndroidInjector, Injectable, SlidingLayout.Listener {
 
@@ -115,17 +111,12 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
 
         val notInitialized = savedInstanceState == null
         initNavigation()
-        if ((User.get(this) !is NotLoggedIn && ((prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1) < 2)) || (User.get(this) is NotLoggedIn && ((prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1) == 0))) {
-            fragNavController.initialize(INDEX_FOLLOWED, savedInstanceState)
-            if (notInitialized) {
-                navBar.selectedItemId = R.id.fragment_follow
-            }
-        } else {
-            fragNavController.initialize(INDEX_TOP, savedInstanceState)
-            if (notInitialized) {
-                navBar.selectedItemId = R.id.fragment_top
-            }
+
+        fragNavController.initialize(INDEX_FOLLOWED, savedInstanceState)
+        if (notInitialized) {
+            navBar.selectedItemId = R.id.fragment_follow
         }
+
         var flag = notInitialized && !isNetworkAvailable
         viewModel.isNetworkAvailable.observe(this) {
             it.getContentIfNotHandled()?.let { online ->
@@ -188,19 +179,7 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
     override fun onBackPressed() {
         if (!viewModel.isPlayerMaximized) {
             if (fragNavController.isRootFragment) {
-                if ((User.get(this) !is NotLoggedIn && ((prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1) < 2)) || (User.get(this) is NotLoggedIn && ((prefs.getString(C.UI_STARTONFOLLOWED, "1")?.toInt() ?: 1) == 0))) {
-                    if (fragNavController.currentStackIndex != INDEX_FOLLOWED) {
-                        navBar.selectedItemId = R.id.fragment_follow
-                    } else {
-                        super.onBackPressed()
-                    }
-                } else {
-                    if (fragNavController.currentStackIndex != INDEX_TOP) {
-                        navBar.selectedItemId = R.id.fragment_top
-                    } else {
-                        super.onBackPressed()
-                    }
-                }
+                super.onBackPressed()
             } else {
                 val currentFrag = fragNavController.currentFrag
                 if (currentFrag !is ChannelPagerFragment || (currentFrag.currentFragment.let { it !is ChatFragment || !it.hideEmotesMenu() })) {
@@ -304,7 +283,7 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
 //Navigation listeners
 
     override fun startStream(stream: Stream) {
-        startPlayer(StreamPlayerFragment.newInstance(stream))
+        fragNavController.pushFragment(ChannelPagerFragment.newInstance(stream.user_id, stream.user_login, stream.user_name, stream.channelLogo))
     }
 
     override fun viewChannel(id: String?, login: String?, name: String?, channelLogo: String?, updateLocal: Boolean) {
@@ -379,7 +358,6 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
     private fun initNavigation() {
         fragNavController.apply {
             rootFragments = listOf(
-                TopFragment(),
                 FollowMediaFragment.newInstance(prefs.getBoolean(C.UI_FOLLOWPAGER, true), prefs.getString(C.UI_FOLLOW_DEFAULT_PAGE, "0")?.toInt(), !User.get(this@MainActivity).gqlToken.isNullOrBlank()),
             )
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
@@ -393,26 +371,18 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
         }
         navBar.apply {
             setOnNavigationItemSelectedListener {
-                val index = when (it.itemId) {
-                    R.id.fragment_top -> INDEX_TOP
-                    R.id.fragment_follow -> INDEX_FOLLOWED
-                    else -> throw IllegalArgumentException()
-                }
-                fragNavController.switchTab(index)
+                fragNavController.switchTab(INDEX_FOLLOWED)
                 true
             }
 
             setOnNavigationItemReselectedListener {
                 val currentFragment = fragNavController.currentFrag
-                when (it.itemId) {
-                    R.id.fragment_games -> fragNavController.clearStack()
-                    else -> if (fragNavController.isRootFragment) {
-                        if (currentFragment is Scrollable) {
-                            currentFragment.scrollToTop()
-                        }
-                    } else {
-                        fragNavController.clearStack()
+                if (fragNavController.isRootFragment) {
+                    if (currentFragment is Scrollable) {
+                        currentFragment.scrollToTop()
                     }
+                } else {
+                    fragNavController.clearStack()
                 }
             }
         }

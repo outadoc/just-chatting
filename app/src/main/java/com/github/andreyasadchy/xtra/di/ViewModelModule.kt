@@ -10,7 +10,6 @@ import com.github.andreyasadchy.xtra.ui.main.MainViewModel
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerViewModel
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchViewModel
 import com.github.andreyasadchy.xtra.ui.settings.SettingsViewModel
-import com.github.andreyasadchy.xtra.ui.streams.common.StreamsViewModel
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsViewModel
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedViewModel
 import dagger.Binds
@@ -32,11 +31,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(SettingsViewModel::class)
     abstract fun bindSettingsViewModel(settingsViewModel: SettingsViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(StreamsViewModel::class)
-    abstract fun bindStreamsViewModel(streamListViewModel: StreamsViewModel): ViewModel
 
     @Binds
     @IntoMap

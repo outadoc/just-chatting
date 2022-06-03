@@ -156,16 +156,12 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
     }
 
     private fun updateStreamLayout(stream: Stream?) {
-        val activity = requireActivity() as MainActivity
         if (stream?.type?.lowercase() == "rerun") {
             watchLive.text = getString(R.string.watch_rerun)
-            watchLive.setOnClickListener { activity.startStream(stream) }
         } else {
             if (stream?.viewer_count != null) {
                 watchLive.text = getString(R.string.watch_live)
-                watchLive.setOnClickListener { activity.startStream(stream) }
             } else {
-                watchLive.setOnClickListener { activity.startStream(Stream(user_id = requireArguments().getString(C.CHANNEL_ID), user_login = requireArguments().getString(C.CHANNEL_LOGIN), user_name = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE))) }
                 if (stream?.lastBroadcast != null) {
                     TwitchApiHelper.formatTimeString(requireContext(), stream.lastBroadcast).let {
                         if (it != null)  {

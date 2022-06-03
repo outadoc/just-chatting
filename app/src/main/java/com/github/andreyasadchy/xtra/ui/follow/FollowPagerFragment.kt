@@ -22,23 +22,10 @@ class FollowPagerFragment : MediaPagerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
-        val defaultItem = requireArguments().getInt(DEFAULT_ITEM)
-        val loggedIn = requireArguments().getBoolean(LOGGED_IN)
-        setAdapter(adapter = FollowPagerAdapter(activity, childFragmentManager, loggedIn),
-            currentItem = if (loggedIn) {
-                when (defaultItem) {
-                    1 -> 2
-                    2 -> 3
-                    3 -> 0
-                    else -> 1
-                }
-            } else {
-                when (defaultItem) {
-                    2 -> 2
-                    3 -> 0
-                    else -> 1
-                }
-            })
+        setAdapter(
+            adapter = FollowPagerAdapter(activity, childFragmentManager),
+            currentItem = 0
+        )
     }
 
     override fun initialize() {

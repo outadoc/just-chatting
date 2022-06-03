@@ -2,21 +2,12 @@
 <resources>
     <string name="app_name" translatable="false">Just Chatting</string>
     <string name="games">Games</string>
-    <string name="popular">Popular</string>
-    <string name="following">Following</string>
     <string name="downloads">Downloads</string>
     <string name="connection_error">Error connecting to the server. Please try again</string>
     <string name="sort">Sort</string>
-    <string name="upload_date">Upload date</string>
-    <string name="today">Today</string>
-    <string name="this_week">This week</string>
-    <string name="this_month">This month</string>
     <string name="all_time">All time</string>
-    <string name="view_count">View count</string>
-    <string name="period">Period</string>
     <string name="apply">Apply</string>
     <string name="sort_and_period">Sort by: %1$s. Period: %2$s</string>
-    <string name="trending">Trending</string>
     <string name="live">Live</string>
     <string name="videos">Videos</string>
     <string name="clips">Clips</string>
@@ -25,34 +16,12 @@
     <string name="source">Source</string>
     <string name="audio_only">Audio only</string>
     <string name="chat_only">Chat only</string>
-    <string name="select_quality">Select quality</string>
     <string name="download">Download</string>
-    <string name="downloading">Downloading</string>
-    <string name="downloaded">Download complete</string>
-    <string name="uploaded_date">Uploaded %s</string>
-    <string name="downloaded_date">Downloaded %s</string>
-    <string name="welcome">Welcome</string>
     <string name="log_in">Log in</string>
     <string name="log_out">Log out</string>
-    <string name="skip">Skip</string>
-    <string name="specify_time">Specify time</string>
-    <string name="from">From:</string>
-    <string name="to">To:</string>
-    <string name="duration">Duration: %s</string>
-    <string name="invalid_time">Invalid time</string>
-    <string name="from_is_greater">Time From must be less than To</string>
-    <string name="to_is_lesser">Time To must be greater than From</string>
-    <string name="to_is_longer">To can\'t be greater than video length</string>
-    <string name="delete">Delete</string>
-    <string name="are_you_sure">Are you sure you want to delete this video?</string>
     <string name="token_expired">Your session has expired. Please log in again</string>
     <string name="no_connection">No Internet connection</string>
     <string name="connection_restored">Back online</string>
-    <string name="notification_downloads_channel_title">Downloads</string>
-    <string name="notification_downloads_channel_id" translatable="false">xtra_downloads_channel</string>
-    <string name="storage_permission_title">The app needs storage permission</string>
-    <string name="storage_permission_message">Storage permission is required to download videos.</string>
-    <string name="permission_denied">Required permissions were denied</string>
     <string name="nothing_here">Nothing here</string>
     <string name="watch_live">Watch live</string>
     <string name="watch_rerun">Watch rerun</string>
@@ -66,9 +35,6 @@
     <string name="landscape_chat_width">Landscape chat width</string>
     <string name="portrait_column_count">Portrait column count</string>
     <string name="landscape_column_count">Landscape column count</string>
-    <string name="internal_storage">Internal storage</string>
-    <string name="save_to">Save to</string>
-    <string name="no_storage_detected">No available storage detected (most likely the phone is connected to a computer).</string>
     <string name="rewind">Rewind</string>
     <string name="forward">Fast forward</string>
     <string name="seconds_full">%s seconds</string>
@@ -79,22 +45,14 @@
     <string name="no">No</string>
     <string name="search">Search</string>
     <string name="chat_replay_unavailable">Chat replay is unavailable</string>
-    <string name="video_subscribers_only">This video is only available to subscribers</string>
     <string name="player_error">Player error. Retrying</string>
     <string name="picture_in_picture">Picture-in-Picture</string>
     <string name="adblock_not_working">TTV.LOL is offline. Disable Adblock to view streams in the meantime</string>
     <string name="adblock_desc">Uses the TTV.LOL api to load streams</string>
     <string name="adblock">Use Adblocker</string>
-    <string name="source_vod_start">Start: %s</string>
-    <string name="source_vod_end">End: %s</string>
     <string name="stream_ended">The stream has ended</string>
     <string name="viewers_count">%s viewers</string>
     <string name="views">%s views</string>
-    <string name="download_pending">Pending</string>
-    <string name="downloading_progress">Downloading: %d%%</string>
-    <string name="pause">Pause</string>
-    <string name="resume">Resume</string>
-    <string name="error_loading_user">Error loading user profile</string>
     <string name="reply">Reply</string>
     <string name="copy_message">Copy message</string>
     <string name="view_profile">View profile</string>
@@ -103,7 +61,6 @@
     <string name="notification_playback_channel_title">Playback</string>
     <string name="notification_playback_channel_id" translatable="false">xtra_playback_channel</string>
     <string name="channels">Channels</string>
-    <string name="watch_video">Watch full video</string>
     <string name="animated_emotes">Animated emotes</string>
     <string name="sleep_timer">Sleep timer</string>
     <string name="start">Start</string>
@@ -186,8 +143,6 @@
     <string name="video_type_highlight">Highlight</string>
     <string name="video_type_upload">Upload</string>
     <string name="video_type_rerun">Rerun</string>
-    <string name="all">All</string>
-    <string name="type">Type</string>
     <string name="room_emote">Emote</string>
     <string name="room_followers">Followers</string>
     <string name="room_followers_min">Followers %s</string>
@@ -222,7 +177,6 @@
     <string name="user_admin">Admin</string>
     <string name="user_global_mod">Global mod</string>
     <string name="uptime">%s uptime</string>
-    <string name="select_language">Select language</string>
     <string name="show_tags">Show tags</string>
     <string name="recentMsg_enable">Load recent messages</string>
     <string name="recentMsg_limit">Recent message limit</string>
@@ -427,7 +381,6 @@ Removes a timeout on a user.</string>
     <string name="viewers">Viewers</string>
     <string name="broadcaster">Broadcaster</string>
     <string name="user_count">%s users in chat</string>
-    <string name="position">Position: %s</string>
     <string name="player_viewerlist">Open viewer list from view count</string>
     <string name="use_followpager">Use tabs layout for following page</string>
     <string name="default_follow_tab">Default following tab</string>
@@ -436,7 +389,6 @@ Removes a timeout on a user.</string>
     <string name="admin_settings">Enable/disable as device admin app</string>
     <string name="disable_chat">Disable chat</string>
     <string name="disconnected">Disconnected</string>
-    <string name="other">Other</string>
     <string name="both">Both</string>
     <string name="timestamp_format_0">h:mm</string>
     <string name="timestamp_format_1">hh:mm</string>
@@ -470,15 +422,9 @@ Removes a timeout on a user.</string>
     <string name="debug_secondview">Movable in app PIP</string>
     <string name="add_bookmark">Add bookmark</string>
     <string name="show_vod_time_left">Show time left on bookmarked vods</string>
-    <string name="vod_time_left">Auto deleted in %s</string>
-    <string name="vod_ignore_user">Ignore auto deletion for this user</string>
     <string name="bookmarks">Bookmarks</string>
     <string name="use_savedpager">Use tabs layout for saved page</string>
     <string name="default_saved_tab">Default saved tab</string>
-    <string name="vod_remove_ignore">Remove from ignore list</string>
-    <string name="remove_bookmark">Remove bookmark</string>
-    <string name="saved">Saved</string>
-    <string name="refresh">Refresh</string>
     <string name="image_library">Image library</string>
     <string name="imageLibraryEntries1">Coil</string>
     <string name="imageLibraryEntries2">Coil + Glide WebP</string>
@@ -503,8 +449,6 @@ Removes a timeout on a user.</string>
     <string name="player_buttons">Player buttons</string>
     <string name="keep_chat_open">Keep chat connected in the background</string>
     <string name="lock_screen_audio">Keep audio playing when screen is off</string>
-    <string name="save_sort_channel">Remember choices for this channel</string>
-    <string name="save_sort_game">Remember choices for this game</string>
     <string name="show_chat">Show chat</string>
     <string name="hide_chat">Hide chat</string>
     <string name="show_chat_bar">Show chat input</string>

@@ -34,43 +34,10 @@ import retrofit2.http.POST
 interface GraphQLApi {
 
     @POST(".")
-    suspend fun getClipUrls(@Header("Client-ID") clientId: String?, @Body json: JsonArray): ClipUrlsResponse
-
-    @POST(".")
-    suspend fun getClipData(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ClipDataResponse
-
-    @POST(".")
-    suspend fun getClipVideo(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ClipVideoResponse
-
-    @POST(".")
-    suspend fun getTopGames(@Header("Client-ID") clientId: String?, @Body json: JsonObject): GameDataResponse
-
-    @POST(".")
-    suspend fun getTopStreams(@Header("Client-ID") clientId: String?, @Body json: JsonObject): StreamDataResponse
-
-    @POST(".")
-    suspend fun getGameStreams(@Header("Client-ID") clientId: String?, @Body json: JsonObject): GameStreamsDataResponse
-
-    @POST(".")
-    suspend fun getGameVideos(@Header("Client-ID") clientId: String?, @Body json: JsonObject): GameVideosDataResponse
-
-    @POST(".")
-    suspend fun getGameClips(@Header("Client-ID") clientId: String?, @Body json: JsonObject): GameClipsDataResponse
-
-    @POST(".")
-    suspend fun getChannelVideos(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ChannelVideosDataResponse
-
-    @POST(".")
-    suspend fun getChannelClips(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ChannelClipsDataResponse
-
-    @POST(".")
     suspend fun getChannelViewerList(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ChannelViewerListDataResponse
 
     @POST(".")
     suspend fun getSearchChannels(@Header("Client-ID") clientId: String?, @Body json: JsonObject): SearchChannelDataResponse
-
-    @POST(".")
-    suspend fun getSearchGames(@Header("Client-ID") clientId: String?, @Body json: JsonObject): SearchGameDataResponse
 
     @POST(".")
     suspend fun getGameTags(@Header("Client-ID") clientId: String?, @Body json: JsonObject): TagGameDataResponse
@@ -88,9 +55,6 @@ interface GraphQLApi {
     suspend fun getSearchStreamTags(@Header("Client-ID") clientId: String?, @Body json: JsonObject): TagSearchDataResponse
 
     @POST(".")
-    suspend fun getVodGames(@Header("Client-ID") clientId: String?, @Body json: JsonObject): VodGamesDataResponse
-
-    @POST(".")
     suspend fun getViewerCount(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ViewersDataResponse
 
     @POST(".")
@@ -100,13 +64,7 @@ interface GraphQLApi {
     suspend fun getFollowedStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedStreamsDataResponse
 
     @POST(".")
-    suspend fun getFollowedVideos(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedVideosDataResponse
-
-    @POST(".")
     suspend fun getFollowedChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedChannelsDataResponse
-
-    @POST(".")
-    suspend fun getFollowedGames(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedGamesDataResponse
 
     @POST(".")
     suspend fun getFollowUser(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowUserDataResponse
@@ -125,7 +83,4 @@ interface GraphQLApi {
 
     @POST(".")
     suspend fun getFollowingGame(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowingGameDataResponse
-
-    @POST(".")
-    suspend fun getChannelPanel(@Body json: JsonArray): Response<ResponseBody>
 }

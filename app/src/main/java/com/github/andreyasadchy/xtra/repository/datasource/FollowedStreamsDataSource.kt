@@ -50,7 +50,7 @@ class FollowedStreamsDataSource(
             }
             val remote = try {
                 when (apiPref.elementAt(0)?.second) {
-                    C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
+                    C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial() else throw Exception()
                     C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
                     C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
                     else -> throw Exception()
@@ -58,7 +58,7 @@ class FollowedStreamsDataSource(
             } catch (e: Exception) {
                 try {
                     when (apiPref.elementAt(1)?.second) {
-                        C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
+                        C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial() else throw Exception()
                         C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
                         C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
                         else -> throw Exception()
@@ -66,7 +66,7 @@ class FollowedStreamsDataSource(
                 } catch (e: Exception) {
                     try {
                         when (apiPref.elementAt(2)?.second) {
-                            C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
+                            C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial() else throw Exception()
                             C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
                             C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
                             else -> throw Exception()
@@ -103,7 +103,7 @@ class FollowedStreamsDataSource(
         }
     }
 
-    private suspend fun helixInitial(params: LoadInitialParams): List<Stream> {
+    private suspend fun helixInitial(): List<Stream> {
         api = C.HELIX
         val get = helixApi.getFollowedStreams(helixClientId, helixToken, userId, 100, offset)
         return if (get.data != null) {

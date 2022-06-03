@@ -1,6 +1,3 @@
 # Just Chatting
 
-## TODO
-- [ ] Remove all features but live player
-- [ ] Remove player, only keep chat
-- [ ] ...
+An app focused on a great Twitch chat experience.

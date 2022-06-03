@@ -8,35 +8,14 @@
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/navBarContainer"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/navBarContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/dividerColor" />
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/navBar"
-            style="?attr/navBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            app:labelVisibilityMode="labeled"
-            app:menu="@menu/navigation_bar" />
-    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/playerContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipChildren="false"
-        android:focusable="true"/>
+        android:focusable="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

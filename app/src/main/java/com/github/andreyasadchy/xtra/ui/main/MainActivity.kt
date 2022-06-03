@@ -113,9 +113,6 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
         initNavigation()
 
         fragNavController.initialize(INDEX_FOLLOWED, savedInstanceState)
-        if (notInitialized) {
-            navBar.selectedItemId = R.id.fragment_follow
-        }
 
         var flag = notInitialized && !isNetworkAvailable
         viewModel.isNetworkAvailable.observe(this) {
@@ -335,14 +332,6 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
         }
     }
 
-    private fun hideNavigationBar() {
-        navBarContainer.gone()
-    }
-
-    private fun showNavigationBar() {
-        navBarContainer.visible()
-    }
-
     fun popFragment() {
         fragNavController.popFragment()
     }
@@ -366,23 +355,6 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
                 }
 
                 override fun onTabTransaction(fragment: Fragment?, index: Int) {
-                }
-            }
-        }
-        navBar.apply {
-            setOnNavigationItemSelectedListener {
-                fragNavController.switchTab(INDEX_FOLLOWED)
-                true
-            }
-
-            setOnNavigationItemReselectedListener {
-                val currentFragment = fragNavController.currentFrag
-                if (fragNavController.isRootFragment) {
-                    if (currentFragment is Scrollable) {
-                        currentFragment.scrollToTop()
-                    }
-                } else {
-                    fragNavController.clearStack()
                 }
             }
         }

@@ -6,9 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
-import com.github.andreyasadchy.xtra.ui.clips.common.ClipsFragment
 import com.github.andreyasadchy.xtra.ui.common.pagers.ItemAwareFragmentPagerAdapter
-import com.github.andreyasadchy.xtra.ui.videos.channel.ChannelVideosFragment
 import com.github.andreyasadchy.xtra.util.C
 
 class ChannelPagerAdapter(
@@ -27,13 +25,7 @@ class ChannelPagerAdapter(
     }
 
     override fun getItem(position: Int): Fragment {
-        val fragment: Fragment = when (position) {
-            0 -> ChannelVideosFragment()
-            1 -> ClipsFragment()
-//            2 -> ChannelInfoFragment()
-            else -> return ChatFragment.newInstance(args.getString(C.CHANNEL_ID), args.getString(C.CHANNEL_LOGIN), args.getString(C.CHANNEL_DISPLAYNAME))
-        }
-        return fragment.apply { arguments = args }
+        return ChatFragment.newInstance(args.getString(C.CHANNEL_ID), args.getString(C.CHANNEL_LOGIN), args.getString(C.CHANNEL_DISPLAYNAME))
     }
 
 //    override fun getCount(): Int = 4

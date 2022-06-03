@@ -25,7 +25,7 @@ class StreamsFragment : BaseStreamsFragment<StreamsViewModel>(), FollowFragment 
             super.adapter
         } else {
             val activity = requireActivity() as MainActivity
-            StreamsCompactAdapter(this, activity, activity, activity)
+            StreamsCompactAdapter(this, activity, activity)
         }
     }
 
@@ -52,7 +52,6 @@ class StreamsFragment : BaseStreamsFragment<StreamsViewModel>(), FollowFragment 
         val activity = requireActivity() as MainActivity
         sortBar.visible()
         if (arguments?.getString(C.GAME_ID) != null && arguments?.getString(C.GAME_NAME) != null) {
-            sortBar.setOnClickListener { activity.openTagSearch(gameId = arguments?.getString(C.GAME_ID), gameName = arguments?.getString(C.GAME_NAME)) }
             if ((requireContext().prefs().getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0) < 2) {
                 parentFragment?.followGame?.let { initializeFollow(
                     fragment = this,
@@ -67,8 +66,6 @@ class StreamsFragment : BaseStreamsFragment<StreamsViewModel>(), FollowFragment 
             if (arguments?.getBoolean(C.CHANNEL_UPDATELOCAL) == true) {
                 viewModel.updateLocalGame(requireContext())
             }
-        } else {
-            sortBar.setOnClickListener { activity.openTagSearch() }
         }
     }
 }

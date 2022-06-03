@@ -29,8 +29,6 @@ import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
-import com.github.andreyasadchy.xtra.ui.player.clip.ClipPlayerFragment
-import com.github.andreyasadchy.xtra.ui.player.offline.OfflinePlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerFragment
 import com.github.andreyasadchy.xtra.ui.view.CustomPlayerView
 import com.github.andreyasadchy.xtra.ui.view.SlidingLayout
@@ -136,15 +134,15 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
         disableChat = prefs.getBoolean(C.CHAT_DISABLE, false)
         initLayout()
         playerView.controllerAutoShow = controllerAutoShow
-        if (this !is OfflinePlayerFragment) {
-            view.findViewById<ImageButton>(R.id.playerSettings).disable()
-            if (this !is StreamPlayerFragment) {
-                view.findViewById<ImageButton>(R.id.playerDownload).disable()
-            }
+
+        view.findViewById<ImageButton>(R.id.playerSettings).disable()
+        if (this !is StreamPlayerFragment) {
+            view.findViewById<ImageButton>(R.id.playerDownload).disable()
         }
+
         if (prefs.getBoolean(C.PLAYER_DOUBLETAP, true) && !disableChat) {
             playerView.setOnDoubleTapListener {
-                if (!isPortrait && slidingLayout.isMaximized && this !is OfflinePlayerFragment) {
+                if (!isPortrait && slidingLayout.isMaximized) {
                     if (chatLayout.isVisible) {
                         hideChat()
                     } else {
@@ -165,7 +163,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 visible()
                 text = channelName
                 setOnClickListener {
-                    activity.viewChannel(channelId, channelLogin, channelName, channelImage, this@BasePlayerFragment is OfflinePlayerFragment)
+                    activity.viewChannel(channelId, channelLogin, channelName, channelImage, false)
                     slidingLayout.minimize()
                 }
             }
@@ -266,7 +264,7 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 playerView.showController()
             }
         }
-        if (this !is OfflinePlayerFragment && prefs.getBoolean(C.PLAYER_FOLLOW, true) && (requireContext().prefs().getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0) < 2) {
+        if (prefs.getBoolean(C.PLAYER_FOLLOW, true) && (requireContext().prefs().getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0) < 2) {
             initializeFollow(
                 fragment = this,
                 viewModel = (viewModel as FollowViewModel),
@@ -277,20 +275,19 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
             )
         }
-        if (this !is ClipPlayerFragment) {
-            viewModel.sleepTimer.observe(viewLifecycleOwner) {
-                onMinimize()
-                activity.closePlayer()
-                if (prefs.getBoolean(C.SLEEP_TIMER_LOCK, true)) {
-                    lockScreen()
-                }
+
+        viewModel.sleepTimer.observe(viewLifecycleOwner) {
+            onMinimize()
+            activity.closePlayer()
+            if (prefs.getBoolean(C.SLEEP_TIMER_LOCK, true)) {
+                lockScreen()
             }
-            if (prefs.getBoolean(C.PLAYER_SLEEP, true)) {
-                view.findViewById<ImageButton>(R.id.playerSleepTimer).apply {
-                    visible()
-                    setOnClickListener {
-                        showSleepTimerDialog()
-                    }
+        }
+        if (prefs.getBoolean(C.PLAYER_SLEEP, true)) {
+            view.findViewById<ImageButton>(R.id.playerSleepTimer).apply {
+                visible()
+                setOnClickListener {
+                    showSleepTimerDialog()
                 }
             }
         }
@@ -412,26 +409,24 @@ abstract class BasePlayerFragment : BaseNetworkFragment(), Injectable, Lifecycle
                 height = LinearLayout.LayoutParams.MATCH_PARENT
                 weight = 1f
             }
-            if (this !is OfflinePlayerFragment) {
-                chatLayout.updateLayoutParams<LinearLayout.LayoutParams> {
-                    width = chatWidthLandscape
-                    height = LinearLayout.LayoutParams.MATCH_PARENT
-                    weight = 0f
-                }
-                if (disableChat) {
-                    chatLayout.gone()
-                    slidingLayout.maximizedSecondViewVisibility = View.GONE
-                } else {
-                    setPreferredChatVisibility()
-                }
-                val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
-                val btnDown = requireView().findViewById<Button>(R.id.btnDown)
-                if (chatLayout.isVisible && btnDown != null && !btnDown.isVisible && recyclerView.adapter?.itemCount != null) {
-                    recyclerView.scrollToPosition(recyclerView.adapter?.itemCount!! - 1) // scroll down
-                }
-            } else {
-                chatLayout.gone()
+
+            chatLayout.updateLayoutParams<LinearLayout.LayoutParams> {
+                width = chatWidthLandscape
+                height = LinearLayout.LayoutParams.MATCH_PARENT
+                weight = 0f
             }
+            if (disableChat) {
+                chatLayout.gone()
+                slidingLayout.maximizedSecondViewVisibility = View.GONE
+            } else {
+                setPreferredChatVisibility()
+            }
+            val recyclerView = requireView().findViewById<RecyclerView>(R.id.recyclerView)
+            val btnDown = requireView().findViewById<Button>(R.id.btnDown)
+            if (chatLayout.isVisible && btnDown != null && !btnDown.isVisible && recyclerView.adapter?.itemCount != null) {
+                recyclerView.scrollToPosition(recyclerView.adapter?.itemCount!! - 1) // scroll down
+            }
+
             if (fullscreenToggle.isVisible) {
                 fullscreenToggle.setImageResource(R.drawable.baseline_fullscreen_exit_black_24)
             }

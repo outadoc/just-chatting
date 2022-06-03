@@ -212,9 +212,6 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             streamLayout.visible()
             gameName.visible()
             gameName.text = stream.game_name
-            if (stream.game_id != null) {
-                gameName.setOnClickListener { activity.openGame(stream.game_id, stream.game_name) }
-            }
         } else {
             gameName.gone()
         }

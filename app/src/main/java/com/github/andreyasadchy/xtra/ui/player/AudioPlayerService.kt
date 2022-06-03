@@ -19,7 +19,6 @@ import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.VideoPosition
 import com.github.andreyasadchy.xtra.player.lowlatency.DefaultHlsPlaylistParserFactory
-import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.google.android.exoplayer2.ExoPlayer
@@ -41,9 +40,6 @@ class AudioPlayerService : Service() {
 
     @Inject
     lateinit var playerRepository: PlayerRepository
-
-    @Inject
-    lateinit var offlineRepository: OfflineRepository
 
     private lateinit var playlistUrl: Uri
 
@@ -68,10 +64,6 @@ class AudioPlayerService : Service() {
             TYPE_VIDEO -> {
                 position = player.currentPosition
                 playerRepository.saveVideoPosition(VideoPosition(videoId as Long, position))
-            }
-            TYPE_OFFLINE -> {
-                position = player.currentPosition
-                offlineRepository.updateVideoPosition(videoId as Int, position)
             }
         }
         player.release()

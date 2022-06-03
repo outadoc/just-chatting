@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import com.github.andreyasadchy.xtra.R
@@ -13,10 +12,7 @@ import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
 import com.github.andreyasadchy.xtra.ui.common.RadioButtonDialogFragment
-import com.github.andreyasadchy.xtra.ui.download.HasDownloadDialog
-import com.github.andreyasadchy.xtra.ui.player.clip.ClipPlayerFragment
 import com.github.andreyasadchy.xtra.ui.player.stream.StreamPlayerFragment
-import com.github.andreyasadchy.xtra.ui.player.video.VideoPlayerFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.prefs
@@ -132,28 +128,8 @@ class PlayerSettingsDialog : ExpandingBottomSheetDialogFragment(), RadioButtonDi
                 }
             }
         }
-        if (parentFragment is VideoPlayerFragment) {
-            if (arguments.getBoolean(VOD_GAMES)) {
-                setVodGames()
-            }
-            if (requireContext().prefs().getBoolean(C.PLAYER_MENU_BOOKMARK, true)) {
-                (parentFragment as? VideoPlayerFragment)?.checkBookmark()
-                (parentFragment as? VideoPlayerFragment)?.isBookmarked()
-                menuBookmark.visible()
-                menuBookmark.setOnClickListener {
-                    (parentFragment as? VideoPlayerFragment)?.saveBookmark()
-                    dismiss()
-                }
-            }
-        }
-        if (parentFragment is HasDownloadDialog && requireContext().prefs().getBoolean(C.PLAYER_MENU_DOWNLOAD, true)) {
-            menuDownload.visible()
-            menuDownload.setOnClickListener {
-                (parentFragment as? HasDownloadDialog)?.showDownloadDialog()
-                dismiss()
-            }
-        }
-        if (parentFragment !is ClipPlayerFragment && requireContext().prefs().getBoolean(C.PLAYER_MENU_SLEEP, true)) {
+
+        if (requireContext().prefs().getBoolean(C.PLAYER_MENU_SLEEP, true)) {
             menuTimer.visible()
             menuTimer.setOnClickListener {
                 (parentFragment as? BasePlayerFragment)?.showSleepTimerDialog()
@@ -197,24 +173,6 @@ class PlayerSettingsDialog : ExpandingBottomSheetDialogFragment(), RadioButtonDi
     private fun setSelectedSpeed(index: Int) {
         speedValue.text = getString(SPEED_LABELS[index])
         speedIndex = index
-    }
-
-    fun setVodGames() {
-        if (requireContext().prefs().getBoolean(C.PLAYER_MENU_GAMES, false)) {
-            menuVodGames.visible()
-            menuVodGames.setOnClickListener {
-                (parentFragment as? VideoPlayerFragment)?.view?.findViewById<ImageButton>(R.id.playerGames)?.performClick()
-                dismiss()
-            }
-        }
-    }
-
-    fun setBookmarkText(isBookmarked: Boolean) {
-        if (isBookmarked) {
-            menuBookmark.text = requireContext().getString(R.string.remove_bookmark)
-        } else {
-            menuBookmark.text = requireContext().getString(R.string.add_bookmark)
-        }
     }
 
     fun setQualities(list: List<CharSequence>?, index: Int) {

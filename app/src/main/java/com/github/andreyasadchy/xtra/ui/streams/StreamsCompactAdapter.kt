@@ -6,15 +6,13 @@ import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.ui.games.GamesFragment
 import com.github.andreyasadchy.xtra.util.*
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.*
 
 class StreamsCompactAdapter(
         fragment: Fragment,
         clickListener: BaseStreamsFragment.OnStreamSelectedListener,
-        channelClickListener: OnChannelSelectedListener,
-        gameClickListener: GamesFragment.OnGameSelectedListener) : BaseStreamsAdapter(fragment, clickListener, channelClickListener, gameClickListener) {
+        channelClickListener: OnChannelSelectedListener) : BaseStreamsAdapter(fragment, clickListener, channelClickListener) {
 
     override val layoutId: Int = R.layout.fragment_streams_list_item_compact
 
@@ -55,9 +53,6 @@ class StreamsCompactAdapter(
                 for (tag in item.tags) {
                     val text = TextView(context)
                     text.text = tag.name
-                    if (tag.id != null) {
-                        text.setOnClickListener { gameClickListener.openGame(tags = listOf(tag.id), id = fragment.parentFragment?.arguments?.getString(C.GAME_ID), name = fragment.parentFragment?.arguments?.getString(C.GAME_NAME)) }
-                    }
                     tagsLayout.addView(text)
                 }
             } else {

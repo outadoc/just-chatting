@@ -13,7 +13,6 @@ import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.clip.Clip
 import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.AuthRepository
-import com.github.andreyasadchy.xtra.repository.OfflineRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.util.Event
@@ -26,8 +25,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
         application: Application,
         private val repository: TwitchService,
-        private val authRepository: AuthRepository,
-        private val offlineRepository: OfflineRepository) : ViewModel() {
+        private val authRepository: AuthRepository) : ViewModel() {
 
     private val _isNetworkAvailable = MutableLiveData<Event<Boolean>>()
     val isNetworkAvailable: LiveData<Event<Boolean>>
@@ -48,10 +46,6 @@ class MainViewModel @Inject constructor(
     private val _user = MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>()
     val user: MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>
         get() = _user
-
-    init {
-        offlineRepository.resumeDownloads(application, false)
-    }
 
     fun onMaximize() {
         isPlayerMaximized = true

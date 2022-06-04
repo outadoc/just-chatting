@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <style name="BaseLightTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -40,39 +40,7 @@
         <item name="android:layout_height">50dp</item>
     </style>
 
-    <style name="Search">
-        <item name="android:layout_width">35dp</item>
-        <item name="android:layout_height">35dp</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:src">@drawable/baseline_search_black_24</item>
-        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-        <item name="android:tint">?attr/colorOnSurface</item>
-        <item name="android:layout_gravity">end</item>
-        <item name="android:layout_marginEnd">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-    </style>
-
-    <style name="MenuButton">
-        <item name="android:layout_width">35dp</item>
-        <item name="android:layout_height">35dp</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:src">@drawable/baseline_more_vert_black_24</item>
-        <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-        <item name="android:tint">?attr/colorOnSurface</item>
-        <item name="android:layout_gravity">end</item>
-        <item name="android:layout_marginEnd">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-    </style>
-
-    <style name="VideoProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">3dp</item>
-        <item name="android:max">100</item>
-        <item name="android:scaleY">1.5</item>
-        <item name="android:layoutDirection" tools:ignore="NewApi">ltr</item>
-    </style>
-
-    <style name="RadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+    <style name="RadioButton" parent="Widget.Material3.CompoundButton.RadioButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">10dp</item>

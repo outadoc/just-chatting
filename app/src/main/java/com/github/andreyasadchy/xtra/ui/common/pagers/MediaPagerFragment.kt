@@ -12,10 +12,10 @@ import kotlinx.android.synthetic.main.fragment_media_pager.viewPager
 
 abstract class MediaPagerFragment : BaseNetworkFragment(), ItemAwarePagerFragment, Scrollable {
 
-    private lateinit var adapter: ItemAwareFragmentPagerAdapter
+    private var adapter: ItemAwareFragmentPagerAdapter? = null
 
     override val currentFragment: Fragment?
-        get() = adapter.currentFragment
+        get() = adapter?.currentFragment
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -25,12 +25,10 @@ abstract class MediaPagerFragment : BaseNetworkFragment(), ItemAwarePagerFragmen
         return inflater.inflate(R.layout.fragment_media_pager, container, false)
     }
 
-    protected fun setAdapter(adapter: ItemAwareFragmentPagerAdapter, currentItem: Int? = null) {
+    protected fun setAdapter(adapter: ItemAwareFragmentPagerAdapter) {
         this.adapter = adapter
         viewPager.adapter = adapter
-        if (currentItem != null) {
-            viewPager.currentItem = currentItem
-        }
+        viewPager.currentItem = 0
         viewPager.offscreenPageLimit = adapter.count
     }
 

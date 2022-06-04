@@ -20,10 +20,7 @@ class FollowPagerFragment : MediaPagerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
-        setAdapter(
-            adapter = FollowPagerAdapter(activity, childFragmentManager),
-            currentItem = 0
-        )
+        setAdapter(FollowPagerAdapter(activity, childFragmentManager))
     }
 
     override fun initialize() {

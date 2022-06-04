@@ -149,7 +149,6 @@ class ChatView : ConstraintLayout {
                     btnDown.isVisible = shouldShowButton()
                     if (showFlexbox && flexbox.isGone) {
                         flexbox.visible()
-                        flexbox.postDelayed({ flexbox.gone() }, 5000)
                     }
                 }
             })

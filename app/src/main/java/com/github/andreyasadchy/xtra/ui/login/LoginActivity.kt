@@ -20,8 +20,19 @@ import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.repository.AuthRepository
-import com.github.andreyasadchy.xtra.util.*
-import kotlinx.android.synthetic.main.activity_login.*
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.applyTheme
+import com.github.andreyasadchy.xtra.util.convertDpToPixels
+import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.shortToast
+import com.github.andreyasadchy.xtra.util.toast
+import com.github.andreyasadchy.xtra.util.visible
+import kotlinx.android.synthetic.main.activity_login.havingTrouble
+import kotlinx.android.synthetic.main.activity_login.progressBar
+import kotlinx.android.synthetic.main.activity_login.webView
+import kotlinx.android.synthetic.main.activity_login.webViewContainer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -58,7 +69,6 @@ class LoginActivity : AppCompatActivity(), Injectable {
                         repository.revoke(gqlClientId, user.gqlToken)
                     }
                 } catch (e: Exception) {
-
                 }
             }
         }
@@ -71,45 +81,45 @@ class LoginActivity : AppCompatActivity(), Injectable {
         val apiSetting = prefs().getString(C.API_LOGIN, "0")?.toInt() ?: 0
         val helixRedirect = prefs().getString(C.HELIX_REDIRECT, "https://localhost")
         val helixScopes = "chat:read chat:edit channel:moderate channel_editor whispers:edit user:read:follows"
-        val helixAuthUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${helixClientId}&redirect_uri=${helixRedirect}&scope=${helixScopes}"
+        val helixAuthUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=$helixClientId&redirect_uri=$helixRedirect&scope=$helixScopes"
         val gqlRedirect = prefs().getString(C.GQL_REDIRECT, "https://www.twitch.tv/")
-        val gqlAuthUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=${gqlClientId}&redirect_uri=${gqlRedirect}&scope="
+        val gqlAuthUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=$gqlClientId&redirect_uri=$gqlRedirect&scope="
         havingTrouble.setOnClickListener {
             AlertDialog.Builder(this)
-                    .setMessage(getString(R.string.login_problem_solution))
-                    .setPositiveButton(R.string.log_in) { _, _ ->
-                        val intent = Intent(Intent.ACTION_VIEW, helixAuthUrl.toUri())
-                        if (intent.resolveActivity(packageManager) != null) {
-                            webView.reload()
-                            startActivity(intent)
-                        } else {
-                            toast(R.string.no_browser_found)
+                .setMessage(getString(R.string.login_problem_solution))
+                .setPositiveButton(R.string.log_in) { _, _ ->
+                    val intent = Intent(Intent.ACTION_VIEW, helixAuthUrl.toUri())
+                    if (intent.resolveActivity(packageManager) != null) {
+                        webView.reload()
+                        startActivity(intent)
+                    } else {
+                        toast(R.string.no_browser_found)
+                    }
+                }
+                .setNeutralButton(R.string.to_enter_url) { _, _ ->
+                    val editText = EditText(this).apply {
+                        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                            val margin = convertDpToPixels(10f)
+                            setMargins(margin, 0, margin, 0)
                         }
                     }
-                    .setNeutralButton(R.string.to_enter_url) { _, _ ->
-                        val editText = EditText(this).apply {
-                            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
-                                val margin = convertDpToPixels(10f)
-                                setMargins(margin, 0, margin, 0)
+                    val dialog = AlertDialog.Builder(this)
+                        .setTitle(R.string.enter_url)
+                        .setView(editText)
+                        .setPositiveButton(R.string.log_in) { _, _ ->
+                            val text = editText.text
+                            if (text.isNotEmpty()) {
+                                if (!loginIfValidUrl(text.toString(), gqlAuthUrl, 2)) {
+                                    shortToast(R.string.invalid_url)
+                                }
                             }
                         }
-                        val dialog = AlertDialog.Builder(this)
-                                .setTitle(R.string.enter_url)
-                                .setView(editText)
-                                .setPositiveButton(R.string.log_in) { _, _ ->
-                                    val text = editText.text
-                                    if (text.isNotEmpty()) {
-                                        if (!loginIfValidUrl(text.toString(), gqlAuthUrl, 2)) {
-                                            shortToast(R.string.invalid_url)
-                                        }
-                                    }
-                                }
-                                .setNegativeButton(android.R.string.cancel, null)
-                                .show()
-                        dialog.window?.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-                    }
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show()
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .show()
+                    dialog.window?.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         }
         clearCookies()
         with(webView) {

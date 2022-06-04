@@ -12,7 +12,7 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import java.lang.reflect.Type
-import java.util.*
+import java.util.Locale
 
 class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
 
@@ -42,7 +42,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             val parts = message.substring(1).split(" ".toRegex(), 2)
             val prefix = parts[0]
             val prefixes = splitAndMakeMap(prefix, ";", "=")
-            val messageInfo = parts[1] //:<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
+            val messageInfo = parts[1] // :<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
             val userLogin = prefixes["login"] ?: try {
                 messageInfo.substring(1, messageInfo.indexOf("!"))
             } catch (e: Exception) {
@@ -61,7 +61,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             } else {
                 val userMessage: String
                 val isAction: Boolean
-                messageInfo.substring(if (messageInfo.substring(msgIndex + 1).startsWith(":")) msgIndex + 2 else msgIndex + 1).let { //from <message>
+                messageInfo.substring(if (messageInfo.substring(msgIndex + 1).startsWith(":")) msgIndex + 2 else msgIndex + 1).let { // from <message>
                     if (!it.startsWith(MessageListenerImpl.ACTION)) {
                         userMessage = it
                         isAction = false

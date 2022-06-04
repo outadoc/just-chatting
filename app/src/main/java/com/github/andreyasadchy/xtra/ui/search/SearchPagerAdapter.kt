@@ -8,8 +8,9 @@ import com.github.andreyasadchy.xtra.ui.common.pagers.ItemAwareFragmentPagerAdap
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchFragment
 
 class SearchPagerAdapter(
-        private val context: Context,
-        fm: FragmentManager) : ItemAwareFragmentPagerAdapter(fm) {
+    private val context: Context,
+    fm: FragmentManager
+) : ItemAwareFragmentPagerAdapter(fm) {
 
     override fun getPageTitle(position: Int): CharSequence {
         return context.getString(R.string.channels)

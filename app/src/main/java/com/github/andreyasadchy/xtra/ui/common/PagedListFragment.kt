@@ -9,10 +9,12 @@ import com.github.andreyasadchy.xtra.repository.LoadingState
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.follow.FollowPagerFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
-import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.prefs
-import kotlinx.android.synthetic.main.common_recycler_view_layout.*
+import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
+import kotlinx.android.synthetic.main.common_recycler_view_layout.progressBar
+import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
+import kotlinx.android.synthetic.main.common_recycler_view_layout.scrollTop
+import kotlinx.android.synthetic.main.common_recycler_view_layout.swipeRefresh
 
 abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> : BaseNetworkFragment() {
 
@@ -32,7 +34,6 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                                 recyclerView?.scrollToPosition(0)
                             }
                         } catch (e: Exception) {
-
                         }
                     }
                 })

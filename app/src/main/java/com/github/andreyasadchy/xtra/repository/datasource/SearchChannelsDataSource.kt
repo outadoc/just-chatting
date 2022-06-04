@@ -16,7 +16,8 @@ class SearchChannelsDataSource private constructor(
     private val gqlClientId: String?,
     private val gqlApi: GraphQLRepository,
     private val apiPref: ArrayList<Pair<Long?, String?>?>?,
-    coroutineScope: CoroutineScope) : BasePositionalDataSource<ChannelSearch>(coroutineScope) {
+    coroutineScope: CoroutineScope
+) : BasePositionalDataSource<ChannelSearch>(coroutineScope) {
     private var api: String? = null
     private var offset: String? = null
 
@@ -128,9 +129,10 @@ class SearchChannelsDataSource private constructor(
         private val gqlClientId: String?,
         private val gqlApi: GraphQLRepository,
         private val apiPref: ArrayList<Pair<Long?, String?>?>?,
-        private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, ChannelSearch, SearchChannelsDataSource>() {
+        private val coroutineScope: CoroutineScope
+    ) : BaseDataSourceFactory<Int, ChannelSearch, SearchChannelsDataSource>() {
 
         override fun create(): DataSource<Int, ChannelSearch> =
-                SearchChannelsDataSource(query, helixClientId, helixToken, helixApi, gqlClientId, gqlApi, apiPref, coroutineScope).also(sourceLiveData::postValue)
+            SearchChannelsDataSource(query, helixClientId, helixToken, helixApi, gqlClientId, gqlApi, apiPref, coroutineScope).also(sourceLiveData::postValue)
     }
 }

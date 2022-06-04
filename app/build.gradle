@@ -76,8 +76,12 @@ android {
 
 spotless {
     kotlin {
-        ktlint("0.45.2")
         target '**/*.kt'
+        ktlint("0.45.2").userData([disabled_rules: "no-wildcard-imports"])
+    }
+    json {
+        target '**/*.json'
+        simple().indentWithSpaces(2)
     }
 }
 

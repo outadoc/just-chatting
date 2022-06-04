@@ -13,8 +13,9 @@ import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.util.loadImage
 
 class EmotesAdapter(
-        private val fragment: Fragment,
-        private val clickListener: (Emote) -> Unit) : ListAdapter<Emote, RecyclerView.ViewHolder>(object : DiffUtil.ItemCallback<Emote>() {
+    private val fragment: Fragment,
+    private val clickListener: (Emote) -> Unit
+) : ListAdapter<Emote, RecyclerView.ViewHolder>(object : DiffUtil.ItemCallback<Emote>() {
     override fun areItemsTheSame(oldItem: Emote, newItem: Emote): Boolean {
         return oldItem.name == newItem.name
     }
@@ -22,7 +23,6 @@ class EmotesAdapter(
     override fun areContentsTheSame(oldItem: Emote, newItem: Emote): Boolean {
         return true
     }
-
 }) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

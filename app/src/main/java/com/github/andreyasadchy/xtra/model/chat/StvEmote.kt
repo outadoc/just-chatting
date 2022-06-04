@@ -4,4 +4,5 @@ class StvEmote(
     override val name: String,
     override val type: String,
     override val url: String,
-    override val zeroWidth: Boolean) : Emote()
+    override val zeroWidth: Boolean
+) : Emote()

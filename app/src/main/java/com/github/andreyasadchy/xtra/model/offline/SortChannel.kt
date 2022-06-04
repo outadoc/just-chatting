@@ -13,4 +13,5 @@ data class SortChannel(
     var saveSort: Boolean? = null,
     var videoSort: String? = null,
     var videoType: String? = null,
-    var clipPeriod: String? = null) : Parcelable
+    var clipPeriod: String? = null
+) : Parcelable

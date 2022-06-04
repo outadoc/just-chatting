@@ -25,23 +25,25 @@ data class Video(
 
     override val gameId: String? = null,
     override val gameName: String? = null,
-    var profileImageURL: String? = null) : Parcelable, Downloadable {
+    var profileImageURL: String? = null
+) : Parcelable, Downloadable {
 
     @Parcelize
     data class MutedSegment(
-            val duration: Int,
-            val offset: Int) : Parcelable
+        val duration: Int,
+        val offset: Int
+    ) : Parcelable
 
-        override val thumbnail: String?
-                get() = TwitchApiHelper.getTemplateUrl(thumbnail_url, "video")
-        override val channelId: String?
-                get() = user_id
-        override val channelLogin: String?
-                get() = user_login
-        override val channelName: String?
-                get() = user_name
-        override val channelLogo: String?
-                get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
-        override val uploadDate: String?
-                get() = createdAt
+    override val thumbnail: String?
+        get() = TwitchApiHelper.getTemplateUrl(thumbnail_url, "video")
+    override val channelId: String?
+        get() = user_id
+    override val channelLogin: String?
+        get() = user_login
+    override val channelName: String?
+        get() = user_name
+    override val channelLogo: String?
+        get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
+    override val uploadDate: String?
+        get() = createdAt
 }

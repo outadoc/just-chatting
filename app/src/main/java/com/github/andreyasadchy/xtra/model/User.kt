@@ -6,10 +6,12 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
 
-sealed class User(val id: String?,
-                  val login: String?,
-                  val helixToken: String?,
-                  val gqlToken: String?) {
+sealed class User(
+    val id: String?,
+    val login: String?,
+    val helixToken: String?,
+    val gqlToken: String?
+) {
 
     companion object {
         private var user: User? = null

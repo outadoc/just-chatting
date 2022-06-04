@@ -17,7 +17,8 @@ import javax.inject.Singleton
 class LocalFollowChannelRepository @Inject constructor(
     private val localFollowsChannelDao: LocalFollowsChannelDao,
     private val videosDao: VideosDao,
-    private val bookmarksDao: BookmarksDao) {
+    private val bookmarksDao: BookmarksDao
+) {
 
     fun loadFollows() = localFollowsChannelDao.getAll()
 

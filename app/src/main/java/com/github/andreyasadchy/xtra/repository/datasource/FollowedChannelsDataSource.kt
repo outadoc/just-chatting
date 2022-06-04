@@ -41,7 +41,8 @@ class FollowedChannelsDataSource(
     private val apiPref: ArrayList<Pair<Long?, String?>?>,
     private val sort: Sort,
     private val order: Order,
-    coroutineScope: CoroutineScope) : BasePositionalDataSource<Follow>(coroutineScope) {
+    coroutineScope: CoroutineScope
+) : BasePositionalDataSource<Follow>(coroutineScope) {
     private var api: String? = null
     private var offset: String? = null
     private var nextPage: Boolean = true
@@ -272,9 +273,8 @@ class FollowedChannelsDataSource(
                     Glide.with(context)
                         .asBitmap()
                         .load(TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage"))
-                        .into(object: CustomTarget<Bitmap>() {
+                        .into(object : CustomTarget<Bitmap>() {
                             override fun onLoadCleared(placeholder: Drawable?) {
-
                             }
 
                             override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
@@ -282,14 +282,16 @@ class FollowedChannelsDataSource(
                             }
                         })
                 } catch (e: Exception) {
-
                 }
-                val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${userId}.png").absolutePath
-                localFollowsChannel.getFollowById(userId)?.let { localFollowsChannel.updateFollow(it.apply {
-                    channelLogo = downloadedLogo }) }
-
+                val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "$userId.png").absolutePath
+                localFollowsChannel.getFollowById(userId)?.let {
+                    localFollowsChannel.updateFollow(
+                        it.apply {
+                            channelLogo = downloadedLogo
+                        }
+                    )
+                }
             } catch (e: Exception) {
-
             }
         }
     }
@@ -306,9 +308,10 @@ class FollowedChannelsDataSource(
         private val apiPref: ArrayList<Pair<Long?, String?>?>,
         private val sort: Sort,
         private val order: Order,
-        private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
+        private val coroutineScope: CoroutineScope
+    ) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
 
         override fun create(): DataSource<Int, Follow> =
-                FollowedChannelsDataSource(localFollowsChannel, userId, helixClientId, helixToken, helixApi, gqlClientId, gqlToken, gqlApi, apiPref, sort, order, coroutineScope).also(sourceLiveData::postValue)
+            FollowedChannelsDataSource(localFollowsChannel, userId, helixClientId, helixToken, helixApi, gqlClientId, gqlToken, gqlApi, apiPref, sort, order, coroutineScope).also(sourceLiveData::postValue)
     }
 }

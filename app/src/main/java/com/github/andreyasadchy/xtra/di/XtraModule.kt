@@ -4,12 +4,60 @@ import android.app.Application
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.network.okHttpClient
 import com.github.andreyasadchy.xtra.BuildConfig
-import com.github.andreyasadchy.xtra.api.*
-import com.github.andreyasadchy.xtra.model.chat.*
-import com.github.andreyasadchy.xtra.model.gql.channel.*
-import com.github.andreyasadchy.xtra.model.gql.clip.*
-import com.github.andreyasadchy.xtra.model.gql.followed.*
-import com.github.andreyasadchy.xtra.model.gql.game.*
+import com.github.andreyasadchy.xtra.api.GraphQLApi
+import com.github.andreyasadchy.xtra.api.HelixApi
+import com.github.andreyasadchy.xtra.api.IdApi
+import com.github.andreyasadchy.xtra.api.MiscApi
+import com.github.andreyasadchy.xtra.model.chat.BttvChannelDeserializer
+import com.github.andreyasadchy.xtra.model.chat.BttvChannelResponse
+import com.github.andreyasadchy.xtra.model.chat.BttvFfzDeserializer
+import com.github.andreyasadchy.xtra.model.chat.BttvFfzResponse
+import com.github.andreyasadchy.xtra.model.chat.BttvGlobalDeserializer
+import com.github.andreyasadchy.xtra.model.chat.BttvGlobalResponse
+import com.github.andreyasadchy.xtra.model.chat.CheerEmotesDeserializer
+import com.github.andreyasadchy.xtra.model.chat.CheerEmotesResponse
+import com.github.andreyasadchy.xtra.model.chat.EmoteCardDeserializer
+import com.github.andreyasadchy.xtra.model.chat.EmoteCardResponse
+import com.github.andreyasadchy.xtra.model.chat.RecentMessagesDeserializer
+import com.github.andreyasadchy.xtra.model.chat.RecentMessagesResponse
+import com.github.andreyasadchy.xtra.model.chat.StvEmotesDeserializer
+import com.github.andreyasadchy.xtra.model.chat.StvEmotesResponse
+import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesDeserializer
+import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesResponse
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelClipsDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelClipsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataResponse
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResponse
+import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
+import com.github.andreyasadchy.xtra.model.gql.clip.ClipUrlsDeserializer
+import com.github.andreyasadchy.xtra.model.gql.clip.ClipUrlsResponse
+import com.github.andreyasadchy.xtra.model.gql.clip.ClipVideoDeserializer
+import com.github.andreyasadchy.xtra.model.gql.clip.ClipVideoResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowUserDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowUserDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedChannelsDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedChannelsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedGamesDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedGamesDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedStreamsDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedStreamsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedVideosDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedVideosDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowingGameDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowingGameDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowingUserDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowingUserDataResponse
+import com.github.andreyasadchy.xtra.model.gql.game.GameClipsDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.game.GameClipsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.game.GameDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.game.GameDataResponse
+import com.github.andreyasadchy.xtra.model.gql.game.GameStreamsDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.game.GameStreamsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.game.GameVideosDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.game.GameVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenDeserializer
 import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenResponse
 import com.github.andreyasadchy.xtra.model.gql.playlist.VideoPlaylistTokenDeserializer
@@ -22,7 +70,16 @@ import com.github.andreyasadchy.xtra.model.gql.stream.StreamDataDeserializer
 import com.github.andreyasadchy.xtra.model.gql.stream.StreamDataResponse
 import com.github.andreyasadchy.xtra.model.gql.stream.ViewersDataDeserializer
 import com.github.andreyasadchy.xtra.model.gql.stream.ViewersDataResponse
-import com.github.andreyasadchy.xtra.model.gql.tag.*
+import com.github.andreyasadchy.xtra.model.gql.tag.TagGameDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.tag.TagGameDataResponse
+import com.github.andreyasadchy.xtra.model.gql.tag.TagGameStreamDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.tag.TagGameStreamDataResponse
+import com.github.andreyasadchy.xtra.model.gql.tag.TagSearchDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.tag.TagSearchDataResponse
+import com.github.andreyasadchy.xtra.model.gql.tag.TagSearchGameStreamDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.tag.TagSearchGameStreamDataResponse
+import com.github.andreyasadchy.xtra.model.gql.tag.TagStreamDataDeserializer
+import com.github.andreyasadchy.xtra.model.gql.tag.TagStreamDataResponse
 import com.github.andreyasadchy.xtra.model.gql.vod.VodGamesDataDeserializer
 import com.github.andreyasadchy.xtra.model.gql.vod.VodGamesDataResponse
 import com.github.andreyasadchy.xtra.model.helix.emote.EmoteSetDeserializer
@@ -57,50 +114,51 @@ class XtraModule {
     @Provides
     fun providesHelixApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): HelixApi {
         return Retrofit.Builder()
-                .baseUrl("https://api.twitch.tv/helix/")
-                .client(client)
-                .addConverterFactory(gsonConverterFactory)
-                .build()
-                .create(HelixApi::class.java)
+            .baseUrl("https://api.twitch.tv/helix/")
+            .client(client)
+            .addConverterFactory(gsonConverterFactory)
+            .build()
+            .create(HelixApi::class.java)
     }
 
     @Singleton
     @Provides
     fun providesMiscApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): MiscApi {
         return Retrofit.Builder()
-                .baseUrl("https://api.twitch.tv/") //placeholder url
-                .client(client)
-                .addConverterFactory(gsonConverterFactory)
-                .build()
-                .create(MiscApi::class.java)
+            .baseUrl("https://api.twitch.tv/") // placeholder url
+            .client(client)
+            .addConverterFactory(gsonConverterFactory)
+            .build()
+            .create(MiscApi::class.java)
     }
 
     @Singleton
     @Provides
     fun providesIdApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): IdApi {
         return Retrofit.Builder()
-                .baseUrl("https://id.twitch.tv/oauth2/")
-                .client(client)
-                .addConverterFactory(gsonConverterFactory)
-                .build()
-                .create(IdApi::class.java)
+            .baseUrl("https://id.twitch.tv/oauth2/")
+            .client(client)
+            .addConverterFactory(gsonConverterFactory)
+            .build()
+            .create(IdApi::class.java)
     }
 
     @Singleton
     @Provides
     fun providesGraphQLApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): GraphQLApi {
         return Retrofit.Builder()
-                .baseUrl("https://gql.twitch.tv/gql/")
-                .client(client)
-                .addConverterFactory(gsonConverterFactory)
-                .build()
-                .create(GraphQLApi::class.java)
+            .baseUrl("https://gql.twitch.tv/gql/")
+            .client(client)
+            .addConverterFactory(gsonConverterFactory)
+            .build()
+            .create(GraphQLApi::class.java)
     }
 
     @Singleton
     @Provides
     fun providesGsonConverterFactory(): GsonConverterFactory {
-        return GsonConverterFactory.create(GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+        return GsonConverterFactory.create(
+            GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 .registerTypeAdapter(EmoteSetResponse::class.java, EmoteSetDeserializer())
                 .registerTypeAdapter(CheerEmotesResponse::class.java, CheerEmotesDeserializer())
                 .registerTypeAdapter(TwitchBadgesResponse::class.java, TwitchBadgesDeserializer())
@@ -139,7 +197,8 @@ class XtraModule {
                 .registerTypeAdapter(FollowUserDataResponse::class.java, FollowUserDataDeserializer())
                 .registerTypeAdapter(FollowingUserDataResponse::class.java, FollowingUserDataDeserializer())
                 .registerTypeAdapter(FollowingGameDataResponse::class.java, FollowingGameDataDeserializer())
-                .create())
+                .create()
+        )
     }
 
     @Singleton
@@ -147,12 +206,14 @@ class XtraModule {
     fun apolloClient(clientId: String?): ApolloClient {
         val builder = ApolloClient.Builder()
             .serverUrl("https://gql.twitch.tv/gql/")
-            .okHttpClient(OkHttpClient.Builder().apply {
-                addInterceptor(AuthorizationInterceptor(clientId))
-                if (BuildConfig.DEBUG) {
-                    addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
-                }
-            }.build())
+            .okHttpClient(
+                OkHttpClient.Builder().apply {
+                    addInterceptor(AuthorizationInterceptor(clientId))
+                    if (BuildConfig.DEBUG) {
+                        addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+                    }
+                }.build()
+            )
         return builder.build()
     }
 
@@ -161,16 +222,18 @@ class XtraModule {
     fun apolloClientWithToken(clientId: String?, token: String?): ApolloClient {
         val builder = ApolloClient.Builder()
             .serverUrl("https://gql.twitch.tv/gql/")
-            .okHttpClient(OkHttpClient.Builder().apply {
-                addInterceptor(AuthorizationInterceptor(clientId, token))
-                if (BuildConfig.DEBUG) {
-                    addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
-                }
-            }.build())
+            .okHttpClient(
+                OkHttpClient.Builder().apply {
+                    addInterceptor(AuthorizationInterceptor(clientId, token))
+                    if (BuildConfig.DEBUG) {
+                        addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+                    }
+                }.build()
+            )
         return builder.build()
     }
 
-    private class AuthorizationInterceptor(val clientId: String?, val token: String? = null): Interceptor {
+    private class AuthorizationInterceptor(val clientId: String?, val token: String? = null) : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request().newBuilder().apply {
                 clientId?.let { addHeader("Client-ID", it) }
@@ -204,11 +267,11 @@ class XtraModule {
     @Provides
     fun providesFetchConfigurationBuilder(application: Application, okHttpClient: OkHttpClient): FetchConfiguration.Builder {
         return FetchConfiguration.Builder(application)
-                .enableLogging(BuildConfig.DEBUG)
-                .enableRetryOnNetworkGain(true)
-                .setDownloadConcurrentLimit(3)
-                .setHttpDownloader(OkHttpDownloader(okHttpClient))
-                .setProgressReportingInterval(1000L)
-                .setAutoRetryMaxAttempts(3)
+            .enableLogging(BuildConfig.DEBUG)
+            .enableRetryOnNetworkGain(true)
+            .setDownloadConcurrentLimit(3)
+            .setHttpDownloader(OkHttpDownloader(okHttpClient))
+            .setProgressReportingInterval(1000L)
+            .setAutoRetryMaxAttempts(3)
     }
 }

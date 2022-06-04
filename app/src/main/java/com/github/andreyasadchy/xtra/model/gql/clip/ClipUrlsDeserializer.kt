@@ -14,10 +14,13 @@ class ClipUrlsDeserializer : JsonDeserializer<ClipUrlsResponse> {
         val videosJson = json.asJsonArray.first().asJsonObject.getAsJsonObject("data").getAsJsonObject("clip").getAsJsonArray("videoQualities")
         videosJson.forEach {
             val video = it.asJsonObject
-            videos.add(ClipUrlsResponse.Video(
+            videos.add(
+                ClipUrlsResponse.Video(
                     video.getAsJsonPrimitive("frameRate").asInt,
                     video.getAsJsonPrimitive("quality").asString,
-                    video.getAsJsonPrimitive("sourceURL").asString.replace(Regex("https://[^/]+"),"https://clips-media-assets2.twitch.tv")))
+                    video.getAsJsonPrimitive("sourceURL").asString.replace(Regex("https://[^/]+"), "https://clips-media-assets2.twitch.tv")
+                )
+            )
         }
         return ClipUrlsResponse(videos)
     }

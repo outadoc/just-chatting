@@ -11,17 +11,20 @@ import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.visible
-import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.*
+import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userFollowers
+import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userImage
+import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userName
 
 class ChannelSearchAdapter(
-        private val fragment: Fragment,
-        private val listener: OnChannelSelectedListener) : BasePagedListAdapter<ChannelSearch>(
-        object : DiffUtil.ItemCallback<ChannelSearch>() {
-            override fun areItemsTheSame(oldItem: ChannelSearch, newItem: ChannelSearch): Boolean =
-                    oldItem.id == newItem.id
+    private val fragment: Fragment,
+    private val listener: OnChannelSelectedListener
+) : BasePagedListAdapter<ChannelSearch>(
+    object : DiffUtil.ItemCallback<ChannelSearch>() {
+        override fun areItemsTheSame(oldItem: ChannelSearch, newItem: ChannelSearch): Boolean =
+            oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: ChannelSearch, newItem: ChannelSearch): Boolean = true
-        }) {
+        override fun areContentsTheSame(oldItem: ChannelSearch, newItem: ChannelSearch): Boolean = true
+    }) {
 
     override val layoutId: Int = R.layout.fragment_search_channels_list_item
 

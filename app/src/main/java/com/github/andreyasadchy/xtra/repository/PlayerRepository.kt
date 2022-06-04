@@ -2,7 +2,13 @@ package com.github.andreyasadchy.xtra.repository
 
 import com.github.andreyasadchy.xtra.api.MiscApi
 import com.github.andreyasadchy.xtra.db.RecentEmotesDao
-import com.github.andreyasadchy.xtra.model.chat.*
+import com.github.andreyasadchy.xtra.model.chat.BttvChannelResponse
+import com.github.andreyasadchy.xtra.model.chat.BttvFfzResponse
+import com.github.andreyasadchy.xtra.model.chat.BttvGlobalResponse
+import com.github.andreyasadchy.xtra.model.chat.RecentEmote
+import com.github.andreyasadchy.xtra.model.chat.RecentMessagesResponse
+import com.github.andreyasadchy.xtra.model.chat.StvEmotesResponse
+import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch

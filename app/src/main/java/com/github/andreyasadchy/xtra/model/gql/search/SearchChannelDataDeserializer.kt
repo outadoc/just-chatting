@@ -17,7 +17,8 @@ class SearchChannelDataDeserializer : JsonDeserializer<SearchChannelDataResponse
         dataJson.forEach {
             cursor = if (!json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("channels").get("cursor").isJsonNull) json.asJsonObject.getAsJsonObject("data").getAsJsonObject("searchFor").getAsJsonObject("channels").getAsJsonPrimitive("cursor").asString else null
             val obj = it.asJsonObject.getAsJsonObject("item")
-            data.add(ChannelSearch(
+            data.add(
+                ChannelSearch(
                     id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else null,
                     broadcaster_login = if (!(obj.get("login").isJsonNull)) { obj.getAsJsonPrimitive("login").asString } else null,
                     display_name = if (!(obj.get("displayName").isJsonNull)) { obj.getAsJsonPrimitive("displayName").asString } else null,

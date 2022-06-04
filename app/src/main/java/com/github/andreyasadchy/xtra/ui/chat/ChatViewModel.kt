@@ -7,7 +7,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.chat.*
+import com.github.andreyasadchy.xtra.model.chat.BttvEmote
+import com.github.andreyasadchy.xtra.model.chat.ChatMessage
+import com.github.andreyasadchy.xtra.model.chat.Chatter
+import com.github.andreyasadchy.xtra.model.chat.CheerEmote
+import com.github.andreyasadchy.xtra.model.chat.Emote
+import com.github.andreyasadchy.xtra.model.chat.FfzEmote
+import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
+import com.github.andreyasadchy.xtra.model.chat.RecentEmote
+import com.github.andreyasadchy.xtra.model.chat.StvEmote
+import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
@@ -15,10 +24,19 @@ import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.ui.view.chat.MAX_ADAPTER_COUNT
 import com.github.andreyasadchy.xtra.util.SingleLiveEvent
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.chat.*
+import com.github.andreyasadchy.xtra.util.chat.Command
+import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
+import com.github.andreyasadchy.xtra.util.chat.LoggedInChatThread
+import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
+import com.github.andreyasadchy.xtra.util.chat.OnCommandReceivedListener
+import com.github.andreyasadchy.xtra.util.chat.OnRewardReceivedListener
+import com.github.andreyasadchy.xtra.util.chat.OnRoomStateReceivedListener
+import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
+import com.github.andreyasadchy.xtra.util.chat.PubSubWebSocket
+import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Collections
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import kotlin.collections.ArrayList
@@ -39,8 +57,9 @@ import kotlin.collections.mutableMapOf
 import kotlin.collections.set
 
 class ChatViewModel @Inject constructor(
-        private val repository: TwitchService,
-        private val playerRepository: PlayerRepository) : BaseViewModel(), ChatView.MessageSenderCallback {
+    private val repository: TwitchService,
+    private val playerRepository: PlayerRepository
+) : BaseViewModel(), ChatView.MessageSenderCallback {
 
     val recentEmotes: LiveData<List<Emote>> by lazy {
         MediatorLiveData<List<Emote>>().apply {
@@ -245,16 +264,17 @@ class ChatViewModel @Inject constructor(
     }
 
     inner class LiveChatController(
-            private val useSSl: Boolean,
-            private val usePubSub: Boolean,
-            private val user: User,
-            private val helixClientId: String?,
-            private val channelId: String?,
-            private val channelLogin: String,
-            displayName: String,
-            private val showUserNotice: Boolean,
-            private val showClearMsg: Boolean,
-            private val showClearChat: Boolean) : ChatController(), OnUserStateReceivedListener, OnRoomStateReceivedListener, OnCommandReceivedListener, OnRewardReceivedListener {
+        private val useSSl: Boolean,
+        private val usePubSub: Boolean,
+        private val user: User,
+        private val helixClientId: String?,
+        private val channelId: String?,
+        private val channelLogin: String,
+        displayName: String,
+        private val showUserNotice: Boolean,
+        private val showClearMsg: Boolean,
+        private val showClearChat: Boolean
+    ) : ChatController(), OnUserStateReceivedListener, OnRoomStateReceivedListener, OnCommandReceivedListener, OnRewardReceivedListener {
 
         private var chat: LiveChatThread? = null
         private var loggedInChat: LoggedInChatThread? = null

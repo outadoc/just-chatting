@@ -9,4 +9,5 @@ import kotlinx.android.parcel.Parcelize
 @Entity(tableName = "vod_bookmark_ignored_users")
 data class VodBookmarkIgnoredUser(
     @PrimaryKey
-    val user_id: String) : Parcelable
+    val user_id: String
+) : Parcelable

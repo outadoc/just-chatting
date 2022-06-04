@@ -11,4 +11,5 @@ data class LocalFollowGame(
     @PrimaryKey
     val game_id: String,
     var game_name: String? = null,
-    var boxArt: String? = null) : Parcelable
+    var boxArt: String? = null
+) : Parcelable

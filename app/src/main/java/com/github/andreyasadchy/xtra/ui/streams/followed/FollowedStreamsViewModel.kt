@@ -12,7 +12,8 @@ import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
 import javax.inject.Inject
 
 class FollowedStreamsViewModel @Inject constructor(
-        private val repository: TwitchService) : PagedListViewModel<Stream>() {
+    private val repository: TwitchService
+) : PagedListViewModel<Stream>() {
 
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Stream>> = Transformations.map(filter) {
@@ -34,5 +35,6 @@ class FollowedStreamsViewModel @Inject constructor(
         val gqlClientId: String?,
         val gqlToken: String?,
         val apiPref: ArrayList<Pair<Long?, String?>?>,
-        val thumbnailsEnabled: Boolean)
+        val thumbnailsEnabled: Boolean
+    )
 }

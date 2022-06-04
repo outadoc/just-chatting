@@ -14,7 +14,6 @@ import androidx.appcompat.widget.AppCompatRadioButton
 import androidx.core.os.bundleOf
 import androidx.core.widget.NestedScrollView
 
-
 class RadioButtonDialogFragment : ExpandingBottomSheetDialogFragment() {
 
     interface OnSortOptionChanged {

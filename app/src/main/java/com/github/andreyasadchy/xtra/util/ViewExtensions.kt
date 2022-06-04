@@ -3,21 +3,17 @@ package com.github.andreyasadchy.xtra.util
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.github.andreyasadchy.xtra.GlideApp
@@ -36,14 +32,14 @@ fun View.toggleVisibility() = if (isVisible) gone() else visible()
 
 @SuppressLint("CheckResult")
 fun ImageView.loadImage(fragment: Fragment, url: String?, changes: Boolean = false, circle: Boolean = false, diskCacheStrategy: DiskCacheStrategy = DiskCacheStrategy.RESOURCE) {
-    if (context.isActivityResumed) { //not enough on some devices?
+    if (context.isActivityResumed) { // not enough on some devices?
         try {
             val request = GlideApp.with(fragment)
-                    .load(url)
-                    .diskCacheStrategy(diskCacheStrategy)
-                    .transition(DrawableTransitionOptions.withCrossFade())
+                .load(url)
+                .diskCacheStrategy(diskCacheStrategy)
+                .transition(DrawableTransitionOptions.withCrossFade())
             if (changes) {
-                //update every 5 minutes
+                // update every 5 minutes
                 val minutes = System.currentTimeMillis() / 60000L
                 val lastMinute = minutes % 10
                 val key = if (lastMinute < 5) minutes - lastMinute else minutes - (lastMinute - 5)

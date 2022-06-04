@@ -20,15 +20,49 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.chat.*
+import com.github.andreyasadchy.xtra.model.chat.BttvEmote
+import com.github.andreyasadchy.xtra.model.chat.ChatMessage
+import com.github.andreyasadchy.xtra.model.chat.Chatter
+import com.github.andreyasadchy.xtra.model.chat.CheerEmote
+import com.github.andreyasadchy.xtra.model.chat.Emote
+import com.github.andreyasadchy.xtra.model.chat.FfzEmote
+import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
+import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
+import com.github.andreyasadchy.xtra.model.chat.RecentEmote
+import com.github.andreyasadchy.xtra.model.chat.StvEmote
+import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
+import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
-import com.github.andreyasadchy.xtra.util.*
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.Command
 import com.github.andreyasadchy.xtra.util.chat.RoomState
+import com.github.andreyasadchy.xtra.util.convertDpToPixels
+import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.hideKeyboard
+import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.showKeyboard
+import com.github.andreyasadchy.xtra.util.toggleVisibility
+import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
-import kotlinx.android.synthetic.main.view_chat.view.*
-import java.util.*
+import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.image
+import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.name
+import kotlinx.android.synthetic.main.view_chat.view.btnDown
+import kotlinx.android.synthetic.main.view_chat.view.clear
+import kotlinx.android.synthetic.main.view_chat.view.editText
+import kotlinx.android.synthetic.main.view_chat.view.emotes
+import kotlinx.android.synthetic.main.view_chat.view.flexbox
+import kotlinx.android.synthetic.main.view_chat.view.messageView
+import kotlinx.android.synthetic.main.view_chat.view.recyclerView
+import kotlinx.android.synthetic.main.view_chat.view.send
+import kotlinx.android.synthetic.main.view_chat.view.textEmote
+import kotlinx.android.synthetic.main.view_chat.view.textFollowers
+import kotlinx.android.synthetic.main.view_chat.view.textSlow
+import kotlinx.android.synthetic.main.view_chat.view.textSubs
+import kotlinx.android.synthetic.main.view_chat.view.textUnique
+import kotlinx.android.synthetic.main.view_chat.view.viewPager
+import java.util.Locale
 import kotlin.math.max
 
 var MAX_ADAPTER_COUNT = 200
@@ -294,7 +328,7 @@ class ChatView : ConstraintLayout {
             }
             is RecentEmote -> hasRecentEmotes = true
         }
-        if (messagingEnabled && ++emotesAddedCount == 3) { //TODO refactor to not wait
+        if (messagingEnabled && ++emotesAddedCount == 3) { // TODO refactor to not wait
             autoCompleteAdapter = AutoCompleteAdapter(context, fragment, autoCompleteList!!).apply {
                 setNotifyOnChange(false)
                 editText.setAdapter(this)
@@ -407,7 +441,7 @@ class ChatView : ConstraintLayout {
             }
             viewPager.offscreenPageLimit = 2
             emotes.setOnClickListener {
-                //TODO add animation
+                // TODO add animation
                 with(viewPager) {
                     if (isGone) {
                         if (hasRecentEmotes != true && currentItem == 0) {
@@ -492,9 +526,10 @@ class ChatView : ConstraintLayout {
     }
 
     class AutoCompleteAdapter(
-            context: Context,
-            private val fragment: Fragment,
-            list: List<Any>) : ArrayAdapter<Any>(context, 0, list) {
+        context: Context,
+        private val fragment: Fragment,
+        list: List<Any>
+    ) : ArrayAdapter<Any>(context, 0, list) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val viewHolder: ViewHolder

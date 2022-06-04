@@ -13,7 +13,8 @@ import javax.inject.Singleton
 
 @Singleton
 class LocalFollowGameRepository @Inject constructor(
-        private val localFollowsGameDao: LocalFollowsGameDao) {
+    private val localFollowsGameDao: LocalFollowsGameDao
+) {
 
     suspend fun getFollowById(id: String) = withContext(Dispatchers.IO) {
         localFollowsGameDao.getById(id)
@@ -29,5 +30,4 @@ class LocalFollowGameRepository @Inject constructor(
             File(context.filesDir.toString() + File.separator + "box_art" + File.separator + "${item.game_id}.png").delete()
         }
     }
-
 }

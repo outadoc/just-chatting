@@ -23,7 +23,8 @@ import javax.inject.Inject
 
 class ChannelPagerViewModel @Inject constructor(
     private val repository: TwitchService,
-    private val localFollowsChannel: LocalFollowChannelRepository) : ViewModel(), FollowViewModel {
+    private val localFollowsChannel: LocalFollowChannelRepository
+) : ViewModel(), FollowViewModel {
 
     private val _stream = MutableLiveData<Stream?>()
     val stream: MutableLiveData<Stream?>
@@ -63,7 +64,6 @@ class ChannelPagerViewModel @Inject constructor(
                     val stream = repository.loadStreamWithUser(channelId, helixClientId, helixToken, gqlClientId)
                     _stream.postValue(stream)
                 } catch (e: Exception) {
-
                 }
             }
         }
@@ -76,7 +76,6 @@ class ChannelPagerViewModel @Inject constructor(
                     val user = repository.loadUsersById(mutableListOf(channelId), helixClientId, helixToken, gqlClientId)?.firstOrNull()
                     _user.postValue(user)
                 } catch (e: Exception) {
-
                 }
             }
         }
@@ -100,9 +99,8 @@ class ChannelPagerViewModel @Inject constructor(
                         Glide.with(context)
                             .asBitmap()
                             .load(user.channelLogo)
-                            .into(object: CustomTarget<Bitmap>() {
+                            .into(object : CustomTarget<Bitmap>() {
                                 override fun onLoadCleared(placeholder: Drawable?) {
-
                                 }
 
                                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
@@ -110,17 +108,19 @@ class ChannelPagerViewModel @Inject constructor(
                                 }
                             })
                     } catch (e: Exception) {
-
                     }
                     val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${user.id}.png").absolutePath
-                    localFollowsChannel.getFollowById(user.id)?.let { localFollowsChannel.updateFollow(it.apply {
-                        user_login = user.login
-                        user_name = user.display_name
-                        channelLogo = downloadedLogo }) }
-
+                    localFollowsChannel.getFollowById(user.id)?.let {
+                        localFollowsChannel.updateFollow(
+                            it.apply {
+                                user_login = user.login
+                                user_name = user.display_name
+                                channelLogo = downloadedLogo
+                            }
+                        )
+                    }
                 }
             } catch (e: Exception) {
-
             }
         }
     }

@@ -1,33 +1,23 @@
 package com.github.andreyasadchy.xtra.api
 
 import com.github.andreyasadchy.xtra.model.chat.EmoteCardResponse
-import com.github.andreyasadchy.xtra.model.gql.channel.ChannelClipsDataResponse
-import com.github.andreyasadchy.xtra.model.gql.channel.ChannelVideosDataResponse
 import com.github.andreyasadchy.xtra.model.gql.channel.ChannelViewerListDataResponse
-import com.github.andreyasadchy.xtra.model.gql.clip.ClipDataResponse
-import com.github.andreyasadchy.xtra.model.gql.clip.ClipUrlsResponse
-import com.github.andreyasadchy.xtra.model.gql.clip.ClipVideoResponse
-import com.github.andreyasadchy.xtra.model.gql.followed.*
-import com.github.andreyasadchy.xtra.model.gql.game.GameClipsDataResponse
-import com.github.andreyasadchy.xtra.model.gql.game.GameDataResponse
-import com.github.andreyasadchy.xtra.model.gql.game.GameStreamsDataResponse
-import com.github.andreyasadchy.xtra.model.gql.game.GameVideosDataResponse
-import com.github.andreyasadchy.xtra.model.gql.playlist.StreamPlaylistTokenResponse
-import com.github.andreyasadchy.xtra.model.gql.playlist.VideoPlaylistTokenResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowUserDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedChannelsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowedStreamsDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowingGameDataResponse
+import com.github.andreyasadchy.xtra.model.gql.followed.FollowingUserDataResponse
 import com.github.andreyasadchy.xtra.model.gql.search.SearchChannelDataResponse
-import com.github.andreyasadchy.xtra.model.gql.search.SearchGameDataResponse
-import com.github.andreyasadchy.xtra.model.gql.stream.StreamDataResponse
 import com.github.andreyasadchy.xtra.model.gql.stream.ViewersDataResponse
-import com.github.andreyasadchy.xtra.model.gql.tag.*
-import com.github.andreyasadchy.xtra.model.gql.vod.VodGamesDataResponse
-import com.google.gson.JsonArray
+import com.github.andreyasadchy.xtra.model.gql.tag.TagGameDataResponse
+import com.github.andreyasadchy.xtra.model.gql.tag.TagGameStreamDataResponse
+import com.github.andreyasadchy.xtra.model.gql.tag.TagSearchDataResponse
+import com.github.andreyasadchy.xtra.model.gql.tag.TagSearchGameStreamDataResponse
+import com.github.andreyasadchy.xtra.model.gql.tag.TagStreamDataResponse
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import okhttp3.ResponseBody
-import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.Header
-import retrofit2.http.HeaderMap
 import retrofit2.http.POST
 
 @JvmSuppressWildcards

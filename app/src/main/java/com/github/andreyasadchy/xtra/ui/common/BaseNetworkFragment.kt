@@ -36,7 +36,7 @@ abstract class BaseNetworkFragment : Fragment(), Injectable {
         super.onCreate(savedInstanceState)
         if (enableNetworkCheck) {
             lastState = savedInstanceState?.getBoolean(LAST_KEY)
-                    ?: requireContext().isNetworkAvailable
+                ?: requireContext().isNetworkAvailable
             shouldRestore = savedInstanceState?.getBoolean(RESTORE_KEY) ?: false
             created = savedInstanceState?.getBoolean(CREATED_KEY) ?: false
         }
@@ -48,28 +48,31 @@ abstract class BaseNetworkFragment : Fragment(), Injectable {
             if (!isInitialized && (created || (lastState && userVisibleHint))) {
                 init()
             }
-            mainViewModel.isNetworkAvailable.observe(viewLifecycleOwner, Observer {
-                val isOnline = it.peekContent()
-                if (isOnline) {
-                    if (!lastState) {
-                        shouldRestore = if (userVisibleHint) {
-                            if (isInitialized) {
-                                onNetworkRestored()
+            mainViewModel.isNetworkAvailable.observe(
+                viewLifecycleOwner,
+                Observer {
+                    val isOnline = it.peekContent()
+                    if (isOnline) {
+                        if (!lastState) {
+                            shouldRestore = if (userVisibleHint) {
+                                if (isInitialized) {
+                                    onNetworkRestored()
+                                } else {
+                                    init()
+                                }
+                                false
                             } else {
-                                init()
+                                true
                             }
-                            false
-                        } else {
-                            true
+                        }
+                    } else {
+                        if (isInitialized) {
+                            onNetworkLost()
                         }
                     }
-                } else {
-                    if (isInitialized) {
-                        onNetworkLost()
-                    }
+                    lastState = isOnline
                 }
-                lastState = isOnline
-            })
+            )
         } else {
             initialize()
         }

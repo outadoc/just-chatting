@@ -3,13 +3,12 @@ package com.github.andreyasadchy.xtra.ui
 import android.content.Context
 import android.graphics.drawable.Drawable
 import android.util.TypedValue
-import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.github.andreyasadchy.xtra.R
 
 internal object Utils {
-    fun getNavigationIcon(context: Context): Drawable { //TODO change this to accept toolbar as parameter
+    fun getNavigationIcon(context: Context): Drawable { // TODO change this to accept toolbar as parameter
         val drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.baseline_arrow_back_black_24)!!)
         val typedValue = TypedValue()
         context.theme.resolveAttribute(R.attr.textColor, typedValue, true)

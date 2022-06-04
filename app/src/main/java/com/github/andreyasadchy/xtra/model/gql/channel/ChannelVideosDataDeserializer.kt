@@ -17,7 +17,8 @@ class ChannelVideosDataDeserializer : JsonDeserializer<ChannelVideosDataResponse
         dataJson.forEach {
             cursor = if (!it.asJsonObject.get("cursor").isJsonNull) it.asJsonObject.get("cursor").asString else null
             val obj = it.asJsonObject.getAsJsonObject("node")
-            data.add(Video(
+            data.add(
+                Video(
                     id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else "",
                     user_id = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("id").asString } else null,
                     user_login = if (!(obj.get("owner").isJsonNull)) { obj.getAsJsonObject("owner").getAsJsonPrimitive("login").asString } else null,

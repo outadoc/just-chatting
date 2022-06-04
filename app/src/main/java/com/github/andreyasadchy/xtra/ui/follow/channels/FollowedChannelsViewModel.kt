@@ -55,7 +55,8 @@ class FollowedChannelsViewModel @Inject constructor(
                     else -> Order.DESC
                 }
             )
-            _sortText.value = context.getString(R.string.sort_and_period,
+            _sortText.value = context.getString(
+                R.string.sort_and_period,
                 when (sortValues?.videoSort) {
                     Sort.FOLLOWED_AT.value -> context.getString(R.string.time_followed)
                     Sort.ALPHABETICALLY.value -> context.getString(R.string.alphabetically)
@@ -74,14 +75,16 @@ class FollowedChannelsViewModel @Inject constructor(
         _sortText.value = text
         viewModelScope.launch {
             val sortDefaults = sortChannelRepository.getById("followed_channels")
-            (sortDefaults?.apply {
-                videoSort = sort.value
-                videoType = order.value
-            } ?: SortChannel(
-                id = "followed_channels",
-                videoSort = sort.value,
-                videoType = order.value
-            )).let { sortChannelRepository.save(it) }
+            (
+                sortDefaults?.apply {
+                    videoSort = sort.value
+                    videoType = order.value
+                } ?: SortChannel(
+                    id = "followed_channels",
+                    videoSort = sort.value,
+                    videoType = order.value
+                )
+                ).let { sortChannelRepository.save(it) }
         }
     }
 
@@ -91,5 +94,6 @@ class FollowedChannelsViewModel @Inject constructor(
         val gqlClientId: String?,
         val apiPref: ArrayList<Pair<Long?, String?>?>,
         val sort: Sort = Sort.LAST_BROADCAST,
-        val order: Order = Order.DESC)
+        val order: Order = Order.DESC
+    )
 }

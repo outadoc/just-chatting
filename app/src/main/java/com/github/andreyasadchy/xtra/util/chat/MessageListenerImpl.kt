@@ -14,14 +14,15 @@ class MessageListenerImpl(
     private val showUserNotice: Boolean,
     private val showClearMsg: Boolean,
     private val showClearChat: Boolean,
-    private val usePubSub: Boolean) : LiveChatThread.OnMessageReceivedListener, LoggedInChatThread.OnMessageReceivedListener {
-    
+    private val usePubSub: Boolean
+) : LiveChatThread.OnMessageReceivedListener, LoggedInChatThread.OnMessageReceivedListener {
+
     override fun onMessage(message: String, userNotice: Boolean) {
         if (!userNotice || (userNotice && showUserNotice)) {
             val parts = message.substring(1).split(" ".toRegex(), 2)
             val prefix = parts[0]
             val prefixes = splitAndMakeMap(prefix, ";", "=")
-            val messageInfo = parts[1] //:<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
+            val messageInfo = parts[1] // :<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
             val userLogin = prefixes["login"] ?: try {
                 messageInfo.substring(1, messageInfo.indexOf("!"))
             } catch (e: Exception) {
@@ -30,15 +31,17 @@ class MessageListenerImpl(
             val systemMsg = prefixes["system-msg"]?.replace("\\s", " ")
             val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
             if (msgIndex == -1 && userNotice) { // no user message & is user notice
-                callbackCommand.onCommand(Command(
-                    message = systemMsg ?: messageInfo,
-                    timestamp = prefixes["tmi-sent-ts"]?.toLong(),
-                    fullMsg = message
-                ))
+                callbackCommand.onCommand(
+                    Command(
+                        message = systemMsg ?: messageInfo,
+                        timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                        fullMsg = message
+                    )
+                )
             } else {
                 val userMessage: String
                 val isAction: Boolean
-                messageInfo.substring(msgIndex + 1).let { //from <message>
+                messageInfo.substring(msgIndex + 1).let { // from <message>
                     if (!it.startsWith(ACTION)) {
                         userMessage = it
                         isAction = false
@@ -98,12 +101,14 @@ class MessageListenerImpl(
     }
 
     override fun onCommand(message: String, duration: String?, type: String?, fullMsg: String?) {
-        callbackCommand.onCommand(Command(
-            message = message,
-            duration = duration,
-            type = type,
-            fullMsg = fullMsg
-        ))
+        callbackCommand.onCommand(
+            Command(
+                message = message,
+                duration = duration,
+                type = type,
+                fullMsg = fullMsg
+            )
+        )
     }
 
     override fun onClearMessage(message: String) {
@@ -115,13 +120,15 @@ class MessageListenerImpl(
             val messageInfo = parts[1]
             val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
             val msg = if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else null
-            callbackCommand.onCommand(Command(
-                message = user,
-                duration = msg,
-                type = "clearmsg",
-                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
-                fullMsg = message
-            ))
+            callbackCommand.onCommand(
+                Command(
+                    message = user,
+                    duration = msg,
+                    type = "clearmsg",
+                    timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                    fullMsg = message
+                )
+            )
         }
     }
 
@@ -135,13 +142,15 @@ class MessageListenerImpl(
             val userIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
             val user = if (userIndex != -1) messageInfo.substring(userIndex + 1) else null
             val type = if (user == null) { "clearchat" } else { if (duration != null) { "timeout" } else { "ban" } }
-            callbackCommand.onCommand(Command(
-                message = user,
-                duration = duration,
-                type = type,
-                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
-                fullMsg = message
-            ))
+            callbackCommand.onCommand(
+                Command(
+                    message = user,
+                    duration = duration,
+                    type = type,
+                    timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                    fullMsg = message
+                )
+            )
         }
     }
 
@@ -151,25 +160,29 @@ class MessageListenerImpl(
         val prefixes = splitAndMakeMap(prefix, ";", "=")
         val messageInfo = parts[1]
         val msgId = prefixes["msg-id"]
-        callbackCommand.onCommand(Command(
-            message = messageInfo.substring(messageInfo.indexOf(":", messageInfo.indexOf(":") + 1) + 1),
-            duration = msgId,
-            type = "notice",
-            fullMsg = message
-        ))
+        callbackCommand.onCommand(
+            Command(
+                message = messageInfo.substring(messageInfo.indexOf(":", messageInfo.indexOf(":") + 1) + 1),
+                duration = msgId,
+                type = "notice",
+                fullMsg = message
+            )
+        )
     }
 
     override fun onRoomState(message: String) {
         val parts = message.substring(1).split(" ".toRegex(), 2)
         val prefix = parts[0]
         val prefixes = splitAndMakeMap(prefix, ";", "=")
-        callbackRoomState.onRoomState(RoomState(
-            emote = prefixes["emote-only"],
-            followers = prefixes["followers-only"],
-            unique = prefixes["r9k"],
-            slow = prefixes["slow"],
-            subs = prefixes["subs-only"]
-        ))
+        callbackRoomState.onRoomState(
+            RoomState(
+                emote = prefixes["emote-only"],
+                followers = prefixes["followers-only"],
+                unique = prefixes["r9k"],
+                slow = prefixes["slow"],
+                subs = prefixes["subs-only"]
+            )
+        )
     }
 
     override fun onUserState(message: String) {
@@ -192,7 +205,7 @@ class MessageListenerImpl(
         }
         return map
     }
-    
+
     companion object {
         const val ACTION = "\u0001ACTION"
     }

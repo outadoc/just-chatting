@@ -18,7 +18,6 @@ import okhttp3.OkHttpClient
 import java.io.InputStream
 import javax.inject.Inject
 
-
 @GlideModule
 class XtraGlideModule : AppGlideModule() {
 

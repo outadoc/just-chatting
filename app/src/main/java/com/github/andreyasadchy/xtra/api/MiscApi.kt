@@ -1,9 +1,13 @@
 package com.github.andreyasadchy.xtra.api
 
-import com.github.andreyasadchy.xtra.model.chat.*
+import com.github.andreyasadchy.xtra.model.chat.BttvChannelResponse
+import com.github.andreyasadchy.xtra.model.chat.BttvFfzResponse
+import com.github.andreyasadchy.xtra.model.chat.BttvGlobalResponse
+import com.github.andreyasadchy.xtra.model.chat.RecentMessagesResponse
+import com.github.andreyasadchy.xtra.model.chat.StvEmotesResponse
+import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesResponse
 import retrofit2.Response
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Path
 import retrofit2.http.Query
 

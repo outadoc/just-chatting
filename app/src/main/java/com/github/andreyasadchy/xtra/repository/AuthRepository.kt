@@ -9,7 +9,8 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthRepository @Inject constructor(
-    private val api: IdApi) {
+    private val api: IdApi
+) {
 
     suspend fun validate(tokenWithPrefix: String): ValidationResponse? = withContext(Dispatchers.IO) {
         api.validateToken(tokenWithPrefix)

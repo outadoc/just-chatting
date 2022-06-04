@@ -21,7 +21,7 @@ import com.github.andreyasadchy.xtra.util.shortToast
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import kotlinx.android.synthetic.main.activity_settings.*
+import kotlinx.android.synthetic.main.activity_settings.toolbar
 import javax.inject.Inject
 
 class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
@@ -41,9 +41,9 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
         if (savedInstanceState == null || recreate) {
             recreate = false
             supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.settings, SettingsFragment())
-                    .commit()
+                .beginTransaction()
+                .replace(R.id.settings, SettingsFragment())
+                .commit()
         }
     }
 

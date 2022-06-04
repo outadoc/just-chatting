@@ -2,7 +2,11 @@ package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
-import java.io.*
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.IOException
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.net.Socket
 import java.util.concurrent.Executor
 import java.util.concurrent.Executors
@@ -15,7 +19,8 @@ class LoggedInChatThread(
     private val userLogin: String?,
     private val userToken: String?,
     private val channelName: String,
-    private val listener: OnMessageReceivedListener) : Thread(), ChatView.MessageSenderCallback {
+    private val listener: OnMessageReceivedListener
+) : Thread(), ChatView.MessageSenderCallback {
     private var socketOut: Socket? = null
     private lateinit var readerOut: BufferedReader
     private lateinit var writerOut: BufferedWriter

@@ -1,7 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.main
 
 import android.app.Activity
-import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -54,7 +53,6 @@ class MainViewModel @Inject constructor(
                 val user = login?.let { repository.loadUsersByLogin(mutableListOf(login), helixClientId, helixToken, gqlClientId) }?.firstOrNull()
                 _user.postValue(user)
             } catch (e: Exception) {
-
             }
         }
     }

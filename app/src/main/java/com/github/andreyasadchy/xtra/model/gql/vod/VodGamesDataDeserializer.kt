@@ -15,7 +15,8 @@ class VodGamesDataDeserializer : JsonDeserializer<VodGamesDataResponse> {
         val dataJson = json.asJsonObject.getAsJsonObject("data").getAsJsonObject("video").getAsJsonObject("moments").getAsJsonArray("edges")
         dataJson.forEach {
             val obj = it.asJsonObject.getAsJsonObject("node")
-            data.add(Game(
+            data.add(
+                Game(
                     id = if (!(obj.get("details").isJsonNull)) { obj.getAsJsonObject("details").getAsJsonObject("game").getAsJsonPrimitive("id").asString } else null,
                     name = if (!(obj.get("details").isJsonNull)) { obj.getAsJsonObject("details").getAsJsonObject("game").getAsJsonPrimitive("displayName").asString } else null,
                     box_art_url = if (!(obj.get("details").isJsonNull)) { obj.getAsJsonObject("details").getAsJsonObject("game").getAsJsonPrimitive("boxArtURL").asString } else null,

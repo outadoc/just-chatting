@@ -22,4 +22,5 @@ data class Bookmark(
     val createdAt: String? = null,
     val thumbnail: String? = null,
     val type: String? = null,
-    val duration: String? = null) : Parcelable
+    val duration: String? = null
+) : Parcelable

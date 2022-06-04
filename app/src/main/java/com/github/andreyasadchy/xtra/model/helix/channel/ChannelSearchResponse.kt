@@ -2,7 +2,9 @@ package com.github.andreyasadchy.xtra.model.helix.channel
 
 class ChannelSearchResponse(
     val data: List<ChannelSearch>?,
-    val pagination: Pagination?)
+    val pagination: Pagination?
+)
 
 data class Pagination(
-    val cursor: String?)
+    val cursor: String?
+)

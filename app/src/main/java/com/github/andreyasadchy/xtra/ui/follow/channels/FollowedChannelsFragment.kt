@@ -17,9 +17,9 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
-import kotlinx.android.synthetic.main.common_recycler_view_layout.*
-import kotlinx.android.synthetic.main.fragment_followed_channels.*
-import kotlinx.android.synthetic.main.sort_bar.*
+import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
+import kotlinx.android.synthetic.main.fragment_followed_channels.sortBar
+import kotlinx.android.synthetic.main.sort_bar.sortText
 
 class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewModel, BasePagedListAdapter<Follow>>(), FollowedChannelsSortDialog.OnFilter, Scrollable {
 

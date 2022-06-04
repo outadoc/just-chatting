@@ -15,7 +15,8 @@ class TagGameStreamDataDeserializer : JsonDeserializer<TagGameStreamDataResponse
         val dataJson = json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonArray("tags")
         dataJson.forEach {
             val obj = it.asJsonObject
-            data.add(Tag(
+            data.add(
+                Tag(
                     id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else null,
                     name = if (!(obj.get("localizedName").isJsonNull)) { obj.getAsJsonPrimitive("localizedName").asString } else null,
                     scope = if (!(obj.get("scope").isJsonNull)) { obj.getAsJsonPrimitive("scope").asString } else null,

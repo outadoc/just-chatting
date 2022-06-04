@@ -9,47 +9,51 @@ import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.visible
-import kotlinx.android.synthetic.main.fragment_streams_list_item.view.*
+import kotlinx.android.synthetic.main.fragment_streams_list_item.view.gameName
+import kotlinx.android.synthetic.main.fragment_streams_list_item.view.title
+import kotlinx.android.synthetic.main.fragment_streams_list_item.view.userImage
+import kotlinx.android.synthetic.main.fragment_streams_list_item.view.username
 
 abstract class BaseStreamsAdapter(
-        protected val fragment: Fragment,
-        private val clickListener: BaseStreamsFragment.OnStreamSelectedListener,
-        private val channelClickListener: OnChannelSelectedListener) : BasePagedListAdapter<Stream>(
-        object : DiffUtil.ItemCallback<Stream>() {
-            override fun areItemsTheSame(oldItem: Stream, newItem: Stream): Boolean =
-                    oldItem.id == newItem.id
+    protected val fragment: Fragment,
+    private val clickListener: BaseStreamsFragment.OnStreamSelectedListener,
+    private val channelClickListener: OnChannelSelectedListener
+) : BasePagedListAdapter<Stream>(
+    object : DiffUtil.ItemCallback<Stream>() {
+        override fun areItemsTheSame(oldItem: Stream, newItem: Stream): Boolean =
+            oldItem.id == newItem.id
 
-            override fun areContentsTheSame(oldItem: Stream, newItem: Stream): Boolean =
-                    oldItem.viewer_count == newItem.viewer_count &&
-                            oldItem.game_name == newItem.game_name &&
-                            oldItem.title == newItem.title
-        }) {
+        override fun areContentsTheSame(oldItem: Stream, newItem: Stream): Boolean =
+            oldItem.viewer_count == newItem.viewer_count &&
+                oldItem.game_name == newItem.game_name &&
+                oldItem.title == newItem.title
+    }) {
 
     override fun bind(item: Stream, view: View) {
         val channelListener: (View) -> Unit = { channelClickListener.viewChannel(item.user_id, item.user_login, item.user_name, item.channelLogo) }
         with(view) {
             setOnClickListener { clickListener.startStream(item) }
-            if (item.channelLogo != null)  {
+            if (item.channelLogo != null) {
                 userImage.visible()
                 userImage.loadImage(fragment, item.channelLogo, circle = true)
                 userImage.setOnClickListener(channelListener)
             } else {
                 userImage.gone()
             }
-            if (item.user_name != null)  {
+            if (item.user_name != null) {
                 username.visible()
                 username.text = item.user_name
                 username.setOnClickListener(channelListener)
             } else {
                 username.gone()
             }
-            if (item.title != null && item.title != "")  {
+            if (item.title != null && item.title != "") {
                 title.visible()
                 title.text = item.title.trim()
             } else {
                 title.gone()
             }
-            if (item.game_name != null)  {
+            if (item.game_name != null) {
                 gameName.visible()
                 gameName.text = item.game_name
             } else {

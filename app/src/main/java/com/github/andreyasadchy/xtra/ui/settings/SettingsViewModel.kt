@@ -9,7 +9,8 @@ import javax.inject.Inject
 
 class SettingsViewModel @Inject constructor(
     private val videoPositions: VideoPositionsDao,
-    private val videos: VideosDao) : BaseViewModel() {
+    private val videos: VideosDao
+) : BaseViewModel() {
 
     fun deletePositions() {
         GlobalScope.launch {

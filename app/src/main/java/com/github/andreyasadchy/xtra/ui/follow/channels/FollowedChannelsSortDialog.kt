@@ -12,9 +12,13 @@ import com.github.andreyasadchy.xtra.model.helix.follows.Order
 import com.github.andreyasadchy.xtra.model.helix.follows.Order.ASC
 import com.github.andreyasadchy.xtra.model.helix.follows.Order.DESC
 import com.github.andreyasadchy.xtra.model.helix.follows.Sort
-import com.github.andreyasadchy.xtra.model.helix.follows.Sort.*
+import com.github.andreyasadchy.xtra.model.helix.follows.Sort.ALPHABETICALLY
+import com.github.andreyasadchy.xtra.model.helix.follows.Sort.FOLLOWED_AT
+import com.github.andreyasadchy.xtra.model.helix.follows.Sort.LAST_BROADCAST
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
-import kotlinx.android.synthetic.main.dialog_followed_channels_sort.*
+import kotlinx.android.synthetic.main.dialog_followed_channels_sort.apply
+import kotlinx.android.synthetic.main.dialog_followed_channels_sort.order
+import kotlinx.android.synthetic.main.dialog_followed_channels_sort.sort
 
 class FollowedChannelsSortDialog : ExpandingBottomSheetDialogFragment() {
 
@@ -63,14 +67,15 @@ class FollowedChannelsSortDialog : ExpandingBottomSheetDialogFragment() {
                 val sortBtn = view.findViewById<RadioButton>(checkedSortId)
                 val orderBtn = view.findViewById<RadioButton>(checkedOrderId)
                 listener.onChange(
-                        when (checkedSortId) {
-                            R.id.time_followed -> FOLLOWED_AT
-                            R.id.alphabetically -> ALPHABETICALLY
-                            else -> LAST_BROADCAST
-                        },
-                        sortBtn.text,
-                        if (checkedOrderId == R.id.newest_first) DESC else ASC,
-                        orderBtn.text)
+                    when (checkedSortId) {
+                        R.id.time_followed -> FOLLOWED_AT
+                        R.id.alphabetically -> ALPHABETICALLY
+                        else -> LAST_BROADCAST
+                    },
+                    sortBtn.text,
+                    if (checkedOrderId == R.id.newest_first) DESC else ASC,
+                    orderBtn.text
+                )
             }
             dismiss()
         }

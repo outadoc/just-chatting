@@ -6,14 +6,19 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.launch
-import okhttp3.*
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import org.json.JSONArray
 import org.json.JSONObject
 
 class PubSubWebSocket(
     channelId: String,
     private val coroutineScope: CoroutineScope,
-    private val listener: OnMessageReceivedListener) {
+    private val listener: OnMessageReceivedListener
+) {
     private var client: OkHttpClient? = null
     private var socket: WebSocket? = null
     private var pongReceived = false
@@ -42,9 +47,12 @@ class PubSubWebSocket(
     private fun listen() {
         val message = JSONObject().apply {
             put("type", "LISTEN")
-            put("data", JSONObject().apply {
-                put("topics", JSONArray().apply { topics.forEach { put(it) } })
-            })
+            put(
+                "data",
+                JSONObject().apply {
+                    put("topics", JSONArray().apply { topics.forEach { put(it) } })
+                }
+            )
         }.toString()
         socket?.send(message)
     }

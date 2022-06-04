@@ -18,7 +18,6 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-
 class XtraApp : Application(), HasAndroidInjector, ImageLoaderFactory {
 
     companion object {

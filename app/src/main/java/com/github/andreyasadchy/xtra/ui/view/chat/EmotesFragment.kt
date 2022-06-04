@@ -18,7 +18,6 @@ import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.view.GridAutofitLayoutManager
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
 
-
 class EmotesFragment : Fragment() {
 
     private lateinit var listener: (Emote) -> Unit

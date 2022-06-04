@@ -25,7 +25,8 @@ class FollowedStreamsDataSource(
     private val gqlToken: String?,
     private val gqlApi: GraphQLRepository,
     private val apiPref: ArrayList<Pair<Long?, String?>?>,
-    coroutineScope: CoroutineScope) : BasePositionalDataSource<Stream>(coroutineScope) {
+    coroutineScope: CoroutineScope
+) : BasePositionalDataSource<Stream>(coroutineScope) {
     private var api: String? = null
     private var offset: String? = null
     private var nextPage: Boolean = true
@@ -234,10 +235,13 @@ class FollowedStreamsDataSource(
             if (get != null) {
                 for (i in get) {
                     if (i?.stream?.viewersCount != null) {
-                        streams.add(Stream(id = i.stream.id, user_id = i.id, user_login = i.login, user_name = i.displayName,
-                            game_id = i.stream.game?.id, game_name = i.stream.game?.displayName, type = i.stream.type,
-                            title = i.stream.title, viewer_count = i.stream.viewersCount, started_at = i.stream.createdAt,
-                            thumbnail_url = i.stream.previewImageURL, profileImageURL = i.profileImageURL)
+                        streams.add(
+                            Stream(
+                                id = i.stream.id, user_id = i.id, user_login = i.login, user_name = i.displayName,
+                                game_id = i.stream.game?.id, game_name = i.stream.game?.displayName, type = i.stream.type,
+                                title = i.stream.title, viewer_count = i.stream.viewersCount, started_at = i.stream.createdAt,
+                                thumbnail_url = i.stream.previewImageURL, profileImageURL = i.profileImageURL
+                            )
                         )
                     }
                 }
@@ -285,9 +289,10 @@ class FollowedStreamsDataSource(
         private val gqlToken: String?,
         private val gqlApi: GraphQLRepository,
         private val apiPref: ArrayList<Pair<Long?, String?>?>,
-        private val coroutineScope: CoroutineScope) : BaseDataSourceFactory<Int, Stream, FollowedStreamsDataSource>() {
+        private val coroutineScope: CoroutineScope
+    ) : BaseDataSourceFactory<Int, Stream, FollowedStreamsDataSource>() {
 
         override fun create(): DataSource<Int, Stream> =
-                FollowedStreamsDataSource(localFollowsChannel, userId, helixClientId, helixToken, helixApi, gqlClientId, gqlToken, gqlApi, apiPref, coroutineScope).also(sourceLiveData::postValue)
+            FollowedStreamsDataSource(localFollowsChannel, userId, helixClientId, helixToken, helixApi, gqlClientId, gqlToken, gqlApi, apiPref, coroutineScope).also(sourceLiveData::postValue)
     }
 }

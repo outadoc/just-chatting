@@ -32,7 +32,8 @@ class FollowLiveData(
     private val user: User,
     private val gqlClientId: String? = null,
     private val setting: Int,
-    private val viewModelScope: CoroutineScope) : MutableLiveData<Boolean>()  {
+    private val viewModelScope: CoroutineScope
+) : MutableLiveData<Boolean>() {
 
     init {
         viewModelScope.launch {
@@ -42,8 +43,10 @@ class FollowLiveData(
                         localFollowsGame != null && !user.gqlToken.isNullOrBlank() && !userName.isNullOrBlank() -> {
                             repository.loadGameFollowing(gqlClientId, user.gqlToken, userName)
                         }
-                        localFollowsChannel != null && ((!user.helixToken.isNullOrBlank() && !userId.isNullOrBlank() && !user.id.isNullOrBlank()) ||
-                                (!user.gqlToken.isNullOrBlank() && !userLogin.isNullOrBlank())) && user.id != userId -> {
+                        localFollowsChannel != null && (
+                            (!user.helixToken.isNullOrBlank() && !userId.isNullOrBlank() && !user.id.isNullOrBlank()) ||
+                                (!user.gqlToken.isNullOrBlank() && !userLogin.isNullOrBlank())
+                            ) && user.id != userId -> {
                             repository.loadUserFollowing(helixClientId, user.helixToken, userId, user.id, gqlClientId, user.gqlToken, userLogin)
                         }
                         else -> false
@@ -59,7 +62,6 @@ class FollowLiveData(
                 }
                 super.setValue(isFollowing)
             } catch (e: Exception) {
-
             }
         }
     }
@@ -75,9 +77,8 @@ class FollowLiveData(
                             Glide.with(context)
                                 .asBitmap()
                                 .load(channelLogo)
-                                .into(object: CustomTarget<Bitmap>() {
+                                .into(object : CustomTarget<Bitmap>() {
                                     override fun onLoadCleared(placeholder: Drawable?) {
-
                                     }
 
                                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
@@ -85,14 +86,12 @@ class FollowLiveData(
                                     }
                                 })
                         } catch (e: Exception) {
-
                         }
-                        val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${userId}.png").absolutePath
+                        val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "$userId.png").absolutePath
                         localFollowsChannel?.saveFollow(LocalFollowChannel(userId, userLogin, userName, downloadedLogo))
                     }
                 }
             } catch (e: Exception) {
-
             }
         }
     }
@@ -108,7 +107,6 @@ class FollowLiveData(
                     }
                 }
             } catch (e: Exception) {
-
             }
         }
     }
@@ -130,9 +128,8 @@ class FollowLiveData(
                             Glide.with(context)
                                 .asBitmap()
                                 .load(channelLogo)
-                                .into(object: CustomTarget<Bitmap>() {
+                                .into(object : CustomTarget<Bitmap>() {
                                     override fun onLoadCleared(placeholder: Drawable?) {
-
                                     }
 
                                     override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
@@ -140,14 +137,12 @@ class FollowLiveData(
                                     }
                                 })
                         } catch (e: Exception) {
-
                         }
-                        val downloadedLogo = File(context.filesDir.toString() + File.separator + "box_art" + File.separator + "${userId}.png").absolutePath
+                        val downloadedLogo = File(context.filesDir.toString() + File.separator + "box_art" + File.separator + "$userId.png").absolutePath
                         localFollowsGame?.saveFollow(LocalFollowGame(userId, userName, downloadedLogo))
                     }
                 }
             } catch (e: Exception) {
-
             }
         }
     }
@@ -163,7 +158,6 @@ class FollowLiveData(
                     }
                 }
             } catch (e: Exception) {
-
             }
         }
     }

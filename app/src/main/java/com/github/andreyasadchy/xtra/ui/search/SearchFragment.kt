@@ -11,7 +11,8 @@ import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.showKeyboard
-import kotlinx.android.synthetic.main.fragment_search.*
+import kotlinx.android.synthetic.main.fragment_search.search
+import kotlinx.android.synthetic.main.fragment_search.toolbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 
@@ -56,7 +57,7 @@ class SearchFragment : MediaPagerFragment() {
                         (currentFragment as? Searchable)?.search(newText)
                     }
                 } else {
-                    (currentFragment as? Searchable)?.search(newText) //might be null on rotation, so as?
+                    (currentFragment as? Searchable)?.search(newText) // might be null on rotation, so as?
                 }
                 return false
             }
@@ -64,6 +65,5 @@ class SearchFragment : MediaPagerFragment() {
     }
 
     override fun onNetworkRestored() {
-
     }
 }

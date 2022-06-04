@@ -12,4 +12,5 @@ data class LocalFollowChannel(
     val user_id: String,
     var user_login: String? = null,
     var user_name: String? = null,
-    var channelLogo: String? = null) : Parcelable
+    var channelLogo: String? = null
+) : Parcelable

@@ -1,9 +1,13 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
-import java.io.*
+import java.io.BufferedReader
+import java.io.BufferedWriter
+import java.io.IOException
+import java.io.InputStreamReader
+import java.io.OutputStreamWriter
 import java.net.Socket
-import java.util.*
+import java.util.Random
 import javax.net.ssl.SSLSocketFactory
 
 private const val TAG = "LiveChatThread"
@@ -12,7 +16,8 @@ class LiveChatThread(
     private val useSSl: Boolean,
     private val loggedIn: Boolean,
     private val channelName: String,
-    private val listener: OnMessageReceivedListener) : Thread() {
+    private val listener: OnMessageReceivedListener
+) : Thread() {
     private var socketIn: Socket? = null
     private lateinit var readerIn: BufferedReader
     private lateinit var writerIn: BufferedWriter
@@ -68,7 +73,7 @@ class LiveChatThread(
                 readerIn = BufferedReader(InputStreamReader(getInputStream()))
                 writerIn = BufferedWriter(OutputStreamWriter(getOutputStream()))
             }
-            write("NICK justinfan${Random().nextInt(((9999 - 1000) + 1)) + 1000}", writerIn) //random number between 1000 and 9999
+            write("NICK justinfan${Random().nextInt(((9999 - 1000) + 1)) + 1000}", writerIn) // random number between 1000 and 9999
             write("CAP REQ :twitch.tv/tags twitch.tv/commands", writerIn)
             write("JOIN $hashChannelName", writerIn)
             writerIn.flush()

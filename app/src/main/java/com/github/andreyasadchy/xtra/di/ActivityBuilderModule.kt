@@ -3,7 +3,6 @@ package com.github.andreyasadchy.xtra.di
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
-
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

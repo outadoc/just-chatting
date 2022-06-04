@@ -15,7 +15,8 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
-import kotlinx.android.synthetic.main.common_recycler_view_layout.*
+import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
+import kotlinx.android.synthetic.main.common_recycler_view_layout.swipeRefresh
 
 class ChannelSearchFragment : PagedListFragment<ChannelSearch, ChannelSearchViewModel, BasePagedListAdapter<ChannelSearch>>(), Searchable {
 
@@ -32,7 +33,7 @@ class ChannelSearchFragment : PagedListFragment<ChannelSearch, ChannelSearchView
     }
 
     override fun search(query: String) {
-        if (query.isNotEmpty()) { //TODO same query doesn't fire
+        if (query.isNotEmpty()) { // TODO same query doesn't fire
             viewModel.setQuery(
                 query = query,
                 helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),

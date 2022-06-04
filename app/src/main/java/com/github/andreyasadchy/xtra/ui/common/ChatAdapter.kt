@@ -50,7 +50,8 @@ class ChatAdapter(
     private val rewardChatMsg: String,
     private val redeemedChatMsg: String,
     private val redeemedNoMsg: String,
-    private val imageLibrary: String?) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+    private val imageLibrary: String?
+) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
         set(value) {
@@ -518,9 +519,9 @@ class ChatAdapter(
         super.onViewAttachedToWindow(holder)
         if (animateGifs) {
             (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-                (it.drawable as? coil.drawable.ScaleDrawable)?.start() ?:
-                (it.drawable as? GifDrawable)?.start() ?:
-                (it.drawable as? WebpDrawable)?.start()
+                (it.drawable as? coil.drawable.ScaleDrawable)?.start()
+                    ?: (it.drawable as? GifDrawable)?.start()
+                    ?: (it.drawable as? WebpDrawable)?.start()
             }
         }
     }
@@ -529,9 +530,9 @@ class ChatAdapter(
         super.onViewDetachedFromWindow(holder)
         if (animateGifs) {
             (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-                (it.drawable as? coil.drawable.ScaleDrawable)?.stop() ?:
-                (it.drawable as? GifDrawable)?.stop() ?:
-                (it.drawable as? WebpDrawable)?.stop()
+                (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
+                    ?: (it.drawable as? GifDrawable)?.stop()
+                    ?: (it.drawable as? WebpDrawable)?.stop()
             }
         }
     }
@@ -541,9 +542,9 @@ class ChatAdapter(
         if (animateGifs) {
             for (i in 0 until childCount) {
                 ((recyclerView.getChildAt(i) as TextView).text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-                    (it.drawable as? coil.drawable.ScaleDrawable)?.stop() ?:
-                    (it.drawable as? GifDrawable)?.stop() ?:
-                    (it.drawable as? WebpDrawable)?.stop()
+                    (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
+                        ?: (it.drawable as? GifDrawable)?.stop()
+                        ?: (it.drawable as? WebpDrawable)?.stop()
                 }
             }
         }

@@ -24,11 +24,35 @@ import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
-import com.github.andreyasadchy.xtra.util.*
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.visible
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.android.synthetic.main.fragment_channel.*
-import kotlinx.android.synthetic.main.fragment_media_pager.*
-
+import kotlinx.android.synthetic.main.fragment_channel.appBar
+import kotlinx.android.synthetic.main.fragment_channel.bannerImage
+import kotlinx.android.synthetic.main.fragment_channel.collapsingToolbar
+import kotlinx.android.synthetic.main.fragment_channel.follow
+import kotlinx.android.synthetic.main.fragment_channel.gameName
+import kotlinx.android.synthetic.main.fragment_channel.lastBroadcast
+import kotlinx.android.synthetic.main.fragment_channel.menu
+import kotlinx.android.synthetic.main.fragment_channel.search
+import kotlinx.android.synthetic.main.fragment_channel.streamLayout
+import kotlinx.android.synthetic.main.fragment_channel.title
+import kotlinx.android.synthetic.main.fragment_channel.toolbar
+import kotlinx.android.synthetic.main.fragment_channel.uptime
+import kotlinx.android.synthetic.main.fragment_channel.userCreated
+import kotlinx.android.synthetic.main.fragment_channel.userFollowers
+import kotlinx.android.synthetic.main.fragment_channel.userImage
+import kotlinx.android.synthetic.main.fragment_channel.userLayout
+import kotlinx.android.synthetic.main.fragment_channel.userName
+import kotlinx.android.synthetic.main.fragment_channel.userType
+import kotlinx.android.synthetic.main.fragment_channel.userViews
+import kotlinx.android.synthetic.main.fragment_channel.viewers
+import kotlinx.android.synthetic.main.fragment_channel.watchLive
+import kotlinx.android.synthetic.main.fragment_media_pager.viewPager
 
 class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
@@ -84,7 +108,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 inflate(R.menu.top_menu)
                 menu.findItem(R.id.login).title = if (user !is NotLoggedIn) getString(R.string.log_out) else getString(R.string.log_in)
                 setOnMenuItemClickListener {
-                    when(it.itemId) {
+                    when (it.itemId) {
                         R.id.settings -> { activity.startActivityFromFragment(this@ChannelPagerFragment, Intent(activity, SettingsActivity::class.java), 3) }
                         R.id.login -> {
                             if (user is NotLoggedIn) {
@@ -162,7 +186,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             } else {
                 if (stream?.lastBroadcast != null) {
                     TwitchApiHelper.formatTimeString(requireContext(), stream.lastBroadcast).let {
-                        if (it != null)  {
+                        if (it != null) {
                             lastBroadcast.visible()
                             lastBroadcast.text = requireContext().getString(R.string.last_broadcast_date, it)
                         } else {
@@ -219,7 +243,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
         if (requireContext().prefs().getBoolean(C.UI_UPTIME, true)) {
             if (stream?.started_at != null) {
                 TwitchApiHelper.getUptime(requireContext(), stream.started_at).let {
-                    if (it != null)  {
+                    if (it != null) {
                         streamLayout.visible()
                         uptime.visible()
                         uptime.text = requireContext().getString(R.string.uptime, it)

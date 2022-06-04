@@ -39,7 +39,8 @@ data class OfflineVideo(
     val maxProgress: Int,
     var status: Int = STATUS_PENDING,
     val type: String? = null,
-    val videoId: String? = null) : Parcelable {
+    val videoId: String? = null
+) : Parcelable {
 
     @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)

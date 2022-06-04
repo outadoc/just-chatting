@@ -14,7 +14,8 @@ data class PubSubPointReward(
     val rewardTitle: String? = null,
     val rewardCost: Int? = null,
     val rewardImage: RewardImage? = null,
-    val timestamp: Long? = null) : ChatMessage {
+    val timestamp: Long? = null
+) : ChatMessage {
 
     data class RewardImage(
         val url1: String? = null,
@@ -22,4 +23,3 @@ data class PubSubPointReward(
         val url4: String? = null
     )
 }
-

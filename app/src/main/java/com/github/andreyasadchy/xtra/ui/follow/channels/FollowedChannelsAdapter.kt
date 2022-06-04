@@ -12,30 +12,36 @@ import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.visible
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.*
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.localText
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.twitchText
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userFollowed
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userImage
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userStream
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.username
 
 class FollowedChannelsAdapter(
-        private val fragment: Fragment,
-        private val listener: OnChannelSelectedListener) : BasePagedListAdapter<Follow>(
-        object : DiffUtil.ItemCallback<Follow>() {
-            override fun areItemsTheSame(oldItem: Follow, newItem: Follow): Boolean =
-                    oldItem.to_id == newItem.to_id
+    private val fragment: Fragment,
+    private val listener: OnChannelSelectedListener
+) : BasePagedListAdapter<Follow>(
+    object : DiffUtil.ItemCallback<Follow>() {
+        override fun areItemsTheSame(oldItem: Follow, newItem: Follow): Boolean =
+            oldItem.to_id == newItem.to_id
 
-            override fun areContentsTheSame(oldItem: Follow, newItem: Follow): Boolean = true
-        }) {
+        override fun areContentsTheSame(oldItem: Follow, newItem: Follow): Boolean = true
+    }) {
 
     override val layoutId: Int = R.layout.fragment_followed_channels_list_item
 
     override fun bind(item: Follow, view: View) {
         with(view) {
             setOnClickListener { listener.viewChannel(item.to_id, item.to_login, item.to_name, item.channelLogo, item.followLocal) }
-            if (item.channelLogo != null)  {
+            if (item.channelLogo != null) {
                 userImage.visible()
                 userImage.loadImage(fragment, item.channelLogo, circle = true, diskCacheStrategy = DiskCacheStrategy.NONE)
             } else {
                 userImage.gone()
             }
-            if (item.to_name != null)  {
+            if (item.to_name != null) {
                 username.visible()
                 username.text = item.to_name
             } else {

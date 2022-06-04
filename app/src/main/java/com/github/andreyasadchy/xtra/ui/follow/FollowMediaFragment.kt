@@ -7,7 +7,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.common.MediaFragment
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
-import kotlinx.android.synthetic.main.fragment_media.*
+import kotlinx.android.synthetic.main.fragment_media.spinner
 
 class FollowMediaFragment : MediaFragment() {
 

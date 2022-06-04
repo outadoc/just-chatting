@@ -3,7 +3,10 @@ package com.github.andreyasadchy.xtra.repository
 import androidx.core.util.Pair
 import androidx.paging.PagedList
 import com.apollographql.apollo3.api.Optional
-import com.github.andreyasadchy.xtra.*
+import com.github.andreyasadchy.xtra.CheerEmotesQuery
+import com.github.andreyasadchy.xtra.GameBoxArtQuery
+import com.github.andreyasadchy.xtra.StreamUserQuery
+import com.github.andreyasadchy.xtra.UsersQuery
 import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
@@ -14,7 +17,9 @@ import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.model.helix.user.User
-import com.github.andreyasadchy.xtra.repository.datasource.*
+import com.github.andreyasadchy.xtra.repository.datasource.FollowedChannelsDataSource
+import com.github.andreyasadchy.xtra.repository.datasource.FollowedStreamsDataSource
+import com.github.andreyasadchy.xtra.repository.datasource.SearchChannelsDataSource
 import com.github.andreyasadchy.xtra.ui.view.chat.animateGifs
 import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
@@ -83,7 +88,8 @@ class ApiRepository @Inject constructor(
             userIds.add(channelId)
             val get = apolloClient(XtraModule(), gqlClientId).query(StreamUserQuery(Optional.Present(userIds))).execute().data
             if (get != null) {
-                val user = User(id = channelId, login = get.users?.first()?.login, display_name = get.users?.first()?.displayName, profile_image_url = get.users?.first()?.profileImageURL,
+                val user = User(
+                    id = channelId, login = get.users?.first()?.login, display_name = get.users?.first()?.displayName, profile_image_url = get.users?.first()?.profileImageURL,
                     bannerImageURL = get.users?.first()?.bannerImageURL, view_count = get.users?.first()?.profileViewCount, created_at = get.users?.first()?.createdAt?.toString(),
                     followers_count = get.users?.first()?.followers?.totalCount,
                     broadcaster_type = when {
@@ -98,11 +104,13 @@ class ApiRepository @Inject constructor(
                         else -> null
                     }
                 )
-                Stream(id = get.users?.first()?.stream?.id, user_id = channelId, user_login = get.users?.first()?.login, user_name = get.users?.first()?.displayName,
+                Stream(
+                    id = get.users?.first()?.stream?.id, user_id = channelId, user_login = get.users?.first()?.login, user_name = get.users?.first()?.displayName,
                     game_id = get.users?.first()?.stream?.game?.id, game_name = get.users?.first()?.stream?.game?.displayName, type = get.users?.first()?.stream?.type,
                     title = get.users?.first()?.stream?.title, viewer_count = get.users?.first()?.stream?.viewersCount, started_at = get.users?.first()?.stream?.createdAt,
                     thumbnail_url = get.users?.first()?.stream?.previewImageURL, profileImageURL = get.users?.first()?.profileImageURL, channelUser = user,
-                    lastBroadcast = get.users?.first()?.lastBroadcast?.startedAt?.toString())
+                    lastBroadcast = get.users?.first()?.lastBroadcast?.startedAt?.toString()
+                )
             } else null
         } catch (e: Exception) {
             helix.getStreams(helixClientId, helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) }, mutableListOf(channelId)).data?.firstOrNull()
@@ -116,7 +124,8 @@ class ApiRepository @Inject constructor(
                 val list = mutableListOf<User>()
                 for (i in get) {
                     list.add(
-                        User(id = i?.id, login = i?.login, display_name = i?.displayName, profile_image_url = i?.profileImageURL,
+                        User(
+                            id = i?.id, login = i?.login, display_name = i?.displayName, profile_image_url = i?.profileImageURL,
                             bannerImageURL = i?.bannerImageURL, view_count = i?.profileViewCount, created_at = i?.createdAt?.toString(),
                             followers_count = i?.followers?.totalCount,
                             broadcaster_type = when {
@@ -129,7 +138,9 @@ class ApiRepository @Inject constructor(
                                 i?.roles?.isSiteAdmin == true -> "admin"
                                 i?.roles?.isGlobalMod == true -> "global_mod"
                                 else -> null
-                            }))
+                            }
+                        )
+                    )
                 }
                 list
             } else null
@@ -145,7 +156,8 @@ class ApiRepository @Inject constructor(
                 val list = mutableListOf<User>()
                 for (i in get) {
                     list.add(
-                        User(id = i?.id, login = i?.login, display_name = i?.displayName, profile_image_url = i?.profileImageURL,
+                        User(
+                            id = i?.id, login = i?.login, display_name = i?.displayName, profile_image_url = i?.profileImageURL,
                             bannerImageURL = i?.bannerImageURL, view_count = i?.profileViewCount, created_at = i?.createdAt?.toString(),
                             followers_count = i?.followers?.totalCount,
                             broadcaster_type = when {
@@ -158,7 +170,9 @@ class ApiRepository @Inject constructor(
                                 i?.roles?.isSiteAdmin == true -> "admin"
                                 i?.roles?.isGlobalMod == true -> "global_mod"
                                 else -> null
-                            }))
+                            }
+                        )
+                    )
                 }
                 list
             } else null
@@ -170,7 +184,7 @@ class ApiRepository @Inject constructor(
     override suspend fun loadCheerEmotes(userId: String, helixClientId: String?, helixToken: String?, gqlClientId: String?): List<CheerEmote>? = withContext(Dispatchers.IO) {
         try {
             val emotes = mutableListOf<CheerEmote>()
-            val get = apolloClient(XtraModule(), gqlClientId).query(CheerEmotesQuery(Optional.Present(userId), Optional.Present(animateGifs), Optional.Present((when (emoteQuality) {"4" -> 4 "3" -> 3 "2" -> 2 else -> 1}).toDouble()))).execute().data
+            val get = apolloClient(XtraModule(), gqlClientId).query(CheerEmotesQuery(Optional.Present(userId), Optional.Present(animateGifs), Optional.Present((when (emoteQuality) { "4" -> 4 "3" -> 3 "2" -> 2 else -> 1 }).toDouble()))).execute().data
             if (get?.user?.cheer?.emotes != null) {
                 for (i in get.user.cheer.emotes) {
                     if (i?.tiers != null) {
@@ -217,5 +231,4 @@ class ApiRepository @Inject constructor(
     override suspend fun unfollowGame(gqlClientId: String?, gqlToken: String?, gameId: String?): Boolean = withContext(Dispatchers.IO) {
         !gql.loadUnfollowGame(gqlClientId, gqlToken?.let { TwitchApiHelper.addTokenPrefixGQL(it) }, gameId).isJsonNull
     }
-
 }

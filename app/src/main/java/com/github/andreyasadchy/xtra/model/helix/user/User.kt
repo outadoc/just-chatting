@@ -18,7 +18,8 @@ data class User(
     val created_at: String? = null,
 
     val followers_count: Int? = null,
-    val bannerImageURL: String? = null) : Parcelable {
+    val bannerImageURL: String? = null
+) : Parcelable {
 
     val channelLogo: String?
         get() = TwitchApiHelper.getTemplateUrl(profile_image_url, "profileimage")

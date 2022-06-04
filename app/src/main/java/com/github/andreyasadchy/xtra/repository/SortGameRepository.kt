@@ -9,7 +9,8 @@ import javax.inject.Singleton
 
 @Singleton
 class SortGameRepository @Inject constructor(
-    private val sortGameDao: SortGameDao) {
+    private val sortGameDao: SortGameDao
+) {
 
     suspend fun getById(id: String) = withContext(Dispatchers.IO) {
         sortGameDao.getById(id)

@@ -1,6 +1,10 @@
 package com.github.andreyasadchy.xtra.ui.main
 
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.content.SharedPreferences
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
@@ -20,7 +24,11 @@ import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
-import com.github.andreyasadchy.xtra.util.*
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.applyTheme
+import com.github.andreyasadchy.xtra.util.isNetworkAvailable
+import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.shortToast
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -44,7 +52,7 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
     }
     private lateinit var prefs: SharedPreferences
 
-    //Lifecycle methods
+    // Lifecycle methods
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,12 +129,12 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
             overridePendingTransition(0, 0)
         }
         when (requestCode) {
-            1 -> { //Was not logged in
-                when (resultCode) {//Logged in
+            1 -> { // Was not logged in
+                when (resultCode) { // Logged in
                     RESULT_OK -> restartActivity()
                 }
             }
-            2 -> restartActivity() //Was logged in
+            2 -> restartActivity() // Was logged in
         }
     }
 
@@ -160,7 +168,7 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
         }
     }
 
-//Navigation listeners
+// Navigation listeners
 
     override fun startStream(stream: Stream) {
         fragNavController.pushFragment(ChannelPagerFragment.newInstance(stream.user_id, stream.user_login, stream.user_name, stream.channelLogo))

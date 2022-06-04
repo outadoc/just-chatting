@@ -17,8 +17,24 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
-import com.github.andreyasadchy.xtra.util.*
-import kotlinx.android.synthetic.main.dialog_chat_message_click.*
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.visible
+import kotlinx.android.synthetic.main.dialog_chat_message_click.bannerImage
+import kotlinx.android.synthetic.main.dialog_chat_message_click.copyClip
+import kotlinx.android.synthetic.main.dialog_chat_message_click.copyFullMsg
+import kotlinx.android.synthetic.main.dialog_chat_message_click.copyMessage
+import kotlinx.android.synthetic.main.dialog_chat_message_click.message
+import kotlinx.android.synthetic.main.dialog_chat_message_click.reply
+import kotlinx.android.synthetic.main.dialog_chat_message_click.userCreated
+import kotlinx.android.synthetic.main.dialog_chat_message_click.userFollowers
+import kotlinx.android.synthetic.main.dialog_chat_message_click.userImage
+import kotlinx.android.synthetic.main.dialog_chat_message_click.userLayout
+import kotlinx.android.synthetic.main.dialog_chat_message_click.userName
+import kotlinx.android.synthetic.main.dialog_chat_message_click.viewProfile
 import javax.inject.Inject
 
 class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
@@ -69,8 +85,10 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             if (item != null) {
                 updateUserLayout(item)
             } else {
-                viewModel.loadUser(channelId = userId, helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), helixToken = requireContext().prefs().getString(C.TOKEN, ""),
-                    gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")).observe(viewLifecycleOwner) { user ->
+                viewModel.loadUser(
+                    channelId = userId, helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+                    gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+                ).observe(viewLifecycleOwner) { user ->
                     if (user != null) {
                         savedUsers.add(user)
                         updateUserLayout(user)

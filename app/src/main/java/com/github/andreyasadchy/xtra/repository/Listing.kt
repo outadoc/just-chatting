@@ -9,11 +9,12 @@ import com.github.andreyasadchy.xtra.repository.datasource.BaseDataSourceFactory
 import com.github.andreyasadchy.xtra.repository.datasource.PagingDataSource
 
 class Listing<T> internal constructor(
-        val pagedList: LiveData<PagedList<T>>,
-        val loadingState: LiveData<LoadingState>,
-        val pagingState: LiveData<LoadingState>,
-        val refresh: () -> Unit,
-        val retry: () -> Unit) {
+    val pagedList: LiveData<PagedList<T>>,
+    val loadingState: LiveData<LoadingState>,
+    val pagingState: LiveData<LoadingState>,
+    val refresh: () -> Unit,
+    val retry: () -> Unit
+) {
 
     companion object {
 
@@ -22,11 +23,12 @@ class Listing<T> internal constructor(
             val loadingState = factory.sourceLiveData.switchMap { it.loadingState }
             val pagingState = factory.sourceLiveData.switchMap { it.pagingState }
             return Listing(
-                    pagedList,
-                    loadingState,
-                    pagingState,
-                    refresh = { factory.sourceLiveData.value?.invalidate() },
-                    retry = { factory.sourceLiveData.value?.retry() })
+                pagedList,
+                loadingState,
+                pagingState,
+                refresh = { factory.sourceLiveData.value?.invalidate() },
+                retry = { factory.sourceLiveData.value?.retry() }
+            )
         }
     }
 }

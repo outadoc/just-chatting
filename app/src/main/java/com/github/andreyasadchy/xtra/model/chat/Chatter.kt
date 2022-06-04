@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-
 class Chatter(val name: String?) {
 
     override fun equals(other: Any?): Boolean {

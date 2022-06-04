@@ -18,8 +18,9 @@ data class Follow(
     var lastBroadcast: String? = null,
 
     var followTwitch: Boolean = false,
-    val followLocal: Boolean = false) : Parcelable {
+    val followLocal: Boolean = false
+) : Parcelable {
 
-        val channelLogo: String?
-                get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
+    val channelLogo: String?
+        get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
 }

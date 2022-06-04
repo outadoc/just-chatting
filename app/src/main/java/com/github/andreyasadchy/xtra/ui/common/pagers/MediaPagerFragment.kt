@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
-import kotlinx.android.synthetic.main.fragment_media_pager.*
+import kotlinx.android.synthetic.main.fragment_media_pager.viewPager
 
 abstract class MediaPagerFragment : BaseNetworkFragment(), ItemAwarePagerFragment, Scrollable {
 

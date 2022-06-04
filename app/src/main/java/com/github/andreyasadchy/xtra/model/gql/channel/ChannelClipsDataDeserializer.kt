@@ -17,7 +17,8 @@ class ChannelClipsDataDeserializer : JsonDeserializer<ChannelClipsDataResponse> 
         dataJson.forEach {
             cursor = if (!it.asJsonObject.get("cursor").isJsonNull) it.asJsonObject.get("cursor").asString else null
             val obj = it.asJsonObject.getAsJsonObject("node")
-            data.add(Clip(
+            data.add(
+                Clip(
                     id = if (!(obj.get("slug").isJsonNull)) { obj.getAsJsonPrimitive("slug").asString } else "",
                     broadcaster_id = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("id").asString } else null,
                     broadcaster_login = if (!(obj.get("broadcaster").isJsonNull)) { obj.getAsJsonObject("broadcaster").getAsJsonPrimitive("login").asString } else null,

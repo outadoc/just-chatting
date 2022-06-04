@@ -6,13 +6,21 @@ import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.util.*
-import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.*
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.visible
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.tagsLayout
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.type
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.uptime
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.viewers
 
 class StreamsCompactAdapter(
-        fragment: Fragment,
-        clickListener: BaseStreamsFragment.OnStreamSelectedListener,
-        channelClickListener: OnChannelSelectedListener) : BaseStreamsAdapter(fragment, clickListener, channelClickListener) {
+    fragment: Fragment,
+    clickListener: BaseStreamsFragment.OnStreamSelectedListener,
+    channelClickListener: OnChannelSelectedListener
+) : BaseStreamsAdapter(fragment, clickListener, channelClickListener) {
 
     override val layoutId: Int = R.layout.fragment_streams_list_item_compact
 

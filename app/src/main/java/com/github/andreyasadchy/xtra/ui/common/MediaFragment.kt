@@ -15,8 +15,9 @@ import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
-import kotlinx.android.synthetic.main.fragment_media.*
-
+import kotlinx.android.synthetic.main.fragment_media.appBar
+import kotlinx.android.synthetic.main.fragment_media.menu
+import kotlinx.android.synthetic.main.fragment_media.search
 
 abstract class MediaFragment : Fragment(), Scrollable {
 
@@ -45,7 +46,7 @@ abstract class MediaFragment : Fragment(), Scrollable {
                 inflate(R.menu.top_menu)
                 menu.findItem(R.id.login).title = if (user !is NotLoggedIn) getString(R.string.log_out) else getString(R.string.log_in)
                 setOnMenuItemClickListener {
-                    when(it.itemId) {
+                    when (it.itemId) {
                         R.id.settings -> { activity.startActivityFromFragment(this@MediaFragment, Intent(activity, SettingsActivity::class.java), 3) }
                         R.id.login -> {
                             if (user is NotLoggedIn) {

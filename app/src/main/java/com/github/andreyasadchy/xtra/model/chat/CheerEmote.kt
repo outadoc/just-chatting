@@ -5,4 +5,5 @@ class CheerEmote(
     val minBits: Int,
     val color: String? = null,
     override val type: String,
-    override val url: String) : Emote()
+    override val url: String
+) : Emote()

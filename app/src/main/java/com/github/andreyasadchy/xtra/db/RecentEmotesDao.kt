@@ -8,7 +8,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 
-
 @Dao
 interface RecentEmotesDao {
 

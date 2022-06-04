@@ -9,7 +9,8 @@ import javax.inject.Singleton
 
 @Singleton
 class SortChannelRepository @Inject constructor(
-    private val sortChannelDao: SortChannelDao) {
+    private val sortChannelDao: SortChannelDao
+) {
 
     suspend fun getById(id: String) = withContext(Dispatchers.IO) {
         sortChannelDao.getById(id)

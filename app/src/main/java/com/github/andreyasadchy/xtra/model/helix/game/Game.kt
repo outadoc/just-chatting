@@ -18,8 +18,9 @@ data class Game(
     val vodDuration: Int? = null,
 
     var followTwitch: Boolean = false,
-    val followLocal: Boolean = false) : Parcelable {
+    val followLocal: Boolean = false
+) : Parcelable {
 
-        val boxArt: String?
-                get() = TwitchApiHelper.getTemplateUrl(box_art_url, "game")
+    val boxArt: String?
+        get() = TwitchApiHelper.getTemplateUrl(box_art_url, "game")
 }

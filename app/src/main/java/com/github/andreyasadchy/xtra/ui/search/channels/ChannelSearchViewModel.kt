@@ -13,7 +13,8 @@ import com.github.andreyasadchy.xtra.util.nullIfEmpty
 import javax.inject.Inject
 
 class ChannelSearchViewModel @Inject constructor(
-        private val repository: TwitchService) : PagedListViewModel<ChannelSearch>() {
+    private val repository: TwitchService
+) : PagedListViewModel<ChannelSearch>() {
 
     private val query = MutableLiveData<String>()
     private var helixClientId = MutableLiveData<String>()

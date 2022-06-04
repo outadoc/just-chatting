@@ -16,4 +16,5 @@ data class SortGame(
     var videoType: String? = null,
     var videoLanguageIndex: Int? = null,
     var clipPeriod: String? = null,
-    var clipLanguageIndex: Int? = null) : Parcelable
+    var clipLanguageIndex: Int? = null
+) : Parcelable

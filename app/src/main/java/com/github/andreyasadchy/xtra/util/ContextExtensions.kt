@@ -7,13 +7,12 @@ import android.content.res.Configuration
 import android.net.ConnectivityManager
 import android.os.Build
 import android.util.TypedValue
-import android.view.WindowManager
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import com.github.andreyasadchy.xtra.R
-import java.util.*
+import java.util.Locale
 
 val Context.isNetworkAvailable get() = getConnectivityManager(this).activeNetworkInfo?.isConnectedOrConnecting == true
 
@@ -21,7 +20,7 @@ private fun getConnectivityManager(context: Context) = context.getSystemService(
 
 fun Context.prefs(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
-fun Context.convertDpToPixels(dp: Float) =  TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics).toInt()
+fun Context.convertDpToPixels(dp: Float) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics).toInt()
 
 fun Activity.applyTheme(): String {
     val lang = prefs().getString(C.UI_LANGUAGE, "auto") ?: "auto"
@@ -44,12 +43,14 @@ fun Activity.applyTheme(): String {
     } else {
         prefs().getString(C.THEME, "0")!!
     }
-    setTheme(when(theme) {
-        "1" -> R.style.AmoledTheme
-        "2" -> R.style.LightTheme
-        "3" -> R.style.BlueTheme
-        else -> R.style.DarkTheme
-    })
+    setTheme(
+        when (theme) {
+            "1" -> R.style.AmoledTheme
+            "2" -> R.style.LightTheme
+            "3" -> R.style.BlueTheme
+            else -> R.style.DarkTheme
+        }
+    )
 
     when (theme) {
         "1" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)

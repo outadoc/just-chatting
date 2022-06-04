@@ -37,12 +37,6 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
-        android:key="chat_alternate_background"
-        android:title="@string/chat_alternate_background"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
         android:key="animatedGifEmotes"
         android:title="@string/animated_emotes"
         app:iconSpaceReserved="false" />

@@ -9,20 +9,24 @@ import android.os.Build
 import android.util.TypedValue
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
-import com.github.andreyasadchy.xtra.R
 import java.util.Locale
 
 val Context.isNetworkAvailable get() = getConnectivityManager(this).activeNetworkInfo?.isConnectedOrConnecting == true
 
-private fun getConnectivityManager(context: Context) = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+private fun getConnectivityManager(context: Context) =
+    context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
 fun Context.prefs(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
 
-fun Context.convertDpToPixels(dp: Float) = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics).toInt()
+fun Context.convertDpToPixels(dp: Float) =
+    TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics)
+        .toInt()
 
-fun Activity.applyTheme(): String {
+val Context.isDarkMode: Boolean
+    get() = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+
+fun Activity.applyTheme() {
     val lang = prefs().getString(C.UI_LANGUAGE, "auto") ?: "auto"
     if (lang != "auto") {
         val config = resources.configuration
@@ -35,38 +39,6 @@ fun Activity.applyTheme(): String {
         resources.updateConfiguration(config, resources.displayMetrics)
         application.resources.updateConfiguration(config, resources.displayMetrics)
     }
-    val theme = if (prefs().getBoolean(C.UI_THEME_FOLLOW_SYSTEM, false)) {
-        when (resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK)) {
-            Configuration.UI_MODE_NIGHT_YES -> prefs().getString(C.UI_THEME_DARK_ON, "0")!!
-            else -> prefs().getString(C.UI_THEME_DARK_OFF, "2")!!
-        }
-    } else {
-        prefs().getString(C.THEME, "0")!!
-    }
-    setTheme(
-        when (theme) {
-            "1" -> R.style.AmoledTheme
-            "2" -> R.style.LightTheme
-            "3" -> R.style.BlueTheme
-            else -> R.style.DarkTheme
-        }
-    )
-
-    when (theme) {
-        "1" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)
-        "2" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryLight)
-        "3" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryBlue)
-        else -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryDark)
-    }
-
-    when (theme) {
-        "1" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)
-        "2" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryLight)
-        "3" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryBlue)
-        else -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryDark)
-    }
-
-    return theme
 }
 
 val Context.isActivityResumed

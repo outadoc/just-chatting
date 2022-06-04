@@ -58,7 +58,8 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
 
     class SettingsFragment : PreferenceFragmentCompat(), Injectable {
 
-        @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+        @Inject
+        lateinit var viewModelFactory: ViewModelProvider.Factory
         private val viewModel by viewModels<SettingsViewModel> { viewModelFactory }
 
         private var changed = false
@@ -86,18 +87,12 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
                 true
             }
 
-            findPreference<Preference>("theme_settings")?.setOnPreferenceClickListener {
-                parentFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.settings, ThemeSettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
-                true
-            }
-
-            findPreference<SwitchPreferenceCompat>(C.UI_TRUNCATEVIEWCOUNT)?.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.UI_UPTIME)?.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.UI_TAGS)?.onPreferenceChangeListener = changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_TRUNCATEVIEWCOUNT)?.onPreferenceChangeListener =
+                changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_UPTIME)?.onPreferenceChangeListener =
+                changeListener
+            findPreference<SwitchPreferenceCompat>(C.UI_TAGS)?.onPreferenceChangeListener =
+                changeListener
 
             findPreference<Preference>("clear_video_positions")?.setOnPreferenceChangeListener { _, _ ->
                 viewModel.deletePositions()
@@ -115,7 +110,14 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
             }
 
             findPreference<Preference>("admin_settings")?.setOnPreferenceClickListener {
-                startActivity(Intent().setComponent(ComponentName("com.android.settings", "com.android.settings.DeviceAdminSettings")))
+                startActivity(
+                    Intent().setComponent(
+                        ComponentName(
+                            "com.android.settings",
+                            "com.android.settings.DeviceAdminSettings"
+                        )
+                    )
+                )
                 true
             }
         }
@@ -134,50 +136,6 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
 
         companion object {
             const val KEY_CHANGED = "changed"
-        }
-    }
-
-    class ThemeSettingsFragment : PreferenceFragmentCompat() {
-
-        private var changed = false
-
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            changed = savedInstanceState?.getBoolean(SettingsFragment.KEY_CHANGED) == true
-            if (changed) {
-                requireActivity().setResult(Activity.RESULT_OK)
-            }
-        }
-
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.theme_preferences, rootKey)
-            val activity = requireActivity()
-
-            findPreference<ListPreference>(C.THEME)?.setOnPreferenceChangeListener { _, _ ->
-                changed = true
-                activity.recreate()
-                true
-            }
-            findPreference<SwitchPreferenceCompat>(C.UI_THEME_FOLLOW_SYSTEM)?.setOnPreferenceChangeListener { _, _ ->
-                changed = true
-                activity.recreate()
-                true
-            }
-            findPreference<ListPreference>(C.UI_THEME_DARK_ON)?.setOnPreferenceChangeListener { _, _ ->
-                changed = true
-                activity.recreate()
-                true
-            }
-            findPreference<ListPreference>(C.UI_THEME_DARK_OFF)?.setOnPreferenceChangeListener { _, _ ->
-                changed = true
-                activity.recreate()
-                true
-            }
-        }
-
-        override fun onSaveInstanceState(outState: Bundle) {
-            outState.putBoolean(SettingsFragment.KEY_CHANGED, changed)
-            super.onSaveInstanceState(outState)
         }
     }
 }

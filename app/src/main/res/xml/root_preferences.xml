@@ -13,11 +13,6 @@
         android:title="@string/language"
         app:iconSpaceReserved="false" />
 
-    <Preference
-        android:key="theme_settings"
-        android:title="@string/theme"
-        app:iconSpaceReserved="false" />
-
     <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="ui_truncateviewcount"

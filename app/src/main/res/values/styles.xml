@@ -1,34 +1,13 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="BaseDarkTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorAccent">@color/accent</item>
-        <item name="primaryColor">@color/primaryDark</item>
-        <item name="textColor">@android:color/white</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:windowBackground">?attr/primaryColor</item>
-        <item name="android:colorBackground">?attr/primaryColor</item>
-        <item name="navBarStyle">@style/NavBarDark</item>
-        <item name="bottomSheetDialogTheme">@style/BottomSheetDark</item> <!--player-->
-        <item name="dividerColor">@color/secondaryDark</item>
-        <item name="android:textColorSecondary">@color/secondaryTextColorDark</item>
-        <item name="secondaryTextColor">@color/secondaryTextColorDark</item>
-        <item name="colorButtonNormal">@color/secondaryDark</item>
-        <item name="android:dialogTheme">@style/DialogDark</item> <!--download dialog-->
-        <item name="alertDialogTheme">@style/DialogDark</item> <!--settings, sleep timer, log out-->
-        <item name="android:alertDialogTheme">@style/DialogDark</item> <!--delete video, permissions?-->
-        <item name="radioButtonStyle">@style/RadioButton</item>
-        <item name="chatStatus">@color/chatStatusDark</item>
-        <item name="chatRedeem">@color/accent</item>
-        <item name="preferenceTheme">@style/prefDark</item>
-    </style>
-
-    <style name="BaseLightTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="BaseLightTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorAccent">@color/accent</item>
         <item name="primaryColor">@color/primaryLight</item>
         <item name="textColor">@android:color/black</item>
         <item name="android:textColor">?attr/textColor</item>
         <item name="android:windowBackground">?attr/primaryColor</item>
         <item name="android:colorBackground">?attr/primaryColor</item>
+        <item name="android:statusBarColor">?attr/primaryColor</item>
         <item name="navBarStyle">@style/NavBarLight</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetLight</item>
         <item name="dividerColor">@color/secondaryLight</item>
@@ -46,13 +25,14 @@
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
-    <style name="BaseAmoledTheme" parent="Theme.AppCompat.NoActionBar" >
+    <style name="BaseDarkTheme" parent="Theme.MaterialComponents.NoActionBar" >
         <item name="colorAccent">@android:color/white</item>
         <item name="primaryColor">@android:color/black</item>
         <item name="textColor">@android:color/white</item>
         <item name="android:textColor">?attr/textColor</item>
         <item name="android:windowBackground">?attr/primaryColor</item>
         <item name="android:colorBackground">?attr/primaryColor</item>
+        <item name="android:statusBarColor">?attr/primaryColor</item>
         <item name="navBarStyle">@style/NavBarAmoled</item>
         <item name="bottomSheetDialogTheme">@style/BottomSheetAmoled</item>
         <item name="dividerColor">@color/secondaryDark</item>
@@ -68,44 +48,16 @@
         <item name="preferenceTheme">@style/prefDark</item>
     </style>
 
-    <style name="BaseBlueTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="colorAccent">@color/accent</item>
-        <item name="primaryColor">@color/primaryBlue</item>
-        <item name="textColor">@android:color/white</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:windowBackground">?attr/primaryColor</item>
-        <item name="android:colorBackground">?attr/primaryColor</item>
-        <item name="navBarStyle">@style/NavBarBlue</item>
-        <item name="bottomSheetDialogTheme">@style/BottomSheetBlue</item>
-        <item name="dividerColor">@color/secondaryTextColorBlue</item>
-        <item name="android:textColorSecondary">@color/secondaryTextColorBlue</item>
-        <item name="secondaryTextColor">@color/secondaryTextColorBlue</item>
-        <item name="colorButtonNormal">@color/secondaryBlue</item>
-        <item name="android:dialogTheme">@style/DialogBlue</item>
-        <item name="alertDialogTheme">@style/DialogBlue</item>
-        <item name="android:alertDialogTheme">@style/DialogBlue</item>
-        <item name="radioButtonStyle">@style/RadioButton</item>
-        <item name="chatStatus">@color/chatStatusDark</item>
-        <item name="chatRedeem">@color/accent</item>
-        <item name="preferenceTheme">@style/prefDark</item>
-    </style>
-
-    <style name="DarkTheme" parent="BaseDarkTheme" />
     <style name="LightTheme" parent="BaseLightTheme" />
-    <style name="AmoledTheme" parent="BaseAmoledTheme" />
-    <style name="BlueTheme" parent="BaseBlueTheme" />
+    <style name="DarkTheme" parent="BaseDarkTheme" />
+
+    <style name="AppTheme" parent="LightTheme" />
 
     <style name="Card">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="cardCornerRadius">0dp</item>
         <item name="cardBackgroundColor">?attr/primaryColor</item>
-    </style>
-
-    <style name="NavBarDark">
-        <item name="android:background">@color/primaryDark</item>
-        <item name="itemIconTint">@color/nav_bar_dark</item>
-        <item name="itemTextColor">@color/nav_bar_dark</item>
     </style>
 
     <style name="NavBarLight">
@@ -118,19 +70,6 @@
         <item name="android:background">@android:color/black</item>
         <item name="itemIconTint">@color/nav_bar_dark</item>
         <item name="itemTextColor">@color/nav_bar_dark</item>
-    </style>
-
-    <style name="NavBarBlue">
-        <item name="android:background">@color/primaryBlue</item>
-        <item name="itemIconTint">@color/nav_bar_blue</item>
-        <item name="itemTextColor">@color/nav_bar_blue</item>
-    </style>
-
-    <style name="BottomSheetDark" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="android:backgroundTint">@color/primaryDark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="colorButtonNormal">@color/secondaryDark</item>
-        <item name="radioButtonStyle">@style/RadioButton</item>
     </style>
 
     <style name="BottomSheetLight" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
@@ -147,19 +86,6 @@
         <item name="radioButtonStyle">@style/RadioButton</item>
     </style>
 
-    <style name="BottomSheetBlue" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="android:backgroundTint">@color/primaryBlue</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="colorButtonNormal">@color/secondaryBlue</item>
-        <item name="radioButtonStyle">@style/RadioButton</item>
-    </style>
-
-    <style name="DialogDark" parent="Theme.MaterialComponents.Dialog">
-        <item name="android:background">@color/primaryDark</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="buttonBarButtonStyle">@style/DialogButtonStyle</item>
-    </style>
-
     <style name="DialogLight" parent="Theme.MaterialComponents.Light.Dialog">
         <item name="android:background">@color/primaryLight</item>
         <item name="colorAccent">@color/accent</item>
@@ -169,12 +95,6 @@
     <style name="DialogAmoled" parent="Theme.MaterialComponents.Dialog">
         <item name="android:background">@android:color/black</item>
         <item name="colorAccent">@android:color/white</item>
-        <item name="buttonBarButtonStyle">@style/DialogButtonStyle</item>
-    </style>
-
-    <style name="DialogBlue" parent="Theme.MaterialComponents.Dialog">
-        <item name="android:background">@color/primaryBlue</item>
-        <item name="colorAccent">@color/accent</item>
         <item name="buttonBarButtonStyle">@style/DialogButtonStyle</item>
     </style>
 

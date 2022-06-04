@@ -25,6 +25,7 @@ import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.applyTheme
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
 import com.github.andreyasadchy.xtra.util.gone
+import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.toast
@@ -123,7 +124,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
         }
         clearCookies()
         with(webView) {
-            if (prefs().getString(C.THEME, "0") != "2") {
+            if (isDarkMode) {
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
                     WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_ON)
                 }
@@ -131,6 +132,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
                     WebSettingsCompat.setForceDarkStrategy(this.settings, WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY)
                 }
             }
+
             settings.javaScriptEnabled = true
             webViewClient = object : WebViewClient() {
 

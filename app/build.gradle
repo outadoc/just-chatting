@@ -4,6 +4,7 @@ plugins {
     id("kotlin-android-extensions")
     id("kotlin-kapt")
     id("com.apollographql.apollo3").version("$apollo_ver")
+    id("com.diffplug.spotless") version "6.6.1"
 }
 
 android {
@@ -71,6 +72,13 @@ android {
         disable 'ContentDescription'
     }
     namespace 'com.github.andreyasadchy.xtra'
+}
+
+spotless {
+    kotlin {
+        ktlint("0.45.2")
+        target '**/*.kt'
+    }
 }
 
 dependencies {

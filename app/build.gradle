@@ -1,10 +1,10 @@
 plugins {
     id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-android-extensions")
-    id("kotlin-kapt")
-    id("com.apollographql.apollo3").version("$apollo_ver")
-    id("com.diffplug.spotless") version "6.6.1"
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.android.extensions")
+    id("org.jetbrains.kotlin.kapt")
+    id("com.apollographql.apollo3")
+    id("com.diffplug.spotless")
 }
 
 android {
@@ -90,7 +90,7 @@ dependencies {
 
     //UI
     implementation 'com.google.android.material:material:1.7.0-alpha02'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
@@ -106,7 +106,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$room"
     implementation "androidx.room:room-ktx:$room"
     kapt "androidx.room:room-compiler:$room"
-    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
 
     //Misc

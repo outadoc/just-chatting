@@ -45,18 +45,23 @@
             tools:visibility="visible">
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                app:hintEnabled="false">
 
                 <MultiAutoCompleteTextView
                     android:id="@+id/editText"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:completionThreshold="1"
+                    android:hint="@string/chat_input_hint"
                     android:imeOptions="actionSend|flagNoFullscreen"
                     android:importantForAutofill="no"
                     android:inputType="textCapSentences|textAutoCorrect"
+                    android:padding="4dp"
                     tools:ignore="LabelFor"
                     tools:visibility="visible" />
 
@@ -175,11 +180,11 @@
         android:text="@string/chat_replay_unavailable"
         android:textColor="?attr/textColor"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -17,6 +20,8 @@ import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.view.GridAutofitLayoutManager
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
+import kotlinx.android.synthetic.main.view_chat.view.btnDown
+import kotlinx.android.synthetic.main.view_chat.view.messageView
 
 class EmotesFragment : Fragment() {
 
@@ -56,6 +61,19 @@ class EmotesFragment : Fragment() {
             0 -> viewModel.recentEmotes.observe(viewLifecycleOwner, observer)
             1 -> viewModel.emotesFromSets.observe(viewLifecycleOwner, observer)
             else -> viewModel.otherEmotes.observe(viewLifecycleOwner, observer)
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->
+            val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            v.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                navBarInsets.bottom
+            )
+
+            windowInsets
         }
     }
 

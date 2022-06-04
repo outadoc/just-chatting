@@ -11,8 +11,11 @@ import android.widget.ArrayAdapter
 import android.widget.MultiAutoCompleteTextView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -156,6 +159,24 @@ class ChatView : ConstraintLayout {
                 recyclerView.scrollToPosition(adapter.messages!!.lastIndex)
                 it.toggleVisibility()
             }
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
+            val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
+
+            messageView.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                if (imeInsets.bottom > 0) imeInsets.bottom else navBarInsets.bottom
+            )
+
+            btnDown.updateLayoutParams<MarginLayoutParams> {
+                bottomMargin += navBarInsets.bottom
+            }
+
+            windowInsets
         }
     }
 
@@ -488,8 +509,10 @@ class ChatView : ConstraintLayout {
                         if (hasRecentEmotes != true && currentItem == 0) {
                             setCurrentItem(1, false)
                         }
+                        this@ChatView.editText.hideKeyboard()
                         visible()
                     } else {
+                        this@ChatView.editText.showKeyboard()
                         gone()
                     }
                 }

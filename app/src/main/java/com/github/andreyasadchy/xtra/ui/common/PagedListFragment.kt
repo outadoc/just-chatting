@@ -2,6 +2,8 @@ package com.github.andreyasadchy.xtra.ui.common
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
@@ -53,6 +55,19 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                     }
                 })
             }
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(recyclerView) { recyclerView, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+
+            recyclerView.setPadding(
+                view.paddingLeft,
+                view.paddingTop,
+                view.paddingRight,
+                insets.bottom
+            )
+
+            WindowInsetsCompat.CONSUMED
         }
     }
 

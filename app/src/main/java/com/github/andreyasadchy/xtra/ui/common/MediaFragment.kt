@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
@@ -42,6 +44,7 @@ abstract class MediaFragment : Fragment(), Scrollable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val activity = requireActivity() as MainActivity
         val user = User.get(activity)
         search.setOnClickListener { activity.openSearch() }
@@ -94,6 +97,19 @@ abstract class MediaFragment : Fragment(), Scrollable {
                 }
                 show()
             }
+        }
+
+        ViewCompat.setOnApplyWindowInsetsListener(appBar) { appBar, windowInsets ->
+            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
+
+            appBar.setPadding(
+                view.paddingLeft,
+                insets.top,
+                view.paddingRight,
+                view.paddingBottom
+            )
+
+            WindowInsetsCompat.CONSUMED
         }
     }
 

@@ -108,6 +108,7 @@ dependencies {
     kapt "androidx.room:room-compiler:$room"
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation "androidx.core:core-ktx:1.8.0"
 
     //Misc
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.7'

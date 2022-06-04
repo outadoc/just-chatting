@@ -17,7 +17,7 @@ android {
     }
     compileSdkVersion 32
     defaultConfig {
-        applicationId "com.github.andreyasadchy.xtra"
+        applicationId "fr.outadoc.justchatting"
         minSdkVersion 21
         targetSdkVersion 32
         versionCode 104

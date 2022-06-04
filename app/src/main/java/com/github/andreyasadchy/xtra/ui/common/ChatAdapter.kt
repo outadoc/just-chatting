@@ -62,10 +62,13 @@ class ChatAdapter(
     private val imageLibrary: String?
 ) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
+    private var positionDeltaWithDeletes = 0
+
     var messages: MutableList<ChatMessage>? = null
         set(value) {
             val oldSize = field?.size ?: 0
             if (oldSize > 0) {
+                positionDeltaWithDeletes += oldSize
                 notifyItemRangeRemoved(0, oldSize)
             }
             field = value
@@ -420,7 +423,7 @@ class ChatAdapter(
             val isRewarded = liveMessage?.rewardId != null && (firstMsgVisibility?.toInt() ?: 0) < 2
             val isNotice = liveMessage?.systemMsg != null || liveMessage?.msgId != null
             val isMention = wasMentioned && userId != null
-            val isOddMessage = position % 2 == 1
+            val isOddMessage = (position + positionDeltaWithDeletes) % 2 == 1
 
             val background = when {
                 isFirstMessage -> R.color.chatMessageFirst

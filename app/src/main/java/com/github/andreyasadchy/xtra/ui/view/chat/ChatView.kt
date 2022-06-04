@@ -130,6 +130,7 @@ class ChatView : ConstraintLayout {
             boldNames = true,
             enableZeroWidth = context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true),
             enableTimestamps = context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
+            useAlternateBackgrounds = context.prefs().getBoolean(C.CHAT_ALTERNATE_BACKGROUND, true),
             timestampFormat = context.prefs().getString(C.CHAT_TIMESTAMP_FORMAT, "0"),
             firstMsgVisibility = context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0"),
             firstChatMsg = context.getString(R.string.chat_first),

@@ -13,6 +13,7 @@ import android.text.style.ImageSpan
 import android.text.style.StyleSpan
 import android.text.style.URLSpan
 import android.util.Patterns
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,11 +30,18 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.chat.*
+import com.github.andreyasadchy.xtra.model.chat.ChatMessage
+import com.github.andreyasadchy.xtra.model.chat.CheerEmote
+import com.github.andreyasadchy.xtra.model.chat.Emote
+import com.github.andreyasadchy.xtra.model.chat.Image
+import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
+import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
+import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
+import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.ui.view.chat.animateGifs
 import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import java.util.*
+import java.util.Random
 import kotlin.collections.set
 
 class ChatAdapter(
@@ -44,6 +52,7 @@ class ChatAdapter(
     private val boldNames: Boolean,
     private val enableZeroWidth: Boolean,
     private val enableTimestamps: Boolean,
+    private val useAlternateBackgrounds: Boolean,
     private val timestampFormat: String?,
     private val firstMsgVisibility: String?,
     private val firstChatMsg: String,
@@ -61,6 +70,7 @@ class ChatAdapter(
             }
             field = value
         }
+
     private val twitchColors = intArrayOf(
         -65536,
         -16776961,
@@ -78,7 +88,9 @@ class ChatAdapter(
         -7722014,
         -16711809
     )
+
     private val noColor = -10066329
+
     private val random = Random()
     private val userColors = HashMap<String, Int>()
     private val savedColors = HashMap<String, Int>()
@@ -92,7 +104,22 @@ class ChatAdapter(
     private var messageClickListener: ((CharSequence, CharSequence, String?, String?) -> Unit)? =
         null
 
+    private var defaultBackgroundRes: Int = -1
+    private var alternateBackgroundRes: Int = -1
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        if (defaultBackgroundRes == -1) {
+            val typedValue = TypedValue()
+            parent.context.theme.resolveAttribute(R.attr.colorSurface, typedValue, true)
+            defaultBackgroundRes = typedValue.resourceId
+        }
+
+        if (alternateBackgroundRes == -1) {
+            val typedValue = TypedValue()
+            parent.context.theme.resolveAttribute(R.attr.colorSurfaceVariant, typedValue, true)
+            alternateBackgroundRes = typedValue.resourceId
+        }
+
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.chat_list_item, parent, false)
         )
@@ -388,21 +415,23 @@ class ChatAdapter(
                     SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }
-            when {
-                liveMessage?.isFirst == true && (
-                    firstMsgVisibility?.toInt()
-                        ?: 0
-                    ) < 2 -> holder.textView.setBackgroundResource(R.color.chatMessageFirst)
-                liveMessage?.rewardId != null && (
-                    firstMsgVisibility?.toInt()
-                        ?: 0
-                    ) < 2 -> holder.textView.setBackgroundResource(R.color.chatMessageReward)
-                liveMessage?.systemMsg != null || liveMessage?.msgId != null -> holder.textView.setBackgroundResource(
-                    R.color.chatMessageNotice
-                )
-                wasMentioned && userId != null -> holder.textView.setBackgroundResource(R.color.chatMessageMention)
-                else -> holder.textView.background = null
+
+            val isFirstMessage = liveMessage?.isFirst == true
+            val isRewarded = liveMessage?.rewardId != null && (firstMsgVisibility?.toInt() ?: 0) < 2
+            val isNotice = liveMessage?.systemMsg != null || liveMessage?.msgId != null
+            val isMention = wasMentioned && userId != null
+            val isOddMessage = position % 2 == 1
+
+            val background = when {
+                isFirstMessage -> R.color.chatMessageFirst
+                isRewarded -> R.color.chatMessageReward
+                isNotice -> R.color.chatMessageNotice
+                isMention -> R.color.chatMessageMention
+                isOddMessage && useAlternateBackgrounds -> alternateBackgroundRes
+                else -> defaultBackgroundRes
             }
+
+            holder.textView.setBackgroundResource(background)
         } catch (e: Exception) {
 //            Crashlytics.logException(e)
         }

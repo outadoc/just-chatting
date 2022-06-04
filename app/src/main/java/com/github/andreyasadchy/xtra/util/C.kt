@@ -17,6 +17,7 @@ object C {
     const val UI_LANGUAGE = "ui_language"
     const val UI_TAGS = "ui_tags"
     const val ANIMATED_EMOTES = "animatedGifEmotes"
+    const val CHAT_ALTERNATE_BACKGROUND = "chat_alternate_background"
     const val CHAT_IMAGE_LIBRARY = "chat_image_library"
     const val CHAT_IMAGE_QUALITY = "chat_image_quality"
     const val CHAT_RANDOMCOLOR = "chat_randomcolor"

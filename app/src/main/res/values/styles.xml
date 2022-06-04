@@ -17,6 +17,7 @@
     <style name="AppTheme" parent="LightTheme" />
 
     <style name="Card" parent="Widget.Material3.CardView.Outlined">
+        <item name="android:foreground">?selectableItemBackground</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>

@@ -1,12 +1,9 @@
 package com.github.andreyasadchy.xtra.ui.streams
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
@@ -25,7 +22,7 @@ abstract class BaseStreamsFragment<VM : PagedListViewModel<Stream>> :
 
     override val adapter: BasePagedListAdapter<Stream> by lazy {
         val activity = requireActivity() as MainActivity
-        StreamsCompactAdapter(this, activity, activity)
+        StreamsCompactAdapter(this, activity)
     }
 
     override fun onCreateView(

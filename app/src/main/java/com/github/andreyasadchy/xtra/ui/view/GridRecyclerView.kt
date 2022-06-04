@@ -3,7 +3,6 @@ package com.github.andreyasadchy.xtra.ui.view
 import android.content.Context
 import android.content.res.Configuration
 import android.util.AttributeSet
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
@@ -43,14 +42,11 @@ class GridRecyclerView : RecyclerView {
         return if (configuration.orientation == Configuration.ORIENTATION_PORTRAIT) portraitColumns else landscapeColumns
     }
 
-    private fun addItemDecoration(columns: Int) {
+    private fun addItemDecoration(columnCount: Int) {
         addItemDecoration(
-            if (columns <= 1) DividerItemDecoration(
-                context,
-                GridLayoutManager.VERTICAL
-            ) else MarginItemDecoration(
-                context.resources.getDimension(R.dimen.divider_margin).toInt(),
-                columns
+            MarginItemDecoration(
+                margin = context.resources.getDimension(R.dimen.divider_margin).toInt(),
+                columnCount = columnCount
             )
         )
     }

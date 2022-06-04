@@ -33,6 +33,7 @@ import kotlinx.android.synthetic.main.fragment_channel.bannerImage
 import kotlinx.android.synthetic.main.fragment_channel.follow
 import kotlinx.android.synthetic.main.fragment_channel.gameName
 import kotlinx.android.synthetic.main.fragment_channel.lastBroadcast
+import kotlinx.android.synthetic.main.fragment_channel.spacerTop
 import kotlinx.android.synthetic.main.fragment_channel.title
 import kotlinx.android.synthetic.main.fragment_channel.toolbar
 import kotlinx.android.synthetic.main.fragment_channel.uptime
@@ -110,8 +111,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-            toolbar.updateLayoutParams<MarginLayoutParams> {
-                topMargin = insets.top
+            spacerTop.updateLayoutParams<MarginLayoutParams> {
+                height = insets.top
             }
             windowInsets
         }

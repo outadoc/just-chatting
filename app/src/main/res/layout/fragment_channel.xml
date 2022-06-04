@@ -26,24 +26,36 @@
                     android:id="@+id/bannerImage"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
+                    android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
                     android:src="?attr/colorSurface"
                     android:tintMode="src_atop"
-                    app:layout_constraintDimensionRatio="h,16:9"
+                    app:layout_constraintBottom_toBottomOf="@id/spacerBottom"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:tint="#8C000000"
                     tools:src="@tools:sample/backgrounds/scenic" />
 
+                <Space
+                    android:id="@+id/spacerTop"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    tools:layout_height="16dp"
+                    app:layout_constraintBottom_toTopOf="@+id/toolbar"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toolbar" />
+
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:minHeight="?attr/actionBarSize"
+                    app:layout_constraintBottom_toTopOf="@id/title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/spacerTop">
 
                     <ImageButton
                         android:id="@+id/follow"
@@ -91,13 +103,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
-                    android:gravity="start"
                     android:maxLines="3"
-                    android:textAlignment="viewStart"
                     android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/gameName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/userImage"
-                    app:layout_constraintTop_toBottomOf="@id/toolbar"
+                    app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                    app:layout_constraintVertical_chainStyle="packed"
                     tools:text="@tools:sample/lorem/random"
                     tools:visibility="visible" />
 
@@ -110,9 +122,10 @@
                     android:maxLines="1"
                     android:textAlignment="viewStart"
                     android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/viewers"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/userImage"
-                    app:layout_constraintTop_toBottomOf="@id/title"
+                    app:layout_constraintTop_toBottomOf="@+id/title"
                     tools:text="@tools:sample/lorem/random"
                     tools:visibility="visible" />
 
@@ -122,9 +135,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@+id/uptime"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/userImage"
-                    app:layout_constraintTop_toBottomOf="@id/gameName"
+                    app:layout_constraintTop_toBottomOf="@+id/gameName"
                     tools:text="1337499 viewers"
                     tools:visibility="visible" />
 
@@ -134,6 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:visibility="gone"
+                    app:layout_constraintBottom_toTopOf="@id/lastBroadcast"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/userImage"
                     app:layout_constraintTop_toBottomOf="@id/viewers"
@@ -146,12 +161,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@id/bannerImage"
+                    app:layout_constraintBottom_toTopOf="@+id/spacerBottom"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/userImage"
-                    app:layout_constraintTop_toBottomOf="@id/uptime"
+                    app:layout_constraintTop_toBottomOf="@+id/uptime"
                     tools:text="Last broadcast %s"
                     tools:visibility="visible" />
+
+                <Space
+                    android:id="@+id/spacerBottom"
+                    android:layout_width="0dp"
+                    android:layout_height="16dp"
+                    app:layout_constraintBottom_toTopOf="@+id/bannerImage"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/lastBroadcast" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

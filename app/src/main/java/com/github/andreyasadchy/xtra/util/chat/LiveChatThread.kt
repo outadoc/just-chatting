@@ -55,7 +55,12 @@ class LiveChatThread(
             } catch (e: IOException) {
                 Log.d(TAG, "Disconnecting from $hashChannelName")
                 if (e.message != "Socket closed" && e.message != "socket is closed" && e.message != "Connection reset" && e.message != "recvfrom failed: ECONNRESET (Connection reset by peer)") {
-                    listener.onCommand(message = channelName, duration = e.toString(), type = "disconnect", fullMsg = e.stackTraceToString())
+                    listener.onCommand(
+                        message = channelName,
+                        duration = e.toString(),
+                        type = "disconnect",
+                        fullMsg = e.stackTraceToString()
+                    )
                 }
                 close()
                 sleep(1000L)
@@ -69,16 +74,27 @@ class LiveChatThread(
     private fun connect() {
         Log.d(TAG, "Connecting to Twitch IRC - SSl $useSSl")
         try {
-            socketIn = (if (useSSl) SSLSocketFactory.getDefault().createSocket("irc.twitch.tv", 6697) else Socket("irc.twitch.tv", 6667)).apply {
+            socketIn = (
+                if (useSSl) SSLSocketFactory.getDefault()
+                    .createSocket("irc.twitch.tv", 6697) else Socket("irc.twitch.tv", 6667)
+                ).apply {
                 readerIn = BufferedReader(InputStreamReader(getInputStream()))
                 writerIn = BufferedWriter(OutputStreamWriter(getOutputStream()))
             }
-            write("NICK justinfan${Random().nextInt(((9999 - 1000) + 1)) + 1000}", writerIn) // random number between 1000 and 9999
+            write(
+                "NICK justinfan${Random().nextInt(((9999 - 1000) + 1)) + 1000}",
+                writerIn
+            ) // random number between 1000 and 9999
             write("CAP REQ :twitch.tv/tags twitch.tv/commands", writerIn)
             write("JOIN $hashChannelName", writerIn)
             writerIn.flush()
             Log.d(TAG, "Successfully connected to - $hashChannelName")
-            listener.onCommand(message = channelName, duration = null, type = "join", fullMsg = null)
+            listener.onCommand(
+                message = channelName,
+                duration = null,
+                type = "join",
+                fullMsg = null
+            )
         } catch (e: IOException) {
             Log.e(TAG, "Error connecting to Twitch IRC", e)
             throw e
@@ -101,7 +117,12 @@ class LiveChatThread(
             socketIn?.close()
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketIn", e)
-            listener.onCommand(message = e.toString(), duration = null, type = "socket_error", fullMsg = e.stackTraceToString())
+            listener.onCommand(
+                message = e.toString(),
+                duration = null,
+                type = "socket_error",
+                fullMsg = e.stackTraceToString()
+            )
         }
     }
 

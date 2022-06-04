@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Card" >
+    style="@style/Card">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,108 +14,108 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/thumbnail"
-            style="@style/Thumbnail"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/backgrounds/scenic" />
+            <ImageView
+                android:id="@+id/thumbnail"
+                style="@style/Thumbnail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@tools:sample/backgrounds/scenic" />
 
-        <com.github.andreyasadchy.xtra.util.TextWithCanvas
-            android:id="@+id/viewers"
-            style="@style/ThumbnailItem"
-            android:layout_marginStart="5dp"
-            android:layout_marginBottom="5dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/thumbnail"
-            app:layout_constraintStart_toStartOf="parent"
-            tools:text="133769 viewers"
-            tools:visibility="visible" />
-
-        <com.github.andreyasadchy.xtra.util.TextWithCanvas
-            android:id="@+id/type"
-            style="@style/ThumbnailItem"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="10dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Rerun"
-            tools:visibility="visible" />
-
-        <com.github.andreyasadchy.xtra.util.TextWithCanvas
-            android:id="@+id/uptime"
-            style="@style/ThumbnailItem"
-            android:layout_marginEnd="5dp"
-            android:layout_marginBottom="5dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/thumbnail"
-            app:layout_constraintEnd_toEndOf="parent"
-            tools:text="8:21:33 uptime"
-            tools:visibility="visible" />
-
-        <ImageView
-            android:id="@+id/userImage"
-            style="@style/UserPicture"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/thumbnail"
-            app:layout_constraintVertical_bias="0.0"
-            tools:src="@tools:sample/backgrounds/scenic"
-            tools:visibility="visible" />
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_marginTop="7dp"
-            android:layout_marginBottom="7dp"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/userImage"
-            app:layout_constraintTop_toBottomOf="@id/thumbnail">
-
-            <TextView
-                android:id="@+id/title"
-                style="@style/VideoTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:textAlignment="viewStart"
+            <com.github.andreyasadchy.xtra.util.TextWithCanvas
+                android:id="@+id/viewers"
+                style="@style/ThumbnailItem"
+                android:layout_marginStart="5dp"
+                android:layout_marginBottom="5dp"
                 android:visibility="gone"
-                tools:text="@sample/streams.json/streams/channel/status"
+                app:layout_constraintBottom_toBottomOf="@+id/thumbnail"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="133769 viewers"
                 tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:textAlignment="viewStart"
+            <com.github.andreyasadchy.xtra.util.TextWithCanvas
+                android:id="@+id/type"
+                style="@style/ThumbnailItem"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
                 android:visibility="gone"
-                tools:text="@sample/streams.json/streams/channel/name"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Rerun"
                 tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/gameName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="start"
-                android:textAlignment="viewStart"
+            <com.github.andreyasadchy.xtra.util.TextWithCanvas
+                android:id="@+id/uptime"
+                style="@style/ThumbnailItem"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp"
                 android:visibility="gone"
-                tools:text="@sample/games.json/top/game/name"
+                app:layout_constraintBottom_toBottomOf="@+id/thumbnail"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="8:21:33 uptime"
                 tools:visibility="visible" />
-        </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            <ImageView
+                android:id="@+id/userImage"
+                style="@style/UserPicture"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/thumbnail"
+                app:layout_constraintVertical_bias="0.0"
+                tools:src="@tools:sample/backgrounds/scenic"
+                tools:visibility="visible" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="7dp"
+                android:layout_marginBottom="7dp"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/userImage"
+                app:layout_constraintTop_toBottomOf="@id/thumbnail">
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/VideoTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textAlignment="viewStart"
+                    android:visibility="gone"
+                    tools:text="@sample/streams.json/streams/channel/status"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textAlignment="viewStart"
+                    android:visibility="gone"
+                    tools:text="@sample/streams.json/streams/channel/name"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/gameName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="start"
+                    android:textAlignment="viewStart"
+                    android:visibility="gone"
+                    tools:text="@sample/games.json/top/game/name"
+                    tools:visibility="visible" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/tagsLayout"

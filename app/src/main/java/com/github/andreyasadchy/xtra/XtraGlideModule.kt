@@ -31,13 +31,19 @@ class XtraGlideModule : AppGlideModule() {
     override fun isManifestParsingEnabled(): Boolean = false
 
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
-        registry.replace(GlideUrl::class.java, InputStream::class.java, OkHttpUrlLoader.Factory(okHttpClient))
+        registry.replace(
+            GlideUrl::class.java,
+            InputStream::class.java,
+            OkHttpUrlLoader.Factory(okHttpClient)
+        )
         super.registerComponents(context, glide, registry)
     }
 
     @GlideExtension
     companion object XtraGlideExtension {
-        private val DECODE_TYPE_WEBP: RequestOptions = GlideOptions.decodeTypeOf(WebpDrawable::class.java).lock()
+        private val DECODE_TYPE_WEBP: RequestOptions =
+            GlideOptions.decodeTypeOf(WebpDrawable::class.java).lock()
+
         @GlideType(WebpDrawable::class)
         fun asWebp(requestBuilder: RequestBuilder<WebpDrawable?>): RequestBuilder<WebpDrawable?> {
             return requestBuilder

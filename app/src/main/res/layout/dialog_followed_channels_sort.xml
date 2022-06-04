@@ -20,17 +20,17 @@
         <RadioButton
             android:id="@+id/time_followed"
             style="@style/RadioButton"
-            android:text="@string/time_followed"/>
+            android:text="@string/time_followed" />
 
         <RadioButton
             android:id="@+id/alphabetically"
             style="@style/RadioButton"
-            android:text="@string/alphabetically"/>
+            android:text="@string/alphabetically" />
 
         <RadioButton
             android:id="@+id/last_broadcast"
             style="@style/RadioButton"
-            android:text="@string/last_broadcast"/>
+            android:text="@string/last_broadcast" />
     </RadioGroup>
 
     <RadioGroup
@@ -48,12 +48,12 @@
         <RadioButton
             android:id="@+id/newest_first"
             style="@style/RadioButton"
-            android:text="@string/descending"/>
+            android:text="@string/descending" />
 
         <RadioButton
             android:id="@+id/oldest_first"
             style="@style/RadioButton"
-            android:text="@string/ascending"/>
+            android:text="@string/ascending" />
 
     </RadioGroup>
 
@@ -61,6 +61,6 @@
         android:id="@+id/apply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/apply"/>
+        android:text="@string/apply" />
 
 </LinearLayout>

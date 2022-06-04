@@ -46,7 +46,15 @@ class FollowLiveData(
                             (!user.helixToken.isNullOrBlank() && !userId.isNullOrBlank() && !user.id.isNullOrBlank()) ||
                                 (!user.gqlToken.isNullOrBlank() && !userLogin.isNullOrBlank())
                             ) && user.id != userId -> {
-                            repository.loadUserFollowing(helixClientId, user.helixToken, userId, user.id, gqlClientId, user.gqlToken, userLogin)
+                            repository.loadUserFollowing(
+                                helixClientId,
+                                user.helixToken,
+                                userId,
+                                user.id,
+                                gqlClientId,
+                                user.gqlToken,
+                                userLogin
+                            )
                         }
                         else -> false
                     }
@@ -80,14 +88,30 @@ class FollowLiveData(
                                     override fun onLoadCleared(placeholder: Drawable?) {
                                     }
 
-                                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                        DownloadUtils.savePng(context, "profile_pics", userId, resource)
+                                    override fun onResourceReady(
+                                        resource: Bitmap,
+                                        transition: Transition<in Bitmap>?
+                                    ) {
+                                        DownloadUtils.savePng(
+                                            context,
+                                            "profile_pics",
+                                            userId,
+                                            resource
+                                        )
                                     }
                                 })
                         } catch (e: Exception) {
                         }
-                        val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "$userId.png").absolutePath
-                        localFollowsChannel?.saveFollow(LocalFollowChannel(userId, userLogin, userName, downloadedLogo))
+                        val downloadedLogo =
+                            File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "$userId.png").absolutePath
+                        localFollowsChannel?.saveFollow(
+                            LocalFollowChannel(
+                                userId,
+                                userLogin,
+                                userName,
+                                downloadedLogo
+                            )
+                        )
                     }
                 }
             } catch (e: Exception) {
@@ -102,7 +126,8 @@ class FollowLiveData(
                     repository.unfollowUser(gqlClientId, user.gqlToken, userId)
                 } else {
                     if (userId != null) {
-                        localFollowsChannel?.getFollowById(userId)?.let { localFollowsChannel.deleteFollow(context, it) }
+                        localFollowsChannel?.getFollowById(userId)
+                            ?.let { localFollowsChannel.deleteFollow(context, it) }
                     }
                 }
             } catch (e: Exception) {
@@ -118,7 +143,12 @@ class FollowLiveData(
                 } else {
                     if (userId != null) {
                         if (channelLogo == null) {
-                            val get = repository.loadGameBoxArt(userId, helixClientId, user.helixToken, gqlClientId)
+                            val get = repository.loadGameBoxArt(
+                                userId,
+                                helixClientId,
+                                user.helixToken,
+                                gqlClientId
+                            )
                             if (get != null) {
                                 channelLogo = TwitchApiHelper.getTemplateUrl(get, "game")
                             }
@@ -131,14 +161,24 @@ class FollowLiveData(
                                     override fun onLoadCleared(placeholder: Drawable?) {
                                     }
 
-                                    override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                    override fun onResourceReady(
+                                        resource: Bitmap,
+                                        transition: Transition<in Bitmap>?
+                                    ) {
                                         DownloadUtils.savePng(context, "box_art", userId, resource)
                                     }
                                 })
                         } catch (e: Exception) {
                         }
-                        val downloadedLogo = File(context.filesDir.toString() + File.separator + "box_art" + File.separator + "$userId.png").absolutePath
-                        localFollowsGame?.saveFollow(LocalFollowGame(userId, userName, downloadedLogo))
+                        val downloadedLogo =
+                            File(context.filesDir.toString() + File.separator + "box_art" + File.separator + "$userId.png").absolutePath
+                        localFollowsGame?.saveFollow(
+                            LocalFollowGame(
+                                userId,
+                                userName,
+                                downloadedLogo
+                            )
+                        )
                     }
                 }
             } catch (e: Exception) {
@@ -153,7 +193,8 @@ class FollowLiveData(
                     repository.unfollowGame(gqlClientId, user.gqlToken, userId)
                 } else {
                     if (userId != null) {
-                        localFollowsGame?.getFollowById(userId)?.let { localFollowsGame.deleteFollow(context, it) }
+                        localFollowsGame?.getFollowById(userId)
+                            ?.let { localFollowsGame.deleteFollow(context, it) }
                     }
                 }
             } catch (e: Exception) {

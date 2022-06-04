@@ -21,7 +21,10 @@ class SearchChannelsDataSource private constructor(
     private var api: String? = null
     private var offset: String? = null
 
-    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<ChannelSearch>) {
+    override fun loadInitial(
+        params: LoadInitialParams,
+        callback: LoadInitialCallback<ChannelSearch>
+    ) {
         loadInitial(params, callback) {
             try {
                 when (apiPref?.elementAt(0)?.second) {
@@ -45,7 +48,8 @@ class SearchChannelsDataSource private constructor(
 
     private suspend fun helixInitial(params: LoadInitialParams): List<ChannelSearch> {
         api = C.HELIX
-        val get = helixApi.getChannels(helixClientId, helixToken, query, params.requestedLoadSize, offset)
+        val get =
+            helixApi.getChannels(helixClientId, helixToken, query, params.requestedLoadSize, offset)
         val list = mutableListOf<ChannelSearch>()
         get.data?.let { list.addAll(it) }
         val ids = mutableListOf<String>()
@@ -133,6 +137,15 @@ class SearchChannelsDataSource private constructor(
     ) : BaseDataSourceFactory<Int, ChannelSearch, SearchChannelsDataSource>() {
 
         override fun create(): DataSource<Int, ChannelSearch> =
-            SearchChannelsDataSource(query, helixClientId, helixToken, helixApi, gqlClientId, gqlApi, apiPref, coroutineScope).also(sourceLiveData::postValue)
+            SearchChannelsDataSource(
+                query,
+                helixClientId,
+                helixToken,
+                helixApi,
+                gqlClientId,
+                gqlApi,
+                apiPref,
+                coroutineScope
+            ).also(sourceLiveData::postValue)
     }
 }

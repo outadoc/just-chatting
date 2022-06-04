@@ -22,10 +22,23 @@ class ChannelSearchViewModel @Inject constructor(
     private var gqlClientId = MutableLiveData<String>()
     private var apiPref = MutableLiveData<ArrayList<Pair<Long?, String?>?>>()
     override val result: LiveData<Listing<ChannelSearch>> = Transformations.map(query) {
-        repository.loadSearchChannels(it, helixClientId.value?.nullIfEmpty(), helixToken.value?.nullIfEmpty(), gqlClientId.value?.nullIfEmpty(), apiPref.value, viewModelScope)
+        repository.loadSearchChannels(
+            it,
+            helixClientId.value?.nullIfEmpty(),
+            helixToken.value?.nullIfEmpty(),
+            gqlClientId.value?.nullIfEmpty(),
+            apiPref.value,
+            viewModelScope
+        )
     }
 
-    fun setQuery(query: String, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null, apiPref: ArrayList<Pair<Long?, String?>?>) {
+    fun setQuery(
+        query: String,
+        helixClientId: String? = null,
+        helixToken: String? = null,
+        gqlClientId: String? = null,
+        apiPref: ArrayList<Pair<Long?, String?>?>
+    ) {
         if (this.helixClientId.value != helixClientId) {
             this.helixClientId.value = helixClientId
         }

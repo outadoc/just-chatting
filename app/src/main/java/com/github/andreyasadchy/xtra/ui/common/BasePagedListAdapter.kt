@@ -8,7 +8,8 @@ import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.repository.LoadingState
 
-abstract class BasePagedListAdapter<T>(diffCallback: DiffUtil.ItemCallback<T>) : PagedListAdapter<T, DefaultViewHolder>(diffCallback) {
+abstract class BasePagedListAdapter<T>(diffCallback: DiffUtil.ItemCallback<T>) :
+    PagedListAdapter<T, DefaultViewHolder>(diffCallback) {
 
     protected abstract val layoutId: Int
     private var pagingState: LoadingState? = null
@@ -16,7 +17,9 @@ abstract class BasePagedListAdapter<T>(diffCallback: DiffUtil.ItemCallback<T>) :
     protected abstract fun bind(item: T, view: View)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DefaultViewHolder {
-        return DefaultViewHolder(LayoutInflater.from(parent.context).inflate(viewType, parent, false))
+        return DefaultViewHolder(
+            LayoutInflater.from(parent.context).inflate(viewType, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: DefaultViewHolder, position: Int) {

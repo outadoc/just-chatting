@@ -32,7 +32,9 @@ class LocalFollowChannelRepository @Inject constructor(
 
     fun deleteFollow(context: Context, item: LocalFollowChannel) {
         GlobalScope.launch {
-            if (item.user_id.isNotBlank() && bookmarksDao.getByUserId(item.user_id).isNullOrEmpty() && videosDao.getByUserId(item.user_id.toInt()).isNullOrEmpty()) {
+            if (item.user_id.isNotBlank() && bookmarksDao.getByUserId(item.user_id)
+                .isNullOrEmpty() && videosDao.getByUserId(item.user_id.toInt()).isNullOrEmpty()
+            ) {
                 File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${item.user_id}.png").delete()
             }
             localFollowsChannelDao.delete(item)

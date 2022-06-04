@@ -1,8 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.settings
 
 import android.app.Activity
-import android.content.ComponentName
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.viewModels

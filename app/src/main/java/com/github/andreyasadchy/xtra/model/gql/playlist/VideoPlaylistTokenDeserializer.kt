@@ -9,8 +9,16 @@ import java.lang.reflect.Type
 class VideoPlaylistTokenDeserializer : JsonDeserializer<VideoPlaylistTokenResponse> {
 
     @Throws(JsonParseException::class)
-    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): VideoPlaylistTokenResponse {
-        val tokenJson = json.asJsonArray.first().asJsonObject.getAsJsonObject("data").getAsJsonObject("videoPlaybackAccessToken")
-        return VideoPlaylistTokenResponse(tokenJson.getAsJsonPrimitive("value").asString, tokenJson.getAsJsonPrimitive("signature").asString)
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): VideoPlaylistTokenResponse {
+        val tokenJson = json.asJsonArray.first().asJsonObject.getAsJsonObject("data")
+            .getAsJsonObject("videoPlaybackAccessToken")
+        return VideoPlaylistTokenResponse(
+            tokenJson.getAsJsonPrimitive("value").asString,
+            tokenJson.getAsJsonPrimitive("signature").asString
+        )
     }
 }

@@ -9,7 +9,12 @@ import com.github.andreyasadchy.xtra.R
 
 internal object Utils {
     fun getNavigationIcon(context: Context): Drawable { // TODO change this to accept toolbar as parameter
-        val drawable = DrawableCompat.wrap(ContextCompat.getDrawable(context, R.drawable.baseline_arrow_back_black_24)!!)
+        val drawable = DrawableCompat.wrap(
+            ContextCompat.getDrawable(
+                context,
+                R.drawable.baseline_arrow_back_black_24
+            )!!
+        )
         val typedValue = TypedValue()
         context.theme.resolveAttribute(R.attr.colorOnSurface, typedValue, true)
         DrawableCompat.setTint(drawable, typedValue.data)

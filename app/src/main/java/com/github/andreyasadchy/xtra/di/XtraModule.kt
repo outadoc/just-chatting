@@ -112,7 +112,10 @@ class XtraModule {
 
     @Singleton
     @Provides
-    fun providesHelixApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): HelixApi {
+    fun providesHelixApi(
+        client: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): HelixApi {
         return Retrofit.Builder()
             .baseUrl("https://api.twitch.tv/helix/")
             .client(client)
@@ -145,7 +148,10 @@ class XtraModule {
 
     @Singleton
     @Provides
-    fun providesGraphQLApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): GraphQLApi {
+    fun providesGraphQLApi(
+        client: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): GraphQLApi {
         return Retrofit.Builder()
             .baseUrl("https://gql.twitch.tv/gql/")
             .client(client)
@@ -162,41 +168,98 @@ class XtraModule {
                 .registerTypeAdapter(EmoteSetResponse::class.java, EmoteSetDeserializer())
                 .registerTypeAdapter(CheerEmotesResponse::class.java, CheerEmotesDeserializer())
                 .registerTypeAdapter(TwitchBadgesResponse::class.java, TwitchBadgesDeserializer())
-                .registerTypeAdapter(RecentMessagesResponse::class.java, RecentMessagesDeserializer())
+                .registerTypeAdapter(
+                    RecentMessagesResponse::class.java,
+                    RecentMessagesDeserializer()
+                )
                 .registerTypeAdapter(StvEmotesResponse::class.java, StvEmotesDeserializer())
                 .registerTypeAdapter(BttvGlobalResponse::class.java, BttvGlobalDeserializer())
                 .registerTypeAdapter(BttvChannelResponse::class.java, BttvChannelDeserializer())
                 .registerTypeAdapter(BttvFfzResponse::class.java, BttvFfzDeserializer())
-                .registerTypeAdapter(StreamPlaylistTokenResponse::class.java, StreamPlaylistTokenDeserializer())
-                .registerTypeAdapter(VideoPlaylistTokenResponse::class.java, VideoPlaylistTokenDeserializer())
+                .registerTypeAdapter(
+                    StreamPlaylistTokenResponse::class.java,
+                    StreamPlaylistTokenDeserializer()
+                )
+                .registerTypeAdapter(
+                    VideoPlaylistTokenResponse::class.java,
+                    VideoPlaylistTokenDeserializer()
+                )
                 .registerTypeAdapter(ClipUrlsResponse::class.java, ClipUrlsDeserializer())
                 .registerTypeAdapter(ClipDataResponse::class.java, ClipDataDeserializer())
                 .registerTypeAdapter(ClipVideoResponse::class.java, ClipVideoDeserializer())
                 .registerTypeAdapter(GameDataResponse::class.java, GameDataDeserializer())
                 .registerTypeAdapter(StreamDataResponse::class.java, StreamDataDeserializer())
                 .registerTypeAdapter(ViewersDataResponse::class.java, ViewersDataDeserializer())
-                .registerTypeAdapter(GameStreamsDataResponse::class.java, GameStreamsDataDeserializer())
-                .registerTypeAdapter(GameVideosDataResponse::class.java, GameVideosDataDeserializer())
+                .registerTypeAdapter(
+                    GameStreamsDataResponse::class.java,
+                    GameStreamsDataDeserializer()
+                )
+                .registerTypeAdapter(
+                    GameVideosDataResponse::class.java,
+                    GameVideosDataDeserializer()
+                )
                 .registerTypeAdapter(GameClipsDataResponse::class.java, GameClipsDataDeserializer())
-                .registerTypeAdapter(ChannelVideosDataResponse::class.java, ChannelVideosDataDeserializer())
-                .registerTypeAdapter(ChannelClipsDataResponse::class.java, ChannelClipsDataDeserializer())
-                .registerTypeAdapter(ChannelViewerListDataResponse::class.java, ChannelViewerListDataDeserializer())
+                .registerTypeAdapter(
+                    ChannelVideosDataResponse::class.java,
+                    ChannelVideosDataDeserializer()
+                )
+                .registerTypeAdapter(
+                    ChannelClipsDataResponse::class.java,
+                    ChannelClipsDataDeserializer()
+                )
+                .registerTypeAdapter(
+                    ChannelViewerListDataResponse::class.java,
+                    ChannelViewerListDataDeserializer()
+                )
                 .registerTypeAdapter(EmoteCardResponse::class.java, EmoteCardDeserializer())
-                .registerTypeAdapter(SearchChannelDataResponse::class.java, SearchChannelDataDeserializer())
-                .registerTypeAdapter(SearchGameDataResponse::class.java, SearchGameDataDeserializer())
+                .registerTypeAdapter(
+                    SearchChannelDataResponse::class.java,
+                    SearchChannelDataDeserializer()
+                )
+                .registerTypeAdapter(
+                    SearchGameDataResponse::class.java,
+                    SearchGameDataDeserializer()
+                )
                 .registerTypeAdapter(TagGameDataResponse::class.java, TagGameDataDeserializer())
-                .registerTypeAdapter(TagGameStreamDataResponse::class.java, TagGameStreamDataDeserializer())
+                .registerTypeAdapter(
+                    TagGameStreamDataResponse::class.java,
+                    TagGameStreamDataDeserializer()
+                )
                 .registerTypeAdapter(TagStreamDataResponse::class.java, TagStreamDataDeserializer())
-                .registerTypeAdapter(TagSearchGameStreamDataResponse::class.java, TagSearchGameStreamDataDeserializer())
+                .registerTypeAdapter(
+                    TagSearchGameStreamDataResponse::class.java,
+                    TagSearchGameStreamDataDeserializer()
+                )
                 .registerTypeAdapter(TagSearchDataResponse::class.java, TagSearchDataDeserializer())
                 .registerTypeAdapter(VodGamesDataResponse::class.java, VodGamesDataDeserializer())
-                .registerTypeAdapter(FollowedStreamsDataResponse::class.java, FollowedStreamsDataDeserializer())
-                .registerTypeAdapter(FollowedVideosDataResponse::class.java, FollowedVideosDataDeserializer())
-                .registerTypeAdapter(FollowedChannelsDataResponse::class.java, FollowedChannelsDataDeserializer())
-                .registerTypeAdapter(FollowedGamesDataResponse::class.java, FollowedGamesDataDeserializer())
-                .registerTypeAdapter(FollowUserDataResponse::class.java, FollowUserDataDeserializer())
-                .registerTypeAdapter(FollowingUserDataResponse::class.java, FollowingUserDataDeserializer())
-                .registerTypeAdapter(FollowingGameDataResponse::class.java, FollowingGameDataDeserializer())
+                .registerTypeAdapter(
+                    FollowedStreamsDataResponse::class.java,
+                    FollowedStreamsDataDeserializer()
+                )
+                .registerTypeAdapter(
+                    FollowedVideosDataResponse::class.java,
+                    FollowedVideosDataDeserializer()
+                )
+                .registerTypeAdapter(
+                    FollowedChannelsDataResponse::class.java,
+                    FollowedChannelsDataDeserializer()
+                )
+                .registerTypeAdapter(
+                    FollowedGamesDataResponse::class.java,
+                    FollowedGamesDataDeserializer()
+                )
+                .registerTypeAdapter(
+                    FollowUserDataResponse::class.java,
+                    FollowUserDataDeserializer()
+                )
+                .registerTypeAdapter(
+                    FollowingUserDataResponse::class.java,
+                    FollowingUserDataDeserializer()
+                )
+                .registerTypeAdapter(
+                    FollowingGameDataResponse::class.java,
+                    FollowingGameDataDeserializer()
+                )
                 .create()
         )
     }
@@ -210,7 +273,11 @@ class XtraModule {
                 OkHttpClient.Builder().apply {
                     addInterceptor(AuthorizationInterceptor(clientId))
                     if (BuildConfig.DEBUG) {
-                        addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+                        addInterceptor(
+                            HttpLoggingInterceptor().apply {
+                                level = HttpLoggingInterceptor.Level.BODY
+                            }
+                        )
                     }
                 }.build()
             )
@@ -226,14 +293,19 @@ class XtraModule {
                 OkHttpClient.Builder().apply {
                     addInterceptor(AuthorizationInterceptor(clientId, token))
                     if (BuildConfig.DEBUG) {
-                        addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+                        addInterceptor(
+                            HttpLoggingInterceptor().apply {
+                                level = HttpLoggingInterceptor.Level.BODY
+                            }
+                        )
                     }
                 }.build()
             )
         return builder.build()
     }
 
-    private class AuthorizationInterceptor(val clientId: String?, val token: String? = null) : Interceptor {
+    private class AuthorizationInterceptor(val clientId: String?, val token: String? = null) :
+        Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
             val request = chain.request().newBuilder().apply {
                 clientId?.let { addHeader("Client-ID", it) }
@@ -248,7 +320,11 @@ class XtraModule {
     fun providesOkHttpClient(): OkHttpClient {
         val builder = OkHttpClient.Builder().apply {
             if (BuildConfig.DEBUG) {
-                addInterceptor(HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY })
+                addInterceptor(
+                    HttpLoggingInterceptor().apply {
+                        level = HttpLoggingInterceptor.Level.BODY
+                    }
+                )
             }
             connectTimeout(5, TimeUnit.MINUTES)
             writeTimeout(5, TimeUnit.MINUTES)
@@ -265,7 +341,10 @@ class XtraModule {
 
     @Singleton
     @Provides
-    fun providesFetchConfigurationBuilder(application: Application, okHttpClient: OkHttpClient): FetchConfiguration.Builder {
+    fun providesFetchConfigurationBuilder(
+        application: Application,
+        okHttpClient: OkHttpClient
+    ): FetchConfiguration.Builder {
         return FetchConfiguration.Builder(application)
             .enableLogging(BuildConfig.DEBUG)
             .enableRetryOnNetworkGain(true)

@@ -45,7 +45,8 @@ internal class DragListAdapter(
         return mItemList[position]!!.first!!
     }
 
-    internal inner class ViewHolder(itemView: View) : DragItemAdapter.ViewHolder(itemView, mGrabHandleId, mDragOnLongPress) {
+    internal inner class ViewHolder(itemView: View) :
+        DragItemAdapter.ViewHolder(itemView, mGrabHandleId, mDragOnLongPress) {
         var mText: TextView = itemView.findViewById<View>(R.id.text) as TextView
         override fun onItemClicked(view: View) {}
         override fun onItemLongClicked(view: View): Boolean {

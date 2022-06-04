@@ -31,7 +31,13 @@ fun View.gone() {
 fun View.toggleVisibility() = if (isVisible) gone() else visible()
 
 @SuppressLint("CheckResult")
-fun ImageView.loadImage(fragment: Fragment, url: String?, changes: Boolean = false, circle: Boolean = false, diskCacheStrategy: DiskCacheStrategy = DiskCacheStrategy.RESOURCE) {
+fun ImageView.loadImage(
+    fragment: Fragment,
+    url: String?,
+    changes: Boolean = false,
+    circle: Boolean = false,
+    diskCacheStrategy: DiskCacheStrategy = DiskCacheStrategy.RESOURCE
+) {
     if (context.isActivityResumed) { // not enough on some devices?
         try {
             val request = GlideApp.with(fragment)
@@ -57,14 +63,16 @@ fun ImageView.loadImage(fragment: Fragment, url: String?, changes: Boolean = fal
 
 fun EditText.showKeyboard() {
     requestFocus()
-    val imm: InputMethodManager? = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    val imm: InputMethodManager? =
+        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
     this.postDelayed({
         imm?.showSoftInput(this, 0)
     }, 100)
 }
 
 fun SearchView.showKeyboard() {
-    val imm: InputMethodManager? = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    val imm: InputMethodManager? =
+        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
     this.postDelayed({
         this.isIconified = false
         imm?.showSoftInput(this, 0)
@@ -72,7 +80,10 @@ fun SearchView.showKeyboard() {
 }
 
 fun View.hideKeyboard() {
-    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(windowToken, 0)
+    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+        windowToken,
+        0
+    )
 }
 
 val View.isKeyboardShown: Boolean

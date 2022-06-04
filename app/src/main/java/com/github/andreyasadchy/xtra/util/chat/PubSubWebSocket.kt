@@ -28,7 +28,10 @@ class PubSubWebSocket(
         if (client == null) {
             client = OkHttpClient()
         }
-        socket = client?.newWebSocket(Request.Builder().url("wss://pubsub-edge.twitch.tv").build(), PubSubListener())
+        socket = client?.newWebSocket(
+            Request.Builder().url("wss://pubsub-edge.twitch.tv").build(),
+            PubSubListener()
+        )
     }
 
     fun disconnect() {
@@ -96,11 +99,17 @@ class PubSubWebSocket(
             val json = if (text.isNotBlank()) JSONObject(text) else null
             when (json?.optString("type")) {
                 "MESSAGE" -> {
-                    val data = json.optString("data").let { if (it.isNotBlank()) JSONObject(it) else null }
+                    val data =
+                        json.optString("data").let { if (it.isNotBlank()) JSONObject(it) else null }
                     val topic = data?.optString("topic")
-                    val messageType = data?.optString("message")?.let { if (it.isNotBlank()) JSONObject(it) else null }?.optString("type")
+                    val messageType = data?.optString("message")
+                        ?.let { if (it.isNotBlank()) JSONObject(it) else null }?.optString("type")
                     when {
-                        (topic?.startsWith("community-points-channel") == true) && (messageType?.startsWith("reward-redeemed") == true) -> listener.onPointReward(text)
+                        (topic?.startsWith("community-points-channel") == true) && (
+                            messageType?.startsWith(
+                                "reward-redeemed"
+                            ) == true
+                            ) -> listener.onPointReward(text)
                     }
                 }
                 "PONG" -> pongReceived = true

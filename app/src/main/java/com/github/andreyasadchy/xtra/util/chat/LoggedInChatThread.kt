@@ -67,7 +67,10 @@ class LoggedInChatThread(
     private fun connect() {
         Log.d(TAG, "Connecting to Twitch IRC - SSl $useSSl")
         try {
-            socketOut = (if (useSSl) SSLSocketFactory.getDefault().createSocket("irc.twitch.tv", 6697) else Socket("irc.twitch.tv", 6667)).apply {
+            socketOut = (
+                if (useSSl) SSLSocketFactory.getDefault()
+                    .createSocket("irc.twitch.tv", 6697) else Socket("irc.twitch.tv", 6667)
+                ).apply {
                 readerOut = BufferedReader(InputStreamReader(getInputStream()))
                 writerOut = BufferedWriter(OutputStreamWriter(getOutputStream()))
                 write("PASS oauth:$userToken", writerOut)
@@ -99,7 +102,12 @@ class LoggedInChatThread(
             socketOut?.close()
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketOut", e)
-            listener.onCommand(message = e.toString(), duration = null, type = "socket_error", fullMsg = e.stackTraceToString())
+            listener.onCommand(
+                message = e.toString(),
+                duration = null,
+                type = "socket_error",
+                fullMsg = e.stackTraceToString()
+            )
         }
     }
 
@@ -116,7 +124,12 @@ class LoggedInChatThread(
                 Log.d(TAG, "Sent message to $hashChannelName: $message")
             } catch (e: IOException) {
                 Log.e(TAG, "Error sending message", e)
-                listener.onCommand(message = e.toString(), duration = null, type = "send_msg_error", fullMsg = e.stackTraceToString())
+                listener.onCommand(
+                    message = e.toString(),
+                    duration = null,
+                    type = "send_msg_error",
+                    fullMsg = e.stackTraceToString()
+                )
             }
         }
     }

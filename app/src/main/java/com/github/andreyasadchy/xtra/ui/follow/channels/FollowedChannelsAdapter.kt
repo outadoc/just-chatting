@@ -34,10 +34,23 @@ class FollowedChannelsAdapter(
 
     override fun bind(item: Follow, view: View) {
         with(view) {
-            setOnClickListener { listener.viewChannel(item.to_id, item.to_login, item.to_name, item.channelLogo, item.followLocal) }
+            setOnClickListener {
+                listener.viewChannel(
+                    item.to_id,
+                    item.to_login,
+                    item.to_name,
+                    item.channelLogo,
+                    item.followLocal
+                )
+            }
             if (item.channelLogo != null) {
                 userImage.visible()
-                userImage.loadImage(fragment, item.channelLogo, circle = true, diskCacheStrategy = DiskCacheStrategy.NONE)
+                userImage.loadImage(
+                    fragment,
+                    item.channelLogo,
+                    circle = true,
+                    diskCacheStrategy = DiskCacheStrategy.NONE
+                )
             } else {
                 userImage.gone()
             }

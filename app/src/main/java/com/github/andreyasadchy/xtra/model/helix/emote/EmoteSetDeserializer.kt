@@ -11,14 +11,36 @@ import java.lang.reflect.Type
 class EmoteSetDeserializer : JsonDeserializer<EmoteSetResponse> {
 
     @Throws(JsonParseException::class)
-    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): EmoteSetResponse {
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): EmoteSetResponse {
         val emotes = mutableListOf<TwitchEmote>()
         for (i in 0 until json.asJsonObject.getAsJsonArray("data").size()) {
             val emote = json.asJsonObject.getAsJsonArray("data").get(i).asJsonObject
             val urls = emote.getAsJsonObject("images")
-            val url = urls.get(when (emoteQuality) { "4" -> ("url_4x") "3" -> ("url_4x") "2" -> ("url_2x") else -> ("url_1x") }).takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("url_2x").takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("url_1x").asString
-            val format = if (emote.getAsJsonArray("format").first().asString.equals("animated")) "image/gif" else "image/png"
-            emotes.add(TwitchEmote(emote.get("name").asString, type = format, url = url, setId = emote.get("emote_set_id").asString, ownerId = emote.get("owner_id").asString))
+            val url = urls.get(
+                when (emoteQuality) {
+                    "4" -> ("url_4x")
+                    "3" -> ("url_4x")
+                    "2" -> ("url_2x")
+                    else -> ("url_1x")
+                }
+            ).takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("url_2x")
+                .takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("url_1x").asString
+            val format = if (emote.getAsJsonArray("format")
+                .first().asString.equals("animated")
+            ) "image/gif" else "image/png"
+            emotes.add(
+                TwitchEmote(
+                    emote.get("name").asString,
+                    type = format,
+                    url = url,
+                    setId = emote.get("emote_set_id").asString,
+                    ownerId = emote.get("owner_id").asString
+                )
+            )
         }
         return EmoteSetResponse(emotes.sortedByDescending { it.setId })
     }

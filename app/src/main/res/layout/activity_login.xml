@@ -31,7 +31,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@android:color/white"/>
+            android:background="@android:color/white" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,7 +48,7 @@
                 android:textStyle="normal"
                 android:textColor="?attr/colorOnBackground"
                 android:padding="10dp"
-                android:background="?attr/selectableItemBackground"/>
+                android:background="?attr/selectableItemBackground" />
         </LinearLayout>
     </LinearLayout>
 

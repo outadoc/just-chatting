@@ -24,53 +24,112 @@ import retrofit2.http.POST
 interface GraphQLApi {
 
     @POST(".")
-    suspend fun getChannelViewerList(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ChannelViewerListDataResponse
+    suspend fun getChannelViewerList(
+        @Header("Client-ID") clientId: String?,
+        @Body json: JsonObject
+    ): ChannelViewerListDataResponse
 
     @POST(".")
-    suspend fun getSearchChannels(@Header("Client-ID") clientId: String?, @Body json: JsonObject): SearchChannelDataResponse
+    suspend fun getSearchChannels(
+        @Header("Client-ID") clientId: String?,
+        @Body json: JsonObject
+    ): SearchChannelDataResponse
 
     @POST(".")
-    suspend fun getGameTags(@Header("Client-ID") clientId: String?, @Body json: JsonObject): TagGameDataResponse
+    suspend fun getGameTags(
+        @Header("Client-ID") clientId: String?,
+        @Body json: JsonObject
+    ): TagGameDataResponse
 
     @POST(".")
-    suspend fun getGameStreamTags(@Header("Client-ID") clientId: String?, @Body json: JsonObject): TagGameStreamDataResponse
+    suspend fun getGameStreamTags(
+        @Header("Client-ID") clientId: String?,
+        @Body json: JsonObject
+    ): TagGameStreamDataResponse
 
     @POST(".")
-    suspend fun getStreamTags(@Header("Client-ID") clientId: String?, @Body json: JsonObject): TagStreamDataResponse
+    suspend fun getStreamTags(
+        @Header("Client-ID") clientId: String?,
+        @Body json: JsonObject
+    ): TagStreamDataResponse
 
     @POST(".")
-    suspend fun getSearchGameTags(@Header("Client-ID") clientId: String?, @Body json: JsonObject): TagSearchGameStreamDataResponse
+    suspend fun getSearchGameTags(
+        @Header("Client-ID") clientId: String?,
+        @Body json: JsonObject
+    ): TagSearchGameStreamDataResponse
 
     @POST(".")
-    suspend fun getSearchStreamTags(@Header("Client-ID") clientId: String?, @Body json: JsonObject): TagSearchDataResponse
+    suspend fun getSearchStreamTags(
+        @Header("Client-ID") clientId: String?,
+        @Body json: JsonObject
+    ): TagSearchDataResponse
 
     @POST(".")
-    suspend fun getViewerCount(@Header("Client-ID") clientId: String?, @Body json: JsonObject): ViewersDataResponse
+    suspend fun getViewerCount(
+        @Header("Client-ID") clientId: String?,
+        @Body json: JsonObject
+    ): ViewersDataResponse
 
     @POST(".")
-    suspend fun getEmoteCard(@Header("Client-ID") clientId: String?, @Body json: JsonObject): EmoteCardResponse
+    suspend fun getEmoteCard(
+        @Header("Client-ID") clientId: String?,
+        @Body json: JsonObject
+    ): EmoteCardResponse
 
     @POST(".")
-    suspend fun getFollowedStreams(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedStreamsDataResponse
+    suspend fun getFollowedStreams(
+        @Header("Client-ID") clientId: String?,
+        @Header("Authorization") token: String?,
+        @Body json: JsonObject
+    ): FollowedStreamsDataResponse
 
     @POST(".")
-    suspend fun getFollowedChannels(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowedChannelsDataResponse
+    suspend fun getFollowedChannels(
+        @Header("Client-ID") clientId: String?,
+        @Header("Authorization") token: String?,
+        @Body json: JsonObject
+    ): FollowedChannelsDataResponse
 
     @POST(".")
-    suspend fun getFollowUser(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowUserDataResponse
+    suspend fun getFollowUser(
+        @Header("Client-ID") clientId: String?,
+        @Header("Authorization") token: String?,
+        @Body json: JsonObject
+    ): FollowUserDataResponse
 
     @POST(".")
-    suspend fun getUnfollowUser(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): JsonElement
+    suspend fun getUnfollowUser(
+        @Header("Client-ID") clientId: String?,
+        @Header("Authorization") token: String?,
+        @Body json: JsonObject
+    ): JsonElement
 
     @POST(".")
-    suspend fun getFollowGame(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): JsonElement
+    suspend fun getFollowGame(
+        @Header("Client-ID") clientId: String?,
+        @Header("Authorization") token: String?,
+        @Body json: JsonObject
+    ): JsonElement
 
     @POST(".")
-    suspend fun getUnfollowGame(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): JsonElement
+    suspend fun getUnfollowGame(
+        @Header("Client-ID") clientId: String?,
+        @Header("Authorization") token: String?,
+        @Body json: JsonObject
+    ): JsonElement
 
     @POST(".")
-    suspend fun getFollowingUser(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowingUserDataResponse
+    suspend fun getFollowingUser(
+        @Header("Client-ID") clientId: String?,
+        @Header("Authorization") token: String?,
+        @Body json: JsonObject
+    ): FollowingUserDataResponse
 
     @POST(".")
-    suspend fun getFollowingGame(@Header("Client-ID") clientId: String?, @Header("Authorization") token: String?, @Body json: JsonObject): FollowingGameDataResponse
+    suspend fun getFollowingGame(
+        @Header("Client-ID") clientId: String?,
+        @Header("Authorization") token: String?,
+        @Body json: JsonObject
+    ): FollowingGameDataResponse
 }

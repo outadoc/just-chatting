@@ -10,16 +10,27 @@ import java.lang.reflect.Type
 class TagGameStreamDataDeserializer : JsonDeserializer<TagGameStreamDataResponse> {
 
     @Throws(JsonParseException::class)
-    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): TagGameStreamDataResponse {
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): TagGameStreamDataResponse {
         val data = mutableListOf<Tag>()
-        val dataJson = json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonArray("tags")
+        val dataJson =
+            json.asJsonObject.getAsJsonObject("data").getAsJsonObject("game").getAsJsonArray("tags")
         dataJson.forEach {
             val obj = it.asJsonObject
             data.add(
                 Tag(
-                    id = if (!(obj.get("id").isJsonNull)) { obj.getAsJsonPrimitive("id").asString } else null,
-                    name = if (!(obj.get("localizedName").isJsonNull)) { obj.getAsJsonPrimitive("localizedName").asString } else null,
-                    scope = if (!(obj.get("scope").isJsonNull)) { obj.getAsJsonPrimitive("scope").asString } else null,
+                    id = if (!(obj.get("id").isJsonNull)) {
+                        obj.getAsJsonPrimitive("id").asString
+                    } else null,
+                    name = if (!(obj.get("localizedName").isJsonNull)) {
+                        obj.getAsJsonPrimitive("localizedName").asString
+                    } else null,
+                    scope = if (!(obj.get("scope").isJsonNull)) {
+                        obj.getAsJsonPrimitive("scope").asString
+                    } else null,
                 )
             )
         }

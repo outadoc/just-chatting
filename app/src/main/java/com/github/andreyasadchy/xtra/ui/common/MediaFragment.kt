@@ -32,7 +32,11 @@ abstract class MediaFragment : Fragment(), Scrollable {
         previousItem = savedInstanceState?.getInt("previousItem", -1) ?: -1
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_media, container, false)
     }
 
@@ -44,19 +48,44 @@ abstract class MediaFragment : Fragment(), Scrollable {
         menu.setOnClickListener { it ->
             PopupMenu(activity, it).apply {
                 inflate(R.menu.top_menu)
-                menu.findItem(R.id.login).title = if (user !is NotLoggedIn) getString(R.string.log_out) else getString(R.string.log_in)
+                menu.findItem(R.id.login).title =
+                    if (user !is NotLoggedIn) getString(R.string.log_out) else getString(R.string.log_in)
                 setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.settings -> { activity.startActivityFromFragment(this@MediaFragment, Intent(activity, SettingsActivity::class.java), 3) }
+                        R.id.settings -> {
+                            activity.startActivityFromFragment(
+                                this@MediaFragment,
+                                Intent(activity, SettingsActivity::class.java),
+                                3
+                            )
+                        }
                         R.id.login -> {
                             if (user is NotLoggedIn) {
-                                activity.startActivityForResult(Intent(activity, LoginActivity::class.java), 1)
+                                activity.startActivityForResult(
+                                    Intent(
+                                        activity,
+                                        LoginActivity::class.java
+                                    ),
+                                    1
+                                )
                             } else {
                                 AlertDialog.Builder(activity).apply {
                                     setTitle(getString(R.string.logout_title))
-                                    user.login?.let { user -> setMessage(getString(R.string.logout_msg, user)) }
+                                    user.login?.let { user ->
+                                        setMessage(
+                                            getString(
+                                                R.string.logout_msg,
+                                                user
+                                            )
+                                        )
+                                    }
                                     setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.dismiss() }
-                                    setPositiveButton(getString(R.string.yes)) { _, _ -> activity.startActivityForResult(Intent(activity, LoginActivity::class.java), 2) }
+                                    setPositiveButton(getString(R.string.yes)) { _, _ ->
+                                        activity.startActivityForResult(
+                                            Intent(activity, LoginActivity::class.java),
+                                            2
+                                        )
+                                    }
                                 }.show()
                             }
                         }

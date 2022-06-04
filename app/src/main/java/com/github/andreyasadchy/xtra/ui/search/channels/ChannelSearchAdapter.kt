@@ -23,14 +23,22 @@ class ChannelSearchAdapter(
         override fun areItemsTheSame(oldItem: ChannelSearch, newItem: ChannelSearch): Boolean =
             oldItem.id == newItem.id
 
-        override fun areContentsTheSame(oldItem: ChannelSearch, newItem: ChannelSearch): Boolean = true
+        override fun areContentsTheSame(oldItem: ChannelSearch, newItem: ChannelSearch): Boolean =
+            true
     }) {
 
     override val layoutId: Int = R.layout.fragment_search_channels_list_item
 
     override fun bind(item: ChannelSearch, view: View) {
         with(view) {
-            setOnClickListener { listener.viewChannel(item.id, item.broadcaster_login, item.display_name, item.channelLogo) }
+            setOnClickListener {
+                listener.viewChannel(
+                    item.id,
+                    item.broadcaster_login,
+                    item.display_name,
+                    item.channelLogo
+                )
+            }
             if (item.channelLogo != null) {
                 userImage.visible()
                 userImage.loadImage(fragment, item.channelLogo, circle = true)
@@ -45,7 +53,10 @@ class ChannelSearchAdapter(
             }
             if (item.followers_count != null) {
                 userFollowers.visible()
-                userFollowers.text = context.getString(R.string.followers, TwitchApiHelper.formatCount(context, item.followers_count))
+                userFollowers.text = context.getString(
+                    R.string.followers,
+                    TwitchApiHelper.formatCount(context, item.followers_count)
+                )
             } else {
                 userFollowers.gone()
             }

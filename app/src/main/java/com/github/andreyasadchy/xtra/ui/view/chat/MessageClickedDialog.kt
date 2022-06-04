@@ -52,14 +52,26 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         private const val KEY_USERID = "userid"
         private val savedUsers = mutableListOf<User>()
 
-        fun newInstance(messagingEnabled: Boolean, originalMessage: CharSequence, formattedMessage: CharSequence, userId: String?, fullMsg: String?) = MessageClickedDialog().apply {
-            arguments = bundleOf(KEY_MESSAGING to messagingEnabled, KEY_ORIGINAL to originalMessage, KEY_FORMATTED to formattedMessage, KEY_USERID to userId); this.fullMsg = fullMsg
+        fun newInstance(
+            messagingEnabled: Boolean,
+            originalMessage: CharSequence,
+            formattedMessage: CharSequence,
+            userId: String?,
+            fullMsg: String?
+        ) = MessageClickedDialog().apply {
+            arguments = bundleOf(
+                KEY_MESSAGING to messagingEnabled,
+                KEY_ORIGINAL to originalMessage,
+                KEY_FORMATTED to formattedMessage,
+                KEY_USERID to userId
+            ); this.fullMsg = fullMsg
         }
     }
 
     var fullMsg: String? = null
 
-    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<MessageClickedViewModel> { viewModelFactory }
 
     private lateinit var listener: OnButtonClickListener
@@ -69,7 +81,11 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         listener = parentFragment as OnButtonClickListener
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.dialog_chat_message_click, container, false)
     }
 
@@ -86,7 +102,9 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                 updateUserLayout(item)
             } else {
                 viewModel.loadUser(
-                    channelId = userId, helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+                    channelId = userId,
+                    helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+                    helixToken = requireContext().prefs().getString(C.TOKEN, ""),
                     gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
                 ).observe(viewLifecycleOwner) { user ->
                     if (user != null) {
@@ -114,7 +132,12 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             }
         }
         copyClip.setOnClickListener {
-            clipboard?.setPrimaryClip(ClipData.newPlainText("label", if (userId != null) msg.substring(msg.indexOf(':') + 2) else msg))
+            clipboard?.setPrimaryClip(
+                ClipData.newPlainText(
+                    "label",
+                    if (userId != null) msg.substring(msg.indexOf(':') + 2) else msg
+                )
+            )
             dismiss()
         }
         if (requireContext().prefs().getBoolean(C.DEBUG_CHAT_FULLMSG, false) && fullMsg != null) {
@@ -139,7 +162,12 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             userImage.visible()
             userImage.loadImage(requireParentFragment(), user.channelLogo, circle = true)
             userImage.setOnClickListener {
-                listener.onViewProfileClicked(user.id, user.login, user.display_name, user.channelLogo)
+                listener.onViewProfileClicked(
+                    user.id,
+                    user.login,
+                    user.display_name,
+                    user.channelLogo
+                )
                 dismiss()
             }
         } else {
@@ -150,7 +178,12 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             userName.visible()
             userName.text = user.display_name
             userName.setOnClickListener {
-                listener.onViewProfileClicked(user.id, user.login, user.display_name, user.channelLogo)
+                listener.onViewProfileClicked(
+                    user.id,
+                    user.login,
+                    user.display_name,
+                    user.channelLogo
+                )
                 dismiss()
             }
             if (user.bannerImageURL != null) {
@@ -162,7 +195,10 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         if (user.followers_count != null) {
             userLayout.visible()
             userFollowers.visible()
-            userFollowers.text = requireContext().getString(R.string.followers, TwitchApiHelper.formatCount(requireContext(), user.followers_count))
+            userFollowers.text = requireContext().getString(
+                R.string.followers,
+                TwitchApiHelper.formatCount(requireContext(), user.followers_count)
+            )
             if (user.bannerImageURL != null) {
                 userFollowers.setTextColor(Color.LTGRAY)
                 userFollowers.setShadowLayer(4f, 0f, 0f, Color.BLACK)
@@ -173,7 +209,10 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         if (user.created_at != null) {
             userLayout.visible()
             userCreated.visible()
-            userCreated.text = requireContext().getString(R.string.created_at, TwitchApiHelper.formatTimeString(requireContext(), user.created_at))
+            userCreated.text = requireContext().getString(
+                R.string.created_at,
+                TwitchApiHelper.formatTimeString(requireContext(), user.created_at)
+            )
             if (user.bannerImageURL != null) {
                 userCreated.setTextColor(Color.LTGRAY)
                 userCreated.setShadowLayer(4f, 0f, 0f, Color.BLACK)

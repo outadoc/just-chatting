@@ -16,7 +16,8 @@ import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 import kotlinx.android.synthetic.main.common_recycler_view_layout.scrollTop
 import kotlinx.android.synthetic.main.common_recycler_view_layout.swipeRefresh
 
-abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> : BaseNetworkFragment() {
+abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> :
+    BaseNetworkFragment() {
 
     protected abstract val viewModel: VM
     protected abstract val adapter: Adapter

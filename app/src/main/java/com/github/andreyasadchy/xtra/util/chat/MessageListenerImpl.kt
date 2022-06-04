@@ -22,7 +22,8 @@ class MessageListenerImpl(
             val parts = message.substring(1).split(" ".toRegex(), 2)
             val prefix = parts[0]
             val prefixes = splitAndMakeMap(prefix, ";", "=")
-            val messageInfo = parts[1] // :<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
+            val messageInfo =
+                parts[1] // :<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
             val userLogin = prefixes["login"] ?: try {
                 messageInfo.substring(1, messageInfo.indexOf("!"))
             } catch (e: Exception) {
@@ -58,7 +59,13 @@ class MessageListenerImpl(
                     entries.forEach { emote ->
                         emote.value?.split(",")?.forEach { indexes ->
                             val index = indexes.split("-")
-                            emotesList.add(TwitchEmote(emote.key, index[0].toInt(), index[1].toInt()))
+                            emotesList.add(
+                                TwitchEmote(
+                                    emote.key,
+                                    index[0].toInt(),
+                                    index[1].toInt()
+                                )
+                            )
                         }
                     }
                 }
@@ -141,7 +148,15 @@ class MessageListenerImpl(
             val messageInfo = parts[1]
             val userIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
             val user = if (userIndex != -1) messageInfo.substring(userIndex + 1) else null
-            val type = if (user == null) { "clearchat" } else { if (duration != null) { "timeout" } else { "ban" } }
+            val type = if (user == null) {
+                "clearchat"
+            } else {
+                if (duration != null) {
+                    "timeout"
+                } else {
+                    "ban"
+                }
+            }
             callbackCommand.onCommand(
                 Command(
                     message = user,
@@ -162,7 +177,12 @@ class MessageListenerImpl(
         val msgId = prefixes["msg-id"]
         callbackCommand.onCommand(
             Command(
-                message = messageInfo.substring(messageInfo.indexOf(":", messageInfo.indexOf(":") + 1) + 1),
+                message = messageInfo.substring(
+                    messageInfo.indexOf(
+                        ":",
+                        messageInfo.indexOf(":") + 1
+                    ) + 1
+                ),
                 duration = msgId,
                 type = "notice",
                 fullMsg = message
@@ -196,7 +216,11 @@ class MessageListenerImpl(
         }
     }
 
-    private fun splitAndMakeMap(string: String, splitRegex: String, mapRegex: String): Map<String, String?> {
+    private fun splitAndMakeMap(
+        string: String,
+        splitRegex: String,
+        mapRegex: String
+    ): Map<String, String?> {
         val list = string.split(splitRegex.toRegex()).dropLastWhile { it.isEmpty() }
         val map = LinkedHashMap<String, String?>()
         for (pair in list) {

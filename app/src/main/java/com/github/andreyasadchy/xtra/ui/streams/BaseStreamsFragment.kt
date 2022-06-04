@@ -13,7 +13,8 @@ import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 
-abstract class BaseStreamsFragment<VM : PagedListViewModel<Stream>> : PagedListFragment<Stream, VM, BasePagedListAdapter<Stream>>(), Scrollable {
+abstract class BaseStreamsFragment<VM : PagedListViewModel<Stream>> :
+    PagedListFragment<Stream, VM, BasePagedListAdapter<Stream>>(), Scrollable {
 
     interface OnStreamSelectedListener {
         fun startStream(stream: Stream)
@@ -24,7 +25,11 @@ abstract class BaseStreamsFragment<VM : PagedListViewModel<Stream>> : PagedListF
         StreamsCompactAdapter(this, activity, activity)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_streams, container, false)
     }
 

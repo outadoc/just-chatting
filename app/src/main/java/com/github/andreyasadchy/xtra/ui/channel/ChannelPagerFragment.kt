@@ -54,7 +54,13 @@ import kotlinx.android.synthetic.main.fragment_channel.watchLive
 class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
     companion object {
-        fun newInstance(id: String?, login: String?, name: String?, channelLogo: String?, updateLocal: Boolean = false) = ChannelPagerFragment().apply {
+        fun newInstance(
+            id: String?,
+            login: String?,
+            name: String?,
+            channelLogo: String?,
+            updateLocal: Boolean = false
+        ) = ChannelPagerFragment().apply {
             arguments = Bundle().apply {
                 putString(C.CHANNEL_ID, id)
                 putString(C.CHANNEL_LOGIN, login)
@@ -67,7 +73,11 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
     private val viewModel by viewModels<ChannelPagerViewModel> { viewModelFactory }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_channel, container, false)
     }
 
@@ -116,19 +126,44 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
         menu.setOnClickListener { it ->
             PopupMenu(activity, it).apply {
                 inflate(R.menu.top_menu)
-                menu.findItem(R.id.login).title = if (user !is NotLoggedIn) getString(R.string.log_out) else getString(R.string.log_in)
+                menu.findItem(R.id.login).title =
+                    if (user !is NotLoggedIn) getString(R.string.log_out) else getString(R.string.log_in)
                 setOnMenuItemClickListener {
                     when (it.itemId) {
-                        R.id.settings -> { activity.startActivityFromFragment(this@ChannelPagerFragment, Intent(activity, SettingsActivity::class.java), 3) }
+                        R.id.settings -> {
+                            activity.startActivityFromFragment(
+                                this@ChannelPagerFragment,
+                                Intent(activity, SettingsActivity::class.java),
+                                3
+                            )
+                        }
                         R.id.login -> {
                             if (user is NotLoggedIn) {
-                                activity.startActivityForResult(Intent(activity, LoginActivity::class.java), 1)
+                                activity.startActivityForResult(
+                                    Intent(
+                                        activity,
+                                        LoginActivity::class.java
+                                    ),
+                                    1
+                                )
                             } else {
                                 AlertDialog.Builder(activity).apply {
                                     setTitle(getString(R.string.logout_title))
-                                    user.login?.let { user -> setMessage(getString(R.string.logout_msg, user)) }
+                                    user.login?.let { user ->
+                                        setMessage(
+                                            getString(
+                                                R.string.logout_msg,
+                                                user
+                                            )
+                                        )
+                                    }
                                     setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.dismiss() }
-                                    setPositiveButton(getString(R.string.yes)) { _, _ -> activity.startActivityForResult(Intent(activity, LoginActivity::class.java), 2) }
+                                    setPositiveButton(getString(R.string.yes)) { _, _ ->
+                                        activity.startActivityForResult(
+                                            Intent(activity, LoginActivity::class.java),
+                                            2
+                                        )
+                                    }
                                 }.show()
                             }
                         }
@@ -143,13 +178,26 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
     override fun initialize() {
         val activity = requireActivity() as MainActivity
-        viewModel.loadStream(channelId = requireArguments().getString(C.CHANNEL_ID), channelLogin = requireArguments().getString(C.CHANNEL_LOGIN), channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME), profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE), helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), helixToken = requireContext().prefs().getString(C.TOKEN, ""), gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))
+        viewModel.loadStream(
+            channelId = requireArguments().getString(C.CHANNEL_ID),
+            channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),
+            channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME),
+            profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE),
+            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+            helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+        )
         viewModel.stream.observe(viewLifecycleOwner) { stream ->
             updateStreamLayout(stream)
             if (stream?.channelUser != null) {
                 updateUserLayout(stream.channelUser)
             } else {
-                viewModel.loadUser(channelId = requireArguments().getString(C.CHANNEL_ID), helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), helixToken = requireContext().prefs().getString(C.TOKEN, ""), gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))
+                viewModel.loadUser(
+                    channelId = requireArguments().getString(C.CHANNEL_ID),
+                    helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+                    helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+                    gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+                )
                 viewModel.user.observe(viewLifecycleOwner) { user ->
                     if (user != null) {
                         updateUserLayout(user)
@@ -179,7 +227,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                     TwitchApiHelper.formatTimeString(requireContext(), stream.lastBroadcast).let {
                         if (it != null) {
                             lastBroadcast.visible()
-                            lastBroadcast.text = requireContext().getString(R.string.last_broadcast_date, it)
+                            lastBroadcast.text =
+                                requireContext().getString(R.string.last_broadcast_date, it)
                         } else {
                             lastBroadcast.gone()
                         }
@@ -264,7 +313,10 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
         }
         if (user.created_at != null) {
             userCreated.visible()
-            userCreated.text = requireContext().getString(R.string.created_at, TwitchApiHelper.formatTimeString(requireContext(), user.created_at))
+            userCreated.text = requireContext().getString(
+                R.string.created_at,
+                TwitchApiHelper.formatTimeString(requireContext(), user.created_at)
+            )
             if (user.bannerImageURL != null) {
                 userCreated.setTextColor(Color.LTGRAY)
                 userCreated.setShadowLayer(4f, 0f, 0f, Color.BLACK)
@@ -274,7 +326,10 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
         }
         if (user.followers_count != null) {
             userFollowers.visible()
-            userFollowers.text = requireContext().getString(R.string.followers, TwitchApiHelper.formatCount(requireContext(), user.followers_count))
+            userFollowers.text = requireContext().getString(
+                R.string.followers,
+                TwitchApiHelper.formatCount(requireContext(), user.followers_count)
+            )
             if (user.bannerImageURL != null) {
                 userFollowers.setTextColor(Color.LTGRAY)
                 userFollowers.setShadowLayer(4f, 0f, 0f, Color.BLACK)
@@ -292,9 +347,15 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
         } else {
             userViews.gone()
         }
-        val broadcasterType = if (user.broadcaster_type != null) { TwitchApiHelper.getUserType(requireContext(), user.broadcaster_type) } else null
-        val type = if (user.type != null) { TwitchApiHelper.getUserType(requireContext(), user.type) } else null
-        val typeString = if (broadcasterType != null && type != null) "$broadcasterType, $type" else broadcasterType ?: type
+        val broadcasterType = if (user.broadcaster_type != null) {
+            TwitchApiHelper.getUserType(requireContext(), user.broadcaster_type)
+        } else null
+        val type = if (user.type != null) {
+            TwitchApiHelper.getUserType(requireContext(), user.type)
+        } else null
+        val typeString =
+            if (broadcasterType != null && type != null) "$broadcasterType, $type" else broadcasterType
+                ?: type
         if (typeString != null) {
             userType.visible()
             userType.text = typeString
@@ -311,7 +372,11 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
     }
 
     override fun onNetworkRestored() {
-        viewModel.retry(helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""), helixToken = requireContext().prefs().getString(C.TOKEN, ""), gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""))
+        viewModel.retry(
+            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+            helixToken = requireContext().prefs().getString(C.TOKEN, ""),
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+        )
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

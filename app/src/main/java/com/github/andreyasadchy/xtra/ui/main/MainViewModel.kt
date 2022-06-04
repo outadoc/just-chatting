@@ -46,11 +46,23 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun loadUser(login: String? = null, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null) {
+    fun loadUser(
+        login: String? = null,
+        helixClientId: String? = null,
+        helixToken: String? = null,
+        gqlClientId: String? = null
+    ) {
         _user.value = null
         viewModelScope.launch {
             try {
-                val user = login?.let { repository.loadUsersByLogin(mutableListOf(login), helixClientId, helixToken, gqlClientId) }?.firstOrNull()
+                val user = login?.let {
+                    repository.loadUsersByLogin(
+                        mutableListOf(login),
+                        helixClientId,
+                        helixToken,
+                        gqlClientId
+                    )
+                }?.firstOrNull()
                 _user.postValue(user)
             } catch (e: Exception) {
             }
@@ -63,7 +75,8 @@ class MainViewModel @Inject constructor(
             viewModelScope.launch {
                 try {
                     if (!user.helixToken.isNullOrBlank()) {
-                        val response = authRepository.validate(TwitchApiHelper.addTokenPrefixHelix(user.helixToken))
+                        val response =
+                            authRepository.validate(TwitchApiHelper.addTokenPrefixHelix(user.helixToken))
                         if (response?.clientId == helixClientId) {
                             User.validated()
                         } else {
@@ -71,7 +84,8 @@ class MainViewModel @Inject constructor(
                         }
                     }
                     if (!user.gqlToken.isNullOrBlank()) {
-                        val response = authRepository.validate(TwitchApiHelper.addTokenPrefixGQL(user.gqlToken))
+                        val response =
+                            authRepository.validate(TwitchApiHelper.addTokenPrefixGQL(user.gqlToken))
                         if (response?.clientId == gqlClientId) {
                             User.validated()
                         } else {
@@ -82,7 +96,10 @@ class MainViewModel @Inject constructor(
                     if ((e is IllegalStateException && e.message == "401") || (e is HttpException && e.code() == 401)) {
                         User.set(activity, null)
                         activity.toast(R.string.token_expired)
-                        activity.startActivityForResult(Intent(activity, LoginActivity::class.java), 2)
+                        activity.startActivityForResult(
+                            Intent(activity, LoginActivity::class.java),
+                            2
+                        )
                     }
                 }
             }

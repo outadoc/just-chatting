@@ -38,13 +38,21 @@ class ChannelPagerViewModel @Inject constructor(
     private val _userName = MutableLiveData<String?>()
     private val _profileImageURL = MutableLiveData<String?>()
     override val userId: String?
-        get() { return _userId.value }
+        get() {
+            return _userId.value
+        }
     override val userLogin: String?
-        get() { return _userLogin.value }
+        get() {
+            return _userLogin.value
+        }
     override val userName: String?
-        get() { return _userName.value }
+        get() {
+            return _userName.value
+        }
     override val channelLogo: String?
-        get() { return _profileImageURL.value }
+        get() {
+            return _profileImageURL.value
+        }
     override lateinit var follow: FollowLiveData
 
     override fun setUser(user: User, helixClientId: String?, gqlClientId: String?) {
@@ -64,7 +72,15 @@ class ChannelPagerViewModel @Inject constructor(
         }
     }
 
-    fun loadStream(channelId: String?, channelLogin: String?, channelName: String?, profileImageURL: String?, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null) {
+    fun loadStream(
+        channelId: String?,
+        channelLogin: String?,
+        channelName: String?,
+        profileImageURL: String?,
+        helixClientId: String? = null,
+        helixToken: String? = null,
+        gqlClientId: String? = null
+    ) {
         if (_userId.value != channelId && channelId != null) {
             _userId.value = channelId
             _userLogin.value = channelLogin
@@ -72,7 +88,12 @@ class ChannelPagerViewModel @Inject constructor(
             _profileImageURL.value = profileImageURL
             viewModelScope.launch {
                 try {
-                    val stream = repository.loadStreamWithUser(channelId, helixClientId, helixToken, gqlClientId)
+                    val stream = repository.loadStreamWithUser(
+                        channelId,
+                        helixClientId,
+                        helixToken,
+                        gqlClientId
+                    )
                     _stream.postValue(stream)
                 } catch (e: Exception) {
                 }
@@ -80,11 +101,21 @@ class ChannelPagerViewModel @Inject constructor(
         }
     }
 
-    fun loadUser(channelId: String?, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null) {
+    fun loadUser(
+        channelId: String?,
+        helixClientId: String? = null,
+        helixToken: String? = null,
+        gqlClientId: String? = null
+    ) {
         if (channelId != null) {
             viewModelScope.launch {
                 try {
-                    val user = repository.loadUsersById(mutableListOf(channelId), helixClientId, helixToken, gqlClientId)?.firstOrNull()
+                    val user = repository.loadUsersById(
+                        mutableListOf(channelId),
+                        helixClientId,
+                        helixToken,
+                        gqlClientId
+                    )?.firstOrNull()
                     _user.postValue(user)
                 } catch (e: Exception) {
                 }
@@ -92,9 +123,21 @@ class ChannelPagerViewModel @Inject constructor(
         }
     }
 
-    fun retry(helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null) {
+    fun retry(
+        helixClientId: String? = null,
+        helixToken: String? = null,
+        gqlClientId: String? = null
+    ) {
         if (_stream.value == null) {
-            loadStream(_userId.value, _userLogin.value, _userName.value, _profileImageURL.value, helixClientId, helixToken, gqlClientId)
+            loadStream(
+                _userId.value,
+                _userLogin.value,
+                _userName.value,
+                _profileImageURL.value,
+                helixClientId,
+                helixToken,
+                gqlClientId
+            )
         } else {
             if (_stream.value!!.channelUser == null) {
                 loadUser(_userId.value, helixClientId, helixToken, gqlClientId)
@@ -102,7 +145,10 @@ class ChannelPagerViewModel @Inject constructor(
         }
     }
 
-    fun updateLocalUser(context: Context, user: com.github.andreyasadchy.xtra.model.helix.user.User) {
+    fun updateLocalUser(
+        context: Context,
+        user: com.github.andreyasadchy.xtra.model.helix.user.User
+    ) {
         GlobalScope.launch {
             try {
                 if (user.id != null) {
@@ -114,13 +160,22 @@ class ChannelPagerViewModel @Inject constructor(
                                 override fun onLoadCleared(placeholder: Drawable?) {
                                 }
 
-                                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                                    DownloadUtils.savePng(context, "profile_pics", user.id, resource)
+                                override fun onResourceReady(
+                                    resource: Bitmap,
+                                    transition: Transition<in Bitmap>?
+                                ) {
+                                    DownloadUtils.savePng(
+                                        context,
+                                        "profile_pics",
+                                        user.id,
+                                        resource
+                                    )
                                 }
                             })
                     } catch (e: Exception) {
                     }
-                    val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${user.id}.png").absolutePath
+                    val downloadedLogo =
+                        File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${user.id}.png").absolutePath
                     localFollowsChannel.getFollowById(user.id)?.let {
                         localFollowsChannel.updateFollow(
                             it.apply {

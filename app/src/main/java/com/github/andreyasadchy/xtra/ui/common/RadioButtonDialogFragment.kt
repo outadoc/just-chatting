@@ -27,9 +27,19 @@ class RadioButtonDialogFragment : ExpandingBottomSheetDialogFragment() {
         private const val TAGS = "tags"
         private const val CHECKED = "checked"
 
-        fun newInstance(requestCode: Int, labels: Collection<CharSequence>, tags: IntArray? = null, checkedIndex: Int): RadioButtonDialogFragment {
+        fun newInstance(
+            requestCode: Int,
+            labels: Collection<CharSequence>,
+            tags: IntArray? = null,
+            checkedIndex: Int
+        ): RadioButtonDialogFragment {
             return RadioButtonDialogFragment().apply {
-                arguments = bundleOf(REQUEST_CODE to requestCode, LABELS to ArrayList(labels), TAGS to tags, CHECKED to checkedIndex)
+                arguments = bundleOf(
+                    REQUEST_CODE to requestCode,
+                    LABELS to ArrayList(labels),
+                    TAGS to tags,
+                    CHECKED to checkedIndex
+                )
             }
         }
     }
@@ -41,7 +51,11 @@ class RadioButtonDialogFragment : ExpandingBottomSheetDialogFragment() {
         listenerSort = parentFragment as OnSortOptionChanged
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val context = requireContext()
         val arguments = requireArguments()
         val layoutParams = LinearLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
@@ -50,7 +64,12 @@ class RadioButtonDialogFragment : ExpandingBottomSheetDialogFragment() {
         val clickListener = View.OnClickListener { v ->
             val clickedId = v.id
             if (clickedId != checkedId) {
-                listenerSort.onChange(arguments.getInt(REQUEST_CODE), clickedId, (v as RadioButton).text, v.tag as Int?)
+                listenerSort.onChange(
+                    arguments.getInt(REQUEST_CODE),
+                    clickedId,
+                    (v as RadioButton).text,
+                    v.tag as Int?
+                )
             }
             dismiss()
         }

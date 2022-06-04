@@ -35,7 +35,12 @@ import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedListener, OnChannelSelectedListener, HasAndroidInjector, Injectable {
+class MainActivity :
+    AppCompatActivity(),
+    BaseStreamsFragment.OnStreamSelectedListener,
+    OnChannelSelectedListener,
+    HasAndroidInjector,
+    Injectable {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
@@ -44,7 +49,8 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
     lateinit var viewModelFactory: ViewModelProvider.Factory
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
 
-    private val fragNavController = FragNavController(supportFragmentManager, R.id.fragmentContainer)
+    private val fragNavController =
+        FragNavController(supportFragmentManager, R.id.fragmentContainer)
     private val networkReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             viewModel.setNetworkAvailable(isNetworkAvailable)
@@ -89,7 +95,11 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
         viewModel.isNetworkAvailable.observe(this) {
             it.getContentIfNotHandled()?.let { online ->
                 if (online) {
-                    viewModel.validate(prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.GQL_CLIENT_ID, ""), this)
+                    viewModel.validate(
+                        prefs.getString(C.HELIX_CLIENT_ID, ""),
+                        prefs.getString(C.GQL_CLIENT_ID, ""),
+                        this
+                    )
                 }
                 if (flag) {
                     shortToast(if (online) R.string.connection_restored else R.string.no_connection)
@@ -125,7 +135,12 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
         fun restartActivity() {
             finish()
             overridePendingTransition(0, 0)
-            startActivity(Intent(this, MainActivity::class.java).apply { addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION) })
+            startActivity(
+                Intent(
+                    this,
+                    MainActivity::class.java
+                ).apply { addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION) }
+            )
             overridePendingTransition(0, 0)
         }
         when (requestCode) {
@@ -156,10 +171,20 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
                 else -> {
                     val login = url.substringAfter("twitch.tv/").substringBefore("/")
                     if (login.isNotBlank()) {
-                        viewModel.loadUser(login, prefs.getString(C.HELIX_CLIENT_ID, ""), prefs.getString(C.TOKEN, ""), prefs.getString(C.GQL_CLIENT_ID, ""))
+                        viewModel.loadUser(
+                            login,
+                            prefs.getString(C.HELIX_CLIENT_ID, ""),
+                            prefs.getString(C.TOKEN, ""),
+                            prefs.getString(C.GQL_CLIENT_ID, "")
+                        )
                         viewModel.user.observe(this) { user ->
                             if (user != null && (!user.id.isNullOrBlank() || !user.login.isNullOrBlank())) {
-                                viewChannel(id = user.id, login = user.login, name = user.display_name, channelLogo = user.channelLogo)
+                                viewChannel(
+                                    id = user.id,
+                                    login = user.login,
+                                    name = user.display_name,
+                                    channelLogo = user.channelLogo
+                                )
                             }
                         }
                     }
@@ -171,11 +196,32 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
 // Navigation listeners
 
     override fun startStream(stream: Stream) {
-        fragNavController.pushFragment(ChannelPagerFragment.newInstance(stream.user_id, stream.user_login, stream.user_name, stream.channelLogo))
+        fragNavController.pushFragment(
+            ChannelPagerFragment.newInstance(
+                stream.user_id,
+                stream.user_login,
+                stream.user_name,
+                stream.channelLogo
+            )
+        )
     }
 
-    override fun viewChannel(id: String?, login: String?, name: String?, channelLogo: String?, updateLocal: Boolean) {
-        fragNavController.pushFragment(ChannelPagerFragment.newInstance(id, login, name, channelLogo, updateLocal))
+    override fun viewChannel(
+        id: String?,
+        login: String?,
+        name: String?,
+        channelLogo: String?,
+        updateLocal: Boolean
+    ) {
+        fragNavController.pushFragment(
+            ChannelPagerFragment.newInstance(
+                id,
+                login,
+                name,
+                channelLogo,
+                updateLocal
+            )
+        )
     }
 
     fun popFragment() {
@@ -199,7 +245,10 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
             )
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
             transactionListener = object : FragNavController.TransactionListener {
-                override fun onFragmentTransaction(fragment: Fragment?, transactionType: FragNavController.TransactionType) {
+                override fun onFragmentTransaction(
+                    fragment: Fragment?,
+                    transactionType: FragNavController.TransactionType
+                ) {
                 }
 
                 override fun onTabTransaction(fragment: Fragment?, index: Int) {

@@ -61,7 +61,23 @@ class ChatAdapter(
             }
             field = value
         }
-    private val twitchColors = intArrayOf(-65536, -16776961, -16744448, -5103070, -32944, -6632142, -47872, -13726889, -2448096, -2987746, -10510688, -14774017, -38476, -7722014, -16711809)
+    private val twitchColors = intArrayOf(
+        -65536,
+        -16776961,
+        -16744448,
+        -5103070,
+        -32944,
+        -6632142,
+        -47872,
+        -13726889,
+        -2448096,
+        -2987746,
+        -10510688,
+        -14774017,
+        -38476,
+        -7722014,
+        -16711809
+    )
     private val noColor = -10066329
     private val random = Random()
     private val userColors = HashMap<String, Int>()
@@ -73,10 +89,13 @@ class ChatAdapter(
     private var loggedInUser: String? = null
     private val scaledEmoteSize = (emoteSize * 0.78f).toInt()
 
-    private var messageClickListener: ((CharSequence, CharSequence, String?, String?) -> Unit)? = null
+    private var messageClickListener: ((CharSequence, CharSequence, String?, String?) -> Unit)? =
+        null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.chat_list_item, parent, false))
+        return ViewHolder(
+            LayoutInflater.from(parent.context).inflate(R.layout.chat_list_item, parent, false)
+        )
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -92,7 +111,9 @@ class ChatAdapter(
             builder.append("$systemMsg\n")
             imageIndex += systemMsg.length + 1
         } else {
-            val msgId = liveMessage?.msgId?.let { TwitchApiHelper.getMessageIdString(it) ?: liveMessage.msgId }
+            val msgId = liveMessage?.msgId?.let {
+                TwitchApiHelper.getMessageIdString(it) ?: liveMessage.msgId
+            }
             if (msgId != null) {
                 builder.append("$msgId\n")
                 imageIndex += msgId.length + 1
@@ -124,14 +145,23 @@ class ChatAdapter(
             builder.append("${pointReward?.rewardCost}\n")
             imageIndex += (pointReward?.rewardCost?.toString()?.length ?: 0) + 1
         }
-        val timestamp = liveMessage?.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) } ?: pointReward?.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) }
+        val timestamp =
+            liveMessage?.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) }
+                ?: pointReward?.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) }
         if (enableTimestamps && timestamp != null) {
             builder.append("$timestamp ")
-            builder.setSpan(ForegroundColorSpan(Color.parseColor("#999999")), imageIndex, imageIndex + timestamp.length, SPAN_INCLUSIVE_INCLUSIVE)
+            builder.setSpan(
+                ForegroundColorSpan(Color.parseColor("#999999")),
+                imageIndex,
+                imageIndex + timestamp.length,
+                SPAN_INCLUSIVE_INCLUSIVE
+            )
             imageIndex += timestamp.length + 1
         }
         chatMessage.badges?.forEach { chatBadge ->
-            val badge = channelBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version } ?: globalBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
+            val badge =
+                channelBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
+                    ?: globalBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
             badge?.url?.let {
                 builder.append("  ")
                 images.add(Image(it, imageIndex++, imageIndex++, false))
@@ -175,8 +205,14 @@ class ChatAdapter(
                 builder.append("${pointReward?.rewardCost}")
                 imageIndex += pointReward?.rewardCost?.toString()?.length ?: 0
                 originalMessage = "$userName: ${chatMessage.message}"
-                userNameWithPostfixLength = string.length + (pointReward?.rewardCost?.toString()?.length ?: 0) + 3
-                builder.setSpan(ForegroundColorSpan(Color.parseColor("#999999")), userNameWithPostfixLength - userNameWithPostfixLength, userNameWithPostfixLength, SPAN_INCLUSIVE_INCLUSIVE)
+                userNameWithPostfixLength =
+                    string.length + (pointReward?.rewardCost?.toString()?.length ?: 0) + 3
+                builder.setSpan(
+                    ForegroundColorSpan(Color.parseColor("#999999")),
+                    userNameWithPostfixLength - userNameWithPostfixLength,
+                    userNameWithPostfixLength,
+                    SPAN_INCLUSIVE_INCLUSIVE
+                )
             } else {
                 originalMessage = "${chatMessage.message}"
                 userNameWithPostfixLength = 0
@@ -186,14 +222,26 @@ class ChatAdapter(
         val color = if (chatMessage is PubSubPointReward) null else
             chatMessage.color.let { userColor ->
                 if (userColor == null) {
-                    userColors[userName] ?: getRandomColor().also { if (userName != null) userColors[userName] = it }
+                    userColors[userName]
+                        ?: getRandomColor().also { if (userName != null) userColors[userName] = it }
                 } else {
-                    savedColors[userColor] ?: Color.parseColor(userColor).also { savedColors[userColor] = it }
+                    savedColors[userColor] ?: Color.parseColor(userColor)
+                        .also { savedColors[userColor] = it }
                 }
             }
         if (color != null && userName != null) {
-            builder.setSpan(ForegroundColorSpan(color), imageIndex, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
-            builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), imageIndex, userNameEndIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
+            builder.setSpan(
+                ForegroundColorSpan(color),
+                imageIndex,
+                userNameEndIndex,
+                SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            builder.setSpan(
+                StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL),
+                imageIndex,
+                userNameEndIndex,
+                SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
         try {
             chatMessage.emotes?.let { emotes ->
@@ -210,7 +258,12 @@ class ChatAdapter(
                 for (e in copy) {
                     val begin = imageIndex + e.begin
                     builder.replace(begin, imageIndex + e.end + 1, ".")
-                    builder.setSpan(ForegroundColorSpan(Color.TRANSPARENT), begin, begin + 1, SPAN_EXCLUSIVE_EXCLUSIVE)
+                    builder.setSpan(
+                        ForegroundColorSpan(Color.TRANSPARENT),
+                        begin,
+                        begin + 1,
+                        SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
                     val length = e.end - e.begin
                     for (e1 in copy) {
                         if (e.begin < e1.begin) {
@@ -220,7 +273,17 @@ class ChatAdapter(
                     }
                     e.end -= length
                 }
-                copy.forEach { images.add(Image(it.url, imageIndex + it.begin, imageIndex + it.end + 1, true, "image/gif")) }
+                copy.forEach {
+                    images.add(
+                        Image(
+                            it.url,
+                            imageIndex + it.begin,
+                            imageIndex + it.end + 1,
+                            true,
+                            "image/gif"
+                        )
+                    )
+                }
             }
             val split = builder.split(" ")
             var builderIndex = 0
@@ -233,27 +296,47 @@ class ChatAdapter(
                 val bitsCount = value.takeLastWhile { it.isDigit() }
                 val bitsName = value.substringBeforeLast(bitsCount)
                 if (bitsCount.isNotEmpty()) {
-                    val cheerEmote = cheerEmotes?.findLast { it.name == bitsName && it.minBits <= bitsCount.toInt() }
+                    val cheerEmote =
+                        cheerEmotes?.findLast { it.name == bitsName && it.minBits <= bitsCount.toInt() }
                     if (cheerEmote != null) {
                         emote = cheerEmote
                         if (emote.color != null) {
-                            builder.setSpan(ForegroundColorSpan(Color.parseColor(emote.color)), builderIndex + bitsName.length, endIndex, SPAN_INCLUSIVE_INCLUSIVE)
+                            builder.setSpan(
+                                ForegroundColorSpan(Color.parseColor(emote.color)),
+                                builderIndex + bitsName.length,
+                                endIndex,
+                                SPAN_INCLUSIVE_INCLUSIVE
+                            )
                         }
                     }
                 }
                 if (emote == null) {
                     if (!Patterns.WEB_URL.matcher(value).matches()) {
                         if (value.startsWith('@')) {
-                            builder.setSpan(StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL), builderIndex, endIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
+                            builder.setSpan(
+                                StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL),
+                                builderIndex,
+                                endIndex,
+                                SPAN_EXCLUSIVE_EXCLUSIVE
+                            )
                         }
                         loggedInUser?.let {
-                            if (!wasMentioned && value.contains(it, true) && chatMessage.userLogin != it) {
+                            if (!wasMentioned && value.contains(
+                                    it,
+                                    true
+                                ) && chatMessage.userLogin != it
+                            ) {
                                 wasMentioned = true
                             }
                         }
                     } else {
                         val url = if (value.startsWith("http")) value else "https://$value"
-                        builder.setSpan(URLSpan(url), builderIndex, endIndex, SPAN_EXCLUSIVE_EXCLUSIVE)
+                        builder.setSpan(
+                            URLSpan(url),
+                            builderIndex,
+                            endIndex,
+                            SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
                     }
                     builderIndex += length + 1
                 } else {
@@ -274,8 +357,22 @@ class ChatAdapter(
                     } else {
                         builder.replace(builderIndex, endIndex, ".")
                     }
-                    builder.setSpan(ForegroundColorSpan(Color.TRANSPARENT), builderIndex, builderIndex + 1, SPAN_EXCLUSIVE_EXCLUSIVE)
-                    images.add(Image(emote.url, builderIndex, builderIndex + 1, true, emote.type, emote.zeroWidth))
+                    builder.setSpan(
+                        ForegroundColorSpan(Color.TRANSPARENT),
+                        builderIndex,
+                        builderIndex + 1,
+                        SPAN_EXCLUSIVE_EXCLUSIVE
+                    )
+                    images.add(
+                        Image(
+                            emote.url,
+                            builderIndex,
+                            builderIndex + 1,
+                            true,
+                            emote.type,
+                            emote.zeroWidth
+                        )
+                    )
                     emotesFound++
                     builderIndex += 2
                     if (emote is CheerEmote) {
@@ -284,12 +381,25 @@ class ChatAdapter(
                 }
             }
             if (color != null && chatMessage.isAction) {
-                builder.setSpan(ForegroundColorSpan(color), if (userName != null) userNameEndIndex + 1 else 0, builder.length, SPAN_EXCLUSIVE_EXCLUSIVE)
+                builder.setSpan(
+                    ForegroundColorSpan(color),
+                    if (userName != null) userNameEndIndex + 1 else 0,
+                    builder.length,
+                    SPAN_EXCLUSIVE_EXCLUSIVE
+                )
             }
             when {
-                liveMessage?.isFirst == true && (firstMsgVisibility?.toInt() ?: 0) < 2 -> holder.textView.setBackgroundResource(R.color.chatMessageFirst)
-                liveMessage?.rewardId != null && (firstMsgVisibility?.toInt() ?: 0) < 2 -> holder.textView.setBackgroundResource(R.color.chatMessageReward)
-                liveMessage?.systemMsg != null || liveMessage?.msgId != null -> holder.textView.setBackgroundResource(R.color.chatMessageNotice)
+                liveMessage?.isFirst == true && (
+                    firstMsgVisibility?.toInt()
+                        ?: 0
+                    ) < 2 -> holder.textView.setBackgroundResource(R.color.chatMessageFirst)
+                liveMessage?.rewardId != null && (
+                    firstMsgVisibility?.toInt()
+                        ?: 0
+                    ) < 2 -> holder.textView.setBackgroundResource(R.color.chatMessageReward)
+                liveMessage?.systemMsg != null || liveMessage?.msgId != null -> holder.textView.setBackgroundResource(
+                    R.color.chatMessageNotice
+                )
                 wasMentioned && userId != null -> holder.textView.setBackgroundResource(R.color.chatMessageMention)
                 else -> holder.textView.background = null
             }
@@ -302,7 +412,14 @@ class ChatAdapter(
 
     override fun getItemCount(): Int = messages?.size ?: 0
 
-    private fun loadImages(holder: ViewHolder, images: List<Image>, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
+    private fun loadImages(
+        holder: ViewHolder,
+        images: List<Image>,
+        originalMessage: CharSequence,
+        builder: SpannableStringBuilder,
+        userId: String?,
+        fullMsg: String?
+    ) {
         images.forEach {
             when (imageLibrary) {
                 "0" -> loadCoil(holder, it, originalMessage, builder, userId, fullMsg)
@@ -332,7 +449,14 @@ class ChatAdapter(
         }
     }
 
-    private fun loadCoil(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
+    private fun loadCoil(
+        holder: ViewHolder,
+        image: Image,
+        originalMessage: CharSequence,
+        builder: SpannableStringBuilder,
+        userId: String?,
+        fullMsg: String?
+    ) {
         val request = ImageRequest.Builder(fragment.requireContext())
             .data(image.url)
             .target(
@@ -353,7 +477,12 @@ class ChatAdapter(
                         result.setBounds(0, 0, width, height)
                     }
                     try {
-                        builder.setSpan(ImageSpan(result), image.start, image.end, SPAN_EXCLUSIVE_EXCLUSIVE)
+                        builder.setSpan(
+                            ImageSpan(result),
+                            image.start,
+                            image.end,
+                            SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
                         if (animateGifs) {
                             (result as? coil.drawable.ScaleDrawable)?.start()
                         }
@@ -366,13 +495,23 @@ class ChatAdapter(
         fragment.requireContext().imageLoader.enqueue(request)
     }
 
-    private fun loadWebp(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
+    private fun loadWebp(
+        holder: ViewHolder,
+        image: Image,
+        originalMessage: CharSequence,
+        builder: SpannableStringBuilder,
+        userId: String?,
+        fullMsg: String?
+    ) {
         GlideApp.with(fragment)
             .asWebp()
             .load(image.url)
             .diskCacheStrategy(DiskCacheStrategy.DATA)
             .into(object : CustomTarget<WebpDrawable>() {
-                override fun onResourceReady(resource: WebpDrawable, transition: Transition<in WebpDrawable>?) {
+                override fun onResourceReady(
+                    resource: WebpDrawable,
+                    transition: Transition<in WebpDrawable>?
+                ) {
                     resource.apply {
                         val size = calculateEmoteSize(this)
                         if (image.zerowidth && enableZeroWidth) {
@@ -390,14 +529,23 @@ class ChatAdapter(
                                 holder.textView.invalidate()
                             }
 
-                            override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
+                            override fun scheduleDrawable(
+                                who: Drawable,
+                                what: Runnable,
+                                `when`: Long
+                            ) {
                                 holder.textView.postDelayed(what, `when`)
                             }
                         }
                         start()
                     }
                     try {
-                        builder.setSpan(ImageSpan(resource), image.start, image.end, SPAN_EXCLUSIVE_EXCLUSIVE)
+                        builder.setSpan(
+                            ImageSpan(resource),
+                            image.start,
+                            image.end,
+                            SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
                     } catch (e: IndexOutOfBoundsException) {
                     }
                     holder.bind(originalMessage, builder, userId, fullMsg)
@@ -412,13 +560,23 @@ class ChatAdapter(
             })
     }
 
-    private fun loadGif(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
+    private fun loadGif(
+        holder: ViewHolder,
+        image: Image,
+        originalMessage: CharSequence,
+        builder: SpannableStringBuilder,
+        userId: String?,
+        fullMsg: String?
+    ) {
         GlideApp.with(fragment)
             .asGif()
             .load(image.url)
             .diskCacheStrategy(DiskCacheStrategy.DATA)
             .into(object : CustomTarget<GifDrawable>() {
-                override fun onResourceReady(resource: GifDrawable, transition: Transition<in GifDrawable>?) {
+                override fun onResourceReady(
+                    resource: GifDrawable,
+                    transition: Transition<in GifDrawable>?
+                ) {
                     resource.apply {
                         val size = calculateEmoteSize(this)
                         if (image.zerowidth && enableZeroWidth) {
@@ -436,14 +594,23 @@ class ChatAdapter(
                                 holder.textView.invalidate()
                             }
 
-                            override fun scheduleDrawable(who: Drawable, what: Runnable, `when`: Long) {
+                            override fun scheduleDrawable(
+                                who: Drawable,
+                                what: Runnable,
+                                `when`: Long
+                            ) {
                                 holder.textView.postDelayed(what, `when`)
                             }
                         }
                         start()
                     }
                     try {
-                        builder.setSpan(ImageSpan(resource), image.start, image.end, SPAN_EXCLUSIVE_EXCLUSIVE)
+                        builder.setSpan(
+                            ImageSpan(resource),
+                            image.start,
+                            image.end,
+                            SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
                     } catch (e: IndexOutOfBoundsException) {
                     }
                     holder.bind(originalMessage, builder, userId, fullMsg)
@@ -458,12 +625,22 @@ class ChatAdapter(
             })
     }
 
-    private fun loadDrawable(holder: ViewHolder, image: Image, originalMessage: CharSequence, builder: SpannableStringBuilder, userId: String?, fullMsg: String?) {
+    private fun loadDrawable(
+        holder: ViewHolder,
+        image: Image,
+        originalMessage: CharSequence,
+        builder: SpannableStringBuilder,
+        userId: String?,
+        fullMsg: String?
+    ) {
         GlideApp.with(fragment)
             .load(image.url)
             .diskCacheStrategy(DiskCacheStrategy.DATA)
             .into(object : CustomTarget<Drawable>() {
-                override fun onResourceReady(resource: Drawable, transition: Transition<in Drawable>?) {
+                override fun onResourceReady(
+                    resource: Drawable,
+                    transition: Transition<in Drawable>?
+                ) {
                     val width: Int
                     val height: Int
                     if (image.isEmote) {
@@ -480,7 +657,12 @@ class ChatAdapter(
                         resource.setBounds(0, 0, width, height)
                     }
                     try {
-                        builder.setSpan(ImageSpan(resource), image.start, image.end, SPAN_EXCLUSIVE_EXCLUSIVE)
+                        builder.setSpan(
+                            ImageSpan(resource),
+                            image.start,
+                            image.end,
+                            SPAN_EXCLUSIVE_EXCLUSIVE
+                        )
                     } catch (e: IndexOutOfBoundsException) {
                     }
                     holder.bind(originalMessage, builder, userId, fullMsg)
@@ -541,11 +723,12 @@ class ChatAdapter(
         val childCount = recyclerView.childCount
         if (animateGifs) {
             for (i in 0 until childCount) {
-                ((recyclerView.getChildAt(i) as TextView).text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-                    (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
-                        ?: (it.drawable as? GifDrawable)?.stop()
-                        ?: (it.drawable as? WebpDrawable)?.stop()
-                }
+                ((recyclerView.getChildAt(i) as TextView).text as? Spannable)?.getSpans<ImageSpan>()
+                    ?.forEach {
+                        (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
+                            ?: (it.drawable as? GifDrawable)?.stop()
+                            ?: (it.drawable as? WebpDrawable)?.stop()
+                    }
             }
         }
         super.onDetachedFromRecyclerView(recyclerView)
@@ -583,11 +766,23 @@ class ChatAdapter(
 
         val textView = itemView as TextView
 
-        fun bind(originalMessage: CharSequence, formattedMessage: SpannableStringBuilder, userId: String?, fullMsg: String?) {
+        fun bind(
+            originalMessage: CharSequence,
+            formattedMessage: SpannableStringBuilder,
+            userId: String?,
+            fullMsg: String?
+        ) {
             textView.apply {
                 text = formattedMessage
                 movementMethod = LinkMovementMethod.getInstance()
-                setOnClickListener { messageClickListener?.invoke(originalMessage, formattedMessage, userId, fullMsg) }
+                setOnClickListener {
+                    messageClickListener?.invoke(
+                        originalMessage,
+                        formattedMessage,
+                        userId,
+                        fullMsg
+                    )
+                }
             }
         }
     }

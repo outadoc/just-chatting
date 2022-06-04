@@ -27,18 +27,27 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesLocalFollowsChannelRepository(localFollowsChannelDao: LocalFollowsChannelDao, videosDao: VideosDao, bookmarksDao: BookmarksDao): LocalFollowChannelRepository = LocalFollowChannelRepository(localFollowsChannelDao, videosDao, bookmarksDao)
+    fun providesLocalFollowsChannelRepository(
+        localFollowsChannelDao: LocalFollowsChannelDao,
+        videosDao: VideosDao,
+        bookmarksDao: BookmarksDao
+    ): LocalFollowChannelRepository =
+        LocalFollowChannelRepository(localFollowsChannelDao, videosDao, bookmarksDao)
 
     @Singleton
     @Provides
-    fun providesLocalFollowsGameRepository(localFollowsGameDao: LocalFollowsGameDao): LocalFollowGameRepository = LocalFollowGameRepository(localFollowsGameDao)
-    @Singleton
-    @Provides
-    fun providesSortChannelRepository(sortChannelDao: SortChannelDao): SortChannelRepository = SortChannelRepository(sortChannelDao)
+    fun providesLocalFollowsGameRepository(localFollowsGameDao: LocalFollowsGameDao): LocalFollowGameRepository =
+        LocalFollowGameRepository(localFollowsGameDao)
 
     @Singleton
     @Provides
-    fun providesSortGameRepository(sortGameDao: SortGameDao): SortGameRepository = SortGameRepository(sortGameDao)
+    fun providesSortChannelRepository(sortChannelDao: SortChannelDao): SortChannelRepository =
+        SortChannelRepository(sortChannelDao)
+
+    @Singleton
+    @Provides
+    fun providesSortGameRepository(sortGameDao: SortGameDao): SortGameRepository =
+        SortGameRepository(sortGameDao)
 
     @Singleton
     @Provides
@@ -58,11 +67,13 @@ class DatabaseModule {
 
     @Singleton
     @Provides
-    fun providesLocalFollowsChannelDao(database: AppDatabase): LocalFollowsChannelDao = database.localFollowsChannel()
+    fun providesLocalFollowsChannelDao(database: AppDatabase): LocalFollowsChannelDao =
+        database.localFollowsChannel()
 
     @Singleton
     @Provides
-    fun providesLocalFollowsGameDao(database: AppDatabase): LocalFollowsGameDao = database.localFollowsGame()
+    fun providesLocalFollowsGameDao(database: AppDatabase): LocalFollowsGameDao =
+        database.localFollowsGame()
 
     @Singleton
     @Provides

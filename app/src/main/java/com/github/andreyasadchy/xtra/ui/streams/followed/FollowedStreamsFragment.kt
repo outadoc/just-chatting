@@ -21,7 +21,10 @@ class FollowedStreamsFragment : BaseStreamsFragment<FollowedStreamsViewModel>() 
             helixToken = User.get(requireContext()).helixToken,
             gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
             gqlToken = User.get(requireContext()).gqlToken,
-            apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_FOLLOWED_STREAMS, ""), TwitchApiHelper.followedStreamsApiDefaults),
+            apiPref = TwitchApiHelper.listFromPrefs(
+                requireContext().prefs().getString(C.API_PREF_FOLLOWED_STREAMS, ""),
+                TwitchApiHelper.followedStreamsApiDefaults
+            ),
             thumbnailsEnabled = !compactStreams
         )
     }

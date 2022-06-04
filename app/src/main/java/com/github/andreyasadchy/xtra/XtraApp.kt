@@ -25,14 +25,15 @@ class XtraApp : Application(), HasAndroidInjector, ImageLoaderFactory {
         lateinit var INSTANCE: Application
     }
 
-    @Inject lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+    @Inject
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
     private val appLifecycleObserver = AppLifecycleObserver()
 
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
         AppInjector.init(this)
-        DynamicColors.applyToActivitiesIfAvailable(this);
+        DynamicColors.applyToActivitiesIfAvailable(this)
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(appLifecycleObserver)
     }

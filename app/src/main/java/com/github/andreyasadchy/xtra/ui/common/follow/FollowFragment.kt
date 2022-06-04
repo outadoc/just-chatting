@@ -9,7 +9,14 @@ import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.visible
 
 interface FollowFragment {
-    fun initializeFollow(fragment: Fragment, viewModel: FollowViewModel, followButton: ImageButton, user: User, helixClientId: String? = null, gqlClientId: String? = null) {
+    fun initializeFollow(
+        fragment: Fragment,
+        viewModel: FollowViewModel,
+        followButton: ImageButton,
+        user: User,
+        helixClientId: String? = null,
+        gqlClientId: String? = null
+    ) {
         val context = fragment.requireContext()
         with(viewModel) {
             setUser(user, helixClientId, gqlClientId)
@@ -18,7 +25,12 @@ interface FollowFragment {
             val channelName = userName
             follow.observe(fragment.viewLifecycleOwner) { following ->
                 if (initialized) {
-                    context.shortToast(context.getString(if (following) R.string.now_following else R.string.unfollowed, channelName))
+                    context.shortToast(
+                        context.getString(
+                            if (following) R.string.now_following else R.string.unfollowed,
+                            channelName
+                        )
+                    )
                 } else {
                     initialized = true
                 }

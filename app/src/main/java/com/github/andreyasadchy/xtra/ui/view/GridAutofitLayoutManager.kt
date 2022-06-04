@@ -17,7 +17,12 @@ class GridAutofitLayoutManager : GridLayoutManager {
         setColumnWidth(columnWidth)
     }
 
-    constructor(context: Context, columnWidth: Int, orientation: Int, reverseLayout: Boolean) : super(context, 1, orientation, reverseLayout) {
+    constructor(
+        context: Context,
+        columnWidth: Int,
+        orientation: Int,
+        reverseLayout: Boolean
+    ) : super(context, 1, orientation, reverseLayout) {
         setColumnWidth(columnWidth)
     }
 

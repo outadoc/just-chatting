@@ -19,13 +19,21 @@ import com.github.andreyasadchy.xtra.util.LifecycleListener
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.prefs
 
-class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDialog.OnButtonClickListener {
+class ChatFragment :
+    BaseNetworkFragment(),
+    LifecycleListener,
+    MessageClickedDialog.OnButtonClickListener {
 
     private val viewModel by viewModels<ChatViewModel> { viewModelFactory }
     private lateinit var chatView: ChatView
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_chat, container, false).also { chatView = it as ChatView }
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_chat, container, false)
+            .also { chatView = it as ChatView }
     }
 
     override fun initialize() {
@@ -46,7 +54,21 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         val recentMsgLimit = requireContext().prefs().getInt(C.CHAT_RECENT_LIMIT, 100)
         val isLive = args.getBoolean(KEY_IS_LIVE)
 
-        viewModel.startLive(useSSl, usePubSub, user, helixClientId, gqlClientId, channelId, channelLogin, channelName, showUserNotice, showClearMsg, showClearChat, enableRecentMsg, recentMsgLimit.toString())
+        viewModel.startLive(
+            useSSl,
+            usePubSub,
+            user,
+            helixClientId,
+            gqlClientId,
+            channelId,
+            channelLogin,
+            channelName,
+            showUserNotice,
+            showClearMsg,
+            showClearChat,
+            enableRecentMsg,
+            recentMsgLimit.toString()
+        )
         chatView.init(this)
         chatView.setCallback(viewModel)
         if (userIsLoggedIn) {
@@ -99,7 +121,12 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         chatView.setMessage(message)
     }
 
-    override fun onViewProfileClicked(id: String?, login: String?, name: String?, channelLogo: String?) {
+    override fun onViewProfileClicked(
+        id: String?,
+        login: String?,
+        name: String?,
+        channelLogo: String?
+    ) {
         (requireActivity() as MainActivity).viewChannel(id, login, name, channelLogo)
     }
 
@@ -124,27 +151,29 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         private const val KEY_START_TIME_EMPTY = "startTime_empty"
         private const val KEY_START_TIME = "startTime"
 
-        fun newInstance(channelId: String?, channelLogin: String?, channelName: String?) = ChatFragment().apply {
-            arguments = Bundle().apply {
-                putBoolean(KEY_IS_LIVE, true)
-                putString(KEY_CHANNEL_ID, channelId)
-                putString(KEY_CHANNEL_LOGIN, channelLogin)
-                putString(KEY_CHANNEL_NAME, channelName)
-            }
-        }
-
-        fun newInstance(channelId: String?, videoId: String?, startTime: Double?) = ChatFragment().apply {
-            arguments = Bundle().apply {
-                putBoolean(KEY_IS_LIVE, false)
-                putString(KEY_CHANNEL_ID, channelId)
-                putString(KEY_VIDEO_ID, videoId)
-                if (startTime != null) {
-                    putBoolean(KEY_START_TIME_EMPTY, false)
-                    putDouble(KEY_START_TIME, startTime)
-                } else {
-                    putBoolean(KEY_START_TIME_EMPTY, true)
+        fun newInstance(channelId: String?, channelLogin: String?, channelName: String?) =
+            ChatFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(KEY_IS_LIVE, true)
+                    putString(KEY_CHANNEL_ID, channelId)
+                    putString(KEY_CHANNEL_LOGIN, channelLogin)
+                    putString(KEY_CHANNEL_NAME, channelName)
                 }
             }
-        }
+
+        fun newInstance(channelId: String?, videoId: String?, startTime: Double?) =
+            ChatFragment().apply {
+                arguments = Bundle().apply {
+                    putBoolean(KEY_IS_LIVE, false)
+                    putString(KEY_CHANNEL_ID, channelId)
+                    putString(KEY_VIDEO_ID, videoId)
+                    if (startTime != null) {
+                        putBoolean(KEY_START_TIME_EMPTY, false)
+                        putDouble(KEY_START_TIME, startTime)
+                    } else {
+                        putBoolean(KEY_START_TIME_EMPTY, true)
+                    }
+                }
+            }
     }
 }

@@ -116,7 +116,13 @@ class FollowedStreamsDataSource(
     private suspend fun gqlQueryInitial(params: LoadInitialParams): List<Stream> {
         api = C.GQL_QUERY
         val get1 = apolloClientWithToken(XtraModule(), gqlClientId, gqlToken)
-            .query(FollowedStreamsQuery(id = Optional.Present(userId), first = Optional.Present(100), after = Optional.Present(offset))).execute().data?.user?.followedLiveUsers
+            .query(
+                FollowedStreamsQuery(
+                    id = Optional.Present(userId),
+                    first = Optional.Present(100),
+                    after = Optional.Present(offset)
+                )
+            ).execute().data?.user?.followedLiveUsers
         val get = get1?.edges
         val list = mutableListOf<Stream>()
         if (get != null) {
@@ -192,7 +198,13 @@ class FollowedStreamsDataSource(
     private suspend fun gqlQueryRange(params: LoadRangeParams): List<Stream> {
         api = C.GQL_QUERY
         val get1 = apolloClientWithToken(XtraModule(), gqlClientId, gqlToken)
-            .query(FollowedStreamsQuery(id = Optional.Present(userId), first = Optional.Present(100), after = Optional.Present(offset))).execute().data?.user?.followedLiveUsers
+            .query(
+                FollowedStreamsQuery(
+                    id = Optional.Present(userId),
+                    first = Optional.Present(100),
+                    after = Optional.Present(offset)
+                )
+            ).execute().data?.user?.followedLiveUsers
         val get = get1?.edges
         val list = mutableListOf<Stream>()
         if (get != null && nextPage && offset != null && offset != "") {
@@ -231,16 +243,27 @@ class FollowedStreamsDataSource(
     private suspend fun gqlQueryLocal(ids: List<String>): List<Stream> {
         val streams = mutableListOf<Stream>()
         for (localIds in ids.chunked(100)) {
-            val get = apolloClient(XtraModule(), gqlClientId).query(StreamsQuery(Optional.Present(localIds))).execute().data?.users
+            val get = apolloClient(
+                XtraModule(),
+                gqlClientId
+            ).query(StreamsQuery(Optional.Present(localIds))).execute().data?.users
             if (get != null) {
                 for (i in get) {
                     if (i?.stream?.viewersCount != null) {
                         streams.add(
                             Stream(
-                                id = i.stream.id, user_id = i.id, user_login = i.login, user_name = i.displayName,
-                                game_id = i.stream.game?.id, game_name = i.stream.game?.displayName, type = i.stream.type,
-                                title = i.stream.title, viewer_count = i.stream.viewersCount, started_at = i.stream.createdAt,
-                                thumbnail_url = i.stream.previewImageURL, profileImageURL = i.profileImageURL
+                                id = i.stream.id,
+                                user_id = i.id,
+                                user_login = i.login,
+                                user_name = i.displayName,
+                                game_id = i.stream.game?.id,
+                                game_name = i.stream.game?.displayName,
+                                type = i.stream.type,
+                                title = i.stream.title,
+                                viewer_count = i.stream.viewersCount,
+                                started_at = i.stream.createdAt,
+                                thumbnail_url = i.stream.previewImageURL,
+                                profileImageURL = i.profileImageURL
                             )
                         )
                     }
@@ -293,6 +316,17 @@ class FollowedStreamsDataSource(
     ) : BaseDataSourceFactory<Int, Stream, FollowedStreamsDataSource>() {
 
         override fun create(): DataSource<Int, Stream> =
-            FollowedStreamsDataSource(localFollowsChannel, userId, helixClientId, helixToken, helixApi, gqlClientId, gqlToken, gqlApi, apiPref, coroutineScope).also(sourceLiveData::postValue)
+            FollowedStreamsDataSource(
+                localFollowsChannel,
+                userId,
+                helixClientId,
+                helixToken,
+                helixApi,
+                gqlClientId,
+                gqlToken,
+                gqlApi,
+                apiPref,
+                coroutineScope
+            ).also(sourceLiveData::postValue)
     }
 }

@@ -51,7 +51,15 @@ class FollowedChannelsDataSource(
         loadInitial(params, callback) {
             val list = mutableListOf<Follow>()
             for (i in localFollowsChannel.loadFollows()) {
-                list.add(Follow(to_id = i.user_id, to_login = i.user_login, to_name = i.user_name, profileImageURL = i.channelLogo, followLocal = true))
+                list.add(
+                    Follow(
+                        to_id = i.user_id,
+                        to_login = i.user_login,
+                        to_name = i.user_name,
+                        profileImageURL = i.channelLogo,
+                        followLocal = true
+                    )
+                )
             }
             val remote = try {
                 when (apiPref.elementAt(0)?.second) {
@@ -102,15 +110,28 @@ class FollowedChannelsDataSource(
             }
             if (allIds.isNotEmpty()) {
                 for (ids in allIds.chunked(100)) {
-                    val get = apolloClient(XtraModule(), gqlClientId).query(UserLastBroadcastQuery(Optional.Present(ids))).execute().data?.users
+                    val get = apolloClient(XtraModule(), gqlClientId).query(
+                        UserLastBroadcastQuery(Optional.Present(ids))
+                    ).execute().data?.users
                     if (get != null) {
                         for (user in get) {
                             val item = list.find { it.to_id == user?.id }
                             if (item != null) {
                                 if (item.followLocal) {
-                                    if (item.profileImageURL == null || item.profileImageURL?.contains("image_manager_disk_cache") == true) {
+                                    if (item.profileImageURL == null || item.profileImageURL?.contains(
+                                            "image_manager_disk_cache"
+                                        ) == true
+                                    ) {
                                         val appContext = XtraApp.INSTANCE.applicationContext
-                                        item.to_id?.let { id -> user?.profileImageURL?.let { profileImageURL -> updateLocalUser(appContext, id, profileImageURL) } }
+                                        item.to_id?.let { id ->
+                                            user?.profileImageURL?.let { profileImageURL ->
+                                                updateLocalUser(
+                                                    appContext,
+                                                    id,
+                                                    profileImageURL
+                                                )
+                                            }
+                                        }
                                     }
                                 } else {
                                     if (item.profileImageURL == null) {
@@ -152,7 +173,13 @@ class FollowedChannelsDataSource(
     private suspend fun gqlQueryInitial(params: LoadInitialParams): List<Follow> {
         api = C.GQL_QUERY
         val get1 = apolloClientWithToken(XtraModule(), gqlClientId, gqlToken)
-            .query(FollowedUsersQuery(id = Optional.Present(userId), first = Optional.Present(100), after = Optional.Present(offset))).execute().data?.user?.follows
+            .query(
+                FollowedUsersQuery(
+                    id = Optional.Present(userId),
+                    first = Optional.Present(100),
+                    after = Optional.Present(offset)
+                )
+            ).execute().data?.user?.follows
         val get = get1?.edges
         val list = mutableListOf<Follow>()
         if (get != null) {
@@ -200,15 +227,28 @@ class FollowedChannelsDataSource(
                 }
                 if (allIds.isNotEmpty()) {
                     for (ids in allIds.chunked(100)) {
-                        val get = apolloClient(XtraModule(), gqlClientId).query(UserLastBroadcastQuery(Optional.Present(ids))).execute().data?.users
+                        val get = apolloClient(XtraModule(), gqlClientId).query(
+                            UserLastBroadcastQuery(Optional.Present(ids))
+                        ).execute().data?.users
                         if (get != null) {
                             for (user in get) {
                                 val item = list.find { it.to_id == user?.id }
                                 if (item != null) {
                                     if (item.followLocal) {
-                                        if (item.profileImageURL == null || item.profileImageURL?.contains("image_manager_disk_cache") == true) {
+                                        if (item.profileImageURL == null || item.profileImageURL?.contains(
+                                                "image_manager_disk_cache"
+                                            ) == true
+                                        ) {
                                             val appContext = XtraApp.INSTANCE.applicationContext
-                                            item.to_id?.let { id -> user?.profileImageURL?.let { profileImageURL -> updateLocalUser(appContext, id, profileImageURL) } }
+                                            item.to_id?.let { id ->
+                                                user?.profileImageURL?.let { profileImageURL ->
+                                                    updateLocalUser(
+                                                        appContext,
+                                                        id,
+                                                        profileImageURL
+                                                    )
+                                                }
+                                            }
                                         }
                                     } else {
                                         if (item.profileImageURL == null) {
@@ -236,7 +276,13 @@ class FollowedChannelsDataSource(
 
     private suspend fun gqlQueryRange(params: LoadRangeParams): List<Follow> {
         val get1 = apolloClientWithToken(XtraModule(), gqlClientId, gqlToken)
-            .query(FollowedUsersQuery(id = Optional.Present(userId), first = Optional.Present(100), after = Optional.Present(offset))).execute().data?.user?.follows
+            .query(
+                FollowedUsersQuery(
+                    id = Optional.Present(userId),
+                    first = Optional.Present(100),
+                    after = Optional.Present(offset)
+                )
+            ).execute().data?.user?.follows
         val get = get1?.edges
         val list = mutableListOf<Follow>()
         if (get != null && nextPage && offset != null && offset != "") {
@@ -277,13 +323,17 @@ class FollowedChannelsDataSource(
                             override fun onLoadCleared(placeholder: Drawable?) {
                             }
 
-                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                            override fun onResourceReady(
+                                resource: Bitmap,
+                                transition: Transition<in Bitmap>?
+                            ) {
                                 DownloadUtils.savePng(context, "profile_pics", userId, resource)
                             }
                         })
                 } catch (e: Exception) {
                 }
-                val downloadedLogo = File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "$userId.png").absolutePath
+                val downloadedLogo =
+                    File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "$userId.png").absolutePath
                 localFollowsChannel.getFollowById(userId)?.let {
                     localFollowsChannel.updateFollow(
                         it.apply {
@@ -312,6 +362,19 @@ class FollowedChannelsDataSource(
     ) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
 
         override fun create(): DataSource<Int, Follow> =
-            FollowedChannelsDataSource(localFollowsChannel, userId, helixClientId, helixToken, helixApi, gqlClientId, gqlToken, gqlApi, apiPref, sort, order, coroutineScope).also(sourceLiveData::postValue)
+            FollowedChannelsDataSource(
+                localFollowsChannel,
+                userId,
+                helixClientId,
+                helixToken,
+                helixApi,
+                gqlClientId,
+                gqlToken,
+                gqlApi,
+                apiPref,
+                sort,
+                order,
+                coroutineScope
+            ).also(sourceLiveData::postValue)
     }
 }

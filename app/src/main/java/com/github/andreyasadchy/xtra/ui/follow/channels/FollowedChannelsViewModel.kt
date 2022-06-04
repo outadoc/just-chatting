@@ -30,14 +30,30 @@ class FollowedChannelsViewModel @Inject constructor(
         get() = _sortText
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Follow>> = Transformations.map(filter) {
-        repository.loadFollowedChannels(it.user.id, it.helixClientId, it.user.helixToken, it.gqlClientId, it.user.gqlToken, it.apiPref, it.sort, it.order, viewModelScope)
+        repository.loadFollowedChannels(
+            it.user.id,
+            it.helixClientId,
+            it.user.helixToken,
+            it.gqlClientId,
+            it.user.gqlToken,
+            it.apiPref,
+            it.sort,
+            it.order,
+            viewModelScope
+        )
     }
     val sort: Sort
         get() = filter.value!!.sort
     val order: Order
         get() = filter.value!!.order
 
-    fun setUser(context: Context, user: User, helixClientId: String?, gqlClientId: String?, apiPref: ArrayList<Pair<Long?, String?>?>) {
+    fun setUser(
+        context: Context,
+        user: User,
+        helixClientId: String?,
+        gqlClientId: String?,
+        apiPref: ArrayList<Pair<Long?, String?>?>
+    ) {
         if (filter.value == null) {
             val sortValues = runBlocking { sortChannelRepository.getById("followed_channels") }
             filter.value = Filter(

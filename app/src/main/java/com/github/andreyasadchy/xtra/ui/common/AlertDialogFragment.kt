@@ -59,9 +59,26 @@ class AlertDialogFragment : DialogFragment() {
         private const val KEY_NEUTRAL = "neutral"
         private const val KEY_CANCELABLE = "cancelable"
 
-        fun show(fragmentManager: FragmentManager, requestCode: Int = 0, title: String? = null, message: String? = null, positiveButton: String, negativeButton: String? = null, neutralButton: String? = null, cancelable: Boolean = true) {
+        fun show(
+            fragmentManager: FragmentManager,
+            requestCode: Int = 0,
+            title: String? = null,
+            message: String? = null,
+            positiveButton: String,
+            negativeButton: String? = null,
+            neutralButton: String? = null,
+            cancelable: Boolean = true
+        ) {
             AlertDialogFragment().apply {
-                arguments = bundleOf(KEY_REQUEST_CODE to requestCode, KEY_TITLE to title, KEY_MESSAGE to message, KEY_POSITIVE to positiveButton, KEY_NEGATIVE to negativeButton, KEY_NEUTRAL to neutralButton, KEY_CANCELABLE to cancelable)
+                arguments = bundleOf(
+                    KEY_REQUEST_CODE to requestCode,
+                    KEY_TITLE to title,
+                    KEY_MESSAGE to message,
+                    KEY_POSITIVE to positiveButton,
+                    KEY_NEGATIVE to negativeButton,
+                    KEY_NEUTRAL to neutralButton,
+                    KEY_CANCELABLE to cancelable
+                )
                 show(fragmentManager, null)
             }
         }

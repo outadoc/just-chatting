@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             app:tabMaxWidth="0dp"
             app:tabMode="fixed"
-            app:tabGravity="fill"/>
+            app:tabGravity="fill" />
 
     </androidx.viewpager.widget.ViewPager>
 

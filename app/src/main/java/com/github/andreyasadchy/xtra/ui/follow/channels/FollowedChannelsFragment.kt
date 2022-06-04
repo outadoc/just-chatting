@@ -21,7 +21,10 @@ import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 import kotlinx.android.synthetic.main.fragment_followed_channels.sortBar
 import kotlinx.android.synthetic.main.sort_bar.sortText
 
-class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewModel, BasePagedListAdapter<Follow>>(), FollowedChannelsSortDialog.OnFilter, Scrollable {
+class FollowedChannelsFragment :
+    PagedListFragment<Follow, FollowedChannelsViewModel, BasePagedListAdapter<Follow>>(),
+    FollowedChannelsSortDialog.OnFilter,
+    Scrollable {
 
     override val viewModel by viewModels<FollowedChannelsViewModel> { viewModelFactory }
     override val adapter: BasePagedListAdapter<Follow> by lazy {
@@ -29,7 +32,11 @@ class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewM
         FollowedChannelsAdapter(this, activity)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_followed_channels, container, false)
     }
 
@@ -43,12 +50,25 @@ class FollowedChannelsFragment : PagedListFragment<Follow, FollowedChannelsViewM
             user = User.get(requireContext()),
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
             gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
-            apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_FOLLOWED_CHANNELS, ""), TwitchApiHelper.followedChannelsApiDefaults),
+            apiPref = TwitchApiHelper.listFromPrefs(
+                requireContext().prefs().getString(C.API_PREF_FOLLOWED_CHANNELS, ""),
+                TwitchApiHelper.followedChannelsApiDefaults
+            ),
         )
-        sortBar.setOnClickListener { FollowedChannelsSortDialog.newInstance(viewModel.sort, viewModel.order).show(childFragmentManager, null) }
+        sortBar.setOnClickListener {
+            FollowedChannelsSortDialog.newInstance(
+                viewModel.sort,
+                viewModel.order
+            ).show(childFragmentManager, null)
+        }
     }
 
-    override fun onChange(sort: Sort, sortText: CharSequence, order: Order, orderText: CharSequence) {
+    override fun onChange(
+        sort: Sort,
+        sortText: CharSequence,
+        order: Order,
+        orderText: CharSequence
+    ) {
         adapter.submitList(null)
         viewModel.filter(
             sort = sort,

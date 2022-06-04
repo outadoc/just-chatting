@@ -30,7 +30,11 @@ class EmotesFragment : Fragment() {
         listener = (requireParentFragment() as ChatFragment)::appendEmote
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.fragment_emotes, container, false)
     }
 
@@ -42,7 +46,10 @@ class EmotesFragment : Fragment() {
         with(view as RecyclerView) {
             itemAnimator = null
             adapter = emotesAdapter
-            layoutManager = GridAutofitLayoutManager(context, context.convertDpToPixels(50f)).also { this@EmotesFragment.layoutManager = it }
+            layoutManager = GridAutofitLayoutManager(
+                context,
+                context.convertDpToPixels(50f)
+            ).also { this@EmotesFragment.layoutManager = it }
         }
         val observer: Observer<List<Emote>> = Observer(emotesAdapter::submitList)
         when (args.getInt(KEY_POSITION)) {
@@ -60,6 +67,7 @@ class EmotesFragment : Fragment() {
     companion object {
         private const val KEY_POSITION = "position"
 
-        fun newInstance(position: Int) = EmotesFragment().apply { arguments = bundleOf(KEY_POSITION to position) }
+        fun newInstance(position: Int) =
+            EmotesFragment().apply { arguments = bundleOf(KEY_POSITION to position) }
     }
 }

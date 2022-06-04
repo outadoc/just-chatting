@@ -81,10 +81,13 @@ class LoginActivity : AppCompatActivity(), Injectable {
         webViewContainer.visible()
         val apiSetting = prefs().getString(C.API_LOGIN, "0")?.toInt() ?: 0
         val helixRedirect = prefs().getString(C.HELIX_REDIRECT, "https://localhost")
-        val helixScopes = "chat:read chat:edit channel:moderate channel_editor whispers:edit user:read:follows"
-        val helixAuthUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=$helixClientId&redirect_uri=$helixRedirect&scope=$helixScopes"
+        val helixScopes =
+            "chat:read chat:edit channel:moderate channel_editor whispers:edit user:read:follows"
+        val helixAuthUrl =
+            "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=$helixClientId&redirect_uri=$helixRedirect&scope=$helixScopes"
         val gqlRedirect = prefs().getString(C.GQL_REDIRECT, "https://www.twitch.tv/")
-        val gqlAuthUrl = "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=$gqlClientId&redirect_uri=$gqlRedirect&scope="
+        val gqlAuthUrl =
+            "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=$gqlClientId&redirect_uri=$gqlRedirect&scope="
         havingTrouble.setOnClickListener {
             AlertDialog.Builder(this)
                 .setMessage(getString(R.string.login_problem_solution))
@@ -99,7 +102,10 @@ class LoginActivity : AppCompatActivity(), Injectable {
                 }
                 .setNeutralButton(R.string.to_enter_url) { _, _ ->
                     val editText = EditText(this).apply {
-                        layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
+                        layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
                             val margin = convertDpToPixels(10f)
                             setMargins(margin, 0, margin, 0)
                         }
@@ -117,7 +123,10 @@ class LoginActivity : AppCompatActivity(), Injectable {
                         }
                         .setNegativeButton(android.R.string.cancel, null)
                         .show()
-                    dialog.window?.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    dialog.window?.setLayout(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
                 }
                 .setNegativeButton(android.R.string.cancel, null)
                 .show()
@@ -129,7 +138,10 @@ class LoginActivity : AppCompatActivity(), Injectable {
                     WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_ON)
                 }
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
-                    WebSettingsCompat.setForceDarkStrategy(this.settings, WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY)
+                    WebSettingsCompat.setForceDarkStrategy(
+                        this.settings,
+                        WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY
+                    )
                 }
             }
 
@@ -141,7 +153,12 @@ class LoginActivity : AppCompatActivity(), Injectable {
                     return false
                 }
 
-                override fun onReceivedError(view: WebView, errorCode: Int, description: String, failingUrl: String) {
+                override fun onReceivedError(
+                    view: WebView,
+                    errorCode: Int,
+                    description: String,
+                    failingUrl: String
+                ) {
                     val errorMessage = if (errorCode == -11) {
                         getString(R.string.browser_workaround)
                     } else {
@@ -175,14 +192,18 @@ class LoginActivity : AppCompatActivity(), Injectable {
             if (apiSetting == 0 && tokens == 0 || apiSetting == 2) {
                 lifecycleScope.launch {
                     try {
-                        val response = repository.validate(TwitchApiHelper.addTokenPrefixHelix(token))
+                        val response =
+                            repository.validate(TwitchApiHelper.addTokenPrefixHelix(token))
                         if (response != null) {
                             userId = response.userId
                             userLogin = response.login
                             helixToken = token
                             if (apiSetting == 0 && gqlToken.isNotBlank() || apiSetting > 0) {
                                 TwitchApiHelper.checkedValidation = true
-                                User.set(this@LoginActivity, LoggedIn(userId, userLogin, helixToken, gqlToken))
+                                User.set(
+                                    this@LoginActivity,
+                                    LoggedIn(userId, userLogin, helixToken, gqlToken)
+                                )
                                 setResult(RESULT_OK)
                                 finish()
                             }
@@ -203,7 +224,10 @@ class LoginActivity : AppCompatActivity(), Injectable {
                             gqlToken = token
                             if (apiSetting == 0 && helixToken.isNotBlank() || apiSetting > 0) {
                                 TwitchApiHelper.checkedValidation = true
-                                User.set(this@LoginActivity, LoggedIn(userId, userLogin, helixToken, gqlToken))
+                                User.set(
+                                    this@LoginActivity,
+                                    LoggedIn(userId, userLogin, helixToken, gqlToken)
+                                )
                                 setResult(RESULT_OK)
                                 finish()
                             }

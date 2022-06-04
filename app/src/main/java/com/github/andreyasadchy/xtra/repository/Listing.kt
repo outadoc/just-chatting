@@ -18,7 +18,10 @@ class Listing<T> internal constructor(
 
     companion object {
 
-        fun <ListValue, DS> create(factory: BaseDataSourceFactory<*, ListValue, DS>, config: PagedList.Config): Listing<ListValue> where DS : DataSource<*, ListValue>, DS : PagingDataSource {
+        fun <ListValue, DS> create(
+            factory: BaseDataSourceFactory<*, ListValue, DS>,
+            config: PagedList.Config
+        ): Listing<ListValue> where DS : DataSource<*, ListValue>, DS : PagingDataSource {
             val pagedList = LivePagedListBuilder(factory, config).build()
             val loadingState = factory.sourceLiveData.switchMap { it.loadingState }
             val pagingState = factory.sourceLiveData.switchMap { it.pagingState }

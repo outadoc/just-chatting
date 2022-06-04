@@ -130,7 +130,7 @@
         android:id="@+id/copyClip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/copy_clip"/>
+        android:text="@string/copy_clip" />
 
     <Button
         android:id="@+id/copyFullMsg"

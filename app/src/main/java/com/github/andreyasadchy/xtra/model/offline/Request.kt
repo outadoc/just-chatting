@@ -10,7 +10,14 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity(
     tableName = "requests",
-    foreignKeys = [ForeignKey(entity = OfflineVideo::class, parentColumns = arrayOf("id"), childColumns = arrayOf("offline_video_id"), onDelete = ForeignKey.CASCADE)]
+    foreignKeys = [
+        ForeignKey(
+            entity = OfflineVideo::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("offline_video_id"),
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class Request(
     @PrimaryKey

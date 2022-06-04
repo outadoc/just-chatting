@@ -55,8 +55,10 @@ object TwitchApiHelper {
         val reg6 = """\d\dx\d\d""".toRegex()
         if (type == "clip") return if (reg1.containsMatchIn(url)) reg1.replace(url, "") else url
         return when {
-            url.contains("%{width}", true) -> url.replace("%{width}", width).replace("%{height}", height)
-            url.contains("{width}", true) -> url.replace("{width}", width).replace("{height}", height)
+            url.contains("%{width}", true) -> url.replace("%{width}", width)
+                .replace("%{height}", height)
+            url.contains("{width}", true) -> url.replace("{width}", width)
+                .replace("{height}", height)
             reg2.containsMatchIn(url) -> reg2.replace(url, "${width}x$height")
             reg3.containsMatchIn(url) -> reg3.replace(url, "${width}x$height")
             reg4.containsMatchIn(url) -> reg4.replace(url, "${width}x$height")
@@ -154,7 +156,10 @@ object TwitchApiHelper {
             SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault()).parse(date)?.time
         } catch (e: ParseException) {
             try {
-                SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault()).parse(date)?.time
+                SimpleDateFormat(
+                    "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'",
+                    Locale.getDefault()
+                ).parse(date)?.time
             } catch (e: ParseException) {
                 null
             }
@@ -178,16 +183,83 @@ object TwitchApiHelper {
         return DateUtils.formatDateTime(context, date, format)
     }
 
-    fun startChat(useSSl: Boolean, loggedIn: Boolean, channelName: String, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, usePubSub: Boolean, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener, callbackReward: OnRewardReceivedListener): LiveChatThread {
-        return LiveChatThread(useSSl, loggedIn, channelName, MessageListenerImpl(newMessageListener, UserStateListener, RoomStateListener, CommandListener, callbackReward, showUserNotice, showClearMsg, showClearChat, usePubSub)).apply { start() }
+    fun startChat(
+        useSSl: Boolean,
+        loggedIn: Boolean,
+        channelName: String,
+        showUserNotice: Boolean,
+        showClearMsg: Boolean,
+        showClearChat: Boolean,
+        usePubSub: Boolean,
+        newMessageListener: OnChatMessageReceivedListener,
+        UserStateListener: OnUserStateReceivedListener,
+        RoomStateListener: OnRoomStateReceivedListener,
+        CommandListener: OnCommandReceivedListener,
+        callbackReward: OnRewardReceivedListener
+    ): LiveChatThread {
+        return LiveChatThread(
+            useSSl,
+            loggedIn,
+            channelName,
+            MessageListenerImpl(
+                newMessageListener,
+                UserStateListener,
+                RoomStateListener,
+                CommandListener,
+                callbackReward,
+                showUserNotice,
+                showClearMsg,
+                showClearChat,
+                usePubSub
+            )
+        ).apply { start() }
     }
 
-    fun startLoggedInChat(useSSl: Boolean, userName: String?, userToken: String?, channelName: String, showUserNotice: Boolean, showClearMsg: Boolean, showClearChat: Boolean, usePubSub: Boolean, newMessageListener: OnChatMessageReceivedListener, UserStateListener: OnUserStateReceivedListener, RoomStateListener: OnRoomStateReceivedListener, CommandListener: OnCommandReceivedListener, callbackReward: OnRewardReceivedListener): LoggedInChatThread {
-        return LoggedInChatThread(useSSl, userName, userToken, channelName, MessageListenerImpl(newMessageListener, UserStateListener, RoomStateListener, CommandListener, callbackReward, showUserNotice, showClearMsg, showClearChat, usePubSub)).apply { start() }
+    fun startLoggedInChat(
+        useSSl: Boolean,
+        userName: String?,
+        userToken: String?,
+        channelName: String,
+        showUserNotice: Boolean,
+        showClearMsg: Boolean,
+        showClearChat: Boolean,
+        usePubSub: Boolean,
+        newMessageListener: OnChatMessageReceivedListener,
+        UserStateListener: OnUserStateReceivedListener,
+        RoomStateListener: OnRoomStateReceivedListener,
+        CommandListener: OnCommandReceivedListener,
+        callbackReward: OnRewardReceivedListener
+    ): LoggedInChatThread {
+        return LoggedInChatThread(
+            useSSl,
+            userName,
+            userToken,
+            channelName,
+            MessageListenerImpl(
+                newMessageListener,
+                UserStateListener,
+                RoomStateListener,
+                CommandListener,
+                callbackReward,
+                showUserNotice,
+                showClearMsg,
+                showClearChat,
+                usePubSub
+            )
+        ).apply { start() }
     }
 
-    fun startPubSub(channelId: String, coroutineScope: CoroutineScope, newMessageListener: OnChatMessageReceivedListener, callbackReward: OnRewardReceivedListener): PubSubWebSocket {
-        return PubSubWebSocket(channelId, coroutineScope, PubSubListenerImpl(newMessageListener, callbackReward)).apply { connect() }
+    fun startPubSub(
+        channelId: String,
+        coroutineScope: CoroutineScope,
+        newMessageListener: OnChatMessageReceivedListener,
+        callbackReward: OnRewardReceivedListener
+    ): PubSubWebSocket {
+        return PubSubWebSocket(
+            channelId,
+            coroutineScope,
+            PubSubListenerImpl(newMessageListener, callbackReward)
+        ).apply { connect() }
     }
 
     fun addTokenPrefixHelix(token: String) = "Bearer $token"
@@ -231,21 +303,37 @@ object TwitchApiHelper {
         return if (hasDecimal) "${truncated / 10.0}$suffix" else "${truncated / 10}$suffix"
     }
 
-    val gamesApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
-    val streamsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
-    val gameStreamsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
-    val gameVideosApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
-    val gameClipsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.HELIX), Pair(2, C.GQL))
-    val channelVideosApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
-    val channelClipsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.HELIX), Pair(2, C.GQL))
-    val searchChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.HELIX), Pair(1, C.GQL))
-    val searchGamesApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.HELIX))
-    val followedStreamsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.HELIX), Pair(2, C.GQL))
-    val followedVideosApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL))
-    val followedChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
-    val followedGamesApiDefaults: ArrayList<Pair<Long?, String?>?> = arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY))
+    val gamesApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
+    val streamsApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
+    val gameStreamsApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
+    val gameVideosApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+    val gameClipsApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.HELIX), Pair(2, C.GQL))
+    val channelVideosApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+    val channelClipsApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.HELIX), Pair(2, C.GQL))
+    val searchChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.HELIX), Pair(1, C.GQL))
+    val searchGamesApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL), Pair(1, C.HELIX))
+    val followedStreamsApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.HELIX), Pair(2, C.GQL))
+    val followedVideosApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL))
+    val followedChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+    val followedGamesApiDefaults: ArrayList<Pair<Long?, String?>?> =
+        arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY))
 
-    fun listFromPrefs(pref: String?, defaults: ArrayList<Pair<Long?, String?>?>): ArrayList<Pair<Long?, String?>?> {
+    fun listFromPrefs(
+        pref: String?,
+        defaults: ArrayList<Pair<Long?, String?>?>
+    ): ArrayList<Pair<Long?, String?>?> {
         return if (!pref.isNullOrBlank()) {
             val list = ArrayList<Pair<Long?, String?>?>()
             val split = splitAndMakeMap(pref)
@@ -297,14 +385,16 @@ object TwitchApiHelper {
             "already_followers_off" -> context.getString(R.string.irc_notice_already_followers_off)
             "already_followers_on" -> context.getString(
                 R.string.irc_notice_already_followers_on,
-                message?.substringAfter("is already in ", "")?.substringBefore(" followers-only mode", "") ?: ""
+                message?.substringAfter("is already in ", "")
+                    ?.substringBefore(" followers-only mode", "") ?: ""
             )
             "already_r9k_off" -> context.getString(R.string.irc_notice_already_r9k_off)
             "already_r9k_on" -> context.getString(R.string.irc_notice_already_r9k_on)
             "already_slow_off" -> context.getString(R.string.irc_notice_already_slow_off)
             "already_slow_on" -> context.getString(
                 R.string.irc_notice_already_slow_on,
-                message?.substringAfter("is already in ", "")?.substringBefore("-second slow", "") ?: ""
+                message?.substringAfter("is already in ", "")?.substringBefore("-second slow", "")
+                    ?: ""
             )
             "already_subs_off" -> context.getString(R.string.irc_notice_already_subs_off)
             "already_subs_on" -> context.getString(R.string.irc_notice_already_subs_on)
@@ -315,36 +405,43 @@ object TwitchApiHelper {
             )
             "bad_ban_admin" -> context.getString(
                 R.string.irc_notice_bad_ban_admin,
-                message?.substringAfter("cannot ban admin", "")?.substringBefore(". Please email", "") ?: ""
+                message?.substringAfter("cannot ban admin", "")
+                    ?.substringBefore(". Please email", "") ?: ""
             )
             "bad_ban_anon" -> context.getString(R.string.irc_notice_bad_ban_anon)
             "bad_ban_broadcaster" -> context.getString(R.string.irc_notice_bad_ban_broadcaster)
             "bad_ban_mod" -> context.getString(
                 R.string.irc_notice_bad_ban_mod,
-                message?.substringAfter("cannot ban moderator", "")?.substringBefore(" unless you are", "") ?: ""
+                message?.substringAfter("cannot ban moderator", "")
+                    ?.substringBefore(" unless you are", "") ?: ""
             )
             "bad_ban_self" -> context.getString(R.string.irc_notice_bad_ban_self)
             "bad_ban_staff" -> context.getString(
                 R.string.irc_notice_bad_ban_staff,
-                message?.substringAfter("cannot ban staff", "")?.substringBefore(". Please email", "") ?: ""
+                message?.substringAfter("cannot ban staff", "")
+                    ?.substringBefore(". Please email", "") ?: ""
             )
             "bad_commercial_error" -> context.getString(R.string.irc_notice_bad_commercial_error)
             "bad_delete_message_broadcaster" -> context.getString(R.string.irc_notice_bad_delete_message_broadcaster)
             "bad_delete_message_mod" -> context.getString(
                 R.string.irc_notice_bad_delete_message_mod,
-                message?.substringAfter("from another moderator ", "")?.substringBeforeLast(".", "") ?: ""
+                message?.substringAfter("from another moderator ", "")?.substringBeforeLast(".", "")
+                    ?: ""
             )
             "bad_host_error" -> context.getString(
                 R.string.irc_notice_bad_host_error,
-                message?.substringAfter("a problem hosting ", "")?.substringBefore(". Please try", "") ?: ""
+                message?.substringAfter("a problem hosting ", "")
+                    ?.substringBefore(". Please try", "") ?: ""
             )
             "bad_host_hosting" -> context.getString(
                 R.string.irc_notice_bad_host_hosting,
-                message?.substringAfter("is already hosting ", "")?.substringBeforeLast(".", "") ?: ""
+                message?.substringAfter("is already hosting ", "")?.substringBeforeLast(".", "")
+                    ?: ""
             )
             "bad_host_rate_exceeded" -> context.getString(
                 R.string.irc_notice_bad_host_rate_exceeded,
-                message?.substringAfter("changed more than ", "")?.substringBefore(" times every half", "") ?: ""
+                message?.substringAfter("changed more than ", "")
+                    ?.substringBefore(" times every half", "") ?: ""
             )
             "bad_host_rejected" -> context.getString(R.string.irc_notice_bad_host_rejected)
             "bad_host_self" -> context.getString(R.string.irc_notice_bad_host_self)
@@ -362,7 +459,8 @@ object TwitchApiHelper {
             )
             "bad_timeout_admin" -> context.getString(
                 R.string.irc_notice_bad_timeout_admin,
-                message?.substringAfter("cannot timeout admin ", "")?.substringBefore(". Please email", "") ?: ""
+                message?.substringAfter("cannot timeout admin ", "")
+                    ?.substringBefore(". Please email", "") ?: ""
             )
             "bad_timeout_anon" -> context.getString(R.string.irc_notice_bad_timeout_anon)
             "bad_timeout_broadcaster" -> context.getString(R.string.irc_notice_bad_timeout_broadcaster)
@@ -372,12 +470,14 @@ object TwitchApiHelper {
             )
             "bad_timeout_mod" -> context.getString(
                 R.string.irc_notice_bad_timeout_mod,
-                message?.substringAfter("cannot timeout moderator ", "")?.substringBefore(" unless you are", "") ?: ""
+                message?.substringAfter("cannot timeout moderator ", "")
+                    ?.substringBefore(" unless you are", "") ?: ""
             )
             "bad_timeout_self" -> context.getString(R.string.irc_notice_bad_timeout_self)
             "bad_timeout_staff" -> context.getString(
                 R.string.irc_notice_bad_timeout_staff,
-                message?.substringAfter("cannot timeout staff ", "")?.substringBefore(". Please email", "") ?: ""
+                message?.substringAfter("cannot timeout staff ", "")
+                    ?.substringBefore(". Please email", "") ?: ""
             )
             "bad_unban_no_ban" -> context.getString(
                 R.string.irc_notice_bad_unban_no_ban,
@@ -413,22 +513,26 @@ object TwitchApiHelper {
             "color_changed" -> context.getString(R.string.irc_notice_color_changed)
             "commercial_success" -> context.getString(
                 R.string.irc_notice_commercial_success,
-                message?.substringAfter("Initiating ", "")?.substringBefore(" second commercial break.", "") ?: ""
+                message?.substringAfter("Initiating ", "")
+                    ?.substringBefore(" second commercial break.", "") ?: ""
             )
             "delete_message_success" -> context.getString(
                 R.string.irc_notice_delete_message_success,
-                message?.substringAfter("The message from ", "")?.substringBefore(" is now deleted.", "") ?: ""
+                message?.substringAfter("The message from ", "")
+                    ?.substringBefore(" is now deleted.", "") ?: ""
             )
             "delete_staff_message_success" -> context.getString(
                 R.string.irc_notice_delete_staff_message_success,
-                message?.substringAfter("message from staff ", "")?.substringBefore(". Please email", "") ?: ""
+                message?.substringAfter("message from staff ", "")
+                    ?.substringBefore(". Please email", "") ?: ""
             )
             "emote_only_off" -> context.getString(R.string.irc_notice_emote_only_off)
             "emote_only_on" -> context.getString(R.string.irc_notice_emote_only_on)
             "followers_off" -> context.getString(R.string.irc_notice_followers_off)
             "followers_on" -> context.getString(
                 R.string.irc_notice_followers_on,
-                message?.substringAfter("is now in ", "")?.substringBefore(" followers-only mode", "") ?: ""
+                message?.substringAfter("is now in ", "")
+                    ?.substringBefore(" followers-only mode", "") ?: ""
             )
             "followers_on_zero" -> context.getString(R.string.irc_notice_followers_on_zero)
             "host_off" -> context.getString(R.string.irc_notice_host_off)
@@ -459,7 +563,8 @@ object TwitchApiHelper {
             )
             "mod_success" -> context.getString(
                 R.string.irc_notice_mod_success,
-                message?.substringAfter("You have added ", "")?.substringBefore(" as a moderator", "") ?: ""
+                message?.substringAfter("You have added ", "")
+                    ?.substringBefore(" as a moderator", "") ?: ""
             )
             "msg_banned" -> context.getString(
                 R.string.irc_notice_msg_banned,
@@ -472,13 +577,16 @@ object TwitchApiHelper {
             "msg_emoteonly" -> context.getString(R.string.irc_notice_msg_emoteonly)
             "msg_followersonly" -> context.getString(
                 R.string.irc_notice_msg_followersonly,
-                message?.substringAfter("This room is in ", "")?.substringBefore(" followers-only mode", "") ?: "",
+                message?.substringAfter("This room is in ", "")
+                    ?.substringBefore(" followers-only mode", "") ?: "",
                 message?.substringAfter("Follow ", "")?.substringBefore(" to join", "") ?: ""
             )
             "msg_followersonly_followed" -> context.getString(
                 R.string.irc_notice_msg_followersonly_followed,
-                message?.substringAfter("This room is in ", "")?.substringBefore(" followers-only mode", "") ?: "",
-                message?.substringAfter("following for ", "")?.substringBefore(". Continue", "") ?: ""
+                message?.substringAfter("This room is in ", "")
+                    ?.substringBefore(" followers-only mode", "") ?: "",
+                message?.substringAfter("following for ", "")?.substringBefore(". Continue", "")
+                    ?: ""
             )
             "msg_followersonly_zero" -> context.getString(
                 R.string.irc_notice_msg_followersonly_zero,
@@ -490,7 +598,8 @@ object TwitchApiHelper {
             "msg_rejected_mandatory" -> context.getString(R.string.irc_notice_msg_rejected_mandatory)
             "msg_slowmode" -> context.getString(
                 R.string.irc_notice_msg_slowmode,
-                message?.substringAfter("talk again in ", "")?.substringBefore(" seconds.", "") ?: ""
+                message?.substringAfter("talk again in ", "")?.substringBefore(" seconds.", "")
+                    ?: ""
             )
             "msg_subsonly" -> context.getString(
                 R.string.irc_notice_msg_subsonly,
@@ -499,7 +608,8 @@ object TwitchApiHelper {
             "msg_suspended" -> context.getString(R.string.irc_notice_msg_suspended)
             "msg_timedout" -> context.getString(
                 R.string.irc_notice_msg_timedout,
-                message?.substringAfter("timed out for ", "")?.substringBefore(" more seconds.", "") ?: ""
+                message?.substringAfter("timed out for ", "")?.substringBefore(" more seconds.", "")
+                    ?: ""
             )
             "msg_verified_email" -> context.getString(R.string.irc_notice_msg_verified_email)
             "no_help" -> context.getString(R.string.irc_notice_no_help)
@@ -515,7 +625,8 @@ object TwitchApiHelper {
             "raid_error_too_many_viewers" -> context.getString(R.string.irc_notice_raid_error_too_many_viewers)
             "raid_error_unexpected" -> context.getString(
                 R.string.irc_notice_raid_error_unexpected,
-                message?.substringAfter("a problem raiding ", "")?.substringBefore(". Please try", "") ?: ""
+                message?.substringAfter("a problem raiding ", "")
+                    ?.substringBefore(". Please try", "") ?: ""
             )
             "raid_notice_mature" -> context.getString(R.string.irc_notice_raid_notice_mature)
             "raid_notice_restricted_chat" -> context.getString(R.string.irc_notice_raid_notice_restricted_chat)
@@ -526,7 +637,8 @@ object TwitchApiHelper {
             "slow_off" -> context.getString(R.string.irc_notice_slow_off)
             "slow_on" -> context.getString(
                 R.string.irc_notice_slow_on,
-                message?.substringAfter("send messages every ", "")?.substringBefore(" seconds.", "") ?: ""
+                message?.substringAfter("send messages every ", "")
+                    ?.substringBefore(" seconds.", "") ?: ""
             )
             "subs_off" -> context.getString(R.string.irc_notice_subs_off)
             "subs_on" -> context.getString(R.string.irc_notice_subs_on)
@@ -541,7 +653,8 @@ object TwitchApiHelper {
             )
             "tos_ban" -> context.getString(
                 R.string.irc_notice_tos_ban,
-                message?.substringAfter("has closed channel ", "")?.substringBefore(" due to Terms", "") ?: ""
+                message?.substringAfter("has closed channel ", "")
+                    ?.substringBefore(" due to Terms", "") ?: ""
             )
             "turbo_only_color" -> context.getString(
                 R.string.irc_notice_turbo_only_color,
@@ -549,7 +662,8 @@ object TwitchApiHelper {
             )
             "unavailable_command" -> context.getString(
                 R.string.irc_notice_unavailable_command,
-                message?.substringAfter("Sorry, “", "")?.substringBefore("” is not available", "") ?: ""
+                message?.substringAfter("Sorry, “", "")?.substringBefore("” is not available", "")
+                    ?: ""
             )
             "unban_success" -> context.getString(
                 R.string.irc_notice_unban_success,
@@ -557,7 +671,8 @@ object TwitchApiHelper {
             )
             "unmod_success" -> context.getString(
                 R.string.irc_notice_unmod_success,
-                message?.substringAfter("You have removed ", "")?.substringBefore(" as a moderator", "") ?: ""
+                message?.substringAfter("You have removed ", "")
+                    ?.substringBefore(" as a moderator", "") ?: ""
             )
             "unraid_error_no_active_raid" -> context.getString(R.string.irc_notice_unraid_error_no_active_raid)
             "unraid_error_unexpected" -> context.getString(R.string.irc_notice_unraid_error_unexpected)
@@ -576,7 +691,8 @@ object TwitchApiHelper {
             )
             "unvip_success" -> context.getString(
                 R.string.irc_notice_unvip_success,
-                message?.substringAfter("You have removed ", "")?.substringBefore(" as a VIP", "") ?: ""
+                message?.substringAfter("You have removed ", "")?.substringBefore(" as a VIP", "")
+                    ?: ""
             )
             "usage_ban" -> context.getString(R.string.irc_notice_usage_ban)
             "usage_clear" -> context.getString(R.string.irc_notice_usage_clear)
@@ -620,7 +736,8 @@ object TwitchApiHelper {
             "usage_whisper" -> context.getString(R.string.irc_notice_usage_whisper)
             "vip_success" -> context.getString(
                 R.string.irc_notice_vip_success,
-                message?.substringAfter("You have added ", "")?.substringBeforeLast(" as a vip", "") ?: ""
+                message?.substringAfter("You have added ", "")?.substringBeforeLast(" as a vip", "")
+                    ?: ""
             )
             "vips_success" -> context.getString(
                 R.string.irc_notice_vips_success,

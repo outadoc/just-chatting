@@ -17,7 +17,11 @@ import java.util.Locale
 class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
 
     @Throws(JsonParseException::class)
-    override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): RecentMessagesResponse {
+    override fun deserialize(
+        json: JsonElement,
+        typeOfT: Type,
+        context: JsonDeserializationContext
+    ): RecentMessagesResponse {
         val messages = mutableListOf<LiveChatMessage>()
         for (i in json.asJsonObject.getAsJsonArray("messages")) {
             val appContext = XtraApp.INSTANCE.applicationContext
@@ -37,19 +41,25 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
         return RecentMessagesResponse(messages)
     }
 
-    private fun onMessage(context: Context, message: String, userNotice: Boolean): LiveChatMessage? {
+    private fun onMessage(
+        context: Context,
+        message: String,
+        userNotice: Boolean
+    ): LiveChatMessage? {
         if (!userNotice || context.prefs().getBoolean(C.CHAT_SHOW_USERNOTICE, true)) {
             val parts = message.substring(1).split(" ".toRegex(), 2)
             val prefix = parts[0]
             val prefixes = splitAndMakeMap(prefix, ";", "=")
-            val messageInfo = parts[1] // :<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
+            val messageInfo =
+                parts[1] // :<user>!<user>@<user>.tmi.twitch.tv PRIVMSG #<channelName> :<message>
             val userLogin = prefixes["login"] ?: try {
                 messageInfo.substring(1, messageInfo.indexOf("!"))
             } catch (e: Exception) {
                 null
             }
             val systemMsg = prefixes["system-msg"]?.replace("\\s", " ")
-            val msgIndex = messageInfo.indexOf(" ", messageInfo.indexOf("#", messageInfo.indexOf(":") + 1) + 1)
+            val msgIndex =
+                messageInfo.indexOf(" ", messageInfo.indexOf("#", messageInfo.indexOf(":") + 1) + 1)
             if (msgIndex == -1 && userNotice) { // no user message & is user notice
                 return LiveChatMessage(
                     message = systemMsg ?: messageInfo,
@@ -61,7 +71,11 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             } else {
                 val userMessage: String
                 val isAction: Boolean
-                messageInfo.substring(if (messageInfo.substring(msgIndex + 1).startsWith(":")) msgIndex + 2 else msgIndex + 1).let { // from <message>
+                messageInfo.substring(
+                    if (messageInfo.substring(msgIndex + 1)
+                        .startsWith(":")
+                    ) msgIndex + 2 else msgIndex + 1
+                ).let { // from <message>
                     if (!it.startsWith(MessageListenerImpl.ACTION)) {
                         userMessage = it
                         isAction = false
@@ -78,7 +92,13 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     entries.forEach { emote ->
                         emote.value?.split(",")?.forEach { indexes ->
                             val index = indexes.split("-")
-                            emotesList.add(TwitchEmote(emote.key, index[0].toInt(), index[1].toInt()))
+                            emotesList.add(
+                                TwitchEmote(
+                                    emote.key,
+                                    index[0].toInt(),
+                                    index[1].toInt()
+                                )
+                            )
                         }
                     }
                 }
@@ -147,12 +167,27 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             val messageInfo = parts[1]
             val userIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
             val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
-            val user = if (userIndex != -1) messageInfo.substring(userIndex + 1) else if (index2 != -1) messageInfo.substring(index2 + 1) else null
-            val type = if (user == null) { "clearchat" } else { if (duration != null) { "timeout" } else { "ban" } }
+            val user =
+                if (userIndex != -1) messageInfo.substring(userIndex + 1) else if (index2 != -1) messageInfo.substring(
+                    index2 + 1
+                ) else null
+            val type = if (user == null) {
+                "clearchat"
+            } else {
+                if (duration != null) {
+                    "timeout"
+                } else {
+                    "ban"
+                }
+            }
             return LiveChatMessage(
                 message = when (type) {
                     "clearchat" -> context.getString(R.string.chat_clear)
-                    "timeout" -> context.getString(R.string.chat_timeout, user, TwitchApiHelper.getDurationFromSeconds(context, duration))
+                    "timeout" -> context.getString(
+                        R.string.chat_timeout,
+                        user,
+                        TwitchApiHelper.getDurationFromSeconds(context, duration)
+                    )
                     "ban" -> context.getString(R.string.chat_ban, user)
                     else -> return null
                 },
@@ -197,7 +232,10 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             val messageInfo = parts[1]
             val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
             val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
-            val msg = if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else if (index2 != -1) messageInfo.substring(index2 + 1) else null
+            val msg =
+                if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else if (index2 != -1) messageInfo.substring(
+                    index2 + 1
+                ) else null
             var emotesList: MutableList<TwitchEmote>? = null
             val emotes = prefixes["emotes"]
             if (emotes != null && system != null && msg != null) {
@@ -206,7 +244,13 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                 entries.forEach { emote ->
                     emote.value?.split(",")?.forEach { indexes ->
                         val index = indexes.split("-")
-                        emotesList.add(TwitchEmote(emote.key, index[0].toInt() + system.length + 1, index[1].toInt() + system.length + 1))
+                        emotesList.add(
+                            TwitchEmote(
+                                emote.key,
+                                index[0].toInt() + system.length + 1,
+                                index[1].toInt() + system.length + 1
+                            )
+                        )
                     }
                 }
             }
@@ -223,7 +267,11 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
         }
     }
 
-    private fun splitAndMakeMap(string: String, splitRegex: String, mapRegex: String): Map<String, String?> {
+    private fun splitAndMakeMap(
+        string: String,
+        splitRegex: String,
+        mapRegex: String
+    ): Map<String, String?> {
         val list = string.split(splitRegex.toRegex()).dropLastWhile { it.isEmpty() }
         val map = LinkedHashMap<String, String?>()
         for (pair in list) {

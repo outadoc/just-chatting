@@ -19,7 +19,10 @@ import javax.inject.Singleton
 @Singleton
 class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
 
-    suspend fun loadChannelViewerList(clientId: String?, channelLogin: String?): ChannelViewerListDataResponse {
+    suspend fun loadChannelViewerList(
+        clientId: String?,
+        channelLogin: String?
+    ): ChannelViewerListDataResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "ChatViewers")
             add(
@@ -35,7 +38,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "e0761ef5444ee3acccee5cfc5b834cbfd7dc220133aa5fbefe1b66120f506250")
+                            addProperty(
+                                "sha256Hash",
+                                "e0761ef5444ee3acccee5cfc5b834cbfd7dc220133aa5fbefe1b66120f506250"
+                            )
                         }
                     )
                 }
@@ -44,7 +50,11 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getChannelViewerList(clientId, json)
     }
 
-    suspend fun loadSearchChannels(clientId: String?, query: String?, cursor: String?): SearchChannelDataResponse {
+    suspend fun loadSearchChannels(
+        clientId: String?,
+        query: String?,
+        cursor: String?
+    ): SearchChannelDataResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "SearchResultsPage_SearchResults")
             add(
@@ -76,7 +86,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "ee977ac21b324669b4c109be49ed3032227e8850bea18503d0ced68e8156c2a5")
+                            addProperty(
+                                "sha256Hash",
+                                "ee977ac21b324669b4c109be49ed3032227e8850bea18503d0ced68e8156c2a5"
+                            )
                         }
                     )
                 }
@@ -101,7 +114,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "00b11c9c428f79ae228f30080a06ffd8226a1f068d6f52fbc057cbde66e994c2")
+                            addProperty(
+                                "sha256Hash",
+                                "00b11c9c428f79ae228f30080a06ffd8226a1f068d6f52fbc057cbde66e994c2"
+                            )
                         }
                     )
                 }
@@ -128,7 +144,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "556230dd63957761355ba54232c43f4781f31ed6686fc827053b9aa7b199848f")
+                            addProperty(
+                                "sha256Hash",
+                                "556230dd63957761355ba54232c43f4781f31ed6686fc827053b9aa7b199848f"
+                            )
                         }
                     )
                 }
@@ -137,7 +156,12 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getEmoteCard(clientId, json)
     }
 
-    suspend fun loadFollowedStreams(clientId: String?, token: String?, limit: Int?, cursor: String?): FollowedStreamsDataResponse {
+    suspend fun loadFollowedStreams(
+        clientId: String?,
+        token: String?,
+        limit: Int?,
+        cursor: String?
+    ): FollowedStreamsDataResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "FollowingLive_CurrentUser")
             add(
@@ -154,7 +178,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "40ac5a060fa06ba73e07bf8dd8c3cf6aca4494aeed2222c986ed47ffddf31f51")
+                            addProperty(
+                                "sha256Hash",
+                                "40ac5a060fa06ba73e07bf8dd8c3cf6aca4494aeed2222c986ed47ffddf31f51"
+                            )
                         }
                     )
                 }
@@ -163,7 +190,12 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getFollowedStreams(clientId, token, json)
     }
 
-    suspend fun loadFollowedChannels(clientId: String?, token: String?, limit: Int?, cursor: String?): FollowedChannelsDataResponse {
+    suspend fun loadFollowedChannels(
+        clientId: String?,
+        token: String?,
+        limit: Int?,
+        cursor: String?
+    ): FollowedChannelsDataResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "ChannelFollows")
             add(
@@ -181,7 +213,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "4b9cb31b54b9213e5760f2f6e9e935ad09924cac2f78aac51f8a64d85f028ed0")
+                            addProperty(
+                                "sha256Hash",
+                                "4b9cb31b54b9213e5760f2f6e9e935ad09924cac2f78aac51f8a64d85f028ed0"
+                            )
                         }
                     )
                 }
@@ -190,7 +225,11 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getFollowedChannels(clientId, token, json)
     }
 
-    suspend fun loadFollowUser(clientId: String?, token: String?, userId: String?): FollowUserDataResponse {
+    suspend fun loadFollowUser(
+        clientId: String?,
+        token: String?,
+        userId: String?
+    ): FollowUserDataResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "FollowButton_FollowUser")
             add(
@@ -212,7 +251,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "800e7346bdf7e5278a3c1d3f21b2b56e2639928f86815677a7126b093b2fdd08")
+                            addProperty(
+                                "sha256Hash",
+                                "800e7346bdf7e5278a3c1d3f21b2b56e2639928f86815677a7126b093b2fdd08"
+                            )
                         }
                     )
                 }
@@ -242,7 +284,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "f7dae976ebf41c755ae2d758546bfd176b4eeb856656098bb40e0a672ca0d880")
+                            addProperty(
+                                "sha256Hash",
+                                "f7dae976ebf41c755ae2d758546bfd176b4eeb856656098bb40e0a672ca0d880"
+                            )
                         }
                     )
                 }
@@ -272,7 +317,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "b846b65ba4bc9a3561dbe2d069d95deed9b9e031bcfda2482d1bedd84a1c2eb3")
+                            addProperty(
+                                "sha256Hash",
+                                "b846b65ba4bc9a3561dbe2d069d95deed9b9e031bcfda2482d1bedd84a1c2eb3"
+                            )
                         }
                     )
                 }
@@ -302,7 +350,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "811e02e396ebba0664f21ff002f2eff3c6f57e8af9aedb4f4dfa77cefd0db43d")
+                            addProperty(
+                                "sha256Hash",
+                                "811e02e396ebba0664f21ff002f2eff3c6f57e8af9aedb4f4dfa77cefd0db43d"
+                            )
                         }
                     )
                 }
@@ -311,7 +362,11 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getUnfollowGame(clientId, token, json)
     }
 
-    suspend fun loadFollowingUser(clientId: String?, token: String?, userLogin: String?): FollowingUserDataResponse {
+    suspend fun loadFollowingUser(
+        clientId: String?,
+        token: String?,
+        userLogin: String?
+    ): FollowingUserDataResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "ChannelSupportButtons")
             add(
@@ -327,7 +382,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "834a75e1c06cffada00f0900664a5033e392f6fb655fae8d2e25b21b340545a9")
+                            addProperty(
+                                "sha256Hash",
+                                "834a75e1c06cffada00f0900664a5033e392f6fb655fae8d2e25b21b340545a9"
+                            )
                         }
                     )
                 }
@@ -336,7 +394,11 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
         return graphQL.getFollowingUser(clientId, token, json)
     }
 
-    suspend fun loadFollowingGame(clientId: String?, token: String?, gameName: String?): FollowingGameDataResponse {
+    suspend fun loadFollowingGame(
+        clientId: String?,
+        token: String?,
+        gameName: String?
+    ): FollowingGameDataResponse {
         val json = JsonObject().apply {
             addProperty("operationName", "FollowGameButton_Game")
             add(
@@ -352,7 +414,10 @@ class GraphQLRepository @Inject constructor(private val graphQL: GraphQLApi) {
                         "persistedQuery",
                         JsonObject().apply {
                             addProperty("version", 1)
-                            addProperty("sha256Hash", "cfeda60899b6b867b2d7f30c8556778c4a9cc8268bd1aadd9f88134a0f642a02")
+                            addProperty(
+                                "sha256Hash",
+                                "cfeda60899b6b867b2d7f30c8556778c4a9cc8268bd1aadd9f88134a0f642a02"
+                            )
                         }
                     )
                 }

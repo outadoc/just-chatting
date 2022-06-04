@@ -13,7 +13,11 @@ class GridRecyclerView : RecyclerView {
 
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     private val portraitColumns = 1
     private val landscapeColumns = 2
@@ -40,6 +44,14 @@ class GridRecyclerView : RecyclerView {
     }
 
     private fun addItemDecoration(columns: Int) {
-        addItemDecoration(if (columns <= 1) DividerItemDecoration(context, GridLayoutManager.VERTICAL) else MarginItemDecoration(context.resources.getDimension(R.dimen.divider_margin).toInt(), columns))
+        addItemDecoration(
+            if (columns <= 1) DividerItemDecoration(
+                context,
+                GridLayoutManager.VERTICAL
+            ) else MarginItemDecoration(
+                context.resources.getDimension(R.dimen.divider_margin).toInt(),
+                columns
+            )
+        )
     }
 }

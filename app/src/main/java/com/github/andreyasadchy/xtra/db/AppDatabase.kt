@@ -13,7 +13,10 @@ import com.github.andreyasadchy.xtra.model.offline.SortChannel
 import com.github.andreyasadchy.xtra.model.offline.SortGame
 import com.github.andreyasadchy.xtra.model.offline.VodBookmarkIgnoredUser
 
-@Database(entities = [OfflineVideo::class, Request::class, RecentEmote::class, VideoPosition::class, LocalFollowChannel::class, LocalFollowGame::class, Bookmark::class, VodBookmarkIgnoredUser::class, SortChannel::class, SortGame::class], version = 17)
+@Database(
+    entities = [OfflineVideo::class, Request::class, RecentEmote::class, VideoPosition::class, LocalFollowChannel::class, LocalFollowGame::class, Bookmark::class, VodBookmarkIgnoredUser::class, SortChannel::class, SortGame::class],
+    version = 17
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun videos(): VideosDao

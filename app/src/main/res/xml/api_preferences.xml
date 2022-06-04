@@ -8,7 +8,7 @@
         android:key="api_login"
         android:summary="%s"
         android:title="@string/api_login"
-        app:iconSpaceReserved="false"/>
+        app:iconSpaceReserved="false" />
 
     <EditTextPreference
         android:defaultValue="ilfexgv3nnljz3isbm257gzwrzr7bi"

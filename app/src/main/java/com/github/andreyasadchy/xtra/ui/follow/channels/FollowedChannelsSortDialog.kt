@@ -45,7 +45,11 @@ class FollowedChannelsSortDialog : ExpandingBottomSheetDialogFragment() {
         listener = parentFragment as OnFilter
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.dialog_followed_channels_sort, container, false)
     }
 
@@ -57,7 +61,8 @@ class FollowedChannelsSortDialog : ExpandingBottomSheetDialogFragment() {
             ALPHABETICALLY -> R.id.alphabetically
             LAST_BROADCAST -> R.id.last_broadcast
         }
-        val originalOrderId = if (args.getSerializable(ORDER) as Order == DESC) R.id.newest_first else R.id.oldest_first
+        val originalOrderId =
+            if (args.getSerializable(ORDER) as Order == DESC) R.id.newest_first else R.id.oldest_first
         sort.check(originalSortId)
         order.check(originalOrderId)
         apply.setOnClickListener {

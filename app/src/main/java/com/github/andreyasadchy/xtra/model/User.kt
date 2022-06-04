@@ -79,8 +79,12 @@ sealed class User(
     }
 }
 
-class LoggedIn(id: String?, login: String?, helixToken: String?, gqlToken: String?) : User(id, login, helixToken, gqlToken) {
+class LoggedIn(id: String?, login: String?, helixToken: String?, gqlToken: String?) :
+    User(id, login, helixToken, gqlToken) {
     constructor(user: NotValidated) : this(user.id, user.login, user.helixToken, user.gqlToken)
 }
-class NotValidated(id: String?, login: String?, helixToken: String?, gqlToken: String?) : User(id, login, helixToken, gqlToken)
+
+class NotValidated(id: String?, login: String?, helixToken: String?, gqlToken: String?) :
+    User(id, login, helixToken, gqlToken)
+
 class NotLoggedIn : User(null, null, null, null)

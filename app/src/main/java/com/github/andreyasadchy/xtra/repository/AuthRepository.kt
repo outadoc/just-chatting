@@ -12,9 +12,10 @@ class AuthRepository @Inject constructor(
     private val api: IdApi
 ) {
 
-    suspend fun validate(tokenWithPrefix: String): ValidationResponse? = withContext(Dispatchers.IO) {
-        api.validateToken(tokenWithPrefix)
-    }
+    suspend fun validate(tokenWithPrefix: String): ValidationResponse? =
+        withContext(Dispatchers.IO) {
+            api.validateToken(tokenWithPrefix)
+        }
 
     suspend fun revoke(clientId: String, token: String) = withContext(Dispatchers.IO) {
         api.revokeToken(clientId, token)

@@ -8,17 +8,28 @@ import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class MessageClickedViewModel @Inject constructor(private val repository: TwitchService) : BaseViewModel() {
+class MessageClickedViewModel @Inject constructor(private val repository: TwitchService) :
+    BaseViewModel() {
 
     private val user = MutableLiveData<User?>()
     private var isLoading = false
 
-    fun loadUser(channelId: String, helixClientId: String? = null, helixToken: String? = null, gqlClientId: String? = null): MutableLiveData<User?> {
+    fun loadUser(
+        channelId: String,
+        helixClientId: String? = null,
+        helixToken: String? = null,
+        gqlClientId: String? = null
+    ): MutableLiveData<User?> {
         if (user.value == null && !isLoading) {
             isLoading = true
             viewModelScope.launch {
                 try {
-                    val u = repository.loadUsersById(mutableListOf(channelId), helixClientId, helixToken, gqlClientId)?.firstOrNull()
+                    val u = repository.loadUsersById(
+                        mutableListOf(channelId),
+                        helixClientId,
+                        helixToken,
+                        gqlClientId
+                    )?.firstOrNull()
                     user.postValue(u)
                 } catch (e: Exception) {
                     _errors.postValue(e)

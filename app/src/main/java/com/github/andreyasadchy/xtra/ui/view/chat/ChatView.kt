@@ -102,7 +102,11 @@ class ChatView : ConstraintLayout {
         init(context)
     }
 
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
+    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    ) {
         init(context)
     }
 
@@ -196,7 +200,13 @@ class ChatView : ConstraintLayout {
                     textFollowers.visible()
                 }
                 else -> {
-                    textFollowers.text = context.getString(R.string.room_followers_min, TwitchApiHelper.getDurationFromSeconds(context, (roomState.followers.toInt() * 60).toString()))
+                    textFollowers.text = context.getString(
+                        R.string.room_followers_min,
+                        TwitchApiHelper.getDurationFromSeconds(
+                            context,
+                            (roomState.followers.toInt() * 60).toString()
+                        )
+                    )
                     textFollowers.visible()
                 }
             }
@@ -215,7 +225,10 @@ class ChatView : ConstraintLayout {
             when (roomState.slow) {
                 "0" -> textSlow.gone()
                 else -> {
-                    textSlow.text = context.getString(R.string.room_slow, TwitchApiHelper.getDurationFromSeconds(context, roomState.slow))
+                    textSlow.text = context.getString(
+                        R.string.room_slow,
+                        TwitchApiHelper.getDurationFromSeconds(context, roomState.slow)
+                    )
                     textSlow.visible()
                 }
             }
@@ -244,7 +257,11 @@ class ChatView : ConstraintLayout {
         val lang = Locale.getDefault().language
         val message = when (command.type) {
             "join" -> context.getString(R.string.chat_join, command.message)
-            "disconnect" -> context.getString(R.string.chat_disconnect, command.message, command.duration)
+            "disconnect" -> context.getString(
+                R.string.chat_disconnect,
+                command.message,
+                command.duration
+            )
             "disconnect_command" -> {
                 adapter.messages?.clear()
                 context.getString(R.string.disconnected)
@@ -252,23 +269,42 @@ class ChatView : ConstraintLayout {
             "send_msg_error" -> context.getString(R.string.chat_send_msg_error, command.message)
             "socket_error" -> context.getString(R.string.chat_socket_error, command.message)
             "notice" -> if (lang == "ar" || lang == "es" || lang == "ja" || lang == "pt" || lang == "ru" || lang == "tr") {
-                TwitchApiHelper.getNoticeString(context, command.duration, command.message) ?: command.message
+                TwitchApiHelper.getNoticeString(context, command.duration, command.message)
+                    ?: command.message
             } else {
                 command.message
             }
-            "clearmsg" -> context.getString(R.string.chat_clearmsg, command.message, command.duration)
+            "clearmsg" -> context.getString(
+                R.string.chat_clearmsg,
+                command.message,
+                command.duration
+            )
             "clearchat" -> context.getString(R.string.chat_clear)
-            "timeout" -> context.getString(R.string.chat_timeout, command.message, TwitchApiHelper.getDurationFromSeconds(context, command.duration))
+            "timeout" -> context.getString(
+                R.string.chat_timeout,
+                command.message,
+                TwitchApiHelper.getDurationFromSeconds(context, command.duration)
+            )
             "ban" -> context.getString(R.string.chat_ban, command.message)
             else -> command.message
         }
-        adapter.messages?.add(LiveChatMessage(message = message, color = "#999999", isAction = true, emotes = command.emotes, timestamp = command.timestamp, fullMsg = command.fullMsg))
+        adapter.messages?.add(
+            LiveChatMessage(
+                message = message,
+                color = "#999999",
+                isAction = true,
+                emotes = command.emotes,
+                timestamp = command.timestamp,
+                fullMsg = command.fullMsg
+            )
+        )
         notifyMessageAdded()
     }
 
     fun notifyReward(message: ChatMessage) {
         if (message is LiveChatMessage) {
-            val item = rewardList.find { it.second?.id == message.rewardId && it.second?.userId == message.userId }
+            val item =
+                rewardList.find { it.second?.id == message.rewardId && it.second?.userId == message.userId }
             if (item != null) {
                 message.apply { pointReward = item.second }.let {
                     rewardList.remove(item)
@@ -280,7 +316,8 @@ class ChatView : ConstraintLayout {
             }
         } else {
             if (message is PubSubPointReward) {
-                val item = rewardList.find { it.first?.rewardId == message.id && it.first?.userId == message.userId }
+                val item =
+                    rewardList.find { it.first?.rewardId == message.id && it.first?.userId == message.userId }
                 if (item != null) {
                     item.first?.apply { pointReward = message }?.let {
                         rewardList.remove(item)
@@ -392,7 +429,8 @@ class ChatView : ConstraintLayout {
         adapter.setOnClickListener { original, formatted, userId, fullMsg ->
             editText.hideKeyboard()
             editText.clearFocus()
-            MessageClickedDialog.newInstance(enableMessaging, original, formatted, userId, fullMsg).show(fragment.childFragmentManager, "closeOnPip")
+            MessageClickedDialog.newInstance(enableMessaging, original, formatted, userId, fullMsg)
+                .show(fragment.childFragmentManager, "closeOnPip")
         }
         if (enableMessaging) {
             editText.addTextChangedListener(onTextChanged = { text, _, _, _ ->
@@ -423,7 +461,10 @@ class ChatView : ConstraintLayout {
             }
             send.setOnClickListener { sendMessage() }
             messageView.visible()
-            viewPager.adapter = object : FragmentStatePagerAdapter(fragment.childFragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+            viewPager.adapter = object : FragmentStatePagerAdapter(
+                fragment.childFragmentManager,
+                BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
+            ) {
 
                 override fun getItem(position: Int): Fragment {
                     return EmotesFragment.newInstance(position)
@@ -538,20 +579,26 @@ class ChatView : ConstraintLayout {
             return when (getItemViewType(position)) {
                 TYPE_EMOTE -> {
                     if (convertView == null) {
-                        val view = LayoutInflater.from(context).inflate(R.layout.auto_complete_emotes_list_item, parent, false)
+                        val view = LayoutInflater.from(context)
+                            .inflate(R.layout.auto_complete_emotes_list_item, parent, false)
                         viewHolder = ViewHolder(view).also { view.tag = it }
                     } else {
                         viewHolder = convertView.tag as ViewHolder
                     }
                     viewHolder.containerView.apply {
                         item as Emote
-                        image.loadImage(fragment, item.url, diskCacheStrategy = DiskCacheStrategy.DATA)
+                        image.loadImage(
+                            fragment,
+                            item.url,
+                            diskCacheStrategy = DiskCacheStrategy.DATA
+                        )
                         name.text = item.name
                     }
                 }
                 else -> {
                     if (convertView == null) {
-                        val view = LayoutInflater.from(context).inflate(android.R.layout.simple_list_item_1, parent, false)
+                        val view = LayoutInflater.from(context)
+                            .inflate(android.R.layout.simple_list_item_1, parent, false)
                         viewHolder = ViewHolder(view).also { view.tag = it }
                     } else {
                         viewHolder = convertView.tag as ViewHolder

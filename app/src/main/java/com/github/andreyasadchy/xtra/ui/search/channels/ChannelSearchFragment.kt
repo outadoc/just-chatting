@@ -18,12 +18,23 @@ import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
 import kotlinx.android.synthetic.main.common_recycler_view_layout.swipeRefresh
 
-class ChannelSearchFragment : PagedListFragment<ChannelSearch, ChannelSearchViewModel, BasePagedListAdapter<ChannelSearch>>(), Searchable {
+class ChannelSearchFragment :
+    PagedListFragment<ChannelSearch, ChannelSearchViewModel, BasePagedListAdapter<ChannelSearch>>(),
+    Searchable {
 
     override val viewModel by viewModels<ChannelSearchViewModel> { viewModelFactory }
-    override val adapter: BasePagedListAdapter<ChannelSearch> by lazy { ChannelSearchAdapter(this, requireActivity() as MainActivity) }
+    override val adapter: BasePagedListAdapter<ChannelSearch> by lazy {
+        ChannelSearchAdapter(
+            this,
+            requireActivity() as MainActivity
+        )
+    }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.common_recycler_view_layout, container, false)
     }
 
@@ -39,7 +50,10 @@ class ChannelSearchFragment : PagedListFragment<ChannelSearch, ChannelSearchView
                 helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
                 helixToken = requireContext().prefs().getString(C.TOKEN, ""),
                 gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
-                apiPref = TwitchApiHelper.listFromPrefs(requireContext().prefs().getString(C.API_PREF_SEARCH_CHANNEL, ""), TwitchApiHelper.searchChannelsApiDefaults)
+                apiPref = TwitchApiHelper.listFromPrefs(
+                    requireContext().prefs().getString(C.API_PREF_SEARCH_CHANNEL, ""),
+                    TwitchApiHelper.searchChannelsApiDefaults
+                )
             )
         } else {
             adapter.submitList(null)

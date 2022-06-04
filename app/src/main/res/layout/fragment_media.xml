@@ -10,12 +10,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
             android:id="@id/toolbar"
-            app:title="@string/app_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways">
+            app:layout_scrollFlags="scroll|enterAlways"
+            app:title="@string/app_name">
 
             <ImageView
                 android:id="@+id/menu"
@@ -30,19 +30,22 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="end"
-                android:src="@drawable/baseline_favorite_border_black_24"
-                android:background="?attr/selectableItemBackgroundBorderless"
                 android:layout_marginEnd="7dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/baseline_favorite_border_black_24"
                 android:visibility="gone"
-                tools:visibility="visible"
-                app:tint="?attr/colorOnSurface" />
+                app:tint="?attr/colorOnSurface"
+                tools:visibility="visible" />
 
-        </androidx.appcompat.widget.Toolbar>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <Spinner
             android:id="@+id/spinner"
-            style="@style/MediaSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="5dp"
             android:visibility="gone"
+            app:layout_scrollFlags="scroll|enterAlways"
             tools:visibility="visible" />
 
     </com.google.android.material.appbar.AppBarLayout>

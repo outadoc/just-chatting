@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             app:expandedTitleGravity="bottom|center_horizontal"
             app:expandedTitleMarginBottom="10dp"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:scrimAnimationDuration="200">
 
             <LinearLayout

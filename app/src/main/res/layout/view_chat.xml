@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginVertical="8dp"
             android:animateLayoutChanges="true"
-            android:background="?attr/colorSurface"
+            android:background="?attr/colorSurfaceVariant"
             android:orientation="horizontal"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/viewPager"
@@ -73,29 +73,29 @@
                 android:id="@+id/clear"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:background="?android:selectableItemBackground"
+                android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/baseline_backspace_black_24"
                 android:visibility="gone"
-                app:tint="?attr/colorOnSurface"
+                app:tint="?attr/colorOnSurfaceVariant"
                 tools:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/emotes"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:background="?android:selectableItemBackground"
+                android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_tag_faces_black_24dp"
-                app:tint="?attr/colorOnSurface"
+                app:tint="?attr/colorOnSurfaceVariant"
                 tools:visibility="visible" />
 
             <ImageButton
                 android:id="@+id/send"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
-                android:background="?android:selectableItemBackground"
+                android:background="?selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_send_black_24dp"
                 android:visibility="gone"
-                app:tint="?attr/colorOnSurface"
+                app:tint="?attr/colorOnSurfaceVariant"
                 tools:visibility="visible" />
         </LinearLayout>
 

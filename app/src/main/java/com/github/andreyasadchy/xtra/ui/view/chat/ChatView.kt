@@ -184,6 +184,11 @@ class ChatView : ConstraintLayout {
                 bottomMargin += navBarInsets.bottom
             }
 
+            if (imeInsets.bottom > 0) {
+                // Hide emote picker when keyboard is opened
+                viewPager.gone()
+            }
+
             windowInsets
         }
     }
@@ -460,6 +465,7 @@ class ChatView : ConstraintLayout {
             MessageClickedDialog.newInstance(enableMessaging, original, formatted, userId, fullMsg)
                 .show(fragment.childFragmentManager, "closeOnPip")
         }
+
         if (enableMessaging) {
             editText.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 if (text?.isNotBlank() == true) {

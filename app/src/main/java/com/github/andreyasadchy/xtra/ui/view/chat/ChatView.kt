@@ -162,6 +162,7 @@ class ChatView : ConstraintLayout {
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
+            val statusBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
             val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
 
@@ -170,6 +171,13 @@ class ChatView : ConstraintLayout {
                 view.paddingTop,
                 view.paddingRight,
                 if (imeInsets.bottom > 0) imeInsets.bottom else navBarInsets.bottom
+            )
+
+            flexbox.setPadding(
+                view.paddingLeft,
+                statusBarInsets.top,
+                view.paddingRight,
+                view.paddingBottom
             )
 
             btnDown.updateLayoutParams<MarginLayoutParams> {
@@ -270,7 +278,6 @@ class ChatView : ConstraintLayout {
         } else {
             showFlexbox = true
             flexbox.visible()
-            flexbox.postDelayed({ flexbox.gone() }, 5000)
         }
     }
 

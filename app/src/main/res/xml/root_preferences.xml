@@ -21,12 +21,6 @@
 
     <SwitchPreferenceCompat
         android:defaultValue="true"
-        android:key="ui_uptime"
-        android:title="@string/show_uptime"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
         android:key="ui_tags"
         android:title="@string/show_tags"
         app:iconSpaceReserved="false" />

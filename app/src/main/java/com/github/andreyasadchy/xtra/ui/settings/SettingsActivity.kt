@@ -87,8 +87,6 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
 
             findPreference<SwitchPreferenceCompat>(C.UI_TRUNCATEVIEWCOUNT)?.onPreferenceChangeListener =
                 changeListener
-            findPreference<SwitchPreferenceCompat>(C.UI_UPTIME)?.onPreferenceChangeListener =
-                changeListener
             findPreference<SwitchPreferenceCompat>(C.UI_TAGS)?.onPreferenceChangeListener =
                 changeListener
 

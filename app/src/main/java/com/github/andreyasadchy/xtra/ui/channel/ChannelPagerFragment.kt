@@ -37,7 +37,10 @@ import kotlinx.android.synthetic.main.fragment_channel.spacerTop
 import kotlinx.android.synthetic.main.fragment_channel.title
 import kotlinx.android.synthetic.main.fragment_channel.toolbar
 import kotlinx.android.synthetic.main.fragment_channel.uptime
+import kotlinx.android.synthetic.main.fragment_channel.userCreated
+import kotlinx.android.synthetic.main.fragment_channel.userFollowers
 import kotlinx.android.synthetic.main.fragment_channel.userImage
+import kotlinx.android.synthetic.main.fragment_channel.userViews
 import kotlinx.android.synthetic.main.fragment_channel.viewers
 import kotlinx.android.synthetic.main.fragment_channel.watchLive
 
@@ -90,15 +93,6 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             .commit()
 
         toolbar.title = args.getString(C.CHANNEL_DISPLAYNAME)
-
-        args.getString(C.CHANNEL_PROFILEIMAGE).let { profileImage ->
-            if (profileImage != null) {
-                userImage.visible()
-                userImage.loadImage(this, profileImage, circle = true)
-            } else {
-                userImage.gone()
-            }
-        }
 
         toolbar.apply {
             navigationIcon = Utils.getNavigationIcon(activity)
@@ -166,7 +160,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             if (stream?.lastBroadcast != null) {
                 TwitchApiHelper.formatTimeString(requireContext(), stream.lastBroadcast).let {
                     if (it != null) {
-                        lastBroadcast.contentDescription =
+                        lastBroadcast.text =
                             requireContext().getString(R.string.last_broadcast_date, it)
                         lastBroadcast.visible()
                     } else {
@@ -185,44 +179,48 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 userImage.gone()
             }
         }
+
         stream?.user_name.let {
             if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
                 toolbar.title = it
                 requireArguments().putString(C.CHANNEL_DISPLAYNAME, it)
             }
         }
+
         stream?.user_login.let {
             if (it != null && it != requireArguments().getString(C.CHANNEL_LOGIN)) {
                 requireArguments().putString(C.CHANNEL_LOGIN, it)
             }
         }
+
         if (stream?.title != null) {
             title.visible()
             title.text = stream.title.trim()
         } else {
             title.gone()
         }
+
         if (stream?.game_name != null) {
             gameName.visible()
             gameName.text = stream.game_name
         } else {
             gameName.gone()
         }
+
         if (stream?.viewer_count != null) {
             viewers.visible()
             viewers.text = TwitchApiHelper.formatViewersCount(requireContext(), stream.viewer_count)
         } else {
             viewers.gone()
         }
-        if (requireContext().prefs().getBoolean(C.UI_UPTIME, true)) {
-            if (stream?.started_at != null) {
-                TwitchApiHelper.getUptime(requireContext(), stream.started_at).let {
-                    if (it != null) {
-                        uptime.visible()
-                        uptime.text = requireContext().getString(R.string.uptime, it)
-                    } else {
-                        uptime.gone()
-                    }
+
+        if (stream?.started_at != null) {
+            TwitchApiHelper.getUptime(requireContext(), stream.started_at).let {
+                if (it != null) {
+                    uptime.visible()
+                    uptime.text = requireContext().getString(R.string.uptime, it)
+                } else {
+                    uptime.gone()
                 }
             }
         }
@@ -241,6 +239,27 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
         if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {
             viewModel.updateLocalUser(requireContext(), user)
+        }
+
+        if (user.created_at != null) {
+            userCreated.visible()
+            userCreated.text = requireContext().getString(
+                R.string.created_at,
+                TwitchApiHelper.formatTimeString(requireContext(), user.created_at)
+            )
+        }
+
+        if (user.followers_count != null) {
+            userFollowers.visible()
+            userFollowers.text = requireContext().getString(
+                R.string.followers,
+                TwitchApiHelper.formatCount(requireContext(), user.followers_count)
+            )
+        }
+
+        if (user.view_count != null) {
+            userViews.visible()
+            userViews.text = TwitchApiHelper.formatViewsCount(requireContext(), user.view_count)
         }
     }
 

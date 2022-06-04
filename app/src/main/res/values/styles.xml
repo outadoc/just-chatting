@@ -35,19 +35,6 @@
         <item name="layout_constraintDimensionRatio">H,16:9</item>
     </style>
 
-    <style name="ThumbnailItem">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:shadowColor">#000000</item>
-        <item name="android:shadowRadius">4</item>
-        <item name="android:textColor">@android:color/white</item>
-        <item name="android:textSize">13sp</item>
-    </style>
-
-    <style name="VideoTitle">
-        <item name="android:textSize">16sp</item>
-    </style>
-
     <style name="UserPicture">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>

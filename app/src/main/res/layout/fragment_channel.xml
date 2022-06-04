@@ -100,7 +100,7 @@
 
                 <TextView
                     android:id="@+id/title"
-                    style="@style/VideoTitle"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"

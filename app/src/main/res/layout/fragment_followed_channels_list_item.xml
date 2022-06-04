@@ -28,8 +28,8 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
-            android:layout_marginEnd="5dp"
             android:layout_marginTop="7dp"
+            android:layout_marginEnd="5dp"
             android:layout_marginBottom="7dp"
             android:gravity="center_vertical"
             android:orientation="vertical"
@@ -40,11 +40,11 @@
 
             <TextView
                 android:id="@+id/username"
-                style="@style/VideoTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textAlignment="viewStart"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:visibility="gone"
                 tools:text="Gorgc"
                 tools:visibility="visible" />
@@ -55,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textAlignment="viewStart"
+                android:textAppearance="?textAppearanceBodyMedium"
                 android:visibility="gone"
                 tools:text="123456 viewers"
                 tools:visibility="visible" />
@@ -65,6 +66,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textAlignment="viewStart"
+                android:textAppearance="?textAppearanceBodyMedium"
                 android:visibility="gone"
                 tools:text="123456 viewers"
                 tools:visibility="visible" />
@@ -90,6 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/twitch"
+                android:textAppearance="?textAppearanceLabelMedium"
                 android:visibility="gone"
                 tools:visibility="visible" />
 
@@ -98,6 +101,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/local"
+                android:textAppearance="?textAppearanceLabelMedium"
                 android:visibility="gone"
                 tools:visibility="visible" />
         </LinearLayout>

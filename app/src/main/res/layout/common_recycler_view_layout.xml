@@ -44,7 +44,7 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@layout/fragment_downloads_list_item" />
+            tools:listitem="@layout/fragment_followed_channels_list_item" />
 
     </com.github.andreyasadchy.xtra.ui.view.CustomSwipeRefreshLayout>
 
@@ -53,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nothing_here"
-        android:textSize="20sp"
+        android:textAppearance="?attr/textAppearanceDisplaySmall"
         android:visibility="gone"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -15,12 +15,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText1"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList1"
@@ -29,12 +29,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText2"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList2"
@@ -43,12 +43,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText3"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList3"
@@ -57,12 +57,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText4"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList4"
@@ -71,12 +71,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText5"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList5"
@@ -85,12 +85,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText6"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList6"
@@ -99,12 +99,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText7"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList7"
@@ -113,12 +113,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText8"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList8"
@@ -127,12 +127,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText9"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList9"
@@ -141,12 +141,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText10"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList10"
@@ -155,12 +155,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText11"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList11"
@@ -169,12 +169,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText12"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList12"
@@ -183,12 +183,12 @@
 
         <TextView
             android:id="@+id/apiSettingsText13"
-            style="@style/VideoTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="3dp"
+            android:textAppearance="?attr/textAppearanceTitleMedium" />
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList13"

@@ -8,10 +8,10 @@ import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.visible
-import kotlinx.android.synthetic.main.fragment_streams_list_item.view.gameName
-import kotlinx.android.synthetic.main.fragment_streams_list_item.view.title
-import kotlinx.android.synthetic.main.fragment_streams_list_item.view.userImage
-import kotlinx.android.synthetic.main.fragment_streams_list_item.view.username
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.gameName
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.title
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.userImage
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.username
 
 abstract class BaseStreamsAdapter(
     protected val fragment: Fragment,

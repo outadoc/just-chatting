@@ -61,7 +61,7 @@
 
             <TextView
                 android:id="@+id/userName"
-                style="@style/VideoTitle"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"

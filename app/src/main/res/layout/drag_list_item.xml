@@ -19,7 +19,7 @@
 
     <TextView
         android:id="@+id/text"
-        style="@style/VideoTitle"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="text" />

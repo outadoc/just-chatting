@@ -3,19 +3,21 @@ package com.github.andreyasadchy.xtra.ui.settings
 import android.app.Activity
 import android.content.ComponentName
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
-import androidx.preference.*
+import androidx.preference.ListPreference
+import androidx.preference.Preference
+import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SwitchPreferenceCompat
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.ui.settings.api.DragListFragment
-import com.github.andreyasadchy.xtra.util.*
+import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.applyTheme
+import com.github.andreyasadchy.xtra.util.shortToast
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -84,18 +86,6 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
                 true
             }
 
-            findPreference<ListPreference>(C.UI_CUTOUTMODE)?.apply {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    setOnPreferenceChangeListener { _, _ ->
-                        changed = true
-                        activity.recreate()
-                        true
-                    }
-                } else {
-                    isVisible = false
-                }
-            }
-
             findPreference<Preference>("theme_settings")?.setOnPreferenceClickListener {
                 parentFragmentManager
                     .beginTransaction()
@@ -105,38 +95,13 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
                 true
             }
 
-            findPreference<SwitchPreferenceCompat>(C.UI_ROUNDUSERIMAGE)?.onPreferenceChangeListener = changeListener
             findPreference<SwitchPreferenceCompat>(C.UI_TRUNCATEVIEWCOUNT)?.onPreferenceChangeListener = changeListener
             findPreference<SwitchPreferenceCompat>(C.UI_UPTIME)?.onPreferenceChangeListener = changeListener
             findPreference<SwitchPreferenceCompat>(C.UI_TAGS)?.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.UI_BROADCASTERSCOUNT)?.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.UI_BOOKMARK_TIME_LEFT)?.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.UI_SCROLLTOP)?.onPreferenceChangeListener = changeListener
-            findPreference<ListPreference>(C.PORTRAIT_COLUMN_COUNT)?.onPreferenceChangeListener = changeListener
-            findPreference<ListPreference>(C.LANDSCAPE_COLUMN_COUNT)?.onPreferenceChangeListener = changeListener
-            findPreference<SwitchPreferenceCompat>(C.COMPACT_STREAMS)?.onPreferenceChangeListener = changeListener
-
-            findPreference<Preference>("buffer_settings")?.setOnPreferenceClickListener {
-                parentFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.settings, BufferSettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
-                true
-            }
 
             findPreference<Preference>("clear_video_positions")?.setOnPreferenceChangeListener { _, _ ->
                 viewModel.deletePositions()
                 requireContext().shortToast(R.string.cleared)
-                true
-            }
-
-            findPreference<Preference>("token_settings")?.setOnPreferenceClickListener {
-                parentFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.settings, TokenSettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
                 true
             }
 
@@ -208,33 +173,11 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
                 activity.recreate()
                 true
             }
-            findPreference<SwitchPreferenceCompat>(C.UI_STATUSBAR)?.setOnPreferenceChangeListener { _, _ ->
-                changed = true
-                activity.recreate()
-                true
-            }
-            findPreference<SwitchPreferenceCompat>(C.UI_NAVBAR)?.setOnPreferenceChangeListener { _, _ ->
-                changed = true
-                activity.recreate()
-                true
-            }
         }
 
         override fun onSaveInstanceState(outState: Bundle) {
             outState.putBoolean(SettingsFragment.KEY_CHANGED, changed)
             super.onSaveInstanceState(outState)
-        }
-    }
-
-    class BufferSettingsFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.buffer_preferences, rootKey)
-        }
-    }
-
-    class TokenSettingsFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.token_preferences, rootKey)
         }
     }
 }

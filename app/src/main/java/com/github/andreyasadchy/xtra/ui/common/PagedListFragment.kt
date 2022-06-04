@@ -38,7 +38,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                 })
             }
         })
-        if (!requireContext().prefs().getBoolean(C.UI_SCROLLTOP, true) || parentFragment is FollowMediaFragment || parentFragment is FollowPagerFragment || parentFragment is SearchFragment) {
+        if (parentFragment is FollowMediaFragment || parentFragment is FollowPagerFragment || parentFragment is SearchFragment) {
             scrollTop.isEnabled = false
         }
         recyclerView.let {

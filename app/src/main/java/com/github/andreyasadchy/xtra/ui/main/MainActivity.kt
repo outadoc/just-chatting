@@ -1,7 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.main
 
 import android.content.*
-import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.Bundle
@@ -52,15 +51,9 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
         prefs = prefs()
         if (prefs.getBoolean(C.FIRST_LAUNCH2, true)) {
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.root_preferences, false)
-            PreferenceManager.setDefaultValues(this@MainActivity, R.xml.buffer_preferences, true)
-            PreferenceManager.setDefaultValues(this@MainActivity, R.xml.token_preferences, true)
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.api_preferences, true)
             prefs.edit {
                 putBoolean(C.FIRST_LAUNCH2, false)
-                if (resources.getBoolean(R.bool.isTablet)) {
-                    putString(C.PORTRAIT_COLUMN_COUNT, "2")
-                    putString(C.LANDSCAPE_COLUMN_COUNT, "3")
-                }
             }
         }
         if (prefs.getBoolean(C.FIRST_LAUNCH, true)) {
@@ -192,7 +185,9 @@ class MainActivity : AppCompatActivity(), BaseStreamsFragment.OnStreamSelectedLi
     private fun initNavigation() {
         fragNavController.apply {
             rootFragments = listOf(
-                FollowMediaFragment.newInstance(prefs.getBoolean(C.UI_FOLLOWPAGER, true), prefs.getString(C.UI_FOLLOW_DEFAULT_PAGE, "0")?.toInt(), !User.get(this@MainActivity).gqlToken.isNullOrBlank()),
+                FollowMediaFragment.newInstance(
+                    loggedIn = !User.get(this@MainActivity).gqlToken.isNullOrBlank()
+                ),
             )
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
             transactionListener = object : FragNavController.TransactionListener {

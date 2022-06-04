@@ -17,9 +17,8 @@ class GridRecyclerView : RecyclerView {
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
 
-    private val prefs = context.prefs()
-    private val portraitColumns = prefs.getString(C.PORTRAIT_COLUMN_COUNT, "1")!!.toInt()
-    private val landscapeColumns = prefs.getString(C.LANDSCAPE_COLUMN_COUNT, "2")!!.toInt()
+    private val portraitColumns = 1
+    private val landscapeColumns = 2
 
     private val gridLayoutManager: GridLayoutManager
 

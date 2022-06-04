@@ -51,29 +51,20 @@ fun Activity.applyTheme(): String {
         else -> R.style.DarkTheme
     })
 
-    if (prefs().getBoolean(C.UI_STATUSBAR, true)) {
-        when (theme) {
-            "1" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)
-            "2" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryLight)
-            "3" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryBlue)
-            else -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryDark)
-        }
+    when (theme) {
+        "1" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)
+        "2" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryLight)
+        "3" -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryBlue)
+        else -> window.statusBarColor = ContextCompat.getColor(this, R.color.primaryDark)
     }
-    if (prefs().getBoolean(C.UI_NAVBAR, true)) {
-        when (theme) {
-            "1" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)
-            "2" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryLight)
-            "3" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryBlue)
-            else -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryDark)
-        }
+
+    when (theme) {
+        "1" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryAmoled)
+        "2" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryLight)
+        "3" -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryBlue)
+        else -> window.navigationBarColor = ContextCompat.getColor(this, R.color.primaryDark)
     }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-        window.attributes.layoutInDisplayCutoutMode = when (prefs().getString(C.UI_CUTOUTMODE, "DEFAULT")) {
-            "1" -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
-            "2" -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_NEVER
-            else -> WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_DEFAULT
-        }
-    }
+
     return theme
 }
 

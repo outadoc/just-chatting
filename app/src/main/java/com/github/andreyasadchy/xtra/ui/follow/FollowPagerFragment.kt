@@ -8,12 +8,10 @@ import com.github.andreyasadchy.xtra.ui.main.MainActivity
 class FollowPagerFragment : MediaPagerFragment() {
 
     companion object {
-        private const val DEFAULT_ITEM = "default_item"
         private const val LOGGED_IN = "logged_in"
 
-        fun newInstance(defaultItem: Int?, loggedIn: Boolean) = FollowPagerFragment().apply {
+        fun newInstance(loggedIn: Boolean) = FollowPagerFragment().apply {
             arguments = Bundle().apply {
-                putInt(DEFAULT_ITEM, defaultItem ?: 0)
                 putBoolean(LOGGED_IN, loggedIn)
             }
         }

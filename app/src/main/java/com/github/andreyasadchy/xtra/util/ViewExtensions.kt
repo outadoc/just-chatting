@@ -49,7 +49,7 @@ fun ImageView.loadImage(fragment: Fragment, url: String?, changes: Boolean = fal
                 val key = if (lastMinute < 5) minutes - lastMinute else minutes - (lastMinute - 5)
                 request.signature(ObjectKey(key))
             }
-            if (circle && context.prefs().getBoolean(C.UI_ROUNDUSERIMAGE, true)) {
+            if (circle) {
                 request.circleCrop()
             }
             request.into(this)

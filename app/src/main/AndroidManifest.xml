@@ -8,54 +8,46 @@
 
     <application
         android:name=".XtraApp"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher"
-        android:theme="@style/DarkTheme"
         android:supportsRtl="true"
-        android:allowBackup="false"
-        android:fullBackupContent="@xml/backup_rules"
-        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:theme="@style/DarkTheme"
         tools:targetApi="s">
+
         <activity
             android:name=".ui.main.MainActivity"
-            android:launchMode="singleTask"
-            android:supportsPictureInPicture="true"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:exported="true">
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:supportsPictureInPicture="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="https" />
                 <data android:host="*.twitch.tv" />
                 <data android:host="twitch.tv" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.settings.SettingsActivity"/>
+
+        <activity android:name=".ui.settings.SettingsActivity" />
+
         <activity
             android:name=".ui.login.LoginActivity"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
 
-        <meta-data android:name="android.max_aspect" android:value="ratio_float" />
-
-        <receiver
-            android:name=".util.AdminReceiver"
-            android:label="@string/app_name"
-            android:permission="android.permission.BIND_DEVICE_ADMIN"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.device_admin"
-                android:resource="@xml/device_admin" />
-            <intent-filter>
-                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
-            </intent-filter>
-        </receiver>
     </application>
-
 </manifest>

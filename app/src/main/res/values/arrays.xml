@@ -6,28 +6,6 @@
         <item>@string/hide</item>
     </string-array>
 
-    <string-array name="backgroundPlaybackEntries">
-        <item>@string/picture_in_picture</item>
-        <item>@string/audio_only</item>
-        <item>@string/disabled</item>
-    </string-array>
-
-    <string-array name="backgroundPlaybackValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
-    <string-array name="backgroundPlaybackNoPipEntries">
-        <item>@string/audio_only</item>
-        <item>@string/disabled</item>
-    </string-array>
-
-    <string-array name="backgroundPlaybackNoPipValues">
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
     <string-array name="imageQualityEntries">
         <item>1x</item>
         <item>2x</item>
@@ -73,23 +51,6 @@
         <item>@string/games</item>
     </string-array>
 
-    <string-array name="spinnerFollowedValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="spinnerSavedEntries">
-        <item>@string/bookmarks</item>
-        <item>@string/downloads</item>
-    </string-array>
-
-    <string-array name="spinnerSavedValues">
-        <item>0</item>
-        <item>1</item>
-    </string-array>
-
     <string-array name="themeEntries">
         <item>@string/dark</item>
         <item>@string/amoled</item>
@@ -104,102 +65,20 @@
         <item>3</item>
     </string-array>
 
-    <string-array name="portraitColumnCount">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
-    <string-array name="landscapeColumnCount">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-    </string-array>
-
-    <string-array name="playerSeekEntries">
-        <item>5</item>
-        <item>10</item>
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-    </string-array>
-
-    <string-array name="playerSeekValues">
-        <item>5000</item>
-        <item>10000</item>
-        <item>15000</item>
-        <item>30000</item>
-        <item>60000</item>
-    </string-array>
-
-    <string-array name="playerQualityEntries">
-        <item>@string/saved_value</item>
-        <item>@string/auto</item>
-        <item>@string/source</item>
-        <item>@string/playerQualityEntries3</item>
-        <item>@string/playerQualityEntries2</item>
-        <item>@string/playerQualityEntries1</item>
-        <item>160p</item>
-    </string-array>
-
-    <string-array name="playerQualityValues">
-        <item>saved</item>
-        <item>Auto</item>
-        <item>Source</item>
-        <item>720</item>
-        <item>480</item>
-        <item>360</item>
-        <item>160</item>
-    </string-array>
-
     <string-array name="languageEntries">
         <item>@string/lang_auto</item>
         <item>@string/lang_en</item>
-        <item>@string/lang_ar</item>
-        <item>@string/lang_es</item>
-        <item>@string/lang_ja</item>
-        <item>@string/lang_pt</item>
-        <item>@string/lang_ru</item>
-        <item>@string/lang_tr</item>
     </string-array>
 
     <string-array name="language">
         <item>auto</item>
         <item>en</item>
-        <item>ar</item>
-        <item>es</item>
-        <item>ja</item>
-        <item>pt</item>
-        <item>ru</item>
-        <item>tr</item>
-    </string-array>
-
-    <string-array name="cutoutmodeEntries">
-        <item>@string/always</item>
-        <item>@string/portrait_only</item>
-        <item>@string/never</item>
-    </string-array>
-
-    <string-array name="cutoutmodeValues">
-        <item>1</item>
-        <item>0</item>
-        <item>2</item>
     </string-array>
 
     <string-array name="miscValues">
         <item>0</item>
         <item>1</item>
         <item>2</item>
-    </string-array>
-
-    <string-array name="followedEntries">
-        <item>@string/always</item>
-        <item>@string/when_logged_in</item>
-        <item>@string/never</item>
     </string-array>
 
     <string-array name="chatFirstMsgEntries">

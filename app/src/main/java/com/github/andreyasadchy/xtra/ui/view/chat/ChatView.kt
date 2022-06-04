@@ -86,7 +86,7 @@ class ChatView : ConstraintLayout {
             emoteSize = context.convertDpToPixels(29.5f),
             badgeSize = context.convertDpToPixels(18.5f),
             randomColor = context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
-            boldNames = context.prefs().getBoolean(C.CHAT_BOLDNAMES, false),
+            boldNames = true,
             enableZeroWidth = context.prefs().getBoolean(C.CHAT_ZEROWIDTH, true),
             enableTimestamps = context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
             timestampFormat = context.prefs().getString(C.CHAT_TIMESTAMP_FORMAT, "0"),

@@ -35,7 +35,7 @@ class ChatFragment : BaseNetworkFragment(), LifecycleListener, MessageClickedDia
         val channelName = args.getString(KEY_CHANNEL_NAME)
         val user = User.get(requireContext())
         val userIsLoggedIn = user is LoggedIn
-        val useSSl = requireContext().prefs().getBoolean(C.CHAT_USE_SSL, true)
+        val useSSl = true
         val usePubSub = requireContext().prefs().getBoolean(C.CHAT_PUBSUB_ENABLED, true)
         val helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, "")
         val gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "") ?: ""

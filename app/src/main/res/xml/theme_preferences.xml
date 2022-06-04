@@ -34,16 +34,4 @@
         android:title="@string/dark_theme_off"
         app:iconSpaceReserved="false"/>
 
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="ui_statusbar"
-        android:title="@string/statusBarColor"
-        app:iconSpaceReserved="false"/>
-
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="ui_navbar"
-        android:title="@string/navigationBarColor"
-        app:iconSpaceReserved="false"/>
-
 </androidx.preference.PreferenceScreen>

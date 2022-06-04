@@ -12,12 +12,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
-import androidx.viewpager.widget.ViewPager
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.Utils
+import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
 import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
@@ -30,10 +30,8 @@ import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.visible
-import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.fragment_channel.appBar
 import kotlinx.android.synthetic.main.fragment_channel.bannerImage
-import kotlinx.android.synthetic.main.fragment_channel.collapsingToolbar
 import kotlinx.android.synthetic.main.fragment_channel.follow
 import kotlinx.android.synthetic.main.fragment_channel.gameName
 import kotlinx.android.synthetic.main.fragment_channel.lastBroadcast
@@ -52,7 +50,6 @@ import kotlinx.android.synthetic.main.fragment_channel.userType
 import kotlinx.android.synthetic.main.fragment_channel.userViews
 import kotlinx.android.synthetic.main.fragment_channel.viewers
 import kotlinx.android.synthetic.main.fragment_channel.watchLive
-import kotlinx.android.synthetic.main.fragment_media_pager.viewPager
 
 class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
@@ -78,9 +75,21 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
         super.onViewCreated(view, savedInstanceState)
         val activity = requireActivity() as MainActivity
         val user = User.get(activity)
-        setAdapter(ChannelPagerAdapter(activity, childFragmentManager, requireArguments()))
 
-        requireArguments().getString(C.CHANNEL_DISPLAYNAME).let {
+        val args = requireArguments()
+        childFragmentManager
+            .beginTransaction()
+            .replace(
+                R.id.fragmentContainer,
+                ChatFragment.newInstance(
+                    args.getString(C.CHANNEL_ID),
+                    args.getString(C.CHANNEL_LOGIN),
+                    args.getString(C.CHANNEL_DISPLAYNAME)
+                )
+            )
+            .commit()
+
+        args.getString(C.CHANNEL_DISPLAYNAME).let {
             if (it != null) {
                 userLayout.visible()
                 userName.visible()
@@ -89,7 +98,8 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 userName.gone()
             }
         }
-        requireArguments().getString(C.CHANNEL_PROFILEIMAGE).let {
+
+        args.getString(C.CHANNEL_PROFILEIMAGE).let {
             if (it != null) {
                 userLayout.visible()
                 userImage.visible()
@@ -129,23 +139,6 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 show()
             }
         }
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            private val layoutParams = collapsingToolbar.layoutParams as AppBarLayout.LayoutParams
-            private val originalScrollFlags = layoutParams.scrollFlags
-
-            override fun onPageSelected(position: Int) {
-//                layoutParams.scrollFlags = if (position != 3) {
-                layoutParams.scrollFlags = if (position != 2) {
-                    originalScrollFlags
-                } else {
-                    appBar.setExpanded(false, isResumed)
-                    AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL
-                }
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {}
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-        })
     }
 
     override fun initialize() {

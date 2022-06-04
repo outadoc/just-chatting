@@ -8,24 +8,24 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
-            app:scrimAnimationDuration="200"
             app:expandedTitleGravity="bottom|center_horizontal"
-            app:expandedTitleMarginBottom="10dp">
+            app:expandedTitleMarginBottom="10dp"
+            app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed"
+            app:scrimAnimationDuration="200">
 
             <LinearLayout
                 android:id="@+id/toolbarContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center_horizontal"
                 android:layout_marginTop="?attr/actionBarSize"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
                 app:layout_collapseMode="parallax">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -71,8 +71,8 @@
                         android:layout_height="match_parent"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
                         android:layout_marginTop="7dp"
+                        android:layout_marginEnd="10dp"
                         android:layout_marginBottom="7dp"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
@@ -148,8 +148,8 @@
                         android:layout_height="match_parent"
                         android:layout_centerVertical="true"
                         android:layout_marginStart="10dp"
-                        android:layout_marginEnd="5dp"
                         android:layout_marginTop="7dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_marginBottom="7dp"
                         android:gravity="center_vertical"
                         android:orientation="vertical"
@@ -229,10 +229,10 @@
                     android:id="@+id/watchLive"
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
+                    android:gravity="center"
                     android:text="@string/open_player"
                     android:textAllCaps="true"
-                    android:textSize="17sp"
-                    android:gravity="center"/>
+                    android:textSize="17sp" />
 
             </LinearLayout>
 
@@ -241,37 +241,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:minHeight="?attr/actionBarSize"
-                app:layout_collapseMode="pin" >
+                app:layout_collapseMode="pin">
 
                 <ImageView
                     android:id="@+id/menu"
-                    style="@style/MenuButton"/>
+                    style="@style/MenuButton" />
 
                 <ImageView
                     android:id="@+id/search"
-                    style="@style/Search"/>
+                    style="@style/Search" />
 
                 <ImageButton
                     android:id="@+id/follow"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:layout_gravity="end"
-                    android:src="@drawable/baseline_favorite_border_black_24"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:layout_marginEnd="7dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/baseline_favorite_border_black_24"
                     android:visibility="gone"
-                    tools:visibility="visible"
-                    app:tint="?attr/colorOnBackground" />
+                    app:tint="?attr/colorOnBackground"
+                    tools:visibility="visible" />
+
             </com.google.android.material.appbar.MaterialToolbar>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        layout="@layout/fragment_media_pager"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

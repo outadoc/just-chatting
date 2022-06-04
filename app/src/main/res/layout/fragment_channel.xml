@@ -8,7 +8,8 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/DarkTheme">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsingToolbar"
@@ -41,18 +42,17 @@
                     android:id="@+id/spacerTop"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    tools:layout_height="16dp"
                     app:layout_constraintBottom_toTopOf="@+id/toolbar"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toolbar" />
+                    app:layout_constraintTop_toBottomOf="@id/toolbar"
+                    tools:layout_height="16dp" />
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     android:minHeight="?attr/actionBarSize"
-                    style="@style/Widget.Material3.CollapsingToolbar.Medium"
                     app:layout_constraintBottom_toTopOf="@id/title"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -132,12 +132,12 @@
 
                 <TextView
                     android:id="@+id/viewers"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toTopOf="@+id/uptime"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/lastBroadcast"
+                    app:layout_constraintEnd_toStartOf="@id/uptime"
                     app:layout_constraintStart_toEndOf="@id/userImage"
                     app:layout_constraintTop_toBottomOf="@+id/gameName"
                     tools:text="1337499 viewers"
@@ -151,8 +151,8 @@
                     android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@id/lastBroadcast"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/userImage"
-                    app:layout_constraintTop_toBottomOf="@id/viewers"
+                    app:layout_constraintStart_toEndOf="@+id/viewers"
+                    app:layout_constraintTop_toBottomOf="@+id/gameName"
                     tools:text="8:21:33 uptime"
                     tools:visibility="visible" />
 
@@ -197,12 +197,12 @@
 
                 <TextView
                     android:id="@+id/userFollowers"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
                     android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@+id/userViews"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/userViews"
                     app:layout_constraintStart_toEndOf="@id/userImage"
                     app:layout_constraintTop_toBottomOf="@+id/userCreated"
                     tools:text="123456 followers"
@@ -216,8 +216,8 @@
                     android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@+id/spacerBottom"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/userImage"
-                    app:layout_constraintTop_toBottomOf="@+id/userFollowers"
+                    app:layout_constraintStart_toEndOf="@id/userFollowers"
+                    app:layout_constraintTop_toBottomOf="@+id/userCreated"
                     tools:text="123456 views"
                     tools:visibility="visible" />
 

@@ -30,11 +30,10 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        layout="@layout/fragment_media_pager"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

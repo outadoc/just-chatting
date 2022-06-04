@@ -1,106 +1,27 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="BaseLightTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <item name="colorAccent">@color/accent</item>
-        <item name="primaryColor">@color/primaryLight</item>
-        <item name="textColor">@android:color/black</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:windowBackground">?attr/primaryColor</item>
-        <item name="android:colorBackground">?attr/primaryColor</item>
-        <item name="android:statusBarColor">?attr/primaryColor</item>
-        <item name="navBarStyle">@style/NavBarLight</item>
-        <item name="bottomSheetDialogTheme">@style/BottomSheetLight</item>
-        <item name="dividerColor">@color/secondaryLight</item>
-        <item name="android:textColorSecondary">@color/secondaryTextColorLight</item>
-        <item name="secondaryTextColor">@color/secondaryTextColorLight</item>
-        <item name="colorButtonNormal">@color/secondaryLight</item>
-        <item name="android:dialogTheme">@style/DialogLight</item>
-        <item name="alertDialogTheme">@style/DialogLight</item>
-        <item name="android:alertDialogTheme">@style/DialogLight</item>
-        <item name="radioButtonStyle">@style/RadioButton</item>
-        <item name="chatStatus">@color/chatStatusLight</item>
-        <item name="chatRedeem">@color/accent</item>
-        <item name="preferenceTheme">@style/prefLight</item>
-        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
-        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
-    </style>
+    <style name="BaseLightTheme" parent="Theme.Material3.Light.NoActionBar" />
 
-    <style name="BaseDarkTheme" parent="Theme.MaterialComponents.NoActionBar" >
-        <item name="colorAccent">@android:color/white</item>
-        <item name="primaryColor">@android:color/black</item>
-        <item name="textColor">@android:color/white</item>
-        <item name="android:textColor">?attr/textColor</item>
-        <item name="android:windowBackground">?attr/primaryColor</item>
-        <item name="android:colorBackground">?attr/primaryColor</item>
-        <item name="android:statusBarColor">?attr/primaryColor</item>
-        <item name="navBarStyle">@style/NavBarAmoled</item>
-        <item name="bottomSheetDialogTheme">@style/BottomSheetAmoled</item>
-        <item name="dividerColor">@color/secondaryDark</item>
-        <item name="android:textColorSecondary">@color/secondaryTextColorDark</item>
-        <item name="secondaryTextColor">@color/secondaryTextColorDark</item>
-        <item name="colorButtonNormal">@color/secondaryAmoled</item>
-        <item name="android:dialogTheme">@style/DialogAmoled</item>
-        <item name="alertDialogTheme">@style/DialogAmoled</item>
-        <item name="android:alertDialogTheme">@style/DialogAmoled</item>
-        <item name="radioButtonStyle">@style/RadioButton</item>
-        <item name="chatStatus">@color/chatStatusDark</item>
-        <item name="chatRedeem">@color/accent</item>
-        <item name="preferenceTheme">@style/prefDark</item>
-    </style>
+    <style name="BaseDarkTheme" parent="Theme.Material3.Dark.NoActionBar" />
 
     <style name="LightTheme" parent="BaseLightTheme" />
+
     <style name="DarkTheme" parent="BaseDarkTheme" />
 
     <style name="AppTheme" parent="LightTheme" />
 
-    <style name="Card">
+    <style name="Card" parent="Widget.Material3.CardView.Outlined">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="cardCornerRadius">0dp</item>
-        <item name="cardBackgroundColor">?attr/primaryColor</item>
     </style>
 
-    <style name="NavBarLight">
-        <item name="android:background">@color/primaryLight</item>
-        <item name="itemIconTint">@color/nav_bar_light</item>
-        <item name="itemTextColor">@color/nav_bar_light</item>
-    </style>
+    <style name="BottomSheetLight" parent="Theme.Material3.Light.BottomSheetDialog" />
 
-    <style name="NavBarAmoled">
-        <item name="android:background">@android:color/black</item>
-        <item name="itemIconTint">@color/nav_bar_dark</item>
-        <item name="itemTextColor">@color/nav_bar_dark</item>
-    </style>
+    <style name="BottomSheetAmoled" parent="Theme.Material3.Dark.BottomSheetDialog" />
 
-    <style name="BottomSheetLight" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="android:backgroundTint">@color/primaryLight</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="colorButtonNormal">@color/secondaryLight</item>
-        <item name="radioButtonStyle">@style/RadioButton</item>
-    </style>
+    <style name="DialogLight" parent="Theme.Material3.Light.Dialog" />
 
-    <style name="BottomSheetAmoled" parent="Theme.MaterialComponents.BottomSheetDialog">
-        <item name="android:backgroundTint">@android:color/black</item>
-        <item name="colorAccent">@android:color/white</item>
-        <item name="colorButtonNormal">@color/secondaryAmoled</item>
-        <item name="radioButtonStyle">@style/RadioButton</item>
-    </style>
-
-    <style name="DialogLight" parent="Theme.MaterialComponents.Light.Dialog">
-        <item name="android:background">@color/primaryLight</item>
-        <item name="colorAccent">@color/accent</item>
-        <item name="buttonBarButtonStyle">@style/DialogButtonStyle</item>
-    </style>
-
-    <style name="DialogAmoled" parent="Theme.MaterialComponents.Dialog">
-        <item name="android:background">@android:color/black</item>
-        <item name="colorAccent">@android:color/white</item>
-        <item name="buttonBarButtonStyle">@style/DialogButtonStyle</item>
-    </style>
-
-    <style name="DialogButtonStyle" parent="Widget.AppCompat.Button.ButtonBar.AlertDialog">
-        <item name="android:textColor">?attr/textColor</item>
-    </style>
+    <style name="DialogAmoled" parent="Theme.Material3.Dark.Dialog" />
 
     <style name="Thumbnail">
         <item name="android:layout_width">match_parent</item>
@@ -132,7 +53,7 @@
         <item name="android:padding">5dp</item>
         <item name="android:src">@drawable/baseline_search_black_24</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-        <item name="android:tint">?attr/textColor</item>
+        <item name="android:tint">?attr/colorOnSurface</item>
         <item name="android:layout_gravity">end</item>
         <item name="android:layout_marginEnd">5dp</item>
         <item name="android:layout_marginRight">5dp</item>
@@ -144,7 +65,7 @@
         <item name="android:padding">5dp</item>
         <item name="android:src">@drawable/baseline_more_vert_black_24</item>
         <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-        <item name="android:tint">?attr/textColor</item>
+        <item name="android:tint">?attr/colorOnSurface</item>
         <item name="android:layout_gravity">end</item>
         <item name="android:layout_marginEnd">5dp</item>
         <item name="android:layout_marginRight">5dp</item>
@@ -171,14 +92,6 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">10dp</item>
-    </style>
-
-    <style name="prefDark" parent="@style/PreferenceThemeOverlay.v14.Material">
-        <item name="android:tint">@android:color/white</item>
-    </style>
-
-    <style name="prefLight" parent="@style/PreferenceThemeOverlay.v14.Material">
-        <item name="android:tint">@android:color/black</item>
     </style>
 
 </resources>

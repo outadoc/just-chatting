@@ -54,7 +54,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textAlignment="viewStart"
-                android:textColor="?attr/secondaryTextColor"
                 android:visibility="gone"
                 tools:text="123456 viewers"
                 tools:visibility="visible" />

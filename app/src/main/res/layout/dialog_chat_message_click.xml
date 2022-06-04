@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textAlignment="viewStart"
-                android:textColor="?attr/secondaryTextColor"
+                android:textColor="?attr/colorSecondary"
                 android:visibility="gone"
                 tools:text="Created at 123456"
                 tools:visibility="visible" />
@@ -87,7 +87,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textAlignment="viewStart"
-                android:textColor="?attr/secondaryTextColor"
+                android:textColor="?attr/colorSecondary"
                 android:visibility="gone"
                 tools:text="123456 followers"
                 tools:visibility="visible" />

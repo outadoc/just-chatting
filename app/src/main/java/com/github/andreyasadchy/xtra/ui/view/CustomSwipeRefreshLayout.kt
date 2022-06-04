@@ -14,9 +14,9 @@ class CustomSwipeRefreshLayout : SwipeRefreshLayout {
     init {
         val theme = context.theme
         val typedValue = TypedValue()
-        theme.resolveAttribute(R.attr.primaryColor, typedValue, true)
+        theme.resolveAttribute(R.attr.colorSurface, typedValue, true)
         setProgressBackgroundColorSchemeColor(typedValue.data)
-        theme.resolveAttribute(R.attr.textColor, typedValue, true)
+        theme.resolveAttribute(R.attr.colorSecondary, typedValue, true)
         setColorSchemeColors(typedValue.data)
     }
 }

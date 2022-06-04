@@ -13,6 +13,7 @@ import coil.util.DebugLogger
 import com.github.andreyasadchy.xtra.di.AppInjector
 import com.github.andreyasadchy.xtra.util.AppLifecycleObserver
 import com.github.andreyasadchy.xtra.util.LifecycleListener
+import com.google.android.material.color.DynamicColors
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -31,6 +32,7 @@ class XtraApp : Application(), HasAndroidInjector, ImageLoaderFactory {
         super.onCreate()
         INSTANCE = this
         AppInjector.init(this)
+        DynamicColors.applyToActivitiesIfAvailable(this);
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(appLifecycleObserver)
     }

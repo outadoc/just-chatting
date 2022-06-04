@@ -8,8 +8,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/primaryColor">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@id/toolbar"
@@ -36,7 +35,8 @@
                 android:layout_marginEnd="7dp"
                 android:visibility="gone"
                 tools:visibility="visible"
-                app:tint="?attr/textColor" />
+                app:tint="?attr/colorOnSurface" />
+
         </androidx.appcompat.widget.Toolbar>
 
         <Spinner

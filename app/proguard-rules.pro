@@ -20,7 +20,6 @@
 # hide the original source file title.
 #-renamesourcefileattribute SourceFile
 -dontwarn com.github.andreyasadchy.xtra.ui.**
--keep class com.iheartradio.m3u8.** { *; }
 
 -keep class com.woxthebox.draglistview.** { *; }
 

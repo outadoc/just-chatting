@@ -100,7 +100,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textAlignment="viewStart"
-                android:textColor="?attr/secondaryTextColor"
                 android:visibility="gone"
                 tools:text="@sample/streams.json/streams/channel/name"
                 tools:visibility="visible" />
@@ -111,7 +110,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="start"
                 android:textAlignment="viewStart"
-                android:textColor="?attr/secondaryTextColor"
                 android:visibility="gone"
                 tools:text="@sample/games.json/top/game/name"
                 tools:visibility="visible" />

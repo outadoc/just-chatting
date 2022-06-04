@@ -38,7 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
-            android:background="?attr/primaryColor"
+            android:background="?attr/colorSurface"
             android:orientation="horizontal"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/viewPager"
@@ -55,7 +55,7 @@
                 <MultiAutoCompleteTextView
                     android:id="@+id/editText"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="40dp"
                     android:completionThreshold="1"
                     android:hint="@string/chat_input_hint"
                     android:imeOptions="actionSend|flagNoFullscreen"
@@ -74,7 +74,7 @@
                 android:background="?android:selectableItemBackground"
                 android:src="@drawable/baseline_backspace_black_24"
                 android:visibility="gone"
-                app:tint="?attr/textColor"
+                app:tint="?attr/colorOnSurface"
                 tools:visibility="visible" />
 
             <ImageButton
@@ -83,7 +83,7 @@
                 android:layout_height="match_parent"
                 android:background="?android:selectableItemBackground"
                 android:src="@drawable/ic_tag_faces_black_24dp"
-                app:tint="?attr/textColor"
+                app:tint="?attr/colorOnSurface"
                 tools:visibility="visible" />
 
             <ImageButton
@@ -93,7 +93,7 @@
                 android:background="?android:selectableItemBackground"
                 android:src="@drawable/ic_send_black_24dp"
                 android:visibility="gone"
-                app:tint="?attr/textColor"
+                app:tint="?attr/colorOnSurface"
                 tools:visibility="visible" />
         </LinearLayout>
 
@@ -118,7 +118,7 @@
         android:id="@+id/flexbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/chatStatus"
+        android:background="?attr/colorPrimaryContainer"
         android:visibility="gone"
         app:flexWrap="wrap"
         app:justifyContent="space_evenly"
@@ -133,6 +133,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="@string/room_emote"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -141,6 +142,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:visibility="gone"
             tools:text="@string/room_followers_min"
             tools:visibility="visible" />
@@ -151,6 +153,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="@string/room_unique"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:visibility="gone"
             tools:visibility="visible" />
 
@@ -159,6 +162,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:visibility="gone"
             tools:text="@string/room_slow"
             tools:visibility="visible" />
@@ -169,6 +173,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="@string/room_subs"
+            android:textColor="?attr/colorOnPrimaryContainer"
             android:visibility="gone"
             tools:visibility="visible" />
     </com.google.android.flexbox.FlexboxLayout>
@@ -178,7 +183,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/chat_replay_unavailable"
-        android:textColor="?attr/textColor"
+        android:textColor="?attr/colorOnBackground"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -33,7 +33,7 @@
         app:layout_constraintEnd_toStartOf="@id/sortByText"
         app:layout_constraintRight_toLeftOf="@id/sortByText"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="?attr/textColor" />
+        app:tint="?attr/colorOnBackground" />
 
     <TextView
         android:id="@+id/sortByText"

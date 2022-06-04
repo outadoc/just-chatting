@@ -302,7 +302,6 @@ Removes a timeout on a user.</string>
     <string name="irc_notice_whisper_limit_per_sec">You are sending whispers too fast. Try again in a second.</string>
     <string name="irc_notice_whisper_restricted">Your settings prevent you from sending this whisper.</string>
     <string name="irc_notice_whisper_restricted_recipient">That user’s settings prevent them from receiving this whisper.</string>
-    <string name="admin_settings">Enable/disable as device admin app</string>
     <string name="disconnected">Disconnected</string>
     <string name="both">Both</string>
     <string name="timestamp_format_0">h:mm</string>
@@ -333,7 +332,6 @@ Removes a timeout on a user.</string>
     <string name="cleared">Cleared</string>
     <string name="irc_msgid_highlighted_message">Highlighted message</string>
     <string name="irc_msgid_announcement">Announcement</string>
-    <string name="debug_secondview">Movable in app PIP</string>
     <string name="image_library">Image library</string>
     <string name="imageLibraryEntries1">Coil</string>
     <string name="imageLibraryEntries2">Coil + Glide WebP</string>

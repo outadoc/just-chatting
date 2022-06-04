@@ -108,18 +108,6 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
                     .commit()
                 true
             }
-
-            findPreference<Preference>("admin_settings")?.setOnPreferenceClickListener {
-                startActivity(
-                    Intent().setComponent(
-                        ComponentName(
-                            "com.android.settings",
-                            "com.android.settings.DeviceAdminSettings"
-                        )
-                    )
-                )
-                true
-            }
         }
 
         override fun onSaveInstanceState(outState: Bundle) {

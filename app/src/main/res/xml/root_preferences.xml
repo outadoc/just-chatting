@@ -31,15 +31,6 @@
         android:title="@string/show_tags"
         app:iconSpaceReserved="false" />
 
-    <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/followButtonEntries"
-        android:entryValues="@array/miscValues"
-        android:key="ui_follow_button"
-        android:summary="%s"
-        android:title="@string/follow_button"
-        app:iconSpaceReserved="false" />
-
     <PreferenceCategory
         android:title="@string/settings_chat"
         app:iconSpaceReserved="false" />
@@ -166,11 +157,6 @@
         android:title="@string/api_settings"
         app:iconSpaceReserved="false" />
 
-    <Preference
-        android:key="admin_settings"
-        android:title="@string/admin_settings"
-        app:iconSpaceReserved="false" />
-
     <PreferenceCategory
         android:title="@string/settings_debug"
         app:iconSpaceReserved="false" />
@@ -179,12 +165,6 @@
         android:defaultValue="false"
         android:key="debug_chat_fullmsg"
         android:title="@string/show_copy_fullmsg"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="debug_secondview"
-        android:title="@string/debug_secondview"
         app:iconSpaceReserved="false" />
 
 </androidx.preference.PreferenceScreen>

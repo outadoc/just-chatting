@@ -47,9 +47,20 @@ class ChannelPagerViewModel @Inject constructor(
         get() { return _profileImageURL.value }
     override lateinit var follow: FollowLiveData
 
-    override fun setUser(user: User, helixClientId: String?, gqlClientId: String?, setting: Int) {
+    override fun setUser(user: User, helixClientId: String?, gqlClientId: String?) {
         if (!this::follow.isInitialized) {
-            follow = FollowLiveData(localFollowsChannel = localFollowsChannel, userId = userId, userLogin = userLogin, userName = userName, channelLogo = channelLogo, repository = repository, helixClientId = helixClientId, user = user, gqlClientId = gqlClientId, setting = setting, viewModelScope = viewModelScope)
+            follow = FollowLiveData(
+                localFollowsChannel = localFollowsChannel,
+                userId = userId,
+                userLogin = userLogin,
+                userName = userName,
+                channelLogo = channelLogo,
+                repository = repository,
+                helixClientId = helixClientId,
+                user = user,
+                gqlClientId = gqlClientId,
+                viewModelScope = viewModelScope
+            )
         }
     }
 

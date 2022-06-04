@@ -31,14 +31,13 @@ class FollowLiveData(
     private val helixClientId: String? = null,
     private val user: User,
     private val gqlClientId: String? = null,
-    private val setting: Int,
     private val viewModelScope: CoroutineScope
 ) : MutableLiveData<Boolean>() {
 
     init {
         viewModelScope.launch {
             try {
-                val isFollowing = if (setting == 0 && !user.gqlToken.isNullOrBlank()) {
+                val isFollowing = if (!user.gqlToken.isNullOrBlank()) {
                     when {
                         localFollowsGame != null && !user.gqlToken.isNullOrBlank() && !userName.isNullOrBlank() -> {
                             repository.loadGameFollowing(gqlClientId, user.gqlToken, userName)
@@ -69,7 +68,7 @@ class FollowLiveData(
     fun saveFollowChannel(context: Context) {
         GlobalScope.launch {
             try {
-                if (setting == 0 && !user.gqlToken.isNullOrBlank()) {
+                if (!user.gqlToken.isNullOrBlank()) {
                     repository.followUser(gqlClientId, user.gqlToken, userId)
                 } else {
                     if (userId != null) {
@@ -99,7 +98,7 @@ class FollowLiveData(
     fun deleteFollowChannel(context: Context) {
         viewModelScope.launch {
             try {
-                if (setting == 0 && !user.gqlToken.isNullOrBlank()) {
+                if (!user.gqlToken.isNullOrBlank()) {
                     repository.unfollowUser(gqlClientId, user.gqlToken, userId)
                 } else {
                     if (userId != null) {
@@ -114,7 +113,7 @@ class FollowLiveData(
     fun saveFollowGame(context: Context) {
         GlobalScope.launch {
             try {
-                if (setting == 0 && !user.gqlToken.isNullOrBlank()) {
+                if (!user.gqlToken.isNullOrBlank()) {
                     repository.followGame(gqlClientId, user.gqlToken, userId)
                 } else {
                     if (userId != null) {
@@ -150,7 +149,7 @@ class FollowLiveData(
     fun deleteFollowGame(context: Context) {
         viewModelScope.launch {
             try {
-                if (setting == 0 && !user.gqlToken.isNullOrBlank()) {
+                if (!user.gqlToken.isNullOrBlank()) {
                     repository.unfollowGame(gqlClientId, user.gqlToken, userId)
                 } else {
                     if (userId != null) {

@@ -164,17 +164,15 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
                 }
             }
         }
-        if ((requireContext().prefs().getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0) < 2) {
-            initializeFollow(
-                fragment = this,
-                viewModel = viewModel,
-                followButton = follow,
-                setting = requireContext().prefs().getString(C.UI_FOLLOW_BUTTON, "0")?.toInt() ?: 0,
-                user = User.get(activity),
-                helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-                gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
-            )
-        }
+
+        initializeFollow(
+            fragment = this,
+            viewModel = viewModel,
+            followButton = follow,
+            user = User.get(activity),
+            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
+            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+        )
     }
 
     private fun updateStreamLayout(stream: Stream?) {

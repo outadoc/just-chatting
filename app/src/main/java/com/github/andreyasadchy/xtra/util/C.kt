@@ -15,7 +15,6 @@ object C {
     const val FIRST_LAUNCH2 = "first_launch2"
     const val UI_TRUNCATEVIEWCOUNT = "ui_truncateviewcount"
     const val UI_LANGUAGE = "ui_language"
-    const val UI_FOLLOW_BUTTON = "ui_follow_button"
     const val UI_UPTIME = "ui_uptime"
     const val UI_TAGS = "ui_tags"
     const val ANIMATED_EMOTES = "animatedGifEmotes"

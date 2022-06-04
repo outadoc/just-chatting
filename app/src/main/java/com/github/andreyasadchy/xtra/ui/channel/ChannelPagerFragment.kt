@@ -3,19 +3,17 @@ package com.github.andreyasadchy.xtra.ui.channel
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.PopupMenu
+import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.Utils
@@ -23,9 +21,7 @@ import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
 import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
-import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
-import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
@@ -37,19 +33,10 @@ import kotlinx.android.synthetic.main.fragment_channel.bannerImage
 import kotlinx.android.synthetic.main.fragment_channel.follow
 import kotlinx.android.synthetic.main.fragment_channel.gameName
 import kotlinx.android.synthetic.main.fragment_channel.lastBroadcast
-import kotlinx.android.synthetic.main.fragment_channel.menu
-import kotlinx.android.synthetic.main.fragment_channel.search
-import kotlinx.android.synthetic.main.fragment_channel.streamLayout
 import kotlinx.android.synthetic.main.fragment_channel.title
 import kotlinx.android.synthetic.main.fragment_channel.toolbar
 import kotlinx.android.synthetic.main.fragment_channel.uptime
-import kotlinx.android.synthetic.main.fragment_channel.userCreated
-import kotlinx.android.synthetic.main.fragment_channel.userFollowers
 import kotlinx.android.synthetic.main.fragment_channel.userImage
-import kotlinx.android.synthetic.main.fragment_channel.userLayout
-import kotlinx.android.synthetic.main.fragment_channel.userName
-import kotlinx.android.synthetic.main.fragment_channel.userType
-import kotlinx.android.synthetic.main.fragment_channel.userViews
 import kotlinx.android.synthetic.main.fragment_channel.viewers
 import kotlinx.android.synthetic.main.fragment_channel.watchLive
 
@@ -85,10 +72,10 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val activity = requireActivity() as MainActivity
-        val user = User.get(activity)
 
+        val activity = requireActivity() as MainActivity
         val args = requireArguments()
+
         childFragmentManager
             .beginTransaction()
             .replace(
@@ -101,93 +88,32 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             )
             .commit()
 
-        args.getString(C.CHANNEL_DISPLAYNAME).let {
-            if (it != null) {
-                userLayout.visible()
-                userName.visible()
-                userName.text = it
-            } else {
-                userName.gone()
-            }
-        }
+        toolbar.title = args.getString(C.CHANNEL_DISPLAYNAME)
 
-        args.getString(C.CHANNEL_PROFILEIMAGE).let {
-            if (it != null) {
-                userLayout.visible()
+        args.getString(C.CHANNEL_PROFILEIMAGE).let { profileImage ->
+            if (profileImage != null) {
                 userImage.visible()
-                userImage.loadImage(this, it, circle = true)
+                userImage.loadImage(this, profileImage, circle = true)
             } else {
                 userImage.gone()
             }
         }
+
         toolbar.apply {
             navigationIcon = Utils.getNavigationIcon(activity)
             setNavigationOnClickListener { activity.popFragment() }
         }
-        search.setOnClickListener { activity.openSearch() }
-        menu.setOnClickListener { it ->
-            PopupMenu(activity, it).apply {
-                inflate(R.menu.top_menu)
-                menu.findItem(R.id.login).title =
-                    if (user !is NotLoggedIn) getString(R.string.log_out) else getString(R.string.log_in)
-                setOnMenuItemClickListener {
-                    when (it.itemId) {
-                        R.id.settings -> {
-                            activity.startActivityFromFragment(
-                                this@ChannelPagerFragment,
-                                Intent(activity, SettingsActivity::class.java),
-                                3
-                            )
-                        }
-                        R.id.login -> {
-                            if (user is NotLoggedIn) {
-                                activity.startActivityForResult(
-                                    Intent(
-                                        activity,
-                                        LoginActivity::class.java
-                                    ),
-                                    1
-                                )
-                            } else {
-                                AlertDialog.Builder(activity).apply {
-                                    setTitle(getString(R.string.logout_title))
-                                    user.login?.let { user ->
-                                        setMessage(
-                                            getString(
-                                                R.string.logout_msg,
-                                                user
-                                            )
-                                        )
-                                    }
-                                    setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.dismiss() }
-                                    setPositiveButton(getString(R.string.yes)) { _, _ ->
-                                        activity.startActivityForResult(
-                                            Intent(activity, LoginActivity::class.java),
-                                            2
-                                        )
-                                    }
-                                }.show()
-                            }
-                        }
-                        else -> menu.close()
-                    }
-                    true
-                }
-                show()
-            }
+
+        watchLive.setOnClickListener {
+            TODO("open stream intent")
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(appBar) { appBar, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-
-            appBar.setPadding(
-                view.paddingLeft,
-                insets.top,
-                view.paddingRight,
-                view.paddingBottom
-            )
-
-            WindowInsetsCompat.CONSUMED
+            toolbar.updateLayoutParams<MarginLayoutParams> {
+                topMargin = insets.top
+            }
+            windowInsets
         }
     }
 
@@ -232,28 +158,25 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
     }
 
     private fun updateStreamLayout(stream: Stream?) {
-        if (stream?.type?.lowercase() == "rerun") {
-            watchLive.text = getString(R.string.watch_rerun)
+        if (stream?.viewer_count != null) {
+            watchLive.contentDescription = getString(R.string.watch_live)
+            watchLive.visible()
         } else {
-            if (stream?.viewer_count != null) {
-                watchLive.text = getString(R.string.watch_live)
-            } else {
-                if (stream?.lastBroadcast != null) {
-                    TwitchApiHelper.formatTimeString(requireContext(), stream.lastBroadcast).let {
-                        if (it != null) {
-                            lastBroadcast.visible()
-                            lastBroadcast.text =
-                                requireContext().getString(R.string.last_broadcast_date, it)
-                        } else {
-                            lastBroadcast.gone()
-                        }
+            if (stream?.lastBroadcast != null) {
+                TwitchApiHelper.formatTimeString(requireContext(), stream.lastBroadcast).let {
+                    if (it != null) {
+                        lastBroadcast.contentDescription =
+                            requireContext().getString(R.string.last_broadcast_date, it)
+                        lastBroadcast.visible()
+                    } else {
+                        lastBroadcast.gone()
                     }
                 }
             }
         }
+
         stream?.channelLogo.let {
             if (it != null) {
-                userLayout.visible()
                 userImage.visible()
                 userImage.loadImage(this, it, circle = true)
                 requireArguments().putString(C.CHANNEL_PROFILEIMAGE, it)
@@ -263,9 +186,7 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
         }
         stream?.user_name.let {
             if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
-                userLayout.visible()
-                userName.visible()
-                userName.text = it
+                toolbar.title = it
                 requireArguments().putString(C.CHANNEL_DISPLAYNAME, it)
             }
         }
@@ -275,21 +196,18 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             }
         }
         if (stream?.title != null) {
-            streamLayout.visible()
             title.visible()
             title.text = stream.title.trim()
         } else {
             title.gone()
         }
         if (stream?.game_name != null) {
-            streamLayout.visible()
             gameName.visible()
             gameName.text = stream.game_name
         } else {
             gameName.gone()
         }
         if (stream?.viewer_count != null) {
-            streamLayout.visible()
             viewers.visible()
             viewers.text = TwitchApiHelper.formatViewersCount(requireContext(), stream.viewer_count)
         } else {
@@ -299,7 +217,6 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
             if (stream?.started_at != null) {
                 TwitchApiHelper.getUptime(requireContext(), stream.started_at).let {
                     if (it != null) {
-                        streamLayout.visible()
                         uptime.visible()
                         uptime.text = requireContext().getString(R.string.uptime, it)
                     } else {
@@ -312,75 +229,15 @@ class ChannelPagerFragment : MediaPagerFragment(), FollowFragment, Scrollable {
 
     private fun updateUserLayout(user: com.github.andreyasadchy.xtra.model.helix.user.User) {
         if (!userImage.isVisible && user.channelLogo != null) {
-            userLayout.visible()
             userImage.visible()
             userImage.loadImage(this, user.channelLogo, circle = true)
             requireArguments().putString(C.CHANNEL_PROFILEIMAGE, user.channelLogo)
         }
+
         if (user.bannerImageURL != null) {
-            bannerImage.visible()
             bannerImage.loadImage(this, user.bannerImageURL)
-            if (userName.isVisible) {
-                userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
-            }
-        } else {
-            bannerImage.gone()
         }
-        if (user.created_at != null) {
-            userCreated.visible()
-            userCreated.text = requireContext().getString(
-                R.string.created_at,
-                TwitchApiHelper.formatTimeString(requireContext(), user.created_at)
-            )
-            if (user.bannerImageURL != null) {
-                userCreated.setTextColor(Color.LTGRAY)
-                userCreated.setShadowLayer(4f, 0f, 0f, Color.BLACK)
-            }
-        } else {
-            userCreated.gone()
-        }
-        if (user.followers_count != null) {
-            userFollowers.visible()
-            userFollowers.text = requireContext().getString(
-                R.string.followers,
-                TwitchApiHelper.formatCount(requireContext(), user.followers_count)
-            )
-            if (user.bannerImageURL != null) {
-                userFollowers.setTextColor(Color.LTGRAY)
-                userFollowers.setShadowLayer(4f, 0f, 0f, Color.BLACK)
-            }
-        } else {
-            userFollowers.gone()
-        }
-        if (user.view_count != null) {
-            userViews.visible()
-            userViews.text = TwitchApiHelper.formatViewsCount(requireContext(), user.view_count)
-            if (user.bannerImageURL != null) {
-                userViews.setTextColor(Color.LTGRAY)
-                userViews.setShadowLayer(4f, 0f, 0f, Color.BLACK)
-            }
-        } else {
-            userViews.gone()
-        }
-        val broadcasterType = if (user.broadcaster_type != null) {
-            TwitchApiHelper.getUserType(requireContext(), user.broadcaster_type)
-        } else null
-        val type = if (user.type != null) {
-            TwitchApiHelper.getUserType(requireContext(), user.type)
-        } else null
-        val typeString =
-            if (broadcasterType != null && type != null) "$broadcasterType, $type" else broadcasterType
-                ?: type
-        if (typeString != null) {
-            userType.visible()
-            userType.text = typeString
-            if (user.bannerImageURL != null) {
-                userType.setTextColor(Color.LTGRAY)
-                userType.setShadowLayer(4f, 0f, 0f, Color.BLACK)
-            }
-        } else {
-            userType.gone()
-        }
+
         if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {
             viewModel.updateLocalUser(requireContext(), user)
         }

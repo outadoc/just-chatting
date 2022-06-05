@@ -2,7 +2,7 @@ package com.github.andreyasadchy.xtra.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.github.andreyasadchy.xtra.ui.channel.ChannelChatViewModel
+import com.github.andreyasadchy.xtra.ui.chat.ChannelChatViewModel
 import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.common.GenericViewModelFactory
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsViewModel

@@ -44,13 +44,14 @@ abstract class MediaFragment : Fragment(), Scrollable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val activity = requireActivity() as MainActivity
-        val user = User.get(activity)
+        val user = User.get(requireContext())
 
-        search.setOnClickListener { activity.openSearch() }
+        search.setOnClickListener {
+            (activity as? MainActivity)?.openSearch()
+        }
 
         menu.setOnClickListener { it ->
-            PopupMenu(activity, it).apply {
+            PopupMenu(requireContext(), it).apply {
                 inflate(R.menu.top_menu)
 
                 menu.findItem(R.id.login).title =
@@ -60,7 +61,7 @@ abstract class MediaFragment : Fragment(), Scrollable {
                 setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.settings -> {
-                            activity.startActivityFromFragment(
+                            activity?.startActivityFromFragment(
                                 this@MediaFragment,
                                 Intent(activity, SettingsActivity::class.java),
                                 3
@@ -68,7 +69,7 @@ abstract class MediaFragment : Fragment(), Scrollable {
                         }
                         R.id.login -> {
                             if (user is NotLoggedIn) {
-                                activity.startActivityForResult(
+                                activity?.startActivityForResult(
                                     Intent(
                                         activity,
                                         LoginActivity::class.java
@@ -76,7 +77,7 @@ abstract class MediaFragment : Fragment(), Scrollable {
                                     1
                                 )
                             } else {
-                                AlertDialog.Builder(activity).apply {
+                                AlertDialog.Builder(requireContext()).apply {
                                     setTitle(getString(R.string.logout_title))
                                     user.login?.let { user ->
                                         setMessage(
@@ -88,7 +89,7 @@ abstract class MediaFragment : Fragment(), Scrollable {
                                     }
                                     setNegativeButton(getString(R.string.no)) { dialog, _ -> dialog.dismiss() }
                                     setPositiveButton(getString(R.string.yes)) { _, _ ->
-                                        activity.startActivityForResult(
+                                        activity?.startActivityForResult(
                                             Intent(activity, LoginActivity::class.java),
                                             2
                                         )

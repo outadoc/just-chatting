@@ -1,4 +1,4 @@
-package com.github.andreyasadchy.xtra.ui.channel
+package com.github.andreyasadchy.xtra.ui.chat
 
 import android.app.Activity
 import android.content.Intent
@@ -20,7 +20,6 @@ import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.Utils
-import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
@@ -91,13 +90,14 @@ class ChannelChatFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val activity = requireActivity() as MainActivity
         val args = requireArguments()
 
         toolbar.apply {
             title = args.getString(C.CHANNEL_DISPLAYNAME)
-            navigationIcon = Utils.getNavigationIcon(activity)
-            setNavigationOnClickListener { activity.popFragment() }
+            navigationIcon = Utils.getNavigationIcon(requireContext())
+            setNavigationOnClickListener {
+                (activity as? MainActivity)?.popFragment()
+            }
         }
 
         watchLive.setOnClickListener {
@@ -119,8 +119,6 @@ class ChannelChatFragment :
     }
 
     private fun initializeChannel() = channelViewModel.let { viewModel ->
-        val activity = requireActivity() as MainActivity
-
         viewModel.loadStream(
             channelId = requireArguments().getString(C.CHANNEL_ID),
             channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),
@@ -155,7 +153,7 @@ class ChannelChatFragment :
             fragment = this,
             viewModel = channelViewModel,
             followButton = follow,
-            user = User.get(activity),
+            user = User.get(requireContext()),
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
             gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
         )

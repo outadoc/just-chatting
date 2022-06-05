@@ -1,4 +1,4 @@
-package com.github.andreyasadchy.xtra.ui.channel
+package com.github.andreyasadchy.xtra.ui.chat
 
 import android.content.Context
 import android.graphics.Bitmap

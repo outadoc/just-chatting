@@ -4,49 +4,33 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.SharedPreferences
 import android.net.ConnectivityManager
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.edit
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
-import androidx.preference.PreferenceManager
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.chat.ChannelChatFragment
+import com.github.andreyasadchy.xtra.ui.chat.ChatActivity
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.applyTheme
 import com.github.andreyasadchy.xtra.util.isNetworkAvailable
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.ncapdevi.fragnav.FragNavController
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import javax.inject.Inject
 
 class MainActivity :
-    AppCompatActivity(),
+    BaseActivity(),
     BaseStreamsFragment.OnStreamSelectedListener,
     OnChannelSelectedListener,
     HasAndroidInjector,
     Injectable {
-
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
 
@@ -61,48 +45,20 @@ class MainActivity :
         }
     }
 
-    private lateinit var prefs: SharedPreferences
-
     // Lifecycle methods
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-
-        prefs = prefs()
-
-        if (prefs.getBoolean(C.FIRST_LAUNCH2, true)) {
-            PreferenceManager.setDefaultValues(this@MainActivity, R.xml.root_preferences, false)
-            PreferenceManager.setDefaultValues(this@MainActivity, R.xml.api_preferences, true)
-            prefs.edit {
-                putBoolean(C.FIRST_LAUNCH2, false)
-            }
-        }
-
-        if (prefs.getBoolean(C.FIRST_LAUNCH, true)) {
-            prefs.edit {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                    putString(C.CHAT_IMAGE_LIBRARY, "2")
-                }
-                putBoolean(C.FIRST_LAUNCH, false)
-            }
-        }
-
-        if (prefs.getBoolean(C.FIRST_LAUNCH1, true)) {
-            prefs.edit {
-                putBoolean(C.FIRST_LAUNCH1, false)
-            }
-        }
-
-        applyTheme()
         setContentView(R.layout.activity_main)
 
         val notInitialized = savedInstanceState == null
-        initNavigation()
 
+        initNavigation()
         fragNavController.initialize(savedInstanceState = savedInstanceState)
 
+        val prefs = prefs()
         var flag = notInitialized && !isNetworkAvailable
+
         viewModel.isNetworkAvailable.observe(this) {
             it.getContentIfNotHandled()?.let { online ->
                 if (online) {
@@ -119,6 +75,7 @@ class MainActivity :
                 }
             }
         }
+
         registerReceiver(networkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         handleIntent(intent)
     }
@@ -181,6 +138,8 @@ class MainActivity :
     }
 
     private fun handleIntent(intent: Intent?) {
+        val prefs = prefs()
+
         if (intent?.action == Intent.ACTION_VIEW) {
             val url = intent.data.toString()
             when {
@@ -212,13 +171,11 @@ class MainActivity :
     // Navigation listeners
 
     override fun startStream(stream: Stream) {
-        fragNavController.pushFragment(
-            ChannelChatFragment.newInstance(
-                stream.user_id,
-                stream.user_login,
-                stream.user_name,
-                stream.channelLogo
-            )
+        viewChannel(
+            id = stream.user_id,
+            login = stream.user_login,
+            name = stream.user_name,
+            channelLogo = stream.channelLogo
         )
     }
 
@@ -229,15 +186,37 @@ class MainActivity :
         channelLogo: String?,
         updateLocal: Boolean
     ) {
-        fragNavController.pushFragment(
-            ChannelChatFragment.newInstance(
-                id,
-                login,
-                name,
-                channelLogo,
-                updateLocal
+
+        ChatActivity.openInBubble(
+            this,
+            id!!,
+            login!!,
+            name!!,
+            channelLogo!!
+        )
+
+        /*
+        startActivity(
+            ChatActivity.createIntent(
+                this,
+                id!!,
+                login!!,
+                name!!,
+                channelLogo!!
             )
         )
+*/
+/*
+          fragNavController.pushFragment(
+          ChannelChatFragment.newInstance(
+                id = id,
+                login = login,
+                name = name,
+                channelLogo = channelLogo,
+                updateLocal = updateLocal
+            )
+            )
+ */
     }
 
     fun popFragment() {
@@ -246,10 +225,6 @@ class MainActivity :
 
     fun openSearch() {
         fragNavController.pushFragment(SearchFragment())
-    }
-
-    override fun androidInjector(): AndroidInjector<Any> {
-        return dispatchingAndroidInjector
     }
 
     private fun initNavigation() {

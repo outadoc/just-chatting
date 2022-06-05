@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="@string/room_emote"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
             android:textColor="?attr/colorOnPrimaryContainer"
             android:visibility="gone"
             tools:visibility="visible" />
@@ -30,6 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
             android:textColor="?attr/colorOnPrimaryContainer"
             android:visibility="gone"
             tools:text="@string/room_followers_min"
@@ -41,6 +43,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="@string/room_unique"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
             android:textColor="?attr/colorOnPrimaryContainer"
             android:visibility="gone"
             tools:visibility="visible" />
@@ -50,6 +53,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
             android:textColor="?attr/colorOnPrimaryContainer"
             android:visibility="gone"
             tools:text="@string/room_slow"
@@ -61,6 +65,7 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:text="@string/room_subs"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
             android:textColor="?attr/colorOnPrimaryContainer"
             android:visibility="gone"
             tools:visibility="visible" />
@@ -135,7 +140,7 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="350dp"
         android:background="?colorSurface"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent">

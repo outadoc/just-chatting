@@ -185,6 +185,8 @@ class ChannelPagerFragment : BaseNetworkFragment(),
 
         chatView.init(this)
         chatView.setOnMessageClickListener { original, formatted, userId, fullMsg ->
+            hideKeyboard()
+
             MessageClickedDialog.newInstance(
                 messagingEnabled = true,
                 originalMessage = original,
@@ -367,15 +369,7 @@ class ChannelPagerFragment : BaseNetworkFragment(),
         }
     }
 
-    fun isActive(): Boolean? {
-        return (chatViewModel.chat as? ChatViewModel.LiveChatController)?.isActive()
-    }
-
-    fun disconnect() {
-        (chatViewModel.chat as? ChatViewModel.LiveChatController)?.disconnect()
-    }
-
-    fun hideKeyboard() {
+    private fun hideKeyboard() {
         chatInputView.hideKeyboard()
         chatInputView.clearFocus()
     }

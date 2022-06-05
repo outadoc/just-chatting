@@ -2,7 +2,7 @@ package com.github.andreyasadchy.xtra.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.github.andreyasadchy.xtra.ui.channel.ChannelPagerViewModel
+import com.github.andreyasadchy.xtra.ui.channel.ChannelChatViewModel
 import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.common.GenericViewModelFactory
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsViewModel
@@ -44,8 +44,8 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ChannelPagerViewModel::class)
-    abstract fun bindChannelPagerViewModel(channelPagerViewModel: ChannelPagerViewModel): ViewModel
+    @ViewModelKey(ChannelChatViewModel::class)
+    abstract fun bindChannelPagerViewModel(channelChatViewModel: ChannelChatViewModel): ViewModel
 
     @Binds
     @IntoMap

@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
-class ChannelPagerViewModel @Inject constructor(
+class ChannelChatViewModel @Inject constructor(
     private val repository: TwitchService,
     private val localFollowsChannel: LocalFollowChannelRepository
 ) : ViewModel(), FollowViewModel {

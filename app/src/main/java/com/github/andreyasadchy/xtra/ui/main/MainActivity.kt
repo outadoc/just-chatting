@@ -19,7 +19,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.ui.channel.ChannelPagerFragment
+import com.github.andreyasadchy.xtra.ui.channel.ChannelChatFragment
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
@@ -160,7 +160,7 @@ class MainActivity :
             super.onBackPressed()
         } else {
             val currentFrag = fragNavController.currentFrag
-            if (!(currentFrag is ChannelPagerFragment && currentFrag.hideEmotesMenu())) {
+            if (!(currentFrag is ChannelChatFragment && currentFrag.hideEmotesMenu())) {
                 fragNavController.popFragment()
             }
         }
@@ -199,7 +199,7 @@ class MainActivity :
 
     override fun startStream(stream: Stream) {
         fragNavController.pushFragment(
-            ChannelPagerFragment.newInstance(
+            ChannelChatFragment.newInstance(
                 stream.user_id,
                 stream.user_login,
                 stream.user_name,
@@ -216,7 +216,7 @@ class MainActivity :
         updateLocal: Boolean
     ) {
         fragNavController.pushFragment(
-            ChannelPagerFragment.newInstance(
+            ChannelChatFragment.newInstance(
                 id,
                 login,
                 name,

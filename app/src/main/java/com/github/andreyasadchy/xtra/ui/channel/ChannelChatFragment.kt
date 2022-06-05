@@ -52,7 +52,7 @@ import kotlinx.android.synthetic.main.fragment_channel.userViews
 import kotlinx.android.synthetic.main.fragment_channel.viewers
 import kotlinx.android.synthetic.main.fragment_channel.watchLive
 
-class ChannelPagerFragment :
+class ChannelChatFragment :
     BaseNetworkFragment(),
     LifecycleListener,
     MessageClickedDialog.OnButtonClickListener,
@@ -66,7 +66,7 @@ class ChannelPagerFragment :
             name: String?,
             channelLogo: String?,
             updateLocal: Boolean = false
-        ) = ChannelPagerFragment().apply {
+        ) = ChannelChatFragment().apply {
             arguments = Bundle().apply {
                 putString(C.CHANNEL_ID, id)
                 putString(C.CHANNEL_LOGIN, login)
@@ -77,7 +77,7 @@ class ChannelPagerFragment :
         }
     }
 
-    private val channelViewModel by viewModels<ChannelPagerViewModel> { viewModelFactory }
+    private val channelViewModel by viewModels<ChannelChatViewModel> { viewModelFactory }
     private val chatViewModel by viewModels<ChatViewModel> { viewModelFactory }
 
     override fun onCreateView(

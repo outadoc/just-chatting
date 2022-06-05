@@ -17,8 +17,8 @@ class MarginItemDecoration(
     ) {
         val position = parent.getChildAdapterPosition(view)
 
-        outRect.right = margin;
-        outRect.bottom = margin;
+        outRect.right = margin
+        outRect.bottom = margin
 
         if (position < columnCount) outRect.top = margin
         if (position % columnCount == 0) outRect.left = margin

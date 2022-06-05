@@ -23,8 +23,8 @@ abstract class BaseStreamsAdapter(
 
         override fun areContentsTheSame(oldItem: Stream, newItem: Stream): Boolean =
             oldItem.viewer_count == newItem.viewer_count &&
-                    oldItem.game_name == newItem.game_name &&
-                    oldItem.title == newItem.title
+                oldItem.game_name == newItem.game_name &&
+                oldItem.title == newItem.title
     }) {
 
     override fun bind(item: Stream, view: View) {

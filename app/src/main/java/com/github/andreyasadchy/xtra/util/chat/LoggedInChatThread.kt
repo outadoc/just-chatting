@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatInputView
-import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.IOException

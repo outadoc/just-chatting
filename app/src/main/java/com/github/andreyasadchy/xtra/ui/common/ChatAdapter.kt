@@ -410,7 +410,6 @@ class ChatAdapter(
 
             if (background == -1) holder.textView.background = null
             else holder.textView.setBackgroundResource(background)
-
         } catch (e: Exception) {
             e.printStackTrace()
         }

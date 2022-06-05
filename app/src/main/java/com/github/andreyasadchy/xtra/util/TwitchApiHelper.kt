@@ -102,15 +102,15 @@ object TwitchApiHelper {
             val seconds = (duration % 60)
             return if (text) String.format(
                 (if (days != 0) (days.toString() + context.getString(R.string.days) + " ") else "") +
-                        (if (hours != 0) (hours.toString() + context.getString(R.string.hours) + " ") else "") +
-                        (if (minutes != 0) (minutes.toString() + context.getString(R.string.minutes) + " ") else "") +
-                        (if (seconds != 0) (seconds.toString() + context.getString(R.string.seconds) + " ") else "")
+                    (if (hours != 0) (hours.toString() + context.getString(R.string.hours) + " ") else "") +
+                    (if (minutes != 0) (minutes.toString() + context.getString(R.string.minutes) + " ") else "") +
+                    (if (seconds != 0) (seconds.toString() + context.getString(R.string.seconds) + " ") else "")
             ).trim() else
                 String.format(
                     (if (days != 0) ("$days:") else "") +
-                            (if (hours != 0) (if (hours < 10 && days != 0) "0$hours:" else "$hours:") else (if (days != 0) "00:" else "")) +
-                            (if (minutes != 0) (if (minutes < 10 && (hours != 0 || days != 0)) "0$minutes:" else "$minutes:") else (if (hours != 0 || days != 0) "00:" else "")) +
-                            (if (seconds != 0) (if (seconds < 10 && (minutes != 0 || hours != 0 || days != 0)) "0$seconds" else "$seconds") else (if (minutes != 0 || hours != 0 || days != 0) "00" else ""))
+                        (if (hours != 0) (if (hours < 10 && days != 0) "0$hours:" else "$hours:") else (if (days != 0) "00:" else "")) +
+                        (if (minutes != 0) (if (minutes < 10 && (hours != 0 || days != 0)) "0$minutes:" else "$minutes:") else (if (hours != 0 || days != 0) "00:" else "")) +
+                        (if (seconds != 0) (if (seconds < 10 && (minutes != 0 || hours != 0 || days != 0)) "0$seconds" else "$seconds") else (if (minutes != 0 || hours != 0 || days != 0) "00" else ""))
                 )
         } else return null
     }

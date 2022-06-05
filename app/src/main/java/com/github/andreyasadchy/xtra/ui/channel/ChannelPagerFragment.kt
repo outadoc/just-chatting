@@ -52,7 +52,8 @@ import kotlinx.android.synthetic.main.fragment_channel.userViews
 import kotlinx.android.synthetic.main.fragment_channel.viewers
 import kotlinx.android.synthetic.main.fragment_channel.watchLive
 
-class ChannelPagerFragment : BaseNetworkFragment(),
+class ChannelPagerFragment :
+    BaseNetworkFragment(),
     LifecycleListener,
     MessageClickedDialog.OnButtonClickListener,
     FollowFragment,

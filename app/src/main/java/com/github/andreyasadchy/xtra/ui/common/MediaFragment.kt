@@ -26,8 +26,7 @@ abstract class MediaFragment : Fragment(), Scrollable {
     var previousItem = -1
     var currentFragment: Fragment? = null
 
-    open val spinnerItems: Array<String>
-        get() = resources.getStringArray(R.array.spinnerMedia)
+    abstract val spinnerItems: Array<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,12 +46,17 @@ abstract class MediaFragment : Fragment(), Scrollable {
 
         val activity = requireActivity() as MainActivity
         val user = User.get(activity)
+
         search.setOnClickListener { activity.openSearch() }
+
         menu.setOnClickListener { it ->
             PopupMenu(activity, it).apply {
                 inflate(R.menu.top_menu)
+
                 menu.findItem(R.id.login).title =
-                    if (user !is NotLoggedIn) getString(R.string.log_out) else getString(R.string.log_in)
+                    if (user !is NotLoggedIn) getString(R.string.log_out)
+                    else getString(R.string.log_in)
+
                 setOnMenuItemClickListener {
                     when (it.itemId) {
                         R.id.settings -> {

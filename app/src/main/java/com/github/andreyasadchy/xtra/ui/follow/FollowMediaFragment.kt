@@ -25,15 +25,19 @@ class FollowMediaFragment : MediaFragment() {
     private var firstLaunch = true
 
     override val spinnerItems: Array<String>
-        get() = resources.getStringArray(if (requireArguments().getBoolean(LOGGED_IN)) R.array.spinnerFollowedEntries else R.array.spinnerFollowedEntriesNotLoggedIn)
+        get() = resources.getStringArray(R.array.spinnerFollowedEntries)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val loggedIn = requireArguments().getBoolean(LOGGED_IN)
+
         currentFragment = if (previousItem != -2) {
             val newFragment = FollowPagerFragment.newInstance(loggedIn)
-            childFragmentManager.beginTransaction().replace(R.id.fragmentContainer, newFragment)
+            childFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, newFragment)
                 .commit()
+
             previousItem = -2
             newFragment
         } else {

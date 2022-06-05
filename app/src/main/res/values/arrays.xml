@@ -26,23 +26,9 @@
         <item>2</item>
     </string-array>
 
-    <string-array name="spinnerMedia">
-        <item>@string/live</item>
-        <item>@string/videos</item>
-        <item>@string/clips</item>
-    </string-array>
-
-    <string-array name="spinnerFollowedEntriesNotLoggedIn">
-        <item>@string/live</item>
-        <item>@string/channels</item>
-        <item>@string/games</item>
-    </string-array>
-
     <string-array name="spinnerFollowedEntries">
         <item>@string/live</item>
-        <item>@string/videos</item>
         <item>@string/channels</item>
-        <item>@string/games</item>
     </string-array>
 
     <string-array name="languageEntries">

@@ -19,7 +19,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.ui.channel.ChannelChatFragment
+import com.github.andreyasadchy.xtra.ui.chat.ChannelChatFragment
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
@@ -47,15 +47,20 @@ class MainActivity :
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
 
-    private val fragNavController =
-        FragNavController(supportFragmentManager, R.id.fragmentContainer)
+    private val fragNavController = FragNavController(
+        supportFragmentManager,
+        R.id.fragmentContainer
+    )
+
     private val networkReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             viewModel.setNetworkAvailable(isNetworkAvailable)
         }
     }
+
     private lateinit var prefs: SharedPreferences
 
     // Lifecycle methods
@@ -65,6 +70,7 @@ class MainActivity :
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         prefs = prefs()
+
         if (prefs.getBoolean(C.FIRST_LAUNCH2, true)) {
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.root_preferences, false)
             PreferenceManager.setDefaultValues(this@MainActivity, R.xml.api_preferences, true)
@@ -72,6 +78,7 @@ class MainActivity :
                 putBoolean(C.FIRST_LAUNCH2, false)
             }
         }
+
         if (prefs.getBoolean(C.FIRST_LAUNCH, true)) {
             prefs.edit {
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
@@ -80,11 +87,13 @@ class MainActivity :
                 putBoolean(C.FIRST_LAUNCH, false)
             }
         }
+
         if (prefs.getBoolean(C.FIRST_LAUNCH1, true)) {
             prefs.edit {
                 putBoolean(C.FIRST_LAUNCH1, false)
             }
         }
+
         applyTheme()
         setContentView(R.layout.activity_main)
 
@@ -134,6 +143,7 @@ class MainActivity :
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         fun restartActivity() {
             finish()
             overridePendingTransition(0, 0)
@@ -145,13 +155,17 @@ class MainActivity :
             )
             overridePendingTransition(0, 0)
         }
+
         when (requestCode) {
-            1 -> { // Was not logged in
-                when (resultCode) { // Logged in
+            1 -> {
+                // Was not logged in
+                when (resultCode) {
+                    // Logged in
                     RESULT_OK -> restartActivity()
                 }
             }
-            2 -> restartActivity() // Was logged in
+            // Was logged in
+            2 -> restartActivity()
         }
     }
 
@@ -195,7 +209,7 @@ class MainActivity :
         }
     }
 
-// Navigation listeners
+    // Navigation listeners
 
     override fun startStream(stream: Stream) {
         fragNavController.pushFragment(

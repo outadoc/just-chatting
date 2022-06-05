@@ -220,6 +220,8 @@ class ChannelChatFragment :
 
         chatInputView.enableChatInteraction(userIsLoggedIn)
 
+        viewModel.roomState.observe(viewLifecycleOwner) { chatInputView.notifyRoomState(it) }
+
         viewModel.chatMessages.observe(viewLifecycleOwner, Observer(chatView::submitList))
         viewModel.newMessage.observe(viewLifecycleOwner) { chatView.notifyMessageAdded() }
         viewModel.recentMessages.observe(viewLifecycleOwner) { chatView.addRecentMessages(it) }
@@ -228,7 +230,6 @@ class ChannelChatFragment :
         viewModel.otherEmotes.observe(viewLifecycleOwner, Observer(chatView::addEmotes))
         viewModel.cheerEmotes.observe(viewLifecycleOwner, Observer(chatView::addCheerEmotes))
         viewModel.emotesLoaded.observe(viewLifecycleOwner) { chatView.notifyEmotesLoaded() }
-        viewModel.roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
         viewModel.command.observe(viewLifecycleOwner) { chatView.notifyCommand(it) }
         viewModel.reward.observe(viewLifecycleOwner) { chatView.notifyReward(it) }
     }

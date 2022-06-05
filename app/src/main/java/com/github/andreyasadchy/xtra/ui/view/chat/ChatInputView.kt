@@ -27,6 +27,8 @@ import com.github.andreyasadchy.xtra.model.chat.FfzEmote
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -38,8 +40,14 @@ import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.name
 import kotlinx.android.synthetic.main.view_chat_input.view.clear
 import kotlinx.android.synthetic.main.view_chat_input.view.editText
 import kotlinx.android.synthetic.main.view_chat_input.view.emotes
+import kotlinx.android.synthetic.main.view_chat_input.view.flexboxChatMode
 import kotlinx.android.synthetic.main.view_chat_input.view.messageView
 import kotlinx.android.synthetic.main.view_chat_input.view.send
+import kotlinx.android.synthetic.main.view_chat_input.view.textEmote
+import kotlinx.android.synthetic.main.view_chat_input.view.textFollowers
+import kotlinx.android.synthetic.main.view_chat_input.view.textSlow
+import kotlinx.android.synthetic.main.view_chat_input.view.textSubs
+import kotlinx.android.synthetic.main.view_chat_input.view.textUnique
 import kotlinx.android.synthetic.main.view_chat_input.view.viewPager
 import kotlin.math.max
 
@@ -173,6 +181,78 @@ class ChatInputView : LinearLayout {
 
     fun setMessage(text: CharSequence) {
         editText.setText(text)
+    }
+
+    fun notifyRoomState(roomState: RoomState) {
+        if (roomState.emote != null) {
+            when (roomState.emote) {
+                "0" -> textEmote.gone()
+                "1" -> textEmote.visible()
+            }
+        } else {
+            textEmote.gone()
+        }
+
+        if (roomState.followers != null) {
+            when (roomState.followers) {
+                "-1" -> textFollowers.gone()
+                "0" -> {
+                    textFollowers.text = context.getString(R.string.room_followers)
+                    textFollowers.visible()
+                }
+                else -> {
+                    textFollowers.text = context.getString(
+                        R.string.room_followers_min,
+                        TwitchApiHelper.getDurationFromSeconds(
+                            context,
+                            (roomState.followers.toInt() * 60).toString()
+                        )
+                    )
+                    textFollowers.visible()
+                }
+            }
+        } else {
+            textFollowers.gone()
+        }
+
+        if (roomState.unique != null) {
+            when (roomState.unique) {
+                "0" -> textUnique.gone()
+                "1" -> textUnique.visible()
+            }
+        } else {
+            textUnique.gone()
+        }
+
+        if (roomState.slow != null) {
+            when (roomState.slow) {
+                "0" -> textSlow.gone()
+                else -> {
+                    textSlow.text = context.getString(
+                        R.string.room_slow,
+                        TwitchApiHelper.getDurationFromSeconds(context, roomState.slow)
+                    )
+                    textSlow.visible()
+                }
+            }
+        } else {
+            textSlow.gone()
+        }
+
+        if (roomState.subs != null) {
+            when (roomState.subs) {
+                "0" -> textSubs.gone()
+                "1" -> textSubs.visible()
+            }
+        } else {
+            textSubs.gone()
+        }
+
+        if (textEmote.isGone && textFollowers.isGone && textUnique.isGone && textSlow.isGone && textSubs.isGone) {
+            flexboxChatMode.gone()
+        } else {
+            flexboxChatMode.visible()
+        }
     }
 
     fun enableChatInteraction(enableMessaging: Boolean) {

@@ -28,20 +28,11 @@ import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.Command
-import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
-import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.toggleVisibility
-import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.view_chat.view.btnDown
-import kotlinx.android.synthetic.main.view_chat.view.flexbox
 import kotlinx.android.synthetic.main.view_chat.view.recyclerView
-import kotlinx.android.synthetic.main.view_chat.view.textEmote
-import kotlinx.android.synthetic.main.view_chat.view.textFollowers
-import kotlinx.android.synthetic.main.view_chat.view.textSlow
-import kotlinx.android.synthetic.main.view_chat.view.textSubs
-import kotlinx.android.synthetic.main.view_chat.view.textUnique
 import java.util.Locale
 
 class ChatView : ConstraintLayout {
@@ -60,7 +51,6 @@ class ChatView : ConstraintLayout {
     private lateinit var adapter: ChatAdapter
 
     private var isChatTouched = false
-    private var showFlexbox = false
     private var hasRecentEmotes: Boolean? = null
 
     private var messageClickListener: OnMessageClickListener? = null
@@ -126,9 +116,6 @@ class ChatView : ConstraintLayout {
                     super.onScrollStateChanged(recyclerView, newState)
                     isChatTouched = newState == RecyclerView.SCROLL_STATE_DRAGGING
                     btnDown.isVisible = shouldShowButton()
-                    if (showFlexbox && flexbox.isGone) {
-                        flexbox.visible()
-                    }
                 }
             })
         }
@@ -141,20 +128,10 @@ class ChatView : ConstraintLayout {
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
-            val statusBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-
-            flexbox.setPadding(
-                view.paddingLeft,
-                statusBarInsets.top,
-                view.paddingRight,
-                view.paddingBottom
-            )
-
             btnDown.updateLayoutParams<MarginLayoutParams> {
                 bottomMargin = navBarInsets.bottom
             }
-
             windowInsets
         }
     }
@@ -191,75 +168,6 @@ class ChatView : ConstraintLayout {
 
     fun notifyEmotesLoaded() {
         adapter.messages?.size?.let { adapter.notifyItemRangeChanged(it - 40, 40) }
-    }
-
-    fun notifyRoomState(roomState: RoomState) {
-        if (roomState.emote != null) {
-            when (roomState.emote) {
-                "0" -> textEmote.gone()
-                "1" -> textEmote.visible()
-            }
-        } else {
-            textEmote.gone()
-        }
-        if (roomState.followers != null) {
-            when (roomState.followers) {
-                "-1" -> textFollowers.gone()
-                "0" -> {
-                    textFollowers.text = context.getString(R.string.room_followers)
-                    textFollowers.visible()
-                }
-                else -> {
-                    textFollowers.text = context.getString(
-                        R.string.room_followers_min,
-                        TwitchApiHelper.getDurationFromSeconds(
-                            context,
-                            (roomState.followers.toInt() * 60).toString()
-                        )
-                    )
-                    textFollowers.visible()
-                }
-            }
-        } else {
-            textFollowers.gone()
-        }
-        if (roomState.unique != null) {
-            when (roomState.unique) {
-                "0" -> textUnique.gone()
-                "1" -> textUnique.visible()
-            }
-        } else {
-            textUnique.gone()
-        }
-        if (roomState.slow != null) {
-            when (roomState.slow) {
-                "0" -> textSlow.gone()
-                else -> {
-                    textSlow.text = context.getString(
-                        R.string.room_slow,
-                        TwitchApiHelper.getDurationFromSeconds(context, roomState.slow)
-                    )
-                    textSlow.visible()
-                }
-            }
-        } else {
-            textSlow.gone()
-        }
-        if (roomState.subs != null) {
-            when (roomState.subs) {
-                "0" -> textSubs.gone()
-                "1" -> textSubs.visible()
-            }
-        } else {
-            textSubs.gone()
-        }
-        if (textEmote.isGone && textFollowers.isGone && textUnique.isGone && textSlow.isGone && textSubs.isGone) {
-            showFlexbox = false
-            flexbox.gone()
-        } else {
-            showFlexbox = true
-            flexbox.visible()
-        }
     }
 
     fun notifyCommand(command: Command) {

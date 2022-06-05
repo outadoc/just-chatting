@@ -23,7 +23,8 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:exported="true"
             android:launchMode="singleTask"
-            android:supportsPictureInPicture="true">
+            android:supportsPictureInPicture="true"
+            android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,6 +40,7 @@
                 <data android:scheme="https" />
                 <data android:host="*.twitch.tv" />
                 <data android:host="twitch.tv" />
+
             </intent-filter>
         </activity>
 

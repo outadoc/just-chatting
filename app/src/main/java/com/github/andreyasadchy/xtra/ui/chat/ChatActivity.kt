@@ -13,9 +13,7 @@ import androidx.core.content.LocusIdCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import androidx.core.graphics.drawable.toBitmap
-import coil.imageLoader
-import coil.request.ImageRequest
+import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.main.BaseActivity
 import com.github.andreyasadchy.xtra.util.C
@@ -68,29 +66,23 @@ class ChatActivity : BaseActivity() {
 
             val bubbleIntent = PendingIntent.getActivity(context, 0, target, flags)
 
-            val request = ImageRequest.Builder(context)
-                .data(channelLogo)
-                .allowHardware(false)
-                .size(512, 512)
-                .target { drawable ->
-                    val bitmap = drawable.toBitmap()
-                    val icon = IconCompat.createWithBitmap(bitmap)
+            val request = GlideApp.with(context)
+                .asBitmap()
+                .load(channelLogo)
 
-                    val person: Person =
-                        Person.Builder()
-                            .setKey(channelId)
-                            .setName(channelName)
-                            .setIcon(icon)
-                            .build()
+            val icon = IconCompat.createWithAdaptiveBitmap(request.submit().get())
 
-                    createShortcutForChannel(context, target, channelId, channelName, person)
-                    createGenericBubbleChannelIfNeeded(context)
-                    createBubbleChannelForUserIfNeeded(context, channelId, channelName)
-                    createBubble(context, channelId, bubbleIntent, icon, person)
-                }
-                .build()
+            val person: Person =
+                Person.Builder()
+                    .setKey(channelId)
+                    .setName(channelName)
+                    .setIcon(icon)
+                    .build()
 
-            context.imageLoader.enqueue(request)
+            createShortcutForChannel(context, target, channelId, channelName, person, icon)
+            createGenericBubbleChannelIfNeeded(context)
+            createBubbleChannelForUserIfNeeded(context, channelId, channelName)
+            createBubble(context, channelId, bubbleIntent, icon, person)
         }
 
         private fun notificationIdFor(channelId: String) = channelId.hashCode()
@@ -100,13 +92,15 @@ class ChatActivity : BaseActivity() {
             intent: Intent,
             channelId: String,
             channelName: String,
-            person: Person
+            person: Person,
+            icon: IconCompat
         ) {
             ShortcutManagerCompat.addDynamicShortcuts(
                 context, listOf(
                     ShortcutInfoCompat.Builder(context, channelId)
                         .setIntent(intent)
                         .setLongLived(true)
+                        .setIcon(icon)
                         .setShortLabel(channelName)
                         .setPerson(person)
                         .build()
@@ -121,6 +115,7 @@ class ChatActivity : BaseActivity() {
                         CHANNEL_ID,
                         NotificationManagerCompat.IMPORTANCE_DEFAULT
                     )
+                        // TODO extract to resource
                         .setName("Chat bubbles")
                         .build()
                 )
@@ -154,7 +149,10 @@ class ChatActivity : BaseActivity() {
                 notificationIdFor(channelId),
                 NotificationCompat.Builder(context, channelId)
                     .setContentIntent(pendingIntent)
+                    // TODO add some notification message
+                    // TODO proper notification icon
                     .setSmallIcon(R.drawable.ic_send_black_24dp)
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                     .setBubbleMetadata(
                         NotificationCompat.BubbleMetadata.Builder(pendingIntent, icon)
                             .setAutoExpandBubble(true)

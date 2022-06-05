@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:ignore="SpUsage">
+    android:layout_height="match_parent">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -36,19 +35,19 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:background="?attr/background">
+            android:background="?attr/colorSurface"
+            android:gravity="center_horizontal">
 
             <TextView
                 android:id="@+id/havingTrouble"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/trouble_logging_in"
-                android:textSize="18sp"
-                android:textStyle="normal"
-                android:textColor="?attr/colorOnBackground"
                 android:padding="10dp"
-                android:background="?attr/selectableItemBackground" />
+                android:text="@string/trouble_logging_in"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="18sp"
+                android:textStyle="normal" />
+
         </LinearLayout>
     </LinearLayout>
 

@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.activity_login.webView
 import kotlinx.android.synthetic.main.activity_login.webViewContainer
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.io.IOException
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -44,6 +45,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
 
     @Inject
     lateinit var repository: AuthRepository
+
     private val tokenPattern = Pattern.compile("token=(.+?)(?=&)")
     private var tokens = 0
     private var userId = ""
@@ -53,14 +55,18 @@ class LoginActivity : AppCompatActivity(), Injectable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         applyTheme()
         setContentView(R.layout.activity_login)
+
         val helixClientId = prefs().getString(C.HELIX_CLIENT_ID, "") ?: ""
         val gqlClientId = prefs().getString(C.GQL_CLIENT_ID, "") ?: ""
         val user = User.get(this)
+
         if (user !is NotLoggedIn) {
             TwitchApiHelper.checkedValidation = false
             User.set(this, null)
+
             GlobalScope.launch {
                 try {
                     if (!user.helixToken.isNullOrBlank()) {
@@ -73,21 +79,47 @@ class LoginActivity : AppCompatActivity(), Injectable {
                 }
             }
         }
+
         initWebView(helixClientId, gqlClientId)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView(helixClientId: String, gqlClientId: String) {
         webViewContainer.visible()
+
         val apiSetting = prefs().getString(C.API_LOGIN, "0")?.toInt() ?: 0
+
+        val helixScopes = listOf(
+            "chat:read",
+            "chat:edit",
+            "channel:moderate",
+            "channel_editor",
+            "whispers:edit",
+            "user:read:follows"
+        )
+
         val helixRedirect = prefs().getString(C.HELIX_REDIRECT, "https://localhost")
-        val helixScopes =
-            "chat:read chat:edit channel:moderate channel_editor whispers:edit user:read:follows"
         val helixAuthUrl =
-            "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=$helixClientId&redirect_uri=$helixRedirect&scope=$helixScopes"
+            "https://id.twitch.tv/oauth2/authorize".toHttpUrl()
+                .newBuilder()
+                .addQueryParameter("response_type", "token")
+                .addQueryParameter("client_id", helixClientId)
+                .addQueryParameter("redirect_uri", helixRedirect)
+                .addQueryParameter("scope", helixScopes.joinToString(" "))
+                .build()
+                .toString()
+
         val gqlRedirect = prefs().getString(C.GQL_REDIRECT, "https://www.twitch.tv/")
         val gqlAuthUrl =
-            "https://id.twitch.tv/oauth2/authorize?response_type=token&client_id=$gqlClientId&redirect_uri=$gqlRedirect&scope="
+            "https://id.twitch.tv/oauth2/authorize".toHttpUrl()
+                .newBuilder()
+                .addQueryParameter("response_type", "token")
+                .addQueryParameter("client_id", gqlClientId)
+                .addQueryParameter("redirect_uri", gqlRedirect)
+                .addQueryParameter("scope", "")
+                .build()
+                .toString()
+
         havingTrouble.setOnClickListener {
             AlertDialog.Builder(this)
                 .setMessage(getString(R.string.login_problem_solution))
@@ -110,6 +142,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
                             setMargins(margin, 0, margin, 0)
                         }
                     }
+
                     val dialog = AlertDialog.Builder(this)
                         .setTitle(R.string.enter_url)
                         .setView(editText)
@@ -123,6 +156,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
                         }
                         .setNegativeButton(android.R.string.cancel, null)
                         .show()
+
                     dialog.window?.setLayout(
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
@@ -131,12 +165,15 @@ class LoginActivity : AppCompatActivity(), Injectable {
                 .setNegativeButton(android.R.string.cancel, null)
                 .show()
         }
+
         clearCookies()
+
         with(webView) {
             if (isDarkMode) {
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
                     WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_ON)
                 }
+
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
                     WebSettingsCompat.setForceDarkStrategy(
                         this.settings,
@@ -164,46 +201,43 @@ class LoginActivity : AppCompatActivity(), Injectable {
                     } else {
                         getString(R.string.error, "$errorCode $description")
                     }
+
                     val html = "<html><body><div align=\"center\">$errorMessage</div></body>"
                     loadUrl("about:blank")
                     loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
                 }
             }
+
             loadUrl(helixAuthUrl)
         }
     }
-
-/*    override fun onKeyDown(keyCode: Int, event: KeyEvent): Boolean {
-        if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_BACK) {
-            if (webView.canGoBack()) {
-                webView.goBack()
-                return true
-            }
-        }
-        return super.onKeyDown(keyCode, event)
-    }*/
 
     private fun loginIfValidUrl(url: String, gqlAuthUrl: String, apiSetting: Int): Boolean {
         val matcher = tokenPattern.matcher(url)
         return if (matcher.find() && tokens < 2) {
             webViewContainer.gone()
             progressBar.visible()
+
             val token = matcher.group(1)!!
             if (apiSetting == 0 && tokens == 0 || apiSetting == 2) {
                 lifecycleScope.launch {
                     try {
-                        val response =
-                            repository.validate(TwitchApiHelper.addTokenPrefixHelix(token))
+                        val response = repository.validate(
+                            TwitchApiHelper.addTokenPrefixHelix(token)
+                        )
+
                         if (response != null) {
                             userId = response.userId
                             userLogin = response.login
                             helixToken = token
+
                             if (apiSetting == 0 && gqlToken.isNotBlank() || apiSetting > 0) {
                                 TwitchApiHelper.checkedValidation = true
                                 User.set(
                                     this@LoginActivity,
                                     LoggedIn(userId, userLogin, helixToken, gqlToken)
                                 )
+
                                 setResult(RESULT_OK)
                                 finish()
                             }
@@ -222,6 +256,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
                             userId = response.userId
                             userLogin = response.login
                             gqlToken = token
+
                             if (apiSetting == 0 && helixToken.isNotBlank() || apiSetting > 0) {
                                 TwitchApiHelper.checkedValidation = true
                                 User.set(
@@ -239,9 +274,11 @@ class LoginActivity : AppCompatActivity(), Injectable {
                     }
                 }
             }
+
             if (apiSetting == 0 && tokens == 0) {
                 webView.loadUrl(gqlAuthUrl)
             }
+
             tokens++
             true
         } else {

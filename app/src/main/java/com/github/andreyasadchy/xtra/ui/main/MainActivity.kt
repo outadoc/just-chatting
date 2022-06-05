@@ -20,7 +20,6 @@ import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.channel.ChannelPagerFragment
-import com.github.andreyasadchy.xtra.ui.chat.ChatFragment
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
@@ -161,7 +160,7 @@ class MainActivity :
             super.onBackPressed()
         } else {
             val currentFrag = fragNavController.currentFrag
-            if (currentFrag !is ChannelPagerFragment || (currentFrag.currentFragment.let { it !is ChatFragment || !it.hideEmotesMenu() })) {
+            if (!(currentFrag is ChannelPagerFragment && currentFrag.hideEmotesMenu())) {
                 fragNavController.popFragment()
             }
         }

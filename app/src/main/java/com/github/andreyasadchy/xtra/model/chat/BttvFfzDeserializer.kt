@@ -1,6 +1,6 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -20,7 +20,7 @@ class BttvFfzDeserializer : JsonDeserializer<BttvFfzResponse> {
             val emote = json.asJsonArray.get(i).asJsonObject
             val urls = emote.getAsJsonObject("images")
             val url = urls.get(
-                when (emoteQuality) {
+                when (ChatView.emoteQuality) {
                     "4" -> ("4x")
                     "3" -> ("2x")
                     "2" -> ("2x")

@@ -1,7 +1,7 @@
 package com.github.andreyasadchy.xtra.model.helix.emote
 
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
-import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -21,7 +21,7 @@ class EmoteSetDeserializer : JsonDeserializer<EmoteSetResponse> {
             val emote = json.asJsonObject.getAsJsonArray("data").get(i).asJsonObject
             val urls = emote.getAsJsonObject("images")
             val url = urls.get(
-                when (emoteQuality) {
+                when (ChatView.emoteQuality) {
                     "4" -> ("url_4x")
                     "3" -> ("url_4x")
                     "2" -> ("url_2x")

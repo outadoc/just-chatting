@@ -1,6 +1,6 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 
 class BttvEmote(
     val id: String,
@@ -11,7 +11,7 @@ class BttvEmote(
     override val url: String
         get() = "https://cdn.betterttv.net/emote/$id/${
         (
-            when (emoteQuality) {
+            when (ChatView.emoteQuality) {
                 "4" -> ("3x")
                 "3" -> ("2x")
                 "2" -> ("2x")

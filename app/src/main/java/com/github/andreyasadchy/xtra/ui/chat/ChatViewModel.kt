@@ -20,8 +20,7 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
-import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
-import com.github.andreyasadchy.xtra.ui.view.chat.MAX_ADAPTER_COUNT
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatView.Companion.MAX_ADAPTER_COUNT
 import com.github.andreyasadchy.xtra.util.SingleLiveEvent
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.Command
@@ -59,7 +58,7 @@ import kotlin.collections.set
 class ChatViewModel @Inject constructor(
     private val repository: TwitchService,
     private val playerRepository: PlayerRepository
-) : BaseViewModel(), ChatView.MessageSenderCallback {
+) : BaseViewModel() {
 
     val recentEmotes: LiveData<List<Emote>> by lazy {
         MediatorLiveData<List<Emote>>().apply {
@@ -122,7 +121,7 @@ class ChatViewModel @Inject constructor(
         showClearMsg: Boolean,
         showClearChat: Boolean,
         enableRecentMsg: Boolean? = false,
-        recentMsgLimit: String? = null
+        recentMsgLimit: Int? = null
     ) {
         if (chat == null && channelLogin != null && channelName != null) {
             chat = LiveChatController(
@@ -159,7 +158,7 @@ class ChatViewModel @Inject constructor(
         chat?.pause()
     }
 
-    override fun send(message: CharSequence) {
+    fun send(message: CharSequence) {
         chat?.send(message)
     }
 
@@ -175,7 +174,7 @@ class ChatViewModel @Inject constructor(
         channelId: String,
         channelLogin: String? = null,
         enableRecentMsg: Boolean? = false,
-        recentMsgLimit: String? = null
+        recentMsgLimit: Int? = null
     ) {
         chat?.start()
         viewModelScope.launch {

@@ -1,7 +1,6 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.ui.view.chat.animateGifs
-import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -23,10 +22,10 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
                 val minBits = tier.asJsonObject.get("min_bits")
                 val color = tier.asJsonObject.get("color")
                 val images = tier.asJsonObject.get("images").asJsonObject.get("dark").asJsonObject
-                val animated = animateGifs && images.toString().contains("animated")
+                val animated = ChatView.animateGifs && images.toString().contains("animated")
                 val urls = images.get(if (animated) "animated" else "static").asJsonObject
                 val url = urls.get(
-                    when (emoteQuality) {
+                    when (ChatView.emoteQuality) {
                         "4" -> ("4")
                         "3" -> ("3")
                         "2" -> ("2")

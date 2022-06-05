@@ -1,6 +1,6 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.google.gson.annotations.SerializedName
 
 class TwitchEmote(
@@ -11,7 +11,7 @@ class TwitchEmote(
     override val type: String = "image/png",
     override val url: String = "https://static-cdn.jtvnw.net/emoticons/v2/$name/default/dark/${
     (
-        when (emoteQuality) {
+        when (ChatView.emoteQuality) {
             "4" -> ("3")
             "3" -> ("2")
             "2" -> ("2")

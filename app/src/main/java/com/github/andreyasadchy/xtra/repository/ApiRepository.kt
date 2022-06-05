@@ -20,8 +20,7 @@ import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.repository.datasource.FollowedChannelsDataSource
 import com.github.andreyasadchy.xtra.repository.datasource.FollowedStreamsDataSource
 import com.github.andreyasadchy.xtra.repository.datasource.SearchChannelsDataSource
-import com.github.andreyasadchy.xtra.ui.view.chat.animateGifs
-import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -323,10 +322,10 @@ class ApiRepository @Inject constructor(
             val get = apolloClient(XtraModule(), gqlClientId).query(
                 CheerEmotesQuery(
                     Optional.Present(userId),
-                    Optional.Present(animateGifs),
+                    Optional.Present(ChatView.animateGifs),
                     Optional.Present(
                         (
-                            when (emoteQuality) {
+                            when (ChatView.emoteQuality) {
                                 "4" -> 4
                                 "3" -> 3
                                 "2" -> 2
@@ -348,7 +347,7 @@ class ApiRepository @Inject constructor(
                                                 name = it,
                                                 minBits = it1,
                                                 color = tier.color,
-                                                type = if (animateGifs) "image/gif" else "image/png",
+                                                type = if (ChatView.animateGifs) "image/gif" else "image/png",
                                                 url = it2
                                             )
                                         )

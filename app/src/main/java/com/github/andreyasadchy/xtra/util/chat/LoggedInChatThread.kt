@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatInputView
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import java.io.BufferedReader
 import java.io.BufferedWriter
@@ -20,7 +21,7 @@ class LoggedInChatThread(
     private val userToken: String?,
     private val channelName: String,
     private val listener: OnMessageReceivedListener
-) : Thread(), ChatView.MessageSenderCallback {
+) : Thread(), ChatInputView.OnMessageSendListener {
     private var socketOut: Socket? = null
     private lateinit var readerOut: BufferedReader
     private lateinit var writerOut: BufferedWriter

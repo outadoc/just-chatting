@@ -22,7 +22,7 @@ interface MiscApi {
     @GET("https://recent-messages.robotty.de/api/v2/recent-messages/{channelLogin}")
     suspend fun getRecentMessages(
         @Path("channelLogin") channelLogin: String,
-        @Query("limit") limit: String
+        @Query("limit") limit: Int
     ): Response<RecentMessagesResponse>
 
     @GET("https://api.7tv.app/v2/emotes/global")

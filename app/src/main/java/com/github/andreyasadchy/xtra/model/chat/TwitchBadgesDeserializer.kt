@@ -1,6 +1,6 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -19,7 +19,7 @@ class TwitchBadgesDeserializer : JsonDeserializer<TwitchBadgesResponse> {
         json.asJsonObject.getAsJsonObject("badge_sets").entrySet().forEach { set ->
             set.value.asJsonObject.getAsJsonObject("versions").entrySet().forEach { version ->
                 val url = version.value.asJsonObject.get(
-                    when (emoteQuality) {
+                    when (ChatView.emoteQuality) {
                         "4" -> ("image_url_4x")
                         "3" -> ("image_url_4x")
                         "2" -> ("image_url_2x")

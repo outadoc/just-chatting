@@ -29,11 +29,17 @@ import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.chat.*
-import com.github.andreyasadchy.xtra.ui.view.chat.animateGifs
-import com.github.andreyasadchy.xtra.ui.view.chat.emoteQuality
+import com.github.andreyasadchy.xtra.model.chat.ChatMessage
+import com.github.andreyasadchy.xtra.model.chat.CheerEmote
+import com.github.andreyasadchy.xtra.model.chat.Emote
+import com.github.andreyasadchy.xtra.model.chat.Image
+import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
+import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
+import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
+import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import java.util.*
+import java.util.Random
 import kotlin.collections.set
 
 class ChatAdapter(
@@ -131,7 +137,7 @@ class ChatAdapter(
             val string = redeemedChatMsg.format(pointReward?.rewardTitle)
             builder.append("$string ")
             imageIndex += string.length + 1
-            val url = when (emoteQuality) {
+            val url = when (ChatView.emoteQuality) {
                 "4" -> pointReward?.rewardImage?.url4
                 "3" -> pointReward?.rewardImage?.url4
                 "2" -> pointReward?.rewardImage?.url2
@@ -191,7 +197,7 @@ class ChatAdapter(
                 val string = redeemedNoMsg.format(userName, pointReward?.rewardTitle)
                 builder.append("$string ")
                 imageIndex += string.length + 1
-                val url = when (emoteQuality) {
+                val url = when (ChatView.emoteQuality) {
                     "4" -> pointReward?.rewardImage?.url4
                     "3" -> pointReward?.rewardImage?.url4
                     "2" -> pointReward?.rewardImage?.url2
@@ -428,7 +434,7 @@ class ChatAdapter(
                 "0" -> loadCoil(holder, it, originalMessage, builder, userId, fullMsg)
                 "1" -> {
                     if (it.type == "image/webp") {
-                        if (animateGifs) {
+                        if (ChatView.animateGifs) {
                             loadWebp(holder, it, originalMessage, builder, userId, fullMsg)
                         } else {
                             loadDrawable(holder, it, originalMessage, builder, userId, fullMsg)
@@ -438,10 +444,10 @@ class ChatAdapter(
                     }
                 }
                 else -> {
-                    if (it.type == "image/webp" && animateGifs) {
+                    if (it.type == "image/webp" && ChatView.animateGifs) {
                         loadWebp(holder, it, originalMessage, builder, userId, fullMsg)
                     } else {
-                        if (it.type == "image/gif" && animateGifs) {
+                        if (it.type == "image/gif" && ChatView.animateGifs) {
                             loadGif(holder, it, originalMessage, builder, userId, fullMsg)
                         } else {
                             loadDrawable(holder, it, originalMessage, builder, userId, fullMsg)
@@ -486,7 +492,7 @@ class ChatAdapter(
                             image.end,
                             SPAN_EXCLUSIVE_EXCLUSIVE
                         )
-                        if (animateGifs) {
+                        if (ChatView.animateGifs) {
                             (result as? coil.drawable.ScaleDrawable)?.start()
                         }
                     } catch (e: IndexOutOfBoundsException) {
@@ -702,7 +708,7 @@ class ChatAdapter(
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        if (animateGifs) {
+        if (ChatView.animateGifs) {
             (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
                 (it.drawable as? coil.drawable.ScaleDrawable)?.start()
                     ?: (it.drawable as? GifDrawable)?.start()
@@ -713,7 +719,7 @@ class ChatAdapter(
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
         super.onViewDetachedFromWindow(holder)
-        if (animateGifs) {
+        if (ChatView.animateGifs) {
             (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
                 (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
                     ?: (it.drawable as? GifDrawable)?.stop()
@@ -724,7 +730,7 @@ class ChatAdapter(
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         val childCount = recyclerView.childCount
-        if (animateGifs) {
+        if (ChatView.animateGifs) {
             for (i in 0 until childCount) {
                 ((recyclerView.getChildAt(i) as TextView).text as? Spannable)?.getSpans<ImageSpan>()
                     ?.forEach {

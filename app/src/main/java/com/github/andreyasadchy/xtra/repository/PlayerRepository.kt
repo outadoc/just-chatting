@@ -24,7 +24,7 @@ class PlayerRepository @Inject constructor(
 ) {
     suspend fun loadRecentMessages(
         channelLogin: String,
-        limit: String
+        limit: Int
     ): Response<RecentMessagesResponse> = withContext(Dispatchers.IO) {
         misc.getRecentMessages(channelLogin, limit)
     }

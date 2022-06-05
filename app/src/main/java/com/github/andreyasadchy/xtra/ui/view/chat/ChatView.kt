@@ -1,31 +1,20 @@
 package com.github.andreyasadchy.xtra.ui.view.chat
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.view.KeyEvent
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.MultiAutoCompleteTextView
-import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.BttvEmote
 import com.github.andreyasadchy.xtra.model.chat.ChatMessage
-import com.github.andreyasadchy.xtra.model.chat.Chatter
 import com.github.andreyasadchy.xtra.model.chat.CheerEmote
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.chat.FfzEmote
@@ -42,58 +31,41 @@ import com.github.andreyasadchy.xtra.util.chat.Command
 import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
 import com.github.andreyasadchy.xtra.util.gone
-import com.github.andreyasadchy.xtra.util.hideKeyboard
-import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
-import com.github.andreyasadchy.xtra.util.showKeyboard
 import com.github.andreyasadchy.xtra.util.toggleVisibility
 import com.github.andreyasadchy.xtra.util.visible
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.image
-import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.name
 import kotlinx.android.synthetic.main.view_chat.view.btnDown
-import kotlinx.android.synthetic.main.view_chat.view.clear
-import kotlinx.android.synthetic.main.view_chat.view.editText
-import kotlinx.android.synthetic.main.view_chat.view.emotes
 import kotlinx.android.synthetic.main.view_chat.view.flexbox
-import kotlinx.android.synthetic.main.view_chat.view.messageView
 import kotlinx.android.synthetic.main.view_chat.view.recyclerView
-import kotlinx.android.synthetic.main.view_chat.view.send
 import kotlinx.android.synthetic.main.view_chat.view.textEmote
 import kotlinx.android.synthetic.main.view_chat.view.textFollowers
 import kotlinx.android.synthetic.main.view_chat.view.textSlow
 import kotlinx.android.synthetic.main.view_chat.view.textSubs
 import kotlinx.android.synthetic.main.view_chat.view.textUnique
-import kotlinx.android.synthetic.main.view_chat.view.viewPager
 import java.util.Locale
-import kotlin.math.max
-
-var MAX_ADAPTER_COUNT = 200
-var MAX_LIST_COUNT = MAX_ADAPTER_COUNT + 1
-var emoteQuality = "4"
-var animateGifs = true
 
 class ChatView : ConstraintLayout {
 
-    interface MessageSenderCallback {
-        fun send(message: CharSequence)
+    companion object {
+        var MAX_ADAPTER_COUNT = 200
+        var MAX_LIST_COUNT = MAX_ADAPTER_COUNT + 1
+        var emoteQuality = "4"
+        var animateGifs = true
+    }
+
+    fun interface OnMessageClickListener {
+        fun send(original: CharSequence, formatted: CharSequence, userId: String?, fullMsg: String?)
     }
 
     private lateinit var adapter: ChatAdapter
 
     private var isChatTouched = false
     private var showFlexbox = false
-
     private var hasRecentEmotes: Boolean? = null
-    private var emotesAddedCount = 0
 
-    private var autoCompleteList: MutableList<Any>? = null
-    private var autoCompleteAdapter: AutoCompleteAdapter? = null
+    private var messageClickListener: OnMessageClickListener? = null
 
     private lateinit var fragment: Fragment
-    private var messagingEnabled = false
-
-    private var messageCallback: MessageSenderCallback? = null
 
     private val rewardList = mutableListOf<Pair<LiveChatMessage?, PubSubPointReward?>>()
 
@@ -119,9 +91,11 @@ class ChatView : ConstraintLayout {
 
     fun init(fragment: Fragment) {
         this.fragment = fragment
+
         emoteQuality = context.prefs().getString(C.CHAT_IMAGE_QUALITY, "4") ?: "4"
         animateGifs = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
+
         adapter = ChatAdapter(
             fragment = fragment,
             emoteSize = context.convertDpToPixels(29.5f),
@@ -138,6 +112,11 @@ class ChatView : ConstraintLayout {
             redeemedNoMsg = context.getString(R.string.user_redeemed),
             imageLibrary = context.prefs().getString(C.CHAT_IMAGE_LIBRARY, "0")
         )
+
+        adapter.setOnClickListener { original, formatted, userId, fullMsg ->
+            messageClickListener?.send(original, formatted, userId, fullMsg)
+        }
+
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null
@@ -153,9 +132,10 @@ class ChatView : ConstraintLayout {
                 }
             })
         }
+
         btnDown.setOnClickListener {
             post {
-                recyclerView.scrollToPosition(adapter.messages!!.lastIndex)
+                scrollToBottom()
                 it.toggleVisibility()
             }
         }
@@ -163,14 +143,6 @@ class ChatView : ConstraintLayout {
         ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
             val statusBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
-
-            messageView.setPadding(
-                view.paddingLeft,
-                view.paddingTop,
-                view.paddingRight,
-                if (imeInsets.bottom > 0) imeInsets.bottom else navBarInsets.bottom
-            )
 
             flexbox.setPadding(
                 view.paddingLeft,
@@ -180,12 +152,7 @@ class ChatView : ConstraintLayout {
             )
 
             btnDown.updateLayoutParams<MarginLayoutParams> {
-                bottomMargin += navBarInsets.bottom
-            }
-
-            if (imeInsets.bottom > 0) {
-                // Hide emote picker when keyboard is opened
-                viewPager.gone()
+                bottomMargin = navBarInsets.bottom
             }
 
             windowInsets
@@ -207,8 +174,18 @@ class ChatView : ConstraintLayout {
                 adapter.notifyItemRangeRemoved(0, removeCount)
             }
             if (!isChatTouched && btnDown.isGone) {
-                recyclerView.scrollToPosition(lastIndex)
+                scrollToBottom()
             }
+        }
+    }
+
+    fun setOnMessageClickListener(callback: OnMessageClickListener) {
+        messageClickListener = callback
+    }
+
+    fun scrollToBottom() {
+        adapter.messages?.let { messages ->
+            recyclerView.scrollToPosition(messages.lastIndex)
         }
     }
 
@@ -365,7 +342,7 @@ class ChatView : ConstraintLayout {
 
     fun addRecentMessages(list: List<LiveChatMessage>) {
         adapter.messages?.addAll(0, list)
-        adapter.messages?.lastIndex?.let { recyclerView.scrollToPosition(it) }
+        scrollToBottom()
     }
 
     fun addGlobalBadges(list: List<TwitchBadge>?) {
@@ -386,31 +363,9 @@ class ChatView : ConstraintLayout {
         when (list.firstOrNull()) {
             is BttvEmote, is FfzEmote, is StvEmote -> {
                 adapter.addEmotes(list)
-                if (messagingEnabled) {
-                    autoCompleteList!!.addAll(list)
-                }
             }
-            is TwitchEmote -> {
-                if (messagingEnabled) {
-                    autoCompleteList!!.addAll(list)
-                }
-            }
+            is TwitchEmote -> {}
             is RecentEmote -> hasRecentEmotes = true
-        }
-        if (messagingEnabled && ++emotesAddedCount == 3) { // TODO refactor to not wait
-            autoCompleteAdapter = AutoCompleteAdapter(context, fragment, autoCompleteList!!).apply {
-                setNotifyOnChange(false)
-                editText.setAdapter(this)
-
-                var previousSize = 0
-                editText.setOnFocusChangeListener { _, hasFocus ->
-                    if (hasFocus && count != previousSize) {
-                        previousSize = count
-                        notifyDataSetChanged()
-                    }
-                    setNotifyOnChange(hasFocus)
-                }
-            }
         }
     }
 
@@ -418,141 +373,9 @@ class ChatView : ConstraintLayout {
         adapter.setUsername(username)
     }
 
-    fun setChatters(chatters: Collection<Chatter>) {
-        autoCompleteList = chatters.toMutableList()
-    }
-
-    fun addChatter(chatter: Chatter) {
-        autoCompleteAdapter?.add(chatter)
-    }
-
-    fun setCallback(callback: MessageSenderCallback) {
-        messageCallback = callback
-    }
-
-    fun hideEmotesMenu(): Boolean {
-        return if (viewPager.isVisible) {
-            viewPager.gone()
-            true
-        } else {
-            false
-        }
-    }
-
-    fun appendEmote(emote: Emote) {
-        editText.text.append(emote.name).append(' ')
-    }
-
-    @SuppressLint("SetTextI18n")
-    fun reply(userName: CharSequence) {
-        val text = "@$userName "
-        editText.apply {
-            setText(text)
-            setSelection(text.length)
-            showKeyboard()
-        }
-    }
-
-    fun setMessage(text: CharSequence) {
-        editText.setText(text)
-    }
-
-    fun enableChatInteraction(enableMessaging: Boolean) {
-        adapter.setOnClickListener { original, formatted, userId, fullMsg ->
-            editText.hideKeyboard()
-            editText.clearFocus()
-            MessageClickedDialog.newInstance(enableMessaging, original, formatted, userId, fullMsg)
-                .show(fragment.childFragmentManager, "closeOnPip")
-        }
-
-        if (enableMessaging) {
-            editText.addTextChangedListener(onTextChanged = { text, _, _, _ ->
-                if (text?.isNotBlank() == true) {
-                    send.visible()
-                    clear.visible()
-                } else {
-                    send.gone()
-                    clear.gone()
-                }
-            })
-            editText.setTokenizer(SpaceTokenizer())
-            editText.setOnKeyListener { _, keyCode, event ->
-                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    sendMessage()
-                } else {
-                    false
-                }
-            }
-            clear.setOnClickListener {
-                val text = editText.text.toString().trimEnd()
-                editText.setText(text.substring(0, max(text.lastIndexOf(' '), 0)))
-                editText.setSelection(editText.length())
-            }
-            clear.setOnLongClickListener {
-                editText.text.clear()
-                true
-            }
-            send.setOnClickListener { sendMessage() }
-            messageView.visible()
-            viewPager.adapter = object : FragmentStatePagerAdapter(
-                fragment.childFragmentManager,
-                BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-            ) {
-
-                override fun getItem(position: Int): Fragment {
-                    return EmotesFragment.newInstance(position)
-                }
-
-                override fun getCount(): Int = 3
-
-                override fun getPageTitle(position: Int): CharSequence? {
-                    return when (position) {
-                        0 -> context.getString(R.string.recent_emotes)
-                        1 -> "Twitch"
-                        else -> "7TV/BTTV/FFZ"
-                    }
-                }
-            }
-            viewPager.offscreenPageLimit = 2
-            emotes.setOnClickListener {
-                // TODO add animation
-                with(viewPager) {
-                    if (isGone) {
-                        if (hasRecentEmotes != true && currentItem == 0) {
-                            setCurrentItem(1, false)
-                        }
-                        this@ChatView.editText.hideKeyboard()
-                        visible()
-                    } else {
-                        this@ChatView.editText.showKeyboard()
-                        gone()
-                    }
-                }
-            }
-            messagingEnabled = true
-        }
-    }
-
     override fun onDetachedFromWindow() {
         recyclerView.adapter = null
         super.onDetachedFromWindow()
-    }
-
-    private fun sendMessage(): Boolean {
-        editText.hideKeyboard()
-        editText.clearFocus()
-        hideEmotesMenu()
-        return messageCallback?.let {
-            val text = editText.text.trim()
-            editText.text.clear()
-            if (text.isNotEmpty()) {
-                it.send(text)
-                adapter.messages?.let { messages -> recyclerView.scrollToPosition(messages.lastIndex) }
-                true
-            } else {
-                false
-            }
-        } == true
     }
 
     private fun shouldShowButton(): Boolean {
@@ -564,98 +387,5 @@ class ChatView : ConstraintLayout {
         val range = recyclerView.computeVerticalScrollRange()
         val percentage = (100f * offset / (range - extent).toFloat())
         return percentage < 100f
-    }
-
-    class SpaceTokenizer : MultiAutoCompleteTextView.Tokenizer {
-
-        override fun findTokenStart(text: CharSequence, cursor: Int): Int {
-            var i = cursor
-
-            while (i > 0 && text[i - 1] != ' ') {
-                i--
-            }
-            while (i < cursor && text[i] == ' ') {
-                i++
-            }
-
-            return i
-        }
-
-        override fun findTokenEnd(text: CharSequence, cursor: Int): Int {
-            var i = cursor
-            val len = text.length
-
-            while (i < len) {
-                if (text[i] == ' ') {
-                    return i
-                } else {
-                    i++
-                }
-            }
-
-            return len
-        }
-
-        override fun terminateToken(text: CharSequence): CharSequence {
-            return "${if (text.startsWith(':')) text.substring(1) else text} "
-        }
-    }
-
-    class AutoCompleteAdapter(
-        context: Context,
-        private val fragment: Fragment,
-        list: List<Any>
-    ) : ArrayAdapter<Any>(context, 0, list) {
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val viewHolder: ViewHolder
-
-            val item = getItem(position)!!
-            return when (getItemViewType(position)) {
-                TYPE_EMOTE -> {
-                    if (convertView == null) {
-                        val view = LayoutInflater.from(context)
-                            .inflate(R.layout.auto_complete_emotes_list_item, parent, false)
-                        viewHolder = ViewHolder(view).also { view.tag = it }
-                    } else {
-                        viewHolder = convertView.tag as ViewHolder
-                    }
-                    viewHolder.containerView.apply {
-                        item as Emote
-                        image.loadImage(
-                            fragment,
-                            item.url,
-                            diskCacheStrategy = DiskCacheStrategy.DATA
-                        )
-                        name.text = item.name
-                    }
-                }
-                else -> {
-                    if (convertView == null) {
-                        val view = LayoutInflater.from(context)
-                            .inflate(android.R.layout.simple_list_item_1, parent, false)
-                        viewHolder = ViewHolder(view).also { view.tag = it }
-                    } else {
-                        viewHolder = convertView.tag as ViewHolder
-                    }
-                    (viewHolder.containerView as TextView).apply {
-                        text = (item as Chatter).name
-                    }
-                }
-            }
-        }
-
-        override fun getItemViewType(position: Int): Int {
-            return if (getItem(position) is Emote) TYPE_EMOTE else TYPE_USERNAME
-        }
-
-        override fun getViewTypeCount(): Int = 2
-
-        class ViewHolder(override val containerView: View) : LayoutContainer
-
-        private companion object {
-            const val TYPE_EMOTE = 0
-            const val TYPE_USERNAME = 1
-        }
     }
 }

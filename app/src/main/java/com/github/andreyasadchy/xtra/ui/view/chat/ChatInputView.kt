@@ -39,12 +39,12 @@ import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.image
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.name
 import kotlinx.android.synthetic.main.view_chat_input.view.clear
 import kotlinx.android.synthetic.main.view_chat_input.view.editText
-import kotlinx.android.synthetic.main.view_chat_input.view.emotes
 import kotlinx.android.synthetic.main.view_chat_input.view.flexboxChatMode
 import kotlinx.android.synthetic.main.view_chat_input.view.messageView
 import kotlinx.android.synthetic.main.view_chat_input.view.send
 import kotlinx.android.synthetic.main.view_chat_input.view.textEmote
 import kotlinx.android.synthetic.main.view_chat_input.view.textFollowers
+import kotlinx.android.synthetic.main.view_chat_input.view.textInputLayoutChat
 import kotlinx.android.synthetic.main.view_chat_input.view.textSlow
 import kotlinx.android.synthetic.main.view_chat_input.view.textSubs
 import kotlinx.android.synthetic.main.view_chat_input.view.textUnique
@@ -277,6 +277,20 @@ class ChatInputView : LinearLayout {
                 }
             }
 
+            textInputLayoutChat.setEndIconOnClickListener {
+                // TODO add animation
+                if (viewPager.isGone) {
+                    if (hasRecentEmotes != true && viewPager.currentItem == 0) {
+                        viewPager.setCurrentItem(1, false)
+                    }
+                    editText.hideKeyboard()
+                    viewPager.visible()
+                } else {
+                    editText.showKeyboard()
+                    viewPager.gone()
+                }
+            }
+
             clear.setOnClickListener {
                 val text = editText.text.toString().trimEnd()
                 editText.setText(text.substring(0, max(text.lastIndexOf(' '), 0)))
@@ -309,22 +323,9 @@ class ChatInputView : LinearLayout {
                     }
                 }
             }
+
             viewPager.offscreenPageLimit = 2
-            emotes.setOnClickListener {
-                // TODO add animation
-                with(viewPager) {
-                    if (isGone) {
-                        if (hasRecentEmotes != true && currentItem == 0) {
-                            setCurrentItem(1, false)
-                        }
-                        this@ChatInputView.editText.hideKeyboard()
-                        visible()
-                    } else {
-                        this@ChatInputView.editText.showKeyboard()
-                        gone()
-                    }
-                }
-            }
+
             messagingEnabled = true
         }
     }

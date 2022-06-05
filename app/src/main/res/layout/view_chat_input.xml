@@ -80,11 +80,14 @@
         tools:visibility="visible">
 
         <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutChat"
             style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.Dense"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
+            app:endIconDrawable="@drawable/ic_tag_faces_black_24dp"
+            app:endIconMode="custom"
             app:hintEnabled="false">
 
             <MultiAutoCompleteTextView
@@ -97,6 +100,7 @@
                 android:importantForAutofill="no"
                 android:inputType="textCapSentences|textAutoCorrect"
                 android:padding="4dp"
+                android:textAppearance="?textAppearanceBodyLarge"
                 tools:ignore="LabelFor"
                 tools:visibility="visible" />
 
@@ -111,17 +115,6 @@
             android:padding="8dp"
             android:src="@drawable/baseline_backspace_black_24"
             android:visibility="gone"
-            app:tint="?attr/colorOnSurfaceVariant"
-            tools:visibility="visible" />
-
-        <ImageButton
-            android:id="@+id/emotes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="?selectableItemBackgroundBorderless"
-            android:padding="8dp"
-            android:src="@drawable/ic_tag_faces_black_24dp"
             app:tint="?attr/colorOnSurfaceVariant"
             tools:visibility="visible" />
 

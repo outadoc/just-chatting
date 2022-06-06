@@ -481,6 +481,5 @@ class ChannelChatFragment :
     }
 
     override fun onMovedToForeground() {
-        chatViewModel.start()
     }
 }

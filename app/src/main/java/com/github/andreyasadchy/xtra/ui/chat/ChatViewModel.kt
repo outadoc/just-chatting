@@ -151,7 +151,6 @@ class ChatViewModel @Inject constructor(
     }
 
     fun start() {
-        chat?.pause()
         chat?.start()
     }
 
@@ -344,6 +343,7 @@ class ChatViewModel @Inject constructor(
         }
 
         override fun start() {
+            pause()
             chat = TwitchApiHelper.startChat(
                 useSSl,
                 user is LoggedIn,

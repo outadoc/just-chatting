@@ -121,10 +121,11 @@ class ChannelChatFragment :
     }
 
     private fun goHome() {
-        val i = Intent(context, MainActivity::class.java).apply {
-            action = Intent.ACTION_VIEW
-        }
-        startActivity(i)
+        startActivity(
+            Intent(context, MainActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+            }
+        )
     }
 
     override fun initialize() {

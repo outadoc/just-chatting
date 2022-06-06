@@ -1,4 +1,4 @@
-package com.github.andreyasadchy.xtra.ui.channel
+package com.github.andreyasadchy.xtra.ui.chat
 
 import android.app.Activity
 import android.content.Intent
@@ -19,8 +19,6 @@ import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.ui.Utils
-import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
@@ -60,11 +58,14 @@ class ChannelChatFragment :
     Scrollable {
 
     companion object {
+        private const val ARG_SHOW_BACK_BUTTON = "show_back_button"
+
         fun newInstance(
             id: String?,
             login: String?,
             name: String?,
             channelLogo: String?,
+            showBackButton: Boolean,
             updateLocal: Boolean = false
         ) = ChannelChatFragment().apply {
             arguments = Bundle().apply {
@@ -73,6 +74,7 @@ class ChannelChatFragment :
                 putString(C.CHANNEL_DISPLAYNAME, name)
                 putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
                 putBoolean(C.CHANNEL_UPDATELOCAL, updateLocal)
+                putBoolean(ARG_SHOW_BACK_BUTTON, showBackButton)
             }
         }
     }
@@ -91,13 +93,18 @@ class ChannelChatFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val activity = requireActivity() as MainActivity
         val args = requireArguments()
 
         toolbar.apply {
             title = args.getString(C.CHANNEL_DISPLAYNAME)
-            navigationIcon = Utils.getNavigationIcon(activity)
-            setNavigationOnClickListener { activity.popFragment() }
+
+            if (args.getBoolean(ARG_SHOW_BACK_BUTTON)) {
+                setNavigationIcon(R.drawable.ic_back)
+            }
+
+            setNavigationOnClickListener {
+                goHome()
+            }
         }
 
         watchLive.setOnClickListener {
@@ -113,14 +120,19 @@ class ChannelChatFragment :
         }
     }
 
+    private fun goHome() {
+        val i = Intent(context, MainActivity::class.java).apply {
+            action = Intent.ACTION_VIEW
+        }
+        startActivity(i)
+    }
+
     override fun initialize() {
         initializeChannel()
         initializeChat()
     }
 
     private fun initializeChannel() = channelViewModel.let { viewModel ->
-        val activity = requireActivity() as MainActivity
-
         viewModel.loadStream(
             channelId = requireArguments().getString(C.CHANNEL_ID),
             channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),
@@ -155,7 +167,7 @@ class ChannelChatFragment :
             fragment = this,
             viewModel = channelViewModel,
             followButton = follow,
-            user = User.get(activity),
+            user = User.get(requireContext()),
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
             gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
         )

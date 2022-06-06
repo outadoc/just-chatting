@@ -11,7 +11,6 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
-import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.ui.settings.api.DragListFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.applyTheme
@@ -33,9 +32,12 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
         super.onCreate(savedInstanceState)
         applyTheme()
         setContentView(R.layout.activity_settings)
-        toolbar.navigationIcon = Utils.getNavigationIcon(this)
+
+        toolbar.setNavigationIcon(R.drawable.ic_back)
         toolbar.setNavigationOnClickListener { onBackPressed() }
+
         recreate = savedInstanceState?.getBoolean(SettingsFragment.KEY_CHANGED) == true
+
         if (savedInstanceState == null || recreate) {
             recreate = false
             supportFragmentManager

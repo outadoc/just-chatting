@@ -127,10 +127,10 @@ class ChatView : ConstraintLayout {
             }
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
+        ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
             btnDown.updateLayoutParams<MarginLayoutParams> {
-                bottomMargin = navBarInsets.bottom
+                bottomMargin = topMargin + navBarInsets.bottom
             }
             windowInsets
         }

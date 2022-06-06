@@ -10,7 +10,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.ui.Utils
 import com.github.andreyasadchy.xtra.ui.common.pagers.MediaPagerFragment
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchFragment
@@ -40,9 +39,10 @@ class SearchFragment : MediaPagerFragment() {
         val activity = requireActivity() as MainActivity
 
         toolbar.apply {
-            navigationIcon = Utils.getNavigationIcon(activity)
+            setNavigationIcon(R.drawable.ic_back)
             setNavigationOnClickListener { activity.popFragment() }
         }
+
         search.showKeyboard()
 
         searchFragment = ChannelSearchFragment().also { fragment ->

@@ -87,13 +87,14 @@ object ChatNotificationUtils {
     ) {
         val request = GlideApp.with(context)
             .asBitmap()
+            .circleCrop()
             .load(channelLogo)
 
         val bitmap = withContext(Dispatchers.IO) {
             request.submit().get()
         }
 
-        val icon = IconCompat.createWithAdaptiveBitmap(bitmap)
+        val icon = IconCompat.createWithBitmap(bitmap)
 
         val person: Person =
             Person.Builder()

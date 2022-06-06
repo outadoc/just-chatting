@@ -46,6 +46,8 @@ object ChatNotificationUtils {
 
         val nm = context.getSystemService<NotificationManager>() ?: return false
 
+        if (!nm.areNotificationsEnabled()) return false
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             nm.bubblePreference != NotificationManager.BUBBLE_PREFERENCE_NONE
         ) return true
@@ -249,9 +251,7 @@ object ChatNotificationUtils {
     ): Intent {
         return Intent(context, ChatActivity::class.java).apply {
             action = Intent.ACTION_VIEW
-            flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
-                    Intent.FLAG_ACTIVITY_NEW_TASK or
-                    Intent.FLAG_ACTIVITY_CLEAR_TASK
+            flags = 0
 
             putExtra(C.CHANNEL_ID, channelId)
             putExtra(C.CHANNEL_LOGIN, channelLogin)

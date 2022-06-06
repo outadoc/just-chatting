@@ -141,31 +141,28 @@ class MainActivity :
     }
 
     private fun handleIntent(intent: Intent?) {
-        val prefs = prefs()
+        if (intent?.action != Intent.ACTION_VIEW || intent.data == null) return
 
-        if (intent?.action == Intent.ACTION_VIEW) {
-            val url = intent.data.toString()
-            when {
-                else -> {
-                    val login = url.substringAfter("twitch.tv/").substringBefore("/")
-                    if (login.isNotBlank()) {
-                        viewModel.loadUser(
-                            login,
-                            prefs.getString(C.HELIX_CLIENT_ID, ""),
-                            prefs.getString(C.TOKEN, ""),
-                            prefs.getString(C.GQL_CLIENT_ID, "")
-                        )
-                        viewModel.user.observe(this) { user ->
-                            if (user != null && (!user.id.isNullOrBlank() || !user.login.isNullOrBlank())) {
-                                viewChannel(
-                                    id = user.id,
-                                    login = user.login,
-                                    name = user.display_name,
-                                    channelLogo = user.channelLogo
-                                )
-                            }
-                        }
-                    }
+        val url = intent.data.toString()
+        val login = url.substringAfter("twitch.tv/").substringBefore("/")
+
+        if (login.isNotBlank()) {
+            val prefs = prefs()
+            viewModel.loadUser(
+                login,
+                prefs.getString(C.HELIX_CLIENT_ID, ""),
+                prefs.getString(C.TOKEN, ""),
+                prefs.getString(C.GQL_CLIENT_ID, "")
+            )
+
+            viewModel.user.observe(this) { user ->
+                if (user != null && (!user.id.isNullOrBlank() || !user.login.isNullOrBlank())) {
+                    viewChannel(
+                        id = user.id,
+                        login = user.login,
+                        name = user.display_name,
+                        channelLogo = user.channelLogo
+                    )
                 }
             }
         }

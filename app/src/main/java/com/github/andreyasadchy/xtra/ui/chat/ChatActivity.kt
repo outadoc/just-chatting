@@ -1,10 +1,8 @@
 package com.github.andreyasadchy.xtra.ui.chat
 
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import com.github.andreyasadchy.xtra.ui.main.BaseActivity
-import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.C
 
 class ChatActivity : BaseActivity() {
@@ -30,11 +28,7 @@ class ChatActivity : BaseActivity() {
     override fun onBackPressed() {
         when {
             isLaunchedFromBubbleCompat -> super.onBackPressed()
-            else -> startActivity(
-                Intent(this, MainActivity::class.java).apply {
-                    action = Intent.ACTION_VIEW
-                }
-            )
+            else -> finish()
         }
     }
 

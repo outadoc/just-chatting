@@ -104,7 +104,7 @@ class ChannelChatFragment :
             }
 
             setNavigationOnClickListener {
-                goHome()
+                activity?.onBackPressed()
             }
         }
 

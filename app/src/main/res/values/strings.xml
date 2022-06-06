@@ -345,4 +345,7 @@ Removes a timeout on a user.</string>
     <string name="image_quality">Image quality</string>
     <string name="lang_auto">System default</string>
     <string name="lang_en">English</string>
+    <string name="notification_channel_bubbles_title">Chat bubbles</string>
+    <string name="notification_channel_bubbles_message">Used to show the Twitch chat in notification bubbles.</string>
+    <string name="notification_channel_bubbles_openPrompt">Open this notification as a bubble.</string>
 </resources>

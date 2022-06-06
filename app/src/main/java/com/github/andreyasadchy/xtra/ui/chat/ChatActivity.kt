@@ -102,9 +102,8 @@ class ChatActivity : BaseActivity() {
                         NOTIFICATION_CHANNEL_ID,
                         NotificationManagerCompat.IMPORTANCE_HIGH
                     )
-                        // TODO extract to resource
-                        .setName("Chat bubbles")
-                        .setDescription("Used to show the Twitch chat in notification bubbles.")
+                        .setName(context.getString(R.string.notification_channel_bubbles_title))
+                        .setDescription(context.getString(R.string.notification_channel_bubbles_message))
                         .build()
                 )
 
@@ -158,7 +157,7 @@ class ChatActivity : BaseActivity() {
                     .setStyle(
                         NotificationCompat.MessagingStyle(person)
                             .addMessage(
-                                "Open this notification as a bubble.",
+                                context.getString(R.string.notification_channel_bubbles_openPrompt),
                                 System.currentTimeMillis(),
                                 person
                             )

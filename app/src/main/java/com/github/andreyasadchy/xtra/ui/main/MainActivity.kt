@@ -14,7 +14,7 @@ import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.chat.ChannelChatFragment
-import com.github.andreyasadchy.xtra.ui.chat.ChatActivity
+import com.github.andreyasadchy.xtra.ui.chat.ChatNotificationUtils
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
@@ -189,13 +189,14 @@ class MainActivity :
         channelLogo: String?,
         updateLocal: Boolean
     ) {
+        if (id == null || login == null || name == null || channelLogo == null) return
         lifecycleScope.launch(Dispatchers.IO) {
-            ChatActivity.openInBubbleOrStartActivity(
-                this@MainActivity,
-                id!!,
-                login!!,
-                name!!,
-                channelLogo!!
+            ChatNotificationUtils.openInBubbleOrStartActivity(
+                context = this@MainActivity,
+                channelId = id,
+                channelLogin = login,
+                channelName = name,
+                channelLogo = channelLogo
             )
         }
     }

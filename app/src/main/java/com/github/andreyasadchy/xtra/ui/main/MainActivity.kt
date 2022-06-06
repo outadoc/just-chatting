@@ -13,7 +13,6 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.ui.chat.ChannelChatFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatNotificationUtils
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
@@ -125,17 +124,6 @@ class MainActivity :
             }
             // Was logged in
             2 -> restartActivity()
-        }
-    }
-
-    override fun onBackPressed() {
-        if (fragNavController.isRootFragment) {
-            super.onBackPressed()
-        } else {
-            val currentFrag = fragNavController.currentFrag
-            if (!(currentFrag is ChannelChatFragment && currentFrag.hideEmotesMenu())) {
-                fragNavController.popFragment()
-            }
         }
     }
 

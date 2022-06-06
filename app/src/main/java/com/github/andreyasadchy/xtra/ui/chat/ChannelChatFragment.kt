@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import androidx.activity.addCallback
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
@@ -134,6 +135,14 @@ class ChannelChatFragment :
                     }
                     else -> false
                 }
+            }
+        }
+
+        activity?.onBackPressedDispatcher?.addCallback(this) {
+            if (!chatInputView.hideEmotesMenu()) {
+                isEnabled = false
+                activity?.onBackPressed()
+                isEnabled = true
             }
         }
 
@@ -437,10 +446,6 @@ class ChannelChatFragment :
     private fun hideKeyboard() {
         chatInputView.hideKeyboard()
         chatInputView.clearFocus()
-    }
-
-    fun hideEmotesMenu(): Boolean {
-        return chatInputView.hideEmotesMenu()
     }
 
     fun appendEmote(emote: Emote) {

@@ -339,8 +339,6 @@ class ChatInputView : LinearLayout {
             editText.text.clear()
             if (text.isNotEmpty()) {
                 it.send(text)
-                // TODO
-                //  adapter.messages?.let { messages -> recyclerView.scrollToPosition(messages.lastIndex) }
                 true
             } else {
                 false

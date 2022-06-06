@@ -189,9 +189,8 @@ class MainActivity :
         channelLogo: String?,
         updateLocal: Boolean
     ) {
-        // TODO check for bubble compatibility. either open in bubble or in new activity
         lifecycleScope.launch(Dispatchers.IO) {
-            ChatActivity.openInBubble(
+            ChatActivity.openInBubbleOrStartActivity(
                 this@MainActivity,
                 id!!,
                 login!!,
@@ -199,29 +198,6 @@ class MainActivity :
                 channelLogo!!
             )
         }
-
-        /*
-        startActivity(
-            ChatActivity.createIntent(
-                this,
-                id!!,
-                login!!,
-                name!!,
-                channelLogo!!
-            )
-        )
-*/
-/*
-          fragNavController.pushFragment(
-          ChannelChatFragment.newInstance(
-                id = id,
-                login = login,
-                name = name,
-                channelLogo = channelLogo,
-                updateLocal = updateLocal
-            )
-            )
- */
     }
 
     fun popFragment() {

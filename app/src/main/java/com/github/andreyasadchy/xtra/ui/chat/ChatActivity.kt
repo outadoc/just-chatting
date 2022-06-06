@@ -1,5 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.chat
 
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -10,6 +11,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.content.LocusIdCompat
+import androidx.core.content.getSystemService
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -24,7 +26,58 @@ class ChatActivity : BaseActivity() {
 
         private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
 
-        fun openInBubble(
+        fun openInBubbleOrStartActivity(
+            context: Context,
+            channelId: String,
+            channelLogin: String,
+            channelName: String,
+            channelLogo: String
+        ) {
+            val channel = createGenericBubbleChannelIfNeeded(context)
+            if (channel != null && areBubblesAllowed(context, channel)) {
+                openInBubble(context, channelId, channelLogin, channelName, channelLogo)
+            } else {
+                startActivity(context, channelId, channelLogin, channelName, channelLogo)
+            }
+        }
+
+        private fun areBubblesAllowed(
+            context: Context,
+            channel: NotificationChannelCompat
+        ): Boolean {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return false
+            if (channel.canBubble()) return true
+            val nm = context.getSystemService<NotificationManager>() ?: return false
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                nm.bubblePreference != NotificationManager.BUBBLE_PREFERENCE_NONE
+            ) return true
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && nm.areBubblesAllowed())
+                return true
+
+            return false
+        }
+
+        private fun startActivity(
+            context: Context,
+            channelId: String,
+            channelLogin: String,
+            channelName: String,
+            channelLogo: String
+        ) {
+            context.startActivity(
+                createIntent(
+                    context = context,
+                    channelId = channelId,
+                    channelLogin = channelLogin,
+                    channelName = channelName,
+                    channelLogo = channelLogo
+                )
+            )
+        }
+
+        private fun openInBubble(
             context: Context,
             channelId: String,
             channelLogin: String,
@@ -58,8 +111,6 @@ class ChatActivity : BaseActivity() {
                 person = person,
                 icon = icon
             )
-
-            createGenericBubbleChannelIfNeeded(context)
 
             createBubble(
                 context = context,
@@ -95,8 +146,8 @@ class ChatActivity : BaseActivity() {
             )
         }
 
-        private fun createGenericBubbleChannelIfNeeded(context: Context) =
-            NotificationManagerCompat.from(context).apply {
+        private fun createGenericBubbleChannelIfNeeded(context: Context): NotificationChannelCompat? {
+            with(NotificationManagerCompat.from(context)) {
                 createNotificationChannel(
                     NotificationChannelCompat.Builder(
                         NOTIFICATION_CHANNEL_ID,
@@ -107,7 +158,9 @@ class ChatActivity : BaseActivity() {
                         .build()
                 )
 
+                return getNotificationChannelCompat(NOTIFICATION_CHANNEL_ID)
             }
+        }
 
         private fun createBubble(
             context: Context,

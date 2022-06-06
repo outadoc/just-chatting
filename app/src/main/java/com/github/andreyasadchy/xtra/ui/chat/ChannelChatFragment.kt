@@ -3,6 +3,7 @@ package com.github.andreyasadchy.xtra.ui.chat
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -108,7 +109,11 @@ class ChannelChatFragment :
         }
 
         watchLive.setOnClickListener {
-            TODO("open stream intent")
+            args.getString(C.CHANNEL_LOGIN)?.let { login ->
+                startActivity(
+                    Intent(Intent.ACTION_VIEW, formatChannelUri(login))
+                )
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
@@ -118,6 +123,13 @@ class ChannelChatFragment :
             }
             windowInsets
         }
+    }
+
+    private fun formatChannelUri(channelLogin: String): Uri {
+        return Uri.parse("https://twitch.tv")
+            .buildUpon()
+            .appendPath(channelLogin)
+            .build()
     }
 
     private fun goHome() {

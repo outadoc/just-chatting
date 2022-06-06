@@ -15,31 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|enterAlways"
-            app:title="@string/app_name">
-
-            <ImageView
-                android:id="@+id/menu"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="5dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="5dp"
-                android:src="@drawable/baseline_more_vert_black_24"
-                app:tint="?attr/colorOnSurface" />
-
-            <ImageView
-                android:id="@+id/search"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="5dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:padding="5dp"
-                android:src="@drawable/baseline_search_black_24"
-                app:tint="?attr/colorOnSurface" />
-
-        </com.google.android.material.appbar.MaterialToolbar>
+            app:title="@string/app_name" />
 
         <Spinner
             android:id="@+id/spinner"

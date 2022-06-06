@@ -2,14 +2,13 @@ package com.github.andreyasadchy.xtra.ui.streams
 
 import android.view.View
 import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
-import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.tagsLayout
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.type
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.uptime
@@ -26,43 +25,43 @@ class StreamsCompactAdapter(
         super.bind(item, view)
         with(view) {
             if (item.viewer_count != null) {
-                viewers.visible()
+                viewers.isVisible = true
                 viewers.text = TwitchApiHelper.formatCount(context, item.viewer_count)
             } else {
-                viewers.gone()
+                viewers.isVisible = false
             }
             if (item.type != null) {
                 val text = TwitchApiHelper.getType(context, item.type)
                 if (text != null) {
-                    type.visible()
+                    type.isVisible = true
                     type.text = text
                 } else {
-                    type.gone()
+                    type.isVisible = false
                 }
             } else {
-                type.gone()
+                type.isVisible = false
             }
             if (item.started_at != null) {
                 val text = TwitchApiHelper.getUptime(context = context, input = item.started_at)
                 if (text != null) {
-                    uptime.visible()
+                    uptime.isVisible = true
                     uptime.text = text
                 } else {
-                    uptime.gone()
+                    uptime.isVisible = false
                 }
             } else {
-                uptime.gone()
+                uptime.isVisible = false
             }
             if (item.tags != null && context.prefs().getBoolean(C.UI_TAGS, true)) {
                 tagsLayout.removeAllViews()
-                tagsLayout.visible()
+                tagsLayout.isVisible = true
                 for (tag in item.tags) {
                     val text = TextView(context)
                     text.text = tag.name
                     tagsLayout.addView(text)
                 }
             } else {
-                tagsLayout.gone()
+                tagsLayout.isVisible = false
             }
         }
     }

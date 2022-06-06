@@ -29,11 +29,9 @@ import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.RoomState
-import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.showKeyboard
-import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.image
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.name
@@ -158,7 +156,7 @@ class ChatInputView : LinearLayout {
 
     fun hideEmotesMenu(): Boolean {
         return if (viewPager.isVisible) {
-            viewPager.gone()
+            viewPager.isVisible = false
             true
         } else {
             false
@@ -186,19 +184,19 @@ class ChatInputView : LinearLayout {
     fun notifyRoomState(roomState: RoomState) {
         if (roomState.emote != null) {
             when (roomState.emote) {
-                "0" -> textEmote.gone()
-                "1" -> textEmote.visible()
+                "0" -> textEmote.isVisible = false
+                "1" -> textEmote.isVisible = true
             }
         } else {
-            textEmote.gone()
+            textEmote.isVisible = false
         }
 
         if (roomState.followers != null) {
             when (roomState.followers) {
-                "-1" -> textFollowers.gone()
+                "-1" -> textFollowers.isVisible = false
                 "0" -> {
                     textFollowers.text = context.getString(R.string.room_followers)
-                    textFollowers.visible()
+                    textFollowers.isVisible = true
                 }
                 else -> {
                     textFollowers.text = context.getString(
@@ -208,50 +206,50 @@ class ChatInputView : LinearLayout {
                             (roomState.followers.toInt() * 60).toString()
                         )
                     )
-                    textFollowers.visible()
+                    textFollowers.isVisible = true
                 }
             }
         } else {
-            textFollowers.gone()
+            textFollowers.isVisible = false
         }
 
         if (roomState.unique != null) {
             when (roomState.unique) {
-                "0" -> textUnique.gone()
-                "1" -> textUnique.visible()
+                "0" -> textUnique.isVisible = false
+                "1" -> textUnique.isVisible = true
             }
         } else {
-            textUnique.gone()
+            textUnique.isVisible = false
         }
 
         if (roomState.slow != null) {
             when (roomState.slow) {
-                "0" -> textSlow.gone()
+                "0" -> textSlow.isVisible = false
                 else -> {
                     textSlow.text = context.getString(
                         R.string.room_slow,
                         TwitchApiHelper.getDurationFromSeconds(context, roomState.slow)
                     )
-                    textSlow.visible()
+                    textSlow.isVisible = true
                 }
             }
         } else {
-            textSlow.gone()
+            textSlow.isVisible = false
         }
 
         if (roomState.subs != null) {
             when (roomState.subs) {
-                "0" -> textSubs.gone()
-                "1" -> textSubs.visible()
+                "0" -> textSubs.isVisible = false
+                "1" -> textSubs.isVisible = true
             }
         } else {
-            textSubs.gone()
+            textSubs.isVisible = false
         }
 
         if (textEmote.isGone && textFollowers.isGone && textUnique.isGone && textSlow.isGone && textSubs.isGone) {
-            flexboxChatMode.gone()
+            flexboxChatMode.isVisible = false
         } else {
-            flexboxChatMode.visible()
+            flexboxChatMode.isVisible = true
         }
     }
 
@@ -259,11 +257,11 @@ class ChatInputView : LinearLayout {
         if (enableMessaging) {
             editText.addTextChangedListener(onTextChanged = { text, _, _, _ ->
                 if (text?.isNotBlank() == true) {
-                    send.visible()
-                    clear.visible()
+                    send.isVisible = true
+                    clear.isVisible = true
                 } else {
-                    send.gone()
-                    clear.gone()
+                    send.isVisible = false
+                    clear.isVisible = false
                 }
             })
 
@@ -284,10 +282,10 @@ class ChatInputView : LinearLayout {
                         viewPager.setCurrentItem(1, false)
                     }
                     editText.hideKeyboard()
-                    viewPager.visible()
+                    viewPager.isVisible = true
                 } else {
                     editText.showKeyboard()
-                    viewPager.gone()
+                    viewPager.isVisible = false
                 }
             }
 
@@ -303,7 +301,7 @@ class ChatInputView : LinearLayout {
             }
 
             send.setOnClickListener { sendMessage() }
-            messageView.visible()
+            messageView.isVisible = true
 
             viewPager.adapter = object : FragmentStatePagerAdapter(
                 fragment.childFragmentManager,

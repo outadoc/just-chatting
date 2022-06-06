@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.search.channels
 
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
@@ -8,9 +9,7 @@ import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userFollowers
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userImage
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userName
@@ -40,25 +39,25 @@ class ChannelSearchAdapter(
                 )
             }
             if (item.channelLogo != null) {
-                userImage.visible()
+                userImage.isVisible = true
                 userImage.loadImage(fragment, item.channelLogo, circle = true)
             } else {
-                userImage.gone()
+                userImage.isVisible = false
             }
             if (item.display_name != null) {
-                userName.visible()
+                userName.isVisible = true
                 userName.text = item.display_name
             } else {
-                userName.gone()
+                userName.isVisible = false
             }
             if (item.followers_count != null) {
-                userFollowers.visible()
+                userFollowers.isVisible = true
                 userFollowers.text = context.getString(
                     R.string.followers,
                     TwitchApiHelper.formatCount(context, item.followers_count)
                 )
             } else {
-                userFollowers.gone()
+                userFollowers.isVisible = false
             }
         }
     }

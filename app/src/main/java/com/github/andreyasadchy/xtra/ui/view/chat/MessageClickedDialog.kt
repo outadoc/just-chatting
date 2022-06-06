@@ -19,10 +19,8 @@ import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
-import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.dialog_chat_message_click.bannerImage
 import kotlinx.android.synthetic.main.dialog_chat_message_click.copyClip
 import kotlinx.android.synthetic.main.dialog_chat_message_click.copyFullMsg
@@ -111,24 +109,24 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                         savedUsers.add(user)
                         updateUserLayout(user)
                     } else {
-                        viewProfile.visible()
+                        viewProfile.isVisible = true
                     }
                 }
             }
             if (args.getBoolean(KEY_MESSAGING)) {
-                reply.visible()
+                reply.isVisible = true
                 reply.setOnClickListener {
                     listener.onReplyClicked(extractUserName(msg))
                     dismiss()
                 }
-                copyMessage.visible()
+                copyMessage.isVisible = true
                 copyMessage.setOnClickListener {
                     listener.onCopyMessageClicked(msg.substring(msg.indexOf(':') + 2))
                     dismiss()
                 }
             } else {
-                reply.gone()
-                copyMessage.gone()
+                reply.isVisible = false
+                copyMessage.isVisible = false
             }
         }
         copyClip.setOnClickListener {
@@ -141,7 +139,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             dismiss()
         }
         if (requireContext().prefs().getBoolean(C.DEBUG_CHAT_FULLMSG, false) && fullMsg != null) {
-            copyFullMsg.visible()
+            copyFullMsg.isVisible = true
             copyFullMsg.setOnClickListener {
                 clipboard?.setPrimaryClip(ClipData.newPlainText("label", fullMsg))
                 dismiss()
@@ -151,15 +149,15 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
 
     private fun updateUserLayout(user: User) {
         if (user.bannerImageURL != null) {
-            userLayout.visible()
-            bannerImage.visible()
+            userLayout.isVisible = true
+            bannerImage.isVisible = true
             bannerImage.loadImage(requireParentFragment(), user.bannerImageURL)
         } else {
-            bannerImage.gone()
+            bannerImage.isVisible = false
         }
         if (user.channelLogo != null) {
-            userLayout.visible()
-            userImage.visible()
+            userLayout.isVisible = true
+            userImage.isVisible = true
             userImage.loadImage(requireParentFragment(), user.channelLogo, circle = true)
             userImage.setOnClickListener {
                 listener.onViewProfileClicked(
@@ -171,11 +169,11 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                 dismiss()
             }
         } else {
-            userImage.gone()
+            userImage.isVisible = false
         }
         if (user.display_name != null) {
-            userLayout.visible()
-            userName.visible()
+            userLayout.isVisible = true
+            userName.isVisible = true
             userName.text = user.display_name
             userName.setOnClickListener {
                 listener.onViewProfileClicked(
@@ -190,11 +188,11 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                 userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
         } else {
-            userName.gone()
+            userName.isVisible = false
         }
         if (user.followers_count != null) {
-            userLayout.visible()
-            userFollowers.visible()
+            userLayout.isVisible = true
+            userFollowers.isVisible = true
             userFollowers.text = requireContext().getString(
                 R.string.followers,
                 TwitchApiHelper.formatCount(requireContext(), user.followers_count)
@@ -204,11 +202,11 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                 userFollowers.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
         } else {
-            userFollowers.gone()
+            userFollowers.isVisible = false
         }
         if (user.created_at != null) {
-            userLayout.visible()
-            userCreated.visible()
+            userLayout.isVisible = true
+            userCreated.isVisible = true
             userCreated.text = requireContext().getString(
                 R.string.created_at,
                 TwitchApiHelper.formatTimeString(requireContext(), user.created_at)
@@ -218,10 +216,10 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                 userCreated.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
         } else {
-            userCreated.gone()
+            userCreated.isVisible = false
         }
         if (!userImage.isVisible && !userName.isVisible) {
-            viewProfile.visible()
+            viewProfile.isVisible = true
         }
     }
 

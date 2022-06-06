@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.follow.channels
 
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -9,9 +10,7 @@ import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.localText
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.twitchText
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userFollowed
@@ -44,7 +43,7 @@ class FollowedChannelsAdapter(
                 )
             }
             if (item.channelLogo != null) {
-                userImage.visible()
+                userImage.isVisible = true
                 userImage.loadImage(
                     fragment,
                     item.channelLogo,
@@ -52,45 +51,45 @@ class FollowedChannelsAdapter(
                     diskCacheStrategy = DiskCacheStrategy.NONE
                 )
             } else {
-                userImage.gone()
+                userImage.isVisible = false
             }
             if (item.to_name != null) {
-                username.visible()
+                username.isVisible = true
                 username.text = item.to_name
             } else {
-                username.gone()
+                username.isVisible = false
             }
             if (item.lastBroadcast != null) {
                 val text = item.lastBroadcast?.let { TwitchApiHelper.formatTimeString(context, it) }
                 if (text != null) {
-                    userStream.visible()
+                    userStream.isVisible = true
                     userStream.text = context.getString(R.string.last_broadcast_date, text)
                 } else {
-                    userStream.gone()
+                    userStream.isVisible = false
                 }
             } else {
-                userStream.gone()
+                userStream.isVisible = false
             }
             if (item.followed_at != null) {
                 val text = TwitchApiHelper.formatTimeString(context, item.followed_at!!)
                 if (text != null) {
-                    userFollowed.visible()
+                    userFollowed.isVisible = true
                     userFollowed.text = context.getString(R.string.followed_at, text)
                 } else {
-                    userFollowed.gone()
+                    userFollowed.isVisible = false
                 }
             } else {
-                userFollowed.gone()
+                userFollowed.isVisible = false
             }
             if (item.followTwitch) {
-                twitchText.visible()
+                twitchText.isVisible = true
             } else {
-                twitchText.gone()
+                twitchText.isVisible = false
             }
             if (item.followLocal) {
-                localText.visible()
+                localText.isVisible = true
             } else {
-                localText.gone()
+                localText.isVisible = false
             }
         }
     }

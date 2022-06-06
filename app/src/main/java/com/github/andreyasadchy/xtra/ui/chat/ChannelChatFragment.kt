@@ -28,12 +28,10 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.LifecycleListener
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
-import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_channel.appBar
 import kotlinx.android.synthetic.main.fragment_channel.bannerImage
 import kotlinx.android.synthetic.main.fragment_channel.chatInputView
@@ -310,20 +308,20 @@ class ChannelChatFragment :
                 if (it != null) {
                     lastBroadcast.text =
                         requireContext().getString(R.string.last_broadcast_date, it)
-                    lastBroadcast.visible()
+                    lastBroadcast.isVisible = true
                 } else {
-                    lastBroadcast.gone()
+                    lastBroadcast.isVisible = false
                 }
             }
         }
 
         stream?.channelLogo.let {
             if (it != null) {
-                userImage.visible()
+                userImage.isVisible = true
                 userImage.loadImage(this, it, circle = true)
                 requireArguments().putString(C.CHANNEL_PROFILEIMAGE, it)
             } else {
-                userImage.gone()
+                userImage.isVisible = false
             }
         }
 
@@ -341,33 +339,33 @@ class ChannelChatFragment :
         }
 
         if (stream?.title != null) {
-            title.visible()
+            title.isVisible = true
             title.text = stream.title.trim()
         } else {
-            title.gone()
+            title.isVisible = false
         }
 
         if (stream?.game_name != null) {
-            gameName.visible()
+            gameName.isVisible = true
             gameName.text = stream.game_name
         } else {
-            gameName.gone()
+            gameName.isVisible = false
         }
 
         if (stream?.viewer_count != null) {
-            viewers.visible()
+            viewers.isVisible = true
             viewers.text = TwitchApiHelper.formatViewersCount(requireContext(), stream.viewer_count)
         } else {
-            viewers.gone()
+            viewers.isVisible = false
         }
 
         if (stream?.started_at != null) {
             TwitchApiHelper.getUptime(requireContext(), stream.started_at).let {
                 if (it != null) {
-                    uptime.visible()
+                    uptime.isVisible = true
                     uptime.text = requireContext().getString(R.string.uptime, it)
                 } else {
-                    uptime.gone()
+                    uptime.isVisible = false
                 }
             }
         }
@@ -375,7 +373,7 @@ class ChannelChatFragment :
 
     private fun updateUserLayout(user: com.github.andreyasadchy.xtra.model.helix.user.User) {
         if (!userImage.isVisible && user.channelLogo != null) {
-            userImage.visible()
+            userImage.isVisible = true
             userImage.loadImage(this, user.channelLogo, circle = true)
             requireArguments().putString(C.CHANNEL_PROFILEIMAGE, user.channelLogo)
         }
@@ -389,7 +387,7 @@ class ChannelChatFragment :
         }
 
         if (user.created_at != null) {
-            userCreated.visible()
+            userCreated.isVisible = true
             userCreated.text = requireContext().getString(
                 R.string.created_at,
                 TwitchApiHelper.formatTimeString(requireContext(), user.created_at)
@@ -397,7 +395,7 @@ class ChannelChatFragment :
         }
 
         if (user.followers_count != null) {
-            userFollowers.visible()
+            userFollowers.isVisible = true
             userFollowers.text = requireContext().getString(
                 R.string.followers,
                 TwitchApiHelper.formatCount(requireContext(), user.followers_count)
@@ -405,7 +403,7 @@ class ChannelChatFragment :
         }
 
         if (user.view_count != null) {
-            userViews.visible()
+            userViews.isVisible = true
             userViews.text = TwitchApiHelper.formatViewsCount(requireContext(), user.view_count)
         }
     }

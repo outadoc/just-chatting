@@ -1,13 +1,12 @@
 package com.github.andreyasadchy.xtra.ui.streams
 
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
-import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.gameName
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.title
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.userImage
@@ -31,28 +30,28 @@ abstract class BaseStreamsAdapter(
         with(view) {
             setOnClickListener { clickListener.startStream(item) }
             if (item.channelLogo != null) {
-                userImage.visible()
+                userImage.isVisible = true
                 userImage.loadImage(fragment, item.channelLogo, circle = true)
             } else {
-                userImage.gone()
+                userImage.isVisible = false
             }
             if (item.user_name != null) {
-                username.visible()
+                username.isVisible = true
                 username.text = item.user_name
             } else {
-                username.gone()
+                username.isVisible = false
             }
             if (item.title != null && item.title != "") {
-                title.visible()
+                title.isVisible = true
                 title.text = item.title.trim()
             } else {
-                title.gone()
+                title.isVisible = false
             }
             if (item.game_name != null) {
-                gameName.visible()
+                gameName.isVisible = true
                 gameName.text = item.game_name
             } else {
-                gameName.gone()
+                gameName.isVisible = false
             }
         }
     }

@@ -11,24 +11,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.signature.ObjectKey
 import com.github.andreyasadchy.xtra.GlideApp
-
-fun View.visible() {
-    // TODO replace with android ktx
-    visibility = View.VISIBLE
-}
-
-fun View.gone() {
-    // TODO replace with android ktx
-    visibility = View.GONE
-}
-
-fun View.toggleVisibility() = if (isVisible) gone() else visible()
 
 @SuppressLint("CheckResult")
 fun ImageView.loadImage(

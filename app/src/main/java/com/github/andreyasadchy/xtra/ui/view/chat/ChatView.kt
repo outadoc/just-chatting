@@ -30,7 +30,6 @@ import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.Command
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
 import com.github.andreyasadchy.xtra.util.prefs
-import com.github.andreyasadchy.xtra.util.toggleVisibility
 import kotlinx.android.synthetic.main.view_chat.view.btnDown
 import kotlinx.android.synthetic.main.view_chat.view.recyclerView
 import java.util.Locale
@@ -123,7 +122,7 @@ class ChatView : ConstraintLayout {
         btnDown.setOnClickListener {
             post {
                 scrollToBottom()
-                it.toggleVisibility()
+                it.isVisible = !it.isVisible
             }
         }
 

@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
@@ -24,12 +25,10 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.applyTheme
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
-import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.toast
-import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.activity_login.havingTrouble
 import kotlinx.android.synthetic.main.activity_login.progressBar
 import kotlinx.android.synthetic.main.activity_login.webView
@@ -85,7 +84,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView(helixClientId: String, gqlClientId: String) {
-        webViewContainer.visible()
+        webViewContainer.isVisible = true
 
         val apiSetting = prefs().getString(C.API_LOGIN, "0")?.toInt() ?: 0
 
@@ -215,8 +214,8 @@ class LoginActivity : AppCompatActivity(), Injectable {
     private fun loginIfValidUrl(url: String, gqlAuthUrl: String, apiSetting: Int): Boolean {
         val matcher = tokenPattern.matcher(url)
         return if (matcher.find() && tokens < 2) {
-            webViewContainer.gone()
-            progressBar.visible()
+            webViewContainer.isVisible = false
+            progressBar.isVisible = true
 
             val token = matcher.group(1)!!
             if (apiSetting == 0 && tokens == 0 || apiSetting == 2) {

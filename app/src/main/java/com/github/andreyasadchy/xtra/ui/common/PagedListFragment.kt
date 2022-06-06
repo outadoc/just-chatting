@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.repository.LoadingState
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
-import com.github.andreyasadchy.xtra.util.gone
 import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
 import kotlinx.android.synthetic.main.common_recycler_view_layout.progressBar
 import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
@@ -90,7 +89,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
             val isLoading = it == LoadingState.LOADING
             val isListEmpty = adapter.currentList.isNullOrEmpty()
             if (isLoading) {
-                nothingHere?.gone()
+                nothingHere?.isVisible = false
             }
             progressBar?.isVisible = isLoading && isListEmpty
             if (swipeRefresh?.isEnabled == true) {
@@ -104,7 +103,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
         if (scrollTop?.isEnabled == true) {
             scrollTop.setOnClickListener {
                 (parentFragment as? Scrollable)?.scrollToTop()
-                it.gone()
+                it.isVisible = false
             }
         }
     }

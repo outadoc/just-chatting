@@ -1,7 +1,7 @@
 package com.github.andreyasadchy.xtra.di
 
 import com.github.andreyasadchy.xtra.ui.chat.ChannelChatFragment
-import com.github.andreyasadchy.xtra.ui.follow.FollowPagerFragment
+import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchFragment
@@ -41,5 +41,5 @@ abstract class FragmentBuilderModule {
     abstract fun contributeFollowedChannelsFragment(): FollowedChannelsFragment
 
     @ContributesAndroidInjector
-    abstract fun contributeFollowPagerFragment(): FollowPagerFragment
+    abstract fun contributeFollowMediaFragment(): FollowMediaFragment
 }

@@ -9,7 +9,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.repository.LoadingState
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
-import com.github.andreyasadchy.xtra.ui.follow.FollowPagerFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.util.gone
 import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
@@ -42,7 +41,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                 })
             }
         })
-        if (parentFragment is FollowMediaFragment || parentFragment is FollowPagerFragment || parentFragment is SearchFragment) {
+        if (parentFragment is FollowMediaFragment || parentFragment is SearchFragment) {
             scrollTop.isEnabled = false
         }
         recyclerView.let {

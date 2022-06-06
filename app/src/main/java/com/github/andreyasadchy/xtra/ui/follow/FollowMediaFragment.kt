@@ -9,18 +9,20 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
+import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
+import com.github.andreyasadchy.xtra.ui.common.pagers.ItemAwareFragmentPagerAdapter
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import kotlinx.android.synthetic.main.fragment_media.appBar
 import kotlinx.android.synthetic.main.fragment_media.toolbar
+import kotlinx.android.synthetic.main.fragment_media.viewPager
 
-class FollowMediaFragment : Fragment(), Scrollable {
+class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
 
     companion object {
         private const val LOGGED_IN = "logged_in"
@@ -34,7 +36,8 @@ class FollowMediaFragment : Fragment(), Scrollable {
     }
 
     private var previousItem = -1
-    private var currentFragment: Fragment? = null
+
+    private var adapter: ItemAwareFragmentPagerAdapter? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,36 +50,39 @@ class FollowMediaFragment : Fragment(), Scrollable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val user = User.get(requireContext())
+        setAdapter(FollowPagerAdapter(requireContext(), childFragmentManager))
 
-        toolbar.inflateMenu(R.menu.top_menu)
+        with(toolbar) {
+            val user = User.get(requireContext())
+            inflateMenu(R.menu.top_menu)
 
-        toolbar.menu.findItem(R.id.login).title =
-            if (user !is NotLoggedIn) getString(R.string.log_out)
-            else getString(R.string.log_in)
+            menu.findItem(R.id.login).title =
+                if (user !is NotLoggedIn) getString(R.string.log_out)
+                else getString(R.string.log_in)
 
-        toolbar.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.search -> {
-                    (activity as? MainActivity)?.openSearch()
-                    true
-                }
-                R.id.settings -> {
-                    activity?.startActivityFromFragment(
-                        this@FollowMediaFragment,
-                        Intent(activity, SettingsActivity::class.java),
-                        3
-                    )
-                    true
-                }
-                R.id.login -> {
-                    when (user) {
-                        is NotLoggedIn -> onLogin()
-                        else -> onLogout(user)
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.search -> {
+                        (activity as? MainActivity)?.openSearch()
+                        true
                     }
-                    true
+                    R.id.settings -> {
+                        activity?.startActivityFromFragment(
+                            this@FollowMediaFragment,
+                            Intent(activity, SettingsActivity::class.java),
+                            3
+                        )
+                        true
+                    }
+                    R.id.login -> {
+                        when (user) {
+                            is NotLoggedIn -> onLogin()
+                            else -> onLogout(user)
+                        }
+                        true
+                    }
+                    else -> false
                 }
-                else -> false
             }
         }
 
@@ -93,19 +99,11 @@ class FollowMediaFragment : Fragment(), Scrollable {
             WindowInsetsCompat.CONSUMED
         }
 
-        currentFragment = if (previousItem != -2) {
-            val loggedIn = requireArguments().getBoolean(LOGGED_IN)
-            val newFragment = FollowPagerFragment.newInstance(loggedIn)
-            childFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragmentContainer, newFragment)
-                .commit()
-
-            previousItem = -2
-            newFragment
-        } else {
-            childFragmentManager.findFragmentById(R.id.fragmentContainer)
-        }
+        savedInstanceState
+            ?.getInt("previousItem")
+            ?.let { previousItem ->
+                viewPager.currentItem = previousItem
+            }
     }
 
     private fun onLogout(user: User) {
@@ -139,6 +137,13 @@ class FollowMediaFragment : Fragment(), Scrollable {
         )
     }
 
+    private fun setAdapter(adapter: ItemAwareFragmentPagerAdapter) {
+        this.adapter = adapter
+        viewPager.adapter = adapter
+        viewPager.currentItem = 0
+        viewPager.offscreenPageLimit = adapter.count
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt("previousItem", previousItem)
         super.onSaveInstanceState(outState)
@@ -146,7 +151,13 @@ class FollowMediaFragment : Fragment(), Scrollable {
 
     override fun scrollToTop() {
         appBar?.setExpanded(true, true)
-        (currentFragment as? Scrollable)?.scrollToTop()
+        (adapter?.currentFragment as? Scrollable)?.scrollToTop()
+    }
+
+    override fun initialize() {
+    }
+
+    override fun onNetworkRestored() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

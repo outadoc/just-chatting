@@ -62,35 +62,8 @@
                         app:layout_constraintBottom_toTopOf="@id/title"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/spacerTop">
-
-                        <ImageButton
-                            android:id="@+id/follow"
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="end"
-                            android:layout_marginEnd="7dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:src="@drawable/baseline_favorite_border_black_24"
-                            android:visibility="gone"
-                            app:tint="?attr/colorOnBackground"
-                            tools:visibility="visible" />
-
-                        <ImageView
-                            android:id="@+id/watchLive"
-                            android:layout_width="35dp"
-                            android:layout_height="35dp"
-                            android:layout_gravity="end"
-                            android:layout_marginEnd="7dp"
-                            android:background="?attr/selectableItemBackgroundBorderless"
-                            android:contentDescription="@string/open_player"
-                            android:padding="4dp"
-                            android:src="@drawable/ic_livetv"
-                            android:visibility="gone"
-                            app:tint="?attr/colorOnBackground"
-                            tools:visibility="visible" />
-
-                    </com.google.android.material.appbar.MaterialToolbar>
+                        app:layout_constraintTop_toBottomOf="@id/spacerTop"
+                        app:navigationIconTint="?colorOnSurface" />
 
                     <ImageView
                         android:id="@+id/userImage"

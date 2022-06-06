@@ -23,21 +23,21 @@ import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
-import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.LifecycleListener
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
+import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.visible
 import kotlinx.android.synthetic.main.fragment_channel.appBar
 import kotlinx.android.synthetic.main.fragment_channel.bannerImage
 import kotlinx.android.synthetic.main.fragment_channel.chatInputView
 import kotlinx.android.synthetic.main.fragment_channel.chatView
-import kotlinx.android.synthetic.main.fragment_channel.follow
 import kotlinx.android.synthetic.main.fragment_channel.gameName
 import kotlinx.android.synthetic.main.fragment_channel.lastBroadcast
 import kotlinx.android.synthetic.main.fragment_channel.spacerTop
@@ -49,14 +49,12 @@ import kotlinx.android.synthetic.main.fragment_channel.userFollowers
 import kotlinx.android.synthetic.main.fragment_channel.userImage
 import kotlinx.android.synthetic.main.fragment_channel.userViews
 import kotlinx.android.synthetic.main.fragment_channel.viewers
-import kotlinx.android.synthetic.main.fragment_channel.watchLive
 import kotlinx.coroutines.launch
 
 class ChannelChatFragment :
     BaseNetworkFragment(),
     LifecycleListener,
     MessageClickedDialog.OnButtonClickListener,
-    FollowFragment,
     Scrollable {
 
     companion object {
@@ -107,13 +105,37 @@ class ChannelChatFragment :
             setNavigationOnClickListener {
                 activity?.onBackPressed()
             }
-        }
 
-        watchLive.setOnClickListener {
-            args.getString(C.CHANNEL_LOGIN)?.let { login ->
-                startActivity(
-                    Intent(Intent.ACTION_VIEW, formatChannelUri(login))
-                )
+            inflateMenu(R.menu.menu_chat)
+
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.watchLive -> {
+                        args.getString(C.CHANNEL_LOGIN)?.let { login ->
+                            startActivity(
+                                Intent(Intent.ACTION_VIEW, formatChannelUri(login))
+                            )
+                        }
+                        true
+                    }
+                    R.id.follow -> with(channelViewModel.follow) {
+                        val following = value ?: false
+                        if (!following) {
+                            saveFollowChannel(context)
+                            value = true
+                        } else {
+                            val channelName = channelViewModel.userName
+                            if (channelName != null) {
+                                FragmentUtils.showUnfollowDialog(context, channelName) {
+                                    deleteFollowChannel(context)
+                                    value = false
+                                }
+                            }
+                        }
+                        true
+                    }
+                    else -> false
+                }
             }
         }
 
@@ -170,9 +192,6 @@ class ChannelChatFragment :
         }
 
         initializeFollow(
-            fragment = this,
-            viewModel = channelViewModel,
-            followButton = follow,
             user = User.get(requireContext()),
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
             gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
@@ -252,20 +271,48 @@ class ChannelChatFragment :
         viewModel.reward.observe(viewLifecycleOwner) { chatView.notifyReward(it) }
     }
 
+    private fun initializeFollow(
+        user: User,
+        helixClientId: String? = null,
+        gqlClientId: String? = null
+    ) {
+        val context = requireContext()
+        with(channelViewModel) {
+            setUser(user, helixClientId, gqlClientId)
+            var initialized = false
+            val channelName = userName
+
+            follow.observe(viewLifecycleOwner) { following ->
+                if (initialized) {
+                    context.shortToast(
+                        context.getString(
+                            if (following) R.string.now_following else R.string.unfollowed,
+                            channelName
+                        )
+                    )
+                } else {
+                    initialized = true
+                }
+
+                toolbar.menu
+                    .findItem(R.id.follow)
+                    .setIcon(
+                        if (following) R.drawable.ic_favorite
+                        else R.drawable.ic_favorite_border
+                    )
+            }
+        }
+    }
+
     private fun updateStreamLayout(stream: Stream?) {
-        if (stream?.viewer_count != null) {
-            watchLive.contentDescription = getString(R.string.watch_live)
-            watchLive.visible()
-        } else {
-            if (stream?.lastBroadcast != null) {
-                TwitchApiHelper.formatTimeString(requireContext(), stream.lastBroadcast).let {
-                    if (it != null) {
-                        lastBroadcast.text =
-                            requireContext().getString(R.string.last_broadcast_date, it)
-                        lastBroadcast.visible()
-                    } else {
-                        lastBroadcast.gone()
-                    }
+        if (stream?.viewer_count == null && stream?.lastBroadcast != null) {
+            TwitchApiHelper.formatTimeString(requireContext(), stream.lastBroadcast).let {
+                if (it != null) {
+                    lastBroadcast.text =
+                        requireContext().getString(R.string.last_broadcast_date, it)
+                    lastBroadcast.visible()
+                } else {
+                    lastBroadcast.gone()
                 }
             }
         }

@@ -15,7 +15,6 @@ import com.github.andreyasadchy.xtra.db.SortGameDao
 import com.github.andreyasadchy.xtra.db.VideoPositionsDao
 import com.github.andreyasadchy.xtra.db.VideosDao
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
-import com.github.andreyasadchy.xtra.repository.LocalFollowGameRepository
 import com.github.andreyasadchy.xtra.repository.SortChannelRepository
 import com.github.andreyasadchy.xtra.repository.SortGameRepository
 import dagger.Module
@@ -33,11 +32,6 @@ class DatabaseModule {
         bookmarksDao: BookmarksDao
     ): LocalFollowChannelRepository =
         LocalFollowChannelRepository(localFollowsChannelDao, videosDao, bookmarksDao)
-
-    @Singleton
-    @Provides
-    fun providesLocalFollowsGameRepository(localFollowsGameDao: LocalFollowsGameDao): LocalFollowGameRepository =
-        LocalFollowGameRepository(localFollowsGameDao)
 
     @Singleton
     @Provides

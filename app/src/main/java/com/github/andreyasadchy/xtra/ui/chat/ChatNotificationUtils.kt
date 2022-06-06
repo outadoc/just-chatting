@@ -138,6 +138,20 @@ object ChatNotificationUtils {
         person: Person,
         icon: IconCompat
     ) {
+        val maxShortcutCount = ShortcutManagerCompat.getMaxShortcutCountPerActivity(context)
+        val currentShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context)
+        val alreadyPublished = currentShortcuts.any { it.id == channelId }
+
+        if (currentShortcuts.size >= maxShortcutCount && !alreadyPublished) {
+            val oldest = currentShortcuts
+                .filterNot { it.id == channelId }
+                .minByOrNull { shortcut -> shortcut.lastChangedTimestamp }
+
+            oldest?.let { shortcut ->
+                ShortcutManagerCompat.removeDynamicShortcuts(context, listOf(shortcut.id))
+            }
+        }
+
         ShortcutManagerCompat.addDynamicShortcuts(
             context,
             listOf(

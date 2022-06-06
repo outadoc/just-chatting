@@ -14,14 +14,14 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="6dp"
         android:padding="10dp"
-        android:src="@drawable/outline_drag_handle_black_24"
+        android:src="@drawable/ic_drag_handle"
         app:tint="?attr/colorOnBackground" />
 
     <TextView
         android:id="@+id/text"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceTitleMedium"
         tools:text="text" />
 
 </LinearLayout>

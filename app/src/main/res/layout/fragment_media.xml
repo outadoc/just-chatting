@@ -17,15 +17,6 @@
             app:layout_scrollFlags="scroll|enterAlways"
             app:title="@string/app_name" />
 
-        <Spinner
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginStart="5dp"
-            android:visibility="gone"
-            app:layout_scrollFlags="scroll|enterAlways"
-            tools:visibility="visible" />
-
     </com.google.android.material.appbar.AppBarLayout>
 
     <FrameLayout

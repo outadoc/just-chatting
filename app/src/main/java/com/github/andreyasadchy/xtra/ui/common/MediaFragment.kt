@@ -24,8 +24,6 @@ abstract class MediaFragment : Fragment(), Scrollable {
     var previousItem = -1
     var currentFragment: Fragment? = null
 
-    abstract val spinnerItems: Array<String>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         previousItem = savedInstanceState?.getInt("previousItem", -1) ?: -1

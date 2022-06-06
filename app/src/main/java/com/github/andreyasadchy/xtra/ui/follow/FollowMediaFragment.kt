@@ -96,7 +96,7 @@ class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
                 view.paddingBottom
             )
 
-            WindowInsetsCompat.CONSUMED
+            windowInsets
         }
 
         savedInstanceState

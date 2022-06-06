@@ -7,6 +7,7 @@ import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchFragment
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
+import com.github.andreyasadchy.xtra.ui.view.chat.EmotesFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -23,6 +24,9 @@ abstract class FragmentBuilderModule {
 
     @ContributesAndroidInjector
     abstract fun contributeSearchFragment(): SearchFragment
+
+    @ContributesAndroidInjector
+    abstract fun contributeEmotesFragment(): EmotesFragment
 
     @ContributesAndroidInjector
     abstract fun contributeChannelSearchFragment(): ChannelSearchFragment

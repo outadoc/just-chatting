@@ -10,22 +10,28 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.ui.chat.ChannelChatFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.view.GridAutofitLayoutManager
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
+import javax.inject.Inject
 
-class EmotesFragment : Fragment() {
+class EmotesFragment : Fragment(), Injectable {
 
     private lateinit var listener: (Emote) -> Unit
     private lateinit var layoutManager: GridAutofitLayoutManager
 
-    private val viewModel by viewModels<ChatViewModel>(ownerProducer = { requireParentFragment() })
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private val viewModel by activityViewModels<ChatViewModel> { viewModelFactory }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

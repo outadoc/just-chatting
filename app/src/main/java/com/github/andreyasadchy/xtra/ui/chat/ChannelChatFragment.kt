@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -81,8 +82,8 @@ class ChannelChatFragment :
         }
     }
 
-    private val channelViewModel by viewModels<ChannelChatViewModel> { viewModelFactory }
-    private val chatViewModel by viewModels<ChatViewModel> { viewModelFactory }
+    private val channelViewModel by activityViewModels<ChannelChatViewModel> { viewModelFactory }
+    private val chatViewModel by activityViewModels<ChatViewModel> { viewModelFactory }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -20,9 +20,10 @@ abstract class BaseNetworkFragment : Fragment(), Injectable {
 
     @Inject
     protected lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private val mainViewModel by activityViewModels<MainViewModel> { viewModelFactory }
 
-    protected var enableNetworkCheck = true
+    private var enableNetworkCheck = true
     private var lastState = false
     private var shouldRestore = false
     private var isInitialized = false

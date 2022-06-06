@@ -24,26 +24,6 @@ class ChatActivity : BaseActivity() {
 
         private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
 
-        fun createIntent(
-            context: Context,
-            channelId: String,
-            channelLogin: String,
-            channelName: String,
-            channelLogo: String
-        ): Intent {
-            return Intent(context, ChatActivity::class.java).apply {
-                action = Intent.ACTION_VIEW
-                flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
-                        Intent.FLAG_ACTIVITY_NEW_TASK or
-                        Intent.FLAG_ACTIVITY_CLEAR_TASK
-
-                putExtra(C.CHANNEL_ID, channelId)
-                putExtra(C.CHANNEL_LOGIN, channelLogin)
-                putExtra(C.CHANNEL_DISPLAYNAME, channelName)
-                putExtra(C.CHANNEL_PROFILEIMAGE, channelLogo)
-            }
-        }
-
         fun openInBubble(
             context: Context,
             channelId: String,
@@ -51,21 +31,6 @@ class ChatActivity : BaseActivity() {
             channelName: String,
             channelLogo: String
         ) {
-            // Create bubble intent
-            val target = createIntent(
-                context = context,
-                channelId = channelId,
-                channelLogin = channelLogin,
-                channelName = channelName,
-                channelLogo = channelLogo
-            )
-
-            val flags = PendingIntent.FLAG_UPDATE_CURRENT or
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) PendingIntent.FLAG_MUTABLE
-                    else 0
-
-            val bubbleIntent = PendingIntent.getActivity(context, 0, target, flags)
-
             val request = GlideApp.with(context)
                 .asBitmap()
                 .load(channelLogo)
@@ -79,9 +44,32 @@ class ChatActivity : BaseActivity() {
                     .setIcon(icon)
                     .build()
 
-            createShortcutForChannel(context, target, channelId, channelName, person, icon)
+            createShortcutForChannel(
+                context = context,
+                intent = createIntent(
+                    context = context,
+                    channelId = channelId,
+                    channelLogin = channelLogin,
+                    channelName = channelName,
+                    channelLogo = channelLogo
+                ),
+                channelId = channelId,
+                channelName = channelName,
+                person = person,
+                icon = icon
+            )
+
             createGenericBubbleChannelIfNeeded(context)
-            createBubble(context, channelId, bubbleIntent, icon, person)
+
+            createBubble(
+                context = context,
+                channelId = channelId,
+                channelLogin = channelLogin,
+                channelName = channelName,
+                channelLogo = channelLogo,
+                icon = icon,
+                person = person
+            )
         }
 
         private fun notificationIdFor(channelId: String) = channelId.hashCode()
@@ -125,14 +113,26 @@ class ChatActivity : BaseActivity() {
         private fun createBubble(
             context: Context,
             channelId: String,
-            pendingIntent: PendingIntent,
+            channelLogin: String,
+            channelName: String,
+            channelLogo: String,
             icon: IconCompat,
             person: Person
         ) = NotificationManagerCompat.from(context).apply {
             notify(
                 notificationIdFor(channelId),
                 NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                    .setContentIntent(pendingIntent)
+                    .setContentTitle(channelName)
+                    .setContentIntent(
+                        createPendingIntent(
+                            context = context,
+                            channelId = channelId,
+                            channelLogin = channelLogin,
+                            channelName = channelName,
+                            channelLogo = channelLogo,
+                            mutable = false
+                        )
+                    )
                     .setSmallIcon(R.drawable.ic_stream)
                     .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
@@ -140,7 +140,17 @@ class ChatActivity : BaseActivity() {
                     .setShortcutId(channelId)
                     .addPerson(person)
                     .setBubbleMetadata(
-                        NotificationCompat.BubbleMetadata.Builder(pendingIntent, icon)
+                        NotificationCompat.BubbleMetadata.Builder(
+                            createPendingIntent(
+                                context = context,
+                                channelId = channelId,
+                                channelLogin = channelLogin,
+                                channelName = channelName,
+                                channelLogo = channelLogo,
+                                mutable = true
+                            ),
+                            icon
+                        )
                             .setAutoExpandBubble(true)
                             .setSuppressNotification(true)
                             .build()
@@ -155,6 +165,50 @@ class ChatActivity : BaseActivity() {
                     )
                     .build()
             )
+        }
+
+        private fun createPendingIntent(
+            context: Context,
+            channelId: String,
+            channelLogin: String,
+            channelName: String,
+            channelLogo: String,
+            mutable: Boolean
+        ): PendingIntent {
+            val mutableFlag =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && mutable) PendingIntent.FLAG_MUTABLE
+                else 0
+
+            val immutableFlag =
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !mutable) PendingIntent.FLAG_IMMUTABLE
+                else 0
+
+            return PendingIntent.getActivity(
+                context,
+                0,
+                createIntent(context, channelId, channelLogin, channelName, channelLogo),
+                mutableFlag or immutableFlag
+            )
+        }
+
+        private fun createIntent(
+            context: Context,
+            channelId: String,
+            channelLogin: String,
+            channelName: String,
+            channelLogo: String
+        ): Intent {
+            return Intent(context, ChatActivity::class.java).apply {
+                action = Intent.ACTION_VIEW
+                flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                        Intent.FLAG_ACTIVITY_NEW_TASK or
+                        Intent.FLAG_ACTIVITY_CLEAR_TASK
+
+                putExtra(C.CHANNEL_ID, channelId)
+                putExtra(C.CHANNEL_LOGIN, channelLogin)
+                putExtra(C.CHANNEL_DISPLAYNAME, channelName)
+                putExtra(C.CHANNEL_PROFILEIMAGE, channelLogo)
+            }
         }
     }
 

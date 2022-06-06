@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
+import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.search.Searchable
 import com.github.andreyasadchy.xtra.util.C
@@ -16,11 +17,13 @@ import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.gone
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
+import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 import kotlinx.android.synthetic.main.common_recycler_view_layout.swipeRefresh
 
 class ChannelSearchFragment :
     PagedListFragment<ChannelSearch, ChannelSearchViewModel, BasePagedListAdapter<ChannelSearch>>(),
-    Searchable {
+    Searchable,
+    Scrollable {
 
     override val viewModel by viewModels<ChannelSearchViewModel> { viewModelFactory }
     override val adapter: BasePagedListAdapter<ChannelSearch> by lazy {
@@ -44,7 +47,8 @@ class ChannelSearchFragment :
     }
 
     override fun search(query: String) {
-        if (query.isNotEmpty()) { // TODO same query doesn't fire
+        if (query.isNotEmpty()) {
+            // TODO same query doesn't fire
             viewModel.setQuery(
                 query = query,
                 helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
@@ -59,5 +63,9 @@ class ChannelSearchFragment :
             adapter.submitList(null)
             nothingHere?.gone()
         }
+    }
+
+    override fun scrollToTop() {
+        recyclerView.scrollToPosition(0)
     }
 }

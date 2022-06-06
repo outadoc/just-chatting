@@ -25,7 +25,6 @@ import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.HasAndroidInjector
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity :
@@ -187,7 +186,7 @@ class MainActivity :
         updateLocal: Boolean
     ) {
         if (id == null || login == null || name == null || channelLogo == null) return
-        lifecycleScope.launch(Dispatchers.IO) {
+        lifecycleScope.launch {
             ChatNotificationUtils.openInBubbleOrStartActivity(
                 context = this@MainActivity,
                 channelId = id,

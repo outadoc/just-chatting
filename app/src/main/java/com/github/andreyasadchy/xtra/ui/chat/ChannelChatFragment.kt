@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.User
@@ -23,7 +24,6 @@ import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowFragment
-import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.LifecycleListener
@@ -50,6 +50,7 @@ import kotlinx.android.synthetic.main.fragment_channel.userImage
 import kotlinx.android.synthetic.main.fragment_channel.userViews
 import kotlinx.android.synthetic.main.fragment_channel.viewers
 import kotlinx.android.synthetic.main.fragment_channel.watchLive
+import kotlinx.coroutines.launch
 
 class ChannelChatFragment :
     BaseNetworkFragment(),
@@ -130,14 +131,6 @@ class ChannelChatFragment :
             .buildUpon()
             .appendPath(channelLogin)
             .build()
-    }
-
-    private fun goHome() {
-        startActivity(
-            Intent(context, MainActivity::class.java).apply {
-                action = Intent.ACTION_VIEW
-            }
-        )
     }
 
     override fun initialize() {
@@ -423,7 +416,16 @@ class ChannelChatFragment :
         name: String?,
         channelLogo: String?
     ) {
-        (requireActivity() as MainActivity).viewChannel(id, login, name, channelLogo)
+        if (id == null || login == null || name == null || channelLogo == null) return
+        lifecycleScope.launch {
+            ChatNotificationUtils.openInBubbleOrStartActivity(
+                context = requireContext(),
+                channelId = id,
+                channelLogin = login,
+                channelName = name,
+                channelLogo = channelLogo
+            )
+        }
     }
 
     override fun scrollToTop() {

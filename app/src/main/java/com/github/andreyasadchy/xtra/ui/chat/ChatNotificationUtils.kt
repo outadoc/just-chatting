@@ -17,11 +17,13 @@ import androidx.core.graphics.drawable.IconCompat
 import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.util.C
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 object ChatNotificationUtils {
     private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
 
-    fun openInBubbleOrStartActivity(
+    suspend fun openInBubbleOrStartActivity(
         context: Context,
         channelId: String,
         channelLogin: String,
@@ -76,7 +78,7 @@ object ChatNotificationUtils {
         )
     }
 
-    private fun openInBubble(
+    private suspend fun openInBubble(
         context: Context,
         channelId: String,
         channelLogin: String,
@@ -87,7 +89,11 @@ object ChatNotificationUtils {
             .asBitmap()
             .load(channelLogo)
 
-        val icon = IconCompat.createWithAdaptiveBitmap(request.submit().get())
+        val bitmap = withContext(Dispatchers.IO) {
+            request.submit().get()
+        }
+
+        val icon = IconCompat.createWithAdaptiveBitmap(bitmap)
 
         val person: Person =
             Person.Builder()

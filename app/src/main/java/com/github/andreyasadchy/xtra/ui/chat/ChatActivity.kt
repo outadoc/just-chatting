@@ -22,7 +22,7 @@ class ChatActivity : BaseActivity() {
 
     companion object {
 
-        private const val CHANNEL_ID = "channel_bubble"
+        private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
 
         fun createIntent(
             context: Context,
@@ -81,7 +81,6 @@ class ChatActivity : BaseActivity() {
 
             createShortcutForChannel(context, target, channelId, channelName, person, icon)
             createGenericBubbleChannelIfNeeded(context)
-            createBubbleChannelForUserIfNeeded(context, channelId, channelName)
             createBubble(context, channelId, bubbleIntent, icon, person)
         }
 
@@ -112,31 +111,16 @@ class ChatActivity : BaseActivity() {
             NotificationManagerCompat.from(context).apply {
                 createNotificationChannel(
                     NotificationChannelCompat.Builder(
-                        CHANNEL_ID,
-                        NotificationManagerCompat.IMPORTANCE_DEFAULT
+                        NOTIFICATION_CHANNEL_ID,
+                        NotificationManagerCompat.IMPORTANCE_HIGH
                     )
                         // TODO extract to resource
                         .setName("Chat bubbles")
+                        .setDescription("Used to show the Twitch chat in notification bubbles.")
                         .build()
                 )
 
             }
-
-        private fun createBubbleChannelForUserIfNeeded(
-            context: Context,
-            channelId: String,
-            channelName: String
-        ) = NotificationManagerCompat.from(context).apply {
-            createNotificationChannel(
-                NotificationChannelCompat.Builder(
-                    channelId,
-                    NotificationManagerCompat.IMPORTANCE_DEFAULT
-                )
-                    .setName(channelName)
-                    .setConversationId(CHANNEL_ID, channelId)
-                    .build()
-            )
-        }
 
         private fun createBubble(
             context: Context,
@@ -147,22 +131,28 @@ class ChatActivity : BaseActivity() {
         ) = NotificationManagerCompat.from(context).apply {
             notify(
                 notificationIdFor(channelId),
-                NotificationCompat.Builder(context, channelId)
+                NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                     .setContentIntent(pendingIntent)
-                    // TODO add some notification message
-                    // TODO proper notification icon
-                    .setSmallIcon(R.drawable.ic_send_black_24dp)
+                    .setSmallIcon(R.drawable.ic_stream)
                     .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setLocusId(LocusIdCompat(channelId))
+                    .setShortcutId(channelId)
+                    .addPerson(person)
                     .setBubbleMetadata(
                         NotificationCompat.BubbleMetadata.Builder(pendingIntent, icon)
                             .setAutoExpandBubble(true)
                             .setSuppressNotification(true)
                             .build()
                     )
-                    .setLocusId(LocusIdCompat(channelId))
-                    .setStyle(NotificationCompat.MessagingStyle(person))
-                    .setShortcutId(channelId)
-                    .addPerson(person)
+                    .setStyle(
+                        NotificationCompat.MessagingStyle(person)
+                            .addMessage(
+                                "Open this notification as a bubble.",
+                                System.currentTimeMillis(),
+                                person
+                            )
+                    )
                     .build()
             )
         }

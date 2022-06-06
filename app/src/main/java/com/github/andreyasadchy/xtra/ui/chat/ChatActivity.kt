@@ -186,7 +186,7 @@ class ChatActivity : BaseActivity() {
                 context,
                 0,
                 createIntent(context, channelId, channelLogin, channelName, channelLogo),
-                mutableFlag or immutableFlag
+                PendingIntent.FLAG_UPDATE_CURRENT or mutableFlag or immutableFlag
             )
         }
 

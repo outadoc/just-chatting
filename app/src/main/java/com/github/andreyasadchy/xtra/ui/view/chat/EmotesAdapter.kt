@@ -16,6 +16,7 @@ class EmotesAdapter(
     private val fragment: Fragment,
     private val clickListener: (Emote) -> Unit
 ) : ListAdapter<Emote, RecyclerView.ViewHolder>(object : DiffUtil.ItemCallback<Emote>() {
+
     override fun areItemsTheSame(oldItem: Emote, newItem: Emote): Boolean {
         return oldItem.name == newItem.name
     }

@@ -14,7 +14,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.github.andreyasadchy.xtra.R

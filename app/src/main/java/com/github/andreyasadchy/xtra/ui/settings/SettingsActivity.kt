@@ -3,8 +3,6 @@ package com.github.andreyasadchy.xtra.ui.settings
 import android.app.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -14,7 +12,6 @@ import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.ui.settings.api.DragListFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.applyTheme
-import com.github.andreyasadchy.xtra.util.shortToast
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -58,10 +55,6 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
 
     class SettingsFragment : PreferenceFragmentCompat(), Injectable {
 
-        @Inject
-        lateinit var viewModelFactory: ViewModelProvider.Factory
-        private val viewModel by viewModels<SettingsViewModel> { viewModelFactory }
-
         private var changed = false
 
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,12 +84,6 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
                 changeListener
             findPreference<SwitchPreferenceCompat>(C.UI_TAGS)?.onPreferenceChangeListener =
                 changeListener
-
-            findPreference<Preference>("clear_video_positions")?.setOnPreferenceChangeListener { _, _ ->
-                viewModel.deletePositions()
-                requireContext().shortToast(R.string.cleared)
-                true
-            }
 
             findPreference<Preference>("api_settings")?.setOnPreferenceClickListener {
                 parentFragmentManager

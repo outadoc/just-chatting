@@ -8,7 +8,6 @@ import com.github.andreyasadchy.xtra.ui.common.GenericViewModelFactory
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsViewModel
 import com.github.andreyasadchy.xtra.ui.main.MainViewModel
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchViewModel
-import com.github.andreyasadchy.xtra.ui.settings.SettingsViewModel
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsViewModel
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedViewModel
 import dagger.Binds
@@ -26,11 +25,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MainViewModel::class)
     abstract fun bindMainViewModel(mainViewModel: MainViewModel): ViewModel
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(SettingsViewModel::class)
-    abstract fun bindSettingsViewModel(settingsViewModel: SettingsViewModel): ViewModel
 
     @Binds
     @IntoMap

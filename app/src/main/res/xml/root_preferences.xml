@@ -142,11 +142,6 @@
         app:iconSpaceReserved="false" />
 
     <Preference
-        android:key="clear_video_positions"
-        android:title="@string/clear_video_positions"
-        app:iconSpaceReserved="false" />
-
-    <Preference
         android:key="api_settings"
         android:title="@string/api_settings"
         app:iconSpaceReserved="false" />

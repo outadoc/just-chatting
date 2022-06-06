@@ -139,7 +139,8 @@ object ChatNotificationUtils {
         icon: IconCompat
     ) {
         ShortcutManagerCompat.addDynamicShortcuts(
-            context, listOf(
+            context,
+            listOf(
                 ShortcutInfoCompat.Builder(context, channelId)
                     .setIntent(intent)
                     .setLongLived(true)

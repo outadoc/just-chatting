@@ -16,8 +16,4 @@ class Chatter(val name: String?) {
     override fun hashCode(): Int {
         return name.hashCode()
     }
-
-    override fun toString(): String {
-        return "@$name"
-    }
 }

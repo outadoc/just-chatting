@@ -367,43 +367,46 @@ class ChatInputView : LinearLayout {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val item = getItem(position) ?: error("Invalid item id")
-            val viewHolder = convertView?.tag as? ViewHolder
-                ?: when (getItemViewType(position)) {
-                    TYPE_EMOTE -> {
-                        val view = LayoutInflater.from(context).inflate(
-                            R.layout.auto_complete_emotes_list_item,
-                            parent,
-                            false
+            val viewHolder = when (getItemViewType(position)) {
+                TYPE_EMOTE -> {
+                    val viewHolder = convertView?.tag as? ViewHolder
+                        ?: ViewHolder(
+                            LayoutInflater.from(context).inflate(
+                                R.layout.auto_complete_emotes_list_item,
+                                parent,
+                                false
+                            )
                         )
 
-                        item as AutoCompleteItem.EmoteItem
-                        ViewHolder(view)
-                            .also { view.tag = it }
-                            .apply {
-                                containerView.image.loadImage(
-                                    context,
-                                    item.emote.url,
-                                    diskCacheStrategy = DiskCacheStrategy.DATA
-                                )
-                                containerView.name.text = item.emote.name
-                            }
-                    }
-                    TYPE_USERNAME -> {
-                        val view = LayoutInflater.from(context).inflate(
-                            android.R.layout.simple_list_item_1,
-                            parent,
-                            false
+                    item as AutoCompleteItem.EmoteItem
+                    viewHolder.apply {
+                        containerView.tag = this
+                        containerView.image.loadImage(
+                            context,
+                            item.emote.url,
+                            diskCacheStrategy = DiskCacheStrategy.DATA
                         )
-
-                        item as AutoCompleteItem.UserItem
-                        ViewHolder(view)
-                            .also { view.tag = it }
-                            .apply {
-                                (containerView as TextView).text = item.chatter.name
-                            }
+                        containerView.name.text = item.emote.name
                     }
-                    else -> error("Invalid item type")
                 }
+                TYPE_USERNAME -> {
+                    val viewHolder = convertView?.tag as? ViewHolder
+                        ?: ViewHolder(
+                            LayoutInflater.from(context).inflate(
+                                android.R.layout.simple_list_item_1,
+                                parent,
+                                false
+                            )
+                        )
+
+                    item as AutoCompleteItem.UserItem
+                    viewHolder.apply {
+                        containerView.tag = this
+                        (containerView as TextView).text = item.chatter.name
+                    }
+                }
+                else -> error("Invalid item type")
+            }
 
             return viewHolder.containerView
         }
@@ -412,7 +415,7 @@ class ChatInputView : LinearLayout {
             when (getItem(position)) {
                 is AutoCompleteItem.EmoteItem -> TYPE_EMOTE
                 is AutoCompleteItem.UserItem -> TYPE_USERNAME
-                else -> error("Invalid item id")
+                null -> error("Invalid item id")
             }
 
         override fun getViewTypeCount(): Int = 2

@@ -3,7 +3,6 @@ package com.github.andreyasadchy.xtra.ui.view.chat
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -13,7 +12,6 @@ import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.util.loadImage
 
 class EmotesAdapter(
-    private val fragment: Fragment,
     private val clickListener: (Emote) -> Unit
 ) : ListAdapter<Emote, RecyclerView.ViewHolder>(object : DiffUtil.ItemCallback<Emote>() {
 
@@ -36,7 +34,7 @@ class EmotesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val emote = getItem(position)
         (holder.itemView as ImageView).apply {
-            loadImage(fragment, emote.url, diskCacheStrategy = DiskCacheStrategy.DATA)
+            loadImage(context, emote.url, diskCacheStrategy = DiskCacheStrategy.DATA)
             setOnClickListener { clickListener(emote) }
         }
     }

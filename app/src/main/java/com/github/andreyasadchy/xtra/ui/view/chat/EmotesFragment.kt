@@ -50,7 +50,7 @@ class EmotesFragment : Fragment(), Injectable {
         super.onViewCreated(view, savedInstanceState)
         val context = requireContext()
         val args = requireArguments()
-        val emotesAdapter = EmotesAdapter(this, listener)
+        val emotesAdapter = EmotesAdapter(listener)
         with(view as RecyclerView) {
             itemAnimator = null
             adapter = emotesAdapter

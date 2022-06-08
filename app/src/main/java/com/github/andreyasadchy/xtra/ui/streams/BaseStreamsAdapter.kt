@@ -31,7 +31,7 @@ abstract class BaseStreamsAdapter(
             setOnClickListener { clickListener.startStream(item) }
             if (item.channelLogo != null) {
                 userImage.isVisible = true
-                userImage.loadImage(fragment, item.channelLogo, circle = true)
+                userImage.loadImage(context, item.channelLogo, circle = true)
             } else {
                 userImage.isVisible = false
             }

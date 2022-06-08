@@ -19,7 +19,7 @@ import com.github.andreyasadchy.xtra.GlideApp
 
 @SuppressLint("CheckResult")
 fun ImageView.loadImage(
-    fragment: Fragment,
+    context: Context,
     url: String?,
     changes: Boolean = false,
     circle: Boolean = false,
@@ -27,7 +27,7 @@ fun ImageView.loadImage(
 ) {
     if (context.isActivityResumed) { // not enough on some devices?
         try {
-            val request = GlideApp.with(fragment)
+            val request = GlideApp.with(context)
                 .load(url)
                 .diskCacheStrategy(diskCacheStrategy)
                 .transition(DrawableTransitionOptions.withCrossFade())

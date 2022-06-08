@@ -45,7 +45,7 @@ class FollowedChannelsAdapter(
             if (item.channelLogo != null) {
                 userImage.isVisible = true
                 userImage.loadImage(
-                    fragment,
+                    context,
                     item.channelLogo,
                     circle = true,
                     diskCacheStrategy = DiskCacheStrategy.NONE

@@ -151,14 +151,14 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         if (user.bannerImageURL != null) {
             userLayout.isVisible = true
             bannerImage.isVisible = true
-            bannerImage.loadImage(requireParentFragment(), user.bannerImageURL)
+            bannerImage.loadImage(requireContext(), user.bannerImageURL)
         } else {
             bannerImage.isVisible = false
         }
         if (user.channelLogo != null) {
             userLayout.isVisible = true
             userImage.isVisible = true
-            userImage.loadImage(requireParentFragment(), user.channelLogo, circle = true)
+            userImage.loadImage(requireContext(), user.channelLogo, circle = true)
             userImage.setOnClickListener {
                 listener.onViewProfileClicked(
                     user.id,

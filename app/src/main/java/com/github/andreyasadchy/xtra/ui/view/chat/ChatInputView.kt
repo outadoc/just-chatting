@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.ui.view.chat
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.KeyEvent
@@ -56,10 +55,8 @@ class ChatInputView : LinearLayout {
     }
 
     private var hasRecentEmotes: Boolean? = null
-    private var emotesAddedCount = 0
 
-    private var autoCompleteList: MutableList<Any>? = null
-    private var autoCompleteAdapter: AutoCompleteAdapter? = null
+    private val autoCompleteAdapter = AutoCompleteAdapter(context)
 
     private lateinit var fragment: Fragment
     private var messagingEnabled = false
@@ -89,6 +86,7 @@ class ChatInputView : LinearLayout {
 
     fun init(fragment: Fragment) {
         this.fragment = fragment
+
         ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
             val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
@@ -113,41 +111,30 @@ class ChatInputView : LinearLayout {
         when (list.firstOrNull()) {
             is BttvEmote, is FfzEmote, is StvEmote -> {
                 if (messagingEnabled) {
-                    autoCompleteList!!.addAll(list)
+                    autoCompleteAdapter.addAll(
+                        list.map { AutoCompleteItem.EmoteItem(it) }
+                    )
                 }
             }
             is TwitchEmote -> {
                 if (messagingEnabled) {
-                    autoCompleteList!!.addAll(list)
+                    autoCompleteAdapter.addAll(
+                        list.map { AutoCompleteItem.EmoteItem(it) }
+                    )
                 }
             }
             is RecentEmote -> hasRecentEmotes = true
         }
-
-        if (messagingEnabled && ++emotesAddedCount == 3) {
-            // TODO refactor to not wait
-            autoCompleteAdapter = AutoCompleteAdapter(context, fragment, autoCompleteList!!).apply {
-                setNotifyOnChange(false)
-                editText.setAdapter(this)
-
-                var previousSize = 0
-                editText.setOnFocusChangeListener { _, hasFocus ->
-                    if (hasFocus && count != previousSize) {
-                        previousSize = count
-                        notifyDataSetChanged()
-                    }
-                    setNotifyOnChange(hasFocus)
-                }
-            }
-        }
     }
 
     fun setChatters(chatters: Collection<Chatter>) {
-        autoCompleteList = chatters.toMutableList()
+        autoCompleteAdapter.addAll(
+            chatters.map { AutoCompleteItem.UserItem(it) }
+        )
     }
 
     fun addChatter(chatter: Chatter) {
-        autoCompleteAdapter?.add(chatter)
+        autoCompleteAdapter.add(AutoCompleteItem.UserItem(chatter))
     }
 
     fun setOnMessageSendListener(callback: OnMessageSendListener) {
@@ -167,7 +154,6 @@ class ChatInputView : LinearLayout {
         editText.text.append(emote.name).append(' ')
     }
 
-    @SuppressLint("SetTextI18n")
     fun reply(userName: CharSequence) {
         val text = "@$userName "
         editText.apply {
@@ -246,26 +232,23 @@ class ChatInputView : LinearLayout {
             textSubs.isVisible = false
         }
 
-        if (textEmote.isGone && textFollowers.isGone && textUnique.isGone && textSlow.isGone && textSubs.isGone) {
-            flexboxChatMode.isVisible = false
-        } else {
-            flexboxChatMode.isVisible = true
-        }
+        flexboxChatMode.isVisible =
+            !textEmote.isGone ||
+                    !textFollowers.isGone
+                    || !textUnique.isGone
+                    || !textSlow.isGone
+                    || !textSubs.isGone
     }
 
     fun enableChatInteraction(enableMessaging: Boolean) {
         if (enableMessaging) {
-            editText.addTextChangedListener(onTextChanged = { text, _, _, _ ->
-                if (text?.isNotBlank() == true) {
-                    send.isVisible = true
-                    clear.isVisible = true
-                } else {
-                    send.isVisible = false
-                    clear.isVisible = false
-                }
-            })
-
+            editText.setAdapter(autoCompleteAdapter)
             editText.setTokenizer(SpaceTokenizer())
+
+            editText.addTextChangedListener({ text, _, _, _ ->
+                send.isVisible = text?.isNotBlank() == true
+                clear.isVisible = text?.isNotBlank() == true
+            })
 
             editText.setOnKeyListener { _, keyCode, event ->
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
@@ -307,13 +290,12 @@ class ChatInputView : LinearLayout {
                 fragment.childFragmentManager,
                 BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
             ) {
-                override fun getItem(position: Int): Fragment {
-                    return EmotesFragment.newInstance(position)
-                }
+                override fun getItem(position: Int): Fragment =
+                    EmotesFragment.newInstance(position)
 
                 override fun getCount(): Int = 3
 
-                override fun getPageTitle(position: Int): CharSequence? {
+                override fun getPageTitle(position: Int): CharSequence {
                     return when (position) {
                         0 -> context.getString(R.string.recent_emotes)
                         1 -> "Twitch"
@@ -331,7 +313,9 @@ class ChatInputView : LinearLayout {
     private fun sendMessage(): Boolean {
         editText.hideKeyboard()
         editText.clearFocus()
+
         hideEmotesMenu()
+
         return messageCallback?.let {
             val text = editText.text.trim()
             editText.text.clear()
@@ -375,57 +359,61 @@ class ChatInputView : LinearLayout {
         }
 
         override fun terminateToken(text: CharSequence): CharSequence {
-            return "${if (text.startsWith(':')) text.substring(1) else text} "
+            return "${text.trimStart(':')} "
         }
     }
 
-    class AutoCompleteAdapter(
-        context: Context,
-        private val fragment: Fragment,
-        list: List<Any>
-    ) : ArrayAdapter<Any>(context, 0, list) {
+    class AutoCompleteAdapter(context: Context) : ArrayAdapter<AutoCompleteItem>(context, 0) {
 
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val viewHolder: ViewHolder
-
-            val item = getItem(position)!!
-            return when (getItemViewType(position)) {
-                TYPE_EMOTE -> {
-                    if (convertView == null) {
-                        val view = LayoutInflater.from(context)
-                            .inflate(R.layout.auto_complete_emotes_list_item, parent, false)
-                        viewHolder = ViewHolder(view).also { view.tag = it }
-                    } else {
-                        viewHolder = convertView.tag as ViewHolder
-                    }
-                    viewHolder.containerView.apply {
-                        item as Emote
-                        image.loadImage(
-                            fragment,
-                            item.url,
-                            diskCacheStrategy = DiskCacheStrategy.DATA
+            val item = getItem(position) ?: error("Invalid item id")
+            val viewHolder = convertView?.tag as? ViewHolder
+                ?: when (getItemViewType(position)) {
+                    TYPE_EMOTE -> {
+                        val view = LayoutInflater.from(context).inflate(
+                            R.layout.auto_complete_emotes_list_item,
+                            parent,
+                            false
                         )
-                        name.text = item.name
+
+                        item as AutoCompleteItem.EmoteItem
+                        ViewHolder(view)
+                            .also { view.tag = it }
+                            .apply {
+                                containerView.image.loadImage(
+                                    context,
+                                    item.emote.url,
+                                    diskCacheStrategy = DiskCacheStrategy.DATA
+                                )
+                                containerView.name.text = item.emote.name
+                            }
                     }
+                    TYPE_USERNAME -> {
+                        val view = LayoutInflater.from(context).inflate(
+                            android.R.layout.simple_list_item_1,
+                            parent,
+                            false
+                        )
+
+                        item as AutoCompleteItem.UserItem
+                        ViewHolder(view)
+                            .also { view.tag = it }
+                            .apply {
+                                (containerView as TextView).text = item.chatter.name
+                            }
+                    }
+                    else -> error("Invalid item type")
                 }
-                else -> {
-                    if (convertView == null) {
-                        val view = LayoutInflater.from(context)
-                            .inflate(android.R.layout.simple_list_item_1, parent, false)
-                        viewHolder = ViewHolder(view).also { view.tag = it }
-                    } else {
-                        viewHolder = convertView.tag as ViewHolder
-                    }
-                    (viewHolder.containerView as TextView).apply {
-                        text = (item as Chatter).name
-                    }
-                }
-            }
+
+            return viewHolder.containerView
         }
 
-        override fun getItemViewType(position: Int): Int {
-            return if (getItem(position) is Emote) TYPE_EMOTE else TYPE_USERNAME
-        }
+        override fun getItemViewType(position: Int): Int =
+            when (getItem(position)) {
+                is AutoCompleteItem.EmoteItem -> TYPE_EMOTE
+                is AutoCompleteItem.UserItem -> TYPE_USERNAME
+                else -> error("Invalid item id")
+            }
 
         override fun getViewTypeCount(): Int = 2
 

@@ -250,7 +250,9 @@ class ChannelChatFragment :
 
         if (userIsLoggedIn) {
             user.login?.let { chatView.setUsername(it) }
+
             chatInputView.setChatters(viewModel.chatters)
+            viewModel.newChatter.observe(viewLifecycleOwner, Observer(chatInputView::addChatter))
 
             val emotesObserver = { emotes: List<Emote> ->
                 chatView.addEmotes(emotes)
@@ -258,8 +260,6 @@ class ChannelChatFragment :
             }
             viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
             viewModel.recentEmotes.observe(viewLifecycleOwner, emotesObserver)
-
-            viewModel.newChatter.observe(viewLifecycleOwner, Observer(chatInputView::addChatter))
         }
 
         chatInputView.enableChatInteraction(userIsLoggedIn)
@@ -327,7 +327,7 @@ class ChannelChatFragment :
         stream?.channelLogo.let {
             if (it != null) {
                 userImage.isVisible = true
-                userImage.loadImage(this, it, circle = true)
+                userImage.loadImage(requireContext(), it, circle = true)
                 requireArguments().putString(C.CHANNEL_PROFILEIMAGE, it)
             } else {
                 userImage.isVisible = false
@@ -383,12 +383,12 @@ class ChannelChatFragment :
     private fun updateUserLayout(user: com.github.andreyasadchy.xtra.model.helix.user.User) {
         if (!userImage.isVisible && user.channelLogo != null) {
             userImage.isVisible = true
-            userImage.loadImage(this, user.channelLogo, circle = true)
+            userImage.loadImage(requireContext(), user.channelLogo, circle = true)
             requireArguments().putString(C.CHANNEL_PROFILEIMAGE, user.channelLogo)
         }
 
         if (user.bannerImageURL != null) {
-            bannerImage.loadImage(this, user.bannerImageURL)
+            bannerImage.loadImage(requireContext(), user.bannerImageURL)
         }
 
         if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {

@@ -90,15 +90,6 @@
         app:iconSpaceReserved="false" />
 
     <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/imageLibraryEntries"
-        android:entryValues="@array/imageLibraryValues"
-        android:key="chat_image_library"
-        android:summary="%s"
-        android:title="@string/image_library"
-        app:iconSpaceReserved="false" />
-
-    <ListPreference
         android:defaultValue="4"
         android:entries="@array/imageQualityEntries"
         android:entryValues="@array/imageQualityValues"

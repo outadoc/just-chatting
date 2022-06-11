@@ -23,11 +23,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.bumptech.glide.integration.webp.decoder.WebpDrawable
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.gif.GifDrawable
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
-import com.github.andreyasadchy.xtra.GlideApp
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.ChatMessage
 import com.github.andreyasadchy.xtra.model.chat.CheerEmote
@@ -55,8 +51,7 @@ class ChatAdapter(
     private val firstChatMsg: String,
     private val rewardChatMsg: String,
     private val redeemedChatMsg: String,
-    private val redeemedNoMsg: String,
-    private val imageLibrary: String?
+    private val redeemedNoMsg: String
 ) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
@@ -67,6 +62,7 @@ class ChatAdapter(
             }
             field = value
         }
+
     private val twitchColors = intArrayOf(
         -65536,
         -16776961,
@@ -84,7 +80,9 @@ class ChatAdapter(
         -7722014,
         -16711809
     )
+
     private val noColor = -10066329
+
     private val random = Random()
     private val userColors = HashMap<String, Int>()
     private val savedColors = HashMap<String, Int>()
@@ -113,6 +111,7 @@ class ChatAdapter(
         var imageIndex = 0
         var badgesCount = 0
         val systemMsg = liveMessage?.systemMsg
+
         if (systemMsg != null) {
             builder.append("$systemMsg\n")
             imageIndex += systemMsg.length + 1
@@ -125,35 +124,43 @@ class ChatAdapter(
                 imageIndex += msgId.length + 1
             }
         }
+
         if (liveMessage?.isFirst == true && firstMsgVisibility == "0") {
             builder.append("$firstChatMsg\n")
             imageIndex += firstChatMsg.length + 1
         }
+
         if (liveMessage?.rewardId != null && pointReward == null && firstMsgVisibility == "0") {
             builder.append("$rewardChatMsg\n")
             imageIndex += rewardChatMsg.length + 1
         }
+
         if (!pointReward?.message.isNullOrBlank()) {
             val string = redeemedChatMsg.format(pointReward?.rewardTitle)
             builder.append("$string ")
             imageIndex += string.length + 1
+
             val url = when (ChatView.emoteQuality) {
                 "4" -> pointReward?.rewardImage?.url4
                 "3" -> pointReward?.rewardImage?.url4
                 "2" -> pointReward?.rewardImage?.url2
                 else -> pointReward?.rewardImage?.url1
             }
+
             url?.let {
                 builder.append("  ")
                 images.add(Image(it, imageIndex++, imageIndex++, false))
                 badgesCount++
             }
+
             builder.append("${pointReward?.rewardCost}\n")
             imageIndex += (pointReward?.rewardCost?.toString()?.length ?: 0) + 1
         }
+
         val timestamp =
             liveMessage?.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) }
                 ?: pointReward?.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) }
+
         if (enableTimestamps && timestamp != null) {
             builder.append("$timestamp ")
             builder.setSpan(
@@ -164,6 +171,7 @@ class ChatAdapter(
             )
             imageIndex += timestamp.length + 1
         }
+
         chatMessage.badges?.forEach { chatBadge ->
             val badge =
                 channelBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
@@ -174,6 +182,7 @@ class ChatAdapter(
                 badgesCount++
             }
         }
+
         val fullMsg = chatMessage.fullMsg
         val userId = chatMessage.userId
         val userName = chatMessage.userName
@@ -181,6 +190,7 @@ class ChatAdapter(
         val userNameEndIndex = imageIndex + userNameLength
         val originalMessage: String
         val userNameWithPostfixLength: Int
+
         if (chatMessage !is PubSubPointReward && !userName.isNullOrBlank()) {
             builder.append(userName)
             if (!chatMessage.isAction) {
@@ -197,22 +207,26 @@ class ChatAdapter(
                 val string = redeemedNoMsg.format(userName, pointReward?.rewardTitle)
                 builder.append("$string ")
                 imageIndex += string.length + 1
+
                 val url = when (ChatView.emoteQuality) {
                     "4" -> pointReward?.rewardImage?.url4
                     "3" -> pointReward?.rewardImage?.url4
                     "2" -> pointReward?.rewardImage?.url2
                     else -> pointReward?.rewardImage?.url1
                 }
+
                 url?.let {
                     builder.append("  ")
                     images.add(Image(it, imageIndex++, imageIndex++, false))
                     badgesCount++
                 }
+
                 builder.append("${pointReward?.rewardCost}")
                 imageIndex += pointReward?.rewardCost?.toString()?.length ?: 0
                 originalMessage = "$userName: ${chatMessage.message}"
                 userNameWithPostfixLength =
                     string.length + (pointReward?.rewardCost?.toString()?.length ?: 0) + 3
+
                 builder.setSpan(
                     ForegroundColorSpan(Color.parseColor("#999999")),
                     userNameWithPostfixLength - userNameWithPostfixLength,
@@ -224,17 +238,24 @@ class ChatAdapter(
                 userNameWithPostfixLength = 0
             }
         }
+
         builder.append(chatMessage.message)
+
         val color = if (chatMessage is PubSubPointReward) null else
             chatMessage.color.let { userColor ->
                 if (userColor == null) {
                     userColors[userName]
-                        ?: getRandomColor().also { if (userName != null) userColors[userName] = it }
+                        ?: getRandomColor().also {
+                            if (userName != null) {
+                                userColors[userName] = it
+                            }
+                        }
                 } else {
                     savedColors[userColor] ?: Color.parseColor(userColor)
                         .also { savedColors[userColor] = it }
                 }
             }
+
         if (color != null && userName != null) {
             builder.setSpan(
                 ForegroundColorSpan(color),
@@ -249,6 +270,7 @@ class ChatAdapter(
                 SPAN_EXCLUSIVE_EXCLUSIVE
             )
         }
+
         try {
             chatMessage.emotes?.let { emotes ->
                 val copy = emotes.map {
@@ -260,9 +282,12 @@ class ChatAdapter(
                     }
                     TwitchEmote(it.name, realBegin, realEnd)
                 }
+
                 imageIndex += userNameWithPostfixLength
+
                 for (e in copy) {
                     val begin = imageIndex + e.begin
+
                     builder.replace(begin, imageIndex + e.end + 1, ".")
                     builder.setSpan(
                         ForegroundColorSpan(Color.TRANSPARENT),
@@ -270,6 +295,7 @@ class ChatAdapter(
                         begin + 1,
                         SPAN_EXCLUSIVE_EXCLUSIVE
                     )
+
                     val length = e.end - e.begin
                     for (e1 in copy) {
                         if (e.begin < e1.begin) {
@@ -277,8 +303,10 @@ class ChatAdapter(
                             e1.end -= length
                         }
                     }
+
                     e.end -= length
                 }
+
                 copy.forEach {
                     images.add(
                         Image(
@@ -291,16 +319,19 @@ class ChatAdapter(
                     )
                 }
             }
+
             val split = builder.split(" ")
             var builderIndex = 0
             var emotesFound = 0
             var wasMentioned = false
+
             for (value in split) {
                 val length = value.length
                 val endIndex = builderIndex + length
                 var emote = emotes[value]
                 val bitsCount = value.takeLastWhile { it.isDigit() }
                 val bitsName = value.substringBeforeLast(bitsCount)
+
                 if (bitsCount.isNotEmpty()) {
                     val cheerEmote =
                         cheerEmotes?.findLast { it.name == bitsName && it.minBits <= bitsCount.toInt() }
@@ -316,6 +347,7 @@ class ChatAdapter(
                         }
                     }
                 }
+
                 if (emote == null) {
                     if (!Patterns.WEB_URL.matcher(value).matches()) {
                         if (value.startsWith('@')) {
@@ -326,11 +358,10 @@ class ChatAdapter(
                                 SPAN_EXCLUSIVE_EXCLUSIVE
                             )
                         }
-                        loggedInUser?.let {
-                            if (!wasMentioned && value.contains(
-                                    it,
-                                    true
-                                ) && chatMessage.userLogin != it
+                        loggedInUser?.let { loggedInUserName ->
+                            if (!wasMentioned &&
+                                value.contains(loggedInUserName, ignoreCase = true) &&
+                                chatMessage.userLogin != loggedInUserName
                             ) {
                                 wasMentioned = true
                             }
@@ -358,34 +389,39 @@ class ChatAdapter(
                             e.end -= remove
                         }
                     }
+
                     if (emote is CheerEmote) {
                         builder.replace(builderIndex, builderIndex + bitsName.length, ".")
                     } else {
                         builder.replace(builderIndex, endIndex, ".")
                     }
+
                     builder.setSpan(
                         ForegroundColorSpan(Color.TRANSPARENT),
                         builderIndex,
                         builderIndex + 1,
                         SPAN_EXCLUSIVE_EXCLUSIVE
                     )
+
                     images.add(
                         Image(
-                            emote.url,
-                            builderIndex,
-                            builderIndex + 1,
-                            true,
-                            emote.type,
-                            emote.zeroWidth
+                            url = emote.url,
+                            start = builderIndex,
+                            end = builderIndex + 1,
+                            isEmote = true,
+                            type = emote.type
                         )
                     )
+
                     emotesFound++
                     builderIndex += 2
+
                     if (emote is CheerEmote) {
                         builderIndex += bitsCount.length
                     }
                 }
             }
+
             if (color != null && chatMessage.isAction) {
                 builder.setSpan(
                     ForegroundColorSpan(color),
@@ -429,31 +465,7 @@ class ChatAdapter(
         fullMsg: String?
     ) {
         images.forEach {
-            when (imageLibrary) {
-                "0" -> loadCoil(holder, it, originalMessage, builder, userId, fullMsg)
-                "1" -> {
-                    if (it.type == "image/webp") {
-                        if (ChatView.animateGifs) {
-                            loadWebp(holder, it, originalMessage, builder, userId, fullMsg)
-                        } else {
-                            loadDrawable(holder, it, originalMessage, builder, userId, fullMsg)
-                        }
-                    } else {
-                        loadCoil(holder, it, originalMessage, builder, userId, fullMsg)
-                    }
-                }
-                else -> {
-                    if (it.type == "image/webp" && ChatView.animateGifs) {
-                        loadWebp(holder, it, originalMessage, builder, userId, fullMsg)
-                    } else {
-                        if (it.type == "image/gif" && ChatView.animateGifs) {
-                            loadGif(holder, it, originalMessage, builder, userId, fullMsg)
-                        } else {
-                            loadDrawable(holder, it, originalMessage, builder, userId, fullMsg)
-                        }
-                    }
-                }
-            }
+            loadCoil(holder, it, originalMessage, builder, userId, fullMsg)
         }
     }
 
@@ -469,21 +481,16 @@ class ChatAdapter(
             .data(image.url)
             .target(
                 onSuccess = { result ->
-                    val width: Int
-                    val height: Int
-                    if (image.isEmote) {
-                        val size = calculateEmoteSize(result)
-                        width = size.first
-                        height = size.second
-                    } else {
-                        width = badgeSize
-                        height = badgeSize
-                    }
+                    val (width, height) =
+                        if (image.isEmote) calculateEmoteSize(result)
+                        else badgeSize to badgeSize
+
                     if (image.zerowidth && enableZeroWidth) {
                         result.setBounds(-90, 0, width - 90, height)
                     } else {
                         result.setBounds(0, 0, width, height)
                     }
+
                     try {
                         builder.setSpan(
                             ImageSpan(result),
@@ -491,194 +498,20 @@ class ChatAdapter(
                             image.end,
                             SPAN_EXCLUSIVE_EXCLUSIVE
                         )
+
                         if (ChatView.animateGifs) {
                             (result as? coil.drawable.ScaleDrawable)?.start()
                         }
                     } catch (e: IndexOutOfBoundsException) {
+                        e.printStackTrace()
                     }
+
                     holder.bind(originalMessage, builder, userId, fullMsg)
                 },
             )
             .build()
+
         fragment.requireContext().imageLoader.enqueue(request)
-    }
-
-    private fun loadWebp(
-        holder: ViewHolder,
-        image: Image,
-        originalMessage: CharSequence,
-        builder: SpannableStringBuilder,
-        userId: String?,
-        fullMsg: String?
-    ) {
-        GlideApp.with(fragment)
-            .asWebp()
-            .load(image.url)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .into(object : CustomTarget<WebpDrawable>() {
-                override fun onResourceReady(
-                    resource: WebpDrawable,
-                    transition: Transition<in WebpDrawable>?
-                ) {
-                    resource.apply {
-                        val size = calculateEmoteSize(this)
-                        if (image.zerowidth && enableZeroWidth) {
-                            setBounds(-90, 0, size.first - 90, size.second)
-                        } else {
-                            setBounds(0, 0, size.first, size.second)
-                        }
-                        loopCount = WebpDrawable.LOOP_FOREVER
-                        callback = object : Drawable.Callback {
-                            override fun unscheduleDrawable(who: Drawable, what: Runnable) {
-                                holder.textView.removeCallbacks(what)
-                            }
-
-                            override fun invalidateDrawable(who: Drawable) {
-                                holder.textView.invalidate()
-                            }
-
-                            override fun scheduleDrawable(
-                                who: Drawable,
-                                what: Runnable,
-                                `when`: Long
-                            ) {
-                                holder.textView.postDelayed(what, `when`)
-                            }
-                        }
-                        start()
-                    }
-                    try {
-                        builder.setSpan(
-                            ImageSpan(resource),
-                            image.start,
-                            image.end,
-                            SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                    } catch (e: IndexOutOfBoundsException) {
-                    }
-                    holder.bind(originalMessage, builder, userId, fullMsg)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-
-                override fun onLoadFailed(errorDrawable: Drawable?) {
-                    loadDrawable(holder, image, originalMessage, builder, userId, fullMsg)
-                }
-            })
-    }
-
-    private fun loadGif(
-        holder: ViewHolder,
-        image: Image,
-        originalMessage: CharSequence,
-        builder: SpannableStringBuilder,
-        userId: String?,
-        fullMsg: String?
-    ) {
-        GlideApp.with(fragment)
-            .asGif()
-            .load(image.url)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .into(object : CustomTarget<GifDrawable>() {
-                override fun onResourceReady(
-                    resource: GifDrawable,
-                    transition: Transition<in GifDrawable>?
-                ) {
-                    resource.apply {
-                        val size = calculateEmoteSize(this)
-                        if (image.zerowidth && enableZeroWidth) {
-                            setBounds(-90, 0, size.first - 90, size.second)
-                        } else {
-                            setBounds(0, 0, size.first, size.second)
-                        }
-                        setLoopCount(GifDrawable.LOOP_FOREVER)
-                        callback = object : Drawable.Callback {
-                            override fun unscheduleDrawable(who: Drawable, what: Runnable) {
-                                holder.textView.removeCallbacks(what)
-                            }
-
-                            override fun invalidateDrawable(who: Drawable) {
-                                holder.textView.invalidate()
-                            }
-
-                            override fun scheduleDrawable(
-                                who: Drawable,
-                                what: Runnable,
-                                `when`: Long
-                            ) {
-                                holder.textView.postDelayed(what, `when`)
-                            }
-                        }
-                        start()
-                    }
-                    try {
-                        builder.setSpan(
-                            ImageSpan(resource),
-                            image.start,
-                            image.end,
-                            SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                    } catch (e: IndexOutOfBoundsException) {
-                    }
-                    holder.bind(originalMessage, builder, userId, fullMsg)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-
-                override fun onLoadFailed(errorDrawable: Drawable?) {
-                    loadDrawable(holder, image, originalMessage, builder, userId, fullMsg)
-                }
-            })
-    }
-
-    private fun loadDrawable(
-        holder: ViewHolder,
-        image: Image,
-        originalMessage: CharSequence,
-        builder: SpannableStringBuilder,
-        userId: String?,
-        fullMsg: String?
-    ) {
-        GlideApp.with(fragment)
-            .load(image.url)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .into(object : CustomTarget<Drawable>() {
-                override fun onResourceReady(
-                    resource: Drawable,
-                    transition: Transition<in Drawable>?
-                ) {
-                    val width: Int
-                    val height: Int
-                    if (image.isEmote) {
-                        val size = calculateEmoteSize(resource)
-                        width = size.first
-                        height = size.second
-                    } else {
-                        width = badgeSize
-                        height = badgeSize
-                    }
-                    if (image.zerowidth && enableZeroWidth) {
-                        resource.setBounds(-90, 0, width - 90, height)
-                    } else {
-                        resource.setBounds(0, 0, width, height)
-                    }
-                    try {
-                        builder.setSpan(
-                            ImageSpan(resource),
-                            image.start,
-                            image.end,
-                            SPAN_EXCLUSIVE_EXCLUSIVE
-                        )
-                    } catch (e: IndexOutOfBoundsException) {
-                    }
-                    holder.bind(originalMessage, builder, userId, fullMsg)
-                }
-
-                override fun onLoadCleared(placeholder: Drawable?) {
-                }
-            })
     }
 
     fun addGlobalBadges(list: List<TwitchBadge>) {
@@ -743,31 +576,23 @@ class ChatAdapter(
     }
 
     private fun getRandomColor(): Int =
-        if (randomColor) {
-            twitchColors[random.nextInt(twitchColors.size)]
-        } else {
-            noColor
-        }
+        if (randomColor) twitchColors[random.nextInt(twitchColors.size)]
+        else noColor
 
     private fun calculateEmoteSize(resource: Drawable): Pair<Int, Int> {
         val widthRatio = resource.intrinsicWidth.toFloat() / resource.intrinsicHeight.toFloat()
-        val width: Int
-        val height: Int
-        when {
+
+        return when {
             widthRatio == 1f -> {
-                width = emoteSize
-                height = emoteSize
+                emoteSize to emoteSize
             }
             widthRatio <= 1.2f -> {
-                width = (emoteSize * widthRatio).toInt()
-                height = emoteSize
+                (emoteSize * widthRatio).toInt() to emoteSize
             }
             else -> {
-                width = (scaledEmoteSize * widthRatio).toInt()
-                height = scaledEmoteSize
+                (scaledEmoteSize * widthRatio).toInt() to scaledEmoteSize
             }
         }
-        return width to height
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

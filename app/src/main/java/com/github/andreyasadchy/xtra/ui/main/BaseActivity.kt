@@ -46,9 +46,6 @@ open class BaseActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
 
         if (prefs.getBoolean(C.FIRST_LAUNCH, true)) {
             prefs.edit {
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
-                    putString(C.CHAT_IMAGE_LIBRARY, "2")
-                }
                 putBoolean(C.FIRST_LAUNCH, false)
             }
         }

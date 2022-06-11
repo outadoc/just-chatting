@@ -98,8 +98,7 @@ class ChatView : ConstraintLayout {
             firstChatMsg = context.getString(R.string.chat_first),
             rewardChatMsg = context.getString(R.string.chat_reward),
             redeemedChatMsg = context.getString(R.string.redeemed),
-            redeemedNoMsg = context.getString(R.string.user_redeemed),
-            imageLibrary = context.prefs().getString(C.CHAT_IMAGE_LIBRARY, "0")
+            redeemedNoMsg = context.getString(R.string.user_redeemed)
         )
 
         adapter.setOnClickListener { original, formatted, userId, fullMsg ->

@@ -330,10 +330,6 @@ Removes a timeout on a user.</string>
     <string name="cleared">Cleared</string>
     <string name="irc_msgid_highlighted_message">Highlighted message</string>
     <string name="irc_msgid_announcement">Announcement</string>
-    <string name="image_library">Image library</string>
-    <string name="imageLibraryEntries1">Coil</string>
-    <string name="imageLibraryEntries2">Coil + Glide WebP</string>
-    <string name="imageLibraryEntries3">Glide</string>
     <string name="follow_button">Follow button</string>
     <string name="follow_account">Follow using twitch account</string>
     <string name="follow_local">Follow locally</string>

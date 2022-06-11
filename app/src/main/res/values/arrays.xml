@@ -14,18 +14,6 @@
         <item>4</item>
     </string-array>
 
-    <string-array name="imageLibraryEntries">
-        <item>@string/imageLibraryEntries1</item>
-        <item>@string/imageLibraryEntries2</item>
-        <item>@string/imageLibraryEntries3</item>
-    </string-array>
-
-    <string-array name="imageLibraryValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
     <string-array name="spinnerFollowedEntries">
         <item>@string/live</item>
         <item>@string/channels</item>

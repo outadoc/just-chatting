@@ -43,7 +43,6 @@ class ChatAdapter(
     private val emoteSize: Int,
     private val badgeSize: Int,
     private val randomColor: Boolean,
-    private val boldNames: Boolean,
     private val enableZeroWidth: Boolean,
     private val enableTimestamps: Boolean,
     private val timestampFormat: String?,
@@ -264,7 +263,7 @@ class ChatAdapter(
                 SPAN_EXCLUSIVE_EXCLUSIVE
             )
             builder.setSpan(
-                StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL),
+                StyleSpan(Typeface.BOLD),
                 imageIndex,
                 userNameEndIndex,
                 SPAN_EXCLUSIVE_EXCLUSIVE
@@ -352,7 +351,7 @@ class ChatAdapter(
                     if (!Patterns.WEB_URL.matcher(value).matches()) {
                         if (value.startsWith('@')) {
                             builder.setSpan(
-                                StyleSpan(if (boldNames) Typeface.BOLD else Typeface.NORMAL),
+                                StyleSpan(Typeface.BOLD),
                                 builderIndex,
                                 endIndex,
                                 SPAN_EXCLUSIVE_EXCLUSIVE

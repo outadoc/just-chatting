@@ -228,7 +228,7 @@ class ChannelChatFragment :
             recentMsgLimit = prefs.getInt(C.CHAT_RECENT_LIMIT, 100)
         )
 
-        chatView.init(this)
+        chatView.init()
         chatView.setOnMessageClickListener { original, formatted, userId, fullMsg ->
             hideKeyboard()
 

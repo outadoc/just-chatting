@@ -1,5 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.common
 
+import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -18,7 +19,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.getSpans
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -39,7 +39,7 @@ import java.util.Random
 import kotlin.collections.set
 
 class ChatAdapter(
-    private val fragment: Fragment,
+    private val context: Context,
     private val emoteSize: Int,
     private val badgeSize: Int,
     private val randomColor: Boolean,
@@ -476,7 +476,7 @@ class ChatAdapter(
         userId: String?,
         fullMsg: String?
     ) {
-        val request = ImageRequest.Builder(fragment.requireContext())
+        val request = ImageRequest.Builder(context)
             .data(image.url)
             .target(
                 onSuccess = { result ->
@@ -510,7 +510,7 @@ class ChatAdapter(
             )
             .build()
 
-        fragment.requireContext().imageLoader.enqueue(request)
+        context.imageLoader.enqueue(request)
     }
 
     fun addGlobalBadges(list: List<TwitchBadge>) {

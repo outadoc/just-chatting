@@ -9,7 +9,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
@@ -54,8 +53,6 @@ class ChatView : ConstraintLayout {
 
     private var messageClickListener: OnMessageClickListener? = null
 
-    private lateinit var fragment: Fragment
-
     private val rewardList = mutableListOf<Pair<LiveChatMessage?, PubSubPointReward?>>()
 
     constructor(context: Context) : super(context) {
@@ -78,15 +75,13 @@ class ChatView : ConstraintLayout {
         View.inflate(context, R.layout.view_chat, this)
     }
 
-    fun init(fragment: Fragment) {
-        this.fragment = fragment
-
+    fun init() {
         emoteQuality = context.prefs().getString(C.CHAT_IMAGE_QUALITY, "4") ?: "4"
         animateGifs = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
 
         adapter = ChatAdapter(
-            fragment = fragment,
+            context = context,
             emoteSize = context.convertDpToPixels(29.5f),
             badgeSize = context.convertDpToPixels(18.5f),
             randomColor = context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),

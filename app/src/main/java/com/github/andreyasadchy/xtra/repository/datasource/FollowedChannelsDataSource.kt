@@ -1,14 +1,13 @@
 package com.github.andreyasadchy.xtra.repository.datasource
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.BitmapDrawable
 import androidx.core.util.Pair
 import androidx.paging.DataSource
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.apollographql.apollo3.api.Optional
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
 import com.github.andreyasadchy.xtra.FollowedUsersQuery
 import com.github.andreyasadchy.xtra.UserLastBroadcastQuery
 import com.github.andreyasadchy.xtra.XtraApp
@@ -27,7 +26,9 @@ import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.File
+import kotlin.io.path.Path
+import kotlin.io.path.absolute
+import kotlin.io.path.pathString
 
 class FollowedChannelsDataSource(
     private val localFollowsChannel: LocalFollowChannelRepository,
@@ -316,32 +317,39 @@ class FollowedChannelsDataSource(
         GlobalScope.launch {
             try {
                 try {
-                    Glide.with(context)
-                        .asBitmap()
-                        .load(TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage"))
-                        .into(object : CustomTarget<Bitmap>() {
-                            override fun onLoadCleared(placeholder: Drawable?) {
-                            }
+                    val loader = ImageLoader(context)
+                    val request = ImageRequest.Builder(context)
+                        .data(TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage"))
+                        .build()
 
-                            override fun onResourceReady(
-                                resource: Bitmap,
-                                transition: Transition<in Bitmap>?
-                            ) {
-                                DownloadUtils.savePng(context, "profile_pics", userId, resource)
-                            }
-                        })
+                    val result = (loader.execute(request) as SuccessResult).drawable
+                    val bitmap = (result as BitmapDrawable).bitmap
+
+                    DownloadUtils.savePng(
+                        context = context,
+                        folder = "profile_pics",
+                        fileName = userId,
+                        bitmap = bitmap
+                    )
+
                 } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-                val downloadedLogo =
-                    File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "$userId.png").absolutePath
+
+                val downloadedLogoPath: String =
+                    Path(context.filesDir.path, "profile_pics", "$userId.png")
+                        .absolute()
+                        .pathString
+
                 localFollowsChannel.getFollowById(userId)?.let {
                     localFollowsChannel.updateFollow(
                         it.apply {
-                            channelLogo = downloadedLogo
+                            channelLogo = downloadedLogoPath
                         }
                     )
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

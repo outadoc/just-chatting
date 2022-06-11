@@ -1,14 +1,13 @@
 package com.github.andreyasadchy.xtra.ui.chat
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.BitmapDrawable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
@@ -16,10 +15,12 @@ import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
 import com.github.andreyasadchy.xtra.util.DownloadUtils
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.io.File
 import javax.inject.Inject
+import kotlin.io.path.Path
+import kotlin.io.path.absolute
+import kotlin.io.path.pathString
 
 class ChannelChatViewModel @Inject constructor(
     private val repository: TwitchService,
@@ -149,44 +150,47 @@ class ChannelChatViewModel @Inject constructor(
         context: Context,
         user: com.github.andreyasadchy.xtra.model.helix.user.User
     ) {
-        GlobalScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
-                if (user.id != null) {
-                    try {
-                        Glide.with(context)
-                            .asBitmap()
-                            .load(user.channelLogo)
-                            .into(object : CustomTarget<Bitmap>() {
-                                override fun onLoadCleared(placeholder: Drawable?) {
-                                }
+                if (user.id == null) {
+                    return@launch
+                }
 
-                                override fun onResourceReady(
-                                    resource: Bitmap,
-                                    transition: Transition<in Bitmap>?
-                                ) {
-                                    DownloadUtils.savePng(
-                                        context,
-                                        "profile_pics",
-                                        user.id,
-                                        resource
-                                    )
-                                }
-                            })
-                    } catch (e: Exception) {
-                    }
-                    val downloadedLogo =
-                        File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${user.id}.png").absolutePath
-                    localFollowsChannel.getFollowById(user.id)?.let {
-                        localFollowsChannel.updateFollow(
-                            it.apply {
-                                user_login = user.login
-                                user_name = user.display_name
-                                channelLogo = downloadedLogo
-                            }
-                        )
-                    }
+                try {
+                    val loader = ImageLoader(context)
+                    val request = ImageRequest.Builder(context)
+                        .data(user.channelLogo)
+                        .build()
+
+                    val result = (loader.execute(request) as SuccessResult).drawable
+                    val bitmap = (result as BitmapDrawable).bitmap
+
+                    DownloadUtils.savePng(
+                        context = context,
+                        folder = "profile_pics",
+                        fileName = user.id,
+                        bitmap = bitmap
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+                val downloadedLogoPath: String =
+                    Path(context.filesDir.path, "profile_pics", "${user.id}.png")
+                        .absolute()
+                        .pathString
+
+                localFollowsChannel.getFollowById(user.id)?.let {
+                    localFollowsChannel.updateFollow(
+                        it.apply {
+                            user_login = user.login
+                            user_name = user.display_name
+                            channelLogo = downloadedLogoPath
+                        }
+                    )
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

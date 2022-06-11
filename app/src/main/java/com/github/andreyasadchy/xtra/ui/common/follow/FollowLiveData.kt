@@ -1,22 +1,22 @@
 package com.github.andreyasadchy.xtra.ui.common.follow
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.BitmapDrawable
 import androidx.lifecycle.MutableLiveData
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.target.CustomTarget
-import com.bumptech.glide.request.transition.Transition
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.offline.LocalFollowChannel
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.util.DownloadUtils
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlin.io.path.Path
 import kotlin.io.path.absolute
+import kotlin.io.path.pathString
 
 class FollowLiveData(
     private val localFollowsChannel: LocalFollowChannelRepository? = null,
@@ -59,12 +59,13 @@ class FollowLiveData(
                 }
                 super.setValue(isFollowing)
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
     fun saveFollowChannel(context: Context) {
-        GlobalScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (!user.gqlToken.isNullOrBlank()) {
                     repository.followUser(gqlClientId, user.gqlToken, userId)
@@ -76,25 +77,20 @@ class FollowLiveData(
                 }
 
                 try {
-                    Glide.with(context)
-                        .asBitmap()
-                        .load(channelLogo)
-                        .into(object : CustomTarget<Bitmap>() {
-                            override fun onLoadCleared(placeholder: Drawable?) {
-                            }
+                    val loader = ImageLoader(context)
+                    val request = ImageRequest.Builder(context)
+                        .data(channelLogo)
+                        .build()
 
-                            override fun onResourceReady(
-                                resource: Bitmap,
-                                transition: Transition<in Bitmap>?
-                            ) {
-                                DownloadUtils.savePng(
-                                    context = context,
-                                    folder = "profile_pics",
-                                    fileName = userId,
-                                    bitmap = resource
-                                )
-                            }
-                        })
+                    val result = (loader.execute(request) as SuccessResult).drawable
+                    val bitmap = (result as BitmapDrawable).bitmap
+
+                    DownloadUtils.savePng(
+                        context = context,
+                        folder = "profile_pics",
+                        fileName = userId,
+                        bitmap = bitmap
+                    )
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -102,7 +98,7 @@ class FollowLiveData(
                 val downloadedLogoPath: String =
                     Path(context.filesDir.path, "profile_pics", "$userId.png")
                         .absolute()
-                        .toString()
+                        .pathString
 
                 localFollowsChannel?.saveFollow(
                     LocalFollowChannel(

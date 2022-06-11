@@ -131,8 +131,9 @@ class ChatView : ConstraintLayout {
     }
 
     fun notifyMessageAdded() {
-        adapter.messages!!.apply {
+        adapter.messages?.apply {
             adapter.notifyItemInserted(lastIndex)
+
             if (size >= MAX_LIST_COUNT) {
                 val removeCount = size - MAX_ADAPTER_COUNT
                 repeat(removeCount) {
@@ -140,6 +141,7 @@ class ChatView : ConstraintLayout {
                 }
                 adapter.notifyItemRangeRemoved(0, removeCount)
             }
+
             if (!isChatTouched && btnDown.isGone) {
                 scrollToBottom()
             }
@@ -156,8 +158,10 @@ class ChatView : ConstraintLayout {
         }
     }
 
-    fun notifyEmotesLoaded() {
-        adapter.messages?.size?.let { adapter.notifyItemRangeChanged(it - 40, 40) }
+    fun notifyEmotesLoaded(loaded: Boolean) {
+        adapter.messages?.size?.let { messageCount ->
+            adapter.notifyItemRangeChanged(messageCount - 40, 40)
+        }
     }
 
     fun notifyCommand(command: Command) {
@@ -195,6 +199,7 @@ class ChatView : ConstraintLayout {
             "ban" -> context.getString(R.string.chat_ban, command.message)
             else -> command.message
         }
+
         adapter.messages?.add(
             LiveChatMessage(
                 message = message,
@@ -205,28 +210,32 @@ class ChatView : ConstraintLayout {
                 fullMsg = command.fullMsg
             )
         )
+
         notifyMessageAdded()
     }
 
     fun notifyReward(message: ChatMessage) {
-        if (message is LiveChatMessage) {
-            val item = rewardList.find {
-                it.second?.id == message.rewardId && it.second?.userId == message.userId
-            }
-
-            if (item != null) {
-                message.apply { pointReward = item.second }.let {
-                    rewardList.remove(item)
-                    adapter.messages?.add(it)
-                    notifyMessageAdded()
+        when (message) {
+            is LiveChatMessage -> {
+                val item = rewardList.find {
+                    it.second?.id == message.rewardId && it.second?.userId == message.userId
                 }
-            } else {
-                rewardList.add(Pair(message, null))
+
+                if (item != null) {
+                    message.apply { pointReward = item.second }.let {
+                        rewardList.remove(item)
+                        adapter.messages?.add(it)
+                        notifyMessageAdded()
+                    }
+                } else {
+                    rewardList.add(Pair(message, null))
+                }
             }
-        } else {
-            if (message is PubSubPointReward) {
-                val item =
-                    rewardList.find { it.first?.rewardId == message.id && it.first?.userId == message.userId }
+            is PubSubPointReward -> {
+                val item = rewardList.find {
+                    it.first?.rewardId == message.id && it.first?.userId == message.userId
+                }
+
                 if (item != null) {
                     item.first?.apply { pointReward = message }?.let {
                         rewardList.remove(item)
@@ -280,9 +289,8 @@ class ChatView : ConstraintLayout {
 
     private fun shouldShowButton(): Boolean {
         val offset = recyclerView.computeVerticalScrollOffset()
-        if (offset < 0) {
-            return false
-        }
+        if (offset < 0) return false
+
         val extent = recyclerView.computeVerticalScrollExtent()
         val range = recyclerView.computeVerticalScrollRange()
         val percentage = (100f * offset / (range - extent).toFloat())

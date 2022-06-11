@@ -93,8 +93,10 @@ class ChatViewModel @Inject constructor(
             value = Collections.synchronizedList(ArrayList(MAX_ADAPTER_COUNT + 1))
         }
     }
+
     val chatMessages: LiveData<MutableList<ChatMessage>>
         get() = _chatMessages
+
     private val _newMessage by lazy { MutableLiveData<ChatMessage>() }
     val newMessage: LiveData<ChatMessage>
         get() = _newMessage
@@ -177,6 +179,7 @@ class ChatViewModel @Inject constructor(
         recentMsgLimit: Int? = null
     ) {
         chat?.start()
+
         viewModelScope.launch {
             if (channelLogin != null && enableRecentMsg == true && recentMsgLimit != null) {
                 try {
@@ -189,6 +192,7 @@ class ChatViewModel @Inject constructor(
                     Log.e(TAG, "Failed to load recent messages for channel $channelLogin", e)
                 }
             }
+
             savedGlobalBadges.also {
                 if (it != null) {
                     globalBadges.value = it
@@ -204,6 +208,7 @@ class ChatViewModel @Inject constructor(
                     }
                 }
             }
+
             try {
                 channelBadges.postValue(
                     playerRepository.loadChannelBadges(channelId).body()?.badges
@@ -211,25 +216,30 @@ class ChatViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load badges for channel $channelId", e)
             }
+
             val list = mutableListOf<Emote>()
+
             try {
                 val channelStv = playerRepository.loadStvEmotes(channelId)
                 channelStv.body()?.emotes?.let(list::addAll)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load 7tv emotes for channel $channelId", e)
             }
+
             try {
                 val channelBttv = playerRepository.loadBttvEmotes(channelId)
                 channelBttv.body()?.emotes?.let(list::addAll)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load BTTV emotes for channel $channelId", e)
             }
+
             try {
                 val channelFfz = playerRepository.loadBttvFfzEmotes(channelId)
                 channelFfz.body()?.emotes?.let(list::addAll)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load FFZ emotes for channel $channelId", e)
             }
+
             globalStvEmotes.also {
                 if (it != null) {
                     list.addAll(it)
@@ -245,6 +255,7 @@ class ChatViewModel @Inject constructor(
                     }
                 }
             }
+
             globalBttvEmotes.also {
                 if (it != null) {
                     list.addAll(it)
@@ -260,6 +271,7 @@ class ChatViewModel @Inject constructor(
                     }
                 }
             }
+
             globalFfzEmotes.also {
                 if (it != null) {
                     list.addAll(it)
@@ -275,8 +287,10 @@ class ChatViewModel @Inject constructor(
                     }
                 }
             }
+
             (chat as? LiveChatController)?.addEmotes(list)
             _otherEmotes.postValue(list)
+
             try {
                 val get =
                     repository.loadCheerEmotes(channelId, helixClientId, helixToken, gqlClientId)
@@ -286,6 +300,7 @@ class ChatViewModel @Inject constructor(
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load cheermotes for channel $channelId", e)
             }
+
             emotesLoaded.value = true
         }
     }
@@ -310,6 +325,7 @@ class ChatViewModel @Inject constructor(
         private var chat: LiveChatThread? = null
         private var loggedInChat: LoggedInChatThread? = null
         private var pubSub: PubSubWebSocket? = null
+
         private val allEmotesMap = mutableMapOf<String, Emote>()
 
         val chatters = ConcurrentHashMap<String?, Chatter>()
@@ -321,60 +337,67 @@ class ChatViewModel @Inject constructor(
         override fun send(message: CharSequence) {
             if (message.toString() == "/dc" || message.toString() == "/disconnect") {
                 disconnect()
-            } else {
-                loggedInChat?.send(message)
-                val usedEmotes = hashSetOf<RecentEmote>()
-                val currentTime = System.currentTimeMillis()
-                message.split(' ').forEach { word ->
-                    allEmotesMap[word]?.let {
-                        usedEmotes.add(
-                            RecentEmote(
-                                word,
-                                it.url,
-                                currentTime
-                            )
+                return
+            }
+
+            loggedInChat?.send(message)
+
+            val usedEmotes = hashSetOf<RecentEmote>()
+            val currentTime = System.currentTimeMillis()
+
+            message.split(' ').forEach { word ->
+                allEmotesMap[word]?.let {
+                    usedEmotes.add(
+                        RecentEmote(
+                            name = word,
+                            url = it.url,
+                            usedAt = currentTime
                         )
-                    }
+                    )
                 }
-                if (usedEmotes.isNotEmpty()) {
-                    playerRepository.insertRecentEmotes(usedEmotes)
-                }
+            }
+
+            if (usedEmotes.isNotEmpty()) {
+                playerRepository.insertRecentEmotes(usedEmotes)
             }
         }
 
         override fun start() {
             pause()
+
             chat = TwitchApiHelper.startChat(
-                useSSl,
-                user is LoggedIn,
-                channelLogin,
-                showUserNotice,
-                showClearMsg,
-                showClearChat,
-                usePubSub,
-                this,
-                this,
-                this,
-                this,
-                this
+                useSSl = useSSl,
+                loggedIn = user is LoggedIn,
+                channelName = channelLogin,
+                showUserNotice = showUserNotice,
+                showClearMsg = showClearMsg,
+                showClearChat = showClearChat,
+                usePubSub = usePubSub,
+                newMessageListener = this,
+                UserStateListener = this,
+                RoomStateListener = this,
+                CommandListener = this,
+                callbackReward = this
             )
+
             if (user is LoggedIn) {
                 loggedInChat = TwitchApiHelper.startLoggedInChat(
-                    useSSl,
-                    user.login,
-                    user.gqlToken?.nullIfEmpty() ?: user.helixToken,
-                    channelLogin,
-                    showUserNotice,
-                    showClearMsg,
-                    showClearChat,
-                    usePubSub,
-                    this,
-                    this,
-                    this,
-                    this,
-                    this
+                    useSSl = useSSl,
+                    userName = user.login,
+                    userToken = user.gqlToken?.nullIfEmpty() ?: user.helixToken,
+                    channelName = channelLogin,
+                    showUserNotice = showUserNotice,
+                    showClearMsg = showClearMsg,
+                    showClearChat = showClearChat,
+                    usePubSub = usePubSub,
+                    newMessageListener = this,
+                    UserStateListener = this,
+                    RoomStateListener = this,
+                    CommandListener = this,
+                    callbackReward = this
                 )
             }
+
             if (usePubSub && !channelId.isNullOrBlank()) {
                 pubSub = TwitchApiHelper.startPubSub(channelId, viewModelScope, this, this)
             }
@@ -392,6 +415,7 @@ class ChatViewModel @Inject constructor(
 
         override fun onMessage(message: ChatMessage) {
             super.onMessage(message)
+
             if (message.userName != null && !chatters.containsKey(message.userName)) {
                 val chatter = Chatter(message.userName)
                 chatters[message.userName] = chatter
@@ -400,48 +424,57 @@ class ChatViewModel @Inject constructor(
         }
 
         override fun onUserState(sets: List<String>?) {
-            if (helixClientId != null && user.helixToken?.nullIfEmpty() != null) {
+            if (helixClientId == null || user.helixToken?.nullIfEmpty() == null) {
+                return
+            }
+
+            viewModelScope.launch {
                 if (savedEmoteSets != sets) {
-                    viewModelScope.launch {
-                        val emotes = mutableListOf<Emote>()
-                        sets?.asReversed()?.chunked(25)?.forEach {
-                            try {
-                                val list =
-                                    repository.loadEmotesFromSet(helixClientId, user.helixToken, it)
-                                if (list != null) {
-                                    emotes.addAll(list)
-                                }
-                            } catch (e: Exception) {
+                    val emotes = mutableListOf<Emote>()
+                    sets?.asReversed()?.chunked(25)?.forEach {
+                        try {
+                            val list =
+                                repository.loadEmotesFromSet(helixClientId, user.helixToken, it)
+                            if (list != null) {
+                                emotes.addAll(list)
                             }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                        if (emotes.isNotEmpty()) {
-                            savedEmoteSets = sets
-                            savedEmotesFromSets = emotes
-                            emoteSetsAdded = true
-                            val items = emotes.filter { it.ownerId == channelId }
-                            for (item in items.asReversed()) {
-                                emotes.add(0, item)
-                            }
-                            addEmotes(emotes)
-                            emotesFromSets.value = emotes
+                    }
+
+                    if (emotes.isNotEmpty()) {
+                        savedEmoteSets = sets
+                        savedEmotesFromSets = emotes
+                        emoteSetsAdded = true
+
+                        val items = emotes.filter { it.ownerId == channelId }
+                        for (item in items.asReversed()) {
+                            emotes.add(0, item)
                         }
+
+                        addEmotes(emotes)
+                        emotesFromSets.value = emotes
                     }
                 } else {
                     if (!emoteSetsAdded) {
                         val emotes = mutableListOf<Emote>()
                         savedEmotesFromSets?.let { emotes.addAll(it) }
+
                         if (emotes.isNotEmpty()) {
                             emoteSetsAdded = true
+
                             val items = emotes.filter { it.ownerId == channelId }
                             for (item in items.asReversed()) {
                                 emotes.add(0, item)
                             }
+
                             addEmotes(emotes)
-                            viewModelScope.launch {
-                                try {
-                                    emotesFromSets.value = emotes!!
-                                } catch (e: Exception) {
-                                }
+
+                            try {
+                                emotesFromSets.value = emotes
+                            } catch (e: Exception) {
+                                e.printStackTrace()
                             }
                         }
                     }
@@ -471,7 +504,7 @@ class ChatViewModel @Inject constructor(
             return chat?.isActive
         }
 
-        fun disconnect() {
+        private fun disconnect() {
             if (chat?.isActive == true) {
                 chat?.disconnect()
                 loggedInChat?.disconnect()
@@ -483,6 +516,7 @@ class ChatViewModel @Inject constructor(
     }
 
     abstract inner class ChatController : OnChatMessageReceivedListener {
+
         abstract fun send(message: CharSequence)
         abstract fun start()
         abstract fun pause()

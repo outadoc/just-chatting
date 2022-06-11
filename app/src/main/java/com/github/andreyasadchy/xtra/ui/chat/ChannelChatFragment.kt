@@ -15,7 +15,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
@@ -252,7 +251,7 @@ class ChannelChatFragment :
             user.login?.let { chatView.setUsername(it) }
 
             chatInputView.setChatters(viewModel.chatters)
-            viewModel.newChatter.observe(viewLifecycleOwner, Observer(chatInputView::addChatter))
+            viewModel.newChatter.observe(viewLifecycleOwner, chatInputView::addChatter)
 
             val emotesObserver = { emotes: List<Emote> ->
                 chatView.addEmotes(emotes)
@@ -266,16 +265,16 @@ class ChannelChatFragment :
 
         viewModel.roomState.observe(viewLifecycleOwner) { chatInputView.notifyRoomState(it) }
 
-        viewModel.chatMessages.observe(viewLifecycleOwner, Observer(chatView::submitList))
         viewModel.newMessage.observe(viewLifecycleOwner) { chatView.notifyMessageAdded() }
-        viewModel.recentMessages.observe(viewLifecycleOwner) { chatView.addRecentMessages(it) }
-        viewModel.globalBadges.observe(viewLifecycleOwner, Observer(chatView::addGlobalBadges))
-        viewModel.channelBadges.observe(viewLifecycleOwner, Observer(chatView::addChannelBadges))
-        viewModel.otherEmotes.observe(viewLifecycleOwner, Observer(chatView::addEmotes))
-        viewModel.cheerEmotes.observe(viewLifecycleOwner, Observer(chatView::addCheerEmotes))
-        viewModel.emotesLoaded.observe(viewLifecycleOwner) { chatView.notifyEmotesLoaded() }
-        viewModel.command.observe(viewLifecycleOwner) { chatView.notifyCommand(it) }
-        viewModel.reward.observe(viewLifecycleOwner) { chatView.notifyReward(it) }
+        viewModel.chatMessages.observe(viewLifecycleOwner, chatView::submitList)
+        viewModel.recentMessages.observe(viewLifecycleOwner, chatView::addRecentMessages)
+        viewModel.globalBadges.observe(viewLifecycleOwner, chatView::addGlobalBadges)
+        viewModel.channelBadges.observe(viewLifecycleOwner, chatView::addChannelBadges)
+        viewModel.otherEmotes.observe(viewLifecycleOwner, chatView::addEmotes)
+        viewModel.cheerEmotes.observe(viewLifecycleOwner, chatView::addCheerEmotes)
+        viewModel.emotesLoaded.observe(viewLifecycleOwner, chatView::notifyEmotesLoaded)
+        viewModel.command.observe(viewLifecycleOwner, chatView::notifyCommand)
+        viewModel.reward.observe(viewLifecycleOwner, chatView::notifyReward)
     }
 
     private fun initializeFollow(
@@ -283,7 +282,6 @@ class ChannelChatFragment :
         helixClientId: String? = null,
         gqlClientId: String? = null
     ) {
-        val context = requireContext()
         with(channelViewModel) {
             setUser(user, helixClientId, gqlClientId)
             var initialized = false
@@ -291,6 +289,7 @@ class ChannelChatFragment :
 
             follow.observe(viewLifecycleOwner) { following ->
                 if (initialized) {
+                    val context = requireContext()
                     context.shortToast(
                         context.getString(
                             if (following) R.string.now_following else R.string.unfollowed,

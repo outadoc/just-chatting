@@ -15,7 +15,8 @@ import com.github.andreyasadchy.xtra.util.DownloadUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import java.io.File
+import kotlin.io.path.Path
+import kotlin.io.path.absolute
 
 class FollowLiveData(
     private val localFollowsChannel: LocalFollowChannelRepository? = null,
@@ -36,9 +37,9 @@ class FollowLiveData(
                 val isFollowing = if (!user.gqlToken.isNullOrBlank()) {
                     when {
                         localFollowsChannel != null && (
-                            (!user.helixToken.isNullOrBlank() && !userId.isNullOrBlank() && !user.id.isNullOrBlank()) ||
-                                (!user.gqlToken.isNullOrBlank() && !userLogin.isNullOrBlank())
-                            ) && user.id != userId -> {
+                                (!user.helixToken.isNullOrBlank() && !userId.isNullOrBlank() && !user.id.isNullOrBlank()) ||
+                                        (!user.gqlToken.isNullOrBlank() && !userLogin.isNullOrBlank())
+                                ) && user.id != userId -> {
                             repository.loadUserFollowing(
                                 helixClientId,
                                 user.helixToken,
@@ -67,43 +68,52 @@ class FollowLiveData(
             try {
                 if (!user.gqlToken.isNullOrBlank()) {
                     repository.followUser(gqlClientId, user.gqlToken, userId)
-                } else {
-                    if (userId != null) {
-                        try {
-                            Glide.with(context)
-                                .asBitmap()
-                                .load(channelLogo)
-                                .into(object : CustomTarget<Bitmap>() {
-                                    override fun onLoadCleared(placeholder: Drawable?) {
-                                    }
-
-                                    override fun onResourceReady(
-                                        resource: Bitmap,
-                                        transition: Transition<in Bitmap>?
-                                    ) {
-                                        DownloadUtils.savePng(
-                                            context,
-                                            "profile_pics",
-                                            userId,
-                                            resource
-                                        )
-                                    }
-                                })
-                        } catch (e: Exception) {
-                        }
-                        val downloadedLogo =
-                            File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "$userId.png").absolutePath
-                        localFollowsChannel?.saveFollow(
-                            LocalFollowChannel(
-                                userId,
-                                userLogin,
-                                userName,
-                                downloadedLogo
-                            )
-                        )
-                    }
+                    return@launch
                 }
+
+                if (userId == null) {
+                    return@launch
+                }
+
+                try {
+                    Glide.with(context)
+                        .asBitmap()
+                        .load(channelLogo)
+                        .into(object : CustomTarget<Bitmap>() {
+                            override fun onLoadCleared(placeholder: Drawable?) {
+                            }
+
+                            override fun onResourceReady(
+                                resource: Bitmap,
+                                transition: Transition<in Bitmap>?
+                            ) {
+                                DownloadUtils.savePng(
+                                    context = context,
+                                    folder = "profile_pics",
+                                    fileName = userId,
+                                    bitmap = resource
+                                )
+                            }
+                        })
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
+                val downloadedLogoPath: String =
+                    Path(context.filesDir.path, "profile_pics", "$userId.png")
+                        .absolute()
+                        .toString()
+
+                localFollowsChannel?.saveFollow(
+                    LocalFollowChannel(
+                        user_id = userId,
+                        user_login = userLogin,
+                        user_name = userName,
+                        channelLogo = downloadedLogoPath
+                    )
+                )
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

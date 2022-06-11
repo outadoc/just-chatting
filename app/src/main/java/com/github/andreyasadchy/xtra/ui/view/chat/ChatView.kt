@@ -80,7 +80,7 @@ class ChatView : ConstraintLayout {
             context = context,
             emoteSize = context.convertDpToPixels(29.5f),
             badgeSize = context.convertDpToPixels(18.5f),
-            randomColor = context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
+            pickRandomColors = context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
             enableTimestamps = context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
             timestampFormat = context.prefs().getString(C.CHAT_TIMESTAMP_FORMAT, "0"),
             firstMsgVisibility = context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0"),

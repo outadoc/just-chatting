@@ -24,8 +24,6 @@ import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.request.ImageRequest
-import com.bumptech.glide.integration.webp.decoder.WebpDrawable
-import com.bumptech.glide.load.resource.gif.GifDrawable
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.ChatMessage
 import com.github.andreyasadchy.xtra.model.chat.CheerEmote
@@ -36,14 +34,13 @@ import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import java.util.Random
 import kotlin.collections.set
 
 class ChatAdapter(
     private val context: Context,
     private val emoteSize: Int,
     private val badgeSize: Int,
-    private val randomColor: Boolean,
+    private val pickRandomColors: Boolean,
     private val enableTimestamps: Boolean,
     private val timestampFormat: String?,
     private val firstMsgVisibility: String?,
@@ -84,7 +81,6 @@ class ChatAdapter(
 
     private val noColor = -10066329
 
-    private val random = Random()
     private val userColors = HashMap<String, Int>()
     private val savedColors = HashMap<String, Int>()
     private var globalBadges: List<TwitchBadge>? = null
@@ -510,7 +506,7 @@ class ChatAdapter(
                         )
 
                         if (animateGifs) {
-                            (result as? coil.drawable.ScaleDrawable)?.start()
+                            (result as? Animatable)?.start()
                         }
                     } catch (e: IndexOutOfBoundsException) {
                         e.printStackTrace()
@@ -554,6 +550,7 @@ class ChatAdapter(
 
         (holder.textView.text as? Spannable)
             ?.getSpans<ImageSpan>()
+            ?.map { it.drawable }
             ?.filterIsInstance<Animatable>()
             ?.forEach { image -> image.start() }
     }
@@ -564,6 +561,7 @@ class ChatAdapter(
 
         (holder.textView.text as? Spannable)
             ?.getSpans<ImageSpan>()
+            ?.map { it.drawable }
             ?.filterIsInstance<Animatable>()
             ?.forEach { image -> image.stop() }
     }
@@ -577,17 +575,14 @@ class ChatAdapter(
             .forEach { message ->
                 (message.text as? Spannable)
                     ?.getSpans<ImageSpan>()
-                    ?.forEach {
-                        (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
-                            ?: (it.drawable as? GifDrawable)?.stop()
-                            ?: (it.drawable as? WebpDrawable)?.stop()
-                    }
+                    ?.map { it.drawable }
+                    ?.filterIsInstance<Animatable>()
+                    ?.forEach { image -> image.stop() }
             }
     }
 
     private fun getRandomColor(): Int =
-        if (randomColor) twitchColors[random.nextInt(twitchColors.size)]
-        else noColor
+        if (pickRandomColors) twitchColors.random() else noColor
 
     private fun calculateEmoteSize(resource: Drawable): Pair<Int, Int> {
         val widthRatio = resource.intrinsicWidth.toFloat() / resource.intrinsicHeight.toFloat()

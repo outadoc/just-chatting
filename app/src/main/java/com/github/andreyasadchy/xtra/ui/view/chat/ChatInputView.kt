@@ -234,10 +234,10 @@ class ChatInputView : LinearLayout {
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-                    !textFollowers.isGone
-                    || !textUnique.isGone
-                    || !textSlow.isGone
-                    || !textSubs.isGone
+            !textFollowers.isGone ||
+            !textUnique.isGone ||
+            !textSlow.isGone ||
+            !textSubs.isGone
     }
 
     fun enableChatInteraction(enableMessaging: Boolean) {

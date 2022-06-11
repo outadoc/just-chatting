@@ -331,7 +331,6 @@ class FollowedChannelsDataSource(
                         fileName = userId,
                         bitmap = bitmap
                     )
-
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

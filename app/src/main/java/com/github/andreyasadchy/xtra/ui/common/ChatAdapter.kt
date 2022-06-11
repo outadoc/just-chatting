@@ -3,6 +3,7 @@ package com.github.andreyasadchy.xtra.ui.common
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -19,6 +20,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.text.getSpans
+import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -33,7 +35,6 @@ import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
-import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import java.util.Random
 import kotlin.collections.set
@@ -50,7 +51,9 @@ class ChatAdapter(
     private val firstChatMsg: String,
     private val rewardChatMsg: String,
     private val redeemedChatMsg: String,
-    private val redeemedNoMsg: String
+    private val redeemedNoMsg: String,
+    private val animateGifs: Boolean,
+    private val emoteQuality: String
 ) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
@@ -92,8 +95,16 @@ class ChatAdapter(
     private var loggedInUser: String? = null
     private val scaledEmoteSize = (emoteSize * 0.78f).toInt()
 
-    private var messageClickListener: ((CharSequence, CharSequence, String?, String?) -> Unit)? =
-        null
+    fun interface OnMessageClickListener {
+        fun onMessageClick(
+            originalMessage: CharSequence,
+            formattedMessage: CharSequence,
+            userId: String?,
+            fullMsg: String?
+        )
+    }
+
+    private var messageClickListener: OnMessageClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
@@ -139,7 +150,7 @@ class ChatAdapter(
             builder.append("$string ")
             imageIndex += string.length + 1
 
-            val url = when (ChatView.emoteQuality) {
+            val url = when (emoteQuality) {
                 "4" -> pointReward?.rewardImage?.url4
                 "3" -> pointReward?.rewardImage?.url4
                 "2" -> pointReward?.rewardImage?.url2
@@ -175,6 +186,7 @@ class ChatAdapter(
             val badge =
                 channelBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
                     ?: globalBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
+
             badge?.url?.let {
                 builder.append("  ")
                 images.add(Image(it, imageIndex++, imageIndex++, false))
@@ -207,7 +219,7 @@ class ChatAdapter(
                 builder.append("$string ")
                 imageIndex += string.length + 1
 
-                val url = when (ChatView.emoteQuality) {
+                val url = when (emoteQuality) {
                     "4" -> pointReward?.rewardImage?.url4
                     "3" -> pointReward?.rewardImage?.url4
                     "2" -> pointReward?.rewardImage?.url2
@@ -498,7 +510,7 @@ class ChatAdapter(
                             SPAN_EXCLUSIVE_EXCLUSIVE
                         )
 
-                        if (ChatView.animateGifs) {
+                        if (animateGifs) {
                             (result as? coil.drawable.ScaleDrawable)?.start()
                         }
                     } catch (e: IndexOutOfBoundsException) {
@@ -533,45 +545,45 @@ class ChatAdapter(
         this.loggedInUser = username
     }
 
-    fun setOnClickListener(listener: (CharSequence, CharSequence, String?, String?) -> Unit) {
+    fun setOnClickListener(listener: OnMessageClickListener?) {
         messageClickListener = listener
     }
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        if (ChatView.animateGifs) {
-            (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-                (it.drawable as? coil.drawable.ScaleDrawable)?.start()
-                    ?: (it.drawable as? GifDrawable)?.start()
-                    ?: (it.drawable as? WebpDrawable)?.start()
-            }
-        }
+        if (!animateGifs) return
+
+        (holder.textView.text as? Spannable)
+            ?.getSpans<ImageSpan>()
+            ?.filterIsInstance<Animatable>()
+            ?.forEach { image -> image.start() }
     }
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
         super.onViewDetachedFromWindow(holder)
-        if (ChatView.animateGifs) {
-            (holder.textView.text as? Spannable)?.getSpans<ImageSpan>()?.forEach {
-                (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
-                    ?: (it.drawable as? GifDrawable)?.stop()
-                    ?: (it.drawable as? WebpDrawable)?.stop()
-            }
-        }
+        if (!animateGifs) return
+
+        (holder.textView.text as? Spannable)
+            ?.getSpans<ImageSpan>()
+            ?.filterIsInstance<Animatable>()
+            ?.forEach { image -> image.stop() }
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        val childCount = recyclerView.childCount
-        if (ChatView.animateGifs) {
-            for (i in 0 until childCount) {
-                ((recyclerView.getChildAt(i) as TextView).text as? Spannable)?.getSpans<ImageSpan>()
+        super.onDetachedFromRecyclerView(recyclerView)
+        if (!animateGifs) return
+
+        recyclerView.children
+            .filterIsInstance<TextView>()
+            .forEach { message ->
+                (message.text as? Spannable)
+                    ?.getSpans<ImageSpan>()
                     ?.forEach {
                         (it.drawable as? coil.drawable.ScaleDrawable)?.stop()
                             ?: (it.drawable as? GifDrawable)?.stop()
                             ?: (it.drawable as? WebpDrawable)?.stop()
                     }
             }
-        }
-        super.onDetachedFromRecyclerView(recyclerView)
     }
 
     private fun getRandomColor(): Int =
@@ -608,11 +620,11 @@ class ChatAdapter(
                 text = formattedMessage
                 movementMethod = LinkMovementMethod.getInstance()
                 setOnClickListener {
-                    messageClickListener?.invoke(
-                        originalMessage,
-                        formattedMessage,
-                        userId,
-                        fullMsg
+                    messageClickListener?.onMessageClick(
+                        originalMessage = originalMessage,
+                        formattedMessage = formattedMessage,
+                        userId = userId,
+                        fullMsg = fullMsg
                     )
                 }
             }

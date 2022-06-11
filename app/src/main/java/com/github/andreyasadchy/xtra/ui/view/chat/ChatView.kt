@@ -42,10 +42,6 @@ class ChatView : ConstraintLayout {
         var animateGifs = true
     }
 
-    fun interface OnMessageClickListener {
-        fun send(original: CharSequence, formatted: CharSequence, userId: String?, fullMsg: String?)
-    }
-
     private lateinit var adapter: ChatAdapter
 
     private var isChatTouched = false
@@ -92,7 +88,9 @@ class ChatView : ConstraintLayout {
             firstChatMsg = context.getString(R.string.chat_first),
             rewardChatMsg = context.getString(R.string.chat_reward),
             redeemedChatMsg = context.getString(R.string.redeemed),
-            redeemedNoMsg = context.getString(R.string.user_redeemed)
+            redeemedNoMsg = context.getString(R.string.user_redeemed),
+            emoteQuality = emoteQuality,
+            animateGifs = animateGifs
         )
 
         adapter.setOnClickListener { original, formatted, userId, fullMsg ->
@@ -212,8 +210,10 @@ class ChatView : ConstraintLayout {
 
     fun notifyReward(message: ChatMessage) {
         if (message is LiveChatMessage) {
-            val item =
-                rewardList.find { it.second?.id == message.rewardId && it.second?.userId == message.userId }
+            val item = rewardList.find {
+                it.second?.id == message.rewardId && it.second?.userId == message.userId
+            }
+
             if (item != null) {
                 message.apply { pointReward = item.second }.let {
                     rewardList.remove(item)

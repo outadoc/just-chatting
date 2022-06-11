@@ -7,7 +7,7 @@ sealed class AutoCompleteItem {
     data class EmoteItem(val emote: Emote) : AutoCompleteItem() {
         override fun toString() = ":${emote.name}"
     }
-    data class UserItem(val chatter: Chatter) : AutoCompleteItem(){
+    data class UserItem(val chatter: Chatter) : AutoCompleteItem() {
         override fun toString() = "@${chatter.name}"
     }
 }

@@ -44,7 +44,6 @@ class ChatAdapter(
     private val emoteSize: Int,
     private val badgeSize: Int,
     private val randomColor: Boolean,
-    private val enableZeroWidth: Boolean,
     private val enableTimestamps: Boolean,
     private val timestampFormat: String?,
     private val firstMsgVisibility: String?,
@@ -496,7 +495,7 @@ class ChatAdapter(
                         if (image.isEmote) calculateEmoteSize(result)
                         else badgeSize to badgeSize
 
-                    if (image.zerowidth && enableZeroWidth) {
+                    if (image.isZeroWidth) {
                         result.setBounds(-90, 0, width - 90, height)
                     } else {
                         result.setBounds(0, 0, width, height)

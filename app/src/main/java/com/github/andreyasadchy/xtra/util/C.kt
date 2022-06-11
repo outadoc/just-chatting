@@ -20,7 +20,6 @@ object C {
     const val CHAT_IMAGE_QUALITY = "chat_image_quality"
     const val CHAT_RANDOMCOLOR = "chat_randomcolor"
     const val CHAT_LIMIT = "chat_limit"
-    const val CHAT_ZEROWIDTH = "chat_zerowidth"
     const val CHAT_FIRSTMSG_VISIBILITY = "chat_firstmsg_visibility"
     const val CHAT_TIMESTAMPS = "chat_timestamps"
     const val CHAT_TIMESTAMP_FORMAT = "chat_timestamp_format"

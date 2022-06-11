@@ -8,21 +8,34 @@ class BttvEmote(
     private val imageType: String
 ) : Emote() {
 
+    companion object {
+        private val ZERO_WIDTH_EMOTES = setOf(
+            "SoSnowy",
+            "IceCold",
+            "SantaHat",
+            "TopHat",
+            "ReinDeer",
+            "CandyCane",
+            "cvMask",
+            "cvHazmat"
+        )
+    }
+
     override val url: String
-        get() = "https://cdn.betterttv.net/emote/$id/${
-        (
-            when (ChatView.emoteQuality) {
+        get() {
+            val quality = when (ChatView.emoteQuality) {
                 "4" -> ("3x")
                 "3" -> ("2x")
                 "2" -> ("2x")
                 else -> ("1x")
             }
-            )
-        }"
+
+            return "https://cdn.betterttv.net/emote/$id/$quality"
+        }
 
     override val type: String
         get() = "image/$imageType"
 
-    override val zeroWidth: Boolean
-        get() = name == "SoSnowy" || name == "IceCold" || name == "SantaHat" || name == "TopHat" || name == "ReinDeer" || name == "CandyCane" || name == "cvMask" || name == "cvHazmat"
+    override val isZeroWidth: Boolean
+        get() = name in ZERO_WIDTH_EMOTES
 }

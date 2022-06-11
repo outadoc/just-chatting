@@ -6,5 +6,5 @@ data class Image(
     var end: Int,
     val isEmote: Boolean,
     val type: String = "image/png",
-    val zerowidth: Boolean = false
+    val isZeroWidth: Boolean = false
 )

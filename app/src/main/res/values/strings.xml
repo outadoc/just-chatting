@@ -58,7 +58,6 @@
     <string name="language">Language</string>
     <string name="truncated_view_counts">Truncated view counts</string>
     <string name="randomcolor">Random color for users without color</string>
-    <string name="zerowidth">Zero width emotes</string>
     <string name="message_limit">Message limit</string>
     <string name="settings_ui">UI</string>
     <string name="settings_chat">CHAT</string>

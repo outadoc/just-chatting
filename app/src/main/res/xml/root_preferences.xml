@@ -42,12 +42,6 @@
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="chat_zerowidth"
-        android:title="@string/zerowidth"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
         android:defaultValue="false"
         android:key="chat_timestamps"
         android:title="@string/timestamps"

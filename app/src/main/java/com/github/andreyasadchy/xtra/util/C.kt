@@ -16,7 +16,6 @@ object C {
     const val UI_TRUNCATEVIEWCOUNT = "ui_truncateviewcount"
     const val UI_TAGS = "ui_tags"
     const val ANIMATED_EMOTES = "animatedGifEmotes"
-    const val CHAT_IMAGE_QUALITY = "chat_image_quality"
     const val CHAT_RANDOMCOLOR = "chat_randomcolor"
     const val CHAT_LIMIT = "chat_limit"
     const val CHAT_FIRSTMSG_VISIBILITY = "chat_firstmsg_visibility"

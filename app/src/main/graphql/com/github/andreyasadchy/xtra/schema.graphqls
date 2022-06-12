@@ -91,7 +91,10 @@ type CheermoteTier {
 }
 
 type CheermoteImage {
-  url: String
+  theme: String!
+  isAnimated: Boolean!
+  dpiScale: Float!
+  url: String!
 }
 
 type Games {

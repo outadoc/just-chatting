@@ -20,7 +20,6 @@ import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.repository.datasource.FollowedChannelsDataSource
 import com.github.andreyasadchy.xtra.repository.datasource.FollowedStreamsDataSource
 import com.github.andreyasadchy.xtra.repository.datasource.SearchChannelsDataSource
-import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,16 +72,16 @@ class ApiRepository @Inject constructor(
         coroutineScope: CoroutineScope
     ): Listing<Stream> {
         val factory = FollowedStreamsDataSource.Factory(
-            localFollowsChannel,
-            userId,
-            helixClientId,
-            helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
-            helix,
-            gqlClientId,
-            gqlToken?.let { TwitchApiHelper.addTokenPrefixGQL(it) },
-            gql,
-            apiPref,
-            coroutineScope
+            localFollowsChannel = localFollowsChannel,
+            userId = userId,
+            helixClientId = helixClientId,
+            helixToken = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
+            helixApi = helix,
+            gqlClientId = gqlClientId,
+            gqlToken = gqlToken?.let { TwitchApiHelper.addTokenPrefixGQL(it) },
+            gqlApi = gql,
+            apiPref = apiPref,
+            coroutineScope = coroutineScope
         )
         val builder = PagedList.Config.Builder().setEnablePlaceholders(false)
         if (thumbnailsEnabled) {
@@ -318,22 +317,10 @@ class ApiRepository @Inject constructor(
         gqlClientId: String?
     ): List<CheerEmote>? = withContext(Dispatchers.IO) {
         try {
-            val animate = false
-            val density: Float =
-                when (ChatView.emoteQuality) {
-                    "4" -> 4
-                    "3" -> 3
-                    "2" -> 2
-                    else -> 1
-                }.toFloat()
-
-            val get = apolloClient(XtraModule(), gqlClientId).query(
-                CheerEmotesQuery(
-                    Optional.Present(userId),
-                    Optional.Present(animate),
-                    Optional.Present(density.toDouble())
-                )
-            ).execute().data
+            val get = apolloClient(XtraModule(), gqlClientId)
+                .query(CheerEmotesQuery(Optional.Present(userId)))
+                .execute()
+                .data
 
             get?.user?.cheer?.emotes
                 .orEmpty()
@@ -354,8 +341,16 @@ class ApiRepository @Inject constructor(
                                     name = prefix,
                                     minBits = tier.bits,
                                     color = tier.color,
-                                    staticUrls = mapOf(density to url),
-                                    animatedUrls = emptyMap()
+                                    images = tier.images
+                                        .filterNotNull()
+                                        .map { image ->
+                                            CheerEmote.Image(
+                                                theme = image.theme,
+                                                isAnimated = image.isAnimated,
+                                                dpiScale = image.dpiScale.toFloat(),
+                                                url = image.url
+                                            )
+                                        }
                                 )
                             } else {
                                 null

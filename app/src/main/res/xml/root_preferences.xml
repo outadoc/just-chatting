@@ -66,15 +66,6 @@
         android:title="@string/show_clearchat"
         app:iconSpaceReserved="false" />
 
-    <ListPreference
-        android:defaultValue="4"
-        android:entries="@array/imageQualityEntries"
-        android:entryValues="@array/imageQualityValues"
-        android:key="chat_image_quality"
-        android:summary="%s"
-        android:title="@string/image_quality"
-        app:iconSpaceReserved="false" />
-
     <SeekBarPreference
         android:defaultValue="600"
         android:key="chat_limit"

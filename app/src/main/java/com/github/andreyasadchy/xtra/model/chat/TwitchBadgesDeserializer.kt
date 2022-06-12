@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
@@ -15,24 +14,31 @@ class TwitchBadgesDeserializer : JsonDeserializer<TwitchBadgesResponse> {
         typeOfT: Type,
         context: JsonDeserializationContext
     ): TwitchBadgesResponse {
-        val badges = mutableListOf<TwitchBadge>()
-        json.asJsonObject.getAsJsonObject("badge_sets").entrySet().forEach { set ->
-            set.value.asJsonObject.getAsJsonObject("versions").entrySet().forEach { version ->
-                val url = version.value.asJsonObject.get(
-                    when (ChatView.emoteQuality) {
-                        "4" -> ("image_url_4x")
-                        "3" -> ("image_url_4x")
-                        "2" -> ("image_url_2x")
-                        else -> ("image_url_1x")
+        val badges = json.asJsonObject
+            .getAsJsonObject("badge_sets")
+            .entrySet()
+            .flatMap { set ->
+                set.value.asJsonObject
+                    .getAsJsonObject("versions")
+                    .entrySet().map { version ->
+                        val urls = version.value.asJsonObject
+                        TwitchBadge(
+                            id = set.key,
+                            version = version.key,
+                            urls = listOf(
+                                1f to urls.get("image_url_1x").asStringOrNull,
+                                2f to urls.get("image_url_2x").asStringOrNull,
+                                4f to urls.get("image_url_4x").asStringOrNull
+                            ).mapNotNull { (density, url) ->
+                                if (url != null) density to url else null
+                            }.toMap()
+                        )
                     }
-                ).takeUnless { it?.isJsonNull == true }?.asString ?: version.value.asJsonObject.get(
-                    "image_url_2x"
-                ).takeUnless { it?.isJsonNull == true }?.asString ?: version.value.asJsonObject.get(
-                    "image_url_1x"
-                ).asString
-                badges.add(TwitchBadge(set.key, version.key, url))
             }
-        }
+
         return TwitchBadgesResponse(badges)
     }
+
+    private val JsonElement.asStringOrNull: String?
+        get() = takeUnless { it.isJsonNull }?.asString
 }

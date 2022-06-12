@@ -13,7 +13,7 @@ data class PubSubPointReward(
     override val fullMsg: String? = null,
     val rewardTitle: String? = null,
     val rewardCost: Int? = null,
-    val rewardImage: RewardImage? = null,
+    private val rewardImage: RewardImage? = null,
     val timestamp: Long? = null
 ) : ChatMessage {
 
@@ -23,7 +23,7 @@ data class PubSubPointReward(
         val url4: String? = null
     )
 
-    val urlForDensity: Map<Float, String?>
+    private val urlForDensity: Map<Float, String?>
         get() = mapOf(
             1f to rewardImage?.url1,
             2f to rewardImage?.url2,

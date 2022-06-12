@@ -43,8 +43,7 @@ class ChatAdapter(
     private val pickRandomColors: Boolean,
     private val enableTimestamps: Boolean,
     private val firstMsgVisibility: String?,
-    private val animateGifs: Boolean,
-    private val emoteQuality: String
+    private val animateGifs: Boolean
 ) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
@@ -164,9 +163,16 @@ class ChatAdapter(
                 channelBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
                     ?: globalBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
 
-            badge?.url?.let {
+            badge?.getUrl(screenDensity)?.let { badgeUrl ->
                 builder.append("  ")
-                images.add(Image(it, imageIndex++, imageIndex++, false))
+                images.add(
+                    Image(
+                        url = badgeUrl,
+                        start = imageIndex++,
+                        end = imageIndex++,
+                        isEmote = false
+                    )
+                )
                 badgesCount++
             }
         }
@@ -196,16 +202,16 @@ class ChatAdapter(
                 builder.append("$string ")
                 imageIndex += string.length + 1
 
-                val url = when (emoteQuality) {
-                    "4" -> pointReward?.rewardImage?.url4
-                    "3" -> pointReward?.rewardImage?.url4
-                    "2" -> pointReward?.rewardImage?.url2
-                    else -> pointReward?.rewardImage?.url1
-                }
-
-                url?.let {
+                pointReward?.getUrl(screenDensity)?.let { url ->
                     builder.append("  ")
-                    images.add(Image(it, imageIndex++, imageIndex++, false))
+                    images.add(
+                        Image(
+                            url = url,
+                            start = imageIndex++,
+                            end = imageIndex++,
+                            isEmote = false
+                        )
+                    )
                     badgesCount++
                 }
 

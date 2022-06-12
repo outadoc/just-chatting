@@ -1,4 +1,4 @@
-query CheerEmotes($id: ID, $gif: Boolean, $quality: Float) {
+query CheerEmotes($id: ID) {
     user(id: $id) {
         cheer {
             emotes {
@@ -6,7 +6,10 @@ query CheerEmotes($id: ID, $gif: Boolean, $quality: Float) {
                 tiers {
                     bits
                     color
-                    images(isAnimated: $gif, dpiScale: $quality) {
+                    images {
+                        theme
+                        isAnimated
+                        dpiScale
                         url
                     }
                 }

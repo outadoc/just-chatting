@@ -21,18 +21,25 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
             for (tier in i.asJsonObject.get("tiers").asJsonArray) {
                 val minBits = tier.asJsonObject.get("min_bits")
                 val color = tier.asJsonObject.get("color")
-                val images = tier.asJsonObject.get("images").asJsonObject.get("dark").asJsonObject
+                val images = tier.asJsonObject.get("images").asJsonObject
 
-                val staticUrls = images.get("static").takeIf { it.isJsonObject }?.asJsonObject
-                val animatedUrls = images.get("animated").takeIf { it.isJsonObject }?.asJsonObject
+                val darkImages = images
+                    .get("dark")
+                    .takeUnless { it.isJsonNull }
+                    ?.asJsonObject
+
+                val lightImages = images
+                    .get("dark")
+                    .takeUnless { it.isJsonNull }
+                    ?.asJsonObject
 
                 emotes.add(
                     CheerEmote(
                         name = name.asString,
                         minBits = minBits.asInt,
                         color = color.asString,
-                        staticUrls = staticUrls?.toMap().orEmpty(),
-                        animatedUrls = animatedUrls?.toMap().orEmpty()
+                        images = darkImages?.getImages("dark").orEmpty() +
+                            lightImages?.getImages("light").orEmpty()
                     )
                 )
             }
@@ -41,9 +48,27 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
         return CheerEmotesResponse(emotes)
     }
 
-    private fun JsonObject.toMap(): Map<Float, String> {
-        return keySet().associate { key ->
-            key.toFloat() to get(key).asString
+    private fun JsonObject.getImages(theme: String): List<CheerEmote.Image> {
+        val staticUrls = get("static")
+            ?.takeIf { it.isJsonObject }
+            ?.asJsonObject
+
+        val animatedUrls = get("animated")
+            ?.takeIf { it.isJsonObject }
+            ?.asJsonObject
+
+        return staticUrls?.toMap("static", theme).orEmpty() +
+            animatedUrls?.toMap("animated", theme).orEmpty()
+    }
+
+    private fun JsonObject.toMap(animation: String, theme: String): List<CheerEmote.Image> {
+        return keySet().map { key ->
+            CheerEmote.Image(
+                theme = theme,
+                isAnimated = animation == "animated",
+                dpiScale = key.toFloat(),
+                url = get(key).asString
+            )
         }
     }
 }

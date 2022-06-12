@@ -335,7 +335,6 @@ Removes a timeout on a user.</string>
     <string name="redeemed">Redeemed %s</string>
     <string name="user_redeemed">%1$s redeemed %2$s</string>
     <string name="enable_pubsub">Enable PubSub</string>
-    <string name="image_quality">Image quality</string>
     <string name="notification_channel_bubbles_title">Chat bubbles</string>
     <string name="notification_channel_bubbles_message">Used to show the Twitch chat in notification bubbles.</string>
     <string name="notification_channel_bubbles_openPrompt">Open this notification as a bubble.</string>

@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="imageQualityEntries">
-        <item>1x</item>
-        <item>2x</item>
-        <item>3x</item>
-        <item>4x</item>
-    </string-array>
-
-    <string-array name="imageQualityValues">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-    </string-array>
-
     <string-array name="spinnerFollowedEntries">
         <item>@string/live</item>
         <item>@string/channels</item>

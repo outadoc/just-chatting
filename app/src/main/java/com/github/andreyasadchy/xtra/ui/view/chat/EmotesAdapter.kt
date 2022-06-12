@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.Emote
+import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
 
 class EmotesAdapter(
@@ -34,7 +35,15 @@ class EmotesAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val emote = getItem(position)
         (holder.itemView as ImageView).apply {
-            loadImage(context, emote.url, diskCacheStrategy = DiskCacheStrategy.DATA)
+            loadImage(
+                context,
+                emote.getUrl(
+                    animate = ChatView.animateGifs,
+                    screenDensity = context.resources.displayMetrics.density,
+                    isDarkTheme = context.isDarkMode
+                ),
+                diskCacheStrategy = DiskCacheStrategy.DATA
+            )
             setOnClickListener { clickListener.onEmoteClicked(emote) }
         }
     }

@@ -20,8 +20,7 @@ class BttvGlobalDeserializer : JsonDeserializer<BttvGlobalResponse> {
             emotes.add(
                 BttvEmote(
                     id = emote.get("id").asString,
-                    name = emote.get("code").asString,
-                    imageType = emote.get("imageType").asString
+                    name = emote.get("code").asString
                 )
             )
         }

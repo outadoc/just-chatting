@@ -60,7 +60,8 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             val systemMsg = prefixes["system-msg"]?.replace("\\s", " ")
             val msgIndex =
                 messageInfo.indexOf(" ", messageInfo.indexOf("#", messageInfo.indexOf(":") + 1) + 1)
-            if (msgIndex == -1 && userNotice) { // no user message & is user notice
+            if (msgIndex == -1 && userNotice) {
+                // no user message & is user notice
                 return LiveChatMessage(
                     message = systemMsg ?: messageInfo,
                     color = "#999999",
@@ -75,7 +76,8 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     if (messageInfo.substring(msgIndex + 1)
                         .startsWith(":")
                     ) msgIndex + 2 else msgIndex + 1
-                ).let { // from <message>
+                ).let {
+                    // from <message>
                     if (!it.startsWith(MessageListenerImpl.ACTION)) {
                         userMessage = it
                         isAction = false
@@ -84,6 +86,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                         isAction = true
                     }
                 }
+
                 var emotesList: MutableList<TwitchEmote>? = null
                 val emotes = prefixes["emotes"]
                 if (emotes != null) {
@@ -94,14 +97,16 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                             val index = indexes.split("-")
                             emotesList.add(
                                 TwitchEmote(
-                                    emote.key,
-                                    index[0].toInt(),
-                                    index[1].toInt()
+                                    name = emote.key,
+                                    id = emote.key,
+                                    begin = index[0].toInt(),
+                                    end = index[1].toInt()
                                 )
                             )
                         }
                     }
                 }
+
                 var badgesList: MutableList<Badge>? = null
                 val badges = prefixes["badges"]
                 if (badges != null) {
@@ -113,6 +118,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                         }
                     }
                 }
+
                 return LiveChatMessage(
                     id = prefixes["id"],
                     userId = prefixes["user-id"],
@@ -171,6 +177,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                 if (userIndex != -1) messageInfo.substring(userIndex + 1) else if (index2 != -1) messageInfo.substring(
                     index2 + 1
                 ) else null
+
             val type = if (user == null) {
                 "clearchat"
             } else {
@@ -180,6 +187,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     "ban"
                 }
             }
+
             return LiveChatMessage(
                 message = when (type) {
                     "clearchat" -> context.getString(R.string.chat_clear)
@@ -211,6 +219,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
         val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
         val msg = messageInfo.substring(if (msgIndex != -1) msgIndex + 1 else index2 + 1)
         val lang = Locale.getDefault().language
+
         return LiveChatMessage(
             message = if (lang == "ar" || lang == "es" || lang == "ja" || lang == "pt" || lang == "ru") {
                 TwitchApiHelper.getNoticeString(context, msgId, msg) ?: msg
@@ -221,50 +230,6 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             isAction = true,
             fullMsg = message
         )
-    }
-
-    private fun onUserNotice(context: Context, message: String): LiveChatMessage? {
-        if (context.prefs().getBoolean(C.CHAT_SHOW_USERNOTICE, true)) {
-            val parts = message.substring(1).split(" ".toRegex(), 2)
-            val prefix = parts[0]
-            val prefixes = splitAndMakeMap(prefix, ";", "=")
-            val system = prefixes["system-msg"]?.replace("\\s", " ")
-            val messageInfo = parts[1]
-            val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
-            val index2 = messageInfo.indexOf(" ", messageInfo.indexOf("#") + 1)
-            val msg =
-                if (msgIndex != -1) messageInfo.substring(msgIndex + 1) else if (index2 != -1) messageInfo.substring(
-                    index2 + 1
-                ) else null
-            var emotesList: MutableList<TwitchEmote>? = null
-            val emotes = prefixes["emotes"]
-            if (emotes != null && system != null && msg != null) {
-                val entries = splitAndMakeMap(emotes, "/", ":").entries
-                emotesList = ArrayList(entries.size)
-                entries.forEach { emote ->
-                    emote.value?.split(",")?.forEach { indexes ->
-                        val index = indexes.split("-")
-                        emotesList.add(
-                            TwitchEmote(
-                                emote.key,
-                                index[0].toInt() + system.length + 1,
-                                index[1].toInt() + system.length + 1
-                            )
-                        )
-                    }
-                }
-            }
-            return LiveChatMessage(
-                message = if (system != null) if (msg != null) "$system $msg" else system else msg,
-                color = "#999999",
-                isAction = true,
-                emotes = emotesList,
-                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
-                fullMsg = message
-            )
-        } else {
-            return null
-        }
     }
 
     private fun splitAndMakeMap(

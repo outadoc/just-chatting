@@ -8,12 +8,16 @@ import androidx.room.PrimaryKey
 class RecentEmote(
     @PrimaryKey
     override val name: String,
-    override val url: String,
+    val url: String,
     @ColumnInfo(name = "used_at")
     val usedAt: Long
 ) : Emote() {
 
     companion object {
         const val MAX_SIZE = 50
+    }
+
+    override fun getUrl(animate: Boolean, screenDensity: Float, isDarkTheme: Boolean): String {
+        return url
     }
 }

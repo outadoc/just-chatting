@@ -61,9 +61,10 @@ class MessageListenerImpl(
                             val index = indexes.split("-")
                             emotesList.add(
                                 TwitchEmote(
-                                    emote.key,
-                                    index[0].toInt(),
-                                    index[1].toInt()
+                                    name = emote.key,
+                                    id = emote.key,
+                                    begin = index[0].toInt(),
+                                    end = index[1].toInt()
                                 )
                             )
                         }

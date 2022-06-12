@@ -20,6 +20,7 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
+import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView.Companion.MAX_ADAPTER_COUNT
 import com.github.andreyasadchy.xtra.util.SingleLiveEvent
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
@@ -292,11 +293,14 @@ class ChatViewModel @Inject constructor(
             _otherEmotes.postValue(list)
 
             try {
-                val get =
-                    repository.loadCheerEmotes(channelId, helixClientId, helixToken, gqlClientId)
-                if (get != null) {
-                    cheerEmotes.postValue(get!!)
-                }
+                cheerEmotes.postValue(
+                    repository.loadCheerEmotes(
+                        userId = channelId,
+                        helixClientId = helixClientId,
+                        helixToken = helixToken,
+                        gqlClientId = gqlClientId
+                    )
+                )
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load cheermotes for channel $channelId", e)
             }
@@ -346,11 +350,11 @@ class ChatViewModel @Inject constructor(
             val currentTime = System.currentTimeMillis()
 
             message.split(' ').forEach { word ->
-                allEmotesMap[word]?.let {
+                allEmotesMap[word]?.let { emote ->
                     usedEmotes.add(
                         RecentEmote(
                             name = word,
-                            url = it.url,
+                            url = emote.getUrl(animate = ChatView.animateGifs),
                             usedAt = currentTime
                         )
                     )

@@ -22,4 +22,18 @@ data class PubSubPointReward(
         val url2: String? = null,
         val url4: String? = null
     )
+
+    val urlForDensity: Map<Float, String?>
+        get() = mapOf(
+            1f to rewardImage?.url1,
+            2f to rewardImage?.url2,
+            4f to rewardImage?.url4,
+        )
+
+    fun getUrl(screenDensity: Float): String? {
+        return urlForDensity
+            .toList()
+            .minByOrNull { density -> screenDensity - density.first }
+            ?.second
+    }
 }

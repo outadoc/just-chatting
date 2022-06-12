@@ -318,47 +318,51 @@ class ApiRepository @Inject constructor(
         gqlClientId: String?
     ): List<CheerEmote>? = withContext(Dispatchers.IO) {
         try {
-            val emotes = mutableListOf<CheerEmote>()
+            val animate = false
+            val density: Float =
+                when (ChatView.emoteQuality) {
+                    "4" -> 4
+                    "3" -> 3
+                    "2" -> 2
+                    else -> 1
+                }.toFloat()
+
             val get = apolloClient(XtraModule(), gqlClientId).query(
                 CheerEmotesQuery(
                     Optional.Present(userId),
-                    Optional.Present(ChatView.animateGifs),
-                    Optional.Present(
-                        (
-                            when (ChatView.emoteQuality) {
-                                "4" -> 4
-                                "3" -> 3
-                                "2" -> 2
-                                else -> 1
-                            }
-                            ).toDouble()
-                    )
+                    Optional.Present(animate),
+                    Optional.Present(density.toDouble())
                 )
             ).execute().data
-            if (get?.user?.cheer?.emotes != null) {
-                for (i in get.user.cheer.emotes) {
-                    if (i?.tiers != null) {
-                        for (tier in i.tiers) {
-                            i.prefix?.let {
-                                tier?.bits?.let { it1 ->
-                                    tier.images?.first()?.url?.let { it2 ->
-                                        emotes.add(
-                                            CheerEmote(
-                                                name = it,
-                                                minBits = it1,
-                                                color = tier.color,
-                                                type = if (ChatView.animateGifs) "image/gif" else "image/png",
-                                                url = it2
-                                            )
-                                        )
-                                    }
-                                }
-                            }
-                        }
+
+            get?.user?.cheer?.emotes
+                .orEmpty()
+                .filterNotNull()
+                .mapNotNull { emote ->
+                    if (emote.tiers != null && emote.prefix != null) {
+                        emote.tiers to emote.prefix
+                    } else {
+                        null
                     }
                 }
-            }
-            emotes.ifEmpty { null }
+                .flatMap { (tiers, prefix) ->
+                    tiers.filterNotNull()
+                        .mapNotNull { tier ->
+                            val url = tier.images?.first()?.url
+                            if (tier.bits != null && url != null) {
+                                CheerEmote(
+                                    name = prefix,
+                                    minBits = tier.bits,
+                                    color = tier.color,
+                                    staticUrls = mapOf(density to url),
+                                    animatedUrls = emptyMap()
+                                )
+                            } else {
+                                null
+                            }
+                        }
+                }
+                .ifEmpty { null }
         } catch (e: Exception) {
             helix.getCheerEmotes(
                 helixClientId,

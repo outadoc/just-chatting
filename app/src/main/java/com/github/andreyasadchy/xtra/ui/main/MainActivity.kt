@@ -186,7 +186,7 @@ class MainActivity :
     }
 
     override fun onBackPressed() {
-        if (!fragNavController.popFragment()) {
+        if (fragNavController.isRootFragment || !fragNavController.popFragment()) {
             super.onBackPressed()
         }
     }

@@ -30,6 +30,7 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.hideKeyboard
+import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.showKeyboard
 import kotlinx.android.extensions.LayoutContainer
@@ -384,7 +385,11 @@ class ChatInputView : LinearLayout {
                         containerView.tag = this
                         containerView.image.loadImage(
                             context,
-                            item.emote.url,
+                            item.emote.getUrl(
+                                animate = ChatView.animateGifs,
+                                screenDensity = context.resources.displayMetrics.density,
+                                isDarkTheme = context.isDarkMode
+                            ),
                             diskCacheStrategy = DiskCacheStrategy.DATA
                         )
                         containerView.name.text = item.emote.name

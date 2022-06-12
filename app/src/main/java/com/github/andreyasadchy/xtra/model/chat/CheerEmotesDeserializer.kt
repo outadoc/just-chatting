@@ -1,9 +1,9 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import java.lang.reflect.Type
 
@@ -22,29 +22,28 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
                 val minBits = tier.asJsonObject.get("min_bits")
                 val color = tier.asJsonObject.get("color")
                 val images = tier.asJsonObject.get("images").asJsonObject.get("dark").asJsonObject
-                val animated = ChatView.animateGifs && images.toString().contains("animated")
-                val urls = images.get(if (animated) "animated" else "static").asJsonObject
-                val url = urls.get(
-                    when (ChatView.emoteQuality) {
-                        "4" -> ("4")
-                        "3" -> ("3")
-                        "2" -> ("2")
-                        else -> ("1")
-                    }
-                ).takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("3")
-                    .takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("2")
-                    .takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("1").asString
+
+                val staticUrls = images.get("static").takeIf { it.isJsonObject }?.asJsonObject
+                val animatedUrls = images.get("animated").takeIf { it.isJsonObject }?.asJsonObject
+
                 emotes.add(
                     CheerEmote(
                         name = name.asString,
                         minBits = minBits.asInt,
                         color = color.asString,
-                        type = if (animated) "image/gif" else "image/png",
-                        url = url
+                        staticUrls = staticUrls?.toMap().orEmpty(),
+                        animatedUrls = animatedUrls?.toMap().orEmpty()
                     )
                 )
             }
         }
+
         return CheerEmotesResponse(emotes)
+    }
+
+    private fun JsonObject.toMap(): Map<Float, String> {
+        return keySet().associate { key ->
+            key.toFloat() to get(key).asString
+        }
     }
 }

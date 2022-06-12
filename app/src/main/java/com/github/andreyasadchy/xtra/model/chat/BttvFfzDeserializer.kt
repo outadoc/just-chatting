@@ -1,9 +1,9 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
+import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import java.lang.reflect.Type
 
@@ -19,23 +19,23 @@ class BttvFfzDeserializer : JsonDeserializer<BttvFfzResponse> {
         for (i in 0 until json.asJsonArray.size()) {
             val emote = json.asJsonArray.get(i).asJsonObject
             val urls = emote.getAsJsonObject("images")
-            val url = urls.get(
-                when (ChatView.emoteQuality) {
-                    "4" -> ("4x")
-                    "3" -> ("2x")
-                    "2" -> ("2x")
-                    else -> ("1x")
-                }
-            ).takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("2x")
-                .takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("1x").asString
+
             emotes.add(
                 FfzEmote(
                     name = emote.get("code").asString,
-                    url = url,
-                    type = "image/" + emote.get("imageType").asString
+                    urls = urls.toMap()
                 )
             )
         }
         return BttvFfzResponse(emotes)
+    }
+
+    private fun JsonObject.toMap(): Map<Float, String> {
+        return keySet()
+            .mapNotNull { key ->
+                val url = get(key).takeUnless { it.isJsonNull }?.asString
+                if (url != null) key.trimEnd('x').toFloat() to url else null
+            }
+            .toMap()
     }
 }

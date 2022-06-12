@@ -35,6 +35,7 @@ import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.isDarkMode
 import kotlin.collections.set
 
 class ChatAdapter(
@@ -54,6 +55,8 @@ class ChatAdapter(
             }
             field = value
         }
+
+    private val screenDensity get() = context.resources.displayMetrics.density
 
     private val badgeSize = context.resources.getDimensionPixelSize(R.dimen.chat_badgeSize)
     private val emoteSize = context.resources.getDimensionPixelSize(R.dimen.chat_emoteSize)
@@ -130,16 +133,9 @@ class ChatAdapter(
             builder.append("$string ")
             imageIndex += string.length + 1
 
-            val url = when (emoteQuality) {
-                "4" -> pointReward?.rewardImage?.url4
-                "3" -> pointReward?.rewardImage?.url4
-                "2" -> pointReward?.rewardImage?.url2
-                else -> pointReward?.rewardImage?.url1
-            }
-
-            url?.let {
+            pointReward?.getUrl(screenDensity)?.let { url ->
                 builder.append("  ")
-                images.add(Image(it, imageIndex++, imageIndex++, false))
+                images.add(Image(url, imageIndex++, imageIndex++, false))
                 badgesCount++
             }
 
@@ -272,7 +268,13 @@ class ChatAdapter(
                     } else {
                         it.end + realBegin - it.begin
                     }
-                    TwitchEmote(it.name, realBegin, realEnd)
+
+                    TwitchEmote(
+                        name = it.name,
+                        id = it.id,
+                        begin = realBegin,
+                        end = realEnd
+                    )
                 }
 
                 imageIndex += userNameWithPostfixLength
@@ -299,14 +301,17 @@ class ChatAdapter(
                     e.end -= length
                 }
 
-                copy.forEach {
+                copy.forEach { emote ->
                     images.add(
                         Image(
-                            it.url,
-                            imageIndex + it.begin,
-                            imageIndex + it.end + 1,
-                            true,
-                            "image/gif"
+                            url = emote.getUrl(
+                                animate = animateGifs,
+                                screenDensity = screenDensity,
+                                isDarkTheme = context.isDarkMode
+                            ),
+                            start = imageIndex + emote.begin,
+                            end = imageIndex + emote.end + 1,
+                            isEmote = true
                         )
                     )
                 }
@@ -397,11 +402,14 @@ class ChatAdapter(
 
                     images.add(
                         Image(
-                            url = emote.url,
+                            url = emote.getUrl(
+                                animate = animateGifs,
+                                screenDensity = screenDensity,
+                                isDarkTheme = context.isDarkMode
+                            ),
                             start = builderIndex,
                             end = builderIndex + 1,
-                            isEmote = true,
-                            type = emote.type
+                            isEmote = true
                         )
                     )
 

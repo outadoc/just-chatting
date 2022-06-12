@@ -79,10 +79,9 @@ class ChatView : ConstraintLayout {
             context = context,
             pickRandomColors = context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
             enableTimestamps = context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
-            timestampFormat = context.prefs().getString(C.CHAT_TIMESTAMP_FORMAT, "0"),
             firstMsgVisibility = context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0"),
-            emoteQuality = emoteQuality,
-            animateGifs = animateGifs
+            animateGifs = animateGifs,
+            emoteQuality = emoteQuality
         )
 
         adapter.setOnClickListener { original, formatted, userId, fullMsg ->

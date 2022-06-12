@@ -3,7 +3,6 @@ package com.github.andreyasadchy.xtra.ui.settings
 import android.app.Activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
@@ -11,7 +10,6 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.ui.settings.api.DragListFragment
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.applyTheme
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -23,11 +21,10 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
-    var recreate = false
+    private var recreate = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        applyTheme()
         setContentView(R.layout.activity_settings)
 
         toolbar.setNavigationIcon(R.drawable.ic_back)
@@ -67,16 +64,9 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
-            val activity = requireActivity()
+
             val changeListener = Preference.OnPreferenceChangeListener { _, _ ->
                 setResult()
-                true
-            }
-
-            findPreference<ListPreference>(C.UI_LANGUAGE)?.setOnPreferenceChangeListener { _, _ ->
-                (activity as? SettingsActivity)?.recreate = true
-                changed = true
-                activity.recreate()
                 true
             }
 

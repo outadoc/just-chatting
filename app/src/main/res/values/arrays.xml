@@ -19,26 +19,16 @@
         <item>@string/channels</item>
     </string-array>
 
-    <string-array name="languageEntries">
-        <item>@string/lang_auto</item>
-        <item>@string/lang_en</item>
-    </string-array>
-
-    <string-array name="language">
-        <item>auto</item>
-        <item>en</item>
-    </string-array>
-
-    <string-array name="loginApiValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-    </string-array>
-
     <string-array name="chatFirstMsgEntries">
         <item>@string/chatFirstMsgEntries1</item>
         <item>@string/chatFirstMsgEntries2</item>
         <item>@string/chatFirstMsgEntries3</item>
+    </string-array>
+
+    <string-array name="chatFirstMsgEntriesValues">
+        <item>@string/pref_chatFirstMsg_value_default</item>
+        <item>@string/pref_chatFirstMsg_value_background</item>
+        <item>@string/pref_chatFirstMsg_value_normal</item>
     </string-array>
 
     <string-array name="loginApiEntries">
@@ -47,26 +37,10 @@
         <item>Helix</item>
     </string-array>
 
-    <string-array name="timestampEntries">
-        <item>@string/timestamp_format_0</item>
-        <item>@string/timestamp_format_1</item>
-        <item>@string/timestamp_format_2</item>
-        <item>@string/timestamp_format_3</item>
-        <item>@string/timestamp_format_4</item>
-        <item>@string/timestamp_format_5</item>
-        <item>@string/timestamp_format_6</item>
-        <item>@string/timestamp_format_7</item>
-    </string-array>
-
-    <string-array name="timestampValues">
-        <item>0</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item>5</item>
-        <item>6</item>
-        <item>7</item>
+    <string-array name="loginApiValues">
+        <item>@string/pref_loginApi_value_both</item>
+        <item>@string/pref_loginApi_value_gql</item>
+        <item>@string/pref_loginApi_value_helix</item>
     </string-array>
 
     <array name="randomChatColors">

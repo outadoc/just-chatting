@@ -10,7 +10,6 @@ import androidx.preference.PreferenceManager
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.applyTheme
 import com.github.andreyasadchy.xtra.util.prefs
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -54,7 +53,5 @@ open class BaseActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
                 putBoolean(C.FIRST_LAUNCH1, false)
             }
         }
-
-        applyTheme()
     }
 }

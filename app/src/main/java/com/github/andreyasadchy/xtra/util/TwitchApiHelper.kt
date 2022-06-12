@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.util
 
 import android.content.Context
+import android.text.format.DateFormat
 import android.text.format.DateUtils
 import androidx.core.util.Pair
 import com.github.andreyasadchy.xtra.R
@@ -78,17 +79,6 @@ object TwitchApiHelper {
         }
     }
 
-    fun getUserType(context: Context, type: String?): String? {
-        return when (type?.lowercase()) {
-            "partner" -> context.getString(R.string.user_partner)
-            "affiliate" -> context.getString(R.string.user_affiliate)
-            "staff" -> context.getString(R.string.user_staff)
-            "admin" -> context.getString(R.string.user_admin)
-            "global_mod" -> context.getString(R.string.user_global_mod)
-            else -> null
-        }
-    }
-
     fun getDurationFromSeconds(context: Context, input: String?, text: Boolean = true): String? {
         if (input != null) {
             val duration = try {
@@ -132,18 +122,8 @@ object TwitchApiHelper {
         } else null
     }
 
-    fun getTimestamp(input: Long, timestampFormat: String?): String? {
-        val pattern = when (timestampFormat) {
-            "0" -> "H:mm"
-            "1" -> "HH:mm"
-            "2" -> "H:mm:ss"
-            "3" -> "HH:mm:ss"
-            "4" -> "h:mm a"
-            "5" -> "hh:mm a"
-            "6" -> "h:mm:ss a"
-            else -> "hh:mm:ss a"
-        }
-        val format = SimpleDateFormat(pattern, Locale.getDefault())
+    fun getTimestamp(context: Context, input: Long): String? {
+        val format = DateFormat.getTimeFormat(context)
         return try {
             format.format(Date(input))
         } catch (e: Exception) {
@@ -170,7 +150,7 @@ object TwitchApiHelper {
         return parseIso8601Date(iso8601date)?.let { formatTime(context, it) }
     }
 
-    fun formatTime(context: Context, date: Long): String {
+    private fun formatTime(context: Context, date: Long): String {
         val year = Calendar.getInstance().let {
             it.timeInMillis = date
             it.get(Calendar.YEAR)

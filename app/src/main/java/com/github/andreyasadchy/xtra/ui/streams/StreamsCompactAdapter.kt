@@ -28,6 +28,7 @@ class StreamsCompactAdapter(
             } else {
                 viewers.isVisible = false
             }
+
             if (item.type != null) {
                 val text = TwitchApiHelper.getType(context, item.type)
                 if (text != null) {
@@ -39,6 +40,7 @@ class StreamsCompactAdapter(
             } else {
                 type.isVisible = false
             }
+
             if (item.started_at != null) {
                 val text = TwitchApiHelper.getUptime(context = context, input = item.started_at)
                 if (text != null) {
@@ -50,6 +52,7 @@ class StreamsCompactAdapter(
             } else {
                 uptime.isVisible = false
             }
+
             if (item.tags != null && context.prefs().getBoolean(C.UI_TAGS, true)) {
                 tagsLayout.removeAllViews()
                 tagsLayout.isVisible = true

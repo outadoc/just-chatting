@@ -2,7 +2,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <ListPreference
-        android:defaultValue="0"
+        android:defaultValue="@string/pref_loginApi_value_both"
         android:entries="@array/loginApiEntries"
         android:entryValues="@array/loginApiValues"
         android:key="api_login"
@@ -15,31 +15,31 @@
         android:key="helix_client_id"
         android:maxLines="1"
         android:title="@string/api_helix"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
 
     <EditTextPreference
         android:defaultValue="https://localhost"
         android:key="helix_redirect"
         android:maxLines="1"
         android:title="@string/api_helix_redirect"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
 
     <EditTextPreference
         android:defaultValue="kimne78kx3ncx6brgo4mv6wki5h1ko"
         android:key="gql_client_id"
         android:maxLines="1"
         android:title="@string/api_gql"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
 
     <EditTextPreference
         android:defaultValue="https://www.twitch.tv/"
         android:key="gql_redirect"
         android:maxLines="1"
         android:title="@string/api_gql_redirect"
-        app:useSimpleSummaryProvider="true"
-        app:iconSpaceReserved="false" />
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
 
 </androidx.preference.PreferenceScreen>

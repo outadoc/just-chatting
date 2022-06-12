@@ -4,14 +4,6 @@
     <PreferenceCategory
         android:title="@string/settings_ui"
         app:iconSpaceReserved="false" />
-    <ListPreference
-        android:defaultValue="auto"
-        android:entries="@array/languageEntries"
-        android:entryValues="@array/language"
-        android:key="ui_language"
-        android:summary="%s"
-        android:title="@string/language"
-        app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
         android:defaultValue="false"
@@ -48,18 +40,9 @@
         app:iconSpaceReserved="false" />
 
     <ListPreference
-        android:defaultValue="0"
-        android:entries="@array/timestampEntries"
-        android:entryValues="@array/timestampValues"
-        android:key="chat_timestamp_format"
-        android:summary="%s"
-        android:title="@string/timestamp_format"
-        app:iconSpaceReserved="false" />
-
-    <ListPreference
-        android:defaultValue="0"
+        android:defaultValue="@string/pref_chatFirstMsg_value_default"
         android:entries="@array/chatFirstMsgEntries"
-        android:entryValues="@array/loginApiValues"
+        android:entryValues="@array/chatFirstMsgEntriesValues"
         android:key="chat_firstmsg_visibility"
         android:summary="%s"
         android:title="@string/chat_firstmsg_visibility"

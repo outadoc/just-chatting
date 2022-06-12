@@ -55,7 +55,6 @@
     <string name="ascending">Ascending</string>
     <string name="logout_title">Log out?</string>
     <string name="logout_msg">Logged in as %s</string>
-    <string name="language">Language</string>
     <string name="truncated_view_counts">Truncated view counts</string>
     <string name="randomcolor">Random color for users without color</string>
     <string name="message_limit">Message limit</string>
@@ -106,7 +105,7 @@
     <string name="recentMsg_enable">Load recent messages</string>
     <string name="recentMsg_limit">Recent message limit</string>
     <string name="last_broadcast_date">Last broadcast %s</string>
-    <string name="followed_at">Followed at %s</string>
+    <string name="followed_at">Following since %s</string>
     <string name="show_usernotice">Show user notices (subs, raids)</string>
     <string name="show_clearmsg">Show deletions of single messages</string>
     <string name="show_clearchat">Show timeouts and bans</string>
@@ -337,8 +336,6 @@ Removes a timeout on a user.</string>
     <string name="user_redeemed">%1$s redeemed %2$s</string>
     <string name="enable_pubsub">Enable PubSub</string>
     <string name="image_quality">Image quality</string>
-    <string name="lang_auto">System default</string>
-    <string name="lang_en">English</string>
     <string name="notification_channel_bubbles_title">Chat bubbles</string>
     <string name="notification_channel_bubbles_message">Used to show the Twitch chat in notification bubbles.</string>
     <string name="notification_channel_bubbles_openPrompt">Open this notification as a bubble.</string>

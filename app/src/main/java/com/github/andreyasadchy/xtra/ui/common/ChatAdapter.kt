@@ -41,7 +41,6 @@ class ChatAdapter(
     private val context: Context,
     private val pickRandomColors: Boolean,
     private val enableTimestamps: Boolean,
-    private val timestampFormat: String?,
     private val firstMsgVisibility: String?,
     private val animateGifs: Boolean,
     private val emoteQuality: String
@@ -148,9 +147,10 @@ class ChatAdapter(
             imageIndex += (pointReward?.rewardCost?.toString()?.length ?: 0) + 1
         }
 
-        val timestamp =
-            liveMessage?.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) }
-                ?: pointReward?.timestamp?.let { TwitchApiHelper.getTimestamp(it, timestampFormat) }
+        val timestamp: String? =
+            (liveMessage?.timestamp ?: pointReward?.timestamp)?.let { timestamp ->
+                TwitchApiHelper.getTimestamp(context, timestamp)
+            }
 
         if (enableTimestamps && timestamp != null) {
             builder.append("$timestamp ")

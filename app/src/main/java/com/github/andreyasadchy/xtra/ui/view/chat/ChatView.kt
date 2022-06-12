@@ -27,7 +27,6 @@ import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.Command
-import com.github.andreyasadchy.xtra.util.convertDpToPixels
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.view_chat.view.btnDown
 import kotlinx.android.synthetic.main.view_chat.view.recyclerView
@@ -78,16 +77,10 @@ class ChatView : ConstraintLayout {
 
         adapter = ChatAdapter(
             context = context,
-            emoteSize = context.convertDpToPixels(29.5f),
-            badgeSize = context.convertDpToPixels(18.5f),
             pickRandomColors = context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
             enableTimestamps = context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
             timestampFormat = context.prefs().getString(C.CHAT_TIMESTAMP_FORMAT, "0"),
             firstMsgVisibility = context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0"),
-            firstChatMsg = context.getString(R.string.chat_first),
-            rewardChatMsg = context.getString(R.string.chat_reward),
-            redeemedChatMsg = context.getString(R.string.redeemed),
-            redeemedNoMsg = context.getString(R.string.user_redeemed),
             emoteQuality = emoteQuality,
             animateGifs = animateGifs
         )

@@ -19,6 +19,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.text.getSpans
 import androidx.core.view.children
 import androidx.recyclerview.widget.RecyclerView
@@ -38,16 +39,10 @@ import kotlin.collections.set
 
 class ChatAdapter(
     private val context: Context,
-    private val emoteSize: Int,
-    private val badgeSize: Int,
     private val pickRandomColors: Boolean,
     private val enableTimestamps: Boolean,
     private val timestampFormat: String?,
     private val firstMsgVisibility: String?,
-    private val firstChatMsg: String,
-    private val rewardChatMsg: String,
-    private val redeemedChatMsg: String,
-    private val redeemedNoMsg: String,
     private val animateGifs: Boolean,
     private val emoteQuality: String
 ) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
@@ -61,25 +56,17 @@ class ChatAdapter(
             field = value
         }
 
-    private val twitchColors = intArrayOf(
-        -65536,
-        -16776961,
-        -16744448,
-        -5103070,
-        -32944,
-        -6632142,
-        -47872,
-        -13726889,
-        -2448096,
-        -2987746,
-        -10510688,
-        -14774017,
-        -38476,
-        -7722014,
-        -16711809
-    )
+    private val badgeSize = context.resources.getDimensionPixelSize(R.dimen.chat_badgeSize)
+    private val emoteSize = context.resources.getDimensionPixelSize(R.dimen.chat_emoteSize)
+    private val scaledEmoteSize = (emoteSize * 0.78f).toInt()
 
-    private val noColor = -10066329
+    private val randomChatColors = context.resources.getIntArray(R.array.randomChatColors)
+    private val defaultChatColor = ContextCompat.getColor(context, R.color.chatUserColorFallback)
+
+    private val firstChatMsg = context.getString(R.string.chat_first)
+    private val rewardChatMsg = context.getString(R.string.chat_reward)
+    private val redeemedChatMsg = context.getString(R.string.redeemed)
+    private val redeemedNoMsg = context.getString(R.string.user_redeemed)
 
     private val userColors = HashMap<String, Int>()
     private val savedColors = HashMap<String, Int>()
@@ -88,7 +75,6 @@ class ChatAdapter(
     private val emotes = HashMap<String, Emote>()
     private var cheerEmotes: List<CheerEmote>? = null
     private var loggedInUser: String? = null
-    private val scaledEmoteSize = (emoteSize * 0.78f).toInt()
 
     fun interface OnMessageClickListener {
         fun onMessageClick(
@@ -582,7 +568,7 @@ class ChatAdapter(
     }
 
     private fun getRandomColor(): Int =
-        if (pickRandomColors) twitchColors.random() else noColor
+        if (pickRandomColors) randomChatColors.random() else defaultChatColor
 
     private fun calculateEmoteSize(resource: Drawable): Pair<Int, Int> {
         val widthRatio = resource.intrinsicWidth.toFloat() / resource.intrinsicHeight.toFloat()

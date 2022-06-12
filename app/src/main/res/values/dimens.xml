@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <dimen name="design_bottom_navigation_text_size" tools:override="true">10sp</dimen>
-    <dimen name="design_bottom_navigation_active_text_size" tools:override="true">10sp</dimen>
+<resources>
     <dimen name="divider_margin">8dp</dimen>
+    <dimen name="chat_emoteSize">29.5dp</dimen>
+    <dimen name="chat_badgeSize">18.5dp</dimen>
 </resources>

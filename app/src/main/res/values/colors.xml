@@ -4,4 +4,23 @@
     <color name="chatMessageReward">#800E4C68</color>
     <color name="chatMessageNotice">#803E0E68</color>
     <color name="chatMessageMention">#80680E0E</color>
+
+    <color name="chatUserColor0">#FF0000</color>
+    <color name="chatUserColor1">#0000FF</color>
+    <color name="chatUserColor2">#008000</color>
+    <color name="chatUserColor3">#B22222</color>
+    <color name="chatUserColor4">#FF7F50</color>
+    <color name="chatUserColor5">#9ACD32</color>
+    <color name="chatUserColor6">#FF4500</color>
+    <color name="chatUserColor7">#2E8B57</color>
+    <color name="chatUserColor8">#DAA520</color>
+    <color name="chatUserColor9">#D2691E</color>
+    <color name="chatUserColor10">#5F9EA0</color>
+    <color name="chatUserColor11">#1E90FF</color>
+    <color name="chatUserColor12">#FF69B4</color>
+    <color name="chatUserColor13">#8A2BE2</color>
+    <color name="chatUserColor14">#00FF7F</color>
+
+    <color name="chatUserColorFallback">#666667</color>
+
 </resources>

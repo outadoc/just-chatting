@@ -36,11 +36,11 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
                     .takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("1").asString
                 emotes.add(
                     CheerEmote(
-                        name.asString,
-                        minBits.asInt,
-                        color.asString,
-                        if (animated) "image/gif" else "image/png",
-                        url
+                        name = name.asString,
+                        minBits = minBits.asInt,
+                        color = color.asString,
+                        type = if (animated) "image/gif" else "image/png",
+                        url = url
                     )
                 )
             }

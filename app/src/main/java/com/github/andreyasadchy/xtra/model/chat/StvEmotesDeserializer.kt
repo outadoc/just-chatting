@@ -34,10 +34,10 @@ class StvEmotesDeserializer : JsonDeserializer<StvEmotesResponse> {
 
             emotes.add(
                 StvEmote(
-                    emote.get("name").asString,
-                    emote.get("mime").asString,
-                    url.asString,
-                    isZeroWidth
+                    name = emote.get("name").asString,
+                    type = emote.get("mime").asString,
+                    url = url.asString,
+                    isZeroWidth = isZeroWidth
                 )
             )
         }

@@ -22,9 +22,9 @@ class BttvChannelDeserializer : JsonDeserializer<BttvChannelResponse> {
                     val emote = value.asJsonArray.get(i).asJsonObject
                     emotes.add(
                         BttvEmote(
-                            emote.get("id").asString,
-                            emote.get("code").asString,
-                            emote.get("imageType").asString
+                            id = emote.get("id").asString,
+                            name = emote.get("code").asString,
+                            imageType = emote.get("imageType").asString
                         )
                     )
                 }

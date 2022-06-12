@@ -30,9 +30,9 @@ class BttvFfzDeserializer : JsonDeserializer<BttvFfzResponse> {
                 .takeUnless { it?.isJsonNull == true }?.asString ?: urls.get("1x").asString
             emotes.add(
                 FfzEmote(
-                    emote.get("code").asString,
-                    url,
-                    "image/" + emote.get("imageType").asString
+                    name = emote.get("code").asString,
+                    url = url,
+                    type = "image/" + emote.get("imageType").asString
                 )
             )
         }

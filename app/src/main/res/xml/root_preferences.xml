@@ -59,7 +59,7 @@
     <ListPreference
         android:defaultValue="0"
         android:entries="@array/chatFirstMsgEntries"
-        android:entryValues="@array/miscValues"
+        android:entryValues="@array/loginApiValues"
         android:key="chat_firstmsg_visibility"
         android:summary="%s"
         android:title="@string/chat_firstmsg_visibility"

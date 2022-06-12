@@ -29,7 +29,7 @@
         <item>en</item>
     </string-array>
 
-    <string-array name="miscValues">
+    <string-array name="loginApiValues">
         <item>0</item>
         <item>1</item>
         <item>2</item>

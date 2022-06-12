@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.chat.Emote
-import com.github.andreyasadchy.xtra.ui.chat.ChannelChatFragment
 import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.view.GridAutofitLayoutManager
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
@@ -25,7 +24,7 @@ import javax.inject.Inject
 
 class EmotesFragment : Fragment(), Injectable {
 
-    private lateinit var listener: (Emote) -> Unit
+    private var listener: OnEmoteClickedListener? = null
     private lateinit var layoutManager: GridAutofitLayoutManager
 
     @Inject
@@ -35,7 +34,7 @@ class EmotesFragment : Fragment(), Injectable {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        listener = (requireParentFragment() as ChannelChatFragment)::appendEmote
+        listener = parentFragment as? OnEmoteClickedListener
     }
 
     override fun onCreateView(
@@ -48,17 +47,23 @@ class EmotesFragment : Fragment(), Injectable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         val context = requireContext()
         val args = requireArguments()
-        val emotesAdapter = EmotesAdapter(listener)
+
+        val emotesAdapter = EmotesAdapter(clickListener = { emote ->
+            listener?.onEmoteClicked(emote)
+        })
+
         with(view as RecyclerView) {
             itemAnimator = null
             adapter = emotesAdapter
             layoutManager = GridAutofitLayoutManager(
-                context,
-                context.convertDpToPixels(50f)
+                context = context,
+                columnWidth = context.convertDpToPixels(50f)
             ).also { this@EmotesFragment.layoutManager = it }
         }
+
         val observer: Observer<List<Emote>> = Observer(emotesAdapter::submitList)
         when (args.getInt(KEY_POSITION)) {
             0 -> viewModel.recentEmotes.observe(viewLifecycleOwner, observer)

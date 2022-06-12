@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.ui.streams
 
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
@@ -13,9 +12,9 @@ import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.us
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.username
 
 abstract class BaseStreamsAdapter(
-    protected val fragment: Fragment,
     private val clickListener: BaseStreamsFragment.OnStreamSelectedListener
 ) : BasePagedListAdapter<Stream>(
+
     object : DiffUtil.ItemCallback<Stream>() {
         override fun areItemsTheSame(oldItem: Stream, newItem: Stream): Boolean =
             oldItem.id == newItem.id

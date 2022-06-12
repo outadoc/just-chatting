@@ -9,9 +9,9 @@ import androidx.fragment.app.viewModels
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
+import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
-import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.search.Searchable
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
@@ -27,10 +27,7 @@ class ChannelSearchFragment :
 
     override val viewModel by viewModels<ChannelSearchViewModel> { viewModelFactory }
     override val adapter: BasePagedListAdapter<ChannelSearch> by lazy {
-        ChannelSearchAdapter(
-            this,
-            requireActivity() as MainActivity
-        )
+        ChannelSearchAdapter(activity as OnChannelSelectedListener)
     }
 
     override fun onCreateView(

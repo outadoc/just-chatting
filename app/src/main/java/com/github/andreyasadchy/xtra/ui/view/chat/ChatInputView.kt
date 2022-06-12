@@ -16,6 +16,7 @@ import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
@@ -54,12 +55,12 @@ class ChatInputView : LinearLayout {
         fun send(message: CharSequence)
     }
 
+    private var messagingEnabled = false
     private var hasRecentEmotes: Boolean? = null
 
     private val autoCompleteAdapter = AutoCompleteAdapter(context)
 
-    private lateinit var fragment: Fragment
-    private var messagingEnabled = false
+    private lateinit var childFragmentManager: FragmentManager
 
     private var messageCallback: OnMessageSendListener? = null
 
@@ -84,8 +85,8 @@ class ChatInputView : LinearLayout {
         orientation = VERTICAL
     }
 
-    fun init(fragment: Fragment) {
-        this.fragment = fragment
+    fun init(childFragmentManager: FragmentManager) {
+        this.childFragmentManager = childFragmentManager
 
         ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
@@ -287,7 +288,7 @@ class ChatInputView : LinearLayout {
             messageView.isVisible = true
 
             viewPager.adapter = object : FragmentStatePagerAdapter(
-                fragment.childFragmentManager,
+                childFragmentManager,
                 BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
             ) {
                 override fun getItem(position: Int): Fragment =

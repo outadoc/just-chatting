@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.ui.follow.channels
 
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
@@ -19,9 +18,9 @@ import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.username
 
 class FollowedChannelsAdapter(
-    private val fragment: Fragment,
     private val listener: OnChannelSelectedListener
 ) : BasePagedListAdapter<Follow>(
+
     object : DiffUtil.ItemCallback<Follow>() {
         override fun areItemsTheSame(oldItem: Follow, newItem: Follow): Boolean =
             oldItem.to_id == newItem.to_id
@@ -42,6 +41,7 @@ class FollowedChannelsAdapter(
                     item.followLocal
                 )
             }
+
             if (item.channelLogo != null) {
                 userImage.isVisible = true
                 userImage.loadImage(
@@ -53,12 +53,14 @@ class FollowedChannelsAdapter(
             } else {
                 userImage.isVisible = false
             }
+
             if (item.to_name != null) {
                 username.isVisible = true
                 username.text = item.to_name
             } else {
                 username.isVisible = false
             }
+
             if (item.lastBroadcast != null) {
                 val text = item.lastBroadcast?.let { TwitchApiHelper.formatTimeString(context, it) }
                 if (text != null) {
@@ -70,6 +72,7 @@ class FollowedChannelsAdapter(
             } else {
                 userStream.isVisible = false
             }
+
             if (item.followed_at != null) {
                 val text = TwitchApiHelper.formatTimeString(context, item.followed_at!!)
                 if (text != null) {
@@ -81,16 +84,9 @@ class FollowedChannelsAdapter(
             } else {
                 userFollowed.isVisible = false
             }
-            if (item.followTwitch) {
-                twitchText.isVisible = true
-            } else {
-                twitchText.isVisible = false
-            }
-            if (item.followLocal) {
-                localText.isVisible = true
-            } else {
-                localText.isVisible = false
-            }
+
+            twitchText.isVisible = item.followTwitch
+            localText.isVisible = item.followLocal
         }
     }
 }

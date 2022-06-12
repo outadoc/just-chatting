@@ -185,8 +185,10 @@ class MainActivity :
         }
     }
 
-    fun popFragment() {
-        fragNavController.popFragment()
+    override fun onBackPressed() {
+        if (!fragNavController.popFragment()) {
+            super.onBackPressed()
+        }
     }
 
     fun openSearch() {

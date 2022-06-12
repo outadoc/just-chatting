@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.ui.search.channels
 
 import android.view.View
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
@@ -15,9 +14,9 @@ import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.us
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userName
 
 class ChannelSearchAdapter(
-    private val fragment: Fragment,
     private val listener: OnChannelSelectedListener
 ) : BasePagedListAdapter<ChannelSearch>(
+
     object : DiffUtil.ItemCallback<ChannelSearch>() {
         override fun areItemsTheSame(oldItem: ChannelSearch, newItem: ChannelSearch): Boolean =
             oldItem.id == newItem.id

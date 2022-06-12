@@ -3,7 +3,6 @@ package com.github.andreyasadchy.xtra.ui.streams
 import android.view.View
 import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.util.C
@@ -15,9 +14,8 @@ import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.up
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.viewers
 
 class StreamsCompactAdapter(
-    fragment: Fragment,
     clickListener: BaseStreamsFragment.OnStreamSelectedListener
-) : BaseStreamsAdapter(fragment, clickListener) {
+) : BaseStreamsAdapter(clickListener) {
 
     override val layoutId: Int = R.layout.fragment_streams_list_item_compact
 

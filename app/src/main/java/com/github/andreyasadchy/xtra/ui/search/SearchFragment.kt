@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
-import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchFragment
 import com.github.andreyasadchy.xtra.util.showKeyboard
 import kotlinx.android.synthetic.main.fragment_search.appBar
@@ -34,11 +33,10 @@ class SearchFragment : BaseNetworkFragment(), Scrollable {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val activity = requireActivity() as MainActivity
 
         toolbar.apply {
             setNavigationIcon(R.drawable.ic_back)
-            setNavigationOnClickListener { activity.popFragment() }
+            setNavigationOnClickListener { activity?.onBackPressed() }
         }
 
         search.showKeyboard()

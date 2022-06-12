@@ -11,9 +11,9 @@ import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
 import com.github.andreyasadchy.xtra.model.helix.follows.Sort
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
+import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
-import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
@@ -28,8 +28,7 @@ class FollowedChannelsFragment :
 
     override val viewModel by viewModels<FollowedChannelsViewModel> { viewModelFactory }
     override val adapter: BasePagedListAdapter<Follow> by lazy {
-        val activity = requireActivity() as MainActivity
-        FollowedChannelsAdapter(this, activity)
+        FollowedChannelsAdapter(activity as OnChannelSelectedListener)
     }
 
     override fun onCreateView(

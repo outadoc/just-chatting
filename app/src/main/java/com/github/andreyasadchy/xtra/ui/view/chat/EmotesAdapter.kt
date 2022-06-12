@@ -12,7 +12,7 @@ import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.util.loadImage
 
 class EmotesAdapter(
-    private val clickListener: (Emote) -> Unit
+    private val clickListener: OnEmoteClickedListener
 ) : ListAdapter<Emote, RecyclerView.ViewHolder>(object : DiffUtil.ItemCallback<Emote>() {
 
     override fun areItemsTheSame(oldItem: Emote, newItem: Emote): Boolean {
@@ -35,7 +35,7 @@ class EmotesAdapter(
         val emote = getItem(position)
         (holder.itemView as ImageView).apply {
             loadImage(context, emote.url, diskCacheStrategy = DiskCacheStrategy.DATA)
-            setOnClickListener { clickListener(emote) }
+            setOnClickListener { clickListener.onEmoteClicked(emote) }
         }
     }
 }

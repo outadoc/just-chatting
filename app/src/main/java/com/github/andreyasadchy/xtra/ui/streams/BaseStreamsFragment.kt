@@ -10,7 +10,6 @@ import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
-import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 
 abstract class BaseStreamsFragment<VM : PagedListViewModel<Stream>> :
@@ -21,8 +20,7 @@ abstract class BaseStreamsFragment<VM : PagedListViewModel<Stream>> :
     }
 
     override val adapter: BasePagedListAdapter<Stream> by lazy {
-        val activity = requireActivity() as MainActivity
-        StreamsCompactAdapter(this, activity)
+        StreamsCompactAdapter(activity as OnStreamSelectedListener)
     }
 
     override fun onCreateView(

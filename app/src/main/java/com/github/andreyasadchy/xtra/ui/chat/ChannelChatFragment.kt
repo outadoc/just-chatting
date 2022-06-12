@@ -24,6 +24,7 @@ import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
+import com.github.andreyasadchy.xtra.ui.view.chat.OnEmoteClickedListener
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.LifecycleListener
@@ -53,6 +54,7 @@ class ChannelChatFragment :
     BaseNetworkFragment(),
     LifecycleListener,
     MessageClickedDialog.OnButtonClickListener,
+    OnEmoteClickedListener,
     Scrollable {
 
     companion object {
@@ -240,7 +242,7 @@ class ChannelChatFragment :
             ).show(childFragmentManager, "closeOnPip")
         }
 
-        chatInputView.init(this)
+        chatInputView.init(childFragmentManager)
 
         chatInputView.setOnMessageSendListener { message ->
             viewModel.send(message)
@@ -447,7 +449,7 @@ class ChannelChatFragment :
         chatInputView.clearFocus()
     }
 
-    fun appendEmote(emote: Emote) {
+    override fun onEmoteClicked(emote: Emote) {
         chatInputView.appendEmote(emote)
     }
 

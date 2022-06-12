@@ -1,8 +1,10 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="BaseLightTheme" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <style name="BaseDarkTheme" parent="Theme.Material3.Dark.NoActionBar">
@@ -15,6 +17,10 @@
     <style name="DarkTheme" parent="BaseDarkTheme" />
 
     <style name="AppTheme" parent="LightTheme" />
+
+    <style name="ChatTheme" parent="AppTheme">
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+    </style>
 
     <style name="Card" parent="Widget.Material3.CardView.Filled">
         <item name="android:layout_width">match_parent</item>

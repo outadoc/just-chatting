@@ -15,10 +15,12 @@ import android.text.style.ImageSpan
 import android.text.style.StyleSpan
 import android.text.style.URLSpan
 import android.util.Patterns
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.text.getSpans
 import androidx.core.view.children
@@ -61,8 +63,18 @@ class ChatAdapter(
     private val emoteSize = context.resources.getDimensionPixelSize(R.dimen.chat_emoteSize)
     private val scaledEmoteSize = (emoteSize * 0.78f).toInt()
 
+    @ColorInt
     private val randomChatColors = context.resources.getIntArray(R.array.randomChatColors)
+
+    @ColorInt
     private val defaultChatColor = ContextCompat.getColor(context, R.color.chatUserColorFallback)
+
+    @get:ColorInt
+    private val backgroundColor: Int by lazy {
+        val typedValue = TypedValue()
+        context.theme.resolveAttribute(R.attr.colorSurface, typedValue, true)
+        typedValue.data
+    }
 
     private val firstChatMsg = context.getString(R.string.chat_first)
     private val rewardChatMsg = context.getString(R.string.chat_reward)
@@ -235,20 +247,11 @@ class ChatAdapter(
 
         builder.append(chatMessage.message)
 
-        val color = if (chatMessage is PubSubPointReward) null else
-            chatMessage.color.let { userColor ->
-                if (userColor == null) {
-                    userColors[userName]
-                        ?: getRandomColor().also {
-                            if (userName != null) {
-                                userColors[userName] = it
-                            }
-                        }
-                } else {
-                    savedColors[userColor] ?: Color.parseColor(userColor)
-                        .also { savedColors[userColor] = it }
-                }
-            }
+        val color = if (chatMessage is PubSubPointReward) null
+        else getColorForUser(
+            userName = userName,
+            messageColor = chatMessage.color
+        )
 
         if (color != null && userName != null) {
             builder.setSpan(
@@ -579,6 +582,40 @@ class ChatAdapter(
                     ?.filterIsInstance<Animatable>()
                     ?.forEach { image -> image.stop() }
             }
+    }
+
+    private fun getColorForUser(userName: String?, messageColor: String?): Int {
+        val userColor = userColors[userName]
+        val savedColor = savedColors[messageColor]
+        return when {
+            userColor != null -> userColor
+            savedColor != null -> savedColor
+            messageColor == null -> getAndSaveRandomUserColor(userName)
+            else -> {
+                val color = Color.parseColor(messageColor)
+                if (isContrastRatioAccessible(backgroundColor, color)) {
+                    saveUserColor(messageColor)
+                } else {
+                    getAndSaveRandomUserColor(userName)
+                }
+            }
+        }
+    }
+
+    @ColorInt
+    private fun getAndSaveRandomUserColor(userName: String?): Int {
+        return getRandomColor().also {
+            if (userName != null) {
+                userColors[userName] = it
+            }
+        }
+    }
+
+    @ColorInt
+    private fun saveUserColor(userColor: String): Int {
+        return Color.parseColor(userColor).also { color ->
+            savedColors[userColor] = color
+        }
     }
 
     private fun getRandomColor(): Int =

@@ -36,6 +36,7 @@ import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.ui.view.chat.VerticalImageSpan
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import kotlin.collections.set
@@ -501,7 +502,7 @@ class ChatAdapter(
 
                     try {
                         builder.setSpan(
-                            ImageSpan(result),
+                            VerticalImageSpan(result),
                             image.start,
                             image.end,
                             SPAN_EXCLUSIVE_EXCLUSIVE

@@ -27,6 +27,7 @@ import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.Command
+import com.github.andreyasadchy.xtra.util.getDurationFromSeconds
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.view_chat.view.btnDown
 import kotlinx.android.synthetic.main.view_chat.view.recyclerView
@@ -177,7 +178,7 @@ class ChatView : ConstraintLayout {
             "timeout" -> context.getString(
                 R.string.chat_timeout,
                 command.message,
-                TwitchApiHelper.getDurationFromSeconds(context, command.duration)
+                getDurationFromSeconds(context, command.duration)
             )
             "ban" -> context.getString(R.string.chat_ban, command.message)
             else -> command.message

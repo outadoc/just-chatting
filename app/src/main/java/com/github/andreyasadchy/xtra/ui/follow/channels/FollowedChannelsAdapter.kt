@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.formatTimeString
 import com.github.andreyasadchy.xtra.util.loadImage
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.localText
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.twitchText
@@ -62,7 +63,7 @@ class FollowedChannelsAdapter(
             }
 
             if (item.lastBroadcast != null) {
-                val text = item.lastBroadcast?.let { TwitchApiHelper.formatTimeString(context, it) }
+                val text = item.lastBroadcast?.let { formatTimeString(context, it) }
                 if (text != null) {
                     userStream.isVisible = true
                     userStream.text = context.getString(R.string.last_broadcast_date, text)
@@ -74,7 +75,7 @@ class FollowedChannelsAdapter(
             }
 
             if (item.followed_at != null) {
-                val text = TwitchApiHelper.formatTimeString(context, item.followed_at!!)
+                val text = formatTimeString(context, item.followed_at!!)
                 if (text != null) {
                     userFollowed.isVisible = true
                     userFollowed.text = context.getString(R.string.followed_at, text)

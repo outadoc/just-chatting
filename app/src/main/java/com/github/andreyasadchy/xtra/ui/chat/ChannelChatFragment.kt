@@ -29,6 +29,8 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.LifecycleListener
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.formatTimeString
+import com.github.andreyasadchy.xtra.util.getUptime
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -323,7 +325,7 @@ class ChannelChatFragment :
 
     private fun updateStreamLayout(stream: Stream?) {
         if (stream?.viewer_count == null && stream?.lastBroadcast != null) {
-            TwitchApiHelper.formatTimeString(requireContext(), stream.lastBroadcast).let {
+            formatTimeString(requireContext(), stream.lastBroadcast).let {
                 if (it != null) {
                     lastBroadcast.text =
                         requireContext().getString(R.string.last_broadcast_date, it)
@@ -379,7 +381,7 @@ class ChannelChatFragment :
         }
 
         if (stream?.started_at != null) {
-            TwitchApiHelper.getUptime(requireContext(), stream.started_at).let {
+            getUptime(requireContext(), stream.started_at).let {
                 if (it != null) {
                     uptime.isVisible = true
                     uptime.text = requireContext().getString(R.string.uptime, it)
@@ -409,7 +411,7 @@ class ChannelChatFragment :
             userCreated.isVisible = true
             userCreated.text = requireContext().getString(
                 R.string.created_at,
-                TwitchApiHelper.formatTimeString(requireContext(), user.created_at)
+                formatTimeString(requireContext(), user.created_at)
             )
         }
 

@@ -30,6 +30,7 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.RoomState
+import com.github.andreyasadchy.xtra.util.getDurationFromSeconds
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -191,7 +192,7 @@ class ChatInputView : LinearLayout {
                 else -> {
                     textFollowers.text = context.getString(
                         R.string.room_followers_min,
-                        TwitchApiHelper.getDurationFromSeconds(
+                        getDurationFromSeconds(
                             context,
                             (roomState.followers.toInt() * 60).toString()
                         )
@@ -218,7 +219,7 @@ class ChatInputView : LinearLayout {
                 else -> {
                     textSlow.text = context.getString(
                         R.string.room_slow,
-                        TwitchApiHelper.getDurationFromSeconds(context, roomState.slow)
+                        getDurationFromSeconds(context, roomState.slow)
                     )
                     textSlow.isVisible = true
                 }

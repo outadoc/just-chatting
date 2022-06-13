@@ -6,6 +6,7 @@ import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
+import com.github.andreyasadchy.xtra.util.getDurationFromSeconds
 import com.github.andreyasadchy.xtra.util.prefs
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -194,7 +195,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     "timeout" -> context.getString(
                         R.string.chat_timeout,
                         user,
-                        TwitchApiHelper.getDurationFromSeconds(context, duration)
+                        getDurationFromSeconds(context, duration)
                     )
                     "ban" -> context.getString(R.string.chat_ban, user)
                     else -> return null

@@ -7,6 +7,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.getUptime
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.tagsLayout
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.type
@@ -42,7 +43,7 @@ class StreamsCompactAdapter(
             }
 
             if (item.started_at != null) {
-                val text = TwitchApiHelper.getUptime(context = context, input = item.started_at)
+                val text = getUptime(context = context, input = item.started_at)
                 if (text != null) {
                     uptime.isVisible = true
                     uptime.text = text

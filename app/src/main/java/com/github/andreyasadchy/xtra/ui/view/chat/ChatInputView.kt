@@ -27,11 +27,13 @@ import com.github.andreyasadchy.xtra.model.chat.FfzEmote
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
+import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.showKeyboard
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.image
@@ -236,10 +238,10 @@ class ChatInputView : LinearLayout {
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-            !textFollowers.isGone ||
-            !textUnique.isGone ||
-            !textSlow.isGone ||
-            !textSubs.isGone
+                    !textFollowers.isGone ||
+                    !textUnique.isGone ||
+                    !textSlow.isGone ||
+                    !textSubs.isGone
     }
 
     fun enableChatInteraction(enableMessaging: Boolean) {
@@ -386,7 +388,7 @@ class ChatInputView : LinearLayout {
                         containerView.image.loadImage(
                             context,
                             item.emote.getUrl(
-                                animate = ChatView.animateGifs,
+                                animate = context.prefs().getBoolean(C.ANIMATED_EMOTES, true),
                                 screenDensity = context.resources.displayMetrics.density,
                                 isDarkTheme = context.isDarkMode
                             ),

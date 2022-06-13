@@ -30,6 +30,7 @@ import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.LifecycleListener
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.hideKeyboard
+import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
@@ -245,7 +246,12 @@ class ChannelChatFragment :
         chatInputView.init(childFragmentManager)
 
         chatInputView.setOnMessageSendListener { message ->
-            viewModel.send(message)
+            viewModel.send(
+                message = message,
+                animateEmotes = requireContext().prefs().getBoolean(C.ANIMATED_EMOTES, true),
+                screenDensity = requireContext().resources.displayMetrics.density,
+                isDarkTheme = requireContext().isDarkMode
+            )
             chatView.scrollToBottom()
         }
 

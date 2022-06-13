@@ -37,7 +37,6 @@ class ChatView : ConstraintLayout {
     companion object {
         var MAX_ADAPTER_COUNT = 200
         var MAX_LIST_COUNT = MAX_ADAPTER_COUNT + 1
-        var animateGifs = true
     }
 
     private lateinit var adapter: ChatAdapter
@@ -70,7 +69,6 @@ class ChatView : ConstraintLayout {
     }
 
     fun init() {
-        animateGifs = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
 
         adapter = ChatAdapter(
@@ -78,7 +76,7 @@ class ChatView : ConstraintLayout {
             pickRandomColors = context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
             enableTimestamps = context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
             firstMsgVisibility = context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0"),
-            animateGifs = animateGifs
+            animateEmotes = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         )
 
         adapter.setOnClickListener { original, formatted, userId, fullMsg ->

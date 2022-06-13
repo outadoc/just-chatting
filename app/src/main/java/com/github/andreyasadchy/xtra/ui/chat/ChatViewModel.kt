@@ -20,7 +20,6 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
-import com.github.andreyasadchy.xtra.ui.view.chat.ChatView
 import com.github.andreyasadchy.xtra.ui.view.chat.ChatView.Companion.MAX_ADAPTER_COUNT
 import com.github.andreyasadchy.xtra.util.SingleLiveEvent
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
@@ -161,8 +160,18 @@ class ChatViewModel @Inject constructor(
         chat?.pause()
     }
 
-    fun send(message: CharSequence) {
-        chat?.send(message)
+    fun send(
+        message: CharSequence,
+        animateEmotes: Boolean,
+        screenDensity: Float,
+        isDarkTheme: Boolean
+    ) {
+        chat?.send(
+            message = message,
+            animateEmotes = animateEmotes,
+            screenDensity = screenDensity,
+            isDarkTheme = isDarkTheme
+        )
     }
 
     override fun onCleared() {
@@ -338,7 +347,12 @@ class ChatViewModel @Inject constructor(
             chatters[displayName] = Chatter(displayName)
         }
 
-        override fun send(message: CharSequence) {
+        override fun send(
+            message: CharSequence,
+            animateEmotes: Boolean,
+            screenDensity: Float,
+            isDarkTheme: Boolean
+        ) {
             if (message.toString() == "/dc" || message.toString() == "/disconnect") {
                 disconnect()
                 return
@@ -354,7 +368,11 @@ class ChatViewModel @Inject constructor(
                     usedEmotes.add(
                         RecentEmote(
                             name = word,
-                            url = emote.getUrl(animate = ChatView.animateGifs),
+                            url = emote.getUrl(
+                                animate = animateEmotes,
+                                screenDensity = screenDensity,
+                                isDarkTheme = isDarkTheme
+                            ),
                             usedAt = currentTime
                         )
                     )
@@ -521,7 +539,13 @@ class ChatViewModel @Inject constructor(
 
     abstract inner class ChatController : OnChatMessageReceivedListener {
 
-        abstract fun send(message: CharSequence)
+        abstract fun send(
+            message: CharSequence,
+            animateEmotes: Boolean,
+            screenDensity: Float,
+            isDarkTheme: Boolean
+        )
+
         abstract fun start()
         abstract fun pause()
         abstract fun stop()

@@ -45,7 +45,7 @@ class ChatAdapter(
     private val pickRandomColors: Boolean,
     private val enableTimestamps: Boolean,
     private val firstMsgVisibility: String?,
-    private val animateGifs: Boolean
+    private val animateEmotes: Boolean
 ) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
 
     var messages: MutableList<ChatMessage>? = null
@@ -314,7 +314,7 @@ class ChatAdapter(
                     images.add(
                         Image(
                             url = emote.getUrl(
-                                animate = animateGifs,
+                                animate = animateEmotes,
                                 screenDensity = screenDensity,
                                 isDarkTheme = context.isDarkMode
                             ),
@@ -412,7 +412,7 @@ class ChatAdapter(
                     images.add(
                         Image(
                             url = emote.getUrl(
-                                animate = animateGifs,
+                                animate = animateEmotes,
                                 screenDensity = screenDensity,
                                 isDarkTheme = context.isDarkMode
                             ),
@@ -508,7 +508,7 @@ class ChatAdapter(
                             SPAN_EXCLUSIVE_EXCLUSIVE
                         )
 
-                        if (animateGifs) {
+                        if (animateEmotes) {
                             (result as? Animatable)?.start()
                         }
                     } catch (e: IndexOutOfBoundsException) {
@@ -549,7 +549,7 @@ class ChatAdapter(
 
     override fun onViewAttachedToWindow(holder: ViewHolder) {
         super.onViewAttachedToWindow(holder)
-        if (!animateGifs) return
+        if (!animateEmotes) return
 
         (holder.textView.text as? Spannable)
             ?.getSpans<ImageSpan>()
@@ -560,7 +560,7 @@ class ChatAdapter(
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
         super.onViewDetachedFromWindow(holder)
-        if (!animateGifs) return
+        if (!animateEmotes) return
 
         (holder.textView.text as? Spannable)
             ?.getSpans<ImageSpan>()
@@ -571,7 +571,7 @@ class ChatAdapter(
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         super.onDetachedFromRecyclerView(recyclerView)
-        if (!animateGifs) return
+        if (!animateEmotes) return
 
         recyclerView.children
             .filterIsInstance<TextView>()

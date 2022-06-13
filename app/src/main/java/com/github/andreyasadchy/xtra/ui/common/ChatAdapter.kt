@@ -63,7 +63,6 @@ class ChatAdapter(
     private val emoteSize = context.resources.getDimensionPixelSize(R.dimen.chat_emoteSize)
     private val scaledEmoteSize = (emoteSize * 0.78f).toInt()
 
-    @ColorInt
     private val randomChatColors = context.resources.getIntArray(R.array.randomChatColors)
 
     @ColorInt

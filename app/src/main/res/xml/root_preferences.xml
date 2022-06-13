@@ -6,12 +6,6 @@
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
-        android:defaultValue="false"
-        android:key="ui_truncateviewcount"
-        android:title="@string/truncated_view_counts"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="ui_tags"
         android:title="@string/show_tags"

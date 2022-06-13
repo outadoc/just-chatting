@@ -53,7 +53,7 @@ class ChannelSearchAdapter(
                 userFollowers.isVisible = true
                 userFollowers.text = context.getString(
                     R.string.followers,
-                    TwitchApiHelper.formatCount(context, item.followers_count)
+                    TwitchApiHelper.formatCount(item.followers_count)
                 )
             } else {
                 userFollowers.isVisible = false

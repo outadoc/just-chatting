@@ -417,7 +417,7 @@ class ChannelChatFragment :
             userFollowers.isVisible = true
             userFollowers.text = requireContext().getString(
                 R.string.followers,
-                TwitchApiHelper.formatCount(requireContext(), user.followers_count)
+                TwitchApiHelper.formatCount(user.followers_count)
             )
         }
 

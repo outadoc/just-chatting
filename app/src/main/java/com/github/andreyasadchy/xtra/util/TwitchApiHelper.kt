@@ -92,15 +92,15 @@ object TwitchApiHelper {
             val seconds = (duration % 60)
             return if (text) String.format(
                 (if (days != 0) (days.toString() + context.getString(R.string.days) + " ") else "") +
-                    (if (hours != 0) (hours.toString() + context.getString(R.string.hours) + " ") else "") +
-                    (if (minutes != 0) (minutes.toString() + context.getString(R.string.minutes) + " ") else "") +
-                    (if (seconds != 0) (seconds.toString() + context.getString(R.string.seconds) + " ") else "")
+                        (if (hours != 0) (hours.toString() + context.getString(R.string.hours) + " ") else "") +
+                        (if (minutes != 0) (minutes.toString() + context.getString(R.string.minutes) + " ") else "") +
+                        (if (seconds != 0) (seconds.toString() + context.getString(R.string.seconds) + " ") else "")
             ).trim() else
                 String.format(
                     (if (days != 0) ("$days:") else "") +
-                        (if (hours != 0) (if (hours < 10 && days != 0) "0$hours:" else "$hours:") else (if (days != 0) "00:" else "")) +
-                        (if (minutes != 0) (if (minutes < 10 && (hours != 0 || days != 0)) "0$minutes:" else "$minutes:") else (if (hours != 0 || days != 0) "00:" else "")) +
-                        (if (seconds != 0) (if (seconds < 10 && (minutes != 0 || hours != 0 || days != 0)) "0$seconds" else "$seconds") else (if (minutes != 0 || hours != 0 || days != 0) "00" else ""))
+                            (if (hours != 0) (if (hours < 10 && days != 0) "0$hours:" else "$hours:") else (if (days != 0) "00:" else "")) +
+                            (if (minutes != 0) (if (minutes < 10 && (hours != 0 || days != 0)) "0$minutes:" else "$minutes:") else (if (hours != 0 || days != 0) "00:" else "")) +
+                            (if (seconds != 0) (if (seconds < 10 && (minutes != 0 || hours != 0 || days != 0)) "0$seconds" else "$seconds") else (if (minutes != 0 || hours != 0 || days != 0) "00" else ""))
                 )
         } else return null
     }
@@ -246,42 +246,15 @@ object TwitchApiHelper {
     fun addTokenPrefixGQL(token: String) = "OAuth $token"
 
     fun formatViewsCount(context: Context, count: Int): String {
-        return if (count > 1000 && context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) {
-            context.getString(R.string.views, formatCountIfMoreThanAThousand(count))
-        } else {
-            context.resources.getQuantityString(R.plurals.views, count, "%,d".format(count))
-        }
+        return context.resources.getQuantityString(R.plurals.views, count, "%,d".format(count))
     }
 
     fun formatViewersCount(context: Context, count: Int): String {
-        return if (count > 1000 && context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) {
-            context.getString(R.string.viewers_count, formatCountIfMoreThanAThousand(count))
-        } else {
-            context.resources.getQuantityString(R.plurals.viewers, count, "%,d".format(count))
-        }
+        return context.resources.getQuantityString(R.plurals.viewers, count, "%,d".format(count))
     }
 
-    fun formatCount(context: Context, count: Int): String {
-        return if (count > 1000 && context.prefs().getBoolean(C.UI_TRUNCATEVIEWCOUNT, false)) {
-            formatCountIfMoreThanAThousand(count)
-        } else {
-            "%,d".format(count)
-        }
-    }
-
-    private fun formatCountIfMoreThanAThousand(count: Int): String {
-        val divider: Int
-        val suffix = if (count.toString().length < 7) {
-            divider = 1000
-            "K"
-        } else {
-            divider = 1_000_000
-            "M"
-        }
-        val truncated = count / (divider / 10)
-        val hasDecimal = truncated / 10.0 != (truncated / 10).toDouble()
-        return if (hasDecimal) "%,d$suffix".format(truncated / 10.0)
-        else "%,d$suffix".format(truncated / 10)
+    fun formatCount(count: Int): String {
+        return "%,d".format(count)
     }
 
     val gamesApiDefaults: ArrayList<Pair<Long?, String?>?> =

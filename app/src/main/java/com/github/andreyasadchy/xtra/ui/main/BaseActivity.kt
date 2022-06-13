@@ -5,6 +5,8 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.core.view.WindowCompat
+import androidx.emoji2.text.DefaultEmojiCompatConfig
+import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.preference.PreferenceManager
 import com.github.andreyasadchy.xtra.R
@@ -31,6 +33,12 @@ open class BaseActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        DefaultEmojiCompatConfig.create(this)
+            ?.setReplaceAll(true)
+            ?.let { emojiConfig ->
+                EmojiCompat.init(emojiConfig)
+            }
 
         prefs = prefs()
 

@@ -34,14 +34,10 @@ import java.util.Locale
 
 class ChatView : ConstraintLayout {
 
-    companion object {
-        var MAX_ADAPTER_COUNT = 200
-        var MAX_LIST_COUNT = MAX_ADAPTER_COUNT + 1
-    }
-
     private lateinit var adapter: ChatAdapter
 
     private var isChatTouched = false
+    private var maxAdapterCount: Int = -1
     private var hasRecentEmotes: Boolean? = null
 
     private var messageClickListener: OnMessageClickListener? = null
@@ -68,8 +64,8 @@ class ChatView : ConstraintLayout {
         View.inflate(context, R.layout.view_chat, this)
     }
 
-    fun init() {
-        MAX_ADAPTER_COUNT = context.prefs().getInt(C.CHAT_LIMIT, 200)
+    fun init(maxAdapterCount: Int) {
+        this.maxAdapterCount = maxAdapterCount
 
         adapter = ChatAdapter(
             context = context,
@@ -121,8 +117,8 @@ class ChatView : ConstraintLayout {
         adapter.messages?.apply {
             adapter.notifyItemInserted(lastIndex)
 
-            if (size >= MAX_LIST_COUNT) {
-                val removeCount = size - MAX_ADAPTER_COUNT
+            if (size > maxAdapterCount) {
+                val removeCount = size - maxAdapterCount
                 repeat(removeCount) {
                     removeAt(0)
                 }

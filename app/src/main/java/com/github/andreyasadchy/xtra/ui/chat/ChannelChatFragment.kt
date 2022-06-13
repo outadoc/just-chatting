@@ -214,6 +214,8 @@ class ChannelChatFragment :
         val user = User.get(requireContext())
         val userIsLoggedIn = user is LoggedIn
 
+        val maxAdapterCount = prefs.getInt(C.CHAT_LIMIT, 600)
+
         viewModel.startLive(
             useSSl = true,
             usePubSub = prefs.getBoolean(C.CHAT_PUBSUB_ENABLED, true),
@@ -227,10 +229,11 @@ class ChannelChatFragment :
             showClearMsg = prefs.getBoolean(C.CHAT_SHOW_CLEARMSG, true),
             showClearChat = prefs.getBoolean(C.CHAT_SHOW_CLEARCHAT, true),
             enableRecentMsg = prefs.getBoolean(C.CHAT_RECENT, true),
-            recentMsgLimit = prefs.getInt(C.CHAT_RECENT_LIMIT, 100)
+            recentMsgLimit = prefs.getInt(C.CHAT_RECENT_LIMIT, 100),
+            maxAdapterCount = maxAdapterCount
         )
 
-        chatView.init()
+        chatView.init(maxAdapterCount)
         chatView.setOnMessageClickListener { original, formatted, userId, fullMsg ->
             hideKeyboard()
 

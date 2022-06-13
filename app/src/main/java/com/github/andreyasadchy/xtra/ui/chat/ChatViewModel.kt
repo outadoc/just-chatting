@@ -20,7 +20,6 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
-import com.github.andreyasadchy.xtra.ui.view.chat.ChatView.Companion.MAX_ADAPTER_COUNT
 import com.github.andreyasadchy.xtra.util.SingleLiveEvent
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.Command
@@ -73,6 +72,7 @@ class ChatViewModel @Inject constructor(
             }
         }
     }
+
     private val _otherEmotes = MutableLiveData<List<Emote>>()
     val otherEmotes: LiveData<List<Emote>>
         get() = _otherEmotes
@@ -88,12 +88,7 @@ class ChatViewModel @Inject constructor(
     val command = MutableLiveData<Command>()
     val reward = MutableLiveData<ChatMessage>()
 
-    private val _chatMessages by lazy {
-        MutableLiveData<MutableList<ChatMessage>>().apply {
-            value = Collections.synchronizedList(ArrayList(MAX_ADAPTER_COUNT + 1))
-        }
-    }
-
+    private val _chatMessages = MutableLiveData<MutableList<ChatMessage>>()
     val chatMessages: LiveData<MutableList<ChatMessage>>
         get() = _chatMessages
 
@@ -123,7 +118,8 @@ class ChatViewModel @Inject constructor(
         showClearMsg: Boolean,
         showClearChat: Boolean,
         enableRecentMsg: Boolean? = false,
-        recentMsgLimit: Int? = null
+        recentMsgLimit: Int? = null,
+        maxAdapterCount: Int
     ) {
         if (chat == null && channelLogin != null && channelName != null) {
             chat = LiveChatController(
@@ -146,7 +142,8 @@ class ChatViewModel @Inject constructor(
                     channelId = channelId,
                     channelLogin = channelLogin,
                     enableRecentMsg = enableRecentMsg,
-                    recentMsgLimit = recentMsgLimit
+                    recentMsgLimit = recentMsgLimit,
+                    maxAdapterCount = maxAdapterCount
                 )
             }
         }
@@ -186,8 +183,13 @@ class ChatViewModel @Inject constructor(
         channelId: String,
         channelLogin: String? = null,
         enableRecentMsg: Boolean? = false,
-        recentMsgLimit: Int? = null
+        recentMsgLimit: Int? = null,
+        maxAdapterCount: Int
     ) {
+        _chatMessages.value = Collections.synchronizedList(
+            ArrayList(maxAdapterCount + 1)
+        )
+
         chat?.start()
 
         viewModelScope.launch {

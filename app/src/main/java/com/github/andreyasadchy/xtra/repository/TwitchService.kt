@@ -77,7 +77,7 @@ interface TwitchService {
         helixClientId: String?,
         helixToken: String?,
         gqlClientId: String?
-    ): List<CheerEmote>?
+    ): List<CheerEmote>
 
     suspend fun loadEmotesFromSet(
         helixClientId: String?,

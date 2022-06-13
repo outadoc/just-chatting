@@ -315,7 +315,7 @@ class ApiRepository @Inject constructor(
         helixClientId: String?,
         helixToken: String?,
         gqlClientId: String?
-    ): List<CheerEmote>? = withContext(Dispatchers.IO) {
+    ): List<CheerEmote> = withContext(Dispatchers.IO) {
         try {
             val get = apolloClient(XtraModule(), gqlClientId)
                 .query(CheerEmotesQuery(Optional.Present(userId)))
@@ -357,7 +357,7 @@ class ApiRepository @Inject constructor(
                             }
                         }
                 }
-                .ifEmpty { null }
+
         } catch (e: Exception) {
             helix.getCheerEmotes(
                 helixClientId,

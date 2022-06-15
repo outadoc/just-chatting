@@ -1,7 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.streams
 
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
 import androidx.core.view.isVisible
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
@@ -9,9 +9,12 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.formatTimestamp
 import com.github.andreyasadchy.xtra.util.prefs
-import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.tagsLayout
+import com.google.android.material.chip.Chip
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.chipGroupTagsContainer
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.scrollViewTagsContainer
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.uptime
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.viewers
+import kotlinx.android.synthetic.main.item_single_tag.view.chipTag
 import kotlinx.datetime.Instant
 
 class StreamsCompactAdapter(
@@ -43,15 +46,16 @@ class StreamsCompactAdapter(
             }
 
             if (item.tags != null && context.prefs().getBoolean(C.UI_TAGS, true)) {
-                tagsLayout.removeAllViews()
-                tagsLayout.isVisible = true
+                val inflater = LayoutInflater.from(context)
+                chipGroupTagsContainer.removeAllViews()
                 for (tag in item.tags) {
-                    val text = TextView(context)
-                    text.text = tag.name
-                    tagsLayout.addView(text)
+                    val chip = inflater.inflate(R.layout.item_single_tag, null)
+                    chip.chipTag.text = tag.name
+                    chipGroupTagsContainer.addView(chip)
                 }
+                scrollViewTagsContainer.isVisible = true
             } else {
-                tagsLayout.isVisible = false
+                scrollViewTagsContainer.isVisible = false
             }
         }
     }

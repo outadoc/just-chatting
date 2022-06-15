@@ -7,7 +7,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="10dp">
 
         <ImageView
             android:id="@+id/userImage"
@@ -95,20 +95,24 @@
             tools:text="8:21:33"
             tools:visibility="visible" />
 
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/tagsLayout"
-            android:layout_width="match_parent"
+        <HorizontalScrollView
+            android:id="@+id/scrollViewTagsContainer"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:visibility="gone"
-            app:flexWrap="wrap"
-            app:justifyContent="space_around"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/gameName"
             app:layout_constraintTop_toBottomOf="@id/gameName"
             tools:layout_height="32dp"
-            tools:visibility="visible" />
+            tools:visibility="visible">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupTagsContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:singleLine="true" />
+
+        </HorizontalScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>

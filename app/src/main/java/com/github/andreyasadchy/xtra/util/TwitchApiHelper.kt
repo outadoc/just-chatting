@@ -156,28 +156,40 @@ object TwitchApiHelper {
 
     val gamesApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
+
     val streamsApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
+
     val gameStreamsApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY), Pair(2, C.HELIX))
+
     val gameVideosApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+
     val gameClipsApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.HELIX), Pair(2, C.GQL))
+
     val channelVideosApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+
     val channelClipsApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.HELIX), Pair(2, C.GQL))
+
     val searchChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.HELIX), Pair(1, C.GQL))
+
     val searchGamesApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL), Pair(1, C.HELIX))
+
     val followedStreamsApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.HELIX), Pair(2, C.GQL))
+
     val followedVideosApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL))
+
     val followedChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
+
     val followedGamesApiDefaults: ArrayList<Pair<Long?, String?>?> =
         arrayListOf(Pair(0, C.GQL), Pair(1, C.GQL_QUERY))
 

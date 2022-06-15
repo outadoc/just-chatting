@@ -35,8 +35,10 @@ class FollowedChannelsDataDeserializer : JsonDeserializer<FollowedChannelsDataRe
                         obj.getAsJsonPrimitive("displayName").asString
                     } else null,
                     followed_at = if (!(obj.get("self").isJsonNull)) {
-                        obj.getAsJsonObject("self").getAsJsonObject("follower")
-                            .getAsJsonPrimitive("followedAt").asString
+                        obj.getAsJsonObject("self")
+                            .getAsJsonObject("follower")
+                            .getAsJsonPrimitive("followedAt")
+                            .asString
                     } else null,
                     profileImageURL = if (!(obj.get("profileImageURL").isJsonNull)) {
                         obj.getAsJsonPrimitive("profileImageURL").asString

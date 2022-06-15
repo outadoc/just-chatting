@@ -29,8 +29,8 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.LifecycleListener
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.formatTimeString
-import com.github.andreyasadchy.xtra.util.getUptime
+import com.github.andreyasadchy.xtra.util.formatTime
+import com.github.andreyasadchy.xtra.util.formatTimestamp
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -52,6 +52,7 @@ import kotlinx.android.synthetic.main.fragment_channel.userImage
 import kotlinx.android.synthetic.main.fragment_channel.userViews
 import kotlinx.android.synthetic.main.fragment_channel.viewers
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Instant
 
 class ChannelChatFragment :
     BaseNetworkFragment(),
@@ -325,15 +326,17 @@ class ChannelChatFragment :
 
     private fun updateStreamLayout(stream: Stream?) {
         if (stream?.viewer_count == null && stream?.lastBroadcast != null) {
-            formatTimeString(requireContext(), stream.lastBroadcast).let {
-                if (it != null) {
-                    lastBroadcast.text =
-                        requireContext().getString(R.string.last_broadcast_date, it)
-                    lastBroadcast.isVisible = true
-                } else {
-                    lastBroadcast.isVisible = false
+            Instant.parse(stream.lastBroadcast)
+                .formatTime(requireContext())
+                .let {
+                    if (it != null) {
+                        lastBroadcast.text =
+                            requireContext().getString(R.string.last_broadcast_date, it)
+                        lastBroadcast.isVisible = true
+                    } else {
+                        lastBroadcast.isVisible = false
+                    }
                 }
-            }
         }
 
         stream?.channelLogo.let {
@@ -380,8 +383,9 @@ class ChannelChatFragment :
             viewers.isVisible = false
         }
 
-        if (stream?.started_at != null) {
-            getUptime(requireContext(), stream.started_at).let {
+        stream?.started_at
+            ?.let { Instant.parse(it) }
+            ?.formatTimestamp(requireContext()).let {
                 if (it != null) {
                     uptime.isVisible = true
                     uptime.text = requireContext().getString(R.string.uptime, it)
@@ -389,7 +393,6 @@ class ChannelChatFragment :
                     uptime.isVisible = false
                 }
             }
-        }
     }
 
     private fun updateUserLayout(user: com.github.andreyasadchy.xtra.model.helix.user.User) {
@@ -411,7 +414,7 @@ class ChannelChatFragment :
             userCreated.isVisible = true
             userCreated.text = requireContext().getString(
                 R.string.created_at,
-                formatTimeString(requireContext(), user.created_at)
+                Instant.parse(user.created_at).formatTime(requireContext())
             )
         }
 

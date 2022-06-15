@@ -1,5 +1,7 @@
 package com.github.andreyasadchy.xtra.model.chat
 
+import kotlinx.datetime.Instant
+
 data class LiveChatMessage(
     override val id: String? = null,
     override val userId: String? = null,
@@ -14,7 +16,7 @@ data class LiveChatMessage(
     val isFirst: Boolean = false,
     val msgId: String? = null,
     val systemMsg: String? = null,
-    val timestamp: Long? = null,
+    val timestamp: Instant? = null,
     val rewardId: String? = null,
     var pointReward: PubSubPointReward? = null
 ) : ChatMessage

@@ -28,9 +28,7 @@ import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.RoomState
-import com.github.andreyasadchy.xtra.util.getDurationFromSeconds
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -52,6 +50,7 @@ import kotlinx.android.synthetic.main.view_chat_input.view.textSubs
 import kotlinx.android.synthetic.main.view_chat_input.view.textUnique
 import kotlinx.android.synthetic.main.view_chat_input.view.viewPager
 import kotlin.math.max
+import kotlin.time.Duration
 
 class ChatInputView : LinearLayout {
 
@@ -173,29 +172,18 @@ class ChatInputView : LinearLayout {
     }
 
     fun notifyRoomState(roomState: RoomState) {
-        if (roomState.emote != null) {
-            when (roomState.emote) {
-                "0" -> textEmote.isVisible = false
-                "1" -> textEmote.isVisible = true
-            }
-        } else {
-            textEmote.isVisible = false
-        }
+        textEmote.isVisible = roomState.emote
 
         if (roomState.followers != null) {
             when (roomState.followers) {
-                "-1" -> textFollowers.isVisible = false
-                "0" -> {
+                Duration.ZERO -> {
                     textFollowers.text = context.getString(R.string.room_followers)
                     textFollowers.isVisible = true
                 }
                 else -> {
                     textFollowers.text = context.getString(
                         R.string.room_followers_min,
-                        getDurationFromSeconds(
-                            context,
-                            (roomState.followers.toInt() * 60).toString()
-                        )
+                        roomState.followers.toString()
                     )
                     textFollowers.isVisible = true
                 }
@@ -204,22 +192,15 @@ class ChatInputView : LinearLayout {
             textFollowers.isVisible = false
         }
 
-        if (roomState.unique != null) {
-            when (roomState.unique) {
-                "0" -> textUnique.isVisible = false
-                "1" -> textUnique.isVisible = true
-            }
-        } else {
-            textUnique.isVisible = false
-        }
+        textUnique.isVisible = roomState.unique
 
         if (roomState.slow != null) {
             when (roomState.slow) {
-                "0" -> textSlow.isVisible = false
+                Duration.ZERO -> textSlow.isVisible = false
                 else -> {
                     textSlow.text = context.getString(
                         R.string.room_slow,
-                        getDurationFromSeconds(context, roomState.slow)
+                        roomState.slow.toString()
                     )
                     textSlow.isVisible = true
                 }
@@ -228,21 +209,14 @@ class ChatInputView : LinearLayout {
             textSlow.isVisible = false
         }
 
-        if (roomState.subs != null) {
-            when (roomState.subs) {
-                "0" -> textSubs.isVisible = false
-                "1" -> textSubs.isVisible = true
-            }
-        } else {
-            textSubs.isVisible = false
-        }
+        textSubs.isVisible = roomState.subs
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-                    !textFollowers.isGone ||
-                    !textUnique.isGone ||
-                    !textSlow.isGone ||
-                    !textSubs.isGone
+            !textFollowers.isGone ||
+            !textUnique.isGone ||
+            !textSlow.isGone ||
+            !textSubs.isGone
     }
 
     fun enableChatInteraction(enableMessaging: Boolean) {

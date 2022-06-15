@@ -1,8 +1,7 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.parseIso8601Date
+import kotlinx.datetime.Instant
 import org.json.JSONObject
 
 class PubSubListenerImpl(
@@ -41,7 +40,9 @@ class PubSubListenerImpl(
                 url2 = rewardImage?.optString("url_2x") ?: defaultImage?.optString("url_2x"),
                 url4 = rewardImage?.optString("url_4x") ?: defaultImage?.optString("url_4x"),
             ),
-            timestamp = messageData?.optString("timestamp")?.let { parseIso8601Date(it) }
+            timestamp = messageData?.optString("timestamp")?.let {
+                Instant.parse(it)
+            }
         )
         if (input.isNullOrBlank()) {
             callback.onMessage(pointReward)

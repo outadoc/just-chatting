@@ -1,5 +1,7 @@
 package com.github.andreyasadchy.xtra.model.chat
 
+import kotlinx.datetime.Instant
+
 data class PubSubPointReward(
     override val id: String? = null,
     override val userId: String? = null,
@@ -14,7 +16,7 @@ data class PubSubPointReward(
     val rewardTitle: String? = null,
     val rewardCost: Int? = null,
     private val rewardImage: RewardImage? = null,
-    val timestamp: Long? = null
+    val timestamp: Instant? = null
 ) : ChatMessage {
 
     data class RewardImage(

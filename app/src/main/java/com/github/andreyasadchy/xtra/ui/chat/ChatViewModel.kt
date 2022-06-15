@@ -533,7 +533,7 @@ class ChatViewModel @Inject constructor(
                 chat?.disconnect()
                 loggedInChat?.disconnect()
                 pubSub?.disconnect()
-                roomState.postValue(RoomState(null, null, null, null, null))
+                roomState.postValue(RoomState())
                 command.postValue(Command(type = "disconnect_command"))
             }
         }

@@ -357,7 +357,6 @@ class ApiRepository @Inject constructor(
                             }
                         }
                 }
-
         } catch (e: Exception) {
             helix.getCheerEmotes(
                 helixClientId,

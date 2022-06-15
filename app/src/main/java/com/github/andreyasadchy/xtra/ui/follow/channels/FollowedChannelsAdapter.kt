@@ -8,8 +8,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.formatTimeString
+import com.github.andreyasadchy.xtra.util.formatTime
 import com.github.andreyasadchy.xtra.util.loadImage
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.localText
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.twitchText
@@ -17,6 +16,7 @@ import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userImage
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userStream
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.username
+import kotlinx.datetime.Instant
 
 class FollowedChannelsAdapter(
     private val listener: OnChannelSelectedListener
@@ -62,26 +62,24 @@ class FollowedChannelsAdapter(
                 username.isVisible = false
             }
 
-            if (item.lastBroadcast != null) {
-                val text = item.lastBroadcast?.let { formatTimeString(context, it) }
-                if (text != null) {
-                    userStream.isVisible = true
-                    userStream.text = context.getString(R.string.last_broadcast_date, text)
-                } else {
-                    userStream.isVisible = false
-                }
+            val lastBroadcast = item.lastBroadcast
+            if (lastBroadcast != null) {
+                userStream.isVisible = true
+                userStream.text = context.getString(
+                    R.string.last_broadcast_date,
+                    Instant.parse(lastBroadcast).formatTime(context)
+                )
             } else {
                 userStream.isVisible = false
             }
 
-            if (item.followed_at != null) {
-                val text = formatTimeString(context, item.followed_at!!)
-                if (text != null) {
-                    userFollowed.isVisible = true
-                    userFollowed.text = context.getString(R.string.followed_at, text)
-                } else {
-                    userFollowed.isVisible = false
-                }
+            val followedAt = item.followed_at
+            if (followedAt != null) {
+                userFollowed.isVisible = true
+                userFollowed.text = context.getString(
+                    R.string.followed_at,
+                    Instant.parse(followedAt).formatTime(context)
+                )
             } else {
                 userFollowed.isVisible = false
             }

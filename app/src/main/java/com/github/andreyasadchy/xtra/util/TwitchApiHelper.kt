@@ -1,8 +1,6 @@
 package com.github.andreyasadchy.xtra.util
 
 import android.content.Context
-import android.text.format.DateFormat
-import android.text.format.DateUtils
 import androidx.core.util.Pair
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.XtraApp
@@ -17,13 +15,6 @@ import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.PubSubListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.PubSubWebSocket
 import kotlinx.coroutines.CoroutineScope
-import java.lang.Integer.parseInt
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
 
 object TwitchApiHelper {
 

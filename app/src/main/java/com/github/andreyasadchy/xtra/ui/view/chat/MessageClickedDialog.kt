@@ -19,7 +19,7 @@ import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.formatTimeString
+import com.github.andreyasadchy.xtra.util.formatTime
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.dialog_chat_message_click.bannerImage
@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.dialog_chat_message_click.userImage
 import kotlinx.android.synthetic.main.dialog_chat_message_click.userLayout
 import kotlinx.android.synthetic.main.dialog_chat_message_click.userName
 import kotlinx.android.synthetic.main.dialog_chat_message_click.viewProfile
+import kotlinx.datetime.Instant
 import javax.inject.Inject
 
 class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
@@ -210,7 +211,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             userCreated.isVisible = true
             userCreated.text = requireContext().getString(
                 R.string.created_at,
-                formatTimeString(requireContext(), user.created_at)
+                Instant.parse(user.created_at).formatTime(requireContext())
             )
             if (user.bannerImageURL != null) {
                 userCreated.setTextColor(Color.LTGRAY)

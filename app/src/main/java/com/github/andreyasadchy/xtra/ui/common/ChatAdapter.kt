@@ -38,7 +38,7 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.ui.view.chat.VerticalImageSpan
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.getTimestamp
+import com.github.andreyasadchy.xtra.util.formatTimestamp
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import kotlin.collections.set
 
@@ -156,9 +156,7 @@ class ChatAdapter(
         }
 
         val timestamp: String? =
-            (liveMessage?.timestamp ?: pointReward?.timestamp)?.let { timestamp ->
-                getTimestamp(context, timestamp)
-            }
+            (liveMessage?.timestamp ?: pointReward?.timestamp)?.formatTimestamp(context)
 
         if (enableTimestamps && timestamp != null) {
             builder.append("$timestamp ")

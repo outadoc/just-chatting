@@ -6,12 +6,12 @@ import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
-import com.github.andreyasadchy.xtra.util.getDurationFromSeconds
 import com.github.andreyasadchy.xtra.util.prefs
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
+import kotlinx.datetime.Instant
 import java.lang.reflect.Type
 import java.util.Locale
 
@@ -67,7 +67,9 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     message = systemMsg ?: messageInfo,
                     color = "#999999",
                     isAction = true,
-                    timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                    timestamp = prefixes["tmi-sent-ts"]
+                        ?.toLong()
+                        ?.let { Instant.fromEpochSeconds(it) },
                     fullMsg = message
                 )
             } else {
@@ -134,7 +136,9 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     systemMsg = systemMsg,
                     emotes = emotesList,
                     badges = badgesList,
-                    timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                    timestamp = prefixes["tmi-sent-ts"]
+                        ?.toLong()
+                        ?.let { Instant.fromEpochSeconds(it) },
                     fullMsg = message
                 )
             }
@@ -157,7 +161,9 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                 message = context.getString(R.string.chat_clearmsg, user, msg),
                 color = "#999999",
                 isAction = true,
-                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                timestamp = prefixes["tmi-sent-ts"]
+                    ?.toLong()
+                    ?.let { Instant.fromEpochSeconds(it) },
                 fullMsg = message
             )
         } else {
@@ -195,14 +201,16 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     "timeout" -> context.getString(
                         R.string.chat_timeout,
                         user,
-                        getDurationFromSeconds(context, duration)
+                        duration
                     )
                     "ban" -> context.getString(R.string.chat_ban, user)
                     else -> return null
                 },
                 color = "#999999",
                 isAction = true,
-                timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                timestamp = prefixes["tmi-sent-ts"]
+                    ?.toLong()
+                    ?.let { Instant.fromEpochSeconds(it) },
                 fullMsg = message
             )
         } else {

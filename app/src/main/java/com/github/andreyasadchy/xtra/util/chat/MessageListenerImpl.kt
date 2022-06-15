@@ -3,7 +3,10 @@ package com.github.andreyasadchy.xtra.util.chat
 import com.github.andreyasadchy.xtra.model.chat.Badge
 import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import kotlinx.datetime.Instant
 import kotlin.collections.set
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 class MessageListenerImpl(
     private val callback: OnChatMessageReceivedListener,
@@ -35,7 +38,8 @@ class MessageListenerImpl(
                 callbackCommand.onCommand(
                     Command(
                         message = systemMsg ?: messageInfo,
-                        timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                        timestamp = prefixes["tmi-sent-ts"]?.toLong()
+                            ?.let { Instant.fromEpochSeconds(it) },
                         fullMsg = message
                     )
                 )
@@ -70,6 +74,7 @@ class MessageListenerImpl(
                         }
                     }
                 }
+
                 var badgesList: MutableList<Badge>? = null
                 val badges = prefixes["badges"]
                 if (badges != null) {
@@ -81,6 +86,7 @@ class MessageListenerImpl(
                         }
                     }
                 }
+
                 val rewardId = prefixes["custom-reward-id"]
                 val chatMessage = LiveChatMessage(
                     id = prefixes["id"],
@@ -96,9 +102,11 @@ class MessageListenerImpl(
                     systemMsg = systemMsg,
                     emotes = emotesList,
                     badges = badgesList,
-                    timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                    timestamp = prefixes["tmi-sent-ts"]?.toLong()
+                        ?.let { Instant.fromEpochSeconds(it) },
                     fullMsg = message
                 )
+
                 if (rewardId.isNullOrBlank() || !usePubSub) {
                     callback.onMessage(chatMessage)
                 } else {
@@ -133,7 +141,8 @@ class MessageListenerImpl(
                     message = user,
                     duration = msg,
                     type = "clearmsg",
-                    timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                    timestamp = prefixes["tmi-sent-ts"]?.toLong()
+                        ?.let { Instant.fromEpochSeconds(it) },
                     fullMsg = message
                 )
             )
@@ -163,7 +172,8 @@ class MessageListenerImpl(
                     message = user,
                     duration = duration,
                     type = type,
-                    timestamp = prefixes["tmi-sent-ts"]?.toLong(),
+                    timestamp = prefixes["tmi-sent-ts"]?.toLong()
+                        ?.let { Instant.fromEpochSeconds(it) },
                     fullMsg = message
                 )
             )
@@ -197,11 +207,11 @@ class MessageListenerImpl(
         val prefixes = splitAndMakeMap(prefix, ";", "=")
         callbackRoomState.onRoomState(
             RoomState(
-                emote = prefixes["emote-only"],
-                followers = prefixes["followers-only"],
-                unique = prefixes["r9k"],
-                slow = prefixes["slow"],
-                subs = prefixes["subs-only"]
+                emote = prefixes["emote-only"] == "1",
+                followers = prefixes["followers-only"]?.toInt()?.takeUnless { it == -1 }?.minutes,
+                unique = prefixes["r9k"] == "1",
+                slow = prefixes["slow"]?.toInt()?.seconds,
+                subs = prefixes["subs-only"] == "1"
             )
         )
     }

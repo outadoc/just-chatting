@@ -5,11 +5,8 @@ import android.view.View
 import androidx.core.view.isVisible
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.formatTimestamp
-import com.github.andreyasadchy.xtra.util.prefs
-import com.google.android.material.chip.Chip
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.chipGroupTagsContainer
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.scrollViewTagsContainer
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.uptime
@@ -45,7 +42,7 @@ class StreamsCompactAdapter(
                 uptime.isVisible = false
             }
 
-            if (item.tags != null && context.prefs().getBoolean(C.UI_TAGS, true)) {
+            if (item.tags != null) {
                 val inflater = LayoutInflater.from(context)
                 chipGroupTagsContainer.removeAllViews()
                 for (tag in item.tags) {

@@ -5,11 +5,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreferenceCompat
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.ui.settings.api.DragListFragment
-import com.github.andreyasadchy.xtra.util.C
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -64,14 +62,6 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
-            val changeListener = Preference.OnPreferenceChangeListener { _, _ ->
-                setResult()
-                true
-            }
-
-            findPreference<SwitchPreferenceCompat>(C.UI_TAGS)?.onPreferenceChangeListener =
-                changeListener
 
             findPreference<Preference>("api_settings")?.setOnPreferenceClickListener {
                 parentFragmentManager

@@ -1,20 +1,6 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory
-        android:title="@string/settings_ui"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="ui_tags"
-        android:title="@string/show_tags"
-        app:iconSpaceReserved="false" />
-
-    <PreferenceCategory
-        android:title="@string/settings_chat"
-        app:iconSpaceReserved="false" />
-
     <SwitchPreferenceCompat
         android:defaultValue="true"
         android:key="chat_randomcolor"
@@ -88,10 +74,6 @@
         android:defaultValue="true"
         android:key="chat_pubsub_enabled"
         android:title="@string/enable_pubsub"
-        app:iconSpaceReserved="false" />
-
-    <PreferenceCategory
-        android:title="@string/settings_player"
         app:iconSpaceReserved="false" />
 
     <Preference

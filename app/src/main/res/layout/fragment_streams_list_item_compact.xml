@@ -87,6 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="16dp"
+            android:paddingEnd="0dp"
             android:textAppearance="?textAppearanceLabelMedium"
             android:visibility="gone"
             app:layout_constraintBaseline_toBaselineOf="@id/gameName"

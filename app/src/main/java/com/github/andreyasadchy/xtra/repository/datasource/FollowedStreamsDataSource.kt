@@ -10,6 +10,7 @@ import com.github.andreyasadchy.xtra.di.XtraModule
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
 import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientWithTokenFactory.apolloClientWithToken
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
+import com.github.andreyasadchy.xtra.model.helix.tag.Tag
 import com.github.andreyasadchy.xtra.repository.GraphQLRepository
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.util.C
@@ -141,6 +142,13 @@ class FollowedStreamsDataSource(
                         started_at = i?.node?.stream?.createdAt,
                         thumbnail_url = i?.node?.stream?.previewImageURL,
                         profileImageURL = i?.node?.profileImageURL,
+                        tags = i?.node?.stream?.tags?.map { tag ->
+                            Tag(
+                                id = tag?.id,
+                                name = tag?.localizedName,
+                                scope = tag?.scope?.name
+                            )
+                        }
                     )
                 )
             }
@@ -223,6 +231,13 @@ class FollowedStreamsDataSource(
                         started_at = i?.node?.stream?.createdAt,
                         thumbnail_url = i?.node?.stream?.previewImageURL,
                         profileImageURL = i?.node?.profileImageURL,
+                        tags = i?.node?.stream?.tags?.map { tag ->
+                            Tag(
+                                id = tag?.id,
+                                name = tag?.localizedName,
+                                scope = tag?.scope?.name
+                            )
+                        }
                     )
                 )
             }
@@ -243,10 +258,11 @@ class FollowedStreamsDataSource(
     private suspend fun gqlQueryLocal(ids: List<String>): List<Stream> {
         val streams = mutableListOf<Stream>()
         for (localIds in ids.chunked(100)) {
-            val get = apolloClient(
-                XtraModule(),
-                gqlClientId
-            ).query(StreamsQuery(Optional.Present(localIds))).execute().data?.users
+            val get = apolloClient(XtraModule(), gqlClientId)
+                .query(StreamsQuery(Optional.Present(localIds)))
+                .execute()
+                .data?.users
+
             if (get != null) {
                 for (i in get) {
                     if (i?.stream?.viewersCount != null) {

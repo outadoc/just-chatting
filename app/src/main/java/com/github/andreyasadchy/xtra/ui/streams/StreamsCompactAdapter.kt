@@ -10,7 +10,6 @@ import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.formatTimestamp
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.tagsLayout
-import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.type
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.uptime
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.viewers
 import kotlinx.datetime.Instant
@@ -29,18 +28,6 @@ class StreamsCompactAdapter(
                 viewers.text = TwitchApiHelper.formatCount(item.viewer_count)
             } else {
                 viewers.isVisible = false
-            }
-
-            if (item.type != null) {
-                val text = TwitchApiHelper.getType(context, item.type)
-                if (text != null) {
-                    type.isVisible = true
-                    type.text = text
-                } else {
-                    type.isVisible = false
-                }
-            } else {
-                type.isVisible = false
             }
 
             if (item.started_at != null) {

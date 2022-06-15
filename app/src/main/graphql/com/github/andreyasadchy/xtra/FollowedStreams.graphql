@@ -15,6 +15,11 @@ query FollowedStreams($id: ID, $first: Int, $after: Cursor) {
                         viewersCount
                         createdAt
                         previewImageURL
+                        tags {
+                            id
+                            localizedName
+                            scope
+                        }
                         game {
                             id
                             displayName

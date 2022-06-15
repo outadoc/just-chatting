@@ -63,10 +63,6 @@
     <string name="settings_player">PLAYER</string>
     <string name="api_helix">Helix client id</string>
     <string name="api_gql">GQL client id</string>
-    <string name="video_type_archive">Past broadcast</string>
-    <string name="video_type_highlight">Highlight</string>
-    <string name="video_type_upload">Upload</string>
-    <string name="video_type_rerun">Rerun</string>
     <string name="room_emote">Emote</string>
     <string name="room_followers">Followers</string>
     <string name="room_followers_min">Followers %s</string>

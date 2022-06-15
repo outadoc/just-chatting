@@ -60,16 +60,6 @@ object TwitchApiHelper {
         }
     }
 
-    fun getType(context: Context, type: String?): String? {
-        return when (type?.lowercase()) {
-            "archive" -> context.getString(R.string.video_type_archive)
-            "highlight" -> context.getString(R.string.video_type_highlight)
-            "upload" -> context.getString(R.string.video_type_upload)
-            "rerun" -> context.getString(R.string.video_type_rerun)
-            else -> null
-        }
-    }
-
     fun startChat(
         useSSl: Boolean,
         loggedIn: Boolean,

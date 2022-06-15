@@ -14,104 +14,6 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/apiSettingsText1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <com.woxthebox.draglistview.DragListView
-            android:id="@+id/apiSettingsList1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/apiSettingsText2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <com.woxthebox.draglistview.DragListView
-            android:id="@+id/apiSettingsList2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/apiSettingsText3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <com.woxthebox.draglistview.DragListView
-            android:id="@+id/apiSettingsList3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/apiSettingsText4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <com.woxthebox.draglistview.DragListView
-            android:id="@+id/apiSettingsList4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/apiSettingsText5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <com.woxthebox.draglistview.DragListView
-            android:id="@+id/apiSettingsList5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/apiSettingsText6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <com.woxthebox.draglistview.DragListView
-            android:id="@+id/apiSettingsList6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/apiSettingsText7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <com.woxthebox.draglistview.DragListView
-            android:id="@+id/apiSettingsList7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
             android:id="@+id/apiSettingsText8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,20 +24,6 @@
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/apiSettingsText9"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <com.woxthebox.draglistview.DragListView
-            android:id="@+id/apiSettingsList9"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -154,20 +42,6 @@
             android:layout_height="wrap_content" />
 
         <TextView
-            android:id="@+id/apiSettingsText11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <com.woxthebox.draglistview.DragListView
-            android:id="@+id/apiSettingsList11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
             android:id="@+id/apiSettingsText12"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -178,20 +52,6 @@
 
         <com.woxthebox.draglistview.DragListView
             android:id="@+id/apiSettingsList12"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/apiSettingsText13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="3dp"
-            android:layout_marginBottom="3dp"
-            android:textAppearance="?attr/textAppearanceTitleMedium" />
-
-        <com.woxthebox.draglistview.DragListView
-            android:id="@+id/apiSettingsList13"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

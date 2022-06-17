@@ -3,7 +3,6 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.android.extensions")
     id("org.jetbrains.kotlin.kapt")
-    id("com.apollographql.apollo3")
     id("com.diffplug.spotless")
 }
 
@@ -127,7 +126,6 @@ dependencies {
     implementation "androidx.tonyodev.fetch2okhttp:xfetch2okhttp:$fetch"
 
     implementation 'androidx.webkit:webkit:1.4.0'
-    implementation "com.apollographql.apollo3:apollo-runtime:$apollo_ver"
 
     implementation 'org.checkerframework:checker-qual:3.22.0'
 
@@ -150,9 +148,4 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2'
-}
-
-apollo {
-    packageName.set("com.github.andreyasadchy.xtra")
-    generateKotlinModels.set(true)
 }

@@ -1,8 +1,6 @@
 package com.github.andreyasadchy.xtra.di
 
 import android.app.Application
-import com.apollographql.apollo3.ApolloClient
-import com.apollographql.apollo3.network.okHttpClient
 import com.github.andreyasadchy.xtra.BuildConfig
 import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.api.IdApi
@@ -247,46 +245,6 @@ class XtraModule {
                 )
                 .create()
         )
-    }
-
-    @Singleton
-    @Provides
-    fun apolloClient(clientId: String?): ApolloClient {
-        val builder = ApolloClient.Builder()
-            .serverUrl("https://gql.twitch.tv/gql/")
-            .okHttpClient(
-                OkHttpClient.Builder().apply {
-                    addInterceptor(AuthorizationInterceptor(clientId))
-                    if (BuildConfig.DEBUG) {
-                        addInterceptor(
-                            HttpLoggingInterceptor().apply {
-                                level = HttpLoggingInterceptor.Level.BODY
-                            }
-                        )
-                    }
-                }.build()
-            )
-        return builder.build()
-    }
-
-    @Singleton
-    @Provides
-    fun apolloClientWithToken(clientId: String?, token: String?): ApolloClient {
-        val builder = ApolloClient.Builder()
-            .serverUrl("https://gql.twitch.tv/gql/")
-            .okHttpClient(
-                OkHttpClient.Builder().apply {
-                    addInterceptor(AuthorizationInterceptor(clientId, token))
-                    if (BuildConfig.DEBUG) {
-                        addInterceptor(
-                            HttpLoggingInterceptor().apply {
-                                level = HttpLoggingInterceptor.Level.BODY
-                            }
-                        )
-                    }
-                }.build()
-            )
-        return builder.build()
     }
 
     private class AuthorizationInterceptor(val clientId: String?, val token: String? = null) :

@@ -45,18 +45,17 @@ class LoginActivity : AppCompatActivity(), Injectable {
     lateinit var repository: AuthRepository
 
     private val tokenPattern = Pattern.compile("token=(.+?)(?=&)")
+
     private var tokens = 0
     private var userId = ""
     private var userLogin = ""
     private var helixToken = ""
-    private var gqlToken = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         val helixClientId = prefs().getString(C.HELIX_CLIENT_ID, "") ?: ""
-        val gqlClientId = prefs().getString(C.GQL_CLIENT_ID, "") ?: ""
         val user = User.get(this)
 
         if (user !is NotLoggedIn) {
@@ -68,22 +67,18 @@ class LoginActivity : AppCompatActivity(), Injectable {
                     if (!user.helixToken.isNullOrBlank()) {
                         repository.revoke(helixClientId, user.helixToken)
                     }
-                    if (!user.gqlToken.isNullOrBlank()) {
-                        repository.revoke(gqlClientId, user.gqlToken)
-                    }
                 } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }
 
-        initWebView(helixClientId, gqlClientId)
+        initWebView(helixClientId)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun initWebView(helixClientId: String, gqlClientId: String) {
+    private fun initWebView(helixClientId: String) {
         webViewContainer.isVisible = true
-
-        val apiSetting = prefs().getString(C.API_LOGIN, "0")?.toInt() ?: 0
 
         val helixScopes = listOf(
             "chat:read",
@@ -102,17 +97,6 @@ class LoginActivity : AppCompatActivity(), Injectable {
                 .addQueryParameter("client_id", helixClientId)
                 .addQueryParameter("redirect_uri", helixRedirect)
                 .addQueryParameter("scope", helixScopes.joinToString(" "))
-                .build()
-                .toString()
-
-        val gqlRedirect = prefs().getString(C.GQL_REDIRECT, "https://www.twitch.tv/")
-        val gqlAuthUrl =
-            "https://id.twitch.tv/oauth2/authorize".toHttpUrl()
-                .newBuilder()
-                .addQueryParameter("response_type", "token")
-                .addQueryParameter("client_id", gqlClientId)
-                .addQueryParameter("redirect_uri", gqlRedirect)
-                .addQueryParameter("scope", "")
                 .build()
                 .toString()
 
@@ -145,7 +129,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
                         .setPositiveButton(R.string.log_in) { _, _ ->
                             val text = editText.text
                             if (text.isNotEmpty()) {
-                                if (!loginIfValidUrl(text.toString(), gqlAuthUrl, 2)) {
+                                if (!loginIfValidUrl(text.toString())) {
                                     shortToast(R.string.invalid_url)
                                 }
                             }
@@ -182,7 +166,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
             webViewClient = object : WebViewClient() {
 
                 override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                    loginIfValidUrl(url, gqlAuthUrl, apiSetting)
+                    loginIfValidUrl(url)
                     return false
                 }
 
@@ -208,14 +192,14 @@ class LoginActivity : AppCompatActivity(), Injectable {
         }
     }
 
-    private fun loginIfValidUrl(url: String, gqlAuthUrl: String, apiSetting: Int): Boolean {
+    private fun loginIfValidUrl(url: String): Boolean {
         val matcher = tokenPattern.matcher(url)
         return if (matcher.find() && tokens < 2) {
             webViewContainer.isVisible = false
             progressBar.isVisible = true
 
             val token = matcher.group(1)!!
-            if (apiSetting == 0 && tokens == 0 || apiSetting == 2) {
+            if (tokens == 0) {
                 lifecycleScope.launch {
                     try {
                         val response = repository.validate(
@@ -226,17 +210,6 @@ class LoginActivity : AppCompatActivity(), Injectable {
                             userId = response.userId
                             userLogin = response.login
                             helixToken = token
-
-                            if (apiSetting == 0 && gqlToken.isNotBlank() || apiSetting > 0) {
-                                TwitchApiHelper.checkedValidation = true
-                                User.set(
-                                    this@LoginActivity,
-                                    LoggedIn(userId, userLogin, helixToken, gqlToken)
-                                )
-
-                                setResult(RESULT_OK)
-                                finish()
-                            }
                         } else {
                             throw IOException()
                         }
@@ -251,13 +224,12 @@ class LoginActivity : AppCompatActivity(), Injectable {
                         if (response != null) {
                             userId = response.userId
                             userLogin = response.login
-                            gqlToken = token
 
-                            if (apiSetting == 0 && helixToken.isNotBlank() || apiSetting > 0) {
+                            if (helixToken.isNotBlank()) {
                                 TwitchApiHelper.checkedValidation = true
                                 User.set(
                                     this@LoginActivity,
-                                    LoggedIn(userId, userLogin, helixToken, gqlToken)
+                                    LoggedIn(userId, userLogin, helixToken)
                                 )
                                 setResult(RESULT_OK)
                                 finish()
@@ -269,10 +241,6 @@ class LoginActivity : AppCompatActivity(), Injectable {
                         toast(R.string.connection_error)
                     }
                 }
-            }
-
-            if (apiSetting == 0 && tokens == 0) {
-                webView.loadUrl(gqlAuthUrl)
             }
 
             tokens++

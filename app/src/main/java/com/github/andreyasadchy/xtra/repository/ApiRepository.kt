@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.repository
 
-import androidx.core.util.Pair
 import androidx.paging.PagedList
 import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.model.chat.CheerEmote
@@ -31,7 +30,6 @@ class ApiRepository @Inject constructor(
         query: String,
         helixClientId: String?,
         helixToken: String?,
-        apiPref: ArrayList<Pair<Long?, String?>?>?,
         coroutineScope: CoroutineScope
     ): Listing<ChannelSearch> {
         val factory = SearchChannelsDataSource.Factory(

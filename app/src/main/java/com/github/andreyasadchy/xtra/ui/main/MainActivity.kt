@@ -64,9 +64,8 @@ class MainActivity :
             it.getContentIfNotHandled()?.let { online ->
                 if (online) {
                     viewModel.validate(
-                        prefs.getString(C.HELIX_CLIENT_ID, ""),
-                        prefs.getString(C.GQL_CLIENT_ID, ""),
-                        this
+                        helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""),
+                        activity = this
                     )
                 }
                 if (flag) {
@@ -136,10 +135,9 @@ class MainActivity :
         if (login.isNotBlank()) {
             val prefs = prefs()
             viewModel.loadUser(
-                login,
-                prefs.getString(C.HELIX_CLIENT_ID, ""),
-                prefs.getString(C.TOKEN, ""),
-                prefs.getString(C.GQL_CLIENT_ID, "")
+                login = login,
+                helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""),
+                helixToken = prefs.getString(C.TOKEN, ""),
             )
 
             viewModel.user.observe(this) { user ->
@@ -199,8 +197,8 @@ class MainActivity :
         fragNavController.apply {
             rootFragments = listOf(
                 FollowMediaFragment.newInstance(
-                    loggedIn = !User.get(this@MainActivity).gqlToken.isNullOrBlank()
-                ),
+                    loggedIn = !User.get(this@MainActivity).helixToken.isNullOrBlank()
+                )
             )
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
             transactionListener = object : FragNavController.TransactionListener {

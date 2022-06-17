@@ -26,20 +26,4 @@
         app:iconSpaceReserved="false"
         app:useSimpleSummaryProvider="true" />
 
-    <EditTextPreference
-        android:defaultValue="kimne78kx3ncx6brgo4mv6wki5h1ko"
-        android:key="gql_client_id"
-        android:maxLines="1"
-        android:title="@string/api_gql"
-        app:iconSpaceReserved="false"
-        app:useSimpleSummaryProvider="true" />
-
-    <EditTextPreference
-        android:defaultValue="https://www.twitch.tv/"
-        android:key="gql_redirect"
-        android:maxLines="1"
-        android:title="@string/api_gql_redirect"
-        app:iconSpaceReserved="false"
-        app:useSimpleSummaryProvider="true" />
-
 </androidx.preference.PreferenceScreen>

@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.ui.streams.followed
 
-import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -18,10 +17,10 @@ class FollowedStreamsViewModel @Inject constructor(
     private val filter = MutableLiveData<Filter>()
     override val result: LiveData<Listing<Stream>> = Transformations.map(filter) {
         repository.loadFollowedStreams(
-            it.userId,
-            it.helixClientId,
-            it.helixToken,
-            viewModelScope
+            userId = it.userId,
+            helixClientId = it.helixClientId,
+            helixToken = it.helixToken,
+            coroutineScope = viewModelScope
         )
     }
 
@@ -29,17 +28,11 @@ class FollowedStreamsViewModel @Inject constructor(
         userId: String? = null,
         helixClientId: String? = null,
         helixToken: String? = null,
-        gqlClientId: String? = null,
-        gqlToken: String? = null,
-        apiPref: ArrayList<Pair<Long?, String?>?>,
     ) {
         Filter(
             userId = userId,
             helixClientId = helixClientId,
-            helixToken = helixToken,
-            gqlClientId = gqlClientId,
-            gqlToken = gqlToken,
-            apiPref = apiPref
+            helixToken = helixToken
         ).let {
             if (filter.value != it) {
                 filter.value = it
@@ -50,9 +43,6 @@ class FollowedStreamsViewModel @Inject constructor(
     private data class Filter(
         val userId: String?,
         val helixClientId: String?,
-        val helixToken: String?,
-        val gqlClientId: String?,
-        val gqlToken: String?,
-        val apiPref: ArrayList<Pair<Long?, String?>?>
+        val helixToken: String?
     )
 }

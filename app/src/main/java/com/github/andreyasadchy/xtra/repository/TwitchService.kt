@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.repository
 
-import androidx.core.util.Pair
 import com.github.andreyasadchy.xtra.model.chat.CheerEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
@@ -17,7 +16,6 @@ interface TwitchService {
         query: String,
         helixClientId: String?,
         helixToken: String?,
-        apiPref: ArrayList<Pair<Long?, String?>?>?,
         coroutineScope: CoroutineScope
     ): Listing<ChannelSearch>
 

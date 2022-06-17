@@ -179,8 +179,7 @@ class ChannelChatFragment :
             channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME),
             profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE),
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-            helixToken = requireContext().prefs().getString(C.TOKEN, ""),
-            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+            helixToken = requireContext().prefs().getString(C.TOKEN, "")
         )
 
         viewModel.stream.observe(viewLifecycleOwner) { stream ->
@@ -191,8 +190,7 @@ class ChannelChatFragment :
                 viewModel.loadUser(
                     channelId = requireArguments().getString(C.CHANNEL_ID),
                     helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-                    helixToken = requireContext().prefs().getString(C.TOKEN, ""),
-                    gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+                    helixToken = requireContext().prefs().getString(C.TOKEN, "")
                 )
 
                 viewModel.user.observe(viewLifecycleOwner) { user ->
@@ -205,8 +203,7 @@ class ChannelChatFragment :
 
         initializeFollow(
             user = User.get(requireContext()),
-            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, "")
         )
     }
 
@@ -224,7 +221,6 @@ class ChannelChatFragment :
             usePubSub = prefs.getBoolean(C.CHAT_PUBSUB_ENABLED, true),
             user = user,
             helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""),
-            gqlClientId = prefs.getString(C.GQL_CLIENT_ID, "") ?: "",
             channelId = args.getString(C.CHANNEL_ID),
             channelLogin = args.getString(C.CHANNEL_LOGIN),
             channelName = args.getString(C.CHANNEL_DISPLAYNAME),
@@ -293,11 +289,10 @@ class ChannelChatFragment :
 
     private fun initializeFollow(
         user: User,
-        helixClientId: String? = null,
-        gqlClientId: String? = null
+        helixClientId: String? = null
     ) {
         with(channelViewModel) {
-            setUser(user, helixClientId, gqlClientId)
+            setUser(user, helixClientId)
             var initialized = false
             val channelName = userName
 
@@ -439,8 +434,7 @@ class ChannelChatFragment :
 
         channelViewModel.retry(
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-            helixToken = requireContext().prefs().getString(C.TOKEN, ""),
-            gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+            helixToken = requireContext().prefs().getString(C.TOKEN, "")
         )
     }
 

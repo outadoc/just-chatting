@@ -56,7 +56,7 @@ class ChannelChatViewModel @Inject constructor(
         }
     override lateinit var follow: FollowLiveData
 
-    override fun setUser(user: User, helixClientId: String?, gqlClientId: String?) {
+    override fun setUser(user: User, helixClientId: String?) {
         if (!this::follow.isInitialized) {
             follow = FollowLiveData(
                 localFollowsChannel = localFollowsChannel,
@@ -67,7 +67,6 @@ class ChannelChatViewModel @Inject constructor(
                 repository = repository,
                 helixClientId = helixClientId,
                 user = user,
-                gqlClientId = gqlClientId,
                 viewModelScope = viewModelScope
             )
         }
@@ -79,23 +78,24 @@ class ChannelChatViewModel @Inject constructor(
         channelName: String?,
         profileImageURL: String?,
         helixClientId: String? = null,
-        helixToken: String? = null,
-        gqlClientId: String? = null
+        helixToken: String? = null
     ) {
         if (_userId.value != channelId && channelId != null) {
             _userId.value = channelId
             _userLogin.value = channelLogin
             _userName.value = channelName
             _profileImageURL.value = profileImageURL
+
             viewModelScope.launch {
                 try {
                     val stream = repository.loadStreamWithUser(
-                        channelId,
-                        helixClientId,
-                        helixToken
+                        channelId = channelId,
+                        helixClientId = helixClientId,
+                        helixToken = helixToken
                     )
                     _stream.postValue(stream)
                 } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }
@@ -104,19 +104,19 @@ class ChannelChatViewModel @Inject constructor(
     fun loadUser(
         channelId: String?,
         helixClientId: String? = null,
-        helixToken: String? = null,
-        gqlClientId: String? = null
+        helixToken: String? = null
     ) {
         if (channelId != null) {
             viewModelScope.launch {
                 try {
                     val user = repository.loadUsersById(
-                        mutableListOf(channelId),
-                        helixClientId,
-                        helixToken
+                        ids = mutableListOf(channelId),
+                        helixClientId = helixClientId,
+                        helixToken = helixToken
                     )?.firstOrNull()
                     _user.postValue(user)
                 } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
         }
@@ -124,22 +124,20 @@ class ChannelChatViewModel @Inject constructor(
 
     fun retry(
         helixClientId: String? = null,
-        helixToken: String? = null,
-        gqlClientId: String? = null
+        helixToken: String? = null
     ) {
         if (_stream.value == null) {
             loadStream(
-                _userId.value,
-                _userLogin.value,
-                _userName.value,
-                _profileImageURL.value,
-                helixClientId,
-                helixToken,
-                gqlClientId
+                channelId = _userId.value,
+                channelLogin = _userLogin.value,
+                channelName = _userName.value,
+                profileImageURL = _profileImageURL.value,
+                helixClientId = helixClientId,
+                helixToken = helixToken
             )
         } else {
             if (_stream.value!!.channelUser == null) {
-                loadUser(_userId.value, helixClientId, helixToken, gqlClientId)
+                loadUser(_userId.value, helixClientId, helixToken)
             }
         }
     }

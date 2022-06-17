@@ -110,7 +110,6 @@ class ChatViewModel @Inject constructor(
         usePubSub: Boolean,
         user: User,
         helixClientId: String?,
-        gqlClientId: String,
         channelId: String?,
         channelLogin: String?,
         channelName: String?,
@@ -138,7 +137,6 @@ class ChatViewModel @Inject constructor(
                 init(
                     helixClientId = helixClientId,
                     helixToken = user.helixToken?.nullIfEmpty(),
-                    gqlClientId = gqlClientId,
                     channelId = channelId,
                     channelLogin = channelLogin,
                     enableRecentMsg = enableRecentMsg,
@@ -179,7 +177,6 @@ class ChatViewModel @Inject constructor(
     private fun init(
         helixClientId: String?,
         helixToken: String?,
-        gqlClientId: String,
         channelId: String,
         channelLogin: String? = null,
         enableRecentMsg: Boolean? = false,
@@ -407,7 +404,7 @@ class ChatViewModel @Inject constructor(
                 loggedInChat = TwitchApiHelper.startLoggedInChat(
                     useSSl = useSSl,
                     userName = user.login,
-                    userToken = user.gqlToken?.nullIfEmpty() ?: user.helixToken,
+                    userToken = user.helixToken,
                     channelName = channelLogin,
                     showUserNotice = showUserNotice,
                     showClearMsg = showClearMsg,

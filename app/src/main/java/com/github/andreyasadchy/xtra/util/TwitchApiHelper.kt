@@ -154,40 +154,6 @@ object TwitchApiHelper {
         return "%,d".format(count)
     }
 
-    val searchChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> =
-        arrayListOf(Pair(0, C.HELIX), Pair(1, C.GQL))
-
-    val followedStreamsApiDefaults: ArrayList<Pair<Long?, String?>?> =
-        arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.HELIX), Pair(2, C.GQL))
-
-    val followedChannelsApiDefaults: ArrayList<Pair<Long?, String?>?> =
-        arrayListOf(Pair(0, C.GQL_QUERY), Pair(1, C.GQL), Pair(2, C.HELIX))
-
-    fun listFromPrefs(
-        pref: String?,
-        defaults: ArrayList<Pair<Long?, String?>?>
-    ): ArrayList<Pair<Long?, String?>?> {
-        return if (!pref.isNullOrBlank()) {
-            val list = ArrayList<Pair<Long?, String?>?>()
-            val split = splitAndMakeMap(pref)
-            for (i in split.sortedBy { it?.first }) {
-                val item = defaults.find { it?.second == i?.second }
-                if (item != null) {
-                    list.add(i)
-                }
-            }
-            for (i in defaults.sortedBy { it?.first }) {
-                val item = list.find { it?.second == i?.second }
-                if (item == null) {
-                    i?.first?.toInt()?.let { list.add(it, i) }
-                }
-            }
-            list
-        } else {
-            defaults
-        }
-    }
-
     private fun splitAndMakeMap(string: String): ArrayList<Pair<Long?, String?>?> {
         val list = string.split(",".toRegex()).dropLastWhile { it.isEmpty() }
         val map = arrayListOf<Pair<Long?, String?>?>()

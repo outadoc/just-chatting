@@ -27,25 +27,24 @@ class FollowLiveData(
     private val repository: TwitchService,
     private val helixClientId: String? = null,
     private val user: User,
-    private val gqlClientId: String? = null,
     private val viewModelScope: CoroutineScope
 ) : MutableLiveData<Boolean>() {
 
     init {
         viewModelScope.launch {
             try {
-                val isFollowing = if (!user.gqlToken.isNullOrBlank()) {
+                val isFollowing = if (!user.helixToken.isNullOrBlank()) {
                     when {
-                        localFollowsChannel != null && (
-                            (!user.helixToken.isNullOrBlank() && !userId.isNullOrBlank() && !user.id.isNullOrBlank()) ||
-                                (!user.gqlToken.isNullOrBlank() && !userLogin.isNullOrBlank())
-                            ) && user.id != userId -> {
+                        localFollowsChannel != null
+                                && !userId.isNullOrBlank()
+                                && !user.id.isNullOrBlank()
+                                && user.id != userId -> {
                             repository.loadUserFollowing(
-                                helixClientId,
-                                user.helixToken,
-                                userId,
-                                user.id,
-                                userLogin
+                                helixClientId = helixClientId,
+                                helixToken = user.helixToken,
+                                userId = userId,
+                                channelId = user.id,
+                                userLogin = userLogin
                             )
                         }
                         else -> false
@@ -65,11 +64,6 @@ class FollowLiveData(
     fun saveFollowChannel(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                if (!user.gqlToken.isNullOrBlank()) {
-                    // TODO("remove this feature")
-                    return@launch
-                }
-
                 if (userId == null) {
                     return@launch
                 }
@@ -115,15 +109,12 @@ class FollowLiveData(
     fun deleteFollowChannel(context: Context) {
         viewModelScope.launch {
             try {
-                if (!user.gqlToken.isNullOrBlank()) {
-                    // TODO("remove this feature")
-                } else {
-                    if (userId != null) {
-                        localFollowsChannel?.getFollowById(userId)
-                            ?.let { localFollowsChannel.deleteFollow(context, it) }
-                    }
+                if (userId != null) {
+                    localFollowsChannel?.getFollowById(userId)
+                        ?.let { localFollowsChannel.deleteFollow(context, it) }
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }

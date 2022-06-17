@@ -33,9 +33,11 @@ class MainViewModel @Inject constructor(
     private val _video = MutableLiveData<Video?>()
     val video: MutableLiveData<Video?>
         get() = _video
+
     private val _clip = MutableLiveData<Clip?>()
     val clip: MutableLiveData<Clip?>
         get() = _clip
+
     private val _user = MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>()
     val user: MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>
         get() = _user
@@ -49,8 +51,7 @@ class MainViewModel @Inject constructor(
     fun loadUser(
         login: String? = null,
         helixClientId: String? = null,
-        helixToken: String? = null,
-        gqlClientId: String? = null
+        helixToken: String? = null
     ) {
         _user.value = null
         viewModelScope.launch {
@@ -68,7 +69,7 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    fun validate(helixClientId: String?, gqlClientId: String?, activity: Activity) {
+    fun validate(helixClientId: String?, activity: Activity) {
         val user = User.get(activity)
         if (user is NotValidated) {
             viewModelScope.launch {
@@ -77,15 +78,6 @@ class MainViewModel @Inject constructor(
                         val response =
                             authRepository.validate(TwitchApiHelper.addTokenPrefixHelix(user.helixToken))
                         if (response?.clientId == helixClientId) {
-                            User.validated()
-                        } else {
-                            throw IllegalStateException("401")
-                        }
-                    }
-                    if (!user.gqlToken.isNullOrBlank()) {
-                        val response =
-                            authRepository.validate(TwitchApiHelper.addTokenPrefixGQL(user.gqlToken))
-                        if (response?.clientId == gqlClientId) {
                             User.validated()
                         } else {
                             throw IllegalStateException("401")

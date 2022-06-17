@@ -14,7 +14,6 @@ import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.search.Searchable
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
 import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
@@ -49,12 +48,7 @@ class ChannelSearchFragment :
             viewModel.setQuery(
                 query = query,
                 helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-                helixToken = requireContext().prefs().getString(C.TOKEN, ""),
-                gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, ""),
-                apiPref = TwitchApiHelper.listFromPrefs(
-                    requireContext().prefs().getString(C.API_PREF_SEARCH_CHANNEL, ""),
-                    TwitchApiHelper.searchChannelsApiDefaults
-                )
+                helixToken = requireContext().prefs().getString(C.TOKEN, "")
             )
         } else {
             adapter.submitList(null)

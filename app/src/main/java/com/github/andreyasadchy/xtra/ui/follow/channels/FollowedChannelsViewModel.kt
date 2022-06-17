@@ -49,17 +49,13 @@ class FollowedChannelsViewModel @Inject constructor(
     fun setUser(
         context: Context,
         user: User,
-        helixClientId: String?,
-        gqlClientId: String?,
-        apiPref: ArrayList<Pair<Long?, String?>?>
+        helixClientId: String?
     ) {
         if (filter.value == null) {
             val sortValues = runBlocking { sortChannelRepository.getById("followed_channels") }
             filter.value = Filter(
                 user = user,
                 helixClientId = helixClientId,
-                gqlClientId = gqlClientId,
-                apiPref = apiPref,
                 sort = when (sortValues?.videoSort) {
                     Sort.FOLLOWED_AT.value -> Sort.FOLLOWED_AT
                     Sort.ALPHABETICALLY.value -> Sort.ALPHABETICALLY
@@ -106,8 +102,6 @@ class FollowedChannelsViewModel @Inject constructor(
     private data class Filter(
         val user: User,
         val helixClientId: String?,
-        val gqlClientId: String?,
-        val apiPref: ArrayList<Pair<Long?, String?>?>,
         val sort: Sort = Sort.LAST_BROADCAST,
         val order: Order = Order.DESC
     )

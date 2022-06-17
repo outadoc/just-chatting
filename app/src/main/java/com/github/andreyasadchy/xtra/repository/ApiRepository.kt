@@ -24,7 +24,6 @@ import javax.inject.Singleton
 @Singleton
 class ApiRepository @Inject constructor(
     private val helix: HelixApi,
-    private val gql: GraphQLRepository,
     private val localFollowsChannel: LocalFollowChannelRepository
 ) : TwitchService {
 
@@ -192,29 +191,5 @@ class ApiRepository @Inject constructor(
             userId = userId,
             channelId = channelId
         ).total == 1
-    }
-
-    override suspend fun followUser(
-        gqlClientId: String?,
-        gqlToken: String?,
-        userId: String?
-    ): Boolean = withContext(Dispatchers.IO) {
-        gql.loadFollowUser(
-            clientId = gqlClientId,
-            token = gqlToken?.let { TwitchApiHelper.addTokenPrefixGQL(it) },
-            userId = userId
-        ).error.isNullOrBlank()
-    }
-
-    override suspend fun unfollowUser(
-        gqlClientId: String?,
-        gqlToken: String?,
-        userId: String?
-    ): Boolean = withContext(Dispatchers.IO) {
-        !gql.loadUnfollowUser(
-            clientId = gqlClientId,
-            token = gqlToken?.let { TwitchApiHelper.addTokenPrefixGQL(it) },
-            userId = userId
-        ).isJsonNull
     }
 }

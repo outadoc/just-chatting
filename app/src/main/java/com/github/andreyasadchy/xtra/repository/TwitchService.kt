@@ -81,6 +81,4 @@ interface TwitchService {
         userLogin: String?
     ): Boolean
 
-    suspend fun followUser(gqlClientId: String?, gqlToken: String?, userId: String?): Boolean
-    suspend fun unfollowUser(gqlClientId: String?, gqlToken: String?, userId: String?): Boolean
 }

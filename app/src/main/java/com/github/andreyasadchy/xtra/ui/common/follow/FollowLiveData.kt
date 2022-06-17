@@ -66,7 +66,7 @@ class FollowLiveData(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 if (!user.gqlToken.isNullOrBlank()) {
-                    repository.followUser(gqlClientId, user.gqlToken, userId)
+                    // TODO("remove this feature")
                     return@launch
                 }
 
@@ -116,7 +116,7 @@ class FollowLiveData(
         viewModelScope.launch {
             try {
                 if (!user.gqlToken.isNullOrBlank()) {
-                    repository.unfollowUser(gqlClientId, user.gqlToken, userId)
+                    // TODO("remove this feature")
                 } else {
                     if (userId != null) {
                         localFollowsChannel?.getFollowById(userId)

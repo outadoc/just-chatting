@@ -4,7 +4,6 @@ import android.app.Application
 import com.apollographql.apollo3.ApolloClient
 import com.apollographql.apollo3.network.okHttpClient
 import com.github.andreyasadchy.xtra.BuildConfig
-import com.github.andreyasadchy.xtra.api.GraphQLApi
 import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.api.IdApi
 import com.github.andreyasadchy.xtra.api.MiscApi
@@ -144,20 +143,6 @@ class XtraModule {
             .addConverterFactory(gsonConverterFactory)
             .build()
             .create(IdApi::class.java)
-    }
-
-    @Singleton
-    @Provides
-    fun providesGraphQLApi(
-        client: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
-    ): GraphQLApi {
-        return Retrofit.Builder()
-            .baseUrl("https://gql.twitch.tv/gql/")
-            .client(client)
-            .addConverterFactory(gsonConverterFactory)
-            .build()
-            .create(GraphQLApi::class.java)
     }
 
     @Singleton

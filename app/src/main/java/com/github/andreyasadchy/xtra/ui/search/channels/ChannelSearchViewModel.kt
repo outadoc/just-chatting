@@ -26,7 +26,6 @@ class ChannelSearchViewModel @Inject constructor(
             it,
             helixClientId.value?.nullIfEmpty(),
             helixToken.value?.nullIfEmpty(),
-            gqlClientId.value?.nullIfEmpty(),
             apiPref.value,
             viewModelScope
         )

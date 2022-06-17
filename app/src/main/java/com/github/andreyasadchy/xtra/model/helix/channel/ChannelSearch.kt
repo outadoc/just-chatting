@@ -16,9 +16,7 @@ data class ChannelSearch(
     val started_at: String? = null,
     val broadcaster_language: String? = null,
     val thumbnail_url: String? = null,
-
-    var profileImageURL: String? = null,
-
+    val profileImageURL: String? = null,
     val followers_count: Int? = null
 ) : Parcelable {
 

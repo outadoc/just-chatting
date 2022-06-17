@@ -59,8 +59,7 @@ class MainViewModel @Inject constructor(
                     repository.loadUsersByLogin(
                         mutableListOf(login),
                         helixClientId,
-                        helixToken,
-                        gqlClientId
+                        helixToken
                     )
                 }?.firstOrNull()
                 _user.postValue(user)

@@ -21,10 +21,6 @@ class FollowedStreamsViewModel @Inject constructor(
             it.userId,
             it.helixClientId,
             it.helixToken,
-            it.gqlClientId,
-            it.gqlToken,
-            it.apiPref,
-            it.thumbnailsEnabled,
             viewModelScope
         )
     }
@@ -36,16 +32,14 @@ class FollowedStreamsViewModel @Inject constructor(
         gqlClientId: String? = null,
         gqlToken: String? = null,
         apiPref: ArrayList<Pair<Long?, String?>?>,
-        thumbnailsEnabled: Boolean
     ) {
         Filter(
-            userId,
-            helixClientId,
-            helixToken,
-            gqlClientId,
-            gqlToken,
-            apiPref,
-            thumbnailsEnabled
+            userId = userId,
+            helixClientId = helixClientId,
+            helixToken = helixToken,
+            gqlClientId = gqlClientId,
+            gqlToken = gqlToken,
+            apiPref = apiPref
         ).let {
             if (filter.value != it) {
                 filter.value = it
@@ -59,7 +53,6 @@ class FollowedStreamsViewModel @Inject constructor(
         val helixToken: String?,
         val gqlClientId: String?,
         val gqlToken: String?,
-        val apiPref: ArrayList<Pair<Long?, String?>?>,
-        val thumbnailsEnabled: Boolean
+        val apiPref: ArrayList<Pair<Long?, String?>?>
     )
 }

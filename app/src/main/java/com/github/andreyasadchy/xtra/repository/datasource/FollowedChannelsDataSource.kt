@@ -2,29 +2,20 @@ package com.github.andreyasadchy.xtra.repository.datasource
 
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
-import androidx.core.util.Pair
 import androidx.paging.DataSource
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.apollographql.apollo3.api.Optional
-import com.github.andreyasadchy.xtra.FollowedUsersQuery
-import com.github.andreyasadchy.xtra.UserLastBroadcastQuery
 import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.api.HelixApi
-import com.github.andreyasadchy.xtra.di.XtraModule
-import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientFactory.apolloClient
-import com.github.andreyasadchy.xtra.di.XtraModule_ApolloClientWithTokenFactory.apolloClientWithToken
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
 import com.github.andreyasadchy.xtra.model.helix.follows.Sort
-import com.github.andreyasadchy.xtra.repository.GraphQLRepository
+import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
-import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.DownloadUtils
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlin.io.path.Path
 import kotlin.io.path.absolute
@@ -36,285 +27,142 @@ class FollowedChannelsDataSource(
     private val helixClientId: String?,
     private val helixToken: String?,
     private val helixApi: HelixApi,
-    private val gqlClientId: String?,
-    private val gqlToken: String?,
-    private val gqlApi: GraphQLRepository,
-    private val apiPref: ArrayList<Pair<Long?, String?>?>,
     private val sort: Sort,
     private val order: Order,
-    coroutineScope: CoroutineScope
+    private val coroutineScope: CoroutineScope
 ) : BasePositionalDataSource<Follow>(coroutineScope) {
-    private var api: String? = null
+
     private var offset: String? = null
-    private var nextPage: Boolean = true
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Follow>) {
+        check(!helixToken.isNullOrBlank())
+
         loadInitial(params, callback) {
-            val list = mutableListOf<Follow>()
-            for (i in localFollowsChannel.loadFollows()) {
-                list.add(
-                    Follow(
-                        to_id = i.user_id,
-                        to_login = i.user_login,
-                        to_name = i.user_name,
-                        profileImageURL = i.channelLogo,
-                        followLocal = true
-                    )
+            val localFollows: Map<String?, Follow> =
+                localFollowsChannel
+                    .loadFollows()
+                    .map { follow ->
+                        Follow(
+                            to_id = follow.user_id,
+                            to_login = follow.user_login,
+                            to_name = follow.user_name,
+                            profileImageURL = follow.channelLogo,
+                            followLocal = true
+                        )
+                    }
+                    .associateBy { it.to_id }
+
+            val helixFollows: Map<String?, Follow> =
+                helixApi.getFollowedChannels(
+                    clientId = helixClientId,
+                    token = helixToken,
+                    userId = userId,
+                    limit = 100,
+                    offset = offset
                 )
-            }
-            val remote = try {
-                when (apiPref.elementAt(0)?.second) {
-                    C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
-                    C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
-                    C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
-                    else -> throw Exception()
-                }
-            } catch (e: Exception) {
-                try {
-                    when (apiPref.elementAt(1)?.second) {
-                        C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
-                        C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
-                        C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
-                        else -> throw Exception()
+                    .also { offset = it.pagination?.cursor }
+                    .data
+                    .orEmpty()
+                    .map { follow ->
+                        val localFollow = localFollows[follow.to_id]
+                        localFollow?.copy(
+                            followTwitch = true,
+                            followed_at = follow.followed_at,
+                            lastBroadcast = follow.lastBroadcast
+                        ) ?: follow.copy(
+                            followTwitch = true
+                        )
                     }
-                } catch (e: Exception) {
-                    try {
-                        when (apiPref.elementAt(2)?.second) {
-                            C.HELIX -> if (!helixToken.isNullOrBlank()) helixInitial(params) else throw Exception()
-                            C.GQL_QUERY -> if (!gqlToken.isNullOrBlank()) gqlQueryInitial(params) else throw Exception()
-                            C.GQL -> if (!gqlToken.isNullOrBlank()) gqlInitial(params) else throw Exception()
-                            else -> throw Exception()
-                        }
-                    } catch (e: Exception) {
-                        mutableListOf()
+                    .associateBy { it.to_id }
+
+            val list: Collection<Follow> =
+                localFollows
+                    .plus(helixFollows)
+                    .values
+                    .mapWithUserProfileImages()
+                    .also { follows ->
+                        follows.filter { follow -> follow.followLocal }
+                            .forEach(::updateLocalProfileImage)
                     }
+
+            when (order) {
+                Order.ASC -> when (sort) {
+                    Sort.FOLLOWED_AT -> list.sortedBy { it.followed_at }
+                    Sort.LAST_BROADCAST -> list.sortedBy { it.lastBroadcast }
+                    else -> list.sortedBy { it.to_login }
+                }
+                Order.DESC -> when (sort) {
+                    Sort.FOLLOWED_AT -> list.sortedByDescending { it.followed_at }
+                    Sort.LAST_BROADCAST -> list.sortedByDescending { it.lastBroadcast }
+                    else -> list.sortedByDescending { it.to_login }
                 }
             }
-            if (!remote.isNullOrEmpty()) {
-                for (i in remote) {
-                    val item = list.find { it.to_id == i.to_id }
-                    if (item == null) {
-                        i.followTwitch = true
-                        list.add(i)
-                    } else {
-                        item.followTwitch = true
-                        item.followed_at = i.followed_at
-                        item.lastBroadcast = i.lastBroadcast
-                    }
-                }
-            }
-            val allIds = mutableListOf<String>()
-            for (i in list) {
-                if (i.profileImageURL == null || i.profileImageURL?.contains("image_manager_disk_cache") == true || i.lastBroadcast == null) {
-                    i.to_id?.let { allIds.add(it) }
-                }
-            }
-            if (allIds.isNotEmpty()) {
-                for (ids in allIds.chunked(100)) {
-                    val get = apolloClient(XtraModule(), gqlClientId).query(
-                        UserLastBroadcastQuery(Optional.Present(ids))
-                    ).execute().data?.users
-                    if (get != null) {
-                        for (user in get) {
-                            val item = list.find { it.to_id == user?.id }
-                            if (item != null) {
-                                if (item.followLocal) {
-                                    if (item.profileImageURL == null || item.profileImageURL?.contains(
-                                            "image_manager_disk_cache"
-                                        ) == true
-                                    ) {
-                                        val appContext = XtraApp.INSTANCE.applicationContext
-                                        item.to_id?.let { id ->
-                                            user?.profileImageURL?.let { profileImageURL ->
-                                                updateLocalUser(
-                                                    appContext,
-                                                    id,
-                                                    profileImageURL
-                                                )
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    if (item.profileImageURL == null) {
-                                        item.profileImageURL = user?.profileImageURL
-                                    }
-                                }
-                                item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
-                            }
-                        }
-                    }
-                }
-            }
-            if (order == Order.ASC) {
-                when (sort) {
-                    Sort.FOLLOWED_AT -> list.sortBy { it.followed_at }
-                    Sort.LAST_BROADCAST -> list.sortBy { it.lastBroadcast }
-                    else -> list.sortBy { it.to_login }
-                }
-            } else {
-                when (sort) {
-                    Sort.FOLLOWED_AT -> list.sortByDescending { it.followed_at }
-                    Sort.LAST_BROADCAST -> list.sortByDescending { it.lastBroadcast }
-                    else -> list.sortByDescending { it.to_login }
-                }
-            }
-            list
         }
     }
 
-    private suspend fun helixInitial(params: LoadInitialParams): List<Follow> {
-        api = C.HELIX
-        val get = helixApi.getFollowedChannels(helixClientId, helixToken, userId, 100, offset)
-        return if (get.data != null) {
-            offset = get.pagination?.cursor
-            get.data
-        } else mutableListOf()
+    private fun updateLocalProfileImage(follow: Follow) {
+        val id = follow.to_id ?: return
+        val profileImageUrl = follow.profileImageURL ?: return
+        updateLocalUser(
+            context = XtraApp.INSTANCE.applicationContext,
+            userId = id,
+            profileImageURL = profileImageUrl
+        )
     }
 
-    private suspend fun gqlQueryInitial(params: LoadInitialParams): List<Follow> {
-        api = C.GQL_QUERY
-        val get1 = apolloClientWithToken(XtraModule(), gqlClientId, gqlToken)
-            .query(
-                FollowedUsersQuery(
-                    id = Optional.Present(userId),
-                    first = Optional.Present(100),
-                    after = Optional.Present(offset)
-                )
-            ).execute().data?.user?.follows
-        val get = get1?.edges
-        val list = mutableListOf<Follow>()
-        if (get != null) {
-            for (i in get) {
-                list.add(
-                    Follow(
-                        to_id = i?.node?.id,
-                        to_login = i?.node?.login,
-                        to_name = i?.node?.displayName,
-                        followed_at = i?.followedAt.toString(),
-                        lastBroadcast = i?.node?.lastBroadcast?.startedAt.toString(),
-                        profileImageURL = i?.node?.profileImageURL,
-                    )
-                )
+    private suspend fun Collection<Follow>.mapWithUserProfileImages(): Collection<Follow> {
+        val results: List<User> =
+            filter { follow ->
+                follow.profileImageURL == null
+                        || follow.profileImageURL?.contains("image_manager_disk_cache") == true
+                        || follow.lastBroadcast == null
             }
-            offset = get.lastOrNull()?.cursor.toString()
-            nextPage = get1.pageInfo?.hasNextPage ?: true
-        }
-        return list
-    }
+                .mapNotNull { follow -> follow.to_id }
+                .chunked(size = 100)
+                .flatMap { idsToUpdate ->
+                    helixApi.getUsersById(
+                        clientId = helixClientId,
+                        token = helixToken,
+                        ids = idsToUpdate
+                    )
+                        .data
+                        .orEmpty()
+                }
 
-    private suspend fun gqlInitial(params: LoadInitialParams): List<Follow> {
-        api = C.GQL
-        val get = gqlApi.loadFollowedChannels(gqlClientId, gqlToken, 100, offset)
-        return if (!get.data.isNullOrEmpty()) {
-            offset = get.cursor
-            get.data
-        } else mutableListOf()
+        return map { follow ->
+            val userInfo = results.firstOrNull { user -> user.id == follow.to_id }
+            follow.copy(
+                profileImageURL = userInfo?.profile_image_url
+            )
+        }
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Follow>) {
+        check(!helixToken.isNullOrBlank())
+
         loadRange(params, callback) {
-            val list = if (!offset.isNullOrBlank()) {
-                when (api) {
-                    C.HELIX -> helixRange(params)
-                    C.GQL_QUERY -> gqlQueryRange(params)
-                    C.GQL -> gqlRange(params)
-                    else -> mutableListOf()
+            helixApi.getFollowedChannels(
+                clientId = helixClientId,
+                token = helixToken,
+                userId = userId,
+                limit = 100,
+                offset = offset
+            )
+                .also { offset = it.pagination?.cursor }
+                .data
+                .orEmpty()
+                .mapWithUserProfileImages()
+                .toList()
+                .also { follows ->
+                    follows.filter { follow -> follow.followLocal }
+                        .forEach(::updateLocalProfileImage)
                 }
-            } else mutableListOf()
-            for (i in list) {
-                val allIds = mutableListOf<String>()
-                if (i.profileImageURL == null || i.lastBroadcast == null) {
-                    i.to_id?.let { allIds.add(it) }
-                }
-                if (allIds.isNotEmpty()) {
-                    for (ids in allIds.chunked(100)) {
-                        val get = apolloClient(XtraModule(), gqlClientId).query(
-                            UserLastBroadcastQuery(Optional.Present(ids))
-                        ).execute().data?.users
-                        if (get != null) {
-                            for (user in get) {
-                                val item = list.find { it.to_id == user?.id }
-                                if (item != null) {
-                                    if (item.followLocal) {
-                                        if (item.profileImageURL == null || item.profileImageURL?.contains(
-                                                "image_manager_disk_cache"
-                                            ) == true
-                                        ) {
-                                            val appContext = XtraApp.INSTANCE.applicationContext
-                                            item.to_id?.let { id ->
-                                                user?.profileImageURL?.let { profileImageURL ->
-                                                    updateLocalUser(
-                                                        appContext,
-                                                        id,
-                                                        profileImageURL
-                                                    )
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        if (item.profileImageURL == null) {
-                                            item.profileImageURL = user?.profileImageURL
-                                        }
-                                    }
-                                    item.lastBroadcast = user?.lastBroadcast?.startedAt?.toString()
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            list
+
         }
-    }
-
-    private suspend fun helixRange(params: LoadRangeParams): List<Follow> {
-        val get = helixApi.getFollowedChannels(helixClientId, helixToken, userId, 100, offset)
-        return if (get.data != null) {
-            offset = get.pagination?.cursor
-            get.data
-        } else mutableListOf()
-    }
-
-    private suspend fun gqlQueryRange(params: LoadRangeParams): List<Follow> {
-        val get1 = apolloClientWithToken(XtraModule(), gqlClientId, gqlToken)
-            .query(
-                FollowedUsersQuery(
-                    id = Optional.Present(userId),
-                    first = Optional.Present(100),
-                    after = Optional.Present(offset)
-                )
-            ).execute().data?.user?.follows
-        val get = get1?.edges
-        val list = mutableListOf<Follow>()
-        if (get != null && nextPage && offset != null && offset != "") {
-            for (i in get) {
-                list.add(
-                    Follow(
-                        to_id = i?.node?.id,
-                        to_login = i?.node?.login,
-                        to_name = i?.node?.displayName,
-                        followed_at = i?.followedAt.toString(),
-                        lastBroadcast = i?.node?.lastBroadcast?.startedAt.toString(),
-                        profileImageURL = i?.node?.profileImageURL,
-                    )
-                )
-            }
-            offset = get.lastOrNull()?.cursor.toString()
-            nextPage = get1.pageInfo?.hasNextPage ?: true
-        }
-        return list
-    }
-
-    private suspend fun gqlRange(params: LoadRangeParams): List<Follow> {
-        val get = gqlApi.loadFollowedChannels(gqlClientId, gqlToken, 100, offset)
-        return if (!get.data.isNullOrEmpty()) {
-            offset = get.cursor
-            get.data
-        } else mutableListOf()
     }
 
     private fun updateLocalUser(context: Context, userId: String, profileImageURL: String) {
-        GlobalScope.launch {
+        coroutineScope.launch {
             try {
                 try {
                     val loader = ImageLoader(context)
@@ -340,9 +188,9 @@ class FollowedChannelsDataSource(
                         .absolute()
                         .pathString
 
-                localFollowsChannel.getFollowById(userId)?.let {
+                localFollowsChannel.getFollowById(userId)?.let { follow ->
                     localFollowsChannel.updateFollow(
-                        it.apply {
+                        follow.apply {
                             channelLogo = downloadedLogoPath
                         }
                     )
@@ -359,10 +207,6 @@ class FollowedChannelsDataSource(
         private val helixClientId: String?,
         private val helixToken: String?,
         private val helixApi: HelixApi,
-        private val gqlClientId: String?,
-        private val gqlToken: String?,
-        private val gqlApi: GraphQLRepository,
-        private val apiPref: ArrayList<Pair<Long?, String?>?>,
         private val sort: Sort,
         private val order: Order,
         private val coroutineScope: CoroutineScope
@@ -370,18 +214,14 @@ class FollowedChannelsDataSource(
 
         override fun create(): DataSource<Int, Follow> =
             FollowedChannelsDataSource(
-                localFollowsChannel,
-                userId,
-                helixClientId,
-                helixToken,
-                helixApi,
-                gqlClientId,
-                gqlToken,
-                gqlApi,
-                apiPref,
-                sort,
-                order,
-                coroutineScope
+                localFollowsChannel = localFollowsChannel,
+                userId = userId,
+                helixClientId = helixClientId,
+                helixToken = helixToken,
+                helixApi = helixApi,
+                sort = sort,
+                order = order,
+                coroutineScope = coroutineScope
             ).also(sourceLiveData::postValue)
     }
 }

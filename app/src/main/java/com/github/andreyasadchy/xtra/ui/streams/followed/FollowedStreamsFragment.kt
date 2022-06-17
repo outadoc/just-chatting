@@ -11,8 +11,6 @@ class FollowedStreamsFragment : BaseStreamsFragment<FollowedStreamsViewModel>() 
 
     override val viewModel by viewModels<FollowedStreamsViewModel> { viewModelFactory }
 
-    private var compactStreams = true
-
     override fun initialize() {
         super.initialize()
         viewModel.loadStreams(
@@ -24,8 +22,7 @@ class FollowedStreamsFragment : BaseStreamsFragment<FollowedStreamsViewModel>() 
             apiPref = TwitchApiHelper.listFromPrefs(
                 requireContext().prefs().getString(C.API_PREF_FOLLOWED_STREAMS, ""),
                 TwitchApiHelper.followedStreamsApiDefaults
-            ),
-            thumbnailsEnabled = !compactStreams
+            )
         )
     }
 }

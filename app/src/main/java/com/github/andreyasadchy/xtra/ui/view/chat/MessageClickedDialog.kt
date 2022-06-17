@@ -104,8 +104,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                 viewModel.loadUser(
                     channelId = userId,
                     helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-                    helixToken = requireContext().prefs().getString(C.TOKEN, ""),
-                    gqlClientId = requireContext().prefs().getString(C.GQL_CLIENT_ID, "")
+                    helixToken = requireContext().prefs().getString(C.TOKEN, "")
                 ).observe(viewLifecycleOwner) { user ->
                     if (user != null) {
                         savedUsers.add(user)

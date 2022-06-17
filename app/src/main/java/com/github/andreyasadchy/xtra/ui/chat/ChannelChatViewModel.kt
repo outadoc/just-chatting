@@ -92,8 +92,7 @@ class ChannelChatViewModel @Inject constructor(
                     val stream = repository.loadStreamWithUser(
                         channelId,
                         helixClientId,
-                        helixToken,
-                        gqlClientId
+                        helixToken
                     )
                     _stream.postValue(stream)
                 } catch (e: Exception) {
@@ -114,8 +113,7 @@ class ChannelChatViewModel @Inject constructor(
                     val user = repository.loadUsersById(
                         mutableListOf(channelId),
                         helixClientId,
-                        helixToken,
-                        gqlClientId
+                        helixToken
                     )?.firstOrNull()
                     _user.postValue(user)
                 } catch (e: Exception) {

@@ -45,8 +45,6 @@ class FollowLiveData(
                                 user.helixToken,
                                 userId,
                                 user.id,
-                                gqlClientId,
-                                user.gqlToken,
                                 userLogin
                             )
                         }

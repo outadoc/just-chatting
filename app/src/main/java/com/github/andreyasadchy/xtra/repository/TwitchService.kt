@@ -6,6 +6,7 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
+import com.github.andreyasadchy.xtra.model.helix.follows.Sort
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.model.helix.user.User
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +17,6 @@ interface TwitchService {
         query: String,
         helixClientId: String?,
         helixToken: String?,
-        gqlClientId: String?,
         apiPref: ArrayList<Pair<Long?, String?>?>?,
         coroutineScope: CoroutineScope
     ): Listing<ChannelSearch>
@@ -25,10 +25,6 @@ interface TwitchService {
         userId: String?,
         helixClientId: String?,
         helixToken: String?,
-        gqlClientId: String?,
-        gqlToken: String?,
-        apiPref: ArrayList<Pair<Long?, String?>?>,
-        thumbnailsEnabled: Boolean,
         coroutineScope: CoroutineScope
     ): Listing<Stream>
 
@@ -36,10 +32,7 @@ interface TwitchService {
         userId: String?,
         helixClientId: String?,
         helixToken: String?,
-        gqlClientId: String?,
-        gqlToken: String?,
-        apiPref: ArrayList<Pair<Long?, String?>?>,
-        sort: com.github.andreyasadchy.xtra.model.helix.follows.Sort,
+        sort: Sort,
         order: Order,
         coroutineScope: CoroutineScope
     ): Listing<Follow>
@@ -47,36 +40,31 @@ interface TwitchService {
     suspend fun loadGameBoxArt(
         gameId: String,
         helixClientId: String?,
-        helixToken: String?,
-        gqlClientId: String?
+        helixToken: String?
     ): String?
 
     suspend fun loadStreamWithUser(
         channelId: String,
         helixClientId: String?,
-        helixToken: String?,
-        gqlClientId: String?
+        helixToken: String?
     ): Stream?
 
     suspend fun loadUsersById(
         ids: List<String>,
         helixClientId: String?,
-        helixToken: String?,
-        gqlClientId: String?
+        helixToken: String?
     ): List<User>?
 
     suspend fun loadUsersByLogin(
         logins: List<String>,
         helixClientId: String?,
-        helixToken: String?,
-        gqlClientId: String?
+        helixToken: String?
     ): List<User>?
 
     suspend fun loadCheerEmotes(
         userId: String,
         helixClientId: String?,
-        helixToken: String?,
-        gqlClientId: String?
+        helixToken: String?
     ): List<CheerEmote>
 
     suspend fun loadEmotesFromSet(
@@ -90,19 +78,9 @@ interface TwitchService {
         helixToken: String?,
         userId: String?,
         channelId: String?,
-        gqlClientId: String?,
-        gqlToken: String?,
         userLogin: String?
-    ): Boolean
-
-    suspend fun loadGameFollowing(
-        gqlClientId: String?,
-        gqlToken: String?,
-        gameName: String?
     ): Boolean
 
     suspend fun followUser(gqlClientId: String?, gqlToken: String?, userId: String?): Boolean
     suspend fun unfollowUser(gqlClientId: String?, gqlToken: String?, userId: String?): Boolean
-    suspend fun followGame(gqlClientId: String?, gqlToken: String?, gameId: String?): Boolean
-    suspend fun unfollowGame(gqlClientId: String?, gqlToken: String?, gameId: String?): Boolean
 }

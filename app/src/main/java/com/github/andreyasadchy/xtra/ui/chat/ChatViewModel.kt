@@ -308,8 +308,7 @@ class ChatViewModel @Inject constructor(
                     repository.loadCheerEmotes(
                         userId = channelId,
                         helixClientId = helixClientId,
-                        helixToken = helixToken,
-                        gqlClientId = gqlClientId
+                        helixToken = helixToken
                     )
                 )
             } catch (e: Exception) {

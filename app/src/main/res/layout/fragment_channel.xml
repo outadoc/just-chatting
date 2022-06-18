@@ -23,20 +23,6 @@
                 android:layout_height="wrap_content"
                 app:layout_collapseMode="parallax">
 
-                <ImageView
-                    android:id="@+id/bannerImage"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:src="?attr/colorSurface"
-                    android:tintMode="src_atop"
-                    app:layout_constraintBottom_toBottomOf="@id/spacerBottom"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@tools:sample/backgrounds/scenic" />
-
                 <Space
                     android:id="@+id/spacerTop"
                     android:layout_width="0dp"
@@ -51,6 +37,7 @@
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toTopOf="@id/gameName"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -67,12 +54,12 @@
                     style="@style/UserPicture"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="4dp"
                     android:visibility="gone"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toStartOf="@+id/barrierStart"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/toolbar"
+                    app:layout_constraintTop_toTopOf="@id/gameName"
                     tools:src="@tools:sample/backgrounds/scenic"
                     tools:visibility="visible" />
 
@@ -169,12 +156,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="8dp"
-                    app:layout_goneMarginStart="0dp"
                     android:visibility="gone"
                     app:layout_constraintBottom_toTopOf="@+id/spacerBottom"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/userFollowers"
                     app:layout_constraintTop_toBottomOf="@+id/userCreated"
+                    app:layout_goneMarginStart="0dp"
                     tools:text="123456 views"
                     tools:visibility="visible" />
 
@@ -182,7 +169,7 @@
                     android:id="@+id/spacerBottom"
                     android:layout_width="0dp"
                     android:layout_height="16dp"
-                    app:layout_constraintBottom_toTopOf="@+id/bannerImage"
+                    app:layout_constraintBottom_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/userViews" />

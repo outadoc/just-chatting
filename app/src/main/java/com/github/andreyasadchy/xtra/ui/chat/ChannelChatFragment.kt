@@ -37,7 +37,6 @@ import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import kotlinx.android.synthetic.main.fragment_channel.appBar
-import kotlinx.android.synthetic.main.fragment_channel.bannerImage
 import kotlinx.android.synthetic.main.fragment_channel.chatInputView
 import kotlinx.android.synthetic.main.fragment_channel.chatView
 import kotlinx.android.synthetic.main.fragment_channel.gameName
@@ -386,10 +385,6 @@ class ChannelChatFragment :
             userImage.isVisible = true
             userImage.loadImage(requireContext(), user.channelLogo, circle = true)
             requireArguments().putString(C.CHANNEL_PROFILEIMAGE, user.channelLogo)
-        }
-
-        if (user.bannerImageURL != null) {
-            bannerImage.loadImage(requireContext(), user.bannerImageURL)
         }
 
         if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {

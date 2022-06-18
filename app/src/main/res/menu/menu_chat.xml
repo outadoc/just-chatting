@@ -12,6 +12,7 @@
         android:id="@+id/follow"
         android:icon="@drawable/ic_favorite_border"
         android:title="@string/follow_button"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 
 </menu>

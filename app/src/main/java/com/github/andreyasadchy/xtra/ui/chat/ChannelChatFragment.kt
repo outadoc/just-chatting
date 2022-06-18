@@ -43,7 +43,6 @@ import kotlinx.android.synthetic.main.fragment_channel.chatView
 import kotlinx.android.synthetic.main.fragment_channel.gameName
 import kotlinx.android.synthetic.main.fragment_channel.lastBroadcast
 import kotlinx.android.synthetic.main.fragment_channel.spacerTop
-import kotlinx.android.synthetic.main.fragment_channel.title
 import kotlinx.android.synthetic.main.fragment_channel.toolbar
 import kotlinx.android.synthetic.main.fragment_channel.uptime
 import kotlinx.android.synthetic.main.fragment_channel.userCreated
@@ -109,8 +108,6 @@ class ChannelChatFragment :
             setNavigationOnClickListener {
                 activity?.onBackPressed()
             }
-
-            inflateMenu(R.menu.menu_chat)
 
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
@@ -353,10 +350,9 @@ class ChannelChatFragment :
         }
 
         if (stream?.title != null) {
-            title.isVisible = true
-            title.text = stream.title.trim()
+            toolbar?.subtitle = stream.title.trim()
         } else {
-            title.isVisible = false
+            toolbar?.subtitle = null
         }
 
         if (stream?.game_name != null) {

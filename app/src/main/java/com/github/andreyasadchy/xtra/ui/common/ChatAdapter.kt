@@ -121,8 +121,8 @@ class ChatAdapter(
             builder.append("$systemMsg\n")
             imageIndex += systemMsg.length + 1
         } else {
-            val msgId = liveMessage?.msgId?.let {
-                TwitchApiHelper.getMessageIdString(it) ?: liveMessage.msgId
+            val msgId = liveMessage?.msgId?.let { messageId ->
+                TwitchApiHelper.getMessageIdString(context, messageId) ?: liveMessage.msgId
             }
             if (msgId != null) {
                 builder.append("$msgId\n")

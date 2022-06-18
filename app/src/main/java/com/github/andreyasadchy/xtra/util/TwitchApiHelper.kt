@@ -1,9 +1,7 @@
 package com.github.andreyasadchy.xtra.util
 
 import android.content.Context
-import androidx.core.util.Pair
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
 import com.github.andreyasadchy.xtra.util.chat.LoggedInChatThread
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
@@ -21,31 +19,42 @@ object TwitchApiHelper {
     var checkedValidation = false
 
     fun getTemplateUrl(url: String?, type: String): String? {
-        if ((url == null) || (url == "") || (url.startsWith("https://vod-secure.twitch.tv/_404/404_processing")))
+        if (url.isNullOrEmpty() || url.startsWith("https://vod-secure.twitch.tv/_404/404_processing"))
             return when (type) {
                 "game" -> "https://static-cdn.jtvnw.net/ttv-static/404_boxart.jpg"
                 "video" -> "https://vod-secure.twitch.tv/_404/404_processing_320x180.png"
                 else -> null
             }
+
         val width = when (type) {
             "game" -> "285"
             "video" -> "1280"
             "profileimage" -> "300"
             else -> ""
         }
+
         val height = when (type) {
             "game" -> "380"
             "video" -> "720"
             "profileimage" -> "300"
             else -> ""
         }
+
         val reg1 = """-\d\d\dx\d\d\d""".toRegex()
         val reg2 = """\d\d\d\dx\d\d\d""".toRegex()
         val reg3 = """\d\d\dx\d\d\d""".toRegex()
         val reg4 = """\d\dx\d\d\d""".toRegex()
         val reg5 = """\d\d\dx\d\d""".toRegex()
         val reg6 = """\d\dx\d\d""".toRegex()
-        if (type == "clip") return if (reg1.containsMatchIn(url)) reg1.replace(url, "") else url
+
+        if (type == "clip") {
+            return if (reg1.containsMatchIn(url)) {
+                reg1.replace(url, "")
+            } else {
+                url
+            }
+        }
+
         return when {
             url.contains("%{width}", true) -> url.replace("%{width}", width)
                 .replace("%{height}", height)
@@ -154,21 +163,10 @@ object TwitchApiHelper {
         return "%,d".format(count)
     }
 
-    private fun splitAndMakeMap(string: String): ArrayList<Pair<Long?, String?>?> {
-        val list = string.split(",".toRegex()).dropLastWhile { it.isEmpty() }
-        val map = arrayListOf<Pair<Long?, String?>?>()
-        for (pair in list) {
-            val kv = pair.split(":".toRegex()).dropLastWhile { it.isEmpty() }
-            map.add(Pair(kv[0].toLong(), kv[1]))
-        }
-        return map
-    }
-
-    fun getMessageIdString(msgId: String?): String? {
-        val appContext = XtraApp.INSTANCE.applicationContext
+    fun getMessageIdString(context: Context, msgId: String?): String? {
         return when (msgId) {
-            "highlighted-message" -> appContext.getString(R.string.irc_msgid_highlighted_message)
-            "announcement" -> appContext.getString(R.string.irc_msgid_announcement)
+            "highlighted-message" -> context.getString(R.string.irc_msgid_highlighted_message)
+            "announcement" -> context.getString(R.string.irc_msgid_announcement)
             else -> null
         }
     }

@@ -324,13 +324,8 @@ class ChannelChatFragment :
             Instant.parse(stream.lastBroadcast)
                 .formatTime(requireContext())
                 .let {
-                    if (it != null) {
-                        lastBroadcast.text =
-                            requireContext().getString(R.string.last_broadcast_date, it)
-                        lastBroadcast.isVisible = true
-                    } else {
-                        lastBroadcast.isVisible = false
-                    }
+                    lastBroadcast.text = context?.getString(R.string.last_broadcast_date, it)
+                    lastBroadcast.isVisible = true
                 }
         }
 

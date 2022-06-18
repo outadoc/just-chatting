@@ -3,6 +3,9 @@ package com.github.andreyasadchy.xtra.ui.chat
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.InsetDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,12 +13,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import androidx.activity.addCallback
+import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.palette.graphics.Palette
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.User
@@ -46,7 +52,6 @@ import kotlinx.android.synthetic.main.fragment_channel.toolbar
 import kotlinx.android.synthetic.main.fragment_channel.uptime
 import kotlinx.android.synthetic.main.fragment_channel.userCreated
 import kotlinx.android.synthetic.main.fragment_channel.userFollowers
-import kotlinx.android.synthetic.main.fragment_channel.userImage
 import kotlinx.android.synthetic.main.fragment_channel.userViews
 import kotlinx.android.synthetic.main.fragment_channel.viewers
 import kotlinx.coroutines.launch
@@ -325,14 +330,8 @@ class ChannelChatFragment :
                 }
         }
 
-        stream?.channelLogo.let {
-            if (it != null) {
-                userImage.isVisible = true
-                userImage.loadImage(requireContext(), it, circle = true)
-                requireArguments().putString(C.CHANNEL_PROFILEIMAGE, it)
-            } else {
-                userImage.isVisible = false
-            }
+        stream?.channelLogo?.let { channelLogo ->
+            loadUserAvatar(channelLogo)
         }
 
         stream?.user_name.let {
@@ -380,11 +379,57 @@ class ChannelChatFragment :
             }
     }
 
+    private fun loadUserAvatar(channelLogo: String) {
+        requireArguments().putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
+
+        val context = context ?: return
+        val size = context.resources.getDimension(R.dimen.chat_streamPictureSize).toInt()
+        val endMargin = context.resources.getDimension(R.dimen.chat_streamPictureMarginEnd).toInt()
+
+        loadImage(
+            context = context,
+            url = channelLogo,
+            circle = true,
+            width = size,
+            height = size
+        ) { drawable ->
+            toolbar.logo = InsetDrawable(drawable, 0, 0, endMargin, 0)
+
+            (drawable as? BitmapDrawable)?.bitmap?.let { bitmap ->
+                Palette.Builder(bitmap).generate { palette ->
+                    palette?.vibrantSwatch?.apply {
+                        appBar.background = ColorDrawable(rgb)
+
+                        with(toolbar) {
+                            setNavigationIconTint(titleTextColor)
+                            setTitleTextColor(titleTextColor)
+                            setSubtitleTextColor(titleTextColor)
+                            menu.forEach { item ->
+                                DrawableCompat.setTint(item.icon, titleTextColor)
+                            }
+                        }
+
+                        setOf(
+                            gameName,
+                            viewers,
+                            uptime,
+                            lastBroadcast,
+                            userCreated,
+                            userFollowers,
+                            userViews
+                        ).forEach { view ->
+                            view.setTextColor(bodyTextColor)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private fun updateUserLayout(user: com.github.andreyasadchy.xtra.model.helix.user.User) {
-        if (!userImage.isVisible && user.channelLogo != null) {
-            userImage.isVisible = true
-            userImage.loadImage(requireContext(), user.channelLogo, circle = true)
-            requireArguments().putString(C.CHANNEL_PROFILEIMAGE, user.channelLogo)
+        user.channelLogo?.let { channelLogo ->
+            requireArguments().putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
+            loadUserAvatar(channelLogo)
         }
 
         if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {

@@ -3,4 +3,6 @@
     <dimen name="divider_margin">8dp</dimen>
     <dimen name="chat_emoteSize">29.5dp</dimen>
     <dimen name="chat_badgeSize">18.5dp</dimen>
+    <dimen name="chat_streamPictureSize">40dp</dimen>
+    <dimen name="chat_streamPictureMarginEnd">8dp</dimen>
 </resources>

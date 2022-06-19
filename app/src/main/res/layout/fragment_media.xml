@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_scrollFlags="noScroll|enterAlways"
+            app:menu="@menu/top_menu"
             app:title="@string/app_name" />
 
     </com.google.android.material.appbar.AppBarLayout>

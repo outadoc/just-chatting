@@ -54,7 +54,6 @@ class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
 
         with(toolbar) {
             val user = User.get(requireContext())
-            inflateMenu(R.menu.top_menu)
 
             menu.findItem(R.id.login).title =
                 if (user !is NotLoggedIn) getString(R.string.log_out)

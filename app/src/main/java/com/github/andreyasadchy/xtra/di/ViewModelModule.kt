@@ -10,6 +10,7 @@ import com.github.andreyasadchy.xtra.ui.main.MainViewModel
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchViewModel
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsViewModel
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedViewModel
+import com.github.andreyasadchy.xtra.ui.view.chat.StreamInfoViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -45,6 +46,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(MessageClickedViewModel::class)
     abstract fun bindMessageClickedViewModel(messageClickedViewModel: MessageClickedViewModel): ViewModel
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(StreamInfoViewModel::class)
+    abstract fun bindStreamInfoViewModel(streamInfoViewModel: StreamInfoViewModel): ViewModel
 
     @Binds
     @IntoMap

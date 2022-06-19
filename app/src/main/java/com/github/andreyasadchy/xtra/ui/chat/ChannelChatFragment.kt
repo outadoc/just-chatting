@@ -11,14 +11,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewGroup.MarginLayoutParams
 import androidx.activity.addCallback
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
-import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.palette.graphics.Palette
@@ -31,12 +28,10 @@ import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import com.github.andreyasadchy.xtra.ui.view.chat.OnEmoteClickedListener
+import com.github.andreyasadchy.xtra.ui.view.chat.StreamInfoDialog
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.LifecycleListener
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.formatTime
-import com.github.andreyasadchy.xtra.util.formatTimestamp
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -45,17 +40,8 @@ import com.github.andreyasadchy.xtra.util.shortToast
 import kotlinx.android.synthetic.main.fragment_channel.appBar
 import kotlinx.android.synthetic.main.fragment_channel.chatInputView
 import kotlinx.android.synthetic.main.fragment_channel.chatView
-import kotlinx.android.synthetic.main.fragment_channel.gameName
-import kotlinx.android.synthetic.main.fragment_channel.lastBroadcast
-import kotlinx.android.synthetic.main.fragment_channel.spacerTop
 import kotlinx.android.synthetic.main.fragment_channel.toolbar
-import kotlinx.android.synthetic.main.fragment_channel.uptime
-import kotlinx.android.synthetic.main.fragment_channel.userCreated
-import kotlinx.android.synthetic.main.fragment_channel.userFollowers
-import kotlinx.android.synthetic.main.fragment_channel.userViews
-import kotlinx.android.synthetic.main.fragment_channel.viewers
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Instant
 
 class ChannelChatFragment :
     BaseNetworkFragment(),
@@ -139,6 +125,15 @@ class ChannelChatFragment :
                         }
                         true
                     }
+                    R.id.info -> {
+                        StreamInfoDialog.newInstance(
+                            userId = args.getString(C.CHANNEL_ID)!!
+                        ).show(
+                            childFragmentManager,
+                            "closeOnPip"
+                        )
+                        true
+                    }
                     else -> false
                 }
             }
@@ -154,9 +149,12 @@ class ChannelChatFragment :
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-            spacerTop.updateLayoutParams<MarginLayoutParams> {
-                height = insets.top
-            }
+            toolbar.setPadding(
+                toolbar.paddingLeft,
+                insets.top,
+                toolbar.paddingRight,
+                toolbar.paddingBottom
+            )
             windowInsets
         }
     }
@@ -321,19 +319,6 @@ class ChannelChatFragment :
     }
 
     private fun updateStreamLayout(stream: Stream?) {
-        if (stream?.viewer_count == null && stream?.lastBroadcast != null) {
-            Instant.parse(stream.lastBroadcast)
-                .formatTime(requireContext())
-                .let {
-                    lastBroadcast.text = context?.getString(R.string.last_broadcast_date, it)
-                    lastBroadcast.isVisible = true
-                }
-        }
-
-        stream?.channelLogo?.let { channelLogo ->
-            loadUserAvatar(channelLogo)
-        }
-
         stream?.user_name.let {
             if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
                 toolbar.title = it
@@ -352,31 +337,6 @@ class ChannelChatFragment :
         } else {
             toolbar?.subtitle = null
         }
-
-        if (stream?.game_name != null) {
-            gameName.isVisible = true
-            gameName.text = stream.game_name
-        } else {
-            gameName.isVisible = false
-        }
-
-        if (stream?.viewer_count != null) {
-            viewers.isVisible = true
-            viewers.text = TwitchApiHelper.formatViewersCount(requireContext(), stream.viewer_count)
-        } else {
-            viewers.isVisible = false
-        }
-
-        stream?.started_at
-            ?.let { Instant.parse(it) }
-            ?.formatTimestamp(requireContext()).let {
-                if (it != null) {
-                    uptime.isVisible = true
-                    uptime.text = requireContext().getString(R.string.uptime, it)
-                } else {
-                    uptime.isVisible = false
-                }
-            }
     }
 
     private fun loadUserAvatar(channelLogo: String) {
@@ -408,18 +368,6 @@ class ChannelChatFragment :
                                 DrawableCompat.setTint(item.icon, titleTextColor)
                             }
                         }
-
-                        setOf(
-                            gameName,
-                            viewers,
-                            uptime,
-                            lastBroadcast,
-                            userCreated,
-                            userFollowers,
-                            userViews
-                        ).forEach { view ->
-                            view.setTextColor(bodyTextColor)
-                        }
                     }
                 }
             }
@@ -434,27 +382,6 @@ class ChannelChatFragment :
 
         if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {
             channelViewModel.updateLocalUser(requireContext(), user)
-        }
-
-        if (user.created_at != null) {
-            userCreated.isVisible = true
-            userCreated.text = requireContext().getString(
-                R.string.created_at,
-                Instant.parse(user.created_at).formatTime(requireContext())
-            )
-        }
-
-        if (user.followers_count != null) {
-            userFollowers.isVisible = true
-            userFollowers.text = requireContext().getString(
-                R.string.followers,
-                TwitchApiHelper.formatCount(user.followers_count)
-            )
-        }
-
-        if (user.view_count != null) {
-            userViews.isVisible = true
-            userViews.text = TwitchApiHelper.formatViewsCount(requireContext(), user.view_count)
         }
     }
 

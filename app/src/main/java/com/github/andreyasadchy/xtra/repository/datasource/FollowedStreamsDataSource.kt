@@ -51,9 +51,10 @@ class FollowedStreamsDataSource(
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
+        if (offset.isNullOrBlank()) return
+
         loadRange(params, callback) {
-            if (offset.isNullOrBlank()) emptyList()
-            else helixApi.getFollowedStreams(
+            helixApi.getFollowedStreams(
                 clientId = helixClientId,
                 token = helixToken,
                 userId = userId,

@@ -42,24 +42,23 @@ class SearchChannelsDataSource private constructor(
     }
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<ChannelSearch>) {
-        loadRange(params, callback) { helixRange(params) }
-    }
+        if (offset.isNullOrBlank()) return
 
-    private suspend fun helixRange(params: LoadRangeParams): List<ChannelSearch> {
-        val result = helixApi.getChannels(
-            clientId = helixClientId,
-            token = helixToken,
-            query = query,
-            limit = params.loadSize,
-            offset = offset
-        )
+        loadRange(params, callback) {
+            val result = helixApi.getChannels(
+                clientId = helixClientId,
+                token = helixToken,
+                query = query,
+                limit = params.loadSize,
+                offset = offset
+            )
 
-        if (offset == null || offset == "") return emptyList()
-        offset = result.pagination?.cursor
+            offset = result.pagination?.cursor
 
-        return result.data
-            .orEmpty()
-            .mapWithUserProfileImages()
+            result.data
+                .orEmpty()
+                .mapWithUserProfileImages()
+        }
     }
 
     private suspend fun List<ChannelSearch>.mapWithUserProfileImages(): List<ChannelSearch> {

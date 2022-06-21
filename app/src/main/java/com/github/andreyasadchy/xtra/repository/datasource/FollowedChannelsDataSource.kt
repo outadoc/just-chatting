@@ -137,6 +137,7 @@ class FollowedChannelsDataSource(
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Follow>) {
         check(!helixToken.isNullOrBlank())
+        if (offset.isNullOrBlank()) return
 
         loadRange(params, callback) {
             helixApi.getFollowedChannels(

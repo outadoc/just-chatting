@@ -3,6 +3,7 @@ package com.github.andreyasadchy.xtra.ui.chat
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
@@ -12,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -357,15 +359,17 @@ class ChannelChatFragment :
 
             (drawable as? BitmapDrawable)?.bitmap?.let { bitmap ->
                 Palette.Builder(bitmap).generate { palette ->
-                    palette?.vibrantSwatch?.apply {
+                    val swatch = palette?.dominantSwatch ?: palette?.dominantSwatch
+                    swatch?.apply {
                         appBar.background = ColorDrawable(rgb)
 
+                        val textColor = ColorUtils.setAlphaComponent(titleTextColor, 255)
                         with(toolbar) {
-                            setNavigationIconTint(titleTextColor)
-                            setTitleTextColor(titleTextColor)
-                            setSubtitleTextColor(titleTextColor)
+                            setNavigationIconTint(textColor)
+                            setTitleTextColor(textColor)
+                            setSubtitleTextColor(textColor)
                             menu.forEach { item ->
-                                DrawableCompat.setTint(item.icon, titleTextColor)
+                                DrawableCompat.setTint(item.icon, textColor)
                             }
                         }
                     }

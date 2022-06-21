@@ -14,7 +14,6 @@ import com.github.andreyasadchy.xtra.model.helix.follows.Order.DESC
 import com.github.andreyasadchy.xtra.model.helix.follows.Sort
 import com.github.andreyasadchy.xtra.model.helix.follows.Sort.ALPHABETICALLY
 import com.github.andreyasadchy.xtra.model.helix.follows.Sort.FOLLOWED_AT
-import com.github.andreyasadchy.xtra.model.helix.follows.Sort.LAST_BROADCAST
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
 import kotlinx.android.synthetic.main.dialog_followed_channels_sort.apply
 import kotlinx.android.synthetic.main.dialog_followed_channels_sort.order
@@ -59,10 +58,11 @@ class FollowedChannelsSortDialog : ExpandingBottomSheetDialogFragment() {
         val originalSortId = when (args.getSerializable(SORT) as Sort) {
             FOLLOWED_AT -> R.id.time_followed
             ALPHABETICALLY -> R.id.alphabetically
-            LAST_BROADCAST -> R.id.last_broadcast
         }
+
         val originalOrderId =
             if (args.getSerializable(ORDER) as Order == DESC) R.id.newest_first else R.id.oldest_first
+
         sort.check(originalSortId)
         order.check(originalOrderId)
         apply.setOnClickListener {
@@ -74,8 +74,7 @@ class FollowedChannelsSortDialog : ExpandingBottomSheetDialogFragment() {
                 listener.onChange(
                     when (checkedSortId) {
                         R.id.time_followed -> FOLLOWED_AT
-                        R.id.alphabetically -> ALPHABETICALLY
-                        else -> LAST_BROADCAST
+                        else -> ALPHABETICALLY
                     },
                     sortBtn.text,
                     if (checkedOrderId == R.id.newest_first) DESC else ASC,

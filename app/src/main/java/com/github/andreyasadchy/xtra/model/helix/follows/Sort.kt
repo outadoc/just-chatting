@@ -2,8 +2,7 @@ package com.github.andreyasadchy.xtra.model.helix.follows
 
 enum class Sort(val value: String) {
     FOLLOWED_AT("created_at"),
-    ALPHABETICALLY("login"),
-    LAST_BROADCAST("last_broadcast");
+    ALPHABETICALLY("login");
 
     override fun toString() = value
 }

@@ -28,7 +28,9 @@ class FollowedChannelsViewModel @Inject constructor(
     private val _sortText = MutableLiveData<CharSequence>()
     val sortText: LiveData<CharSequence>
         get() = _sortText
+
     private val filter = MutableLiveData<Filter>()
+
     override val result: LiveData<Listing<Follow>> = Transformations.map(filter) {
         repository.loadFollowedChannels(
             userId = it.user.id,
@@ -58,8 +60,7 @@ class FollowedChannelsViewModel @Inject constructor(
                 helixClientId = helixClientId,
                 sort = when (sortValues?.videoSort) {
                     Sort.FOLLOWED_AT.value -> Sort.FOLLOWED_AT
-                    Sort.ALPHABETICALLY.value -> Sort.ALPHABETICALLY
-                    else -> Sort.LAST_BROADCAST
+                    else -> Sort.ALPHABETICALLY
                 },
                 order = when (sortValues?.videoType) {
                     Order.ASC.value -> Order.ASC
@@ -87,22 +88,22 @@ class FollowedChannelsViewModel @Inject constructor(
         viewModelScope.launch {
             val sortDefaults = sortChannelRepository.getById("followed_channels")
             (
-                sortDefaults?.apply {
-                    videoSort = sort.value
-                    videoType = order.value
-                } ?: SortChannel(
-                    id = "followed_channels",
-                    videoSort = sort.value,
-                    videoType = order.value
-                )
-                ).let { sortChannelRepository.save(it) }
+                    sortDefaults?.apply {
+                        videoSort = sort.value
+                        videoType = order.value
+                    } ?: SortChannel(
+                        id = "followed_channels",
+                        videoSort = sort.value,
+                        videoType = order.value
+                    )
+                    ).let { sortChannelRepository.save(it) }
         }
     }
 
     private data class Filter(
         val user: User,
         val helixClientId: String?,
-        val sort: Sort = Sort.LAST_BROADCAST,
+        val sort: Sort = Sort.FOLLOWED_AT,
         val order: Order = Order.DESC
     )
 }

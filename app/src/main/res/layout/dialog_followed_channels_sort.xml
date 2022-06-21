@@ -27,10 +27,6 @@
             style="@style/RadioButton"
             android:text="@string/alphabetically" />
 
-        <RadioButton
-            android:id="@+id/last_broadcast"
-            style="@style/RadioButton"
-            android:text="@string/last_broadcast" />
     </RadioGroup>
 
     <RadioGroup

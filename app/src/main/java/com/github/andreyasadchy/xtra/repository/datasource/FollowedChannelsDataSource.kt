@@ -88,12 +88,10 @@ class FollowedChannelsDataSource(
             when (order) {
                 Order.ASC -> when (sort) {
                     Sort.FOLLOWED_AT -> list.sortedBy { it.followed_at }
-                    Sort.LAST_BROADCAST -> list.sortedBy { it.lastBroadcast }
                     else -> list.sortedBy { it.to_login }
                 }
                 Order.DESC -> when (sort) {
                     Sort.FOLLOWED_AT -> list.sortedByDescending { it.followed_at }
-                    Sort.LAST_BROADCAST -> list.sortedByDescending { it.lastBroadcast }
                     else -> list.sortedByDescending { it.to_login }
                 }
             }
@@ -114,7 +112,7 @@ class FollowedChannelsDataSource(
         val results: List<User> =
             filter { follow ->
                 follow.profileImageURL == null
-                        || follow.profileImageURL?.contains("image_manager_disk_cache") == true
+                        || follow.profileImageURL.contains("image_manager_disk_cache")
                         || follow.lastBroadcast == null
             }
                 .mapNotNull { follow -> follow.to_id }

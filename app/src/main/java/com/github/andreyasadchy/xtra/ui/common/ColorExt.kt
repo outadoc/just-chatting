@@ -9,8 +9,9 @@ import kotlin.math.min
 
 fun isContrastRatioAccessible(@ColorInt c1: Int, @ColorInt c2: Int): Boolean {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        val accessibleRatio = 7.0
-        getContrastRatio(c1, c2) < accessibleRatio
+        val accessibleRatio = 4.5
+        val ratio = getContrastRatio(c1, c2)
+        ratio > accessibleRatio
     } else {
         true
     }

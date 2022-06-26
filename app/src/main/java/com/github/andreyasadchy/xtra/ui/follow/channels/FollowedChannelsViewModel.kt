@@ -1,7 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.follow.channels
 
 import android.content.Context
-import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -88,15 +87,15 @@ class FollowedChannelsViewModel @Inject constructor(
         viewModelScope.launch {
             val sortDefaults = sortChannelRepository.getById("followed_channels")
             (
-                    sortDefaults?.apply {
-                        videoSort = sort.value
-                        videoType = order.value
-                    } ?: SortChannel(
-                        id = "followed_channels",
-                        videoSort = sort.value,
-                        videoType = order.value
-                    )
-                    ).let { sortChannelRepository.save(it) }
+                sortDefaults?.apply {
+                    videoSort = sort.value
+                    videoType = order.value
+                } ?: SortChannel(
+                    id = "followed_channels",
+                    videoSort = sort.value,
+                    videoType = order.value
+                )
+                ).let { sortChannelRepository.save(it) }
         }
     }
 

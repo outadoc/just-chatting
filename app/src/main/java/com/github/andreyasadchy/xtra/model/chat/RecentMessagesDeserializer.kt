@@ -69,7 +69,6 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     timestamp = prefixes["tmi-sent-ts"]
                         ?.toLong()
                         ?.let { Instant.fromEpochMilliseconds(it) },
-                    userName = prefixes["display-name"]?.replace("\\s", " "),
                     fullMsg = message
                 )
             } else {

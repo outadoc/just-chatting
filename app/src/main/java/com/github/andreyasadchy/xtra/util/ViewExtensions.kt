@@ -51,7 +51,6 @@ fun ImageView.loadImage(
     }
 }
 
-
 @SuppressLint("CheckResult")
 fun loadImage(
     context: Context,
@@ -90,9 +89,7 @@ fun loadImage(
                 }
 
                 override fun onLoadCleared(placeholder: Drawable?) {}
-
             })
-
         } catch (e: IllegalArgumentException) {
             e.printStackTrace()
         }

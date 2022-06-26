@@ -16,8 +16,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
-import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
+import com.github.andreyasadchy.xtra.ui.chat.EmoteSetItem
 import com.github.andreyasadchy.xtra.ui.view.GridAutofitLayoutManager
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
 import javax.inject.Inject
@@ -61,10 +61,19 @@ class EmotesFragment : Fragment(), Injectable {
             layoutManager = GridAutofitLayoutManager(
                 context = context,
                 columnWidth = context.convertDpToPixels(50f)
-            ).also { this@EmotesFragment.layoutManager = it }
+            ).also { layoutManager ->
+                layoutManager.isHeaderLookup = { position ->
+                    when (emotesAdapter.getItemViewType(position)) {
+                        EmotesAdapter.TYPE_HEADER -> true
+                        else -> false
+                    }
+                }
+
+                this@EmotesFragment.layoutManager = layoutManager
+            }
         }
 
-        val observer: Observer<List<Emote>> = Observer(emotesAdapter::submitList)
+        val observer: Observer<List<EmoteSetItem>> = Observer(emotesAdapter::submitList)
         when (args.getInt(KEY_POSITION)) {
             0 -> viewModel.recentEmotes.observe(viewLifecycleOwner, observer)
             1 -> viewModel.emotesFromSets.observe(viewLifecycleOwner, observer)

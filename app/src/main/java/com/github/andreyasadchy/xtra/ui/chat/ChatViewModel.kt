@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.ui.chat
 
 import android.util.Log
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,6 +18,7 @@ import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
+import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
@@ -33,25 +35,14 @@ import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.PubSubWebSocket
 import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.Collections
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
-import kotlin.collections.ArrayList
-import kotlin.collections.Collection
-import kotlin.collections.List
-import kotlin.collections.MutableList
-import kotlin.collections.asReversed
-import kotlin.collections.associateBy
-import kotlin.collections.chunked
-import kotlin.collections.contains
-import kotlin.collections.containsKey
-import kotlin.collections.filter
-import kotlin.collections.forEach
-import kotlin.collections.hashSetOf
-import kotlin.collections.isNotEmpty
-import kotlin.collections.mutableListOf
-import kotlin.collections.mutableMapOf
+import kotlin.collections.component1
+import kotlin.collections.component2
+import kotlin.collections.get
 import kotlin.collections.set
 
 class ChatViewModel @Inject constructor(
@@ -59,22 +50,27 @@ class ChatViewModel @Inject constructor(
     private val playerRepository: PlayerRepository
 ) : BaseViewModel() {
 
-    val recentEmotes: LiveData<List<Emote>> by lazy {
-        MediatorLiveData<List<Emote>>().apply {
+    val recentEmotes: LiveData<List<EmoteSetItem>> by lazy {
+        MediatorLiveData<List<EmoteSetItem>>().apply {
             addSource(emotesFromSets) { twitch ->
                 removeSource(emotesFromSets)
                 addSource(_otherEmotes) { other ->
                     removeSource(_otherEmotes)
                     addSource(playerRepository.loadRecentEmotes()) { recent ->
-                        value = recent.filter { (twitch.contains<Emote>(it) || other.contains(it)) }
+                        value = recent
+                            .filter { recentEmote ->
+                                twitch.any { twitchEmote -> (twitchEmote as? EmoteSetItem.Emote)?.emote == recentEmote } ||
+                                    other.any { otherEmote -> (otherEmote as? EmoteSetItem.Emote)?.emote == recentEmote }
+                            }
+                            .map { emote -> EmoteSetItem.Emote(emote) }
                     }
                 }
             }
         }
     }
 
-    private val _otherEmotes = MutableLiveData<List<Emote>>()
-    val otherEmotes: LiveData<List<Emote>>
+    private val _otherEmotes = MutableLiveData<List<EmoteSetItem>>()
+    val otherEmotes: LiveData<List<EmoteSetItem>>
         get() = _otherEmotes
 
     val recentMessages = MutableLiveData<List<LiveChatMessage>>()
@@ -82,7 +78,7 @@ class ChatViewModel @Inject constructor(
     val channelBadges = MutableLiveData<List<TwitchBadge>>()
     val cheerEmotes = MutableLiveData<List<CheerEmote>>()
     var emoteSetsAdded = false
-    val emotesFromSets = MutableLiveData<List<Emote>>()
+    val emotesFromSets = MutableLiveData<List<EmoteSetItem>>()
     val emotesLoaded = MutableLiveData<Boolean>()
     val roomState = MutableLiveData<RoomState>()
     val command = MutableLiveData<Command>()
@@ -298,7 +294,14 @@ class ChatViewModel @Inject constructor(
             }
 
             (chat as? LiveChatController)?.addEmotes(list)
-            _otherEmotes.postValue(list)
+
+            _otherEmotes.postValue(
+                list.groupBy { emote -> emote.ownerId }
+                    .flatMap { (ownerId, emotes) ->
+                        listOf(EmoteSetItem.Header(ownerId))
+                            .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
+                    }
+            )
 
             try {
                 cheerEmotes.postValue(
@@ -448,57 +451,69 @@ class ChatViewModel @Inject constructor(
                 return
             }
 
-            viewModelScope.launch {
-                if (savedEmoteSets != sets) {
-                    val emotes = mutableListOf<Emote>()
-                    sets?.asReversed()?.chunked(25)?.forEach {
+            if (savedEmoteSets != sets || !emoteSetsAdded) {
+                viewModelScope.launch(Dispatchers.Default) {
+                    loadEmotes(sets)
+                }
+            }
+        }
+
+        private suspend fun loadEmotes(sets: List<String>?) {
+            val emotes: List<TwitchEmote> =
+                sets.orEmpty()
+                    .asReversed()
+                    .chunked(25)
+                    .flatMap { setIds ->
                         try {
-                            val list =
-                                repository.loadEmotesFromSet(helixClientId, user.helixToken, it)
-                            if (list != null) {
-                                emotes.addAll(list)
-                            }
+                            repository.loadEmotesFromSet(
+                                helixClientId = helixClientId,
+                                helixToken = user.helixToken,
+                                setIds = setIds
+                            )
                         } catch (e: Exception) {
                             e.printStackTrace()
-                        }
+                            null
+                        }.orEmpty()
                     }
 
-                    if (emotes.isNotEmpty()) {
-                        savedEmoteSets = sets
-                        savedEmotesFromSets = emotes
-                        emoteSetsAdded = true
+            val groupedEmotes: Map<String?, List<TwitchEmote>> =
+                emotes.groupBy { emote -> emote.ownerId }
 
-                        val items = emotes.filter { it.ownerId == channelId }
-                        for (item in items.asReversed()) {
-                            emotes.add(0, item)
-                        }
-
-                        addEmotes(emotes)
-                        emotesFromSets.value = emotes
-                    }
-                } else {
-                    if (!emoteSetsAdded) {
-                        val emotes = mutableListOf<Emote>()
-                        savedEmotesFromSets?.let { emotes.addAll(it) }
-
-                        if (emotes.isNotEmpty()) {
-                            emoteSetsAdded = true
-
-                            val items = emotes.filter { it.ownerId == channelId }
-                            for (item in items.asReversed()) {
-                                emotes.add(0, item)
-                            }
-
-                            addEmotes(emotes)
-
-                            try {
-                                emotesFromSets.value = emotes
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                            }
-                        }
-                    }
+            val emoteOwners: Map<String, com.github.andreyasadchy.xtra.model.helix.user.User> =
+                try {
+                    repository.loadUsersById(
+                        ids = groupedEmotes.keys
+                            .filterNotNull()
+                            .filter { id -> id.isDigitsOnly() },
+                        helixClientId = helixClientId,
+                        helixToken = user.helixToken
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    null
                 }
+                    .orEmpty()
+                    .associateBy { user -> user.id!! }
+
+            val channelEmotes: Map<String?, List<TwitchEmote>> =
+                groupedEmotes.filter { (ownerId, _) -> ownerId == channelId }
+
+            val sortedEmotes: List<EmoteSetItem> =
+                (channelEmotes + groupedEmotes.minus(channelEmotes))
+                    .flatMap { (ownerId, emotes) ->
+                        val channelName = ownerId?.let { emoteOwners[it] }?.display_name
+                        listOf(EmoteSetItem.Header(title = channelName))
+                            .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
+                    }
+
+            if (emotes.isNotEmpty()) {
+                savedEmoteSets = sets
+                savedEmotesFromSets = emotes
+                emoteSetsAdded = true
+
+                addEmotes(emotes)
+
+                emotesFromSets.postValue(sortedEmotes)
             }
         }
 

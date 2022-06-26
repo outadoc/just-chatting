@@ -78,5 +78,4 @@ interface TwitchService {
         channelId: String?,
         userLogin: String?
     ): Boolean
-
 }

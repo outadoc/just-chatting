@@ -21,14 +21,14 @@ import com.github.andreyasadchy.xtra.util.formatTimestamp
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.dialog_chat_message_click.bannerImage
+import kotlinx.android.synthetic.main.dialog_chat_stream_info.gameName
+import kotlinx.android.synthetic.main.dialog_chat_stream_info.lastBroadcast
+import kotlinx.android.synthetic.main.dialog_chat_stream_info.uptime
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.userCreated
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.userFollowers
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.userImage
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.userLayout
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.userName
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.gameName
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.lastBroadcast
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.uptime
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.viewers
 import kotlinx.datetime.Instant
 import javax.inject.Inject
@@ -74,7 +74,6 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                     updateStreamLayout(state.stream)
                 }
                 StreamInfoViewModel.State.Loading -> {
-
                 }
             }
         }

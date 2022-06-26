@@ -3,7 +3,6 @@ package com.github.andreyasadchy.xtra.ui.chat
 import android.app.Activity
 import android.content.Intent
 import android.content.res.Configuration
-import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
@@ -39,10 +38,7 @@ import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
-import kotlinx.android.synthetic.main.fragment_channel.appBar
-import kotlinx.android.synthetic.main.fragment_channel.chatInputView
-import kotlinx.android.synthetic.main.fragment_channel.chatView
-import kotlinx.android.synthetic.main.fragment_channel.toolbar
+import kotlinx.android.synthetic.main.fragment_channel.*
 import kotlinx.coroutines.launch
 
 class ChannelChatFragment :
@@ -264,12 +260,15 @@ class ChannelChatFragment :
             chatInputView.setChatters(viewModel.chatters)
             viewModel.newChatter.observe(viewLifecycleOwner, chatInputView::addChatter)
 
-            val emotesObserver = { emotes: List<Emote> ->
+            val emotesObserver = { emoteSets: List<EmoteSetItem> ->
+                val emotes = emoteSets.mapNotNull { (it as? EmoteSetItem.Emote)?.emote }
                 chatView.addEmotes(emotes)
                 chatInputView.addEmotes(emotes)
             }
+
             viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
             viewModel.recentEmotes.observe(viewLifecycleOwner, emotesObserver)
+            viewModel.otherEmotes.observe(viewLifecycleOwner, emotesObserver)
         }
 
         chatInputView.enableChatInteraction(userIsLoggedIn)
@@ -281,7 +280,6 @@ class ChannelChatFragment :
         viewModel.recentMessages.observe(viewLifecycleOwner, chatView::addRecentMessages)
         viewModel.globalBadges.observe(viewLifecycleOwner, chatView::addGlobalBadges)
         viewModel.channelBadges.observe(viewLifecycleOwner, chatView::addChannelBadges)
-        viewModel.otherEmotes.observe(viewLifecycleOwner, chatView::addEmotes)
         viewModel.cheerEmotes.observe(viewLifecycleOwner, chatView::addCheerEmotes)
         viewModel.emotesLoaded.observe(viewLifecycleOwner, chatView::notifyEmotesLoaded)
         viewModel.command.observe(viewLifecycleOwner, chatView::notifyCommand)

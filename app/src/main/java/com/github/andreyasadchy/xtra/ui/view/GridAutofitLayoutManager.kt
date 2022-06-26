@@ -13,6 +13,8 @@ class GridAutofitLayoutManager : GridLayoutManager {
     private var columnWidth = 0
     private var widthChanged = true
 
+    var isHeaderLookup: (position: Int) -> Boolean = { false }
+
     constructor(context: Context, columnWidth: Int) : super(context, 1) {
         setColumnWidth(columnWidth)
     }
@@ -24,6 +26,13 @@ class GridAutofitLayoutManager : GridLayoutManager {
         reverseLayout: Boolean
     ) : super(context, 1, orientation, reverseLayout) {
         setColumnWidth(columnWidth)
+    }
+
+    init {
+        spanSizeLookup = object : SpanSizeLookup() {
+            override fun getSpanSize(position: Int): Int =
+                if (isHeaderLookup(position)) spanCount else 1
+        }
     }
 
     override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State) {

@@ -160,9 +160,6 @@ class ChatAdapter(
                 liveMessage?.rewardId != null && pointReward == null -> {
                     setText(R.string.chat_reward)
                 }
-                liveMessage?.isAction == true && liveMessage.userName != null -> {
-                    text = liveMessage.userName
-                }
             }
 
             isVisible = text.isNotEmpty()
@@ -571,7 +568,7 @@ class ChatAdapter(
         cheerEmotes = list
     }
 
-    fun addEmotes(list: List<Emote>) {
+    fun addEmotes(list: Collection<Emote>) {
         emotes.putAll(list.associateBy { it.name })
     }
 

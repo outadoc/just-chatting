@@ -49,7 +49,6 @@ class StreamInfoViewModel @Inject constructor(
                 )
 
                 _state.value = State.Loaded(user = user, stream = stream)
-
             } catch (e: Exception) {
                 _state.value = State.Error(e)
             }

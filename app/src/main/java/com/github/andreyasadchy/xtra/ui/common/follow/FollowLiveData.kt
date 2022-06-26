@@ -35,10 +35,10 @@ class FollowLiveData(
             try {
                 val isFollowing = if (!user.helixToken.isNullOrBlank()) {
                     when {
-                        localFollowsChannel != null
-                                && !userId.isNullOrBlank()
-                                && !user.id.isNullOrBlank()
-                                && user.id != userId -> {
+                        localFollowsChannel != null &&
+                            !userId.isNullOrBlank() &&
+                            !user.id.isNullOrBlank() &&
+                            user.id != userId -> {
                             repository.loadUserFollowing(
                                 helixClientId = helixClientId,
                                 helixToken = user.helixToken,

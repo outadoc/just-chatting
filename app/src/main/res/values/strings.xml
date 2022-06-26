@@ -304,9 +304,7 @@ Removes a timeout on a user.</string>
     <string name="timestamp_format_5">hh:mm am/pm</string>
     <string name="timestamp_format_6">h:mm:ss am/pm</string>
     <string name="timestamp_format_7">hh:mm:ss am/pm</string>
-    <string name="api_login">Get token for selected apis</string>
     <string name="api_helix_redirect">Helix redirect url</string>
-    <string name="api_gql_redirect">GQL redirect url</string>
     <string name="api_settings">Api settings</string>
     <string name="search_channels">Search channels</string>
     <string name="followed_streams">Followed streams</string>

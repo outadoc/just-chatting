@@ -1,15 +1,6 @@
 <androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ListPreference
-        android:defaultValue="@string/pref_loginApi_value_both"
-        android:entries="@array/loginApiEntries"
-        android:entryValues="@array/loginApiValues"
-        android:key="api_login"
-        android:summary="%s"
-        android:title="@string/api_login"
-        app:iconSpaceReserved="false" />
-
     <EditTextPreference
         android:defaultValue="ilfexgv3nnljz3isbm257gzwrzr7bi"
         android:key="helix_client_id"

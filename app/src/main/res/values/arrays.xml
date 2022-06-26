@@ -5,30 +5,6 @@
         <item>@string/channels</item>
     </string-array>
 
-    <string-array name="chatFirstMsgEntries">
-        <item>@string/chatFirstMsgEntries1</item>
-        <item>@string/chatFirstMsgEntries2</item>
-        <item>@string/chatFirstMsgEntries3</item>
-    </string-array>
-
-    <string-array name="chatFirstMsgEntriesValues">
-        <item>@string/pref_chatFirstMsg_value_default</item>
-        <item>@string/pref_chatFirstMsg_value_background</item>
-        <item>@string/pref_chatFirstMsg_value_normal</item>
-    </string-array>
-
-    <string-array name="loginApiEntries">
-        <item>@string/both</item>
-        <item>GQL</item>
-        <item>Helix</item>
-    </string-array>
-
-    <string-array name="loginApiValues">
-        <item>@string/pref_loginApi_value_both</item>
-        <item>@string/pref_loginApi_value_gql</item>
-        <item>@string/pref_loginApi_value_helix</item>
-    </string-array>
-
     <array name="randomChatColors">
         <item>@color/chatUserColor0</item>
         <item>@color/chatUserColor1</item>

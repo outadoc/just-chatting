@@ -68,7 +68,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     isAction = true,
                     timestamp = prefixes["tmi-sent-ts"]
                         ?.toLong()
-                        ?.let { Instant.fromEpochSeconds(it) },
+                        ?.let { Instant.fromEpochMilliseconds(it) },
                     fullMsg = message
                 )
             } else {
@@ -137,7 +137,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     badges = badgesList,
                     timestamp = prefixes["tmi-sent-ts"]
                         ?.toLong()
-                        ?.let { Instant.fromEpochSeconds(it) },
+                        ?.let { Instant.fromEpochMilliseconds(it) },
                     fullMsg = message
                 )
             }
@@ -161,7 +161,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                 isAction = true,
                 timestamp = prefixes["tmi-sent-ts"]
                     ?.toLong()
-                    ?.let { Instant.fromEpochSeconds(it) },
+                    ?.let { Instant.fromEpochMilliseconds(it) },
                 fullMsg = message
             )
         } else {
@@ -207,7 +207,7 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                 isAction = true,
                 timestamp = prefixes["tmi-sent-ts"]
                     ?.toLong()
-                    ?.let { Instant.fromEpochSeconds(it) },
+                    ?.let { Instant.fromEpochMilliseconds(it) },
                 fullMsg = message
             )
         } else {

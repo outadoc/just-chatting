@@ -39,7 +39,7 @@ class MessageListenerImpl(
                     Command(
                         message = systemMsg ?: messageInfo,
                         timestamp = prefixes["tmi-sent-ts"]?.toLong()
-                            ?.let { Instant.fromEpochSeconds(it) },
+                            ?.let { Instant.fromEpochMilliseconds(it) },
                         fullMsg = message
                     )
                 )
@@ -103,7 +103,7 @@ class MessageListenerImpl(
                     emotes = emotesList,
                     badges = badgesList,
                     timestamp = prefixes["tmi-sent-ts"]?.toLong()
-                        ?.let { Instant.fromEpochSeconds(it) },
+                        ?.let { Instant.fromEpochMilliseconds(it) },
                     fullMsg = message
                 )
 
@@ -142,7 +142,7 @@ class MessageListenerImpl(
                     duration = msg,
                     type = "clearmsg",
                     timestamp = prefixes["tmi-sent-ts"]?.toLong()
-                        ?.let { Instant.fromEpochSeconds(it) },
+                        ?.let { Instant.fromEpochMilliseconds(it) },
                     fullMsg = message
                 )
             )
@@ -173,7 +173,7 @@ class MessageListenerImpl(
                     duration = duration,
                     type = type,
                     timestamp = prefixes["tmi-sent-ts"]?.toLong()
-                        ?.let { Instant.fromEpochSeconds(it) },
+                        ?.let { Instant.fromEpochMilliseconds(it) },
                     fullMsg = message
                 )
             )

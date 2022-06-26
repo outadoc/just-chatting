@@ -276,9 +276,9 @@ class ChatInputView : LinearLayout {
 
                 override fun getPageTitle(position: Int): CharSequence {
                     return when (position) {
-                        0 -> context.getString(R.string.recent_emotes)
-                        1 -> "Twitch"
-                        else -> "7TV/BTTV/FFZ"
+                        0 -> context.getString(R.string.emote_tab_recent)
+                        1 -> context.getString(R.string.emote_tab_twitch)
+                        else -> context.getString(R.string.emote_tab_others)
                     }
                 }
             }

@@ -222,85 +222,83 @@ class ChatViewModel @Inject constructor(
                 Log.e(TAG, "Failed to load badges for channel $channelId", e)
             }
 
-            val list = mutableListOf<Emote>()
-
-            try {
+            val stvEmotes: List<StvEmote> = try {
                 val channelStv = playerRepository.loadStvEmotes(channelId)
-                channelStv.body()?.emotes?.let(list::addAll)
+                channelStv.body()?.emotes
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load 7tv emotes for channel $channelId", e)
-            }
+                null
+            }.orEmpty()
 
-            try {
+            val bttvEmotes: List<BttvEmote> = try {
                 val channelBttv = playerRepository.loadBttvEmotes(channelId)
-                channelBttv.body()?.emotes?.let(list::addAll)
+                channelBttv.body()?.emotes
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load BTTV emotes for channel $channelId", e)
-            }
+                null
+            }.orEmpty()
 
-            try {
+            val ffzEmotes: List<FfzEmote> = try {
                 val channelFfz = playerRepository.loadBttvFfzEmotes(channelId)
-                channelFfz.body()?.emotes?.let(list::addAll)
+                channelFfz.body()?.emotes
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load FFZ emotes for channel $channelId", e)
-            }
+                null
+            }.orEmpty()
 
-            globalStvEmotes.also {
-                if (it != null) {
-                    list.addAll(it)
-                } else {
-                    try {
-                        val emotes = playerRepository.loadGlobalStvEmotes().body()?.emotes
-                        if (emotes != null) {
-                            globalStvEmotes = emotes
-                            list.addAll(emotes)
-                        }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Failed to load global 7tv emotes", e)
+            val globalStv: List<StvEmote> = globalStvEmotes ?: try {
+                playerRepository.loadGlobalStvEmotes()
+                    .body()
+                    ?.emotes
+                    ?.also { emotes ->
+                        globalStvEmotes = emotes
                     }
-                }
-            }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load global 7tv emotes", e)
+                null
+            }.orEmpty()
 
-            globalBttvEmotes.also {
-                if (it != null) {
-                    list.addAll(it)
-                } else {
-                    try {
-                        val emotes = playerRepository.loadGlobalBttvEmotes().body()?.emotes
-                        if (emotes != null) {
-                            globalBttvEmotes = emotes
-                            list.addAll(emotes)
-                        }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Failed to load global BTTV emotes", e)
+            val globalBttv: List<BttvEmote> = globalBttvEmotes ?: try {
+                playerRepository.loadGlobalBttvEmotes()
+                    .body()
+                    ?.emotes
+                    ?.also { emotes ->
+                        globalBttvEmotes = emotes
                     }
-                }
-            }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load global BTTV emotes", e)
+                null
+            }.orEmpty()
 
-            globalFfzEmotes.also {
-                if (it != null) {
-                    list.addAll(it)
-                } else {
-                    try {
-                        val emotes = playerRepository.loadBttvGlobalFfzEmotes().body()?.emotes
-                        if (emotes != null) {
-                            globalFfzEmotes = emotes
-                            list.addAll(emotes)
-                        }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Failed to load global FFZ emotes", e)
+            val globalFfz: List<FfzEmote> = globalFfzEmotes ?: try {
+                playerRepository.loadBttvGlobalFfzEmotes()
+                    .body()
+                    ?.emotes
+                    ?.also { emotes ->
+                        globalFfzEmotes = emotes
                     }
-                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load global FFZ emotes", e)
+                null
+            }.orEmpty()
+
+            val groups = mapOf(
+                "BetterTTV" to bttvEmotes + globalBttv,
+                "7TV" to stvEmotes + globalStv,
+                "FrankerFaceZ" to ffzEmotes + globalFfz
+            ).filterValues { emotes ->
+                emotes.isNotEmpty()
             }
 
-            (chat as? LiveChatController)?.addEmotes(list)
+            (chat as? LiveChatController)?.addEmotes(
+                groups.flatMap { (_, emotes) -> emotes }
+            )
 
             _otherEmotes.postValue(
-                list.groupBy { emote -> emote.ownerId }
-                    .flatMap { (ownerId, emotes) ->
-                        listOf(EmoteSetItem.Header(ownerId))
-                            .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
-                    }
+                groups.flatMap { (group, emotes) ->
+                    listOf(EmoteSetItem.Header(group))
+                        .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
+                }
             )
 
             try {

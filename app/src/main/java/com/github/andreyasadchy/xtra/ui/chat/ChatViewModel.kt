@@ -188,11 +188,13 @@ class ChatViewModel @Inject constructor(
         viewModelScope.launch {
             if (channelLogin != null && enableRecentMsg == true && recentMsgLimit != null) {
                 try {
-                    val get = playerRepository.loadRecentMessages(channelLogin, recentMsgLimit)
-                        .body()?.messages
-                    if (get != null && get.isNotEmpty()) {
-                        recentMessages.postValue(get!!)
-                    }
+                    playerRepository.loadRecentMessages(channelLogin, recentMsgLimit)
+                        .body()
+                        ?.messages
+                        ?.takeIf { it.isNotEmpty() }
+                        ?.let { messages ->
+                            recentMessages.postValue(messages)
+                        }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load recent messages for channel $channelLogin", e)
                 }

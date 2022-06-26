@@ -13,7 +13,6 @@ object C {
     const val FIRST_LAUNCH1 = "first_launch1"
     const val FIRST_LAUNCH2 = "first_launch2"
     const val ANIMATED_EMOTES = "animatedGifEmotes"
-    const val CHAT_RANDOMCOLOR = "chat_randomcolor"
     const val CHAT_LIMIT = "chat_limit"
     const val CHAT_TIMESTAMPS = "chat_timestamps"
     const val CHAT_RECENT = "chat_recent"

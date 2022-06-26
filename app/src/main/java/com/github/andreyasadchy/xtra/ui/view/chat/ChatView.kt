@@ -69,7 +69,6 @@ class ChatView : ConstraintLayout {
 
         adapter = ChatAdapter(
             context = context,
-            pickRandomColors = context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
             enableTimestamps = context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
             animateEmotes = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         )

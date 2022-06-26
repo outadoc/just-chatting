@@ -34,7 +34,8 @@ class MessageListenerImpl(
             }
             val systemMsg = prefixes["system-msg"]?.replace("\\s", " ")
             val msgIndex = messageInfo.indexOf(":", messageInfo.indexOf(":") + 1)
-            if (msgIndex == -1 && userNotice) { // no user message & is user notice
+            if (msgIndex == -1 && userNotice) {
+                // no user message & is user notice
                 callbackCommand.onCommand(
                     Command(
                         message = systemMsg ?: messageInfo,

@@ -45,7 +45,6 @@ import kotlin.collections.set
 
 class ChatAdapter(
     private val context: Context,
-    private val pickRandomColors: Boolean,
     private val enableTimestamps: Boolean,
     private val animateEmotes: Boolean
 ) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
@@ -144,29 +143,26 @@ class ChatAdapter(
         holder.noticeTitle?.apply {
             text = null
 
-            val systemMsg = liveMessage?.systemMsg
-            if (systemMsg != null) {
-                text = systemMsg
-            } else {
-                val noticeMessage = liveMessage?.msgId?.let { messageId ->
-                    TwitchApiHelper.getMessageIdString(context, messageId) ?: liveMessage.msgId
-                }
+            val noticeMessage = liveMessage?.msgId?.let { messageId ->
+                TwitchApiHelper.getMessageIdString(context, messageId) ?: liveMessage.msgId
+            }
 
-                if (noticeMessage != null) {
+            when {
+                liveMessage?.systemMsg != null -> {
+                    text = liveMessage.systemMsg
+                }
+                noticeMessage != null -> {
                     text = noticeMessage
                 }
-            }
-
-            if (liveMessage?.isFirst == true) {
-                setText(R.string.chat_first)
-            }
-
-            if (liveMessage?.rewardId != null && pointReward == null) {
-                setText(R.string.chat_reward)
-            }
-
-            if (liveMessage?.isAction == true && liveMessage.userName != null) {
-                text = liveMessage.userName
+                liveMessage?.isFirst == true -> {
+                    setText(R.string.chat_first)
+                }
+                liveMessage?.rewardId != null && pointReward == null -> {
+                    setText(R.string.chat_reward)
+                }
+                liveMessage?.isAction == true && liveMessage.userName != null -> {
+                    text = liveMessage.userName
+                }
             }
 
             isVisible = text.isNotEmpty()
@@ -658,8 +654,7 @@ class ChatAdapter(
         }
     }
 
-    private fun getRandomColor(): Int =
-        if (pickRandomColors) randomChatColors.random() else defaultChatColor
+    private fun getRandomColor(): Int = randomChatColors.random()
 
     private fun calculateEmoteSize(resource: Drawable): Pair<Int, Int> {
         val widthRatio = resource.intrinsicWidth.toFloat() / resource.intrinsicHeight.toFloat()

@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="chatMessageFirst">#800a4028</color>
-    <color name="chatMessageReward">#800E4C68</color>
-    <color name="chatMessageNotice">#803E0E68</color>
-    <color name="chatMessageMention">#80680E0E</color>
-
     <color name="chatUserColor0">#EF5350</color>
     <color name="chatUserColor1">#EC407A</color>
     <color name="chatUserColor2">#AB47BC</color>

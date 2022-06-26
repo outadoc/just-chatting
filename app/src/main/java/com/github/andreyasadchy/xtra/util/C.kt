@@ -15,7 +15,6 @@ object C {
     const val ANIMATED_EMOTES = "animatedGifEmotes"
     const val CHAT_RANDOMCOLOR = "chat_randomcolor"
     const val CHAT_LIMIT = "chat_limit"
-    const val CHAT_FIRSTMSG_VISIBILITY = "chat_firstmsg_visibility"
     const val CHAT_TIMESTAMPS = "chat_timestamps"
     const val CHAT_RECENT = "chat_recent"
     const val CHAT_RECENT_LIMIT = "chat_recent_limit"

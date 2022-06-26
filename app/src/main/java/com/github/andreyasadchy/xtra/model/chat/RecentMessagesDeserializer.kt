@@ -65,7 +65,6 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                 // no user message & is user notice
                 return LiveChatMessage(
                     message = systemMsg ?: messageInfo,
-                    color = "#999999",
                     isAction = true,
                     timestamp = prefixes["tmi-sent-ts"]
                         ?.toLong()
@@ -159,7 +158,6 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             val msg = messageInfo.substring(if (msgIndex != -1) msgIndex + 1 else index2 + 1)
             return LiveChatMessage(
                 message = context.getString(R.string.chat_clearmsg, user, msg),
-                color = "#999999",
                 isAction = true,
                 timestamp = prefixes["tmi-sent-ts"]
                     ?.toLong()
@@ -206,7 +204,6 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
                     "ban" -> context.getString(R.string.chat_ban, user)
                     else -> return null
                 },
-                color = "#999999",
                 isAction = true,
                 timestamp = prefixes["tmi-sent-ts"]
                     ?.toLong()
@@ -235,7 +232,6 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             } else {
                 msg
             },
-            color = "#999999",
             isAction = true,
             fullMsg = message
         )

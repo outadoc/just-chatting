@@ -24,6 +24,7 @@ import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.text.getSpans
 import androidx.core.view.children
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.request.ImageRequest
@@ -46,9 +47,13 @@ class ChatAdapter(
     private val context: Context,
     private val pickRandomColors: Boolean,
     private val enableTimestamps: Boolean,
-    private val firstMsgVisibility: String?,
     private val animateEmotes: Boolean
 ) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+
+    private companion object {
+        const val ITEM_TYPE_MESSAGE = 0
+        const val ITEM_TYPE_NOTICE = 1
+    }
 
     var messages: MutableList<ChatMessage>? = null
         set(value) {
@@ -77,8 +82,6 @@ class ChatAdapter(
         typedValue.data
     }
 
-    private val firstChatMsg = context.getString(R.string.chat_first)
-    private val rewardChatMsg = context.getString(R.string.chat_reward)
     private val redeemedChatMsg = context.getString(R.string.redeemed)
     private val redeemedNoMsg = context.getString(R.string.user_redeemed)
 
@@ -102,43 +105,84 @@ class ChatAdapter(
     private var messageClickListener: OnMessageClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val viewId = when (viewType) {
+            ITEM_TYPE_NOTICE -> R.layout.chat_list_notice_item
+            else -> R.layout.chat_list_item
+        }
+
         return ViewHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.chat_list_item, parent, false)
+            LayoutInflater.from(parent.context).inflate(viewId, parent, false)
         )
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        val chatMessage = messages?.get(position) as? LiveChatMessage
+            ?: return ITEM_TYPE_MESSAGE
+
+        val isFirstMessage = chatMessage.isFirst
+        val isRewarded = chatMessage.rewardId != null
+        val isNotice = chatMessage.systemMsg != null || chatMessage.msgId != null
+        val isAction = chatMessage.isAction
+
+        return when {
+            isFirstMessage || isRewarded || isNotice || isAction -> ITEM_TYPE_NOTICE
+            else -> ITEM_TYPE_MESSAGE
+        }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chatMessage = messages?.get(position) ?: return
-        val liveMessage = chatMessage as? LiveChatMessage
-        val pointReward = chatMessage as? PubSubPointReward ?: liveMessage?.pointReward
-        val builder = SpannableStringBuilder()
-        val images = ArrayList<Image>()
+        bindNoticeMessage(holder, chatMessage)
+        bindMessage(holder, chatMessage)
+    }
+
+    private fun bindNoticeMessage(holder: ViewHolder, chatMessage: ChatMessage) {
+        val liveMessage: LiveChatMessage? = chatMessage as? LiveChatMessage
+        val pointReward: PubSubPointReward? = chatMessage as? PubSubPointReward
+            ?: liveMessage?.pointReward
+
+        holder.noticeTitle?.apply {
+            text = null
+
+            val systemMsg = liveMessage?.systemMsg
+            if (systemMsg != null) {
+                text = systemMsg
+            } else {
+                val noticeMessage = liveMessage?.msgId?.let { messageId ->
+                    TwitchApiHelper.getMessageIdString(context, messageId) ?: liveMessage.msgId
+                }
+
+                if (noticeMessage != null) {
+                    text = noticeMessage
+                }
+            }
+
+            if (liveMessage?.isFirst == true) {
+                setText(R.string.chat_first)
+            }
+
+            if (liveMessage?.rewardId != null && pointReward == null) {
+                setText(R.string.chat_reward)
+            }
+
+            if (liveMessage?.isAction == true && liveMessage.userName != null) {
+                text = liveMessage.userName
+            }
+
+            isVisible = text.isNotEmpty()
+        }
+    }
+
+    private fun bindMessage(holder: ViewHolder, chatMessage: ChatMessage) {
+        val liveMessage: LiveChatMessage? = chatMessage as? LiveChatMessage
+        val pointReward: PubSubPointReward? = chatMessage as? PubSubPointReward
+            ?: liveMessage?.pointReward
+
+        val images: MutableList<Image> = mutableListOf()
         var imageIndex = 0
         var badgesCount = 0
-        val systemMsg = liveMessage?.systemMsg
 
-        if (systemMsg != null) {
-            builder.append("$systemMsg\n")
-            imageIndex += systemMsg.length + 1
-        } else {
-            val msgId = liveMessage?.msgId?.let { messageId ->
-                TwitchApiHelper.getMessageIdString(context, messageId) ?: liveMessage.msgId
-            }
-            if (msgId != null) {
-                builder.append("$msgId\n")
-                imageIndex += msgId.length + 1
-            }
-        }
-
-        if (liveMessage?.isFirst == true && firstMsgVisibility == "0") {
-            builder.append("$firstChatMsg\n")
-            imageIndex += firstChatMsg.length + 1
-        }
-
-        if (liveMessage?.rewardId != null && pointReward == null && firstMsgVisibility == "0") {
-            builder.append("$rewardChatMsg\n")
-            imageIndex += rewardChatMsg.length + 1
-        }
+        val builder = SpannableStringBuilder()
 
         if (!pointReward?.message.isNullOrBlank()) {
             val string = redeemedChatMsg.format(pointReward?.rewardTitle)
@@ -161,7 +205,7 @@ class ChatAdapter(
         if (enableTimestamps && timestamp != null) {
             builder.append("$timestamp ")
             builder.setSpan(
-                ForegroundColorSpan(Color.parseColor("#999999")),
+                ForegroundColorSpan(defaultChatColor),
                 imageIndex,
                 imageIndex + timestamp.length,
                 SPAN_INCLUSIVE_INCLUSIVE
@@ -170,7 +214,7 @@ class ChatAdapter(
         }
 
         chatMessage.badges?.forEach { chatBadge ->
-            val badge =
+            val badge: TwitchBadge? =
                 channelBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
                     ?: globalBadges?.find { it.id == chatBadge.id && it.version == chatBadge.version }
 
@@ -198,14 +242,14 @@ class ChatAdapter(
 
         if (chatMessage !is PubSubPointReward && !userName.isNullOrBlank()) {
             builder.append(userName)
-            if (!chatMessage.isAction) {
-                builder.append(": ")
-                originalMessage = "$userName: ${chatMessage.message}"
-                userNameWithPostfixLength = userNameLength + 2
-            } else {
+            if (chatMessage.isAction) {
                 builder.append(" ")
                 originalMessage = "$userName ${chatMessage.message}"
                 userNameWithPostfixLength = userNameLength + 1
+            } else {
+                builder.append(": ")
+                originalMessage = "$userName: ${chatMessage.message}"
+                userNameWithPostfixLength = userNameLength + 2
             }
         } else {
             if (chatMessage is PubSubPointReward && pointReward?.message.isNullOrBlank()) {
@@ -233,7 +277,7 @@ class ChatAdapter(
                     string.length + (pointReward?.rewardCost?.toString()?.length ?: 0) + 3
 
                 builder.setSpan(
-                    ForegroundColorSpan(Color.parseColor("#999999")),
+                    ForegroundColorSpan(defaultChatColor),
                     userNameWithPostfixLength - userNameWithPostfixLength,
                     userNameWithPostfixLength,
                     SPAN_INCLUSIVE_INCLUSIVE
@@ -269,17 +313,17 @@ class ChatAdapter(
 
         try {
             chatMessage.emotes?.let { emotes ->
-                val copy = emotes.map {
-                    val realBegin = chatMessage.message?.offsetByCodePoints(0, it.begin) ?: 0
-                    val realEnd = if (it.begin == realBegin) {
-                        it.end
+                val emotesCopy = emotes.map { emote ->
+                    val realBegin = chatMessage.message?.offsetByCodePoints(0, emote.begin) ?: 0
+                    val realEnd = if (emote.begin == realBegin) {
+                        emote.end
                     } else {
-                        it.end + realBegin - it.begin
+                        emote.end + realBegin - emote.begin
                     }
 
                     TwitchEmote(
-                        name = it.name,
-                        id = it.id,
+                        name = emote.name,
+                        id = emote.id,
                         begin = realBegin,
                         end = realEnd
                     )
@@ -287,10 +331,10 @@ class ChatAdapter(
 
                 imageIndex += userNameWithPostfixLength
 
-                for (e in copy) {
-                    val begin = imageIndex + e.begin
+                emotesCopy.forEach { emote ->
+                    val begin = imageIndex + emote.begin
 
-                    builder.replace(begin, imageIndex + e.end + 1, ".")
+                    builder.replace(begin, imageIndex + emote.end + 1, ".")
                     builder.setSpan(
                         ForegroundColorSpan(Color.TRANSPARENT),
                         begin,
@@ -298,18 +342,18 @@ class ChatAdapter(
                         SPAN_EXCLUSIVE_EXCLUSIVE
                     )
 
-                    val length = e.end - e.begin
-                    for (e1 in copy) {
-                        if (e.begin < e1.begin) {
-                            e1.begin -= length
-                            e1.end -= length
+                    val length = emote.end - emote.begin
+                    emotesCopy.forEach { other ->
+                        if (emote.begin < other.begin) {
+                            other.begin -= length
+                            other.end -= length
                         }
                     }
 
-                    e.end -= length
+                    emote.end -= length
                 }
 
-                copy.forEach { emote ->
+                emotesCopy.forEach { emote ->
                     images.add(
                         Image(
                             url = emote.getUrl(
@@ -325,21 +369,23 @@ class ChatAdapter(
                 }
             }
 
-            val split = builder.split(" ")
+            val words = builder.split(" ")
             var builderIndex = 0
             var emotesFound = 0
             var wasMentioned = false
 
-            for (value in split) {
-                val length = value.length
+            words.forEach { word ->
+                val length = word.length
                 val endIndex = builderIndex + length
-                var emote = emotes[value]
-                val bitsCount = value.takeLastWhile { it.isDigit() }
-                val bitsName = value.substringBeforeLast(bitsCount)
+                var emote = emotes[word]
+                val bitsCount = word.takeLastWhile { it.isDigit() }
+                val bitsName = word.substringBeforeLast(bitsCount)
 
                 if (bitsCount.isNotEmpty()) {
-                    val cheerEmote =
-                        cheerEmotes?.findLast { it.name == bitsName && it.minBits <= bitsCount.toInt() }
+                    val cheerEmote = cheerEmotes?.findLast { cheerEmote ->
+                        cheerEmote.name == bitsName && cheerEmote.minBits <= bitsCount.toInt()
+                    }
+
                     if (cheerEmote != null) {
                         emote = cheerEmote
                         if (emote.color != null) {
@@ -354,8 +400,8 @@ class ChatAdapter(
                 }
 
                 if (emote == null) {
-                    if (!Patterns.WEB_URL.matcher(value).matches()) {
-                        if (value.startsWith('@')) {
+                    if (!Patterns.WEB_URL.matcher(word).matches()) {
+                        if (word.startsWith('@')) {
                             builder.setSpan(
                                 StyleSpan(Typeface.BOLD),
                                 builderIndex,
@@ -365,14 +411,14 @@ class ChatAdapter(
                         }
                         loggedInUser?.let { loggedInUserName ->
                             if (!wasMentioned &&
-                                value.contains(loggedInUserName, ignoreCase = true) &&
+                                word.contains(loggedInUserName, ignoreCase = true) &&
                                 chatMessage.userLogin != loggedInUserName
                             ) {
                                 wasMentioned = true
                             }
                         }
                     } else {
-                        val url = if (value.startsWith("http")) value else "https://$value"
+                        val url = if (word.startsWith("http")) word else "https://$word"
                         builder.setSpan(
                             URLSpan(url),
                             builderIndex,
@@ -429,40 +475,26 @@ class ChatAdapter(
                     }
                 }
             }
-
-            if (color != null && chatMessage.isAction) {
-                builder.setSpan(
-                    ForegroundColorSpan(color),
-                    if (userName != null) userNameEndIndex + 1 else 0,
-                    builder.length,
-                    SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-            }
-
-            val isFirstMessage = liveMessage?.isFirst == true
-            val isRewarded = liveMessage?.rewardId != null && (firstMsgVisibility?.toInt() ?: 0) < 2
-            val isNotice = liveMessage?.systemMsg != null || liveMessage?.msgId != null
-            val isMention = wasMentioned && userId != null
-
-            val background = when {
-                isFirstMessage -> R.color.chatMessageFirst
-                isRewarded -> R.color.chatMessageReward
-                isNotice -> R.color.chatMessageNotice
-                isMention -> R.color.chatMessageMention
-                else -> -1
-            }
-
-            if (background == -1) holder.textView.background = null
-            else holder.textView.setBackgroundResource(background)
         } catch (e: Exception) {
             e.printStackTrace()
         }
 
-        holder.bind(originalMessage, builder, userId, fullMsg)
-        loadImages(holder, images, originalMessage, builder, userId, fullMsg)
-    }
+        holder.bind(
+            originalMessage = originalMessage,
+            formattedMessage = builder,
+            userId = userId,
+            fullMsg = fullMsg
+        )
 
-    override fun getItemCount(): Int = messages?.size ?: 0
+        loadImages(
+            holder = holder,
+            images = images,
+            originalMessage = originalMessage,
+            builder = builder,
+            userId = userId,
+            fullMsg = fullMsg
+        )
+    }
 
     private fun loadImages(
         holder: ViewHolder,
@@ -472,8 +504,15 @@ class ChatAdapter(
         userId: String?,
         fullMsg: String?
     ) {
-        images.forEach {
-            loadCoil(holder, it, originalMessage, builder, userId, fullMsg)
+        images.forEach { image ->
+            loadCoil(
+                holder = holder,
+                image = image,
+                originalMessage = originalMessage,
+                builder = builder,
+                userId = userId,
+                fullMsg = fullMsg
+            )
         }
     }
 
@@ -521,6 +560,8 @@ class ChatAdapter(
 
         context.imageLoader.enqueue(request)
     }
+
+    override fun getItemCount(): Int = messages?.size ?: 0
 
     fun addGlobalBadges(list: List<TwitchBadge>) {
         globalBadges = list
@@ -624,21 +665,16 @@ class ChatAdapter(
         val widthRatio = resource.intrinsicWidth.toFloat() / resource.intrinsicHeight.toFloat()
 
         return when {
-            widthRatio == 1f -> {
-                emoteSize to emoteSize
-            }
-            widthRatio <= 1.2f -> {
-                (emoteSize * widthRatio).toInt() to emoteSize
-            }
-            else -> {
-                (scaledEmoteSize * widthRatio).toInt() to scaledEmoteSize
-            }
+            widthRatio == 1f -> emoteSize to emoteSize
+            widthRatio <= 1.2f -> (emoteSize * widthRatio).toInt() to emoteSize
+            else -> (scaledEmoteSize * widthRatio).toInt() to scaledEmoteSize
         }
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val textView = itemView as TextView
+        val textView: TextView = itemView.findViewById(R.id.textView_chatMessage)
+        val noticeTitle: TextView? = itemView.findViewById(R.id.textView_chatNoticeTitle)
 
         fun bind(
             originalMessage: CharSequence,

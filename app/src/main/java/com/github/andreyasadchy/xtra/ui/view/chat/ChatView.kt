@@ -71,7 +71,6 @@ class ChatView : ConstraintLayout {
             context = context,
             pickRandomColors = context.prefs().getBoolean(C.CHAT_RANDOMCOLOR, true),
             enableTimestamps = context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
-            firstMsgVisibility = context.prefs().getString(C.CHAT_FIRSTMSG_VISIBILITY, "0"),
             animateEmotes = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         )
 
@@ -186,7 +185,6 @@ class ChatView : ConstraintLayout {
         adapter.messages?.add(
             LiveChatMessage(
                 message = message,
-                color = "#999999",
                 isAction = true,
                 emotes = command.emotes,
                 timestamp = command.timestamp,

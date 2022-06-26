@@ -136,8 +136,7 @@ class ChatViewModel @Inject constructor(
                     channelId = channelId,
                     channelLogin = channelLogin,
                     enableRecentMsg = enableRecentMsg,
-                    recentMsgLimit = recentMsgLimit,
-                    maxAdapterCount = maxAdapterCount
+                    recentMsgLimit = recentMsgLimit
                 )
             }
         }
@@ -176,12 +175,9 @@ class ChatViewModel @Inject constructor(
         channelId: String,
         channelLogin: String? = null,
         enableRecentMsg: Boolean? = false,
-        recentMsgLimit: Int? = null,
-        maxAdapterCount: Int
+        recentMsgLimit: Int? = null
     ) {
-        _chatMessages.value = Collections.synchronizedList(
-            ArrayList(maxAdapterCount + 1)
-        )
+        _chatMessages.value = Collections.synchronizedList(LinkedList())
 
         chat?.start()
 

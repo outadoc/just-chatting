@@ -9,7 +9,7 @@
     android:focusable="true"
     android:linksClickable="true"
     android:paddingHorizontal="4dp"
-    android:paddingVertical="4dp"
+    android:paddingVertical="6dp"
     android:textAppearance="?textAppearanceBodyMedium"
     android:textColor="?attr/colorOnBackground"
     tools:text="@tools:sample/lorem" />

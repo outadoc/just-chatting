@@ -1,9 +1,12 @@
 package com.github.andreyasadchy.xtra.ui.view.chat
 
 import android.content.Context
+import android.graphics.Color
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
@@ -24,6 +27,7 @@ import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
+import com.github.andreyasadchy.xtra.ui.view.AlternatingBackgroundItemDecoration
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.Command
@@ -80,7 +84,21 @@ class ChatView : ConstraintLayout {
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null
-            it.layoutManager = LinearLayoutManager(context).apply { stackFromEnd = true }
+            it.layoutManager = LinearLayoutManager(context).apply {
+                stackFromEnd = true
+            }
+
+            val typedValue = TypedValue()
+            context.theme.resolveAttribute(R.attr.colorSurfaceVariant, typedValue, true)
+            val altBackground = ColorUtils.setAlphaComponent(typedValue.data, 40)
+
+            it.addItemDecoration(
+                AlternatingBackgroundItemDecoration(
+                    oddBackground = Color.TRANSPARENT,
+                    evenBackground = altBackground
+                )
+            )
+
 
             it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -115,8 +133,9 @@ class ChatView : ConstraintLayout {
         adapter.messages?.apply {
             adapter.notifyItemInserted(lastIndex)
 
+            val size = size
             if (size > maxAdapterCount) {
-                val removeCount = size - maxAdapterCount
+                val removeCount = size - maxAdapterCount + if (size % 2 == 1) 1 else 0
                 repeat(removeCount) {
                     removeAt(0)
                 }

@@ -85,7 +85,6 @@ class ChatAdapter(
     private val redeemedNoMsg = context.getString(R.string.user_redeemed)
 
     private val userColors = HashMap<String, Int>()
-    private val savedColors = HashMap<String, Int>()
     private var globalBadges: List<TwitchBadge>? = null
     private var channelBadges: List<TwitchBadge>? = null
     private val emotes = HashMap<String, Emote>()
@@ -619,19 +618,10 @@ class ChatAdapter(
 
     private fun getColorForUser(userName: String?, messageColor: String?): Int {
         val userColor = userColors[userName]
-        val savedColor = savedColors[messageColor]
         return when {
             userColor != null -> userColor
-            savedColor != null -> savedColor
             messageColor == null -> getAndSaveRandomUserColor(userName)
-            else -> {
-                val color = Color.parseColor(messageColor)
-                if (isContrastRatioAccessible(backgroundColor, color)) {
-                    saveUserColor(messageColor)
-                } else {
-                    getAndSaveRandomUserColor(userName)
-                }
-            }
+            else -> ensureColorIsAccessible(backgroundColor, Color.parseColor(messageColor))
         }
     }
 
@@ -641,13 +631,6 @@ class ChatAdapter(
             if (userName != null) {
                 userColors[userName] = it
             }
-        }
-    }
-
-    @ColorInt
-    private fun saveUserColor(userColor: String): Int {
-        return Color.parseColor(userColor).also { color ->
-            savedColors[userColor] = color
         }
     }
 

@@ -18,9 +18,10 @@ class LoggedInChatThread(
     private val useSSl: Boolean,
     private val userLogin: String?,
     private val userToken: String?,
-    private val channelName: String,
+    channelName: String,
     private val listener: OnMessageReceivedListener
 ) : Thread(), ChatInputView.OnMessageSendListener {
+
     private var socketOut: Socket? = null
     private lateinit var readerOut: BufferedReader
     private lateinit var writerOut: BufferedWriter

@@ -4,7 +4,6 @@ import com.github.andreyasadchy.xtra.model.chat.CheerEmotesResponse
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearchResponse
 import com.github.andreyasadchy.xtra.model.helix.emote.EmoteSetResponse
 import com.github.andreyasadchy.xtra.model.helix.follows.FollowResponse
-import com.github.andreyasadchy.xtra.model.helix.game.GamesResponse
 import com.github.andreyasadchy.xtra.model.helix.stream.StreamsResponse
 import com.github.andreyasadchy.xtra.model.helix.user.UsersResponse
 import retrofit2.http.GET
@@ -12,13 +11,6 @@ import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface HelixApi {
-
-    @GET("games")
-    suspend fun getGames(
-        @Header("Client-ID") clientId: String?,
-        @Header("Authorization") token: String?,
-        @Query("id") ids: List<String>
-    ): GamesResponse
 
     @GET("streams/")
     suspend fun getStreams(

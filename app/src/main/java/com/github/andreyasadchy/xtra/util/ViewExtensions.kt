@@ -121,15 +121,3 @@ fun View.hideKeyboard() {
         0
     )
 }
-
-val View.isKeyboardShown: Boolean
-    get() {
-        val rect = Rect()
-        getWindowVisibleDisplayFrame(rect)
-        val screenHeight = rootView.height
-
-        // rect.bottom is the position above soft keypad or device button.
-        // if keypad is shown, the r.bottom is smaller than that before.
-        val keypadHeight = screenHeight - rect.bottom
-        return keypadHeight > screenHeight * 0.15
-    }

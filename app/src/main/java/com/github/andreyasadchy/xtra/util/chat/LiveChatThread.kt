@@ -18,6 +18,7 @@ class LiveChatThread(
     private val channelName: String,
     private val listener: OnMessageReceivedListener
 ) : Thread() {
+
     private var socketIn: Socket? = null
     private lateinit var readerIn: BufferedReader
     private lateinit var writerIn: BufferedWriter

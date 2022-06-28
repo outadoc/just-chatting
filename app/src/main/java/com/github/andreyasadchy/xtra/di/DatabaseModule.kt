@@ -16,7 +16,6 @@ import com.github.andreyasadchy.xtra.db.VideoPositionsDao
 import com.github.andreyasadchy.xtra.db.VideosDao
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.SortChannelRepository
-import com.github.andreyasadchy.xtra.repository.SortGameRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -37,11 +36,6 @@ class DatabaseModule {
     @Provides
     fun providesSortChannelRepository(sortChannelDao: SortChannelDao): SortChannelRepository =
         SortChannelRepository(sortChannelDao)
-
-    @Singleton
-    @Provides
-    fun providesSortGameRepository(sortGameDao: SortGameDao): SortGameRepository =
-        SortGameRepository(sortGameDao)
 
     @Singleton
     @Provides

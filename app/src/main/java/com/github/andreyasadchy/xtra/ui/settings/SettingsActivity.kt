@@ -78,13 +78,6 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
             super.onSaveInstanceState(outState)
         }
 
-        private fun setResult() {
-            if (!changed) {
-                changed = true
-                requireActivity().setResult(Activity.RESULT_OK)
-            }
-        }
-
         companion object {
             const val KEY_CHANGED = "changed"
         }

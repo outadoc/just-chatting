@@ -9,8 +9,6 @@ import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.NotValidated
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.helix.clip.Clip
-import com.github.andreyasadchy.xtra.model.helix.video.Video
 import com.github.andreyasadchy.xtra.repository.AuthRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
@@ -29,14 +27,6 @@ class MainViewModel @Inject constructor(
     private val _isNetworkAvailable = MutableLiveData<Event<Boolean>>()
     val isNetworkAvailable: LiveData<Event<Boolean>>
         get() = _isNetworkAvailable
-
-    private val _video = MutableLiveData<Video?>()
-    val video: MutableLiveData<Video?>
-        get() = _video
-
-    private val _clip = MutableLiveData<Clip?>()
-    val clip: MutableLiveData<Clip?>
-        get() = _clip
 
     private val _user = MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>()
     val user: MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>

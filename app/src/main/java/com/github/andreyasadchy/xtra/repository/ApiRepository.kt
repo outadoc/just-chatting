@@ -104,18 +104,6 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override suspend fun loadGameBoxArt(
-        gameId: String,
-        helixClientId: String?,
-        helixToken: String?
-    ): String? = withContext(Dispatchers.IO) {
-        helix.getGames(
-            clientId = helixClientId,
-            token = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
-            ids = mutableListOf(gameId)
-        ).data?.firstOrNull()?.boxArt
-    }
-
     override suspend fun loadStreamWithUser(
         channelId: String,
         helixClientId: String?,

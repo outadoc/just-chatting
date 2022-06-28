@@ -35,12 +35,6 @@ interface TwitchService {
         coroutineScope: CoroutineScope
     ): Listing<Follow>
 
-    suspend fun loadGameBoxArt(
-        gameId: String,
-        helixClientId: String?,
-        helixToken: String?
-    ): String?
-
     suspend fun loadStreamWithUser(
         channelId: String,
         helixClientId: String?,

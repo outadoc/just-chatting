@@ -8,8 +8,6 @@ interface FollowViewModel {
     val userName: String?
     val channelLogo: String?
     val follow: FollowLiveData
-    val game: Boolean
-        get() = false
 
     fun setUser(user: User, helixClientId: String?)
 }

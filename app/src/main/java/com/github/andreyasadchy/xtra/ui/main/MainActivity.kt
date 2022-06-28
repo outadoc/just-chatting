@@ -8,7 +8,6 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
@@ -24,7 +23,6 @@ import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.HasAndroidInjector
-import kotlinx.coroutines.launch
 
 class MainActivity :
     BaseActivity(),
@@ -172,15 +170,13 @@ class MainActivity :
         updateLocal: Boolean
     ) {
         if (id == null || login == null || name == null || channelLogo == null) return
-        lifecycleScope.launch {
-            ChatNotificationUtils.openInBubbleOrStartActivity(
-                context = this@MainActivity,
-                channelId = id,
-                channelLogin = login,
-                channelName = name,
-                channelLogo = channelLogo
-            )
-        }
+        ChatNotificationUtils.openInBubbleOrStartActivity(
+            context = this@MainActivity,
+            channelId = id,
+            channelLogin = login,
+            channelName = name,
+            channelLogo = channelLogo
+        )
     }
 
     override fun onBackPressed() {

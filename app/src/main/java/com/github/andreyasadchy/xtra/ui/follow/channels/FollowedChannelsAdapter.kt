@@ -3,19 +3,13 @@ package com.github.andreyasadchy.xtra.ui.follow.channels
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.formatTime
 import com.github.andreyasadchy.xtra.util.loadImage
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.localText
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.twitchText
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userFollowed
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userImage
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userStream
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.username
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.*
 import kotlinx.datetime.Instant
 
 class FollowedChannelsAdapter(
@@ -48,8 +42,7 @@ class FollowedChannelsAdapter(
                 userImage.loadImage(
                     context,
                     item.channelLogo,
-                    circle = true,
-                    diskCacheStrategy = DiskCacheStrategy.NONE
+                    circle = true
                 )
             } else {
                 userImage.isVisible = false

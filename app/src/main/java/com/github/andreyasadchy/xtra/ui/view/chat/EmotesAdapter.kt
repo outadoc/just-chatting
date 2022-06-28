@@ -7,7 +7,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.chat.EmoteSetItem
 import com.github.andreyasadchy.xtra.util.C
@@ -18,16 +17,16 @@ import com.github.andreyasadchy.xtra.util.prefs
 class EmotesAdapter(
     private val clickListener: OnEmoteClickedListener
 ) : ListAdapter<EmoteSetItem, ViewHolder>(object :
-        DiffUtil.ItemCallback<EmoteSetItem>() {
+    DiffUtil.ItemCallback<EmoteSetItem>() {
 
-        override fun areItemsTheSame(oldItem: EmoteSetItem, newItem: EmoteSetItem): Boolean {
-            return oldItem == newItem
-        }
+    override fun areItemsTheSame(oldItem: EmoteSetItem, newItem: EmoteSetItem): Boolean {
+        return oldItem == newItem
+    }
 
-        override fun areContentsTheSame(oldItem: EmoteSetItem, newItem: EmoteSetItem): Boolean {
-            return oldItem == newItem
-        }
-    }) {
+    override fun areContentsTheSame(oldItem: EmoteSetItem, newItem: EmoteSetItem): Boolean {
+        return oldItem == newItem
+    }
+}) {
 
     companion object {
         const val TYPE_EMOTE = 0
@@ -76,8 +75,7 @@ class EmotesAdapter(
                     animate = context.prefs().getBoolean(C.ANIMATED_EMOTES, true),
                     screenDensity = context.resources.displayMetrics.density,
                     isDarkTheme = context.isDarkMode
-                ),
-                diskCacheStrategy = DiskCacheStrategy.DATA
+                )
             )
             setOnClickListener {
                 clickListener.onEmoteClicked(emote)

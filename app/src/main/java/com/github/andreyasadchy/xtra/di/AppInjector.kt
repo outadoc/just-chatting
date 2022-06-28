@@ -13,12 +13,12 @@ import dagger.android.support.AndroidSupportInjection
 
 object AppInjector {
 
-    lateinit var daggerComponent: XtraComponent
-        private set
-
     fun init(xtraApp: XtraApp) {
-        daggerComponent = DaggerXtraComponent.builder().application(xtraApp).build()
-        daggerComponent.inject(xtraApp)
+        DaggerXtraComponent.builder()
+            .application(xtraApp)
+            .build()
+            .inject(xtraApp)
+
         xtraApp.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 if (activity is Injectable) {

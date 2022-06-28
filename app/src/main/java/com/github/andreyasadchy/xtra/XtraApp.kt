@@ -29,6 +29,7 @@ class XtraApp : Application(), HasAndroidInjector, ImageLoaderFactory {
 
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+
     private val appLifecycleObserver = AppLifecycleObserver()
 
     override fun onCreate() {

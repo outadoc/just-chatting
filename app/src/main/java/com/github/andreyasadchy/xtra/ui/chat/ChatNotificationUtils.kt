@@ -4,6 +4,8 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -14,16 +16,16 @@ import androidx.core.content.getSystemService
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import com.github.andreyasadchy.xtra.GlideApp
+import coil.imageLoader
+import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.util.C
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 object ChatNotificationUtils {
     private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
 
-    suspend fun openInBubbleOrStartActivity(
+    fun openInBubbleOrStartActivity(
         context: Context,
         channelId: String,
         channelLogin: String,
@@ -78,23 +80,55 @@ object ChatNotificationUtils {
         )
     }
 
-    private suspend fun openInBubble(
+    private fun openInBubble(
         context: Context,
         channelId: String,
         channelLogin: String,
         channelName: String,
         channelLogo: String
     ) {
-        val request = GlideApp.with(context)
-            .asBitmap()
-            .circleCrop()
-            .load(channelLogo)
+        val request = ImageRequest.Builder(context)
+            .data(channelLogo)
+            .crossfade(true)
+            .size(256, 256)
+            .transformations(CircleCropTransformation())
+            .target(
+                onSuccess = { drawable ->
+                    onChannelLogoLoaded(
+                        context = context,
+                        channelId = channelId,
+                        channelLogin = channelLogin,
+                        channelName = channelName,
+                        channelLogo = channelLogo,
+                        channelLogoBitmap = (drawable as? BitmapDrawable)?.bitmap
+                    )
+                },
+                onError = { drawable ->
+                    onChannelLogoLoaded(
+                        context = context,
+                        channelId = channelId,
+                        channelLogin = channelLogin,
+                        channelName = channelName,
+                        channelLogo = channelLogo,
+                        channelLogoBitmap = (drawable as? BitmapDrawable)?.bitmap
+                    )
+                }
+            )
+            .build()
 
-        val bitmap = withContext(Dispatchers.IO) {
-            request.submit().get()
-        }
+        context.imageLoader.enqueue(request)
+    }
 
-        val icon = IconCompat.createWithBitmap(bitmap)
+    private fun onChannelLogoLoaded(
+        context: Context,
+        channelId: String,
+        channelLogin: String,
+        channelName: String,
+        channelLogo: String,
+        channelLogoBitmap: Bitmap?
+    ) {
+        val icon = channelLogoBitmap?.let { IconCompat.createWithBitmap(it) }
+            ?: IconCompat.createWithResource(context, R.mipmap.ic_launcher)
 
         val person: Person =
             Person.Builder()

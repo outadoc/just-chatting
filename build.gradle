@@ -6,7 +6,6 @@ buildscript {
     ext.room = '2.4.2'
     ext.dagger = '2.42'
     ext.retrofit = '2.9.0'
-    ext.glide = '4.13.2'
     ext.fetch = '3.1.6'
     ext.coil = '2.1.0'
     ext.emoji = '1.1.0'

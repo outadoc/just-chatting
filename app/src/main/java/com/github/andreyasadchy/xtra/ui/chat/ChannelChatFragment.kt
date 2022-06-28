@@ -17,7 +17,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.palette.graphics.Palette
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.LoggedIn
@@ -40,7 +39,6 @@ import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.google.android.material.shape.MaterialShapeDrawable
 import kotlinx.android.synthetic.main.fragment_channel.*
-import kotlinx.coroutines.launch
 
 class ChannelChatFragment :
     BaseNetworkFragment(),
@@ -448,15 +446,13 @@ class ChannelChatFragment :
         channelLogo: String?
     ) {
         if (id == null || login == null || name == null || channelLogo == null) return
-        lifecycleScope.launch {
-            ChatNotificationUtils.openInBubbleOrStartActivity(
-                context = requireContext(),
-                channelId = id,
-                channelLogin = login,
-                channelName = name,
-                channelLogo = channelLogo
-            )
-        }
+        ChatNotificationUtils.openInBubbleOrStartActivity(
+            context = requireContext(),
+            channelId = id,
+            channelLogin = login,
+            channelName = name,
+            channelLogo = channelLogo
+        )
     }
 
     override fun scrollToTop() {

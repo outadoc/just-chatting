@@ -18,7 +18,6 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.BttvEmote
 import com.github.andreyasadchy.xtra.model.chat.Chatter
@@ -35,20 +34,8 @@ import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.showKeyboard
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.image
-import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.name
-import kotlinx.android.synthetic.main.view_chat_input.view.clear
-import kotlinx.android.synthetic.main.view_chat_input.view.editText
-import kotlinx.android.synthetic.main.view_chat_input.view.flexboxChatMode
-import kotlinx.android.synthetic.main.view_chat_input.view.messageView
-import kotlinx.android.synthetic.main.view_chat_input.view.send
-import kotlinx.android.synthetic.main.view_chat_input.view.textEmote
-import kotlinx.android.synthetic.main.view_chat_input.view.textFollowers
-import kotlinx.android.synthetic.main.view_chat_input.view.textInputLayoutChat
-import kotlinx.android.synthetic.main.view_chat_input.view.textSlow
-import kotlinx.android.synthetic.main.view_chat_input.view.textSubs
-import kotlinx.android.synthetic.main.view_chat_input.view.textUnique
-import kotlinx.android.synthetic.main.view_chat_input.view.viewPager
+import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
+import kotlinx.android.synthetic.main.view_chat_input.view.*
 import kotlin.math.max
 import kotlin.time.Duration
 
@@ -213,10 +200,10 @@ class ChatInputView : LinearLayout {
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-            !textFollowers.isGone ||
-            !textUnique.isGone ||
-            !textSlow.isGone ||
-            !textSubs.isGone
+                    !textFollowers.isGone ||
+                    !textUnique.isGone ||
+                    !textSlow.isGone ||
+                    !textSubs.isGone
     }
 
     fun enableChatInteraction(enableMessaging: Boolean) {
@@ -361,13 +348,12 @@ class ChatInputView : LinearLayout {
                     viewHolder.apply {
                         containerView.tag = this
                         containerView.image.loadImage(
-                            context,
-                            item.emote.getUrl(
+                            context = context,
+                            url = item.emote.getUrl(
                                 animate = context.prefs().getBoolean(C.ANIMATED_EMOTES, true),
                                 screenDensity = context.resources.displayMetrics.density,
                                 isDarkTheme = context.isDarkMode
-                            ),
-                            diskCacheStrategy = DiskCacheStrategy.DATA
+                            )
                         )
                         containerView.name.text = item.emote.name
                     }

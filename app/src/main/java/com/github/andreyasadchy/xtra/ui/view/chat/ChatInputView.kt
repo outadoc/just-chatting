@@ -158,54 +158,6 @@ class ChatInputView : LinearLayout {
         editText.setText(text)
     }
 
-    fun notifyRoomState(roomState: RoomState) {
-        textEmote.isVisible = roomState.emote
-
-        if (roomState.followers != null) {
-            when (roomState.followers) {
-                Duration.ZERO -> {
-                    textFollowers.text = context.getString(R.string.room_followers)
-                    textFollowers.isVisible = true
-                }
-                else -> {
-                    textFollowers.text = context.getString(
-                        R.string.room_followers_min,
-                        roomState.followers.toString()
-                    )
-                    textFollowers.isVisible = true
-                }
-            }
-        } else {
-            textFollowers.isVisible = false
-        }
-
-        textUnique.isVisible = roomState.unique
-
-        if (roomState.slow != null) {
-            when (roomState.slow) {
-                Duration.ZERO -> textSlow.isVisible = false
-                else -> {
-                    textSlow.text = context.getString(
-                        R.string.room_slow,
-                        roomState.slow.toString()
-                    )
-                    textSlow.isVisible = true
-                }
-            }
-        } else {
-            textSlow.isVisible = false
-        }
-
-        textSubs.isVisible = roomState.subs
-
-        flexboxChatMode.isVisible =
-            !textEmote.isGone ||
-                    !textFollowers.isGone ||
-                    !textUnique.isGone ||
-                    !textSlow.isGone ||
-                    !textSubs.isGone
-    }
-
     fun enableChatInteraction(enableMessaging: Boolean) {
         if (enableMessaging) {
             editText.setAdapter(autoCompleteAdapter)
@@ -224,7 +176,7 @@ class ChatInputView : LinearLayout {
                 }
             }
 
-            textInputLayoutChat.setEndIconOnClickListener {
+            textInputLayoutChat.setStartIconOnClickListener {
                 // TODO add animation
                 if (viewPager.isGone) {
                     if (hasRecentEmotes != true && viewPager.currentItem == 0) {

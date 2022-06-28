@@ -76,6 +76,7 @@
     <string name="chat_clearmsg">Message deleted from %1$s\: %2$s</string>
     <string name="chat_first">First time chat</string>
     <string name="chat_input_hint">Send a message</string>
+    <string name="chat_input_emote_cd">Open emote picker</string>
     <string name="chat_reward">Channel point redemption</string>
     <string name="twitch">Twitch</string>
     <string name="local">Local</string>

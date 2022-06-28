@@ -31,10 +31,11 @@ import com.github.andreyasadchy.xtra.ui.view.AlternatingBackgroundItemDecoration
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.Command
+import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.prefs
-import kotlinx.android.synthetic.main.view_chat.view.btnDown
-import kotlinx.android.synthetic.main.view_chat.view.recyclerView
-import java.util.Locale
+import kotlinx.android.synthetic.main.view_chat.view.*
+import java.util.*
+import kotlin.time.Duration
 
 class ChatView : ConstraintLayout {
 
@@ -246,6 +247,54 @@ class ChatView : ConstraintLayout {
                 }
             }
         }
+    }
+
+    fun notifyRoomState(roomState: RoomState) {
+        textEmote.isVisible = roomState.emote
+
+        if (roomState.followers != null) {
+            when (roomState.followers) {
+                Duration.ZERO -> {
+                    textFollowers.text = context.getString(R.string.room_followers)
+                    textFollowers.isVisible = true
+                }
+                else -> {
+                    textFollowers.text = context.getString(
+                        R.string.room_followers_min,
+                        roomState.followers.toString()
+                    )
+                    textFollowers.isVisible = true
+                }
+            }
+        } else {
+            textFollowers.isVisible = false
+        }
+
+        textUnique.isVisible = roomState.unique
+
+        if (roomState.slow != null) {
+            when (roomState.slow) {
+                Duration.ZERO -> textSlow.isVisible = false
+                else -> {
+                    textSlow.text = context.getString(
+                        R.string.room_slow,
+                        roomState.slow.toString()
+                    )
+                    textSlow.isVisible = true
+                }
+            }
+        } else {
+            textSlow.isVisible = false
+        }
+
+        textSubs.isVisible = roomState.subs
+
+        flexboxChatMode.isVisible =
+            !textEmote.isGone ||
+                    !textFollowers.isGone ||
+                    !textUnique.isGone ||
+                    !textSlow.isGone ||
+                    !textSubs.isGone
     }
 
     fun addRecentMessages(list: List<LiveChatMessage>) {

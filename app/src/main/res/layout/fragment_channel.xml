@@ -24,8 +24,8 @@
                 android:background="@android:color/transparent"
                 app:menu="@menu/menu_chat"
                 app:navigationIconTint="?colorOnSurface"
-                app:titleTextAppearance="?attr/textAppearanceTitleLarge"
                 app:subtitleTextAppearance="?attr/textAppearanceTitleSmall"
+                app:titleTextAppearance="?attr/textAppearanceTitleLarge"
                 tools:navigationIcon="@drawable/ic_back"
                 tools:subtitle="Let's play some games! Something something long title !ad !justkidding"
                 tools:title="StreamerName" />
@@ -44,7 +44,6 @@
         android:id="@+id/chatInputView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorSurfaceVariant"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/coordinatorLayout_channel" />
 

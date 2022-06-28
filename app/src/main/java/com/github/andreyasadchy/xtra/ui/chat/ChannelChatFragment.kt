@@ -272,8 +272,7 @@ class ChannelChatFragment :
 
         chatInputView.enableChatInteraction(userIsLoggedIn)
 
-        viewModel.roomState.observe(viewLifecycleOwner) { chatInputView.notifyRoomState(it) }
-
+        viewModel.roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
         viewModel.newMessage.observe(viewLifecycleOwner) { chatView.notifyMessageAdded() }
         viewModel.chatMessages.observe(viewLifecycleOwner, chatView::submitList)
         viewModel.recentMessages.observe(viewLifecycleOwner, chatView::addRecentMessages)

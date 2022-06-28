@@ -21,8 +21,6 @@ import com.github.andreyasadchy.xtra.model.chat.StvEmotesDeserializer
 import com.github.andreyasadchy.xtra.model.chat.StvEmotesResponse
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesDeserializer
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesResponse
-import com.github.andreyasadchy.xtra.model.gql.search.SearchChannelDataDeserializer
-import com.github.andreyasadchy.xtra.model.gql.search.SearchChannelDataResponse
 import com.github.andreyasadchy.xtra.model.helix.emote.EmoteSetDeserializer
 import com.github.andreyasadchy.xtra.model.helix.emote.EmoteSetResponse
 import com.github.andreyasadchy.xtra.repository.ApiRepository
@@ -102,10 +100,6 @@ class XtraModule {
                 .registerTypeAdapter(BttvChannelResponse::class.java, BttvChannelDeserializer())
                 .registerTypeAdapter(BttvFfzResponse::class.java, BttvFfzDeserializer())
                 .registerTypeAdapter(EmoteCardResponse::class.java, EmoteCardDeserializer())
-                .registerTypeAdapter(
-                    SearchChannelDataResponse::class.java,
-                    SearchChannelDataDeserializer()
-                )
                 .create()
         )
     }

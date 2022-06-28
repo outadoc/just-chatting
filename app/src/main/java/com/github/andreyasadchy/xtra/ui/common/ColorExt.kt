@@ -34,6 +34,21 @@ fun ensureColorIsAccessible(
     return correctedForeground
 }
 
+@ColorInt
+fun ensureMinimumAlpha(
+    @ColorInt background: Int,
+    @ColorInt foreground: Int,
+    minimumContrast: Float = 10.0f
+): Int {
+    val minAlpha = ColorUtils.calculateMinimumAlpha(foreground, background, minimumContrast)
+        .takeIf { it >= 0 } ?: 255
+
+    return ColorUtils.setAlphaComponent(
+        foreground,
+        minAlpha
+    )
+}
+
 private fun colorToXyz(@ColorInt color: Int): DoubleArray {
     return DoubleArray(3).apply {
         ColorUtils.colorToXYZ(color, this)

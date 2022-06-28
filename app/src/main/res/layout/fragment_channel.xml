@@ -24,7 +24,8 @@
                 android:background="@android:color/transparent"
                 app:menu="@menu/menu_chat"
                 app:navigationIconTint="?colorOnSurface"
-                app:subtitleTextAppearance="?attr/textAppearanceTitleMedium"
+                app:titleTextAppearance="?attr/textAppearanceTitleLarge"
+                app:subtitleTextAppearance="?attr/textAppearanceTitleSmall"
                 tools:navigationIcon="@drawable/ic_back"
                 tools:subtitle="Let's play some games! Something something long title !ad !justkidding"
                 tools:title="StreamerName" />

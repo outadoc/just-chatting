@@ -2,9 +2,9 @@ package com.github.andreyasadchy.xtra.ui.chat
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.InsetDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -12,7 +12,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
-import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -27,6 +26,7 @@ import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
+import com.github.andreyasadchy.xtra.ui.common.ensureMinimumAlpha
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import com.github.andreyasadchy.xtra.ui.view.chat.OnEmoteClickedListener
 import com.github.andreyasadchy.xtra.ui.view.chat.StreamInfoDialog
@@ -38,6 +38,7 @@ import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
+import com.google.android.material.shape.MaterialShapeDrawable
 import kotlinx.android.synthetic.main.fragment_channel.*
 import kotlinx.coroutines.launch
 
@@ -359,16 +360,27 @@ class ChannelChatFragment :
                 Palette.Builder(bitmap).generate { palette ->
                     val swatch = palette?.dominantSwatch ?: palette?.dominantSwatch
                     swatch?.apply {
-                        appBar.background = ColorDrawable(rgb)
+                        val backgroundColor = rgb
+                        val textColor = ensureMinimumAlpha(
+                            background = backgroundColor,
+                            foreground = titleTextColor
+                        )
 
-                        val textColor = ColorUtils.setAlphaComponent(titleTextColor, 255)
-                        with(toolbar) {
-                            setNavigationIconTint(textColor)
-                            setTitleTextColor(textColor)
-                            setSubtitleTextColor(textColor)
-                            menu.forEach { item ->
-                                DrawableCompat.setTint(item.icon, textColor)
+                        ViewCompat.setBackground(
+                            toolbar,
+                            MaterialShapeDrawable.createWithElevationOverlay(
+                                toolbar.context,
+                                ViewCompat.getElevation(toolbar)
+                            ).apply {
+                                fillColor = ColorStateList.valueOf(backgroundColor)
                             }
+                        )
+
+                        toolbar.setNavigationIconTint(textColor)
+                        toolbar.setTitleTextColor(textColor)
+                        toolbar.setSubtitleTextColor(textColor)
+                        toolbar.menu.forEach { item ->
+                            DrawableCompat.setTint(item.icon, textColor)
                         }
                     }
                 }

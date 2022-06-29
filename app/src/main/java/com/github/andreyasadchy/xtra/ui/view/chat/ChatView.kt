@@ -5,7 +5,7 @@ import android.graphics.Color
 import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.View
-import androidx.constraintlayout.widget.ConstraintLayout
+import android.widget.LinearLayout
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -37,7 +37,7 @@ import kotlinx.android.synthetic.main.view_chat.view.*
 import java.util.*
 import kotlin.time.Duration
 
-class ChatView : ConstraintLayout {
+class ChatView : LinearLayout {
 
     private lateinit var adapter: ChatAdapter
 
@@ -67,6 +67,7 @@ class ChatView : ConstraintLayout {
 
     private fun init(context: Context) {
         View.inflate(context, R.layout.view_chat, this)
+        orientation = VERTICAL
     }
 
     fun init(maxAdapterCount: Int) {
@@ -99,7 +100,6 @@ class ChatView : ConstraintLayout {
                     evenBackground = altBackground
                 )
             )
-
 
             it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -291,10 +291,10 @@ class ChatView : ConstraintLayout {
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-                    !textFollowers.isGone ||
-                    !textUnique.isGone ||
-                    !textSlow.isGone ||
-                    !textSubs.isGone
+            !textFollowers.isGone ||
+            !textUnique.isGone ||
+            !textSlow.isGone ||
+            !textSubs.isGone
     }
 
     fun addRecentMessages(list: List<LiveChatMessage>) {

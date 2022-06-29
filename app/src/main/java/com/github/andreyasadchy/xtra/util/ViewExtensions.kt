@@ -65,7 +65,6 @@ fun loadImage(
             .build()
 
         context.imageLoader.enqueue(request)
-
     } catch (e: IllegalArgumentException) {
         e.printStackTrace()
     }

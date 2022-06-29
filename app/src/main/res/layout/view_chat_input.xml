@@ -5,7 +5,7 @@
     tools:orientation="vertical"
     tools:parentTag="android.widget.LinearLayout">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/messageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,9 +27,13 @@
             app:boxBackgroundColor="?colorSurfaceVariant"
             app:boxStrokeWidth="0dp"
             app:boxStrokeWidthFocused="0dp"
-            app:endIconMode="custom"
+            app:endIconMode="clear_text"
             app:hintEnabled="false"
             app:hintTextColor="?colorOnSurfaceVariant"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/send"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
             app:startIconContentDescription="@string/chat_input_emote_cd"
             app:startIconDrawable="@drawable/ic_mood"
@@ -44,7 +48,6 @@
                 android:imeOptions="actionSend|flagNoFullscreen"
                 android:importantForAutofill="no"
                 android:inputType="textCapSentences|textAutoCorrect"
-                android:padding="4dp"
                 android:textAppearance="?textAppearanceBodyLarge"
                 android:textColor="?colorOnSurfaceVariant"
                 tools:ignore="LabelFor"
@@ -52,31 +55,29 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ImageButton
-            android:id="@+id/clear"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:background="?selectableItemBackgroundBorderless"
-            android:padding="8dp"
-            android:src="@drawable/ic_backspace"
-            android:visibility="gone"
-            app:tint="?attr/colorOnSurfaceVariant"
-            tools:visibility="visible" />
-
-        <ImageButton
+        <Button
             android:id="@+id/send"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_gravity="center_vertical"
-            android:background="?selectableItemBackgroundBorderless"
-            android:padding="8dp"
-            android:src="@drawable/ic_send"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
             android:visibility="gone"
+            app:icon="@drawable/ic_send"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutChat"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayoutChat"
             app:tint="?attr/colorOnSurfaceVariant"
             tools:visibility="visible" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewPager"

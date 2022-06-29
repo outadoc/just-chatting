@@ -27,7 +27,6 @@ import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -36,8 +35,6 @@ import com.github.andreyasadchy.xtra.util.showKeyboard
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
 import kotlinx.android.synthetic.main.view_chat_input.view.*
-import kotlin.math.max
-import kotlin.time.Duration
 
 class ChatInputView : LinearLayout {
 
@@ -163,9 +160,8 @@ class ChatInputView : LinearLayout {
             editText.setAdapter(autoCompleteAdapter)
             editText.setTokenizer(SpaceTokenizer())
 
-            editText.addTextChangedListener({ text, _, _, _ ->
+            editText.addTextChangedListener(afterTextChanged = { text ->
                 send.isVisible = text?.isNotBlank() == true
-                clear.isVisible = text?.isNotBlank() == true
             })
 
             editText.setOnKeyListener { _, keyCode, event ->
@@ -182,23 +178,13 @@ class ChatInputView : LinearLayout {
                     if (hasRecentEmotes != true && viewPager.currentItem == 0) {
                         viewPager.setCurrentItem(1, false)
                     }
-                    editText.hideKeyboard()
+
                     viewPager.isVisible = true
+                    editText.hideKeyboard()
                 } else {
-                    editText.showKeyboard()
                     viewPager.isVisible = false
+                    editText.showKeyboard()
                 }
-            }
-
-            clear.setOnClickListener {
-                val text = editText.text.toString().trimEnd()
-                editText.setText(text.substring(0, max(text.lastIndexOf(' '), 0)))
-                editText.setSelection(editText.length())
-            }
-
-            clear.setOnLongClickListener {
-                editText.text.clear()
-                true
             }
 
             send.setOnClickListener { sendMessage() }

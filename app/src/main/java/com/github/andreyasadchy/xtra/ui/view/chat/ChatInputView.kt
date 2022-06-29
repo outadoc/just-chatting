@@ -179,11 +179,11 @@ class ChatInputView : LinearLayout {
                         viewPager.setCurrentItem(1, false)
                     }
 
-                    viewPager.isVisible = true
                     editText.hideKeyboard()
+                    viewPager.isVisible = true
                 } else {
-                    viewPager.isVisible = false
                     editText.showKeyboard()
+                    viewPager.isVisible = false
                 }
             }
 

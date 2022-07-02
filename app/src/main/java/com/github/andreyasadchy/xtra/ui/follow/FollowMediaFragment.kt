@@ -9,18 +9,23 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
-import com.github.andreyasadchy.xtra.ui.common.pagers.ItemAwareFragmentPagerAdapter
+import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
-import kotlinx.android.synthetic.main.fragment_media.appBar
-import kotlinx.android.synthetic.main.fragment_media.toolbar
-import kotlinx.android.synthetic.main.fragment_media.viewPager
+import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.fragment_media.*
 
 class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
 
@@ -37,7 +42,7 @@ class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
 
     private var previousItem = -1
 
-    private var adapter: ItemAwareFragmentPagerAdapter? = null
+    private var adapter: Adapter<*>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,7 +55,7 @@ class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setAdapter(FollowPagerAdapter(requireContext(), childFragmentManager))
+        setAdapter()
 
         with(toolbar) {
             val user = User.get(requireContext())
@@ -101,7 +106,7 @@ class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
         savedInstanceState
             ?.getInt("previousItem")
             ?.let { previousItem ->
-                viewPager.currentItem = previousItem
+                viewPagerMedia.currentItem = previousItem
             }
     }
 
@@ -136,11 +141,35 @@ class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
         )
     }
 
-    private fun setAdapter(adapter: ItemAwareFragmentPagerAdapter) {
-        this.adapter = adapter
-        viewPager.adapter = adapter
-        viewPager.currentItem = 0
-        viewPager.offscreenPageLimit = adapter.count
+    private fun setAdapter() {
+        adapter = object : FragmentStateAdapter(this) {
+            override fun getItemCount(): Int = 2
+            override fun createFragment(position: Int): Fragment {
+                return when (position) {
+                    0 -> FollowedStreamsFragment()
+                    else -> FollowedChannelsFragment()
+                }
+            }
+        }
+
+        viewPagerMedia.adapter = this.adapter
+
+        tabLayoutMedia.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                scrollToTop()
+            }
+        })
+
+        TabLayoutMediator(tabLayoutMedia, viewPagerMedia) { tab, position ->
+            tab.text = context?.getString(
+                when (position) {
+                    0 -> R.string.live
+                    else -> R.string.channels
+                }
+            )
+        }.attach()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -150,7 +179,11 @@ class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
 
     override fun scrollToTop() {
         appBar?.setExpanded(true, true)
-        (adapter?.currentFragment as? Scrollable)?.scrollToTop()
+        (viewPagerMedia.findCurrentFragment() as? Scrollable)?.scrollToTop()
+    }
+
+    private fun ViewPager2.findCurrentFragment(): Fragment? {
+        return childFragmentManager.findFragmentByTag("f$currentItem")
     }
 
     override fun initialize() {

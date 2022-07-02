@@ -241,8 +241,6 @@ class ChannelChatFragment :
             ).show(childFragmentManager, "closeOnPip")
         }
 
-        chatInputView.init(childFragmentManager)
-
         chatInputView.setOnMessageSendListener { message ->
             viewModel.send(
                 message = message,

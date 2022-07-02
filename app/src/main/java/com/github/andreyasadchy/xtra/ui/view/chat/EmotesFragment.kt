@@ -18,11 +18,12 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.chat.EmoteSetItem
+import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.view.GridAutofitLayoutManager
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
 import javax.inject.Inject
 
-class EmotesFragment : Fragment(), Injectable {
+class EmotesFragment : Fragment(), Injectable, Scrollable {
 
     private var listener: OnEmoteClickedListener? = null
     private lateinit var layoutManager: GridAutofitLayoutManager
@@ -106,5 +107,9 @@ class EmotesFragment : Fragment(), Injectable {
             EmotesFragment().apply {
                 arguments = bundleOf(KEY_POSITION to position)
             }
+    }
+
+    override fun scrollToTop() {
+        (view as? RecyclerView)?.smoothScrollToPosition(0)
     }
 }

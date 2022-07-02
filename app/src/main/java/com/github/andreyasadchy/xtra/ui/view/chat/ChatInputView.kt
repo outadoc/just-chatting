@@ -17,7 +17,6 @@ import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.findFragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.github.andreyasadchy.xtra.R
@@ -28,12 +27,14 @@ import com.github.andreyasadchy.xtra.model.chat.FfzEmote
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.showKeyboard
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
@@ -49,8 +50,6 @@ class ChatInputView : LinearLayout {
     private var hasRecentEmotes: Boolean? = null
 
     private val autoCompleteAdapter = AutoCompleteAdapter(context)
-
-    private lateinit var childFragmentManager: FragmentManager
 
     private var messageCallback: OnMessageSendListener? = null
 
@@ -75,9 +74,7 @@ class ChatInputView : LinearLayout {
         orientation = VERTICAL
     }
 
-    fun init(childFragmentManager: FragmentManager) {
-        this.childFragmentManager = childFragmentManager
-
+    init {
         ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
             val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
@@ -209,6 +206,19 @@ class ChatInputView : LinearLayout {
                     else -> context.getString(R.string.emote_tab_others)
                 }
             }.attach()
+
+            emotePickerTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {}
+                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    val position = tab?.position ?: return
+                    val fragment = findFragment<Fragment>()
+                        .childFragmentManager
+                        .findFragmentByTag("f$position")
+
+                    (fragment as? Scrollable)?.scrollToTop()
+                }
+            })
 
             messagingEnabled = true
         }

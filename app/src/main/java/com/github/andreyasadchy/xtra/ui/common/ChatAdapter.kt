@@ -618,10 +618,10 @@ class ChatAdapter(
 
     private fun getColorForUser(userName: String?, messageColor: String?): Int {
         val savedColor = userColors[userName]
-        val accessibleColor = messageColor?.let {
+        val accessibleColor = messageColor?.let { color ->
             ensureColorIsAccessible(
+                foreground = Color.parseColor(color),
                 background = backgroundColor,
-                foreground = Color.parseColor(it)
             )
         }
 

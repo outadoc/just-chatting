@@ -5,10 +5,13 @@ import androidx.core.graphics.ColorUtils
 import kotlin.math.max
 import kotlin.math.min
 
+private const val MIN_LUMINANCE_SEARCH_MAX_ITERATIONS = 10
+private const val MIN_LUMINANCE_SEARCH_PRECISION = 1
+
 @ColorInt
 fun ensureColorIsAccessible(
-    @ColorInt background: Int,
     @ColorInt foreground: Int,
+    @ColorInt background: Int,
     minimumContrast: Double = 4.5
 ): Int? {
     // Get X, Y, Z components of foreground and background colors
@@ -32,18 +35,34 @@ fun ensureColorIsAccessible(
     // Even with max luminance, contrast isn't high enough
     if (maxLuminanceContrast < minimumContrast) return null
 
+    // Binary search to find a value with the minimum value which provides sufficient contrast
+    var numIterations = 0
+
+    var minNewY = 0.0
+    var maxNewY = 100.0
+
+    while (
+        numIterations <= MIN_LUMINANCE_SEARCH_MAX_ITERATIONS &&
+        maxNewY - minNewY > MIN_LUMINANCE_SEARCH_PRECISION
+    ) {
+        val testY = (minNewY + maxNewY) / 2
+        val testContrast = calculateLuminanceContrast(
+            foregroundY = testY,
+            backgroundY = backgroundY
+        )
+
+        if (testContrast < minimumContrast) minNewY = testY
+        else maxNewY = testY
+
+        numIterations++
+    }
+
     // Return the foreground color, but with a higher luminance contrast
-    val correctedForeground = xyzToColor(
+    return xyzToColor(
         x = foregroundX,
-        y = if (backgroundY > foregroundY) {
-            (backgroundY + 5) / minimumContrast
-        } else {
-            (backgroundY + 5) * minimumContrast
-        }.coerceAtMost(100.0),
+        y = maxNewY,
         z = foregroundZ
     )
-
-    return correctedForeground
 }
 
 private fun calculateLuminanceContrast(foregroundY: Double, backgroundY: Double): Double {
@@ -52,8 +71,8 @@ private fun calculateLuminanceContrast(foregroundY: Double, backgroundY: Double)
 
 @ColorInt
 fun ensureMinimumAlpha(
-    @ColorInt background: Int,
     @ColorInt foreground: Int,
+    @ColorInt background: Int,
     minimumContrast: Float = 10.0f
 ): Int {
     val minAlpha = ColorUtils.calculateMinimumAlpha(foreground, background, minimumContrast)

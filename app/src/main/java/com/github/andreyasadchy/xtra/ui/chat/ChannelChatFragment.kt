@@ -359,8 +359,8 @@ class ChannelChatFragment :
                     swatch?.apply {
                         val backgroundColor = rgb
                         val textColor = ensureMinimumAlpha(
-                            background = backgroundColor,
-                            foreground = titleTextColor
+                            foreground = titleTextColor,
+                            background = backgroundColor
                         )
 
                         ViewCompat.setBackground(

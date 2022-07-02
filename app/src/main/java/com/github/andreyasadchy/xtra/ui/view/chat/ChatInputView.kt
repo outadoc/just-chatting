@@ -230,11 +230,11 @@ class ChatInputView : LinearLayout {
 
         hideEmotesMenu()
 
-        return messageCallback?.let {
+        return messageCallback?.let { listener ->
             val text = editText.text.trim()
             editText.text.clear()
             if (text.isNotEmpty()) {
-                it.send(text)
+                listener.send(text)
                 true
             } else {
                 false

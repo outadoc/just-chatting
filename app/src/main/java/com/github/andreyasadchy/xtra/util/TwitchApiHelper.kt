@@ -2,17 +2,6 @@ package com.github.andreyasadchy.xtra.util
 
 import android.content.Context
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
-import com.github.andreyasadchy.xtra.util.chat.LoggedInChatThread
-import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
-import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
-import com.github.andreyasadchy.xtra.util.chat.OnCommandReceivedListener
-import com.github.andreyasadchy.xtra.util.chat.OnRewardReceivedListener
-import com.github.andreyasadchy.xtra.util.chat.OnRoomStateReceivedListener
-import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
-import com.github.andreyasadchy.xtra.util.chat.PubSubListenerImpl
-import com.github.andreyasadchy.xtra.util.chat.PubSubWebSocket
-import kotlinx.coroutines.CoroutineScope
 
 object TwitchApiHelper {
 
@@ -67,81 +56,6 @@ object TwitchApiHelper {
             reg6.containsMatchIn(url) -> reg6.replace(url, "${width}x$height")
             else -> url
         }
-    }
-
-    fun startChat(
-        loggedIn: Boolean,
-        channelName: String,
-        showUserNotice: Boolean,
-        showClearMsg: Boolean,
-        showClearChat: Boolean,
-        usePubSub: Boolean,
-        newMessageListener: OnChatMessageReceivedListener,
-        UserStateListener: OnUserStateReceivedListener,
-        RoomStateListener: OnRoomStateReceivedListener,
-        CommandListener: OnCommandReceivedListener,
-        callbackReward: OnRewardReceivedListener
-    ): LiveChatThread {
-        return LiveChatThread(
-            loggedIn = loggedIn,
-            channelName = channelName,
-            listener = MessageListenerImpl(
-                callback = newMessageListener,
-                callbackUserState = UserStateListener,
-                callbackRoomState = RoomStateListener,
-                callbackCommand = CommandListener,
-                callbackReward = callbackReward,
-                showUserNotice = showUserNotice,
-                showClearMsg = showClearMsg,
-                showClearChat = showClearChat,
-                usePubSub = usePubSub
-            )
-        ).apply { start() }
-    }
-
-    fun startLoggedInChat(
-        userName: String?,
-        userToken: String?,
-        channelName: String,
-        showUserNotice: Boolean,
-        showClearMsg: Boolean,
-        showClearChat: Boolean,
-        usePubSub: Boolean,
-        newMessageListener: OnChatMessageReceivedListener,
-        UserStateListener: OnUserStateReceivedListener,
-        RoomStateListener: OnRoomStateReceivedListener,
-        CommandListener: OnCommandReceivedListener,
-        callbackReward: OnRewardReceivedListener
-    ): LoggedInChatThread {
-        return LoggedInChatThread(
-            userLogin = userName,
-            userToken = userToken,
-            channelName = channelName,
-            listener = MessageListenerImpl(
-                callback = newMessageListener,
-                callbackUserState = UserStateListener,
-                callbackRoomState = RoomStateListener,
-                callbackCommand = CommandListener,
-                callbackReward = callbackReward,
-                showUserNotice = showUserNotice,
-                showClearMsg = showClearMsg,
-                showClearChat = showClearChat,
-                usePubSub = usePubSub
-            )
-        ).apply { start() }
-    }
-
-    fun startPubSub(
-        channelId: String,
-        coroutineScope: CoroutineScope,
-        newMessageListener: OnChatMessageReceivedListener,
-        callbackReward: OnRewardReceivedListener
-    ): PubSubWebSocket {
-        return PubSubWebSocket(
-            channelId,
-            coroutineScope,
-            PubSubListenerImpl(newMessageListener, callbackReward)
-        ).apply { connect() }
     }
 
     fun addTokenPrefixHelix(token: String) = "Bearer $token"

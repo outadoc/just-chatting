@@ -23,15 +23,16 @@ import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
 import com.github.andreyasadchy.xtra.util.SingleLiveEvent
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.chat.Command
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
 import com.github.andreyasadchy.xtra.util.chat.LoggedInChatThread
+import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.OnCommandReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.OnRewardReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.OnRoomStateReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
+import com.github.andreyasadchy.xtra.util.chat.PubSubListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.PubSubWebSocket
 import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
@@ -60,7 +61,7 @@ class ChatViewModel @Inject constructor(
                         value = recent
                             .filter { recentEmote ->
                                 twitch.any { twitchEmote -> (twitchEmote as? EmoteSetItem.Emote)?.emote == recentEmote } ||
-                                    other.any { otherEmote -> (otherEmote as? EmoteSetItem.Emote)?.emote == recentEmote }
+                                        other.any { otherEmote -> (otherEmote as? EmoteSetItem.Emote)?.emote == recentEmote }
                             }
                             .map { emote -> EmoteSetItem.Emote(emote) }
                     }
@@ -92,14 +93,14 @@ class ChatViewModel @Inject constructor(
     val newMessage: LiveData<ChatMessage>
         get() = _newMessage
 
-    var chat: ChatController? = null
+    private var chatController: ChatController? = null
 
     private val _newChatter by lazy { SingleLiveEvent<Chatter>() }
     val newChatter: LiveData<Chatter>
         get() = _newChatter
 
     val chatters: Collection<Chatter>
-        get() = (chat as LiveChatController).chatters.values
+        get() = (chatController as LiveChatController).chatters.values
 
     fun startLive(
         usePubSub: Boolean,
@@ -114,8 +115,8 @@ class ChatViewModel @Inject constructor(
         enableRecentMsg: Boolean? = false,
         recentMsgLimit: Int? = null
     ) {
-        if (chat == null && channelLogin != null && channelName != null) {
-            chat = LiveChatController(
+        if (chatController == null && channelLogin != null && channelName != null) {
+            chatController = LiveChatController(
                 usePubSub = usePubSub,
                 user = user,
                 helixClientId = helixClientId,
@@ -126,6 +127,7 @@ class ChatViewModel @Inject constructor(
                 showClearMsg = showClearMsg,
                 showClearChat = showClearChat
             )
+
             if (channelId != null) {
                 init(
                     helixClientId = helixClientId,
@@ -140,11 +142,9 @@ class ChatViewModel @Inject constructor(
     }
 
     fun start() {
-        chat?.start()
-    }
-
-    fun stop() {
-        chat?.pause()
+        viewModelScope.launch {
+            chatController?.start()
+        }
     }
 
     fun send(
@@ -153,7 +153,7 @@ class ChatViewModel @Inject constructor(
         screenDensity: Float,
         isDarkTheme: Boolean
     ) {
-        chat?.send(
+        chatController?.send(
             message = message,
             animateEmotes = animateEmotes,
             screenDensity = screenDensity,
@@ -162,7 +162,7 @@ class ChatViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        chat?.stop()
+        chatController?.stop()
         super.onCleared()
     }
 
@@ -176,7 +176,7 @@ class ChatViewModel @Inject constructor(
     ) {
         _chatMessages.value = Collections.synchronizedList(LinkedList())
 
-        chat?.start()
+        start()
 
         viewModelScope.launch {
             if (channelLogin != null && enableRecentMsg == true && recentMsgLimit != null) {
@@ -285,7 +285,7 @@ class ChatViewModel @Inject constructor(
                 emotes.isNotEmpty()
             }
 
-            (chat as? LiveChatController)?.addEmotes(
+            (chatController as? LiveChatController)?.addEmotes(
                 groups.flatMap { (_, emotes) -> emotes }
             )
 
@@ -317,20 +317,57 @@ class ChatViewModel @Inject constructor(
         private val user: User,
         private val helixClientId: String?,
         private val channelId: String?,
-        private val channelLogin: String,
+        channelLogin: String,
         displayName: String,
-        private val showUserNotice: Boolean,
-        private val showClearMsg: Boolean,
-        private val showClearChat: Boolean
+        showUserNotice: Boolean,
+        showClearMsg: Boolean,
+        showClearChat: Boolean
     ) : ChatController(),
         OnUserStateReceivedListener,
         OnRoomStateReceivedListener,
         OnCommandReceivedListener,
         OnRewardReceivedListener {
 
-        private var chat: LiveChatThread? = null
-        private var loggedInChat: LoggedInChatThread? = null
-        private var pubSub: PubSubWebSocket? = null
+        private val listener = MessageListenerImpl(
+            callback = this,
+            callbackUserState = this,
+            callbackRoomState = this,
+            callbackCommand = this,
+            callbackReward = this,
+            showUserNotice = showUserNotice,
+            showClearMsg = showClearMsg,
+            showClearChat = showClearChat,
+            usePubSub = usePubSub
+        )
+
+        private val liveChat: LiveChatThread =
+            LiveChatThread(
+                scope = viewModelScope,
+                loggedIn = user is LoggedIn,
+                channelName = channelLogin,
+                listener = listener
+            )
+
+        private val loggedInChat: LoggedInChatThread =
+            LoggedInChatThread(
+                scope = viewModelScope,
+                userLogin = user.login,
+                userToken = user.helixToken,
+                channelName = channelLogin,
+                listener = listener
+            )
+
+        private val pubSub: PubSubWebSocket? =
+            if (usePubSub && !channelId.isNullOrEmpty()) {
+                PubSubWebSocket(
+                    scope = viewModelScope,
+                    channelId = channelId,
+                    listener = PubSubListenerImpl(
+                        callback = this,
+                        callbackReward = this
+                    )
+                )
+            } else null
 
         private val allEmotesMap = mutableMapOf<String, Emote>()
 
@@ -351,7 +388,7 @@ class ChatViewModel @Inject constructor(
                 return
             }
 
-            loggedInChat?.send(message)
+            loggedInChat.send(message)
 
             val usedEmotes = hashSetOf<RecentEmote>()
             val currentTime = System.currentTimeMillis()
@@ -377,53 +414,22 @@ class ChatViewModel @Inject constructor(
             }
         }
 
-        override fun start() {
-            pause()
-
-            chat = TwitchApiHelper.startChat(
-                loggedIn = user is LoggedIn,
-                channelName = channelLogin,
-                showUserNotice = showUserNotice,
-                showClearMsg = showClearMsg,
-                showClearChat = showClearChat,
-                usePubSub = usePubSub,
-                newMessageListener = this,
-                UserStateListener = this,
-                RoomStateListener = this,
-                CommandListener = this,
-                callbackReward = this
-            )
+        override suspend fun start() {
+            liveChat.start()
 
             if (user is LoggedIn) {
-                loggedInChat = TwitchApiHelper.startLoggedInChat(
-                    userName = user.login,
-                    userToken = user.helixToken,
-                    channelName = channelLogin,
-                    showUserNotice = showUserNotice,
-                    showClearMsg = showClearMsg,
-                    showClearChat = showClearChat,
-                    usePubSub = usePubSub,
-                    newMessageListener = this,
-                    UserStateListener = this,
-                    RoomStateListener = this,
-                    CommandListener = this,
-                    callbackReward = this
-                )
+                loggedInChat.start()
             }
 
             if (usePubSub && !channelId.isNullOrBlank()) {
-                pubSub = TwitchApiHelper.startPubSub(channelId, viewModelScope, this, this)
+                pubSub?.start()
             }
         }
 
-        override fun pause() {
-            chat?.disconnect()
-            loggedInChat?.disconnect()
-            pubSub?.disconnect()
-        }
-
         override fun stop() {
-            pause()
+            liveChat.disconnect()
+            loggedInChat.disconnect()
+            pubSub?.disconnect()
         }
 
         override fun onMessage(message: ChatMessage) {
@@ -525,18 +531,12 @@ class ChatViewModel @Inject constructor(
             }
         }
 
-        fun isActive(): Boolean? {
-            return chat?.isActive
-        }
-
         private fun disconnect() {
-            if (chat?.isActive == true) {
-                chat?.disconnect()
-                loggedInChat?.disconnect()
-                pubSub?.disconnect()
-                roomState.postValue(RoomState())
-                command.postValue(Command(type = "disconnect_command"))
-            }
+            liveChat.disconnect()
+            loggedInChat.disconnect()
+            pubSub?.disconnect()
+            roomState.postValue(RoomState())
+            command.postValue(Command(type = "disconnect_command"))
         }
     }
 
@@ -549,8 +549,7 @@ class ChatViewModel @Inject constructor(
             isDarkTheme: Boolean
         )
 
-        abstract fun start()
-        abstract fun pause()
+        abstract suspend fun start()
         abstract fun stop()
 
         override fun onMessage(message: ChatMessage) {

@@ -1,146 +1,68 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
-import com.github.andreyasadchy.xtra.ui.view.chat.ChatInputView
-import java.io.BufferedReader
-import java.io.BufferedWriter
+import kotlinx.coroutines.CoroutineScope
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import java.io.IOException
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.net.Socket
-import java.util.concurrent.Executor
-import java.util.concurrent.Executors
-import javax.net.ssl.SSLSocketFactory
-
-private const val TAG = "LoggedInChatThread"
 
 class LoggedInChatThread(
+    scope: CoroutineScope,
     private val userLogin: String?,
     private val userToken: String?,
     channelName: String,
     private val listener: OnMessageReceivedListener
-) : Thread(), ChatInputView.OnMessageSendListener {
+) : BaseChatThread(scope, listener, channelName) {
 
-    private var socketOut: Socket? = null
-    private lateinit var readerOut: BufferedReader
-    private lateinit var writerOut: BufferedWriter
-    private val hashChannelName: String = "#$channelName"
-    private val messageSenderExecutor: Executor = Executors.newSingleThreadExecutor()
-    private var isActive = true
+    fun start() {
+        connect(socketListener = LiveChatThreadListener())
+    }
 
-    override fun run() {
+    private inner class LiveChatThreadListener : WebSocketListener() {
 
-        fun handlePing(writer: BufferedWriter) {
-            write("PONG :tmi.twitch.tv", writer)
-            writer.flush()
-        }
-
-        do {
-            try {
-                connect()
-                while (true) {
-                    val messageOut = readerOut.readLine()!!
-                    messageOut.run {
-                        when {
-                            contains("PRIVMSG") -> {}
-                            contains("USERNOTICE") -> {}
-                            contains("CLEARMSG") -> {}
-                            contains("CLEARCHAT") -> {}
-                            contains("NOTICE") -> listener.onNotice(this)
-                            contains("ROOMSTATE") -> {}
-                            contains("USERSTATE") -> listener.onUserState(this)
-                            startsWith("PING") -> handlePing(writerOut)
-                        }
-                    }
-                }
-            } catch (e: IOException) {
-                Log.d(TAG, "Disconnecting from $hashChannelName")
-                close()
-                sleep(1000L)
-            } catch (e: Exception) {
-                close()
-                sleep(1000L)
+        override fun onOpen(webSocket: WebSocket, response: Response) {
+            with(webSocket) {
+                send("PASS oauth:$userToken")
+                send("NICK $userLogin")
+                send("CAP REQ :twitch.tv/tags twitch.tv/commands")
+                send("JOIN $hashChannelName")
             }
-        } while (isActive)
-    }
 
-    private fun connect() {
-        Log.d(TAG, "Connecting to Twitch IRC")
-        try {
-            socketOut = SSLSocketFactory.getDefault()
-                .createSocket("irc.twitch.tv", 6697)
-                .apply {
-                    readerOut = BufferedReader(InputStreamReader(getInputStream()))
-                    writerOut = BufferedWriter(OutputStreamWriter(getOutputStream()))
-                    write("PASS oauth:$userToken", writerOut)
-                    write("NICK $userLogin", writerOut)
-                }
-
-            write("CAP REQ :twitch.tv/tags twitch.tv/commands", writerOut)
-            write("JOIN $hashChannelName", writerOut)
-            writerOut.flush()
-            Log.d(TAG, "Successfully connected to - $hashChannelName")
-        } catch (e: IOException) {
-            Log.e(TAG, "Error connecting to Twitch IRC", e)
-            throw e
+            Log.d(TAG, "Successfully logged in to $hashChannelName")
         }
-    }
 
-    fun disconnect() {
-        if (isActive) {
-            val thread = Thread {
-                isActive = false
-                close()
+        override fun onMessage(webSocket: WebSocket, text: String) {
+            text.lines().forEach(::notifyMessage)
+        }
+
+        private fun notifyMessage(message: String) = with(message) {
+            when {
+                contains("NOTICE") -> listener.onNotice(this)
+                contains("USERSTATE") -> listener.onUserState(this)
+                startsWith("PING") -> sendPong()
             }
-            thread.start()
-            thread.join()
+        }
+
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            t.printStackTrace()
+            attemptReconnect(listener = this@LiveChatThreadListener)
         }
     }
 
-    private fun close() {
+    fun send(message: CharSequence) {
         try {
-            socketOut?.close()
+            socket?.send("PRIVMSG $hashChannelName :$message")
+            Log.d(TAG, "Sent message to $hashChannelName: $message")
         } catch (e: IOException) {
-            Log.e(TAG, "Error while closing socketOut", e)
+            Log.e(TAG, "Error sending message", e)
             listener.onCommand(
                 message = e.toString(),
                 duration = null,
-                type = "socket_error",
+                type = "send_msg_error",
                 fullMsg = e.stackTraceToString()
             )
+
         }
-    }
-
-    @Throws(IOException::class)
-    private fun write(message: String, vararg writers: BufferedWriter?) {
-        writers.forEach { it?.write(message + System.getProperty("line.separator")) }
-    }
-
-    override fun send(message: CharSequence) {
-        messageSenderExecutor.execute {
-            try {
-                write("PRIVMSG $hashChannelName :$message", writerOut)
-                writerOut.flush()
-                Log.d(TAG, "Sent message to $hashChannelName: $message")
-            } catch (e: IOException) {
-                Log.e(TAG, "Error sending message", e)
-                listener.onCommand(
-                    message = e.toString(),
-                    duration = null,
-                    type = "send_msg_error",
-                    fullMsg = e.stackTraceToString()
-                )
-            }
-        }
-    }
-
-    interface OnMessageReceivedListener {
-        fun onMessage(message: String, userNotice: Boolean)
-        fun onCommand(message: String, duration: String?, type: String?, fullMsg: String?)
-        fun onClearMessage(message: String)
-        fun onClearChat(message: String)
-        fun onNotice(message: String)
-        fun onRoomState(message: String)
-        fun onUserState(message: String)
     }
 }

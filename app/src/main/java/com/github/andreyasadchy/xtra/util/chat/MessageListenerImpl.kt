@@ -18,7 +18,7 @@ class MessageListenerImpl(
     private val showClearMsg: Boolean,
     private val showClearChat: Boolean,
     private val usePubSub: Boolean
-) : LiveChatThread.OnMessageReceivedListener, LoggedInChatThread.OnMessageReceivedListener {
+) : OnMessageReceivedListener {
 
     override fun onMessage(message: String, userNotice: Boolean) {
         if (!userNotice || (userNotice && showUserNotice)) {

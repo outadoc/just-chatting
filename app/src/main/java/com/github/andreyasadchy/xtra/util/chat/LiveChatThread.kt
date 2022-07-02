@@ -1,99 +1,35 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
-import java.io.BufferedReader
-import java.io.BufferedWriter
+import kotlinx.coroutines.CoroutineScope
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import java.io.IOException
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.net.Socket
-import javax.net.ssl.SSLSocketFactory
 import kotlin.random.Random
 
-private const val TAG = "LiveChatThread"
-
 class LiveChatThread(
+    scope: CoroutineScope,
     private val loggedIn: Boolean,
     private val channelName: String,
     private val listener: OnMessageReceivedListener
-) : Thread() {
+) : BaseChatThread(scope, listener, channelName) {
 
-    private var socketIn: Socket? = null
-    private lateinit var readerIn: BufferedReader
-    private lateinit var writerIn: BufferedWriter
-    private val hashChannelName: String = "#$channelName"
-    var isActive = true
-
-    override fun run() {
-
-        fun handlePing(writer: BufferedWriter) {
-            write("PONG :tmi.twitch.tv", writer)
-            writer.flush()
-        }
-
-        do {
-            try {
-                connect()
-                while (true) {
-                    val messageIn = readerIn.readLine()!!
-                    messageIn.run {
-                        when {
-                            contains("PRIVMSG") -> listener.onMessage(this, false)
-                            contains("USERNOTICE") -> listener.onMessage(this, true)
-                            contains("CLEARMSG") -> listener.onClearMessage(this)
-                            contains("CLEARCHAT") -> listener.onClearChat(this)
-                            contains("NOTICE") -> {
-                                if (!loggedIn) {
-                                    listener.onNotice(this)
-                                }
-                            }
-                            contains("ROOMSTATE") -> listener.onRoomState(this)
-                            startsWith("PING") -> handlePing(writerIn)
-                        }
-                    }
-                }
-            } catch (e: IOException) {
-                Log.d(TAG, "Disconnecting from $hashChannelName")
-                if (e.message != "Socket closed" && e.message != "socket is closed" && e.message != "Connection reset" && e.message != "recvfrom failed: ECONNRESET (Connection reset by peer)") {
-                    listener.onCommand(
-                        message = channelName,
-                        duration = e.toString(),
-                        type = "disconnect",
-                        fullMsg = e.stackTraceToString()
-                    )
-                }
-                close()
-                sleep(1000L)
-            } catch (e: Exception) {
-                close()
-                sleep(1000L)
-            }
-        } while (isActive)
+    fun start() {
+        connect(socketListener = LiveChatThreadListener())
     }
 
-    private fun connect() {
-        Log.d(TAG, "Connecting to Twitch IRC")
-        try {
-            socketIn =
-                SSLSocketFactory.getDefault()
-                    .createSocket("irc.twitch.tv", 6697)
-                    .apply {
-                        readerIn = BufferedReader(InputStreamReader(getInputStream()))
-                        writerIn = BufferedWriter(OutputStreamWriter(getOutputStream()))
-                    }
+    private inner class LiveChatThreadListener : WebSocketListener() {
 
-            // random number between 1000 and 9999
-            write(
-                "NICK justinfan${Random.nextInt(1000, 10_000)}",
-                writerIn
-            )
+        override fun onOpen(webSocket: WebSocket, response: Response) {
+            with(webSocket) {
+                // random number between 1000 and 9999
+                send("NICK justinfan${Random.nextInt(1000, 10_000)}")
+                send("CAP REQ :twitch.tv/tags twitch.tv/commands")
+                send("JOIN $hashChannelName")
+            }
 
-            write("CAP REQ :twitch.tv/tags twitch.tv/commands", writerIn)
-            write("JOIN $hashChannelName", writerIn)
-
-            writerIn.flush()
-
-            Log.d(TAG, "Successfully connected to - $hashChannelName")
+            Log.d(TAG, "Successfully connected to $hashChannelName")
 
             listener.onCommand(
                 message = channelName,
@@ -101,49 +37,46 @@ class LiveChatThread(
                 type = "join",
                 fullMsg = null
             )
-        } catch (e: IOException) {
-            Log.e(TAG, "Error connecting to Twitch IRC", e)
-            throw e
         }
-    }
 
-    fun disconnect() {
-        if (isActive) {
-            val thread = Thread {
-                isActive = false
-                close()
+        override fun onMessage(webSocket: WebSocket, text: String) {
+            text.lines().forEach(::notifyMessage)
+        }
+
+        private fun notifyMessage(message: String) = with(message) {
+            when {
+                contains("PRIVMSG") -> listener.onMessage(this, false)
+                contains("USERNOTICE") -> listener.onMessage(this, true)
+                contains("CLEARMSG") -> listener.onClearMessage(this)
+                contains("CLEARCHAT") -> listener.onClearChat(this)
+                contains("NOTICE") -> if (!loggedIn) listener.onNotice(this)
+                contains("ROOMSTATE") -> listener.onRoomState(this)
+                startsWith("PING") -> sendPong()
             }
-            thread.start()
-            thread.join()
         }
-    }
 
-    private fun close() {
-        try {
-            socketIn?.close()
-        } catch (e: IOException) {
-            Log.e(TAG, "Error while closing socketIn", e)
-            listener.onCommand(
-                message = e.toString(),
-                duration = null,
-                type = "socket_error",
-                fullMsg = e.stackTraceToString()
-            )
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            t.printStackTrace()
+
+            if (t is IOException && !t.isSocketError) {
+                listener.onCommand(
+                    message = channelName,
+                    duration = t.toString(),
+                    type = "disconnect",
+                    fullMsg = t.stackTraceToString()
+                )
+            }
+
+            attemptReconnect(listener = this@LiveChatThreadListener)
         }
-    }
 
-    @Throws(IOException::class)
-    private fun write(message: String, vararg writers: BufferedWriter?) {
-        writers.forEach { it?.write(message + System.getProperty("line.separator")) }
-    }
-
-    interface OnMessageReceivedListener {
-        fun onMessage(message: String, userNotice: Boolean)
-        fun onCommand(message: String, duration: String?, type: String?, fullMsg: String?)
-        fun onClearMessage(message: String)
-        fun onClearChat(message: String)
-        fun onNotice(message: String)
-        fun onRoomState(message: String)
-        fun onUserState(message: String)
+        private val Throwable.isSocketError: Boolean
+            get() = when (message) {
+                "Socket closed",
+                "socket is closed",
+                "Connection reset",
+                "recvfrom failed: ECONNRESET (Connection reset by peer)" -> true
+                else -> false
+            }
     }
 }

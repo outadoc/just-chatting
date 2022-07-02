@@ -617,12 +617,15 @@ class ChatAdapter(
     }
 
     private fun getColorForUser(userName: String?, messageColor: String?): Int {
-        val userColor = userColors[userName]
-        return when {
-            userColor != null -> userColor
-            messageColor == null -> getAndSaveRandomUserColor(userName)
-            else -> ensureColorIsAccessible(backgroundColor, Color.parseColor(messageColor))
+        val savedColor = userColors[userName]
+        val accessibleColor = messageColor?.let {
+            ensureColorIsAccessible(
+                background = backgroundColor,
+                foreground = Color.parseColor(it)
+            )
         }
+
+        return savedColor ?: accessibleColor ?: getAndSaveRandomUserColor(userName)
     }
 
     @ColorInt

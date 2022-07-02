@@ -10,15 +10,27 @@ fun ensureColorIsAccessible(
     @ColorInt background: Int,
     @ColorInt foreground: Int,
     minimumContrast: Double = 4.5
-): Int {
+): Int? {
     // Get X, Y, Z components of foreground and background colors
     val (_, backgroundY, _) = colorToXyz(background)
     val (foregroundX, foregroundY, foregroundZ) = colorToXyz(foreground)
 
     // Calculate the contrast between the foreground and background colors
-    val contrast = max(foregroundY + 5, backgroundY + 5) / min(foregroundY + 5, backgroundY + 5)
+    val contrast = calculateLuminanceContrast(
+        foregroundY = foregroundY,
+        backgroundY = backgroundY
+    )
 
+    // Contrast is a-ok as-is
     if (contrast > minimumContrast) return foreground
+
+    val maxLuminanceContrast = calculateLuminanceContrast(
+        foregroundY = 100.0,
+        backgroundY = backgroundY
+    )
+
+    // Even with max luminance, contrast isn't high enough
+    if (maxLuminanceContrast < minimumContrast) return null
 
     // Return the foreground color, but with a higher luminance contrast
     val correctedForeground = xyzToColor(
@@ -32,6 +44,10 @@ fun ensureColorIsAccessible(
     )
 
     return correctedForeground
+}
+
+private fun calculateLuminanceContrast(foregroundY: Double, backgroundY: Double): Double {
+    return max(foregroundY + 5, backgroundY + 5) / min(foregroundY + 5, backgroundY + 5)
 }
 
 @ColorInt

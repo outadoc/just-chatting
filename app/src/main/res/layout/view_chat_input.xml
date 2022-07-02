@@ -79,22 +79,29 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <androidx.viewpager.widget.ViewPager
+    <LinearLayout
         android:id="@+id/emotePicker"
         android:layout_width="match_parent"
-        android:layout_height="350dp"
-        android:background="?colorSurface"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <com.google.android.material.tabs.TabLayout
+            android:id="@+id/emotePickerTabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabGravity="fill"
             app:tabMaxWidth="0dp"
             app:tabMode="fixed" />
 
-    </androidx.viewpager.widget.ViewPager>
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/emotePickerPager"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:background="?colorSurface"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </LinearLayout>
 
 </merge>
 

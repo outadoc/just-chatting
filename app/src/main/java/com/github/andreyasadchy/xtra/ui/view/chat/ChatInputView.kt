@@ -18,7 +18,8 @@ import androidx.core.view.updateLayoutParams
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.findFragment
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.BttvEmote
 import com.github.andreyasadchy.xtra.model.chat.Chatter
@@ -33,6 +34,7 @@ import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.showKeyboard
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
 import kotlinx.android.synthetic.main.view_chat_input.view.*
@@ -181,10 +183,6 @@ class ChatInputView : LinearLayout {
             textInputLayoutChat.setStartIconOnClickListener {
                 // TODO add animation
                 if (emotePicker.isGone) {
-                    if (hasRecentEmotes != true && emotePicker.currentItem == 0) {
-                        emotePicker.setCurrentItem(1, false)
-                    }
-
                     editText.hideKeyboard()
                     emotePicker.isVisible = true
                 } else {
@@ -196,25 +194,21 @@ class ChatInputView : LinearLayout {
             send.setOnClickListener { sendMessage() }
             messageView.isVisible = true
 
-            emotePicker.adapter = object : FragmentStatePagerAdapter(
-                childFragmentManager,
-                BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
-            ) {
-                override fun getItem(position: Int): Fragment =
+            emotePickerPager.adapter = object : FragmentStateAdapter(findFragment<Fragment>()) {
+
+                override fun createFragment(position: Int): Fragment =
                     EmotesFragment.newInstance(position)
 
-                override fun getCount(): Int = 3
-
-                override fun getPageTitle(position: Int): CharSequence {
-                    return when (position) {
-                        0 -> context.getString(R.string.emote_tab_recent)
-                        1 -> context.getString(R.string.emote_tab_twitch)
-                        else -> context.getString(R.string.emote_tab_others)
-                    }
-                }
+                override fun getItemCount(): Int = 3
             }
 
-            emotePicker.offscreenPageLimit = 2
+            TabLayoutMediator(emotePickerTabLayout, emotePickerPager) { tab, position ->
+                tab.text = when (position) {
+                    0 -> context.getString(R.string.emote_tab_recent)
+                    1 -> context.getString(R.string.emote_tab_twitch)
+                    else -> context.getString(R.string.emote_tab_others)
+                }
+            }.attach()
 
             messagingEnabled = true
         }

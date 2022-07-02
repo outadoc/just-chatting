@@ -103,6 +103,8 @@ class EmotesFragment : Fragment(), Injectable {
         private const val KEY_POSITION = "position"
 
         fun newInstance(position: Int) =
-            EmotesFragment().apply { arguments = bundleOf(KEY_POSITION to position) }
+            EmotesFragment().apply {
+                arguments = bundleOf(KEY_POSITION to position)
+            }
     }
 }

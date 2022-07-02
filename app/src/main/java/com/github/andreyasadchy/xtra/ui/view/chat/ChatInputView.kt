@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -89,6 +90,11 @@ class ChatInputView : LinearLayout {
             if (imeInsets.bottom > 0) {
                 // Hide emote picker when keyboard is opened
                 hideEmotesMenu()
+
+                // Set emote picker height to keyboard height
+                emotePicker.updateLayoutParams {
+                    height = imeInsets.bottom
+                }
             }
 
             windowInsets
@@ -130,8 +136,8 @@ class ChatInputView : LinearLayout {
     }
 
     fun hideEmotesMenu(): Boolean {
-        return if (viewPager.isVisible) {
-            viewPager.isVisible = false
+        return if (emotePicker.isVisible) {
+            emotePicker.isVisible = false
             true
         } else {
             false
@@ -174,23 +180,23 @@ class ChatInputView : LinearLayout {
 
             textInputLayoutChat.setStartIconOnClickListener {
                 // TODO add animation
-                if (viewPager.isGone) {
-                    if (hasRecentEmotes != true && viewPager.currentItem == 0) {
-                        viewPager.setCurrentItem(1, false)
+                if (emotePicker.isGone) {
+                    if (hasRecentEmotes != true && emotePicker.currentItem == 0) {
+                        emotePicker.setCurrentItem(1, false)
                     }
 
                     editText.hideKeyboard()
-                    viewPager.isVisible = true
+                    emotePicker.isVisible = true
                 } else {
                     editText.showKeyboard()
-                    viewPager.isVisible = false
+                    emotePicker.isVisible = false
                 }
             }
 
             send.setOnClickListener { sendMessage() }
             messageView.isVisible = true
 
-            viewPager.adapter = object : FragmentStatePagerAdapter(
+            emotePicker.adapter = object : FragmentStatePagerAdapter(
                 childFragmentManager,
                 BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT
             ) {
@@ -208,7 +214,7 @@ class ChatInputView : LinearLayout {
                 }
             }
 
-            viewPager.offscreenPageLimit = 2
+            emotePicker.offscreenPageLimit = 2
 
             messagingEnabled = true
         }

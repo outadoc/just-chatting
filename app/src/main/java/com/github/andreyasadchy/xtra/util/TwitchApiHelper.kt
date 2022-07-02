@@ -70,7 +70,6 @@ object TwitchApiHelper {
     }
 
     fun startChat(
-        useSSl: Boolean,
         loggedIn: Boolean,
         channelName: String,
         showUserNotice: Boolean,
@@ -84,25 +83,23 @@ object TwitchApiHelper {
         callbackReward: OnRewardReceivedListener
     ): LiveChatThread {
         return LiveChatThread(
-            useSSl,
-            loggedIn,
-            channelName,
-            MessageListenerImpl(
-                newMessageListener,
-                UserStateListener,
-                RoomStateListener,
-                CommandListener,
-                callbackReward,
-                showUserNotice,
-                showClearMsg,
-                showClearChat,
-                usePubSub
+            loggedIn = loggedIn,
+            channelName = channelName,
+            listener = MessageListenerImpl(
+                callback = newMessageListener,
+                callbackUserState = UserStateListener,
+                callbackRoomState = RoomStateListener,
+                callbackCommand = CommandListener,
+                callbackReward = callbackReward,
+                showUserNotice = showUserNotice,
+                showClearMsg = showClearMsg,
+                showClearChat = showClearChat,
+                usePubSub = usePubSub
             )
         ).apply { start() }
     }
 
     fun startLoggedInChat(
-        useSSl: Boolean,
         userName: String?,
         userToken: String?,
         channelName: String,
@@ -117,20 +114,19 @@ object TwitchApiHelper {
         callbackReward: OnRewardReceivedListener
     ): LoggedInChatThread {
         return LoggedInChatThread(
-            useSSl,
-            userName,
-            userToken,
-            channelName,
-            MessageListenerImpl(
-                newMessageListener,
-                UserStateListener,
-                RoomStateListener,
-                CommandListener,
-                callbackReward,
-                showUserNotice,
-                showClearMsg,
-                showClearChat,
-                usePubSub
+            userLogin = userName,
+            userToken = userToken,
+            channelName = channelName,
+            listener = MessageListenerImpl(
+                callback = newMessageListener,
+                callbackUserState = UserStateListener,
+                callbackRoomState = RoomStateListener,
+                callbackCommand = CommandListener,
+                callbackReward = callbackReward,
+                showUserNotice = showUserNotice,
+                showClearMsg = showClearMsg,
+                showClearChat = showClearChat,
+                usePubSub = usePubSub
             )
         ).apply { start() }
     }

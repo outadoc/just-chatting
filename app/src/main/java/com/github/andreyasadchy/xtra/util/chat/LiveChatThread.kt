@@ -7,13 +7,12 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.Socket
-import java.util.Random
 import javax.net.ssl.SSLSocketFactory
+import kotlin.random.Random
 
 private const val TAG = "LiveChatThread"
 
 class LiveChatThread(
-    private val useSSl: Boolean,
     private val loggedIn: Boolean,
     private val channelName: String,
     private val listener: OnMessageReceivedListener
@@ -73,23 +72,29 @@ class LiveChatThread(
     }
 
     private fun connect() {
-        Log.d(TAG, "Connecting to Twitch IRC - SSl $useSSl")
+        Log.d(TAG, "Connecting to Twitch IRC")
         try {
-            socketIn = (
-                if (useSSl) SSLSocketFactory.getDefault()
-                    .createSocket("irc.twitch.tv", 6697) else Socket("irc.twitch.tv", 6667)
-                ).apply {
-                readerIn = BufferedReader(InputStreamReader(getInputStream()))
-                writerIn = BufferedWriter(OutputStreamWriter(getOutputStream()))
-            }
+            socketIn =
+                SSLSocketFactory.getDefault()
+                    .createSocket("irc.twitch.tv", 6697)
+                    .apply {
+                        readerIn = BufferedReader(InputStreamReader(getInputStream()))
+                        writerIn = BufferedWriter(OutputStreamWriter(getOutputStream()))
+                    }
+
+            // random number between 1000 and 9999
             write(
-                "NICK justinfan${Random().nextInt(((9999 - 1000) + 1)) + 1000}",
+                "NICK justinfan${Random.nextInt(1000, 10_000)}",
                 writerIn
-            ) // random number between 1000 and 9999
+            )
+
             write("CAP REQ :twitch.tv/tags twitch.tv/commands", writerIn)
             write("JOIN $hashChannelName", writerIn)
+
             writerIn.flush()
+
             Log.d(TAG, "Successfully connected to - $hashChannelName")
+
             listener.onCommand(
                 message = channelName,
                 duration = null,

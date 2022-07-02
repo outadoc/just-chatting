@@ -15,7 +15,6 @@ import javax.net.ssl.SSLSocketFactory
 private const val TAG = "LoggedInChatThread"
 
 class LoggedInChatThread(
-    private val useSSl: Boolean,
     private val userLogin: String?,
     private val userToken: String?,
     channelName: String,
@@ -66,17 +65,17 @@ class LoggedInChatThread(
     }
 
     private fun connect() {
-        Log.d(TAG, "Connecting to Twitch IRC - SSl $useSSl")
+        Log.d(TAG, "Connecting to Twitch IRC")
         try {
-            socketOut = (
-                if (useSSl) SSLSocketFactory.getDefault()
-                    .createSocket("irc.twitch.tv", 6697) else Socket("irc.twitch.tv", 6667)
-                ).apply {
-                readerOut = BufferedReader(InputStreamReader(getInputStream()))
-                writerOut = BufferedWriter(OutputStreamWriter(getOutputStream()))
-                write("PASS oauth:$userToken", writerOut)
-                write("NICK $userLogin", writerOut)
-            }
+            socketOut = SSLSocketFactory.getDefault()
+                .createSocket("irc.twitch.tv", 6697)
+                .apply {
+                    readerOut = BufferedReader(InputStreamReader(getInputStream()))
+                    writerOut = BufferedWriter(OutputStreamWriter(getOutputStream()))
+                    write("PASS oauth:$userToken", writerOut)
+                    write("NICK $userLogin", writerOut)
+                }
+
             write("CAP REQ :twitch.tv/tags twitch.tv/commands", writerOut)
             write("JOIN $hashChannelName", writerOut)
             writerOut.flush()

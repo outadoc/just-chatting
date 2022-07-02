@@ -102,7 +102,6 @@ class ChatViewModel @Inject constructor(
         get() = (chat as LiveChatController).chatters.values
 
     fun startLive(
-        useSSl: Boolean,
         usePubSub: Boolean,
         user: User,
         helixClientId: String?,
@@ -113,12 +112,10 @@ class ChatViewModel @Inject constructor(
         showClearMsg: Boolean,
         showClearChat: Boolean,
         enableRecentMsg: Boolean? = false,
-        recentMsgLimit: Int? = null,
-        maxAdapterCount: Int
+        recentMsgLimit: Int? = null
     ) {
         if (chat == null && channelLogin != null && channelName != null) {
             chat = LiveChatController(
-                useSSl = useSSl,
                 usePubSub = usePubSub,
                 user = user,
                 helixClientId = helixClientId,
@@ -316,7 +313,6 @@ class ChatViewModel @Inject constructor(
     }
 
     inner class LiveChatController(
-        private val useSSl: Boolean,
         private val usePubSub: Boolean,
         private val user: User,
         private val helixClientId: String?,
@@ -385,7 +381,6 @@ class ChatViewModel @Inject constructor(
             pause()
 
             chat = TwitchApiHelper.startChat(
-                useSSl = useSSl,
                 loggedIn = user is LoggedIn,
                 channelName = channelLogin,
                 showUserNotice = showUserNotice,
@@ -401,7 +396,6 @@ class ChatViewModel @Inject constructor(
 
             if (user is LoggedIn) {
                 loggedInChat = TwitchApiHelper.startLoggedInChat(
-                    useSSl = useSSl,
                     userName = user.login,
                     userToken = user.helixToken,
                     channelName = channelLogin,

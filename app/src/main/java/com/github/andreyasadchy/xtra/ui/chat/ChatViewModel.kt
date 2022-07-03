@@ -189,7 +189,7 @@ class ChatViewModel @Inject constructor(
         start()
 
         viewModelScope.launch {
-            if (channelLogin != null && enableRecentMsg == true && recentMsgLimit != null) {
+            if (channelLogin != null && enableRecentMsg == true && recentMsgLimit != null && recentMsgLimit > 0) {
                 try {
                     playerRepository.loadRecentMessages(channelLogin, recentMsgLimit)
                         .body()

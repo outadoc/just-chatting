@@ -41,7 +41,7 @@
         android:max="1000"
         android:title="@string/message_limit"
         app:iconSpaceReserved="false"
-        app:min="1"
+        app:min="10"
         app:showSeekBarValue="true" />
 
     <SwitchPreferenceCompat
@@ -56,7 +56,7 @@
         android:max="800"
         android:title="@string/recentMsg_limit"
         app:iconSpaceReserved="false"
-        app:min="1"
+        app:min="0"
         app:showSeekBarValue="true" />
 
     <SwitchPreferenceCompat

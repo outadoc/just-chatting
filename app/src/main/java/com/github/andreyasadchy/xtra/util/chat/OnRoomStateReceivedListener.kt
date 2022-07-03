@@ -1,15 +1,7 @@
 package com.github.andreyasadchy.xtra.util.chat
 
-import kotlin.time.Duration
+import com.github.andreyasadchy.xtra.model.chat.RoomState
 
 interface OnRoomStateReceivedListener {
     fun onRoomState(list: RoomState)
 }
-
-data class RoomState(
-    val emote: Boolean = false,
-    val followers: Duration? = null,
-    val unique: Boolean = false,
-    val slow: Duration? = null,
-    val subs: Boolean = false
-)

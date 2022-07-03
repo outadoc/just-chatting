@@ -1,6 +1,10 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
+import com.github.andreyasadchy.xtra.model.chat.ChatMessage
+import com.github.andreyasadchy.xtra.model.chat.Command
+import com.github.andreyasadchy.xtra.model.chat.PingCommand
+import com.github.andreyasadchy.xtra.model.chat.RoomState
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.Response
 import okhttp3.WebSocket
@@ -10,9 +14,9 @@ import kotlin.random.Random
 
 class LiveChatThread(
     scope: CoroutineScope,
-    private val loggedIn: Boolean,
     private val channelName: String,
-    private val listener: OnMessageReceivedListener
+    private val listener: OnMessageReceivedListener,
+    private val parser: ChatMessageParser
 ) : BaseChatThread(scope, listener, channelName) {
 
     fun start() {
@@ -32,26 +36,31 @@ class LiveChatThread(
             Log.d(TAG, "Successfully connected to $hashChannelName")
 
             listener.onCommand(
-                message = channelName,
-                duration = null,
-                type = "join",
-                fullMsg = null
+                Command.Join(
+                    message = channelName,
+                    duration = null,
+                    type = "join",
+                    fullMsg = null
+                )
             )
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
-            text.lines().forEach(::notifyMessage)
+            text.lines()
+                .filter { message -> message.isNotBlank() }
+                .forEach(::notifyMessage)
         }
 
-        private fun notifyMessage(message: String) = with(message) {
-            when {
-                contains("PRIVMSG") -> listener.onMessage(this, false)
-                contains("USERNOTICE") -> listener.onMessage(this, true)
-                contains("CLEARMSG") -> listener.onClearMessage(this)
-                contains("CLEARCHAT") -> listener.onClearChat(this)
-                contains("NOTICE") -> if (!loggedIn) listener.onNotice(this)
-                contains("ROOMSTATE") -> listener.onRoomState(this)
-                startsWith("PING") -> sendPong()
+        private fun notifyMessage(message: String) {
+            when (val command = parser.parse(message)) {
+                is ChatMessage,
+                is Command.ClearChat,
+                is Command.ClearMessage,
+                is Command.Notice,
+                is Command.UserNotice,
+                is RoomState -> listener.onCommand(command)
+                PingCommand -> sendPong()
+                else -> {}
             }
         }
 
@@ -60,10 +69,12 @@ class LiveChatThread(
 
             if (t is IOException && !t.isSocketError) {
                 listener.onCommand(
-                    message = channelName,
-                    duration = t.toString(),
-                    type = "disconnect",
-                    fullMsg = t.stackTraceToString()
+                    Command.Disconnect(
+                        message = channelName,
+                        duration = t.toString(),
+                        type = "disconnect",
+                        fullMsg = t.stackTraceToString()
+                    )
                 )
             }
 

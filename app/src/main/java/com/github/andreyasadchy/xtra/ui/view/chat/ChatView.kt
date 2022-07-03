@@ -18,11 +18,13 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.BttvEmote
 import com.github.andreyasadchy.xtra.model.chat.ChatMessage
 import com.github.andreyasadchy.xtra.model.chat.CheerEmote
+import com.github.andreyasadchy.xtra.model.chat.Command
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.chat.FfzEmote
 import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
+import com.github.andreyasadchy.xtra.model.chat.RoomState
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
@@ -30,11 +32,8 @@ import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
 import com.github.andreyasadchy.xtra.ui.view.AlternatingBackgroundItemDecoration
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.chat.Command
-import com.github.andreyasadchy.xtra.util.chat.RoomState
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.view_chat.view.*
-import java.util.*
 import kotlin.time.Duration
 
 class ChatView : LinearLayout {
@@ -166,39 +165,42 @@ class ChatView : LinearLayout {
     }
 
     fun notifyCommand(command: Command) {
-        val lang = Locale.getDefault().language
-        val message = when (command.type) {
-            "join" -> context.getString(R.string.chat_join, command.message)
-            "disconnect" -> context.getString(
-                R.string.chat_disconnect,
-                command.message,
-                command.duration
-            )
-            "disconnect_command" -> {
-                adapter.messages?.clear()
-                context.getString(R.string.disconnected)
-            }
-            "send_msg_error" -> context.getString(R.string.chat_send_msg_error, command.message)
-            "socket_error" -> context.getString(R.string.chat_socket_error, command.message)
-            "notice" -> if (lang == "ar" || lang == "es" || lang == "ja" || lang == "pt" || lang == "ru" || lang == "tr") {
-                TwitchApiHelper.getNoticeString(context, command.duration, command.message)
-                    ?: command.message
-            } else {
-                command.message
-            }
-            "clearmsg" -> context.getString(
-                R.string.chat_clearmsg,
-                command.message,
-                command.duration
-            )
-            "clearchat" -> context.getString(R.string.chat_clear)
-            "timeout" -> context.getString(
+        val message = when (command) {
+            is Command.ClearChat -> context.getString(R.string.chat_clear)
+            is Command.ClearMessage ->
+                context.getString(
+                    R.string.chat_clearmsg,
+                    command.message,
+                    command.duration
+                )
+            is Command.Join ->
+                context.getString(R.string.chat_join, command.message)
+            is Command.Disconnect ->
+                context.getString(
+                    R.string.chat_disconnect,
+                    command.message,
+                    command.duration
+                )
+            is Command.Notice ->
+                TwitchApiHelper.getNoticeString(
+                    context = context,
+                    msgId = command.duration,
+                    message = command.message
+                ) ?: command.message
+            is Command.SendMessageError ->
+                context.getString(
+                    R.string.chat_send_msg_error,
+                    command.message
+                )
+            is Command.SocketError ->
+                context.getString(R.string.chat_socket_error, command.message)
+            is Command.Ban -> context.getString(R.string.chat_ban, command.message)
+            is Command.Timeout -> context.getString(
                 R.string.chat_timeout,
                 command.message,
                 command.duration
             )
-            "ban" -> context.getString(R.string.chat_ban, command.message)
-            else -> command.message
+            is Command.UserNotice -> command.message
         }
 
         adapter.messages?.add(
@@ -291,15 +293,10 @@ class ChatView : LinearLayout {
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-            !textFollowers.isGone ||
-            !textUnique.isGone ||
-            !textSlow.isGone ||
-            !textSubs.isGone
-    }
-
-    fun addRecentMessages(list: List<LiveChatMessage>) {
-        adapter.messages?.addAll(0, list)
-        scrollToBottom()
+                    !textFollowers.isGone ||
+                    !textUnique.isGone ||
+                    !textSlow.isGone ||
+                    !textSubs.isGone
     }
 
     fun addGlobalBadges(list: List<TwitchBadge>?) {

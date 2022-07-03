@@ -2,6 +2,7 @@ package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
 import com.github.andreyasadchy.xtra.XtraApp
+import com.github.andreyasadchy.xtra.model.chat.Command
 import com.tonyodev.fetch2core.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,10 +48,10 @@ abstract class BaseChatThread(
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketIn", e)
             listener.onCommand(
-                message = e.toString(),
-                duration = null,
-                type = "socket_error",
-                fullMsg = e.stackTraceToString()
+                Command.SocketError(
+                    message = e.toString(),
+                    fullMsg = e.stackTraceToString()
+                )
             )
         }
     }

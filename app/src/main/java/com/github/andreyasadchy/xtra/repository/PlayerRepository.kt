@@ -10,8 +10,6 @@ import com.github.andreyasadchy.xtra.model.chat.RecentMessagesResponse
 import com.github.andreyasadchy.xtra.model.chat.StvEmotesResponse
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesResponse
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 import javax.inject.Inject
@@ -25,30 +23,35 @@ class PlayerRepository @Inject constructor(
     suspend fun loadRecentMessages(
         channelLogin: String,
         limit: Int
-    ): Response<RecentMessagesResponse> = withContext(Dispatchers.IO) {
-        misc.getRecentMessages(channelLogin, limit)
-    }
+    ): Response<RecentMessagesResponse> =
+        withContext(Dispatchers.IO) {
+            misc.getRecentMessages(channelLogin, limit)
+        }
 
-    suspend fun loadGlobalBadges(): Response<TwitchBadgesResponse> = withContext(Dispatchers.IO) {
-        misc.getGlobalBadges()
-    }
+    suspend fun loadGlobalBadges(): Response<TwitchBadgesResponse> =
+        withContext(Dispatchers.IO) {
+            misc.getGlobalBadges()
+        }
 
     suspend fun loadChannelBadges(channelId: String): Response<TwitchBadgesResponse> =
         withContext(Dispatchers.IO) {
             misc.getChannelBadges(channelId)
         }
 
-    suspend fun loadGlobalStvEmotes(): Response<StvEmotesResponse> = withContext(Dispatchers.IO) {
-        misc.getGlobalStvEmotes()
-    }
+    suspend fun loadGlobalStvEmotes(): Response<StvEmotesResponse> =
+        withContext(Dispatchers.IO) {
+            misc.getGlobalStvEmotes()
+        }
 
-    suspend fun loadGlobalBttvEmotes(): Response<BttvGlobalResponse> = withContext(Dispatchers.IO) {
-        misc.getGlobalBttvEmotes()
-    }
+    suspend fun loadGlobalBttvEmotes(): Response<BttvGlobalResponse> =
+        withContext(Dispatchers.IO) {
+            misc.getGlobalBttvEmotes()
+        }
 
-    suspend fun loadBttvGlobalFfzEmotes(): Response<BttvFfzResponse> = withContext(Dispatchers.IO) {
-        misc.getBttvGlobalFfzEmotes()
-    }
+    suspend fun loadBttvGlobalFfzEmotes(): Response<BttvFfzResponse> =
+        withContext(Dispatchers.IO) {
+            misc.getBttvGlobalFfzEmotes()
+        }
 
     suspend fun loadStvEmotes(channelId: String): Response<StvEmotesResponse> =
         withContext(Dispatchers.IO) {
@@ -67,8 +70,8 @@ class PlayerRepository @Inject constructor(
 
     fun loadRecentEmotes() = recentEmotes.getAll()
 
-    fun insertRecentEmotes(emotes: Collection<RecentEmote>) {
-        GlobalScope.launch {
+    suspend fun insertRecentEmotes(emotes: Collection<RecentEmote>) =
+        withContext(Dispatchers.IO) {
             val listSize = emotes.size
             val list = if (listSize <= RecentEmote.MAX_SIZE) {
                 emotes
@@ -77,5 +80,4 @@ class PlayerRepository @Inject constructor(
             }
             recentEmotes.ensureMaxSizeAndInsert(list)
         }
-    }
 }

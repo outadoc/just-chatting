@@ -271,7 +271,6 @@ class ChannelChatFragment :
         viewModel.roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
         viewModel.newMessage.observe(viewLifecycleOwner) { chatView.notifyMessageAdded() }
         viewModel.chatMessages.observe(viewLifecycleOwner, chatView::submitList)
-        viewModel.recentMessages.observe(viewLifecycleOwner, chatView::addRecentMessages)
         viewModel.globalBadges.observe(viewLifecycleOwner, chatView::addGlobalBadges)
         viewModel.channelBadges.observe(viewLifecycleOwner, chatView::addChannelBadges)
         viewModel.cheerEmotes.observe(viewLifecycleOwner, chatView::addCheerEmotes)

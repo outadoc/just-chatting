@@ -1,6 +1,9 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
+import com.github.andreyasadchy.xtra.model.chat.Command
+import com.github.andreyasadchy.xtra.model.chat.PingCommand
+import com.github.andreyasadchy.xtra.model.chat.UserState
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.Response
 import okhttp3.WebSocket
@@ -12,7 +15,8 @@ class LoggedInChatThread(
     private val userLogin: String?,
     private val userToken: String?,
     channelName: String,
-    private val listener: OnMessageReceivedListener
+    private val listener: OnMessageReceivedListener,
+    private val parser: ChatMessageParser
 ) : BaseChatThread(scope, listener, channelName) {
 
     fun start() {
@@ -33,14 +37,17 @@ class LoggedInChatThread(
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
-            text.lines().forEach(::notifyMessage)
+            text.lines()
+                .filter { message -> message.isNotBlank() }
+                .forEach(::notifyMessage)
         }
 
-        private fun notifyMessage(message: String) = with(message) {
-            when {
-                contains("NOTICE") -> listener.onNotice(this)
-                contains("USERSTATE") -> listener.onUserState(this)
-                startsWith("PING") -> sendPong()
+        private fun notifyMessage(message: String) {
+            when (val command = parser.parse(message)) {
+                is Command.Notice -> listener.onCommand(command)
+                is UserState -> listener.onCommand(command)
+                PingCommand -> sendPong()
+                else -> {}
             }
         }
 
@@ -57,10 +64,10 @@ class LoggedInChatThread(
         } catch (e: IOException) {
             Log.e(TAG, "Error sending message", e)
             listener.onCommand(
-                message = e.toString(),
-                duration = null,
-                type = "send_msg_error",
-                fullMsg = e.stackTraceToString()
+                Command.SendMessageError(
+                    message = e.toString(),
+                    fullMsg = e.stackTraceToString()
+                )
             )
 
         }

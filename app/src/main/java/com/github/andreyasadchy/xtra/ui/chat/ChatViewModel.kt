@@ -531,7 +531,9 @@ class ChatViewModel @Inject constructor(
         }
 
         override suspend fun start() {
-            liveChat.start()
+            liveChat.start(
+                isLoggedIn = user is LoggedIn
+            )
 
             if (user is LoggedIn) {
                 loggedInChat.start()

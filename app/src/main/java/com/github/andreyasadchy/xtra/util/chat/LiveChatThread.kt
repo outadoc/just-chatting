@@ -5,6 +5,7 @@ import com.github.andreyasadchy.xtra.model.chat.ChatMessage
 import com.github.andreyasadchy.xtra.model.chat.Command
 import com.github.andreyasadchy.xtra.model.chat.PingCommand
 import com.github.andreyasadchy.xtra.model.chat.RoomState
+import com.github.andreyasadchy.xtra.model.chat.UserState
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.Response
 import okhttp3.WebSocket
@@ -19,11 +20,13 @@ class LiveChatThread(
     private val parser: ChatMessageParser
 ) : BaseChatThread(scope, listener, channelName) {
 
-    fun start() {
-        connect(socketListener = LiveChatThreadListener())
+    fun start(isLoggedIn: Boolean) {
+        connect(socketListener = LiveChatThreadListener(isLoggedIn))
     }
 
-    private inner class LiveChatThreadListener : WebSocketListener() {
+    private inner class LiveChatThreadListener(
+        private val isLoggedIn: Boolean
+    ) : WebSocketListener() {
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
             with(webSocket) {
@@ -56,11 +59,24 @@ class LiveChatThread(
                 is ChatMessage,
                 is Command.ClearChat,
                 is Command.ClearMessage,
-                is Command.Notice,
                 is Command.UserNotice,
-                is RoomState -> listener.onCommand(command)
-                PingCommand -> sendPong()
-                else -> {}
+                is Command.Ban,
+                is Command.Disconnect,
+                is Command.Join,
+                is Command.SendMessageError,
+                is Command.SocketError,
+                is Command.Timeout,
+                is RoomState -> {
+                    listener.onCommand(command)
+                }
+                PingCommand -> {
+                    sendPong()
+                }
+                is Command.Notice -> {
+                    if (!isLoggedIn) listener.onCommand(command)
+                }
+                is UserState,
+                null -> Unit
             }
         }
 

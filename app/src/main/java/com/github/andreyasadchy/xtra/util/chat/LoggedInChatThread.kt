@@ -2,7 +2,10 @@ package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
 import com.github.andreyasadchy.xtra.model.chat.Command
+import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.PingCommand
+import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
+import com.github.andreyasadchy.xtra.model.chat.RoomState
 import com.github.andreyasadchy.xtra.model.chat.UserState
 import kotlinx.coroutines.CoroutineScope
 import okhttp3.Response
@@ -47,7 +50,19 @@ class LoggedInChatThread(
                 is Command.Notice -> listener.onCommand(command)
                 is UserState -> listener.onCommand(command)
                 PingCommand -> sendPong()
-                else -> {}
+                is LiveChatMessage,
+                is PubSubPointReward,
+                is Command.Ban,
+                is Command.ClearChat,
+                is Command.ClearMessage,
+                is Command.Disconnect,
+                is Command.Join,
+                is Command.SendMessageError,
+                is Command.SocketError,
+                is Command.Timeout,
+                is Command.UserNotice,
+                is RoomState,
+                null -> Unit
             }
         }
 

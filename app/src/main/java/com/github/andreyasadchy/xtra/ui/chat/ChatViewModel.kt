@@ -15,6 +15,7 @@ import com.github.andreyasadchy.xtra.model.chat.CheerEmote
 import com.github.andreyasadchy.xtra.model.chat.Command
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.chat.FfzEmote
+import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.RoomState
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
@@ -35,10 +36,12 @@ import com.github.andreyasadchy.xtra.util.chat.OnRoomStateReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.PubSubListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.PubSubWebSocket
+import com.github.andreyasadchy.xtra.util.combineWith
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -85,6 +88,20 @@ class ChatViewModel @Inject constructor(
     val roomState = MutableLiveData<RoomState>()
     val command = MutableLiveData<Command>()
     val reward = MutableLiveData<ChatMessage>()
+
+    private val _lastSentMessageInstant = MutableLiveData<Instant?>(null)
+
+    val messagePostConstraint: LiveData<MessagePostConstraint?> =
+        _lastSentMessageInstant.combineWith(roomState) { lastSentMessageInstant, roomState ->
+            if (lastSentMessageInstant == null || roomState == null || roomState.slow == null) {
+                null
+            } else {
+                MessagePostConstraint(
+                    lastMessageSentAt = lastSentMessageInstant,
+                    slowModeDuration = roomState.slow
+                )
+            }
+        }
 
     private val _chatMessages = MutableLiveData<MutableList<ChatMessage>>()
     val chatMessages: LiveData<MutableList<ChatMessage>>
@@ -365,6 +382,10 @@ class ChatViewModel @Inject constructor(
                 val chatter = Chatter(message.userName)
                 chatters[message.userName] = chatter
                 _newChatter.postValue(chatter)
+            }
+
+            if (message is LiveChatMessage && message.userId != null && message.userId == user.id) {
+                _lastSentMessageInstant.postValue(message.timestamp)
             }
         }
 

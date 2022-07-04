@@ -1,5 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.view.chat
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.KeyEvent
@@ -13,6 +14,7 @@ import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.widget.addTextChangedListener
@@ -27,6 +29,7 @@ import com.github.andreyasadchy.xtra.model.chat.FfzEmote
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.ui.chat.MessagePostConstraint
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.hideKeyboard
@@ -39,6 +42,8 @@ import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
 import kotlinx.android.synthetic.main.view_chat_input.view.*
+import kotlinx.datetime.Clock
+
 
 class ChatInputView : LinearLayout {
 
@@ -52,6 +57,7 @@ class ChatInputView : LinearLayout {
     private val autoCompleteAdapter = AutoCompleteAdapter(context)
 
     private var messageCallback: OnMessageSendListener? = null
+    private var progressAnimator: ValueAnimator? = null
 
     constructor(context: Context) : super(context) {
         init(context)
@@ -132,6 +138,44 @@ class ChatInputView : LinearLayout {
 
     fun setOnMessageSendListener(callback: OnMessageSendListener) {
         messageCallback = callback
+    }
+
+    fun setMessagePostConstraint(constraint: MessagePostConstraint?) {
+        // No constraint, no need for an indicator
+        if (constraint == null) {
+            progressCannotSendUntil.isInvisible = true
+            return
+        }
+
+        // If the constraint is in the past, just ignore it
+        val now = Clock.System.now()
+        val canPostAt = constraint.lastMessageSentAt + constraint.slowModeDuration
+        val durationUntilCanPost = canPostAt - now
+
+        if (durationUntilCanPost.isNegative()) {
+            progressCannotSendUntil.isInvisible = true
+            return
+        }
+
+        if (progressAnimator != null) {
+            progressAnimator?.cancel()
+            progressAnimator = null
+        }
+
+        // noinspection Recycle
+        progressAnimator = ValueAnimator.ofInt(0, Int.MAX_VALUE)
+            .apply {
+                interpolator = null
+                duration = durationUntilCanPost.inWholeMilliseconds
+                addUpdateListener { animation ->
+                    with(progressCannotSendUntil) {
+                        max = Int.MAX_VALUE
+                        progress = animation.animatedValue as Int
+                        isInvisible = progress == 0
+                    }
+                }
+                reverse()
+            }
     }
 
     fun hideEmotesMenu(): Boolean {

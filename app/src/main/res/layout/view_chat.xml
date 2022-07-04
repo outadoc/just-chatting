@@ -92,7 +92,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingVertical="8dp"
+            android:paddingVertical="4dp"
             tools:listitem="@layout/chat_list_item" />
 
         <Button

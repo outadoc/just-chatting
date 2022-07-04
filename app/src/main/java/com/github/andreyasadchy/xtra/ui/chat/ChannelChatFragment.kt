@@ -254,6 +254,10 @@ class ChannelChatFragment :
 
             chatInputView.setChatters(viewModel.chatters)
             viewModel.newChatter.observe(viewLifecycleOwner, chatInputView::addChatter)
+            viewModel.messagePostConstraint.observe(
+                viewLifecycleOwner,
+                chatInputView::setMessagePostConstraint
+            )
 
             val emotesObserver = { emoteSets: List<EmoteSetItem> ->
                 val emotes = emoteSets.mapNotNull { (it as? EmoteSetItem.Emote)?.emote }

@@ -1,9 +1,9 @@
 package com.github.andreyasadchy.xtra.ui.common
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.ui.main.MainViewModel
@@ -35,6 +35,7 @@ abstract class BaseNetworkFragment : Fragment(), Injectable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         if (enableNetworkCheck) {
             lastState = savedInstanceState?.getBoolean(LAST_KEY)
                 ?: requireContext().isNetworkAvailable
@@ -43,39 +44,48 @@ abstract class BaseNetworkFragment : Fragment(), Injectable {
         }
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        if (enableNetworkCheck) {
-            if (!isInitialized && (created || (lastState && userVisibleHint))) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        if (!enableNetworkCheck) {
+            initialize()
+            return
+        }
+
+        if (!isInitialized && (created || (lastState && userVisibleHint))) {
+            init()
+        }
+
+        mainViewModel.isNetworkAvailable.observe(viewLifecycleOwner) { event ->
+            val isOnline = event.peekContent()
+            if (isOnline) {
+                if (!lastState) {
+                    if (isInitialized) {
+                        onNetworkRestored()
+                    } else {
+                        init()
+                    }
+                    shouldRestore = false
+                }
+            } else if (isInitialized) {
+                onNetworkLost()
+            }
+
+            lastState = isOnline
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!enableNetworkCheck) return
+
+        if (!isInitialized) {
+            if (isResumed && lastState) {
                 init()
             }
-            mainViewModel.isNetworkAvailable.observe(
-                viewLifecycleOwner,
-                Observer {
-                    val isOnline = it.peekContent()
-                    if (isOnline) {
-                        if (!lastState) {
-                            shouldRestore = if (userVisibleHint) {
-                                if (isInitialized) {
-                                    onNetworkRestored()
-                                } else {
-                                    init()
-                                }
-                                false
-                            } else {
-                                true
-                            }
-                        }
-                    } else {
-                        if (isInitialized) {
-                            onNetworkLost()
-                        }
-                    }
-                    lastState = isOnline
-                }
-            )
-        } else {
-            initialize()
+        } else if (shouldRestore && lastState) {
+            onNetworkRestored()
+            shouldRestore = false
         }
     }
 
@@ -83,22 +93,6 @@ abstract class BaseNetworkFragment : Fragment(), Injectable {
         super.onDestroyView()
         if (enableNetworkCheck) {
             isInitialized = false
-        }
-    }
-
-    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
-        super.setUserVisibleHint(isVisibleToUser)
-        if (enableNetworkCheck) {
-            if (!isInitialized) {
-                if (isVisibleToUser && isResumed && lastState) {
-                    init()
-                }
-            } else if (shouldRestore && lastState) {
-                if (isVisibleToUser) {
-                    onNetworkRestored()
-                    shouldRestore = false
-                }
-            }
         }
     }
 

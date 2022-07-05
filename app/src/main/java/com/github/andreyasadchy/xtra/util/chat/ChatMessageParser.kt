@@ -36,7 +36,7 @@ class ChatMessageParser @Inject constructor() {
     }
 
     private fun parseMessage(message: String, userNotice: Boolean): ChatCommand {
-        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val parts = message.substring(1).split(" ", limit = 2)
         val prefix = parts[0]
         val prefixes = prefix.splitAndMakeMap(";", "=")
         val messageInfo = parts[1]
@@ -85,7 +85,7 @@ class ChatMessageParser @Inject constructor() {
 
         val emotesList: List<TwitchEmote>? =
             prefixes["emotes"]
-                ?.splitAndMakeMap(splitRegex = "/", mapRegex = ":")
+                ?.splitAndMakeMap(split = "/", map = ":")
                 ?.entries
                 ?.flatMap { emote ->
                     emote.value
@@ -130,7 +130,7 @@ class ChatMessageParser @Inject constructor() {
     }
 
     private fun parseClearMessage(message: String): Command.ClearMessage {
-        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val parts = message.substring(1).split(" ", limit = 2)
         val prefix = parts[0]
         val prefixes = prefix.splitAndMakeMap(";", "=")
         val user = prefixes["login"]
@@ -148,7 +148,7 @@ class ChatMessageParser @Inject constructor() {
     }
 
     private fun parseClearChat(message: String): Command {
-        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val parts = message.substring(1).split(" ", limit = 2)
         val prefix = parts[0]
         val prefixes = prefix.splitAndMakeMap(";", "=")
         val duration = prefixes["ban-duration"]
@@ -182,7 +182,7 @@ class ChatMessageParser @Inject constructor() {
     }
 
     private fun parseNotice(message: String): Command.Notice {
-        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val parts = message.substring(1).split(" ", limit = 2)
         val prefix = parts[0]
         val prefixes = prefix.splitAndMakeMap(";", "=")
         val messageInfo = parts[1]
@@ -201,7 +201,7 @@ class ChatMessageParser @Inject constructor() {
     }
 
     private fun parseRoomState(message: String): RoomState {
-        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val parts = message.substring(1).split(" ", limit = 2)
         val prefix = parts[0]
         val prefixes = prefix.splitAndMakeMap(";", "=")
 
@@ -215,24 +215,24 @@ class ChatMessageParser @Inject constructor() {
     }
 
     private fun parseUserState(message: String): UserState {
-        val parts = message.substring(1).split(" ".toRegex(), 2)
+        val parts = message.substring(1).split(' ', limit = 2)
         val prefix = parts[0]
         val prefixes = prefix.splitAndMakeMap(";", "=")
         return UserState(
             emoteSets = prefixes["emote-sets"]
-                ?.split(",".toRegex())
+                ?.split(",")
                 ?.dropLastWhile { it.isEmpty() }
         )
     }
 
     private fun String.splitAndMakeMap(
-        splitRegex: String,
-        mapRegex: String
+        split: String,
+        map: String
     ): Map<String, String?> = buildMap {
-        split(splitRegex.toRegex())
+        this@splitAndMakeMap.split(split)
             .dropLastWhile { it.isEmpty() }
             .asSequence()
-            .map { pair -> pair.split(mapRegex.toRegex()).dropLastWhile { it.isEmpty() } }
+            .map { pair -> pair.split(map).dropLastWhile { it.isEmpty() } }
             .forEach { this[it[0]] = if (it.size == 2) it[1] else null }
     }
 

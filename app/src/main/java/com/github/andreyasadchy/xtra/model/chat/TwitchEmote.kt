@@ -3,7 +3,7 @@ package com.github.andreyasadchy.xtra.model.chat
 import com.google.gson.annotations.SerializedName
 import okhttp3.HttpUrl.Companion.toHttpUrl
 
-class TwitchEmote(
+data class TwitchEmote(
     @SerializedName("_id")
     override val name: String,
     val id: String,

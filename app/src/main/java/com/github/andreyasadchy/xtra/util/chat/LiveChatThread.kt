@@ -42,8 +42,7 @@ class LiveChatThread(
             listener.onCommand(
                 Command.Join(
                     message = channelName,
-                    duration = null,
-                    fullMsg = null
+                    duration = null
                 )
             )
         }
@@ -87,8 +86,7 @@ class LiveChatThread(
                 listener.onCommand(
                     Command.Disconnect(
                         message = channelName,
-                        duration = t.toString(),
-                        fullMsg = t.stackTraceToString()
+                        throwable = t
                     )
                 )
             }

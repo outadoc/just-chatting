@@ -78,8 +78,8 @@ class ChatView : LinearLayout {
             animateEmotes = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
         )
 
-        adapter.setOnClickListener { original, formatted, userId, fullMsg ->
-            messageClickListener?.send(original, formatted, userId, fullMsg)
+        adapter.setOnClickListener { original, formatted, userId ->
+            messageClickListener?.send(original, formatted, userId)
         }
 
         recyclerView.let {
@@ -208,8 +208,7 @@ class ChatView : LinearLayout {
                 message = message,
                 isAction = true,
                 emotes = command.emotes,
-                timestamp = command.timestamp,
-                fullMsg = command.fullMsg
+                timestamp = command.timestamp
             )
         )
 

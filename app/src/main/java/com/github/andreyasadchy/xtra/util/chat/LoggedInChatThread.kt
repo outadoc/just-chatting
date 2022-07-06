@@ -80,10 +80,7 @@ class LoggedInChatThread(
         } catch (e: IOException) {
             Log.e(TAG, "Error sending message", e)
             listener.onCommand(
-                Command.SendMessageError(
-                    message = e.toString(),
-                    fullMsg = e.stackTraceToString()
-                )
+                Command.SendMessageError(throwable = e)
             )
         }
     }

@@ -227,15 +227,14 @@ class ChannelChatFragment :
         )
 
         chatView.init(maxAdapterCount)
-        chatView.setOnMessageClickListener { original, formatted, userId, fullMsg ->
+        chatView.setOnMessageClickListener { original, formatted, userId ->
             hideKeyboard()
 
             MessageClickedDialog.newInstance(
                 messagingEnabled = true,
                 originalMessage = original,
                 formattedMessage = formatted,
-                userId = userId,
-                fullMsg = fullMsg
+                userId = userId
             ).show(childFragmentManager, "closeOnPip")
         }
 

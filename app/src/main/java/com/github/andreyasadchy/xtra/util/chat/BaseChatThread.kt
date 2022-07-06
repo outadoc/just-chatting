@@ -48,10 +48,7 @@ abstract class BaseChatThread(
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketIn", e)
             listener.onCommand(
-                Command.SocketError(
-                    message = e.toString(),
-                    fullMsg = e.stackTraceToString()
-                )
+                Command.SocketError(throwable = e)
             )
         }
     }

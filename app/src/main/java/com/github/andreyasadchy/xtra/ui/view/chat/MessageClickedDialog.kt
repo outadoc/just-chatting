@@ -56,19 +56,16 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             messagingEnabled: Boolean,
             originalMessage: CharSequence,
             formattedMessage: CharSequence,
-            userId: String?,
-            fullMsg: String?
+            userId: String?
         ) = MessageClickedDialog().apply {
             arguments = bundleOf(
                 KEY_MESSAGING to messagingEnabled,
                 KEY_ORIGINAL to originalMessage,
                 KEY_FORMATTED to formattedMessage,
                 KEY_USERID to userId
-            ); this.fullMsg = fullMsg
+            )
         }
     }
-
-    var fullMsg: String? = null
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -138,13 +135,6 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
                 )
             )
             dismiss()
-        }
-        if (requireContext().prefs().getBoolean(C.DEBUG_CHAT_FULLMSG, false) && fullMsg != null) {
-            copyFullMsg.isVisible = true
-            copyFullMsg.setOnClickListener {
-                clipboard?.setPrimaryClip(ClipData.newPlainText("label", fullMsg))
-                dismiss()
-            }
         }
     }
 

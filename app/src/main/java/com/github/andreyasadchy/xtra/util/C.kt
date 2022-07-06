@@ -23,5 +23,4 @@ object C {
     const val CHAT_PUBSUB_ENABLED = "chat_pubsub_enabled"
     const val HELIX_CLIENT_ID = "helix_client_id"
     const val HELIX_REDIRECT = "helix_redirect"
-    const val DEBUG_CHAT_FULLMSG = "debug_chat_fullmsg"
 }

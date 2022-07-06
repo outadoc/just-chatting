@@ -95,8 +95,7 @@ class ChatAdapter(
         fun onMessageClick(
             originalMessage: CharSequence,
             formattedMessage: CharSequence,
-            userId: String?,
-            fullMsg: String?
+            userId: String?
         )
     }
 
@@ -224,7 +223,6 @@ class ChatAdapter(
             }
         }
 
-        val fullMsg = chatMessage.fullMsg
         val userId = chatMessage.userId
         val userName = chatMessage.userName
         val userNameLength = userName?.length ?: 0
@@ -474,8 +472,7 @@ class ChatAdapter(
         holder.bind(
             originalMessage = originalMessage,
             formattedMessage = builder,
-            userId = userId,
-            fullMsg = fullMsg
+            userId = userId
         )
 
         loadImages(
@@ -483,8 +480,7 @@ class ChatAdapter(
             images = images,
             originalMessage = originalMessage,
             builder = builder,
-            userId = userId,
-            fullMsg = fullMsg
+            userId = userId
         )
     }
 
@@ -493,8 +489,7 @@ class ChatAdapter(
         images: List<Image>,
         originalMessage: CharSequence,
         builder: SpannableStringBuilder,
-        userId: String?,
-        fullMsg: String?
+        userId: String?
     ) {
         images.forEach { image ->
             loadCoil(
@@ -502,8 +497,7 @@ class ChatAdapter(
                 image = image,
                 originalMessage = originalMessage,
                 builder = builder,
-                userId = userId,
-                fullMsg = fullMsg
+                userId = userId
             )
         }
     }
@@ -513,8 +507,7 @@ class ChatAdapter(
         image: Image,
         originalMessage: CharSequence,
         builder: SpannableStringBuilder,
-        userId: String?,
-        fullMsg: String?
+        userId: String?
     ) {
         val request = ImageRequest.Builder(context)
             .data(image.url)
@@ -545,7 +538,11 @@ class ChatAdapter(
                         e.printStackTrace()
                     }
 
-                    holder.bind(originalMessage, builder, userId, fullMsg)
+                    holder.bind(
+                        originalMessage = originalMessage,
+                        formattedMessage = builder,
+                        userId = userId
+                    )
                 },
             )
             .build()
@@ -657,8 +654,7 @@ class ChatAdapter(
         fun bind(
             originalMessage: CharSequence,
             formattedMessage: SpannableStringBuilder,
-            userId: String?,
-            fullMsg: String?
+            userId: String?
         ) {
             textView.apply {
                 text = formattedMessage
@@ -667,8 +663,7 @@ class ChatAdapter(
                     messageClickListener?.onMessageClick(
                         originalMessage = originalMessage,
                         formattedMessage = formattedMessage,
-                        userId = userId,
-                        fullMsg = fullMsg
+                        userId = userId
                     )
                 }
             }

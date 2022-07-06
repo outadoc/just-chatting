@@ -17,8 +17,8 @@ import javax.inject.Inject
 class ChatMessageParser @Inject constructor() {
 
     fun parse(message: String): ChatCommand? {
-        val ircMessage = IrcMessageParser.parse(message) ?: return null
-        return when (ircMessage.command) {
+        val ircMessage = IrcMessageParser.parse(message)
+        val parsedMessage = when (ircMessage?.command) {
             PrivMsgMessage.command -> parseMessage(ircMessage)
             PingMessage.command -> PingCommand
             NoticeMessage.command -> parseNotice(ircMessage)
@@ -27,11 +27,14 @@ class ChatMessageParser @Inject constructor() {
             "CLEARMSG" -> parseClearMessage(ircMessage)
             "CLEARCHAT" -> parseClearChat(ircMessage)
             "ROOMSTATE" -> parseRoomState(ircMessage)
-            else -> {
-                Log.w(TAG, "Unknown command: $message")
-                null
-            }
+            else -> null
         }
+
+        if (parsedMessage == null) {
+            Log.w(TAG, "Unknown command: $message")
+        }
+
+        return parsedMessage
     }
 
     private fun parseMessage(ircMessage: IrcMessage): ChatCommand? {
@@ -56,12 +59,9 @@ class ChatMessageParser @Inject constructor() {
         )
     }
 
-    private fun parseUserNotice(ircMessage: IrcMessage): Command.UserNotice? {
-        val command = PrivMsgMessage.Command.Parser.parse(ircMessage)
-            ?: return null
-
+    private fun parseUserNotice(ircMessage: IrcMessage): Command.UserNotice {
         return Command.UserNotice(
-            message = ircMessage.tags.systemMsg ?: command.message,
+            message = ircMessage.tags.systemMsg ?: ircMessage.parameters.getOrNull(1),
             timestamp = ircMessage.tags.parseTimestamp()
         )
     }

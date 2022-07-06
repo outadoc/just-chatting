@@ -44,7 +44,6 @@ import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
 import kotlinx.android.synthetic.main.view_chat_input.view.*
 import kotlinx.datetime.Clock
 
-
 class ChatInputView : LinearLayout {
 
     fun interface OnMessageSendListener {

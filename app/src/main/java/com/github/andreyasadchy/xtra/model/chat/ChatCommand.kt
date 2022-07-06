@@ -8,7 +8,6 @@ sealed interface ChatCommand
 sealed class Command(
     open val message: String? = null,
     open val duration: String? = null,
-    open val type: String? = null,
     open val emotes: List<TwitchEmote>? = null,
     open val timestamp: Instant? = null,
     open val fullMsg: String? = null
@@ -17,7 +16,6 @@ sealed class Command(
     data class UserNotice(
         override val message: String? = null,
         override val duration: String? = null,
-        override val type: String? = null,
         override val emotes: List<TwitchEmote>? = null,
         override val timestamp: Instant? = null,
         override val fullMsg: String? = null
@@ -26,7 +24,6 @@ sealed class Command(
     data class Notice(
         override val message: String? = null,
         override val duration: String? = null,
-        override val type: String? = null,
         override val emotes: List<TwitchEmote>? = null,
         override val timestamp: Instant? = null,
         override val fullMsg: String? = null
@@ -35,7 +32,6 @@ sealed class Command(
     data class ClearChat(
         override val message: String? = null,
         override val duration: String? = null,
-        override val type: String? = null,
         override val emotes: List<TwitchEmote>? = null,
         override val timestamp: Instant? = null,
         override val fullMsg: String? = null
@@ -44,7 +40,6 @@ sealed class Command(
     data class Timeout(
         override val message: String? = null,
         override val duration: String? = null,
-        override val type: String? = null,
         override val emotes: List<TwitchEmote>? = null,
         override val timestamp: Instant? = null,
         override val fullMsg: String? = null
@@ -53,7 +48,6 @@ sealed class Command(
     data class Ban(
         override val message: String? = null,
         override val duration: String? = null,
-        override val type: String? = null,
         override val emotes: List<TwitchEmote>? = null,
         override val timestamp: Instant? = null,
         override val fullMsg: String? = null
@@ -62,7 +56,6 @@ sealed class Command(
     data class ClearMessage(
         override val message: String? = null,
         override val duration: String? = null,
-        override val type: String? = null,
         override val emotes: List<TwitchEmote>? = null,
         override val timestamp: Instant? = null,
         override val fullMsg: String? = null
@@ -71,7 +64,6 @@ sealed class Command(
     data class Join(
         override val message: String? = null,
         override val duration: String? = null,
-        override val type: String? = null,
         override val emotes: List<TwitchEmote>? = null,
         override val timestamp: Instant? = null,
         override val fullMsg: String? = null
@@ -80,7 +72,6 @@ sealed class Command(
     data class Disconnect(
         override val message: String? = null,
         override val duration: String? = null,
-        override val type: String? = null,
         override val emotes: List<TwitchEmote>? = null,
         override val timestamp: Instant? = null,
         override val fullMsg: String? = null
@@ -89,7 +80,6 @@ sealed class Command(
     data class SendMessageError(
         override val message: String? = null,
         override val duration: String? = null,
-        override val type: String? = null,
         override val emotes: List<TwitchEmote>? = null,
         override val timestamp: Instant? = null,
         override val fullMsg: String? = null
@@ -98,7 +88,6 @@ sealed class Command(
     data class SocketError(
         override val message: String? = null,
         override val duration: String? = null,
-        override val type: String? = null,
         override val emotes: List<TwitchEmote>? = null,
         override val timestamp: Instant? = null,
         override val fullMsg: String? = null

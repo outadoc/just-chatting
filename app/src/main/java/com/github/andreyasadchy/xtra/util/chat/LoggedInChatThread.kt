@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
+import com.github.andreyasadchy.xtra.feature.irc.ChatMessageParser
 import com.github.andreyasadchy.xtra.model.chat.Command
 import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.PingCommand
@@ -84,7 +85,6 @@ class LoggedInChatThread(
                     fullMsg = e.stackTraceToString()
                 )
             )
-
         }
     }
 }

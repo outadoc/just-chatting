@@ -1,6 +1,6 @@
 package com.github.andreyasadchy.xtra.model.chat
 
-import com.github.andreyasadchy.xtra.util.chat.ChatMessageParser
+import com.github.andreyasadchy.xtra.feature.irc.ChatMessageParser
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement

@@ -16,4 +16,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = 'just-chatting'
+
 include ':app'
+include ':lib-irc'

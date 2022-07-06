@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
+import com.github.andreyasadchy.xtra.feature.irc.ChatMessageParser
 import com.github.andreyasadchy.xtra.model.chat.ChatMessage
 import com.github.andreyasadchy.xtra.model.chat.Command
 import com.github.andreyasadchy.xtra.model.chat.PingCommand
@@ -42,7 +43,6 @@ class LiveChatThread(
                 Command.Join(
                     message = channelName,
                     duration = null,
-                    type = "join",
                     fullMsg = null
                 )
             )
@@ -88,7 +88,6 @@ class LiveChatThread(
                     Command.Disconnect(
                         message = channelName,
                         duration = t.toString(),
-                        type = "disconnect",
                         fullMsg = t.stackTraceToString()
                     )
                 )

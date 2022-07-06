@@ -133,7 +133,7 @@ class PubSubWebSocket(
 
                     when {
                         topic?.startsWith("community-points-channel") == true &&
-                                messageType?.startsWith("reward-redeemed") == true -> {
+                            messageType?.startsWith("reward-redeemed") == true -> {
                             listener.onPointReward(text)
                         }
                     }

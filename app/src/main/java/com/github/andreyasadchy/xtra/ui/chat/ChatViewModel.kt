@@ -93,12 +93,12 @@ class ChatViewModel @Inject constructor(
 
     val messagePostConstraint: LiveData<MessagePostConstraint?> =
         _lastSentMessageInstant.combineWith(roomState) { lastSentMessageInstant, roomState ->
-            if (lastSentMessageInstant == null || roomState?.slow?.isPositive() != true) {
+            if (lastSentMessageInstant == null || roomState?.slowModeDuration?.isPositive() != true) {
                 null
             } else {
                 MessagePostConstraint(
                     lastMessageSentAt = lastSentMessageInstant,
-                    slowModeDuration = roomState.slow
+                    slowModeDuration = roomState.slowModeDuration
                 )
             }
         }

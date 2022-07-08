@@ -159,11 +159,11 @@ data class PubSubPointReward(
 }
 
 data class RoomState(
-    val emote: Boolean = false,
-    val followers: Duration? = null,
-    val unique: Boolean = false,
-    val slow: Duration? = null,
-    val subs: Boolean = false
+    val isEmoteOnly: Boolean = false,
+    val minFollowDuration: Duration? = null,
+    val uniqueMessagesOnly: Boolean = false,
+    val slowModeDuration: Duration? = null,
+    val isSubOnly: Boolean = false
 ) : ChatCommand
 
 data class UserState(val emoteSets: List<String>?) : ChatCommand

@@ -64,13 +64,13 @@ val Map<String, String?>.id: String?
 val Map<String, String?>.isEmoteOnly: Boolean
     get() = this["emote-only"] == "1"
 
-val Map<String, String?>.isFollowersOnly: Duration?
+val Map<String, String?>.minFollowDuration: Duration?
     get() = this["followers-only"]?.toInt()?.takeUnless { it == -1 }?.minutes
 
-val Map<String, String?>.isSlowMode: Duration?
-    get() = this["slow"]?.toInt()?.seconds
+val Map<String, String?>.slowModeDuration: Duration?
+    get() = this["slow"]?.toInt()?.takeUnless { it == 0 }?.seconds
 
-val Map<String, String?>.isUniqueMode: Boolean
+val Map<String, String?>.uniqueMessagesOnly: Boolean
     get() = this["r9k"] == "1"
 
 val Map<String, String?>.isSubOnly: Boolean

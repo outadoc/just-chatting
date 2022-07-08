@@ -41,13 +41,17 @@ class ChatMessageParser @Inject constructor() {
         val privateMessage = PrivMsgMessage.Message.Parser.parse(ircMessage)
             ?: return null
 
+        // If the message is an action, it matches this regex, and we need
+        // to extract the actual message contained inside
+        val actionGroups = actionRegex.find(privateMessage.message)
+
         return LiveChatMessage(
             id = ircMessage.tags.id,
             userId = ircMessage.tags.userId,
             userLogin = ircMessage.tags.login ?: privateMessage.source.nick,
             userName = ircMessage.tags.displayName,
-            message = privateMessage.message.removePrefix(ACTION_PREFIX),
-            isAction = privateMessage.message.startsWith(ACTION_PREFIX),
+            message = actionGroups?.groupValues?.get(1) ?: privateMessage.message,
+            isAction = actionGroups != null,
             color = ircMessage.tags.color,
             rewardId = ircMessage.tags.customRewardId,
             isFirst = ircMessage.tags.firstMsg,
@@ -109,11 +113,11 @@ class ChatMessageParser @Inject constructor() {
 
     private fun parseRoomState(ircMessage: IrcMessage): RoomState {
         return RoomState(
-            emote = ircMessage.tags.isEmoteOnly,
-            followers = ircMessage.tags.isFollowersOnly,
-            unique = ircMessage.tags.isUniqueMode,
-            slow = ircMessage.tags.isSlowMode,
-            subs = ircMessage.tags.isSubOnly
+            isEmoteOnly = ircMessage.tags.isEmoteOnly,
+            minFollowDuration = ircMessage.tags.minFollowDuration,
+            uniqueMessagesOnly = ircMessage.tags.uniqueMessagesOnly,
+            slowModeDuration = ircMessage.tags.slowModeDuration,
+            isSubOnly = ircMessage.tags.isSubOnly
         )
     }
 
@@ -123,6 +127,7 @@ class ChatMessageParser @Inject constructor() {
 
     companion object {
         private const val TAG = "ChatMessageParser"
-        private const val ACTION_PREFIX = "\u0001ACTION"
+
+        private val actionRegex = Regex("^\u0001ACTION (.+)\u0001\$")
     }
 }

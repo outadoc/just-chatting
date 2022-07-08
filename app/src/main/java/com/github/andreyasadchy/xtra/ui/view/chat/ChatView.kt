@@ -251,10 +251,10 @@ class ChatView : LinearLayout {
     }
 
     fun notifyRoomState(roomState: RoomState) {
-        textEmote.isVisible = roomState.emote
+        textEmote.isVisible = roomState.isEmoteOnly
 
-        if (roomState.followers != null) {
-            when (roomState.followers) {
+        if (roomState.minFollowDuration != null) {
+            when (roomState.minFollowDuration) {
                 Duration.ZERO -> {
                     textFollowers.text = context.getString(R.string.room_followers)
                     textFollowers.isVisible = true
@@ -262,7 +262,7 @@ class ChatView : LinearLayout {
                 else -> {
                     textFollowers.text = context.getString(
                         R.string.room_followers_min,
-                        roomState.followers.toString()
+                        roomState.minFollowDuration.toString()
                     )
                     textFollowers.isVisible = true
                 }
@@ -271,24 +271,19 @@ class ChatView : LinearLayout {
             textFollowers.isVisible = false
         }
 
-        textUnique.isVisible = roomState.unique
+        textUnique.isVisible = roomState.uniqueMessagesOnly
 
-        if (roomState.slow != null) {
-            when (roomState.slow) {
-                Duration.ZERO -> textSlow.isVisible = false
-                else -> {
-                    textSlow.text = context.getString(
-                        R.string.room_slow,
-                        roomState.slow.toString()
-                    )
-                    textSlow.isVisible = true
-                }
-            }
+        if (roomState.slowModeDuration != null) {
+            textSlow.text = context.getString(
+                R.string.room_slow,
+                roomState.slowModeDuration.toString()
+            )
+            textSlow.isVisible = true
         } else {
             textSlow.isVisible = false
         }
 
-        textSubs.isVisible = roomState.subs
+        textSubs.isVisible = roomState.isSubOnly
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||

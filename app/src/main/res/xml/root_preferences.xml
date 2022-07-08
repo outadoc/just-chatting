@@ -59,15 +59,24 @@
         app:min="0"
         app:showSeekBarValue="true" />
 
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="chat_pubsub_enabled"
-        android:title="@string/enable_pubsub"
-        app:iconSpaceReserved="false" />
-
-    <Preference
-        android:key="api_settings"
+    <PreferenceCategory
         android:title="@string/api_settings"
         app:iconSpaceReserved="false" />
+
+    <EditTextPreference
+        android:defaultValue="ilfexgv3nnljz3isbm257gzwrzr7bi"
+        android:key="helix_client_id"
+        android:maxLines="1"
+        android:title="@string/api_helix"
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
+
+    <EditTextPreference
+        android:defaultValue="https://localhost"
+        android:key="helix_redirect"
+        android:maxLines="1"
+        android:title="@string/api_helix_redirect"
+        app:iconSpaceReserved="false"
+        app:useSimpleSummaryProvider="true" />
 
 </androidx.preference.PreferenceScreen>

@@ -10,10 +10,10 @@ import com.github.andreyasadchy.xtra.feature.irc.ChatMessageParser
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.chat.BttvEmote
+import com.github.andreyasadchy.xtra.model.chat.ChatCommand
 import com.github.andreyasadchy.xtra.model.chat.ChatMessage
 import com.github.andreyasadchy.xtra.model.chat.Chatter
 import com.github.andreyasadchy.xtra.model.chat.CheerEmote
-import com.github.andreyasadchy.xtra.model.chat.Command
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.chat.FfzEmote
 import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
@@ -25,18 +25,19 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
+import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntry
+import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntryMapper
 import com.github.andreyasadchy.xtra.util.SingleLiveEvent
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
 import com.github.andreyasadchy.xtra.util.chat.LoggedInChatThread
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
-import com.github.andreyasadchy.xtra.util.chat.OnCommandReceivedListener
-import com.github.andreyasadchy.xtra.util.chat.OnRewardReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.OnRoomStateReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.OnUserStateReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.PubSubListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.PubSubWebSocket
 import com.github.andreyasadchy.xtra.util.combineWith
+import com.github.andreyasadchy.xtra.util.isOdd
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +54,8 @@ import kotlin.collections.set
 class ChatViewModel @Inject constructor(
     private val repository: TwitchService,
     private val playerRepository: PlayerRepository,
-    private val chatMessageParser: ChatMessageParser
+    private val chatMessageParser: ChatMessageParser,
+    private val chatEntryMapper: ChatEntryMapper
 ) : BaseViewModel() {
 
     val recentEmotes: LiveData<List<EmoteSetItem>> by lazy {
@@ -66,7 +68,7 @@ class ChatViewModel @Inject constructor(
                         value = recent
                             .filter { recentEmote ->
                                 twitch.any { twitchEmote -> (twitchEmote as? EmoteSetItem.Emote)?.emote == recentEmote } ||
-                                    other.any { otherEmote -> (otherEmote as? EmoteSetItem.Emote)?.emote == recentEmote }
+                                        other.any { otherEmote -> (otherEmote as? EmoteSetItem.Emote)?.emote == recentEmote }
                             }
                             .map { emote -> EmoteSetItem.Emote(emote) }
                     }
@@ -86,8 +88,6 @@ class ChatViewModel @Inject constructor(
     val emotesFromSets = MutableLiveData<List<EmoteSetItem>>()
     val emotesLoaded = MutableLiveData<Boolean>()
     val roomState = MutableLiveData<RoomState>()
-    val command = MutableLiveData<Command>()
-    val reward = MutableLiveData<ChatMessage>()
 
     private val _lastSentMessageInstant = MutableLiveData<Instant?>(null)
 
@@ -103,13 +103,9 @@ class ChatViewModel @Inject constructor(
             }
         }
 
-    private val _chatMessages = MutableLiveData<MutableList<ChatMessage>>()
-    val chatMessages: LiveData<MutableList<ChatMessage>>
+    private val _chatMessages = MutableLiveData<List<ChatEntry>>()
+    val chatMessages: LiveData<List<ChatEntry>>
         get() = _chatMessages
-
-    private val _newMessage by lazy { MutableLiveData<ChatMessage>() }
-    val newMessage: LiveData<ChatMessage>
-        get() = _newMessage
 
     private var chatStateListener: ChatStateListener? = null
     private var chatController: ChatController? = null
@@ -121,8 +117,9 @@ class ChatViewModel @Inject constructor(
     val chatters: Collection<Chatter>
         get() = chatStateListener?.chatters?.values.orEmpty()
 
+    private var maxAdapterCount: Int = -1
+
     fun startLive(
-        usePubSub: Boolean,
         user: User,
         helixClientId: String?,
         channelId: String?,
@@ -132,14 +129,16 @@ class ChatViewModel @Inject constructor(
         showClearMsg: Boolean,
         showClearChat: Boolean,
         enableRecentMsg: Boolean? = false,
-        recentMsgLimit: Int? = null
+        recentMsgLimit: Int? = null,
+        maxAdapterCount: Int
     ) {
+        this.maxAdapterCount = maxAdapterCount
+
         if (chatController == null && channelLogin != null && channelName != null) {
             val listener = ChatStateListener(
                 user = user,
                 helixClientId = helixClientId,
                 channelId = channelId,
-                usePubSub = usePubSub,
                 displayName = channelName,
                 showUserNotice = showUserNotice,
                 showClearMsg = showClearMsg,
@@ -148,7 +147,6 @@ class ChatViewModel @Inject constructor(
 
             chatStateListener = listener
             chatController = LiveChatController(
-                usePubSub = usePubSub,
                 user = user,
                 channelId = channelId,
                 channelLogin = channelLogin,
@@ -201,7 +199,7 @@ class ChatViewModel @Inject constructor(
         enableRecentMsg: Boolean? = false,
         recentMsgLimit: Int? = null
     ) {
-        _chatMessages.value = Collections.synchronizedList(LinkedList())
+        _chatMessages.value = LinkedList()
 
         start()
 
@@ -211,9 +209,10 @@ class ChatViewModel @Inject constructor(
                     playerRepository.loadRecentMessages(channelLogin, recentMsgLimit)
                         .body()
                         ?.messages
-                        ?.forEach { message ->
-                            chatStateListener?.messageListener?.onCommand(message)
+                        ?.let { messages ->
+                            chatStateListener?.appendMessages(messages)
                         }
+
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load recent messages for channel $channelLogin", e)
                 }
@@ -342,27 +341,21 @@ class ChatViewModel @Inject constructor(
         private val user: User,
         private val helixClientId: String?,
         private val channelId: String?,
-        usePubSub: Boolean,
         showUserNotice: Boolean,
         showClearMsg: Boolean,
         showClearChat: Boolean,
         displayName: String
     ) : OnUserStateReceivedListener,
         OnRoomStateReceivedListener,
-        OnCommandReceivedListener,
-        OnRewardReceivedListener,
         OnChatMessageReceivedListener {
 
         val messageListener = MessageListenerImpl(
             callback = this,
             callbackUserState = this,
             callbackRoomState = this,
-            callbackCommand = this,
-            callbackReward = this,
             showUserNotice = showUserNotice,
             showClearMsg = showClearMsg,
-            showClearChat = showClearChat,
-            usePubSub = usePubSub
+            showClearChat = showClearChat
         )
 
         private val _allEmotesMap = mutableMapOf<String, Emote>()
@@ -374,14 +367,27 @@ class ChatViewModel @Inject constructor(
             chatters[displayName] = Chatter(displayName)
         }
 
-        override fun onMessage(message: ChatMessage) {
-            _chatMessages.value!!.add(message)
-            _newMessage.postValue(message)
+        fun appendMessages(messages: List<ChatCommand>) {
+            val newList = _chatMessages.value.orEmpty() +
+                    messages.mapNotNull { chatEntryMapper.map(it) }
 
-            if (message.userName != null && !chatters.containsKey(message.userName)) {
-                val chatter = Chatter(message.userName)
-                chatters[message.userName] = chatter
-                _newChatter.postValue(chatter)
+            // We alternate the background of each chat row.
+            // If we remove just one item, the backgrounds will shift, so we always need to remove
+            // an even number of items.
+            val maxCount = maxAdapterCount + if (newList.size.isOdd) 1 else 0
+
+            _chatMessages.postValue(newList.takeLast(maxCount))
+        }
+
+        override fun onMessage(message: ChatCommand) {
+            appendMessages(listOf(message))
+
+            if (message is ChatMessage) {
+                if (message.userName != null && !chatters.containsKey(message.userName)) {
+                    val chatter = Chatter(message.userName)
+                    chatters[message.userName] = chatter
+                    _newChatter.postValue(chatter)
+                }
             }
 
             if (message is LiveChatMessage && message.userId != null && message.userId == user.id) {
@@ -464,14 +470,6 @@ class ChatViewModel @Inject constructor(
             roomState.postValue(list)
         }
 
-        override fun onCommand(list: Command) {
-            command.postValue(list)
-        }
-
-        override fun onReward(message: ChatMessage) {
-            reward.postValue(message)
-        }
-
         fun addEmotes(list: List<Emote>) {
             if (user is LoggedIn) {
                 _allEmotesMap.putAll(list.associateBy { it.name })
@@ -480,7 +478,6 @@ class ChatViewModel @Inject constructor(
     }
 
     inner class LiveChatController(
-        private val usePubSub: Boolean,
         private val user: User,
         private val channelId: String?,
         channelLogin: String,
@@ -506,14 +503,11 @@ class ChatViewModel @Inject constructor(
             )
 
         private val pubSub: PubSubWebSocket? =
-            if (usePubSub && !channelId.isNullOrEmpty()) {
+            if (!channelId.isNullOrEmpty()) {
                 PubSubWebSocket(
                     scope = viewModelScope,
                     channelId = channelId,
-                    listener = PubSubListenerImpl(
-                        callback = chatStateListener,
-                        callbackReward = chatStateListener
-                    )
+                    listener = PubSubListenerImpl(callback = chatStateListener)
                 )
             } else null
 
@@ -560,7 +554,7 @@ class ChatViewModel @Inject constructor(
                 loggedInChat.start()
             }
 
-            if (usePubSub && !channelId.isNullOrBlank()) {
+            if (!channelId.isNullOrBlank()) {
                 pubSub?.start()
             }
         }

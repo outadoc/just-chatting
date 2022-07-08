@@ -16,7 +16,9 @@ sealed class Command(
         override val message: String? = null,
         override val duration: String? = null,
         override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null
+        override val timestamp: Instant? = null,
+        val userMessage: ChatMessage? = null,
+        val msgId: String? = null
     ) : Command()
 
     data class Notice(
@@ -112,11 +114,9 @@ data class LiveChatMessage(
     override val emotes: List<TwitchEmote>? = null,
     override val badges: List<Badge>? = null,
     val isFirst: Boolean = false,
-    val msgId: String? = null,
     val systemMsg: String? = null,
     val timestamp: Instant? = null,
-    val rewardId: String? = null,
-    var pointReward: PubSubPointReward? = null
+    val rewardId: String? = null
 ) : ChatMessage
 
 object PingCommand : ChatCommand
@@ -133,7 +133,7 @@ data class PubSubPointReward(
     override val badges: List<Badge>? = null,
     val rewardTitle: String? = null,
     val rewardCost: Int? = null,
-    private val rewardImage: RewardImage? = null,
+    val rewardImage: RewardImage? = null,
     val timestamp: Instant? = null
 ) : ChatMessage {
 
@@ -141,20 +141,21 @@ data class PubSubPointReward(
         val url1: String? = null,
         val url2: String? = null,
         val url4: String? = null
-    )
+    ) : RemoteImage {
 
-    private val urlForDensity: Map<Float, String?>
-        get() = mapOf(
-            1f to rewardImage?.url1,
-            2f to rewardImage?.url2,
-            4f to rewardImage?.url4,
-        )
+        private val urlForDensity: Map<Float, String?>
+            get() = mapOf(
+                1f to url1,
+                2f to url2,
+                4f to url4,
+            )
 
-    fun getUrl(screenDensity: Float): String? {
-        return urlForDensity
-            .toList()
-            .minByOrNull { density -> screenDensity - density.first }
-            ?.second
+        override fun getUrl(screenDensity: Float): String? {
+            return urlForDensity
+                .toList()
+                .minByOrNull { density -> screenDensity - density.first }
+                ?.second
+        }
     }
 }
 

@@ -73,11 +73,7 @@ class ChatMessageParserTest {
                     Badge(id = "turbo", version = "1")
                 ),
                 isFirst = false,
-                msgId = null,
-                systemMsg = null,
-                timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
-                rewardId = null,
-                pointReward = null
+                timestamp = Instant.parse("2017-10-05T23:36:12.675Z")
             )
         }
     }
@@ -111,7 +107,56 @@ class ChatMessageParserTest {
         expected {
             Command.UserNotice(
                 message = "Frfun subscribed with Prime. They've subscribed for 41 months, currently on a 40 month streak!",
-                timestamp = Instant.parse("2022-07-08T16:49:19.852Z")
+                timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
+                msgId = "resub",
+                userMessage = LiveChatMessage(
+                    id = "4c5a38ff-6bb3-4cad-a555-dc8a736cfc38",
+                    userId = "99037844",
+                    userLogin = "frfun",
+                    userName = "Frfun",
+                    message = "coxPet pat pat le requin moumou4Content",
+                    color = "#FFFFFF",
+                    isAction = false,
+                    emotes = listOf(
+                        TwitchEmote(
+                            name = "emotesv2_53f30305e78246aea4bc24d299dd09e7",
+                            id = "emotesv2_53f30305e78246aea4bc24d299dd09e7",
+                            begin = 0,
+                            end = 5,
+                            setId = null,
+                            ownerId = null,
+                            supportedFormats = listOf(
+                                "default"
+                            ),
+                            supportedScales = mapOf(1.0f to "1.0", 2.0f to "2.0", 3.0f to "3.0"),
+                            supportedThemes = listOf("dark")
+                        ),
+                        TwitchEmote(
+                            name = "emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8",
+                            id = "emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8",
+                            begin = 25,
+                            end = 38,
+                            setId = null,
+                            ownerId = null,
+                            supportedFormats = listOf(
+                                "default"
+                            ),
+                            supportedScales = mapOf(
+                                1.0f to "1.0",
+                                2.0f to "2.0",
+                                3.0f to "3.0"
+                            ),
+                            supportedThemes = listOf("dark")
+                        )
+                    ),
+                    badges = listOf(
+                        Badge(id = "subscriber", version = "36"),
+                        Badge(id = "bits", version = "1000")
+                    ),
+                    isFirst = false,
+                    timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
+                    rewardId = null
+                )
             )
         }
     }
@@ -121,8 +166,22 @@ class ChatMessageParserTest {
         input { "@badge-info=subscriber/11;badges=moderator/1,subscriber/3009;color=#8A2BE2;display-name=pepitipepibot;emotes=;flags=;id=54b4d931-8db5-47ad-b6e7-6687cdbbb8ec;login=pepitipepibot;mod=1;msg-id=announcement;room-id=402890635;subscriber=1;system-msg=;tmi-sent-ts=1657301015335;user-id=651859616;user-type=mod :tmi.twitch.tv USERNOTICE #pelerine :LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !" }
         expected {
             Command.UserNotice(
-                message = "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !",
-                timestamp = Instant.parse("2022-07-08T17:23:35.335Z")
+                timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
+                msgId = "announcement",
+                userMessage = LiveChatMessage(
+                    id = "54b4d931-8db5-47ad-b6e7-6687cdbbb8ec",
+                    userId = "651859616",
+                    userLogin = "pepitipepibot",
+                    userName = "pepitipepibot",
+                    color = "#8A2BE2",
+                    emotes = emptyList(),
+                    badges = listOf(
+                        Badge(id = "moderator", version = "1"),
+                        Badge(id = "subscriber", version = "3009")
+                    ),
+                    timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
+                    message = "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !"
+                )
             )
         }
     }
@@ -133,7 +192,8 @@ class ChatMessageParserTest {
         expected {
             Command.UserNotice(
                 message = "3 raiders from maxent__ have joined!",
-                timestamp = Instant.parse("2022-07-08T18:11:52.832Z")
+                timestamp = Instant.parse("2022-07-08T18:11:52.832Z"),
+                msgId = "raid"
             )
         }
     }
@@ -168,6 +228,39 @@ class ChatMessageParserTest {
                 slowModeDuration = 2.minutes,
                 uniqueMessagesOnly = true,
                 isSubOnly = true
+            )
+        }
+    }
+
+    @Test
+    fun `Parse CLEARCHAT permanent ban message`() = test {
+        input { "@room-id=12345678;target-user-id=87654321;tmi-sent-ts=1642715756806 :tmi.twitch.tv CLEARCHAT #dallas :ronni" }
+        expected {
+            Command.Ban(
+                message = "ronni",
+                timestamp = Instant.parse("2022-01-20T21:55:56.806Z")
+            )
+        }
+    }
+
+    @Test
+    fun `Parse CLEARCHAT temporary ban message`() = test {
+        input { "@ban-duration=350;room-id=12345678;target-user-id=87654321;tmi-sent-ts=1642719320727 :tmi.twitch.tv CLEARCHAT #dallas :ronni" }
+        expected {
+            Command.Timeout(
+                message = "ronni",
+                duration = "350",
+                timestamp = Instant.parse("2022-01-20T22:55:20.727Z")
+            )
+        }
+    }
+
+    @Test
+    fun `Parse CLEARCHAT global clear message`() = test {
+        input { "@room-id=12345678;tmi-sent-ts=1642715695392 :tmi.twitch.tv CLEARCHAT #dallas" }
+        expected {
+            Command.ClearChat(
+                timestamp = Instant.parse("2022-01-20T21:54:55.392Z")
             )
         }
     }

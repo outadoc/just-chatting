@@ -1,7 +1,9 @@
 package com.github.andreyasadchy.xtra.di
 
 import android.app.Application
+import android.content.Context
 import com.github.andreyasadchy.xtra.BuildConfig
+import com.github.andreyasadchy.xtra.XtraApp
 import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.api.IdApi
 import com.github.andreyasadchy.xtra.api.MiscApi
@@ -40,6 +42,11 @@ import javax.inject.Singleton
 
 @Module
 class XtraModule {
+
+    @Provides
+    fun providesApplicationContext(): Context {
+        return XtraApp.INSTANCE
+    }
 
     @Singleton
     @Provides

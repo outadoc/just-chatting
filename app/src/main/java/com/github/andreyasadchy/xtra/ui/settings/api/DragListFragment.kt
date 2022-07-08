@@ -38,10 +38,4 @@ class DragListFragment : Fragment() {
             return DragListFragment()
         }
     }
-
-    class ApiSettingsFragment : PreferenceFragmentCompat() {
-        override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-            setPreferencesFromResource(R.xml.api_preferences, rootKey)
-        }
-    }
 }

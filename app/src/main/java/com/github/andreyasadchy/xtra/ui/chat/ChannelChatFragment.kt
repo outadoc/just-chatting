@@ -213,7 +213,6 @@ class ChannelChatFragment :
         val maxAdapterCount = prefs.getInt(C.CHAT_LIMIT, 600)
 
         viewModel.startLive(
-            usePubSub = prefs.getBoolean(C.CHAT_PUBSUB_ENABLED, true),
             user = user,
             helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""),
             channelId = args.getString(C.CHANNEL_ID),
@@ -223,10 +222,10 @@ class ChannelChatFragment :
             showClearMsg = prefs.getBoolean(C.CHAT_SHOW_CLEARMSG, true),
             showClearChat = prefs.getBoolean(C.CHAT_SHOW_CLEARCHAT, true),
             enableRecentMsg = prefs.getBoolean(C.CHAT_RECENT, true),
-            recentMsgLimit = prefs.getInt(C.CHAT_RECENT_LIMIT, 100)
+            recentMsgLimit = prefs.getInt(C.CHAT_RECENT_LIMIT, 100),
+            maxAdapterCount = prefs.getInt(C.CHAT_LIMIT, 600)
         )
 
-        chatView.init(maxAdapterCount)
         chatView.setOnMessageClickListener { original, formatted, userId ->
             hideKeyboard()
 
@@ -272,14 +271,11 @@ class ChannelChatFragment :
         chatInputView.enableChatInteraction(userIsLoggedIn)
 
         viewModel.roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
-        viewModel.newMessage.observe(viewLifecycleOwner) { chatView.notifyMessageAdded() }
         viewModel.chatMessages.observe(viewLifecycleOwner, chatView::submitList)
         viewModel.globalBadges.observe(viewLifecycleOwner, chatView::addGlobalBadges)
         viewModel.channelBadges.observe(viewLifecycleOwner, chatView::addChannelBadges)
         viewModel.cheerEmotes.observe(viewLifecycleOwner, chatView::addCheerEmotes)
         viewModel.emotesLoaded.observe(viewLifecycleOwner, chatView::notifyEmotesLoaded)
-        viewModel.command.observe(viewLifecycleOwner, chatView::notifyCommand)
-        viewModel.reward.observe(viewLifecycleOwner, chatView::notifyReward)
     }
 
     private fun initializeFollow(

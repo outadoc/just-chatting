@@ -37,7 +37,7 @@ class ChatMessageParser @Inject constructor() {
         return parsedMessage
     }
 
-    private fun parseMessage(ircMessage: IrcMessage): ChatCommand? {
+    private fun parseMessage(ircMessage: IrcMessage): LiveChatMessage? {
         val privateMessage = PrivMsgMessage.Message.Parser.parse(ircMessage)
             ?: return null
 
@@ -55,8 +55,6 @@ class ChatMessageParser @Inject constructor() {
             color = ircMessage.tags.color,
             rewardId = ircMessage.tags.customRewardId,
             isFirst = ircMessage.tags.firstMsg,
-            msgId = ircMessage.tags.messageId,
-            systemMsg = ircMessage.tags.systemMsg,
             emotes = ircMessage.tags.parseEmotes(),
             badges = ircMessage.tags.parseBadges(),
             timestamp = ircMessage.tags.parseTimestamp()
@@ -65,8 +63,10 @@ class ChatMessageParser @Inject constructor() {
 
     private fun parseUserNotice(ircMessage: IrcMessage): Command.UserNotice {
         return Command.UserNotice(
-            message = ircMessage.tags.systemMsg ?: ircMessage.parameters.getOrNull(1),
-            timestamp = ircMessage.tags.parseTimestamp()
+            message = ircMessage.tags.systemMsg,
+            timestamp = ircMessage.tags.parseTimestamp(),
+            userMessage = parseMessage(ircMessage),
+            msgId = ircMessage.tags.messageId
         )
     }
 

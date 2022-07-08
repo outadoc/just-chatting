@@ -44,7 +44,6 @@ open class BaseActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
 
         if (prefs.getBoolean(C.FIRST_LAUNCH2, true)) {
             PreferenceManager.setDefaultValues(this, R.xml.root_preferences, false)
-            PreferenceManager.setDefaultValues(this, R.xml.api_preferences, true)
             prefs.edit {
                 putBoolean(C.FIRST_LAUNCH2, false)
             }

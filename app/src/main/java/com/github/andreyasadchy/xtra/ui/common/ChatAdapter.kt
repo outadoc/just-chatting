@@ -23,22 +23,21 @@ import android.widget.TextView
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import androidx.core.text.getSpans
+import androidx.core.text.toSpannable
 import androidx.core.view.children
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.imageLoader
 import coil.request.ImageRequest
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.chat.ChatMessage
 import com.github.andreyasadchy.xtra.model.chat.CheerEmote
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.chat.Image
-import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
-import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.ui.view.chat.VerticalImageSpan
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntry
 import com.github.andreyasadchy.xtra.util.formatTimestamp
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import kotlin.collections.set
@@ -47,21 +46,12 @@ class ChatAdapter(
     private val context: Context,
     private val enableTimestamps: Boolean,
     private val animateEmotes: Boolean
-) : RecyclerView.Adapter<ChatAdapter.ViewHolder>() {
+) : ListAdapter<ChatEntry, ChatAdapter.ViewHolder>(ChatEntryDiffUtil) {
 
     private companion object {
         const val ITEM_TYPE_MESSAGE = 0
         const val ITEM_TYPE_NOTICE = 1
     }
-
-    var messages: MutableList<ChatMessage>? = null
-        set(value) {
-            val oldSize = field?.size ?: 0
-            if (oldSize > 0) {
-                notifyItemRangeRemoved(0, oldSize)
-            }
-            field = value
-        }
 
     private val screenDensity get() = context.resources.displayMetrics.density
 
@@ -82,7 +72,6 @@ class ChatAdapter(
     }
 
     private val redeemedChatMsg = context.getString(R.string.redeemed)
-    private val redeemedNoMsg = context.getString(R.string.user_redeemed)
 
     private val userColors = HashMap<String, Int>()
     private var globalBadges: List<TwitchBadge>? = null
@@ -113,85 +102,61 @@ class ChatAdapter(
     }
 
     override fun getItemViewType(position: Int): Int {
-        val chatMessage = messages?.get(position) as? LiveChatMessage
-            ?: return ITEM_TYPE_MESSAGE
-
-        val isFirstMessage = chatMessage.isFirst
-        val isRewarded = chatMessage.rewardId != null
-        val isNotice = chatMessage.systemMsg != null || chatMessage.msgId != null
-        val isAction = chatMessage.isAction
-
-        return when {
-            isFirstMessage || isRewarded || isNotice || isAction -> ITEM_TYPE_NOTICE
-            else -> ITEM_TYPE_MESSAGE
+        return when (getItem(position)) {
+            is ChatEntry.Plain -> ITEM_TYPE_MESSAGE
+            is ChatEntry.WithHeader -> ITEM_TYPE_NOTICE
+            null -> error("Invalid item type")
         }
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val chatMessage = messages?.get(position) ?: return
-        bindNoticeMessage(holder, chatMessage)
-        bindMessage(holder, chatMessage)
-    }
+        val chatMessage = getItem(position) ?: return
 
-    private fun bindNoticeMessage(holder: ViewHolder, chatMessage: ChatMessage) {
-        val liveMessage: LiveChatMessage? = chatMessage as? LiveChatMessage
-        val pointReward: PubSubPointReward? = chatMessage as? PubSubPointReward
-            ?: liveMessage?.pointReward
-
-        holder.noticeTitle?.apply {
-            text = null
-
-            val noticeMessage = liveMessage?.msgId?.let { messageId ->
-                TwitchApiHelper.getMessageIdString(context, messageId) ?: liveMessage.msgId
+        when (val data = chatMessage.data) {
+            is ChatEntry.Data.Rich -> {
+                bindMessage(holder, data)
             }
-
-            when {
-                liveMessage?.systemMsg != null -> {
-                    text = liveMessage.systemMsg
-                }
-                noticeMessage != null -> {
-                    text = noticeMessage
-                }
-                liveMessage?.isFirst == true -> {
-                    setText(R.string.chat_first)
-                }
-                liveMessage?.rewardId != null && pointReward == null -> {
-                    setText(R.string.chat_reward)
+            is ChatEntry.Data.Simple -> {
+                data.message?.let {
+                    holder.bind(
+                        originalMessage = data.message,
+                        formattedMessage = data.message.toSpannable(),
+                        userId = null
+                    )
                 }
             }
+        }
 
-            isVisible = text.isNotEmpty()
+        if (chatMessage is ChatEntry.WithHeader) {
+            /*
+            if (headerImage != null) {
+                pointReward?.getUrl(screenDensity)?.let { url ->
+                    builder.append("  ")
+                    images.add(Image(url, imageIndex++, imageIndex++, false))
+                    badgesCount++
+                }
+
+                builder.append("${pointReward?.rewardCost}\n")
+                imageIndex += (pointReward?.rewardCost?.toString()?.length ?: 0) + 1
+            }
+            */
+
+            holder.noticeTitle?.apply {
+                text = chatMessage.header
+                isVisible = text.isNotEmpty()
+            }
         }
     }
 
-    private fun bindMessage(holder: ViewHolder, chatMessage: ChatMessage) {
-        val liveMessage: LiveChatMessage? = chatMessage as? LiveChatMessage
-        val pointReward: PubSubPointReward? = chatMessage as? PubSubPointReward
-            ?: liveMessage?.pointReward
-
+    private fun bindMessage(holder: ViewHolder, chatMessage: ChatEntry.Data.Rich) {
         val images: MutableList<Image> = mutableListOf()
         var imageIndex = 0
         var badgesCount = 0
 
         val builder = SpannableStringBuilder()
 
-        if (!pointReward?.message.isNullOrBlank()) {
-            val string = redeemedChatMsg.format(pointReward?.rewardTitle)
-            builder.append("$string ")
-            imageIndex += string.length + 1
-
-            pointReward?.getUrl(screenDensity)?.let { url ->
-                builder.append("  ")
-                images.add(Image(url, imageIndex++, imageIndex++, false))
-                badgesCount++
-            }
-
-            builder.append("${pointReward?.rewardCost}\n")
-            imageIndex += (pointReward?.rewardCost?.toString()?.length ?: 0) + 1
-        }
-
         val timestamp: String? =
-            (liveMessage?.timestamp ?: pointReward?.timestamp)?.formatTimestamp(context)
+            chatMessage.timestamp?.formatTimestamp(context)
 
         if (enableTimestamps && timestamp != null) {
             builder.append("$timestamp ")
@@ -230,7 +195,7 @@ class ChatAdapter(
         val originalMessage: String
         val userNameWithPostfixLength: Int
 
-        if (chatMessage !is PubSubPointReward && !userName.isNullOrBlank()) {
+        if (!userName.isNullOrEmpty()) {
             builder.append(userName)
             if (chatMessage.isAction) {
                 builder.append(" ")
@@ -242,51 +207,20 @@ class ChatAdapter(
                 userNameWithPostfixLength = userNameLength + 2
             }
         } else {
-            if (chatMessage is PubSubPointReward && pointReward?.message.isNullOrBlank()) {
-                val string = redeemedNoMsg.format(userName, pointReward?.rewardTitle)
-                builder.append("$string ")
-                imageIndex += string.length + 1
-
-                pointReward?.getUrl(screenDensity)?.let { url ->
-                    builder.append("  ")
-                    images.add(
-                        Image(
-                            url = url,
-                            start = imageIndex++,
-                            end = imageIndex++,
-                            isEmote = false
-                        )
-                    )
-                    badgesCount++
-                }
-
-                builder.append("${pointReward?.rewardCost}")
-                imageIndex += pointReward?.rewardCost?.toString()?.length ?: 0
-                originalMessage = "$userName: ${chatMessage.message}"
-                userNameWithPostfixLength =
-                    string.length + (pointReward?.rewardCost?.toString()?.length ?: 0) + 3
-
-                builder.setSpan(
-                    ForegroundColorSpan(defaultChatColor),
-                    userNameWithPostfixLength - userNameWithPostfixLength,
-                    userNameWithPostfixLength,
-                    SPAN_INCLUSIVE_INCLUSIVE
-                )
-            } else {
-                originalMessage = "${chatMessage.message}"
-                userNameWithPostfixLength = 0
-            }
+            originalMessage = ""
+            userNameWithPostfixLength = 0
         }
 
-        builder.append(chatMessage.message)
+        chatMessage.message?.let { message ->
+            builder.append(message)
+        }
 
-        val color = if (chatMessage is PubSubPointReward) null
-        else getColorForUser(
+        val color = getColorForUser(
             userName = userName,
             messageColor = chatMessage.color
         )
 
-        if (color != null && userName != null) {
+        if (userName != null) {
             builder.setSpan(
                 ForegroundColorSpan(color),
                 imageIndex,
@@ -550,8 +484,6 @@ class ChatAdapter(
         context.imageLoader.enqueue(request)
     }
 
-    override fun getItemCount(): Int = messages?.size ?: 0
-
     fun addGlobalBadges(list: List<TwitchBadge>) {
         globalBadges = list
     }
@@ -653,7 +585,7 @@ class ChatAdapter(
 
         fun bind(
             originalMessage: CharSequence,
-            formattedMessage: SpannableStringBuilder,
+            formattedMessage: Spannable,
             userId: String?
         ) {
             textView.apply {

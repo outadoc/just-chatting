@@ -20,7 +20,6 @@ object C {
     const val CHAT_SHOW_USERNOTICE = "chat_show_usernotice"
     const val CHAT_SHOW_CLEARMSG = "chat_show_clearmsg"
     const val CHAT_SHOW_CLEARCHAT = "chat_show_clearchat"
-    const val CHAT_PUBSUB_ENABLED = "chat_pubsub_enabled"
     const val HELIX_CLIENT_ID = "helix_client_id"
     const val HELIX_REDIRECT = "helix_redirect"
 }

@@ -5,8 +5,7 @@ import kotlinx.datetime.Instant
 import org.json.JSONObject
 
 class PubSubListenerImpl(
-    private val callback: OnChatMessageReceivedListener,
-    private val callbackReward: OnRewardReceivedListener
+    private val callback: OnChatMessageReceivedListener
 ) : PubSubWebSocket.OnMessageReceivedListener {
 
     override fun onPointReward(text: String) {
@@ -26,6 +25,7 @@ class PubSubListenerImpl(
         val defaultImage = reward?.optString("default_image")
             ?.let { if (it.isNotBlank() && !reward.isNull("default_image")) JSONObject(it) else null }
         val input = redemption?.optString("user_input")
+
         val pointReward = PubSubPointReward(
             id = reward?.optString("id"),
             userId = user?.optString("id"),
@@ -43,10 +43,7 @@ class PubSubListenerImpl(
                 Instant.parse(it)
             }
         )
-        if (input.isNullOrBlank()) {
-            callback.onMessage(pointReward)
-        } else {
-            callbackReward.onReward(pointReward)
-        }
+
+        callback.onMessage(pointReward)
     }
 }

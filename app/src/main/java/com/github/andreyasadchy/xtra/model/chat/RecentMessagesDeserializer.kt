@@ -1,5 +1,6 @@
 package com.github.andreyasadchy.xtra.model.chat
 
+import android.util.Log
 import com.github.andreyasadchy.xtra.feature.irc.ChatMessageParser
 import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
@@ -21,7 +22,10 @@ class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
             messages = json.asJsonObject
                 .getAsJsonArray("messages")
                 .mapNotNull { message -> message.asString.takeIf { !it.isNullOrBlank() } }
-                .mapNotNull { message -> parser.parse(message) }
+                .mapNotNull { message ->
+                    Log.d("RecentMsg", message)
+                    parser.parse(message)
+                }
         )
     }
 }

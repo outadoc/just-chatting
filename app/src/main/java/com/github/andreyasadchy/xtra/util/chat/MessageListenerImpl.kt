@@ -31,7 +31,6 @@ class MessageListenerImpl(
                     callbackReward.onReward(command)
                 }
             }
-            is PubSubPointReward -> {}
             is Command.ClearChat -> if (showClearChat) callbackCommand.onCommand(command)
             is Command.ClearMessage -> if (showClearMsg) callbackCommand.onCommand(command)
             is Command.UserNotice -> if (showUserNotice) callbackCommand.onCommand(command)
@@ -42,7 +41,10 @@ class MessageListenerImpl(
             is Command.SocketError -> callbackCommand.onCommand(command)
             is RoomState -> callbackRoomState.onRoomState(command)
             is UserState -> callbackUserState.onUserState(command.emoteSets)
-            PingCommand -> {}
+            is PubSubPointReward,
+            is Command.Ban,
+            is Command.Timeout,
+            PingCommand -> Unit
         }
     }
 }

@@ -1,6 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
-    ext.kotlin_version = '1.6.21'
+    ext.kotlin_version = '1.7.10'
     ext.paging = '2.1.2'
     ext.lifecycle = '2.4.1'
     ext.room = '2.4.2'

@@ -24,7 +24,6 @@ import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.dialog_chat_message_click.bannerImage
 import kotlinx.android.synthetic.main.dialog_chat_message_click.copyClip
-import kotlinx.android.synthetic.main.dialog_chat_message_click.copyFullMsg
 import kotlinx.android.synthetic.main.dialog_chat_message_click.copyMessage
 import kotlinx.android.synthetic.main.dialog_chat_message_click.message
 import kotlinx.android.synthetic.main.dialog_chat_message_click.reply

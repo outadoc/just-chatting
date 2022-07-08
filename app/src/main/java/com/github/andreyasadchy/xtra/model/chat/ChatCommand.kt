@@ -99,7 +99,6 @@ sealed interface ChatMessage : ChatCommand {
     val isAction: Boolean
     val emotes: List<TwitchEmote>?
     val badges: List<Badge>?
-    val fullMsg: String?
 }
 
 data class LiveChatMessage(
@@ -112,7 +111,6 @@ data class LiveChatMessage(
     override val isAction: Boolean = false,
     override val emotes: List<TwitchEmote>? = null,
     override val badges: List<Badge>? = null,
-    override val fullMsg: String? = null,
     val isFirst: Boolean = false,
     val msgId: String? = null,
     val systemMsg: String? = null,
@@ -133,7 +131,6 @@ data class PubSubPointReward(
     override val isAction: Boolean = false,
     override val emotes: List<TwitchEmote>? = null,
     override val badges: List<Badge>? = null,
-    override val fullMsg: String? = null,
     val rewardTitle: String? = null,
     val rewardCost: Int? = null,
     private val rewardImage: RewardImage? = null,

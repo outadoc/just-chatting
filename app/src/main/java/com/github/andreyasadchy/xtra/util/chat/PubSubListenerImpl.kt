@@ -32,7 +32,6 @@ class PubSubListenerImpl(
             userLogin = user?.optString("login"),
             userName = user?.optString("display_name"),
             message = input,
-            fullMsg = text,
             rewardTitle = reward?.optString("title"),
             rewardCost = reward?.optInt("cost"),
             rewardImage = PubSubPointReward.RewardImage(

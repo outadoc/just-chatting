@@ -54,6 +54,8 @@ class LiveChatThread(
         }
 
         private fun notifyMessage(message: String) {
+            Log.d(TAG, message)
+
             when (val command = parser.parse(message)) {
                 is ChatMessage,
                 is Command.ClearChat,

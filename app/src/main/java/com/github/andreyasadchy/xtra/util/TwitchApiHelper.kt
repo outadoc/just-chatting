@@ -59,7 +59,6 @@ object TwitchApiHelper {
     }
 
     fun addTokenPrefixHelix(token: String) = "Bearer $token"
-    fun addTokenPrefixGQL(token: String) = "OAuth $token"
 
     fun formatViewersCount(context: Context, count: Int): String {
         return context.resources.getQuantityString(R.plurals.viewers, count, "%,d".format(count))

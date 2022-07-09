@@ -41,6 +41,7 @@ import com.github.andreyasadchy.xtra.util.isOdd
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import java.util.*
@@ -68,7 +69,7 @@ class ChatViewModel @Inject constructor(
                         value = recent
                             .filter { recentEmote ->
                                 twitch.any { twitchEmote -> (twitchEmote as? EmoteSetItem.Emote)?.emote == recentEmote } ||
-                                        other.any { otherEmote -> (otherEmote as? EmoteSetItem.Emote)?.emote == recentEmote }
+                                    other.any { otherEmote -> (otherEmote as? EmoteSetItem.Emote)?.emote == recentEmote }
                             }
                             .map { emote -> EmoteSetItem.Emote(emote) }
                     }
@@ -212,7 +213,6 @@ class ChatViewModel @Inject constructor(
                         ?.let { messages ->
                             chatStateListener?.appendMessages(messages)
                         }
-
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load recent messages for channel $channelLogin", e)
                 }
@@ -367,31 +367,39 @@ class ChatViewModel @Inject constructor(
             chatters[displayName] = Chatter(displayName)
         }
 
-        fun appendMessages(messages: List<ChatCommand>) {
-            val newList = _chatMessages.value.orEmpty() +
+        suspend fun appendMessages(messages: List<ChatCommand>) =
+            withContext(Dispatchers.Default) {
+                messages.forEach { message ->
+                    // Process side-effects
+                    // Remember names of chatters
+                    if (message is ChatMessage) {
+                        if (message.userName != null && !chatters.containsKey(message.userName)) {
+                            val chatter = Chatter(message.userName)
+                            chatters[message.userName] = chatter
+                            _newChatter.postValue(chatter)
+                        }
+                    }
+
+                    // Note that this is the last message we've sent
+                    if (message is LiveChatMessage && message.userId != null && message.userId == user.id) {
+                        _lastSentMessageInstant.postValue(message.timestamp)
+                    }
+                }
+
+                val newList = _chatMessages.value.orEmpty() +
                     messages.mapNotNull { chatEntryMapper.map(it) }
 
-            // We alternate the background of each chat row.
-            // If we remove just one item, the backgrounds will shift, so we always need to remove
-            // an even number of items.
-            val maxCount = maxAdapterCount + if (newList.size.isOdd) 1 else 0
+                // We alternate the background of each chat row.
+                // If we remove just one item, the backgrounds will shift, so we always need to remove
+                // an even number of items.
+                val maxCount = maxAdapterCount + if (newList.size.isOdd) 1 else 0
 
-            _chatMessages.postValue(newList.takeLast(maxCount))
-        }
-
-        override fun onMessage(message: ChatCommand) {
-            appendMessages(listOf(message))
-
-            if (message is ChatMessage) {
-                if (message.userName != null && !chatters.containsKey(message.userName)) {
-                    val chatter = Chatter(message.userName)
-                    chatters[message.userName] = chatter
-                    _newChatter.postValue(chatter)
-                }
+                _chatMessages.postValue(newList.takeLast(maxCount))
             }
 
-            if (message is LiveChatMessage && message.userId != null && message.userId == user.id) {
-                _lastSentMessageInstant.postValue(message.timestamp)
+        override fun onMessage(message: ChatCommand) {
+            viewModelScope.launch {
+                appendMessages(listOf(message))
             }
         }
 

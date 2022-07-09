@@ -210,8 +210,6 @@ class ChannelChatFragment :
         val user = User.get(requireContext())
         val userIsLoggedIn = user is LoggedIn
 
-        val maxAdapterCount = prefs.getInt(C.CHAT_LIMIT, 600)
-
         viewModel.startLive(
             user = user,
             helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""),

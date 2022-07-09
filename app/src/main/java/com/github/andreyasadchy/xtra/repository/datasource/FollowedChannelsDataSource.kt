@@ -35,7 +35,7 @@ class FollowedChannelsDataSource(
     private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Follow>) {
-        check(!helixToken.isNullOrBlank())
+        if (helixToken.isNullOrBlank()) return
 
         loadInitial(params, callback) {
             val localFollows: Map<String?, Follow> =

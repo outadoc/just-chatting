@@ -18,7 +18,7 @@ class FollowedStreamsDataSource(
     private var offset: String? = null
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
-        check(!helixToken.isNullOrBlank())
+        if (helixToken.isNullOrBlank()) return
 
         loadInitial(params, callback) {
             val localIds = localFollowsChannel.loadFollows().map { it.user_id }

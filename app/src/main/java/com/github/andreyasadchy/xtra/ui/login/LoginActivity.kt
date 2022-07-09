@@ -20,6 +20,7 @@ import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
+import com.github.andreyasadchy.xtra.model.id.ValidationResponse
 import com.github.andreyasadchy.xtra.repository.AuthRepository
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
@@ -28,11 +29,7 @@ import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.toast
-import kotlinx.android.synthetic.main.activity_login.havingTrouble
-import kotlinx.android.synthetic.main.activity_login.progressBar
-import kotlinx.android.synthetic.main.activity_login.webView
-import kotlinx.android.synthetic.main.activity_login.webViewContainer
-import kotlinx.coroutines.GlobalScope
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.io.IOException
@@ -46,11 +43,6 @@ class LoginActivity : AppCompatActivity(), Injectable {
 
     private val tokenPattern = Pattern.compile("token=(.+?)(?=&)")
 
-    private var tokens = 0
-    private var userId = ""
-    private var userLogin = ""
-    private var helixToken = ""
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -62,7 +54,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
             TwitchApiHelper.checkedValidation = false
             User.set(this, null)
 
-            GlobalScope.launch {
+            lifecycleScope.launch {
                 try {
                     if (!user.helixToken.isNullOrBlank()) {
                         repository.revoke(helixClientId, user.helixToken)
@@ -194,60 +186,37 @@ class LoginActivity : AppCompatActivity(), Injectable {
 
     private fun loginIfValidUrl(url: String): Boolean {
         val matcher = tokenPattern.matcher(url)
-        return if (matcher.find() && tokens < 2) {
-            webViewContainer.isVisible = false
-            progressBar.isVisible = true
+        if (!matcher.find()) return false
 
-            val token = matcher.group(1)!!
-            if (tokens == 0) {
-                lifecycleScope.launch {
-                    try {
-                        val response = repository.validate(
-                            TwitchApiHelper.addTokenPrefixHelix(token)
-                        )
+        webViewContainer.isVisible = false
+        progressBar.isVisible = true
 
-                        if (response != null) {
-                            userId = response.userId
-                            userLogin = response.login
-                            helixToken = token
-                        } else {
-                            throw IOException()
-                        }
-                    } catch (e: Exception) {
-                        toast(R.string.connection_error)
-                    }
-                }
-            } else {
-                lifecycleScope.launch {
-                    try {
-                        val response = repository.validate(TwitchApiHelper.addTokenPrefixGQL(token))
-                        if (response != null) {
-                            userId = response.userId
-                            userLogin = response.login
+        val token = matcher.group(1)!!
+        lifecycleScope.launch {
+            try {
+                val response: ValidationResponse =
+                    repository.validate(TwitchApiHelper.addTokenPrefixHelix(token))
+                        ?: throw IOException()
 
-                            if (helixToken.isNotBlank()) {
-                                TwitchApiHelper.checkedValidation = true
-                                User.set(
-                                    this@LoginActivity,
-                                    LoggedIn(userId, userLogin, helixToken)
-                                )
-                                setResult(RESULT_OK)
-                                finish()
-                            }
-                        } else {
-                            throw IOException()
-                        }
-                    } catch (e: Exception) {
-                        toast(R.string.connection_error)
-                    }
-                }
+                TwitchApiHelper.checkedValidation = true
+
+                User.set(
+                    this@LoginActivity,
+                    LoggedIn(
+                        id = response.userId,
+                        login = response.login,
+                        helixToken = token
+                    )
+                )
+
+                setResult(RESULT_OK)
+                finish()
+            } catch (e: Exception) {
+                toast(R.string.connection_error)
             }
-
-            tokens++
-            true
-        } else {
-            false
         }
+
+        return true
     }
 
     private fun clearCookies() {

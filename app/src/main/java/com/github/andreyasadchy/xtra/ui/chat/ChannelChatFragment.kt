@@ -248,8 +248,7 @@ class ChannelChatFragment :
         if (userIsLoggedIn) {
             user.login?.let { chatView.setUsername(it) }
 
-            chatInputView.setChatters(viewModel.chatters)
-            viewModel.newChatter.observe(viewLifecycleOwner, chatInputView::addChatter)
+            viewModel.chatters.observe(viewLifecycleOwner, chatInputView::setChatters)
             viewModel.messagePostConstraint.observe(
                 viewLifecycleOwner,
                 chatInputView::setMessagePostConstraint

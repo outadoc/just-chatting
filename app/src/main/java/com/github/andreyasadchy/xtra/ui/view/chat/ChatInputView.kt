@@ -126,13 +126,10 @@ class ChatInputView : LinearLayout {
     }
 
     fun setChatters(chatters: Collection<Chatter>) {
+        autoCompleteAdapter.clear()
         autoCompleteAdapter.addAll(
             chatters.map { AutoCompleteItem.UserItem(it) }
         )
-    }
-
-    fun addChatter(chatter: Chatter) {
-        autoCompleteAdapter.add(AutoCompleteItem.UserItem(chatter))
     }
 
     fun setOnMessageSendListener(callback: OnMessageSendListener) {

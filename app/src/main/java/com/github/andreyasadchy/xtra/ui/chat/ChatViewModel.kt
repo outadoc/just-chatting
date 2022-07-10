@@ -27,7 +27,6 @@ import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntry
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntryMapper
-import com.github.andreyasadchy.xtra.util.SingleLiveEvent
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
 import com.github.andreyasadchy.xtra.util.chat.LoggedInChatThread
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
@@ -45,12 +44,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.collections.get
-import kotlin.collections.set
 
 class ChatViewModel @Inject constructor(
     private val repository: TwitchService,
@@ -92,13 +88,8 @@ class ChatViewModel @Inject constructor(
     private var chatStateListener: ChatStateListener? = null
     private var chatController: ChatController? = null
 
-    private val _newChatter by lazy { SingleLiveEvent<Chatter>() }
-    val newChatter: LiveData<Chatter>
-        get() = _newChatter
-
-    val chatters: Collection<Chatter>
-        get() = chatStateListener?.chatters?.values.orEmpty()
-
+    private val _chatters = MutableLiveData<Set<Chatter>>()
+    val chatters: LiveData<Set<Chatter>> get() = _chatters
 
     val recentEmotes: LiveData<List<EmoteSetItem>> =
         MediatorLiveData<List<EmoteSetItem>>().apply {
@@ -365,10 +356,8 @@ class ChatViewModel @Inject constructor(
         private val _allEmotesMap = mutableMapOf<String, Emote>()
         val allEmotesMap: Map<String, Emote> = _allEmotesMap
 
-        val chatters = ConcurrentHashMap<String?, Chatter>()
-
         init {
-            chatters[displayName] = Chatter(displayName)
+            _chatters.postValue(setOf(Chatter(displayName)))
         }
 
         suspend fun appendMessages(messages: List<ChatCommand>) =
@@ -377,10 +366,11 @@ class ChatViewModel @Inject constructor(
                     // Process side-effects
                     // Remember names of chatters
                     if (message is ChatMessage) {
-                        if (message.userName != null && !chatters.containsKey(message.userName)) {
-                            val chatter = Chatter(message.userName)
-                            chatters[message.userName] = chatter
-                            _newChatter.postValue(chatter)
+                        message.userName?.let { userName ->
+                            _chatters.postValue(
+                                _chatters.value.orEmpty()
+                                    .plusElement(Chatter(userName))
+                            )
                         }
                     }
 

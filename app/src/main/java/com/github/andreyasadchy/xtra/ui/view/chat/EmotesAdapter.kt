@@ -17,16 +17,16 @@ import com.github.andreyasadchy.xtra.util.prefs
 class EmotesAdapter(
     private val clickListener: OnEmoteClickedListener
 ) : ListAdapter<EmoteSetItem, ViewHolder>(object :
-        DiffUtil.ItemCallback<EmoteSetItem>() {
+    DiffUtil.ItemCallback<EmoteSetItem>() {
 
-        override fun areItemsTheSame(oldItem: EmoteSetItem, newItem: EmoteSetItem): Boolean {
-            return oldItem == newItem
-        }
+    override fun areItemsTheSame(oldItem: EmoteSetItem, newItem: EmoteSetItem): Boolean {
+        return oldItem == newItem
+    }
 
-        override fun areContentsTheSame(oldItem: EmoteSetItem, newItem: EmoteSetItem): Boolean {
-            return oldItem == newItem
-        }
-    }) {
+    override fun areContentsTheSame(oldItem: EmoteSetItem, newItem: EmoteSetItem): Boolean {
+        return oldItem == newItem
+    }
+}) {
 
     companion object {
         const val TYPE_EMOTE = 0
@@ -62,6 +62,7 @@ class EmotesAdapter(
         val header = (getItem(position) as? EmoteSetItem.Header) ?: return
         val titleView: TextView = holder.itemView.findViewById(R.id.textView_header)
         titleView.text = header.title
+            ?: titleView.context.getString(R.string.emote_category_global)
     }
 
     private fun bindEmote(holder: ViewHolder, position: Int) {

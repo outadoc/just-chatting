@@ -1,7 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.chat
 
 import android.util.Log
-import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -427,15 +426,17 @@ class ChatViewModel @Inject constructor(
                         }.orEmpty()
                     }
 
-            val groupedEmotes: Map<String?, List<TwitchEmote>> =
-                emotes.groupBy { emote -> emote.ownerId }
-
             val emoteOwners: Map<String, com.github.andreyasadchy.xtra.model.helix.user.User> =
                 try {
                     repository.loadUsersById(
-                        ids = groupedEmotes.keys
-                            .filterNotNull()
-                            .filter { id -> id.isDigitsOnly() },
+                        ids = emotes
+                            .mapNotNull { it.ownerId }
+                            .toSet()
+                            .mapNotNull {
+                                it.toLongOrNull()
+                                    ?.takeIf { id -> id > 0 }
+                                    ?.toString()
+                            },
                         helixClientId = helixClientId,
                         helixToken = user.helixToken
                     )
@@ -446,14 +447,18 @@ class ChatViewModel @Inject constructor(
                     .orEmpty()
                     .associateBy { user -> user.id!! }
 
-            val channelEmotes: Map<String?, List<TwitchEmote>> =
-                groupedEmotes.filter { (ownerId, _) -> ownerId == channelId }
+            val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
+                emotes.filter { emote -> emote.ownerId == channelId }
+                    .groupBy { emoteOwners[channelId]?.display_name }
+
+            val groupedEmotes: Map<String?, List<TwitchEmote>> =
+                emotes.filter { emote -> emote.ownerId != channelId }
+                    .groupBy { emote -> emoteOwners[emote.ownerId]?.display_name }
 
             val sortedEmotes: List<EmoteSetItem> =
-                (channelEmotes + groupedEmotes.minus(channelEmotes))
-                    .flatMap { (ownerId, emotes) ->
-                        val channelName = ownerId?.let { emoteOwners[it] }?.display_name
-                        listOf(EmoteSetItem.Header(title = channelName))
+                (groupedChannelEmotes + groupedEmotes)
+                    .flatMap { (ownerName, emotes) ->
+                        listOf(EmoteSetItem.Header(title = ownerName))
                             .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
                     }
 

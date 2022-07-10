@@ -33,6 +33,7 @@
     <string name="reply">Reply</string>
     <string name="copy_message">Copy message</string>
     <string name="view_profile">View profile</string>
+    <string name="emote_category_global">Global</string>
     <string name="emote_tab_recent">Recent</string>
     <string name="emote_tab_twitch">Twitch</string>
     <string name="emote_tab_others">Others</string>

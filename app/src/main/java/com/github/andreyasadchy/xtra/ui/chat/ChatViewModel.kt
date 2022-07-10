@@ -65,11 +65,15 @@ class ChatViewModel @Inject constructor(
                 removeSource(emotesFromSets)
                 addSource(_otherEmotes) { other ->
                     removeSource(_otherEmotes)
+
+                    val knownEmotes =
+                        (twitch + other).filterIsInstance<EmoteSetItem.Emote>()
+                            .map { it.emote }
+
                     addSource(playerRepository.loadRecentEmotes()) { recent ->
                         value = recent
                             .filter { recentEmote ->
-                                twitch.any { twitchEmote -> (twitchEmote as? EmoteSetItem.Emote)?.emote == recentEmote } ||
-                                    other.any { otherEmote -> (otherEmote as? EmoteSetItem.Emote)?.emote == recentEmote }
+                                knownEmotes.any { emote -> emote.name == recentEmote.name }
                             }
                             .map { emote -> EmoteSetItem.Emote(emote) }
                     }

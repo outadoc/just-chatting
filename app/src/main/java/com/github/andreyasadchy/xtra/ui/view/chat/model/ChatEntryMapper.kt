@@ -18,105 +18,85 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
         return with(chatCommand) {
             when (this) {
                 is Command.ClearChat -> {
-                    ChatEntry.WithHeader(
-                        header = null,
-                        data = ChatEntry.Data.Simple(
-                            message = context.getString(R.string.chat_clear),
-                            timestamp = timestamp
-                        )
+                    ChatEntry.Highlighted(
+                        header = context.getString(R.string.chat_clear),
+                        data = null,
+                        timestamp = timestamp
                     )
                 }
                 is Command.Ban -> {
-                    ChatEntry.WithHeader(
-                        header = null,
-                        data = ChatEntry.Data.Simple(
-                            message = context.getString(R.string.chat_ban, message),
-                            timestamp = timestamp
-                        )
+                    ChatEntry.Highlighted(
+                        header = context.getString(R.string.chat_ban, message),
+                        data = null,
+                        timestamp = timestamp
                     )
                 }
                 is Command.Timeout -> {
-                    ChatEntry.WithHeader(
-                        header = null,
-                        data = ChatEntry.Data.Simple(
-                            message = context.getString(R.string.chat_timeout, message, duration),
-                            timestamp = timestamp
-                        )
+                    ChatEntry.Highlighted(
+                        header = context.getString(R.string.chat_timeout, message, duration),
+                        data = null,
+                        timestamp = timestamp
                     )
                 }
                 is Command.ClearMessage -> {
-                    ChatEntry.WithHeader(
-                        header = null,
-                        data = ChatEntry.Data.Simple(
-                            message = context.getString(R.string.chat_clearmsg, message, duration),
-                            timestamp = timestamp
-                        )
+                    ChatEntry.Highlighted(
+                        header = context.getString(R.string.chat_clearmsg, message, duration),
+                        data = null,
+                        timestamp = timestamp
                     )
                 }
                 is Command.Join -> {
-                    ChatEntry.WithHeader(
-                        header = null,
-                        data = ChatEntry.Data.Simple(
-                            message = context.getString(R.string.chat_join, message),
-                            timestamp = timestamp
-                        )
+                    ChatEntry.Highlighted(
+                        header = context.getString(R.string.chat_join, message),
+                        data = null,
+                        timestamp = timestamp
                     )
                 }
                 is Command.Disconnect -> {
-                    ChatEntry.WithHeader(
-                        header = null,
-                        data = ChatEntry.Data.Simple(
-                            message = context.getString(
-                                R.string.chat_disconnect,
-                                message,
-                                duration
-                            ),
-                            timestamp = timestamp
-                        )
+                    ChatEntry.Highlighted(
+                        header = context.getString(
+                            R.string.chat_disconnect,
+                            message,
+                            duration
+                        ),
+                        data = null,
+                        timestamp = timestamp
                     )
                 }
                 is Command.Notice -> {
-                    ChatEntry.WithHeader(
-                        header = null,
-                        data = ChatEntry.Data.Simple(
-                            message = TwitchApiHelper.getNoticeString(
-                                context = context,
-                                msgId = duration,
-                                message = message
-                            ) ?: message,
-                            timestamp = timestamp
-                        )
+                    ChatEntry.Highlighted(
+                        header = TwitchApiHelper.getNoticeString(
+                            context = context,
+                            msgId = duration,
+                            message = message
+                        ) ?: message,
+                        data = null,
+                        timestamp = timestamp
                     )
                 }
                 is Command.SendMessageError -> {
-                    ChatEntry.WithHeader(
-                        header = null,
-                        data = ChatEntry.Data.Simple(
-                            message = context.getString(R.string.chat_send_msg_error, message),
-                            timestamp = timestamp
-                        )
+                    ChatEntry.Highlighted(
+                        header = context.getString(R.string.chat_send_msg_error, message),
+                        data = null,
+                        timestamp = timestamp
                     )
                 }
                 is Command.SocketError -> {
-                    ChatEntry.WithHeader(
-                        header = null,
-                        data = ChatEntry.Data.Simple(
-                            message = context.getString(R.string.chat_socket_error, message),
-                            timestamp = timestamp
-                        )
+                    ChatEntry.Highlighted(
+                        header = context.getString(R.string.chat_socket_error, message),
+                        data = null,
+                        timestamp = timestamp
                     )
                 }
                 is Command.UserNotice -> {
                     if (userMessage == null) {
-                        ChatEntry.WithHeader(
-                            header = null,
-                            data = ChatEntry.Data.Simple(
-                                message = message,
-                                timestamp = timestamp
-                            )
+                        ChatEntry.Highlighted(
+                            header = message,
+                            data = null,
+                            timestamp = timestamp
                         )
                     } else {
-                        ChatEntry.WithHeader(
+                        ChatEntry.Highlighted(
                             header = message ?: msgId?.let { messageId ->
                                 TwitchApiHelper.getMessageIdString(context, messageId)
                             },
@@ -128,9 +108,9 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                                 isAction = userMessage.isAction,
                                 color = userMessage.color,
                                 emotes = userMessage.emotes,
-                                badges = userMessage.badges,
-                                timestamp = timestamp
-                            )
+                                badges = userMessage.badges
+                            ),
+                            timestamp = timestamp
                         )
                     }
                 }
@@ -143,7 +123,7 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                     }
 
                     if (header != null || isAction) {
-                        ChatEntry.WithHeader(
+                        ChatEntry.Highlighted(
                             header = header,
                             data = ChatEntry.Data.Rich(
                                 message = message,
@@ -153,12 +133,12 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                                 isAction = isAction,
                                 color = color,
                                 emotes = emotes,
-                                badges = badges,
-                                timestamp = timestamp
-                            )
+                                badges = badges
+                            ),
+                            timestamp = timestamp
                         )
                     } else {
-                        ChatEntry.Plain(
+                        ChatEntry.Simple(
                             ChatEntry.Data.Rich(
                                 message = message,
                                 userId = userId,
@@ -167,24 +147,24 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                                 isAction = isAction,
                                 color = color,
                                 emotes = emotes,
-                                badges = badges,
-                                timestamp = timestamp
-                            )
+                                badges = badges
+                            ),
+                            timestamp = timestamp
                         )
                     }
                 }
                 is PubSubPointReward -> {
-                    ChatEntry.WithHeader(
+                    ChatEntry.Highlighted(
                         header = rewardCost?.toString(),
                         headerImage = rewardImage,
-                        data = ChatEntry.Data.Simple(
+                        data = ChatEntry.Data.Plain(
                             message = context.getString(
                                 R.string.user_redeemed,
                                 userName,
                                 rewardTitle
-                            ),
-                            timestamp = timestamp
-                        )
+                            )
+                        ),
+                        timestamp = timestamp
                     )
                 }
                 PingCommand,

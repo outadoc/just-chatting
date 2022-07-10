@@ -21,7 +21,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.ColorInt
-import androidx.core.content.ContextCompat
 import androidx.core.text.getSpans
 import androidx.core.text.toSpannable
 import androidx.core.view.children
@@ -61,17 +60,12 @@ class ChatAdapter(
 
     private val randomChatColors = context.resources.getIntArray(R.array.randomChatColors)
 
-    @ColorInt
-    private val defaultChatColor = ContextCompat.getColor(context, R.color.chatUserColorFallback)
-
     @get:ColorInt
     private val backgroundColor: Int by lazy {
         val typedValue = TypedValue()
         context.theme.resolveAttribute(R.attr.colorSurface, typedValue, true)
         typedValue.data
     }
-
-    private val redeemedChatMsg = context.getString(R.string.redeemed)
 
     private val userColors = HashMap<String, Int>()
     private var globalBadges: List<TwitchBadge>? = null
@@ -103,8 +97,8 @@ class ChatAdapter(
 
     override fun getItemViewType(position: Int): Int {
         return when (getItem(position)) {
-            is ChatEntry.Plain -> ITEM_TYPE_MESSAGE
-            is ChatEntry.WithHeader -> ITEM_TYPE_NOTICE
+            is ChatEntry.Simple -> ITEM_TYPE_MESSAGE
+            is ChatEntry.Highlighted -> ITEM_TYPE_NOTICE
             null -> error("Invalid item type")
         }
     }
@@ -112,11 +106,40 @@ class ChatAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val chatMessage = getItem(position) ?: return
 
+        holder.bindTimestamp(
+            timestamp = chatMessage.timestamp
+                ?.formatTimestamp(context)
+                ?.takeIf { enableTimestamps }
+        )
+
+        when (chatMessage) {
+            is ChatEntry.Highlighted -> {
+                /*
+                if (headerImage != null) {
+                    pointReward?.getUrl(screenDensity)?.let { url ->
+                        builder.append("  ")
+                        images.add(Image(url, imageIndex++, imageIndex++, false))
+                        badgesCount++
+                    }
+
+                    builder.append("${pointReward?.rewardCost}\n")
+                    imageIndex += (pointReward?.rewardCost?.toString()?.length ?: 0) + 1
+                }
+                */
+
+                holder.noticeTitle?.apply {
+                    text = chatMessage.header
+                    isVisible = text.isNotEmpty()
+                }
+            }
+            is ChatEntry.Simple -> {}
+        }
+
         when (val data = chatMessage.data) {
             is ChatEntry.Data.Rich -> {
                 bindMessage(holder, data)
             }
-            is ChatEntry.Data.Simple -> {
+            is ChatEntry.Data.Plain -> {
                 data.message?.let {
                     holder.bind(
                         originalMessage = data.message,
@@ -125,26 +148,7 @@ class ChatAdapter(
                     )
                 }
             }
-        }
-
-        if (chatMessage is ChatEntry.WithHeader) {
-            /*
-            if (headerImage != null) {
-                pointReward?.getUrl(screenDensity)?.let { url ->
-                    builder.append("  ")
-                    images.add(Image(url, imageIndex++, imageIndex++, false))
-                    badgesCount++
-                }
-
-                builder.append("${pointReward?.rewardCost}\n")
-                imageIndex += (pointReward?.rewardCost?.toString()?.length ?: 0) + 1
-            }
-            */
-
-            holder.noticeTitle?.apply {
-                text = chatMessage.header
-                isVisible = text.isNotEmpty()
-            }
+            null -> holder.clearMessage()
         }
     }
 
@@ -154,20 +158,6 @@ class ChatAdapter(
         var badgesCount = 0
 
         val builder = SpannableStringBuilder()
-
-        val timestamp: String? =
-            chatMessage.timestamp?.formatTimestamp(context)
-
-        if (enableTimestamps && timestamp != null) {
-            builder.append("$timestamp ")
-            builder.setSpan(
-                ForegroundColorSpan(defaultChatColor),
-                imageIndex,
-                imageIndex + timestamp.length,
-                SPAN_INCLUSIVE_INCLUSIVE
-            )
-            imageIndex += timestamp.length + 1
-        }
 
         chatMessage.badges?.forEach { chatBadge ->
             val badge: TwitchBadge? =
@@ -512,7 +502,7 @@ class ChatAdapter(
         super.onViewAttachedToWindow(holder)
         if (!animateEmotes) return
 
-        (holder.textView.text as? Spannable)
+        (holder.message.text as? Spannable)
             ?.getSpans<ImageSpan>()
             ?.map { it.drawable }
             ?.filterIsInstance<Animatable>()
@@ -523,7 +513,7 @@ class ChatAdapter(
         super.onViewDetachedFromWindow(holder)
         if (!animateEmotes) return
 
-        (holder.textView.text as? Spannable)
+        (holder.message.text as? Spannable)
             ?.getSpans<ImageSpan>()
             ?.map { it.drawable }
             ?.filterIsInstance<Animatable>()
@@ -580,15 +570,23 @@ class ChatAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val textView: TextView = itemView.findViewById(R.id.textView_chatMessage)
+        val message: TextView = itemView.findViewById(R.id.textView_chatMessage)
         val noticeTitle: TextView? = itemView.findViewById(R.id.textView_chatNoticeTitle)
+        private val messageContainer: ViewGroup? = itemView.findViewById(R.id.messageContainer)
+        private val timestamp: TextView = itemView.findViewById(R.id.textView_timestamp)
+
+        fun clearMessage() {
+            messageContainer?.isVisible = false
+        }
 
         fun bind(
             originalMessage: CharSequence,
             formattedMessage: Spannable,
             userId: String?
         ) {
-            textView.apply {
+            messageContainer?.isVisible = true
+
+            message.apply {
                 text = formattedMessage
                 movementMethod = LinkMovementMethod.getInstance()
                 setOnClickListener {
@@ -598,6 +596,15 @@ class ChatAdapter(
                         userId = userId
                     )
                 }
+            }
+        }
+
+        fun bindTimestamp(timestamp: String?) {
+            if (timestamp.isNullOrEmpty()) {
+                this.timestamp.isVisible = false
+            } else {
+                this.timestamp.isVisible = true
+                this.timestamp.text = timestamp
             }
         }
     }

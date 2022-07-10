@@ -7,11 +7,10 @@ import kotlinx.datetime.Instant
 
 sealed class ChatEntry {
 
-    abstract val data: Data
+    abstract val data: Data?
+    abstract val timestamp: Instant?
 
     sealed interface Data {
-
-        val timestamp: Instant?
 
         class Rich(
             val userId: String?,
@@ -21,23 +20,23 @@ sealed class ChatEntry {
             val message: String?,
             val color: String?,
             val emotes: List<TwitchEmote>?,
-            val badges: List<Badge>?,
-            override val timestamp: Instant?
+            val badges: List<Badge>?
         ) : Data
 
-        class Simple(
-            val message: String?,
-            override val timestamp: Instant?
+        class Plain(
+            val message: String?
         ) : Data
     }
 
-    data class Plain(
-        override val data: Data
+    data class Simple(
+        override val data: Data,
+        override val timestamp: Instant?
     ) : ChatEntry()
 
-    data class WithHeader(
+    data class Highlighted(
         val header: String?,
         val headerImage: RemoteImage? = null,
-        override val data: Data
+        override val data: Data?,
+        override val timestamp: Instant?
     ) : ChatEntry()
 }

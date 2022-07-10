@@ -59,29 +59,6 @@ class ChatViewModel @Inject constructor(
     private val chatEntryMapper: ChatEntryMapper
 ) : BaseViewModel() {
 
-    val recentEmotes: LiveData<List<EmoteSetItem>> by lazy {
-        MediatorLiveData<List<EmoteSetItem>>().apply {
-            addSource(emotesFromSets) { twitch ->
-                removeSource(emotesFromSets)
-                addSource(_otherEmotes) { other ->
-                    removeSource(_otherEmotes)
-
-                    val knownEmotes =
-                        (twitch + other).filterIsInstance<EmoteSetItem.Emote>()
-                            .map { it.emote }
-
-                    addSource(playerRepository.loadRecentEmotes()) { recent ->
-                        value = recent
-                            .filter { recentEmote ->
-                                knownEmotes.any { emote -> emote.name == recentEmote.name }
-                            }
-                            .map { emote -> EmoteSetItem.Emote(emote) }
-                    }
-                }
-            }
-        }
-    }
-
     private val _otherEmotes = MutableLiveData<List<EmoteSetItem>>()
     val otherEmotes: LiveData<List<EmoteSetItem>>
         get() = _otherEmotes
@@ -121,6 +98,29 @@ class ChatViewModel @Inject constructor(
 
     val chatters: Collection<Chatter>
         get() = chatStateListener?.chatters?.values.orEmpty()
+
+
+    val recentEmotes: LiveData<List<EmoteSetItem>> =
+        MediatorLiveData<List<EmoteSetItem>>().apply {
+            addSource(emotesFromSets) { twitch ->
+                removeSource(emotesFromSets)
+                addSource(_otherEmotes) { other ->
+                    removeSource(_otherEmotes)
+
+                    val knownEmotes =
+                        (twitch + other).filterIsInstance<EmoteSetItem.Emote>()
+                            .map { it.emote }
+
+                    addSource(playerRepository.loadRecentEmotes()) { recent ->
+                        value = recent
+                            .filter { recentEmote ->
+                                knownEmotes.any { emote -> emote.name == recentEmote.name }
+                            }
+                            .map { emote -> EmoteSetItem.Emote(emote) }
+                    }
+                }
+            }
+        }
 
     private var maxAdapterCount: Int = -1
 
@@ -391,7 +391,7 @@ class ChatViewModel @Inject constructor(
                 }
 
                 val newList = _chatMessages.value.orEmpty() +
-                    messages.mapNotNull { chatEntryMapper.map(it) }
+                        messages.mapNotNull { chatEntryMapper.map(it) }
 
                 // We alternate the background of each chat row.
                 // If we remove just one item, the backgrounds will shift, so we always need to remove

@@ -15,11 +15,13 @@ import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.palette.graphics.Palette
+import androidx.palette.graphics.Palette.Swatch
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.User
@@ -28,6 +30,7 @@ import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.ensureMinimumAlpha
+import com.github.andreyasadchy.xtra.ui.common.isLightColor
 import com.github.andreyasadchy.xtra.ui.view.chat.EmotesFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import com.github.andreyasadchy.xtra.ui.view.chat.OnEmoteClickedListener
@@ -365,33 +368,40 @@ class ChannelChatFragment :
 
             (drawable as? BitmapDrawable)?.bitmap?.let { bitmap ->
                 Palette.Builder(bitmap).generate { palette ->
-                    val swatch = palette?.dominantSwatch ?: palette?.dominantSwatch
-                    swatch?.apply {
-                        val backgroundColor = rgb
-                        val textColor = ensureMinimumAlpha(
-                            foreground = titleTextColor,
-                            background = backgroundColor
-                        )
-
-                        ViewCompat.setBackground(
-                            toolbar,
-                            MaterialShapeDrawable.createWithElevationOverlay(
-                                toolbar.context,
-                                ViewCompat.getElevation(toolbar)
-                            ).apply {
-                                fillColor = ColorStateList.valueOf(backgroundColor)
-                            }
-                        )
-
-                        toolbar.setNavigationIconTint(textColor)
-                        toolbar.setTitleTextColor(textColor)
-                        toolbar.setSubtitleTextColor(textColor)
-                        toolbar.menu.forEach { item ->
-                            DrawableCompat.setTint(item.icon, textColor)
-                        }
-                    }
+                    (palette?.dominantSwatch ?: palette?.dominantSwatch)
+                        ?.let { swatch -> updateToolbarColor(swatch) }
                 }
             }
+        }
+    }
+
+    private fun updateToolbarColor(swatch: Swatch) {
+        val backgroundColor = swatch.rgb
+        val textColor = ensureMinimumAlpha(
+            foreground = swatch.titleTextColor,
+            background = backgroundColor
+        )
+
+        ViewCompat.setBackground(
+            toolbar,
+            MaterialShapeDrawable.createWithElevationOverlay(
+                toolbar.context,
+                ViewCompat.getElevation(toolbar)
+            ).apply {
+                fillColor = ColorStateList.valueOf(backgroundColor)
+            }
+        )
+
+        toolbar.setNavigationIconTint(textColor)
+        toolbar.setTitleTextColor(textColor)
+        toolbar.setSubtitleTextColor(textColor)
+        toolbar.menu.forEach { item ->
+            DrawableCompat.setTint(item.icon, textColor)
+        }
+
+        activity?.let { activity ->
+            WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+                .isAppearanceLightStatusBars = !textColor.isLightColor
         }
     }
 

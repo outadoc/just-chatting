@@ -94,3 +94,6 @@ private fun colorToXyz(@ColorInt color: Int): DoubleArray {
 private fun xyzToColor(x: Double, y: Double, z: Double): Int = ColorUtils.XYZToColor(x, y, z)
 
 fun Int.colorToHex(): String = "#%06X".format(0xFFFFFF and this)
+
+val Int.isLightColor: Boolean
+    get() = ColorUtils.calculateLuminance(this) > 0.5

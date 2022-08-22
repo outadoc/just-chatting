@@ -6,7 +6,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.feature.irc.ChatMessageParser
-import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.chat.BttvEmote
 import com.github.andreyasadchy.xtra.model.chat.ChatCommand
@@ -27,7 +26,6 @@ import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntry
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntryMapper
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
-import com.github.andreyasadchy.xtra.util.chat.LoggedInChatThread
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.OnRoomStateReceivedListener
@@ -42,7 +40,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import java.util.*
+import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.collections.component1
 import kotlin.collections.component2
@@ -115,7 +113,7 @@ class ChatViewModel @Inject constructor(
     private var maxAdapterCount: Int = -1
 
     fun startLive(
-        user: User,
+        user: User.LoggedIn,
         helixClientId: String?,
         channelId: String?,
         channelLogin: String?,
@@ -478,14 +476,14 @@ class ChatViewModel @Inject constructor(
         }
 
         fun addEmotes(list: List<Emote>) {
-            if (user is LoggedIn) {
+            if (user is User.LoggedIn) {
                 _allEmotesMap.putAll(list.associateBy { it.name })
             }
         }
     }
 
     inner class LiveChatController(
-        private val user: User,
+        private val user: User.LoggedIn,
         private val channelId: String?,
         channelLogin: String,
         private val chatStateListener: ChatStateListener
@@ -495,16 +493,8 @@ class ChatViewModel @Inject constructor(
             LiveChatThread(
                 scope = viewModelScope,
                 channelName = channelLogin,
-                listener = chatStateListener.messageListener,
-                parser = chatMessageParser
-            )
-
-        private val loggedInChat: LoggedInChatThread =
-            LoggedInChatThread(
-                scope = viewModelScope,
                 userLogin = user.login,
                 userToken = user.helixToken,
-                channelName = channelLogin,
                 listener = chatStateListener.messageListener,
                 parser = chatMessageParser
             )
@@ -524,7 +514,7 @@ class ChatViewModel @Inject constructor(
             screenDensity: Float,
             isDarkTheme: Boolean
         ) {
-            loggedInChat.send(message)
+            liveChat.send(message)
 
             val usedEmotes = hashSetOf<RecentEmote>()
             val currentTime = Clock.System.now().toEpochMilliseconds()
@@ -553,13 +543,7 @@ class ChatViewModel @Inject constructor(
         }
 
         override suspend fun start() {
-            liveChat.start(
-                isLoggedIn = user is LoggedIn
-            )
-
-            if (user is LoggedIn) {
-                loggedInChat.start()
-            }
+            liveChat.start()
 
             if (!channelId.isNullOrBlank()) {
                 pubSub?.start()
@@ -568,7 +552,6 @@ class ChatViewModel @Inject constructor(
 
         override fun stop() {
             liveChat.disconnect()
-            loggedInChat.disconnect()
             pubSub?.disconnect()
         }
     }

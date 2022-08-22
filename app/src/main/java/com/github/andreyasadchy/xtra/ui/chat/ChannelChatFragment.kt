@@ -11,21 +11,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.palette.graphics.Palette
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.LoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.ensureMinimumAlpha
+import com.github.andreyasadchy.xtra.ui.view.chat.EmotesFragment
 import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import com.github.andreyasadchy.xtra.ui.view.chat.OnEmoteClickedListener
 import com.github.andreyasadchy.xtra.ui.view.chat.StreamInfoDialog
@@ -38,7 +41,10 @@ import com.github.andreyasadchy.xtra.util.loadImage
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.google.android.material.shape.MaterialShapeDrawable
-import kotlinx.android.synthetic.main.fragment_channel.*
+import kotlinx.android.synthetic.main.fragment_channel.appBar
+import kotlinx.android.synthetic.main.fragment_channel.chatInputView
+import kotlinx.android.synthetic.main.fragment_channel.chatView
+import kotlinx.android.synthetic.main.fragment_channel.toolbar
 
 class ChannelChatFragment :
     BaseNetworkFragment(),
@@ -208,7 +214,12 @@ class ChannelChatFragment :
         val prefs = requireContext().prefs()
 
         val user = User.get(requireContext())
-        val userIsLoggedIn = user is LoggedIn
+
+        if (user !is User.LoggedIn) {
+            Toast.makeText(requireContext(), "You must be logged in to chat.", Toast.LENGTH_SHORT)
+                .show()
+            return
+        }
 
         viewModel.startLive(
             user = user,
@@ -245,28 +256,36 @@ class ChannelChatFragment :
             chatView.scrollToBottom()
         }
 
-        if (userIsLoggedIn) {
-            user.login?.let { chatView.setUsername(it) }
-
-            viewModel.chatters.observe(viewLifecycleOwner, chatInputView::setChatters)
-            viewModel.messagePostConstraint.observe(
-                viewLifecycleOwner,
-                chatInputView::setMessagePostConstraint
-            )
-
-            val emotesObserver = { emoteSets: List<EmoteSetItem> ->
-                val emotes = emoteSets.mapNotNull { (it as? EmoteSetItem.Emote)?.emote }
-                chatView.addEmotes(emotes)
-                chatInputView.addEmotes(emotes)
-            }
-
-            viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
-            viewModel.recentEmotes.observe(viewLifecycleOwner, emotesObserver)
-            viewModel.otherEmotes.observe(viewLifecycleOwner, emotesObserver)
+        chatInputView.emotePickerSelectedTab.observe(viewLifecycleOwner) { position ->
+            val fragment = childFragmentManager.findFragmentByTag("f$position")
+            (fragment as? Scrollable)?.scrollToTop()
         }
 
-        chatInputView.enableChatInteraction(userIsLoggedIn)
+        chatInputView.emotePickerAdapter = object : FragmentStateAdapter(this) {
 
+            override fun createFragment(position: Int): Fragment =
+                EmotesFragment.newInstance(position)
+
+            override fun getItemCount(): Int = 3
+        }
+
+        chatView.setUsername(user.login)
+
+        viewModel.chatters.observe(viewLifecycleOwner, chatInputView::setChatters)
+        viewModel.messagePostConstraint.observe(
+            viewLifecycleOwner,
+            chatInputView::setMessagePostConstraint
+        )
+
+        val emotesObserver = { emoteSets: List<EmoteSetItem> ->
+            val emotes = emoteSets.mapNotNull { (it as? EmoteSetItem.Emote)?.emote }
+            chatView.addEmotes(emotes)
+            chatInputView.addEmotes(emotes)
+        }
+
+        viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
+        viewModel.recentEmotes.observe(viewLifecycleOwner, emotesObserver)
+        viewModel.otherEmotes.observe(viewLifecycleOwner, emotesObserver)
         viewModel.roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
         viewModel.chatMessages.observe(viewLifecycleOwner, chatView::submitList)
         viewModel.globalBadges.observe(viewLifecycleOwner, chatView::addGlobalBadges)

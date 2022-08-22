@@ -7,8 +7,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.NotValidated
 import com.github.andreyasadchy.xtra.model.User
+import com.github.andreyasadchy.xtra.model.validate
 import com.github.andreyasadchy.xtra.repository.AuthRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
@@ -55,27 +55,32 @@ class MainViewModel @Inject constructor(
                 }?.firstOrNull()
                 _user.postValue(user)
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
     }
 
     fun validate(helixClientId: String?, activity: Activity) {
-        val user = User.get(activity)
-        if (user is NotValidated) {
+        val user = User.get(activity.applicationContext)
+        if (user is User.NotValidated) {
             viewModelScope.launch {
                 try {
-                    if (!user.helixToken.isNullOrBlank()) {
-                        val response =
-                            authRepository.validate(TwitchApiHelper.addTokenPrefixHelix(user.helixToken))
-                        if (response?.clientId == helixClientId) {
-                            User.validated()
+                    val token = user.helixToken
+                    if (!token.isNullOrBlank()) {
+                        val response = authRepository.validate(
+                            TwitchApiHelper.addTokenPrefixHelix(token)
+                        )
+
+                        val validatedUser = user.validate()
+                        if (response?.clientId == helixClientId && validatedUser != null) {
+                            User.set(activity.applicationContext, validatedUser)
                         } else {
                             throw IllegalStateException("401")
                         }
                     }
                 } catch (e: Exception) {
                     if ((e is IllegalStateException && e.message == "401") || (e is HttpException && e.code() == 401)) {
-                        User.set(activity, null)
+                        User.set(activity.applicationContext, null)
                         activity.toast(R.string.token_expired)
                         activity.startActivityForResult(
                             Intent(activity, LoginActivity::class.java),
@@ -85,6 +90,7 @@ class MainViewModel @Inject constructor(
                 }
             }
         }
+
         TwitchApiHelper.checkedValidation = true
     }
 }

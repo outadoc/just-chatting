@@ -31,7 +31,14 @@ import com.github.andreyasadchy.xtra.ui.view.AlternatingBackgroundItemDecoration
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntry
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.prefs
-import kotlinx.android.synthetic.main.view_chat.view.*
+import kotlinx.android.synthetic.main.view_chat.view.btnDown
+import kotlinx.android.synthetic.main.view_chat.view.flexboxChatMode
+import kotlinx.android.synthetic.main.view_chat.view.recyclerView
+import kotlinx.android.synthetic.main.view_chat.view.textEmote
+import kotlinx.android.synthetic.main.view_chat.view.textFollowers
+import kotlinx.android.synthetic.main.view_chat.view.textSlow
+import kotlinx.android.synthetic.main.view_chat.view.textSubs
+import kotlinx.android.synthetic.main.view_chat.view.textUnique
 import kotlin.time.Duration
 
 class ChatView : LinearLayout {

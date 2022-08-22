@@ -17,8 +17,6 @@ import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
-import com.github.andreyasadchy.xtra.model.LoggedIn
-import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.id.ValidationResponse
 import com.github.andreyasadchy.xtra.repository.AuthRepository
@@ -29,7 +27,10 @@ import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.toast
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_login.havingTrouble
+import kotlinx.android.synthetic.main.activity_login.progressBar
+import kotlinx.android.synthetic.main.activity_login.webView
+import kotlinx.android.synthetic.main.activity_login.webViewContainer
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.io.IOException
@@ -50,14 +51,15 @@ class LoginActivity : AppCompatActivity(), Injectable {
         val helixClientId = prefs().getString(C.HELIX_CLIENT_ID, "") ?: ""
         val user = User.get(this)
 
-        if (user !is NotLoggedIn) {
+        if (user !is User.NotLoggedIn) {
             TwitchApiHelper.checkedValidation = false
             User.set(this, null)
 
             lifecycleScope.launch {
                 try {
-                    if (!user.helixToken.isNullOrBlank()) {
-                        repository.revoke(helixClientId, user.helixToken)
+                    val token = user.helixToken
+                    if (!token.isNullOrBlank()) {
+                        repository.revoke(helixClientId, token)
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -202,7 +204,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
 
                 User.set(
                     this@LoginActivity,
-                    LoggedIn(
+                    User.LoggedIn(
                         id = response.userId,
                         login = response.login,
                         helixToken = token

@@ -18,9 +18,9 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.core.view.updateLayoutParams
 import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.findFragment
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.BttvEmote
 import com.github.andreyasadchy.xtra.model.chat.Chatter
@@ -30,7 +30,6 @@ import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.ui.chat.MessagePostConstraint
-import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
@@ -40,8 +39,16 @@ import com.github.andreyasadchy.xtra.util.showKeyboard
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.*
-import kotlinx.android.synthetic.main.view_chat_input.view.*
+import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.image
+import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.name
+import kotlinx.android.synthetic.main.view_chat_input.view.editText
+import kotlinx.android.synthetic.main.view_chat_input.view.emotePicker
+import kotlinx.android.synthetic.main.view_chat_input.view.emotePickerPager
+import kotlinx.android.synthetic.main.view_chat_input.view.emotePickerTabLayout
+import kotlinx.android.synthetic.main.view_chat_input.view.messageView
+import kotlinx.android.synthetic.main.view_chat_input.view.progressCannotSendUntil
+import kotlinx.android.synthetic.main.view_chat_input.view.send
+import kotlinx.android.synthetic.main.view_chat_input.view.textInputLayoutChat
 import kotlinx.datetime.Clock
 
 class ChatInputView : LinearLayout {
@@ -50,7 +57,9 @@ class ChatInputView : LinearLayout {
         fun send(message: CharSequence)
     }
 
-    private var messagingEnabled = false
+    private val _emotePickerSelectedTab = MutableLiveData<Int>()
+    val emotePickerSelectedTab: LiveData<Int> = _emotePickerSelectedTab
+
     private var hasRecentEmotes: Boolean? = null
 
     private val autoCompleteAdapter = AutoCompleteAdapter(context)
@@ -77,9 +86,45 @@ class ChatInputView : LinearLayout {
     private fun init(context: Context) {
         View.inflate(context, R.layout.view_chat_input, this)
         orientation = VERTICAL
-    }
 
-    init {
+        editText.setAdapter(autoCompleteAdapter)
+        editText.setTokenizer(SpaceTokenizer())
+
+        editText.addTextChangedListener(afterTextChanged = { text ->
+            send.isVisible = text?.isNotBlank() == true
+        })
+
+        editText.setOnKeyListener { _, keyCode, event ->
+            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                sendMessage()
+            } else {
+                false
+            }
+        }
+
+        textInputLayoutChat.setStartIconOnClickListener {
+            // TODO add animation
+            if (emotePicker.isGone) {
+                editText.hideKeyboard()
+                emotePicker.isVisible = true
+            } else {
+                editText.showKeyboard()
+                emotePicker.isVisible = false
+            }
+        }
+
+        send.setOnClickListener { sendMessage() }
+        messageView.isVisible = true
+
+        emotePickerTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+                val position = tab?.position ?: return
+                _emotePickerSelectedTab.postValue(position)
+            }
+        })
+
         ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
             val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
@@ -105,21 +150,31 @@ class ChatInputView : LinearLayout {
         }
     }
 
+    var emotePickerAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>?
+        get() = emotePickerPager.adapter
+        set(value) {
+            emotePickerPager.adapter = value
+
+            TabLayoutMediator(emotePickerTabLayout, emotePickerPager) { tab, position ->
+                tab.text = when (position) {
+                    0 -> context.getString(R.string.emote_tab_recent)
+                    1 -> context.getString(R.string.emote_tab_twitch)
+                    else -> context.getString(R.string.emote_tab_others)
+                }
+            }.attach()
+        }
+
     fun addEmotes(list: List<Emote>) {
         when (list.firstOrNull()) {
             is BttvEmote, is FfzEmote, is StvEmote -> {
-                if (messagingEnabled) {
-                    autoCompleteAdapter.addAll(
-                        list.map { AutoCompleteItem.EmoteItem(it) }
-                    )
-                }
+                autoCompleteAdapter.addAll(
+                    list.map { AutoCompleteItem.EmoteItem(it) }
+                )
             }
             is TwitchEmote -> {
-                if (messagingEnabled) {
-                    autoCompleteAdapter.addAll(
-                        list.map { AutoCompleteItem.EmoteItem(it) }
-                    )
-                }
+                autoCompleteAdapter.addAll(
+                    list.map { AutoCompleteItem.EmoteItem(it) }
+                )
             }
             is RecentEmote -> hasRecentEmotes = true
         }
@@ -198,70 +253,6 @@ class ChatInputView : LinearLayout {
 
     fun setMessage(text: CharSequence) {
         editText.setText(text)
-    }
-
-    fun enableChatInteraction(enableMessaging: Boolean) {
-        if (enableMessaging) {
-            editText.setAdapter(autoCompleteAdapter)
-            editText.setTokenizer(SpaceTokenizer())
-
-            editText.addTextChangedListener(afterTextChanged = { text ->
-                send.isVisible = text?.isNotBlank() == true
-            })
-
-            editText.setOnKeyListener { _, keyCode, event ->
-                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    sendMessage()
-                } else {
-                    false
-                }
-            }
-
-            textInputLayoutChat.setStartIconOnClickListener {
-                // TODO add animation
-                if (emotePicker.isGone) {
-                    editText.hideKeyboard()
-                    emotePicker.isVisible = true
-                } else {
-                    editText.showKeyboard()
-                    emotePicker.isVisible = false
-                }
-            }
-
-            send.setOnClickListener { sendMessage() }
-            messageView.isVisible = true
-
-            emotePickerPager.adapter = object : FragmentStateAdapter(findFragment<Fragment>()) {
-
-                override fun createFragment(position: Int): Fragment =
-                    EmotesFragment.newInstance(position)
-
-                override fun getItemCount(): Int = 3
-            }
-
-            TabLayoutMediator(emotePickerTabLayout, emotePickerPager) { tab, position ->
-                tab.text = when (position) {
-                    0 -> context.getString(R.string.emote_tab_recent)
-                    1 -> context.getString(R.string.emote_tab_twitch)
-                    else -> context.getString(R.string.emote_tab_others)
-                }
-            }.attach()
-
-            emotePickerTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-                override fun onTabSelected(tab: TabLayout.Tab?) {}
-                override fun onTabUnselected(tab: TabLayout.Tab?) {}
-                override fun onTabReselected(tab: TabLayout.Tab?) {
-                    val position = tab?.position ?: return
-                    val fragment = findFragment<Fragment>()
-                        .childFragmentManager
-                        .findFragmentByTag("f$position")
-
-                    (fragment as? Scrollable)?.scrollToTop()
-                }
-            })
-
-            messagingEnabled = true
-        }
     }
 
     private fun sendMessage(): Boolean {

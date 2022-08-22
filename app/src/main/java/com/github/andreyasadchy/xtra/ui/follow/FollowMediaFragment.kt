@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.NotLoggedIn
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
@@ -25,7 +24,10 @@ import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.fragment_media.*
+import kotlinx.android.synthetic.main.fragment_media.appBar
+import kotlinx.android.synthetic.main.fragment_media.tabLayoutMedia
+import kotlinx.android.synthetic.main.fragment_media.toolbar
+import kotlinx.android.synthetic.main.fragment_media.viewPagerMedia
 
 class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
 
@@ -61,7 +63,7 @@ class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
             val user = User.get(requireContext())
 
             menu.findItem(R.id.login).title =
-                if (user !is NotLoggedIn) getString(R.string.log_out)
+                if (user !is User.NotLoggedIn) getString(R.string.log_out)
                 else getString(R.string.log_in)
 
             setOnMenuItemClickListener { menuItem ->
@@ -80,7 +82,7 @@ class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
                     }
                     R.id.login -> {
                         when (user) {
-                            is NotLoggedIn -> onLogin()
+                            is User.NotLoggedIn -> onLogin()
                             else -> onLogout(user)
                         }
                         true

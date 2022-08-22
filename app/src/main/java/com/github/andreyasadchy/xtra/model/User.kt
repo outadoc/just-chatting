@@ -6,11 +6,29 @@ import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.prefs
 
-sealed class User(
-    val id: String?,
-    val login: String?,
-    val helixToken: String?
-) {
+sealed class User {
+
+    abstract val id: String?
+    abstract val login: String?
+    abstract val helixToken: String?
+
+    data class LoggedIn(
+        override val id: String,
+        override val login: String,
+        override val helixToken: String
+    ) : User()
+
+    data class NotValidated(
+        override val id: String?,
+        override val login: String?,
+        override val helixToken: String?
+    ) : User()
+
+    object NotLoggedIn : User() {
+        override val id: String? = null
+        override val login: String? = null
+        override val helixToken: String? = null
+    }
 
     companion object {
         private var user: User? = null
@@ -22,12 +40,12 @@ sealed class User(
                     val name = getString(C.USERNAME, null)
                     val helixToken = getString(C.TOKEN, null)
                     if (TwitchApiHelper.checkedValidation) {
-                        LoggedIn(id, name, helixToken)
+                        LoggedIn(id, name!!, helixToken!!)
                     } else {
                         NotValidated(id, name, helixToken)
                     }
                 } else {
-                    NotLoggedIn()
+                    NotLoggedIn
                 }
             }.also { user = it }
         }
@@ -46,39 +64,10 @@ sealed class User(
                 }
             }
         }
-
-        fun validated() {
-            user = LoggedIn(user as NotValidated)
-        }
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as User
-
-        if (id != other.id) return false
-        if (login != other.login) return false
-        if (helixToken != other.helixToken) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = id.hashCode()
-        result = 31 * result + login.hashCode()
-        result = 31 * result + helixToken.hashCode()
-        return result
     }
 }
 
-class LoggedIn(id: String?, login: String?, helixToken: String?) :
-    User(id, login, helixToken) {
-    constructor(user: NotValidated) : this(user.id, user.login, user.helixToken)
+fun User.NotValidated.validate(): User.LoggedIn? {
+    if (id == null || login == null || helixToken == null) return null
+    return User.LoggedIn(id, login, helixToken)
 }
-
-class NotValidated(id: String?, login: String?, helixToken: String?) :
-    User(id, login, helixToken)
-
-class NotLoggedIn : User(null, null, null)

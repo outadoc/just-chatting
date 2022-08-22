@@ -12,32 +12,43 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import java.io.IOException
-import kotlin.random.Random
 
 class LiveChatThread(
     scope: CoroutineScope,
     private val channelName: String,
+    private val userLogin: String,
+    private val userToken: String,
     private val listener: OnMessageReceivedListener,
     private val parser: ChatMessageParser
 ) : BaseChatThread(scope, listener, channelName) {
 
-    fun start(isLoggedIn: Boolean) {
-        connect(socketListener = LiveChatThreadListener(isLoggedIn))
+    fun start() {
+        connect(socketListener = LiveChatThreadListener())
     }
 
-    private inner class LiveChatThreadListener(
-        private val isLoggedIn: Boolean
-    ) : WebSocketListener() {
+    fun send(message: CharSequence) {
+        try {
+            socket?.send("PRIVMSG $hashChannelName :$message")
+            Log.d(TAG, "Sent message to $hashChannelName: $message")
+        } catch (e: IOException) {
+            Log.e(TAG, "Error sending message", e)
+            listener.onCommand(
+                Command.SendMessageError(throwable = e)
+            )
+        }
+    }
+
+    private inner class LiveChatThreadListener : WebSocketListener() {
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
             with(webSocket) {
-                // random number between 1000 and 9999
-                send("NICK justinfan${Random.nextInt(1000, 10_000)}")
+                send("PASS oauth:$userToken")
+                send("NICK $userLogin")
                 send("CAP REQ :twitch.tv/tags twitch.tv/commands")
                 send("JOIN $hashChannelName")
             }
 
-            Log.d(TAG, "Successfully connected to $hashChannelName")
+            Log.d(TAG, "Connected to #$hashChannelName")
 
             listener.onCommand(
                 Command.Join(
@@ -67,16 +78,14 @@ class LiveChatThread(
                 is Command.SendMessageError,
                 is Command.SocketError,
                 is Command.Timeout,
+                is Command.Notice,
+                is UserState,
                 is RoomState -> {
                     listener.onCommand(command)
                 }
                 PingCommand -> {
                     sendPong()
                 }
-                is Command.Notice -> {
-                    if (!isLoggedIn) listener.onCommand(command)
-                }
-                is UserState,
                 null -> Unit
             }
         }

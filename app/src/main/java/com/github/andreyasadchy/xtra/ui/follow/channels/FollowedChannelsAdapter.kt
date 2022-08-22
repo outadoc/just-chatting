@@ -9,7 +9,12 @@ import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.util.formatTime
 import com.github.andreyasadchy.xtra.util.loadImage
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.*
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.localText
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.twitchText
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userFollowed
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userImage
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userStream
+import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.username
 import kotlinx.datetime.Instant
 
 class FollowedChannelsAdapter(

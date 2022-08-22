@@ -116,6 +116,16 @@ class ChatView : LinearLayout {
             }
         }
 
+        recyclerView.layoutManager = object : LinearLayoutManager(context, VERTICAL, false) {
+            override fun onLayoutCompleted(state: RecyclerView.State?) {
+                super.onLayoutCompleted(state)
+
+                if (!isChatTouched && btnDown.isGone) {
+                    scrollToBottom()
+                }
+            }
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
             btnDown.updateLayoutParams<MarginLayoutParams> {
@@ -127,10 +137,6 @@ class ChatView : LinearLayout {
 
     fun submitList(list: List<ChatEntry>) {
         adapter.submitList(list)
-
-        if (!isChatTouched && btnDown.isGone) {
-            scrollToBottom()
-        }
     }
 
     fun setOnMessageClickListener(callback: OnMessageClickListener) {

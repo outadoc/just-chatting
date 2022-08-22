@@ -45,7 +45,6 @@ class ChatView : LinearLayout {
 
     private lateinit var adapter: ChatAdapter
 
-    private var isChatTouched = false
     private var hasRecentEmotes: Boolean? = null
 
     private var messageClickListener: OnMessageClickListener? = null
@@ -85,8 +84,28 @@ class ChatView : LinearLayout {
         recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null
-            it.layoutManager = LinearLayoutManager(context).apply {
-                stackFromEnd = true
+            it.layoutManager = object : LinearLayoutManager(context) {
+
+                init {
+                    stackFromEnd = true
+                }
+
+                private var isChatTouched = false
+
+                override fun onScrollStateChanged(state: Int) {
+                    super.onScrollStateChanged(state)
+                    isChatTouched = state != RecyclerView.SCROLL_STATE_IDLE
+                    btnDown.isVisible = shouldShowButton()
+                }
+
+                override fun onLayoutCompleted(state: RecyclerView.State?) {
+                    super.onLayoutCompleted(state)
+                    state ?: return
+
+                    if (!isChatTouched && btnDown.isGone) {
+                        scrollToPosition(state.itemCount - 1)
+                    }
+                }
             }
 
             val typedValue = TypedValue()
@@ -99,30 +118,12 @@ class ChatView : LinearLayout {
                     evenBackground = altBackground
                 )
             )
-
-            it.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    super.onScrollStateChanged(recyclerView, newState)
-                    isChatTouched = newState == RecyclerView.SCROLL_STATE_DRAGGING
-                    btnDown.isVisible = shouldShowButton()
-                }
-            })
         }
 
         btnDown.setOnClickListener {
             post {
                 scrollToBottom()
                 it.isVisible = !it.isVisible
-            }
-        }
-
-        recyclerView.layoutManager = object : LinearLayoutManager(context, VERTICAL, false) {
-            override fun onLayoutCompleted(state: RecyclerView.State?) {
-                super.onLayoutCompleted(state)
-
-                if (!isChatTouched && btnDown.isGone) {
-                    scrollToBottom()
-                }
             }
         }
 
@@ -190,10 +191,10 @@ class ChatView : LinearLayout {
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-            !textFollowers.isGone ||
-            !textUnique.isGone ||
-            !textSlow.isGone ||
-            !textSubs.isGone
+                    !textFollowers.isGone ||
+                    !textUnique.isGone ||
+                    !textSlow.isGone ||
+                    !textSubs.isGone
     }
 
     fun addGlobalBadges(list: List<TwitchBadge>?) {
@@ -235,7 +236,7 @@ class ChatView : LinearLayout {
 
         val extent = recyclerView.computeVerticalScrollExtent()
         val range = recyclerView.computeVerticalScrollRange()
-        val percentage = (100f * offset / (range - extent).toFloat())
-        return percentage < 100f
+        val ratio = offset / (range - extent)
+        return ratio < 1f
     }
 }

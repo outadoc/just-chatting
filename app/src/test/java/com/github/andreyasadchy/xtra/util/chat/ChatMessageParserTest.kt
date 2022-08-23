@@ -288,6 +288,35 @@ class ChatMessageParserTest {
         }
     }
 
+    @Test
+    fun `Parse PRIVMSG replying to another`() = test {
+        input { "@badge-info=;badges=;client-nonce=8ffba7725e1a778b62f355ec990599ce;color=#B22222;display-name=tpanax;emotes=;first-msg=0;flags=;id=99d64122-2006-4e46-a43f-2b43f0ff9341;mod=0;reply-parent-display-name=Brankhorst;reply-parent-msg-body=On\\sdirait\\sEVE\\son\\sline;reply-parent-msg-id=7ffcf399-8d69-495c-920c-ea15a96eeee4;reply-parent-user-id=108193474;reply-parent-user-login=brankhorst;returning-chatter=0;room-id=28575692;subscriber=0;tmi-sent-ts=1661281318667;turbo=0;user-id=732098026;user-type= :tpanax!tpanax@tpanax.tmi.twitch.tv PRIVMSG #mistermv :@Brankhorst eve s'est inspiré du homeworld 1" }
+        expected {
+            LiveChatMessage(
+                id = "99d64122-2006-4e46-a43f-2b43f0ff9341",
+                userId = "732098026",
+                userLogin = "tpanax",
+                userName = "tpanax",
+                message = "@Brankhorst eve s'est inspiré du homeworld 1",
+                color = "#B22222",
+                isAction = false,
+                emotes = emptyList(),
+                badges = emptyList(),
+                isFirst = false,
+                systemMsg = null,
+                timestamp = Instant.parse("2022-08-23T19:01:58.667Z"),
+                rewardId = null,
+                inReplyTo = LiveChatMessage.InReplyTo(
+                    userName = "Brankhorst",
+                    message = "On dirait EVE on line",
+                    id = "7ffcf399-8d69-495c-920c-ea15a96eeee4",
+                    userId = "108193474",
+                    userLogin = "brankhorst",
+                )
+            )
+        }
+    }
+
     private lateinit var parser: ChatMessageParser
 
     @Before

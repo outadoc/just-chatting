@@ -116,8 +116,17 @@ data class LiveChatMessage(
     val isFirst: Boolean = false,
     val systemMsg: String? = null,
     val timestamp: Instant? = null,
-    val rewardId: String? = null
-) : ChatMessage
+    val rewardId: String? = null,
+    val inReplyTo: InReplyTo? = null
+) : ChatMessage {
+    data class InReplyTo(
+        val id: String,
+        val userName: String,
+        val message: String,
+        val userId: String,
+        val userLogin: String
+    )
+}
 
 object PingCommand : ChatCommand
 

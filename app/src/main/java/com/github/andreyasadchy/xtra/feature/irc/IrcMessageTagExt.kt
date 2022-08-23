@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.feature.irc
 
 import com.github.andreyasadchy.xtra.model.chat.Badge
+import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
@@ -38,6 +39,16 @@ fun Map<String, String?>.parseBadges(): List<Badge>? =
 fun Map<String, String?>.parseTimestamp(): Instant? {
     val prop = this["tmi-sent-ts"] ?: this["rm-received-ts"]
     return prop?.toLong()?.let { Instant.fromEpochMilliseconds(it) }
+}
+
+fun Map<String, String?>.parseParentMessage(): LiveChatMessage.InReplyTo? {
+    return LiveChatMessage.InReplyTo(
+        id = this["reply-parent-msg-id"] ?: return null,
+        message = this["reply-parent-msg-body"] ?: return null,
+        userId = this["reply-parent-user-id"] ?: return null,
+        userLogin = this["reply-parent-user-login"] ?: return null,
+        userName = this["reply-parent-display-name"] ?: return null
+    )
 }
 
 val Map<String, String?>.banDuration: String?

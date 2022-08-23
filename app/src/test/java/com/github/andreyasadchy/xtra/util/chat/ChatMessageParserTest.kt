@@ -8,6 +8,7 @@ import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.PingCommand
 import com.github.andreyasadchy.xtra.model.chat.RoomState
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.model.chat.UserState
 import kotlinx.datetime.Instant
 import org.junit.Assert
 import org.junit.Before
@@ -261,6 +262,28 @@ class ChatMessageParserTest {
         expected {
             Command.ClearChat(
                 timestamp = Instant.parse("2022-01-20T21:54:55.392Z")
+            )
+        }
+    }
+
+    @Test
+    fun `Parse USERSTATE message`() = test {
+        input { "@badge-info=;badges=;color=#F85E10;display-name=outadoc;emote-sets=0,19194,553791,773027,300374282,380519965,477339272,494046698,537206155,592920959,610186276;id=e39d4a41-a7c8-4a24-845d-3e1c26aaf63f;mod=0;subscriber=0;user-type= :tmi.twitch.tv USERSTATE #mistermv" }
+        expected {
+            UserState(
+                emoteSets = listOf(
+                    "0",
+                    "19194",
+                    "553791",
+                    "773027",
+                    "300374282",
+                    "380519965",
+                    "477339272",
+                    "494046698",
+                    "537206155",
+                    "592920959",
+                    "610186276"
+                )
             )
         }
     }

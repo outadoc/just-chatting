@@ -15,7 +15,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
@@ -29,7 +28,7 @@ import kotlinx.android.synthetic.main.fragment_media.tabLayoutMedia
 import kotlinx.android.synthetic.main.fragment_media.toolbar
 import kotlinx.android.synthetic.main.fragment_media.viewPagerMedia
 
-class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
+class FollowMediaFragment : Fragment(), Scrollable {
 
     companion object {
         private const val LOGGED_IN = "logged_in"
@@ -186,12 +185,6 @@ class FollowMediaFragment : BaseNetworkFragment(), Scrollable {
 
     private fun ViewPager2.findCurrentFragment(): Fragment? {
         return childFragmentManager.findFragmentByTag("f$currentItem")
-    }
-
-    override fun initialize() {
-    }
-
-    override fun onNetworkRestored() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

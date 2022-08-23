@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchFragment
 import com.github.andreyasadchy.xtra.util.showKeyboard
@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.fragment_search.toolbar
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 
-class SearchFragment : BaseNetworkFragment(), Scrollable {
+class SearchFragment : Fragment(), Scrollable {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,9 +60,7 @@ class SearchFragment : BaseNetworkFragment(), Scrollable {
 
             WindowInsetsCompat.CONSUMED
         }
-    }
 
-    override fun initialize() {
         search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             private var job: Job? = null
 
@@ -84,9 +82,6 @@ class SearchFragment : BaseNetworkFragment(), Scrollable {
                 return false
             }
         })
-    }
-
-    override fun onNetworkRestored() {
     }
 
     override fun scrollToTop() {

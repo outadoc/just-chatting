@@ -20,14 +20,15 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Palette.Swatch
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.ui.common.BaseNetworkFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.common.ensureMinimumAlpha
 import com.github.andreyasadchy.xtra.ui.common.isLightColor
@@ -48,13 +49,15 @@ import kotlinx.android.synthetic.main.fragment_channel.appBar
 import kotlinx.android.synthetic.main.fragment_channel.chatInputView
 import kotlinx.android.synthetic.main.fragment_channel.chatView
 import kotlinx.android.synthetic.main.fragment_channel.toolbar
+import javax.inject.Inject
 
 class ChannelChatFragment :
-    BaseNetworkFragment(),
+    Fragment(),
     LifecycleListener,
     MessageClickedDialog.OnButtonClickListener,
     OnEmoteClickedListener,
-    Scrollable {
+    Scrollable,
+    Injectable {
 
     companion object {
         private const val ARG_SHOW_BACK_BUTTON = "show_back_button"
@@ -77,6 +80,9 @@ class ChannelChatFragment :
             }
         }
     }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private val channelViewModel by activityViewModels<ChannelChatViewModel> { viewModelFactory }
     private val chatViewModel by activityViewModels<ChatViewModel> { viewModelFactory }
@@ -163,6 +169,9 @@ class ChannelChatFragment :
             )
             windowInsets
         }
+
+        initializeChannel()
+        initializeChat()
     }
 
     private fun formatChannelUri(channelLogin: String): Uri {
@@ -170,11 +179,6 @@ class ChannelChatFragment :
             .buildUpon()
             .appendPath(channelLogin)
             .build()
-    }
-
-    override fun initialize() {
-        initializeChannel()
-        initializeChat()
     }
 
     private fun initializeChannel() = channelViewModel.let { viewModel ->
@@ -414,17 +418,6 @@ class ChannelChatFragment :
         if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {
             channelViewModel.updateLocalUser(requireContext(), user)
         }
-    }
-
-    override fun onNetworkRestored() {
-        if (isResumed) {
-            chatViewModel.start()
-        }
-
-        channelViewModel.retry(
-            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-            helixToken = requireContext().prefs().getString(C.TOKEN, "")
-        )
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

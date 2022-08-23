@@ -1,10 +1,6 @@
 package com.github.andreyasadchy.xtra.ui.main
 
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
@@ -18,9 +14,7 @@ import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.isNetworkAvailable
 import com.github.andreyasadchy.xtra.util.prefs
-import com.github.andreyasadchy.xtra.util.shortToast
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.HasAndroidInjector
 
@@ -38,54 +32,26 @@ class MainActivity :
         R.id.fragmentContainer
     )
 
-    private val networkReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            viewModel.setNetworkAvailable(isNetworkAvailable)
-        }
-    }
-
     // Lifecycle methods
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val notInitialized = savedInstanceState == null
-
         initNavigation()
         fragNavController.initialize(savedInstanceState = savedInstanceState)
 
-        val prefs = prefs()
-        var flag = notInitialized && !isNetworkAvailable
+        viewModel.validate(
+            helixClientId = prefs().getString(C.HELIX_CLIENT_ID, ""),
+            activity = this
+        )
 
-        viewModel.isNetworkAvailable.observe(this) {
-            it.getContentIfNotHandled()?.let { online ->
-                if (online) {
-                    viewModel.validate(
-                        helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""),
-                        activity = this
-                    )
-                }
-                if (flag) {
-                    shortToast(if (online) R.string.connection_restored else R.string.no_connection)
-                } else {
-                    flag = true
-                }
-            }
-        }
-
-        registerReceiver(networkReceiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
         handleIntent(intent)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         fragNavController.onSaveInstanceState(outState)
-    }
-
-    override fun onDestroy() {
-        unregisterReceiver(networkReceiver)
-        super.onDestroy()
     }
 
     override fun onNewIntent(intent: Intent?) {

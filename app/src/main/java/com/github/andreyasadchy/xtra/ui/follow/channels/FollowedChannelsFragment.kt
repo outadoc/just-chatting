@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
@@ -19,6 +20,7 @@ import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 import kotlinx.android.synthetic.main.fragment_followed_channels.sortBar
 import kotlinx.android.synthetic.main.sort_bar.sortText
+import javax.inject.Inject
 
 class FollowedChannelsFragment :
     PagedListFragment<Follow, FollowedChannelsViewModel, BasePagedListAdapter<Follow>>(),
@@ -38,21 +40,22 @@ class FollowedChannelsFragment :
         return inflater.inflate(R.layout.fragment_followed_channels, container, false)
     }
 
-    override fun initialize() {
-        super.initialize()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         viewModel.sortText.observe(viewLifecycleOwner) {
             sortText.text = it
         }
+
         viewModel.setUser(
             context = requireContext(),
             user = User.get(requireContext()),
             helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
         )
+
         sortBar.setOnClickListener {
-            FollowedChannelsSortDialog.newInstance(
-                viewModel.sort,
-                viewModel.order
-            ).show(childFragmentManager, null)
+            FollowedChannelsSortDialog.newInstance(sort = viewModel.sort, order = viewModel.order)
+                .show(childFragmentManager, null)
         }
     }
 

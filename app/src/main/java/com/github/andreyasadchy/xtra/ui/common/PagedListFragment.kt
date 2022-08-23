@@ -5,19 +5,26 @@ import android.view.View
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
+import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.repository.LoadingState
 import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
 import kotlinx.android.synthetic.main.common_recycler_view_layout.progressBar
 import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 import kotlinx.android.synthetic.main.common_recycler_view_layout.swipeRefresh
+import javax.inject.Inject
 
 abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> :
-    BaseNetworkFragment() {
+    Fragment(), Injectable {
 
     protected abstract val viewModel: VM
     protected abstract val adapter: Adapter
+
+    @Inject
+    protected lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -53,20 +60,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
 
             windowInsets
         }
-    }
 
-    private fun shouldShowButton(): Boolean {
-        val offset = recyclerView.computeVerticalScrollOffset()
-        if (offset < 0) {
-            return false
-        }
-        val extent = recyclerView.computeVerticalScrollExtent()
-        val range = recyclerView.computeVerticalScrollRange()
-        val percentage = (100f * offset / (range - extent).toFloat())
-        return percentage > 3f
-    }
-
-    override fun initialize() {
         viewModel.list.observe(viewLifecycleOwner) {
             adapter.submitList(it)
             nothingHere?.isVisible = it.isEmpty()
@@ -91,7 +85,14 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
         }
     }
 
-    override fun onNetworkRestored() {
-        viewModel.retry()
+    private fun shouldShowButton(): Boolean {
+        val offset = recyclerView.computeVerticalScrollOffset()
+        if (offset < 0) {
+            return false
+        }
+        val extent = recyclerView.computeVerticalScrollExtent()
+        val range = recyclerView.computeVerticalScrollRange()
+        val percentage = (100f * offset / (range - extent).toFloat())
+        return percentage > 3f
     }
 }

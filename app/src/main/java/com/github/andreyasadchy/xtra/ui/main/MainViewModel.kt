@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.ui.main
 
 import android.app.Activity
 import android.content.Intent
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,6 @@ import com.github.andreyasadchy.xtra.model.validate
 import com.github.andreyasadchy.xtra.repository.AuthRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
-import com.github.andreyasadchy.xtra.util.Event
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.toast
 import kotlinx.coroutines.launch
@@ -24,19 +22,9 @@ class MainViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _isNetworkAvailable = MutableLiveData<Event<Boolean>>()
-    val isNetworkAvailable: LiveData<Event<Boolean>>
-        get() = _isNetworkAvailable
-
     private val _user = MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>()
     val user: MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>
         get() = _user
-
-    fun setNetworkAvailable(available: Boolean) {
-        if (_isNetworkAvailable.value?.peekContent() != available) {
-            _isNetworkAvailable.value = Event(available)
-        }
-    }
 
     fun loadUser(
         login: String? = null,

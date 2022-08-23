@@ -74,11 +74,10 @@ class EmotesFragment : Fragment(), Injectable, Scrollable {
             }
         }
 
-        val observer: Observer<List<EmoteSetItem>> = Observer(emotesAdapter::submitList)
         when (args.getInt(KEY_POSITION)) {
-            0 -> viewModel.recentEmotes.observe(viewLifecycleOwner, observer)
-            1 -> viewModel.emotesFromSets.observe(viewLifecycleOwner, observer)
-            else -> viewModel.otherEmotes.observe(viewLifecycleOwner, observer)
+            0 -> viewModel.recentEmotes.observe(viewLifecycleOwner, emotesAdapter::submitList)
+            1 -> viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesAdapter::submitList)
+            else -> viewModel.otherEmotes.observe(viewLifecycleOwner, emotesAdapter::submitList)
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->

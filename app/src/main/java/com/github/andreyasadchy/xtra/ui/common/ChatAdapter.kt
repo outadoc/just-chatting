@@ -21,6 +21,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.core.text.bold
+import androidx.core.text.buildSpannedString
 import androidx.core.text.getSpans
 import androidx.core.text.toSpannable
 import androidx.core.view.children
@@ -144,7 +146,8 @@ class ChatAdapter(
                     holder.bind(
                         originalMessage = data.message,
                         formattedMessage = data.message.toSpannable(),
-                        userId = null
+                        userId = null,
+                        inReplyTo = null
                     )
                 }
             }
@@ -393,10 +396,18 @@ class ChatAdapter(
             e.printStackTrace()
         }
 
+        val inReplyTo = chatMessage.inReplyTo?.let { inReplyTo ->
+            buildSpannedString {
+                bold { append("@${inReplyTo.userName}") }
+                append(": ${inReplyTo.message}")
+            }
+        }
+
         holder.bind(
             originalMessage = originalMessage,
             formattedMessage = builder,
-            userId = userId
+            userId = userId,
+            inReplyTo = inReplyTo
         )
 
         loadImages(
@@ -465,7 +476,8 @@ class ChatAdapter(
                     holder.bind(
                         originalMessage = originalMessage,
                         formattedMessage = builder,
-                        userId = userId
+                        userId = userId,
+                        inReplyTo = null
                     )
                 },
             )
@@ -572,6 +584,7 @@ class ChatAdapter(
 
         val message: TextView = itemView.findViewById(R.id.textView_chatMessage)
         val noticeTitle: TextView? = itemView.findViewById(R.id.textView_chatNoticeTitle)
+        private val inReplyTo: TextView? = itemView.findViewById(R.id.textView_inReplyTo)
         private val messageContainer: ViewGroup? = itemView.findViewById(R.id.messageContainer)
         private val timestamp: TextView = itemView.findViewById(R.id.textView_timestamp)
 
@@ -582,7 +595,8 @@ class ChatAdapter(
         fun bind(
             originalMessage: CharSequence,
             formattedMessage: Spannable,
-            userId: String?
+            userId: String?,
+            inReplyTo: CharSequence?
         ) {
             messageContainer?.isVisible = true
 
@@ -597,6 +611,9 @@ class ChatAdapter(
                     )
                 }
             }
+
+            this.inReplyTo?.isVisible = inReplyTo != null
+            this.inReplyTo?.text = inReplyTo
         }
 
         fun bindTimestamp(timestamp: String?) {

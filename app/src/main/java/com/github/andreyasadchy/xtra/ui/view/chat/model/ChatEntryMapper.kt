@@ -108,7 +108,8 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                                 isAction = userMessage.isAction,
                                 color = userMessage.color,
                                 emotes = userMessage.emotes,
-                                badges = userMessage.badges
+                                badges = userMessage.badges,
+                                inReplyTo = null
                             ),
                             timestamp = timestamp
                         )
@@ -133,21 +134,25 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                                 isAction = isAction,
                                 color = color,
                                 emotes = emotes,
-                                badges = badges
+                                badges = badges,
+                                inReplyTo = null
                             ),
                             timestamp = timestamp
                         )
                     } else {
                         ChatEntry.Simple(
                             ChatEntry.Data.Rich(
-                                message = message,
+                                message = inReplyTo?.let {
+                                    message?.removePrefix("@${it.userName} ")
+                                } ?: message,
                                 userId = userId,
                                 userName = userName,
                                 userLogin = userLogin,
                                 isAction = isAction,
                                 color = color,
                                 emotes = emotes,
-                                badges = badges
+                                badges = badges,
+                                inReplyTo = inReplyTo
                             ),
                             timestamp = timestamp
                         )

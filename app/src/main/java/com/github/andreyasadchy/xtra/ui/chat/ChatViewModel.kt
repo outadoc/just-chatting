@@ -26,6 +26,7 @@ import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntry
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntryMapper
 import com.github.andreyasadchy.xtra.util.chat.LiveChatThread
+import com.github.andreyasadchy.xtra.util.chat.LoggedInChatThread
 import com.github.andreyasadchy.xtra.util.chat.MessageListenerImpl
 import com.github.andreyasadchy.xtra.util.chat.OnChatMessageReceivedListener
 import com.github.andreyasadchy.xtra.util.chat.OnRoomStateReceivedListener
@@ -493,8 +494,16 @@ class ChatViewModel @Inject constructor(
             LiveChatThread(
                 scope = viewModelScope,
                 channelName = channelLogin,
+                listener = chatStateListener.messageListener,
+                parser = chatMessageParser
+            )
+
+        private val loggedInChat: LoggedInChatThread =
+            LoggedInChatThread(
+                scope = viewModelScope,
                 userLogin = user.login,
                 userToken = user.helixToken,
+                channelName = channelLogin,
                 listener = chatStateListener.messageListener,
                 parser = chatMessageParser
             )
@@ -514,7 +523,7 @@ class ChatViewModel @Inject constructor(
             screenDensity: Float,
             isDarkTheme: Boolean
         ) {
-            liveChat.send(message)
+            loggedInChat.send(message)
 
             val usedEmotes = hashSetOf<RecentEmote>()
             val currentTime = Clock.System.now().toEpochMilliseconds()
@@ -544,6 +553,7 @@ class ChatViewModel @Inject constructor(
 
         override suspend fun start() {
             liveChat.start()
+            loggedInChat.start()
 
             if (!channelId.isNullOrBlank()) {
                 pubSub?.start()
@@ -552,6 +562,7 @@ class ChatViewModel @Inject constructor(
 
         override fun stop() {
             liveChat.disconnect()
+            loggedInChat.disconnect()
             pubSub?.disconnect()
         }
     }

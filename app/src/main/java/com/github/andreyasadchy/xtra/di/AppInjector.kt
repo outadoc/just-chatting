@@ -14,7 +14,7 @@ import dagger.android.support.AndroidSupportInjection
 object AppInjector {
 
     fun init(mainApplication: MainApplication) {
-        DaggerXtraComponent.builder()
+        DaggerMainComponent.builder()
             .application(mainApplication)
             .build()
             .inject(mainApplication)
@@ -24,6 +24,7 @@ object AppInjector {
                 if (activity is Injectable) {
                     AndroidInjection.inject(activity)
                 }
+
                 if (activity is FragmentActivity) {
                     activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
                         object : FragmentManager.FragmentLifecycleCallbacks() {

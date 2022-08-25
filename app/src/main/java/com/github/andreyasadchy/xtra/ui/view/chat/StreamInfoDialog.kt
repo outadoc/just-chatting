@@ -19,7 +19,6 @@ import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.formatTime
 import com.github.andreyasadchy.xtra.util.formatTimestamp
 import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.dialog_chat_message_click.bannerImage
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.gameName
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.lastBroadcast
@@ -78,11 +77,7 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             }
         }
 
-        viewModel.loadUser(
-            channelId = userId,
-            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-            helixToken = requireContext().prefs().getString(C.TOKEN, "")
-        )
+        viewModel.loadUser(channelId = userId)
     }
 
     private fun updateUserLayout(user: User) {

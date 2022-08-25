@@ -11,10 +11,9 @@ import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.chat.ChatNotificationUtils
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
+import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.prefs
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.HasAndroidInjector
 
@@ -38,13 +37,31 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initNavigation()
-        fragNavController.initialize(savedInstanceState = savedInstanceState)
+        viewModel.userToShow.observe(this) { user ->
+            if (user != null && (!user.id.isNullOrBlank() || !user.login.isNullOrBlank())) {
+                viewChannel(
+                    id = user.id,
+                    login = user.login,
+                    name = user.display_name,
+                    channelLogo = user.channelLogo
+                )
+            }
+        }
 
-        viewModel.validate(
-            helixClientId = prefs().getString(C.HELIX_CLIENT_ID, ""),
-            activity = this
-        )
+        viewModel.currentUser.observe(this) { user ->
+            if (user is User.NotLoggedIn) {
+                startActivityForResult(
+                    Intent(this, LoginActivity::class.java),
+                    2
+                )
+                return@observe
+            }
+
+            initNavigation(isLoggedIn = user is User.LoggedIn)
+            fragNavController.initialize(savedInstanceState = savedInstanceState)
+        }
+
+        viewModel.validate(activity = this)
 
         handleIntent(intent)
     }
@@ -97,23 +114,7 @@ class MainActivity :
         val login = url.substringAfter("twitch.tv/").substringBefore("/")
 
         if (login.isNotBlank()) {
-            val prefs = prefs()
-            viewModel.loadUser(
-                login = login,
-                helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""),
-                helixToken = prefs.getString(C.TOKEN, ""),
-            )
-
-            viewModel.user.observe(this) { user ->
-                if (user != null && (!user.id.isNullOrBlank() || !user.login.isNullOrBlank())) {
-                    viewChannel(
-                        id = user.id,
-                        login = user.login,
-                        name = user.display_name,
-                        channelLogo = user.channelLogo
-                    )
-                }
-            }
+            viewModel.loadUser(login = login)
         }
     }
 
@@ -133,7 +134,7 @@ class MainActivity :
         login: String?,
         name: String?,
         channelLogo: String?,
-        updateLocal: Boolean
+        updateLocal: Boolean,
     ) {
         if (id == null || login == null || name == null || channelLogo == null) return
         ChatNotificationUtils.openInBubbleOrStartActivity(
@@ -155,18 +156,17 @@ class MainActivity :
         fragNavController.pushFragment(SearchFragment())
     }
 
-    private fun initNavigation() {
+    private fun initNavigation(isLoggedIn: Boolean) {
         fragNavController.apply {
             rootFragments = listOf(
-                FollowMediaFragment.newInstance(
-                    loggedIn = !User.get(this@MainActivity).helixToken.isNullOrBlank()
-                )
+                FollowMediaFragment.newInstance(loggedIn = isLoggedIn)
             )
+
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
             transactionListener = object : FragNavController.TransactionListener {
                 override fun onFragmentTransaction(
                     fragment: Fragment?,
-                    transactionType: FragNavController.TransactionType
+                    transactionType: FragNavController.TransactionType,
                 ) {
                 }
 

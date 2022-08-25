@@ -17,11 +17,9 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
-import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.formatTime
 import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.dialog_chat_message_click.bannerImage
 import kotlinx.android.synthetic.main.dialog_chat_message_click.copyClip
 import kotlinx.android.synthetic.main.dialog_chat_message_click.copyMessage
@@ -97,18 +95,15 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             if (item != null) {
                 updateUserLayout(item)
             } else {
-                viewModel.loadUser(
-                    channelId = userId,
-                    helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-                    helixToken = requireContext().prefs().getString(C.TOKEN, "")
-                ).observe(viewLifecycleOwner) { user ->
-                    if (user != null) {
-                        savedUsers.add(user)
-                        updateUserLayout(user)
-                    } else {
-                        viewProfile.isVisible = true
+                viewModel.loadUser(channelId = userId)
+                    .observe(viewLifecycleOwner) { user ->
+                        if (user != null) {
+                            savedUsers.add(user)
+                            updateUserLayout(user)
+                        } else {
+                            viewProfile.isVisible = true
+                        }
                     }
-                }
             }
             if (args.getBoolean(KEY_MESSAGING)) {
                 reply.isVisible = true

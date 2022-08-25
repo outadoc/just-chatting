@@ -20,8 +20,11 @@ import com.github.andreyasadchy.xtra.model.chat.RoomState
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.repository.AuthPreferencesRepository
+import com.github.andreyasadchy.xtra.repository.ChatPreferencesRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
+import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
 import com.github.andreyasadchy.xtra.ui.common.BaseViewModel
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntry
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntryMapper
@@ -37,6 +40,7 @@ import com.github.andreyasadchy.xtra.util.combineWith
 import com.github.andreyasadchy.xtra.util.isOdd
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
@@ -50,7 +54,10 @@ class ChatViewModel @Inject constructor(
     private val repository: TwitchService,
     private val playerRepository: PlayerRepository,
     private val chatMessageParser: ChatMessageParser,
-    private val chatEntryMapper: ChatEntryMapper
+    private val chatEntryMapper: ChatEntryMapper,
+    private val chatPreferencesRepository: ChatPreferencesRepository,
+    private val authPreferencesRepository: AuthPreferencesRepository,
+    private val userPreferencesRepository: UserPreferencesRepository,
 ) : BaseViewModel() {
 
     private val _otherEmotes = MutableLiveData<List<EmoteSetItem>>()
@@ -114,48 +121,42 @@ class ChatViewModel @Inject constructor(
     private var maxAdapterCount: Int = -1
 
     fun startLive(
-        user: User.LoggedIn,
-        helixClientId: String?,
         channelId: String?,
         channelLogin: String?,
         channelName: String?,
-        showUserNotice: Boolean,
-        showClearMsg: Boolean,
-        showClearChat: Boolean,
-        enableRecentMsg: Boolean? = false,
-        recentMsgLimit: Int? = null,
-        maxAdapterCount: Int
     ) {
-        this.maxAdapterCount = maxAdapterCount
+        viewModelScope.launch {
+            val user = userPreferencesRepository.user.first() as? User.LoggedIn ?: return@launch
 
-        if (chatController == null && channelLogin != null && channelName != null) {
-            val listener = ChatStateListener(
-                user = user,
-                helixClientId = helixClientId,
-                channelId = channelId,
-                displayName = channelName,
-                showUserNotice = showUserNotice,
-                showClearMsg = showClearMsg,
-                showClearChat = showClearChat
-            )
+            maxAdapterCount = chatPreferencesRepository.messageLimit.first()
 
-            chatStateListener = listener
-            chatController = LiveChatController(
-                user = user,
-                channelId = channelId,
-                channelLogin = channelLogin,
+            if (chatController == null && channelLogin != null && channelName != null) {
+                val listener = ChatStateListener(
+                    user = user,
+                    helixClientId = authPreferencesRepository.helixClientId.first(),
+                    channelId = channelId,
+                    displayName = channelName,
+                    showUserNotice = chatPreferencesRepository.showUserNotice.first(),
+                    showClearMsg = chatPreferencesRepository.showClearMsg.first(),
+                    showClearChat = chatPreferencesRepository.showClearChat.first()
+                )
+
                 chatStateListener = listener
-            )
-
-            if (channelId != null) {
-                init(
-                    helixClientId = helixClientId,
-                    helixToken = user.helixToken?.nullIfEmpty(),
+                chatController = LiveChatController(
+                    user = user,
                     channelId = channelId,
                     channelLogin = channelLogin,
-                    enableRecentMsg = enableRecentMsg,
-                    recentMsgLimit = recentMsgLimit
+                    chatStateListener = listener
                 )
+
+                if (channelId != null) {
+                    init(
+                        channelId = channelId,
+                        channelLogin = channelLogin,
+                        enableRecentMsg = chatPreferencesRepository.enableRecentMsg.first(),
+                        recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first()
+                    )
+                }
             }
         }
     }
@@ -168,16 +169,17 @@ class ChatViewModel @Inject constructor(
 
     fun send(
         message: CharSequence,
-        animateEmotes: Boolean,
         screenDensity: Float,
-        isDarkTheme: Boolean
+        isDarkTheme: Boolean,
     ) {
-        chatController?.send(
-            message = message,
-            animateEmotes = animateEmotes,
-            screenDensity = screenDensity,
-            isDarkTheme = isDarkTheme
-        )
+        viewModelScope.launch {
+            chatController?.send(
+                message = message,
+                animateEmotes = chatPreferencesRepository.animateEmotes.first(),
+                screenDensity = screenDensity,
+                isDarkTheme = isDarkTheme
+            )
+        }
     }
 
     override fun onCleared() {
@@ -186,12 +188,10 @@ class ChatViewModel @Inject constructor(
     }
 
     private fun init(
-        helixClientId: String?,
-        helixToken: String?,
         channelId: String,
         channelLogin: String? = null,
         enableRecentMsg: Boolean? = false,
-        recentMsgLimit: Int? = null
+        recentMsgLimit: Int? = null,
     ) {
         _chatMessages.value = LinkedList()
 
@@ -317,9 +317,7 @@ class ChatViewModel @Inject constructor(
             try {
                 cheerEmotes.postValue(
                     repository.loadCheerEmotes(
-                        userId = channelId,
-                        helixClientId = helixClientId,
-                        helixToken = helixToken
+                        userId = channelId
                     )
                 )
             } catch (e: Exception) {
@@ -337,7 +335,7 @@ class ChatViewModel @Inject constructor(
         showUserNotice: Boolean,
         showClearMsg: Boolean,
         showClearChat: Boolean,
-        displayName: String
+        displayName: String,
     ) : OnUserStateReceivedListener,
         OnRoomStateReceivedListener,
         OnChatMessageReceivedListener {
@@ -379,7 +377,7 @@ class ChatViewModel @Inject constructor(
                 }
 
                 val newList = _chatMessages.value.orEmpty() +
-                        messages.mapNotNull { chatEntryMapper.map(it) }
+                    messages.mapNotNull { chatEntryMapper.map(it) }
 
                 // We alternate the background of each chat row.
                 // If we remove just one item, the backgrounds will shift, so we always need to remove
@@ -415,8 +413,6 @@ class ChatViewModel @Inject constructor(
                     .flatMap { setIds ->
                         try {
                             repository.loadEmotesFromSet(
-                                helixClientId = helixClientId,
-                                helixToken = user.helixToken,
                                 setIds = setIds
                             )
                         } catch (e: Exception) {
@@ -435,9 +431,7 @@ class ChatViewModel @Inject constructor(
                                 it.toLongOrNull()
                                     ?.takeIf { id -> id > 0 }
                                     ?.toString()
-                            },
-                        helixClientId = helixClientId,
-                        helixToken = user.helixToken
+                            }
                     )
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -484,10 +478,10 @@ class ChatViewModel @Inject constructor(
     }
 
     inner class LiveChatController(
-        private val user: User.LoggedIn,
+        user: User.LoggedIn,
         private val channelId: String?,
         channelLogin: String,
-        private val chatStateListener: ChatStateListener
+        private val chatStateListener: ChatStateListener,
     ) : ChatController() {
 
         private val liveChat: LiveChatThread =
@@ -521,7 +515,7 @@ class ChatViewModel @Inject constructor(
             message: CharSequence,
             animateEmotes: Boolean,
             screenDensity: Float,
-            isDarkTheme: Boolean
+            isDarkTheme: Boolean,
         ) {
             loggedInChat.send(message)
 
@@ -573,7 +567,7 @@ class ChatViewModel @Inject constructor(
             message: CharSequence,
             animateEmotes: Boolean,
             screenDensity: Float,
-            isDarkTheme: Boolean
+            isDarkTheme: Boolean,
         )
 
         abstract suspend fun start()

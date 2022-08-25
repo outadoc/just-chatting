@@ -29,8 +29,6 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
 import com.github.andreyasadchy.xtra.ui.view.AlternatingBackgroundItemDecoration
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntry
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.view_chat.view.btnDown
 import kotlinx.android.synthetic.main.view_chat.view.flexboxChatMode
 import kotlinx.android.synthetic.main.view_chat.view.recyclerView
@@ -50,6 +48,18 @@ class ChatView : LinearLayout {
     private var messageClickListener: OnMessageClickListener? = null
 
     private val rewardList = mutableListOf<Pair<LiveChatMessage?, PubSubPointReward?>>()
+
+    var showTimestamps: Boolean
+        get() = adapter.showTimestamps
+        set(value) {
+            adapter.showTimestamps = value
+        }
+
+    var animateEmotes: Boolean
+        get() = adapter.animateEmotes
+        set(value) {
+            adapter.animateEmotes = value
+        }
 
     constructor(context: Context) : super(context) {
         init(context)
@@ -71,12 +81,7 @@ class ChatView : LinearLayout {
         View.inflate(context, R.layout.view_chat, this)
         orientation = VERTICAL
 
-        adapter = ChatAdapter(
-            context = context,
-            enableTimestamps = context.prefs().getBoolean(C.CHAT_TIMESTAMPS, false),
-            animateEmotes = context.prefs().getBoolean(C.ANIMATED_EMOTES, true)
-        )
-
+        adapter = ChatAdapter(context = context)
         adapter.setOnClickListener { original, formatted, userId ->
             messageClickListener?.send(original, formatted, userId)
         }
@@ -191,10 +196,10 @@ class ChatView : LinearLayout {
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-                    !textFollowers.isGone ||
-                    !textUnique.isGone ||
-                    !textSlow.isGone ||
-                    !textSubs.isGone
+            !textFollowers.isGone ||
+            !textUnique.isGone ||
+            !textSlow.isGone ||
+            !textSubs.isGone
     }
 
     fun addGlobalBadges(list: List<TwitchBadge>?) {

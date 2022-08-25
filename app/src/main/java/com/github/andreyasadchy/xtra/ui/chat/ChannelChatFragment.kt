@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.ViewCompat
@@ -42,7 +41,6 @@ import com.github.andreyasadchy.xtra.util.LifecycleListener
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.google.android.material.shape.MaterialShapeDrawable
 import kotlinx.android.synthetic.main.fragment_channel.appBar
@@ -68,7 +66,7 @@ class ChannelChatFragment :
             name: String?,
             channelLogo: String?,
             showBackButton: Boolean,
-            updateLocal: Boolean = false
+            updateLocal: Boolean = false,
         ) = ChannelChatFragment().apply {
             arguments = Bundle().apply {
                 putString(C.CHANNEL_ID, id)
@@ -90,7 +88,7 @@ class ChannelChatFragment :
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.fragment_channel, container, false)
     }
@@ -172,6 +170,20 @@ class ChannelChatFragment :
 
         initializeChannel()
         initializeChat()
+
+        channelViewModel.user.observe(viewLifecycleOwner) { user ->
+            initializeFollow(user)
+
+            user.login?.let { login ->
+                chatView.setUsername(login)
+            }
+        }
+
+        channelViewModel.state.observe(viewLifecycleOwner) { state ->
+            chatView?.showTimestamps = state.showTimestamps
+            chatView?.animateEmotes = state.animateEmotes
+            chatInputView?.animateEmotes = state.animateEmotes
+        }
     }
 
     private fun formatChannelUri(channelLogin: String): Uri {
@@ -186,60 +198,27 @@ class ChannelChatFragment :
             channelId = requireArguments().getString(C.CHANNEL_ID),
             channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),
             channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME),
-            profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE),
-            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-            helixToken = requireContext().prefs().getString(C.TOKEN, "")
+            profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE)
         )
 
         viewModel.stream.observe(viewLifecycleOwner) { stream ->
             updateStreamLayout(stream)
-            if (stream?.channelUser != null) {
-                updateUserLayout(stream.channelUser)
-            } else {
-                viewModel.loadUser(
-                    channelId = requireArguments().getString(C.CHANNEL_ID),
-                    helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-                    helixToken = requireContext().prefs().getString(C.TOKEN, "")
-                )
-
-                viewModel.user.observe(viewLifecycleOwner) { user ->
-                    if (user != null) {
-                        updateUserLayout(user)
-                    }
-                }
-            }
         }
 
-        initializeFollow(
-            user = User.get(requireContext()),
-            helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, "")
-        )
+        viewModel.loadedUser.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                updateUserLayout(user)
+            }
+        }
     }
 
     private fun initializeChat() = chatViewModel.let { viewModel ->
         val args = requireArguments()
-        val prefs = requireContext().prefs()
-
-        val user = User.get(requireContext())
-
-        if (user !is User.LoggedIn) {
-            Toast.makeText(requireContext(), "You must be logged in to chat.", Toast.LENGTH_SHORT)
-                .show()
-            return
-        }
 
         viewModel.startLive(
-            user = user,
-            helixClientId = prefs.getString(C.HELIX_CLIENT_ID, ""),
             channelId = args.getString(C.CHANNEL_ID),
             channelLogin = args.getString(C.CHANNEL_LOGIN),
-            channelName = args.getString(C.CHANNEL_DISPLAYNAME),
-            showUserNotice = prefs.getBoolean(C.CHAT_SHOW_USERNOTICE, true),
-            showClearMsg = prefs.getBoolean(C.CHAT_SHOW_CLEARMSG, true),
-            showClearChat = prefs.getBoolean(C.CHAT_SHOW_CLEARCHAT, true),
-            enableRecentMsg = prefs.getBoolean(C.CHAT_RECENT, true),
-            recentMsgLimit = prefs.getInt(C.CHAT_RECENT_LIMIT, 100),
-            maxAdapterCount = prefs.getInt(C.CHAT_LIMIT, 600)
+            channelName = args.getString(C.CHANNEL_DISPLAYNAME)
         )
 
         chatView.setOnMessageClickListener { original, formatted, userId ->
@@ -256,10 +235,10 @@ class ChannelChatFragment :
         chatInputView.setOnMessageSendListener { message ->
             viewModel.send(
                 message = message,
-                animateEmotes = requireContext().prefs().getBoolean(C.ANIMATED_EMOTES, true),
                 screenDensity = requireContext().resources.displayMetrics.density,
                 isDarkTheme = requireContext().isDarkMode
             )
+
             chatView.scrollToBottom()
         }
 
@@ -275,8 +254,6 @@ class ChannelChatFragment :
 
             override fun getItemCount(): Int = 3
         }
-
-        chatView.setUsername(user.login)
 
         viewModel.chatters.observe(viewLifecycleOwner, chatInputView::setChatters)
         viewModel.messagePostConstraint.observe(
@@ -301,12 +278,9 @@ class ChannelChatFragment :
         viewModel.emotesLoaded.observe(viewLifecycleOwner, chatView::notifyEmotesLoaded)
     }
 
-    private fun initializeFollow(
-        user: User,
-        helixClientId: String? = null
-    ) {
+    private fun initializeFollow(user: User) {
         with(channelViewModel) {
-            setUser(user, helixClientId)
+            setUser(user)
             var initialized = false
             val channelName = userName
 
@@ -455,7 +429,7 @@ class ChannelChatFragment :
         id: String?,
         login: String?,
         name: String?,
-        channelLogo: String?
+        channelLogo: String?,
     ) {
         if (id == null || login == null || name == null || channelLogo == null) return
         ChatNotificationUtils.openInBubbleOrStartActivity(

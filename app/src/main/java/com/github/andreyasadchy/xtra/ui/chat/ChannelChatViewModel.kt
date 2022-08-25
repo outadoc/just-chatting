@@ -4,18 +4,22 @@ import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
+import com.github.andreyasadchy.xtra.repository.ChatPreferencesRepository
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
+import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
 import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
 import com.github.andreyasadchy.xtra.util.DownloadUtils
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.io.path.Path
@@ -24,39 +28,58 @@ import kotlin.io.path.pathString
 
 class ChannelChatViewModel @Inject constructor(
     private val repository: TwitchService,
-    private val localFollowsChannel: LocalFollowChannelRepository
+    private val localFollowsChannel: LocalFollowChannelRepository,
+    chatPreferencesRepository: ChatPreferencesRepository,
+    userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel(), FollowViewModel {
 
     private val _stream = MutableLiveData<Stream?>()
     val stream: MutableLiveData<Stream?>
         get() = _stream
-    private val _user = MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>()
-    val user: MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>
-        get() = _user
+
+    private val _loadedUser =
+        MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>()
+
+    val loadedUser: MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>
+        get() = _loadedUser
+
+    val user = userPreferencesRepository.user.asLiveData()
 
     private val _userId = MutableLiveData<String?>()
     private val _userLogin = MutableLiveData<String?>()
     private val _userName = MutableLiveData<String?>()
     private val _profileImageURL = MutableLiveData<String?>()
+
     override val userId: String?
-        get() {
-            return _userId.value
-        }
+        get() = _userId.value
+
     override val userLogin: String?
-        get() {
-            return _userLogin.value
-        }
+        get() = _userLogin.value
+
     override val userName: String?
-        get() {
-            return _userName.value
-        }
+        get() = _userName.value
+
     override val channelLogo: String?
-        get() {
-            return _profileImageURL.value
-        }
+        get() = _profileImageURL.value
+
     override lateinit var follow: FollowLiveData
 
-    override fun setUser(user: User, helixClientId: String?) {
+    data class State(
+        val showTimestamps: Boolean = false,
+        val animateEmotes: Boolean = true,
+    )
+
+    val state = combine(
+        chatPreferencesRepository.showTimestamps,
+        chatPreferencesRepository.animateEmotes
+    ) { showTimestamps, animateEmotes ->
+        State(
+            showTimestamps = showTimestamps,
+            animateEmotes = animateEmotes
+        )
+    }.asLiveData()
+
+    override fun setUser(user: User) {
         if (!this::follow.isInitialized) {
             follow = FollowLiveData(
                 localFollowsChannel = localFollowsChannel,
@@ -65,7 +88,6 @@ class ChannelChatViewModel @Inject constructor(
                 userName = userName,
                 channelLogo = channelLogo,
                 repository = repository,
-                helixClientId = helixClientId,
                 user = user,
                 viewModelScope = viewModelScope
             )
@@ -77,8 +99,6 @@ class ChannelChatViewModel @Inject constructor(
         channelLogin: String?,
         channelName: String?,
         profileImageURL: String?,
-        helixClientId: String? = null,
-        helixToken: String? = null
     ) {
         if (_userId.value != channelId && channelId != null) {
             _userId.value = channelId
@@ -88,33 +108,33 @@ class ChannelChatViewModel @Inject constructor(
 
             viewModelScope.launch {
                 try {
-                    val stream = repository.loadStreamWithUser(
-                        channelId = channelId,
-                        helixClientId = helixClientId,
-                        helixToken = helixToken
-                    )
+                    val stream = repository.loadStreamWithUser(channelId = channelId)
+                    val user = stream?.channelUser
+
                     _stream.postValue(stream)
+
+                    if (user != null) {
+                        _loadedUser.postValue(user)
+                    } else {
+                        loadUser(channelId)
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
+
+        loadUser(channelId = channelId)
     }
 
-    fun loadUser(
-        channelId: String?,
-        helixClientId: String? = null,
-        helixToken: String? = null
-    ) {
+    private fun loadUser(channelId: String?) {
         if (channelId != null) {
             viewModelScope.launch {
                 try {
                     val user = repository.loadUsersById(
-                        ids = mutableListOf(channelId),
-                        helixClientId = helixClientId,
-                        helixToken = helixToken
+                        ids = mutableListOf(channelId)
                     )?.firstOrNull()
-                    _user.postValue(user)
+                    _loadedUser.postValue(user)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -122,29 +142,24 @@ class ChannelChatViewModel @Inject constructor(
         }
     }
 
-    fun retry(
-        helixClientId: String? = null,
-        helixToken: String? = null
-    ) {
+    fun retry() {
         if (_stream.value == null) {
             loadStream(
                 channelId = _userId.value,
                 channelLogin = _userLogin.value,
                 channelName = _userName.value,
-                profileImageURL = _profileImageURL.value,
-                helixClientId = helixClientId,
-                helixToken = helixToken
+                profileImageURL = _profileImageURL.value
             )
         } else {
             if (_stream.value!!.channelUser == null) {
-                loadUser(_userId.value, helixClientId, helixToken)
+                loadUser(_userId.value)
             }
         }
     }
 
     fun updateLocalUser(
         context: Context,
-        user: com.github.andreyasadchy.xtra.model.helix.user.User
+        user: com.github.andreyasadchy.xtra.model.helix.user.User,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {

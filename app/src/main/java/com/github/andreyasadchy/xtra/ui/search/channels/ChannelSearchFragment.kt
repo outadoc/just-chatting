@@ -13,8 +13,6 @@ import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.search.Searchable
-import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.prefs
 import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
 import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 import kotlinx.android.synthetic.main.common_recycler_view_layout.swipeRefresh
@@ -44,12 +42,7 @@ class ChannelSearchFragment :
 
     override fun search(query: String) {
         if (query.isNotEmpty()) {
-            // TODO same query doesn't fire
-            viewModel.setQuery(
-                query = query,
-                helixClientId = requireContext().prefs().getString(C.HELIX_CLIENT_ID, ""),
-                helixToken = requireContext().prefs().getString(C.TOKEN, "")
-            )
+            viewModel.setQuery(query = query)
         } else {
             adapter.submitList(null)
             nothingHere?.isVisible = false

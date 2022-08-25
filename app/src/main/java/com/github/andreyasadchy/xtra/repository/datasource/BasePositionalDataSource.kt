@@ -9,8 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-abstract class BasePositionalDataSource<T>(private val coroutineScope: CoroutineScope) :
-    PositionalDataSource<T>(), PagingDataSource {
+abstract class BasePositionalDataSource<T>(
+    private val coroutineScope: CoroutineScope,
+) : PositionalDataSource<T>(), PagingDataSource {
 
     private val tag: String = javaClass.simpleName
     private var retry: (() -> Any)? = null
@@ -21,7 +22,7 @@ abstract class BasePositionalDataSource<T>(private val coroutineScope: Coroutine
     protected fun loadInitial(
         params: LoadInitialParams,
         callback: LoadInitialCallback<T>,
-        request: suspend () -> List<T>
+        request: suspend () -> List<T>,
     ) {
         runBlocking {
             coroutineScope.launch(Dispatchers.IO) {
@@ -45,7 +46,7 @@ abstract class BasePositionalDataSource<T>(private val coroutineScope: Coroutine
     protected fun loadRange(
         params: LoadRangeParams,
         callback: LoadRangeCallback<T>,
-        request: suspend () -> List<T>
+        request: suspend () -> List<T>,
     ) {
         runBlocking {
             coroutineScope.launch(Dispatchers.IO) {

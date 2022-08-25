@@ -13,9 +13,10 @@ import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.repository.datasource.FollowedChannelsDataSource
 import com.github.andreyasadchy.xtra.repository.datasource.FollowedStreamsDataSource
 import com.github.andreyasadchy.xtra.repository.datasource.SearchChannelsDataSource
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.TwitchApiHelper.addTokenPrefixHelix
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -23,19 +24,19 @@ import javax.inject.Singleton
 @Singleton
 class ApiRepository @Inject constructor(
     private val helix: HelixApi,
-    private val localFollowsChannel: LocalFollowChannelRepository
+    private val localFollowsChannel: LocalFollowChannelRepository,
+    private val authPrefs: AuthPreferencesRepository,
+    private val userPreferencesRepository: UserPreferencesRepository,
 ) : TwitchService {
 
-    override fun loadSearchChannels(
+    override suspend fun loadSearchChannels(
         query: String,
-        helixClientId: String?,
-        helixToken: String?,
-        coroutineScope: CoroutineScope
+        coroutineScope: CoroutineScope,
     ): Listing<ChannelSearch> {
         val factory = SearchChannelsDataSource.Factory(
             query = query,
-            helixClientId = helixClientId,
-            helixToken = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
+            helixClientId = authPrefs.helixClientId.first(),
+            helixToken = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
             helixApi = helix,
             coroutineScope = coroutineScope
         )
@@ -50,17 +51,12 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadFollowedStreams(
-        userId: String?,
-        helixClientId: String?,
-        helixToken: String?,
-        coroutineScope: CoroutineScope
-    ): Listing<Stream> {
+    override suspend fun loadFollowedStreams(coroutineScope: CoroutineScope): Listing<Stream> {
         val factory = FollowedStreamsDataSource.Factory(
             localFollowsChannel = localFollowsChannel,
-            userId = userId,
-            helixClientId = helixClientId,
-            helixToken = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
+            userId = userPreferencesRepository.user.first().id,
+            helixClientId = authPrefs.helixClientId.first(),
+            helixToken = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
             helixApi = helix,
             coroutineScope = coroutineScope
         )
@@ -75,19 +71,16 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override fun loadFollowedChannels(
-        userId: String?,
-        helixClientId: String?,
-        helixToken: String?,
+    override suspend fun loadFollowedChannels(
         sort: Sort,
         order: Order,
-        coroutineScope: CoroutineScope
+        coroutineScope: CoroutineScope,
     ): Listing<Follow> {
         val factory = FollowedChannelsDataSource.Factory(
             localFollowsChannel = localFollowsChannel,
-            userId = userId,
-            helixClientId = helixClientId,
-            helixToken = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
+            userId = userPreferencesRepository.user.first().id,
+            helixClientId = authPrefs.helixClientId.first(),
+            helixToken = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
             helixApi = helix,
             sort = sort,
             order = order,
@@ -104,76 +97,59 @@ class ApiRepository @Inject constructor(
         return Listing.create(factory, config)
     }
 
-    override suspend fun loadStreamWithUser(
-        channelId: String,
-        helixClientId: String?,
-        helixToken: String?
-    ): Stream? = withContext(Dispatchers.IO) {
-        helix.getStreams(
-            clientId = helixClientId,
-            token = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
-            ids = listOf(channelId)
-        ).data?.firstOrNull()
-    }
+    override suspend fun loadStreamWithUser(channelId: String): Stream? =
+        withContext(Dispatchers.IO) {
+            helix.getStreams(
+                clientId = authPrefs.helixClientId.first(),
+                token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+                ids = listOf(channelId)
+            ).data?.firstOrNull()
+        }
 
-    override suspend fun loadUsersById(
-        ids: List<String>,
-        helixClientId: String?,
-        helixToken: String?
-    ): List<User>? = withContext(Dispatchers.IO) {
-        helix.getUsersById(
-            clientId = helixClientId,
-            token = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
-            ids = ids
-        ).data
-    }
+    override suspend fun loadUsersById(ids: List<String>): List<User>? =
+        withContext(Dispatchers.IO) {
+            helix.getUsersById(
+                clientId = authPrefs.helixClientId.first(),
+                token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+                ids = ids
+            ).data
+        }
 
-    override suspend fun loadUsersByLogin(
-        logins: List<String>,
-        helixClientId: String?,
-        helixToken: String?
-    ): List<User>? = withContext(Dispatchers.IO) {
-        helix.getUsersByLogin(
-            clientId = helixClientId,
-            token = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
-            logins = logins
-        ).data
-    }
+    override suspend fun loadUsersByLogin(logins: List<String>): List<User>? =
+        withContext(Dispatchers.IO) {
+            helix.getUsersByLogin(
+                clientId = authPrefs.helixClientId.first(),
+                token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+                logins = logins
+            ).data
+        }
 
-    override suspend fun loadCheerEmotes(
-        userId: String,
-        helixClientId: String?,
-        helixToken: String?
-    ): List<CheerEmote> = withContext(Dispatchers.IO) {
-        helix.getCheerEmotes(
-            clientId = helixClientId,
-            token = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
-            userId = userId
-        ).emotes
-    }
+    override suspend fun loadCheerEmotes(userId: String): List<CheerEmote> =
+        withContext(Dispatchers.IO) {
+            helix.getCheerEmotes(
+                clientId = authPrefs.helixClientId.first(),
+                token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+                userId = userId
+            ).emotes
+        }
 
-    override suspend fun loadEmotesFromSet(
-        helixClientId: String?,
-        helixToken: String?,
-        setIds: List<String>
-    ): List<TwitchEmote>? = withContext(Dispatchers.IO) {
-        helix.getEmotesFromSet(
-            clientId = helixClientId,
-            token = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
-            setIds = setIds
-        ).emotes
-    }
+    override suspend fun loadEmotesFromSet(setIds: List<String>): List<TwitchEmote>? =
+        withContext(Dispatchers.IO) {
+            helix.getEmotesFromSet(
+                clientId = authPrefs.helixClientId.first(),
+                token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+                setIds = setIds
+            ).emotes
+        }
 
     override suspend fun loadUserFollowing(
-        helixClientId: String?,
-        helixToken: String?,
         userId: String?,
         channelId: String?,
-        userLogin: String?
+        userLogin: String?,
     ): Boolean = withContext(Dispatchers.IO) {
         helix.getUserFollows(
-            clientId = helixClientId,
-            token = helixToken?.let { TwitchApiHelper.addTokenPrefixHelix(it) },
+            clientId = authPrefs.helixClientId.first(),
+            token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
             userId = userId,
             channelId = channelId
         ).total == 1

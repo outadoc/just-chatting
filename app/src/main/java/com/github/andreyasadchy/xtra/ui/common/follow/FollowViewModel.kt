@@ -9,5 +9,5 @@ interface FollowViewModel {
     val channelLogo: String?
     val follow: FollowLiveData
 
-    fun setUser(user: User, helixClientId: String?)
+    fun setUser(user: User)
 }

@@ -30,11 +30,9 @@ import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.ui.chat.MessagePostConstraint
-import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.showKeyboard
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
@@ -67,6 +65,12 @@ class ChatInputView : LinearLayout {
     private var messageCallback: OnMessageSendListener? = null
     private var progressAnimator: ValueAnimator? = null
 
+    var animateEmotes: Boolean
+        get() = autoCompleteAdapter.animateEmotes
+        set(value) {
+            autoCompleteAdapter.animateEmotes = value
+        }
+
     constructor(context: Context) : super(context) {
         init(context)
     }
@@ -84,7 +88,7 @@ class ChatInputView : LinearLayout {
     }
 
     private fun init(context: Context) {
-        View.inflate(context, R.layout.view_chat_input, this)
+        inflate(context, R.layout.view_chat_input, this)
         orientation = VERTICAL
 
         editText.setAdapter(autoCompleteAdapter)
@@ -310,6 +314,8 @@ class ChatInputView : LinearLayout {
 
     class AutoCompleteAdapter(context: Context) : ArrayAdapter<AutoCompleteItem>(context, 0) {
 
+        var animateEmotes: Boolean = true
+
         override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
             val item = getItem(position) ?: error("Invalid item id")
             val viewHolder = when (getItemViewType(position)) {
@@ -329,7 +335,7 @@ class ChatInputView : LinearLayout {
                         containerView.image.loadImage(
                             context = context,
                             url = item.emote.getUrl(
-                                animate = context.prefs().getBoolean(C.ANIMATED_EMOTES, true),
+                                animate = animateEmotes,
                                 screenDensity = context.resources.displayMetrics.density,
                                 isDarkTheme = context.isDarkMode
                             )

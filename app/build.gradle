@@ -99,6 +99,8 @@ dependencies {
     implementation "androidx.emoji2:emoji2:$emoji"
     implementation "androidx.emoji2:emoji2-views:$emoji"
 
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
+
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.preference:preference-ktx:1.2.0'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'

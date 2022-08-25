@@ -26,7 +26,12 @@ import com.github.andreyasadchy.xtra.model.chat.TwitchBadgesResponse
 import com.github.andreyasadchy.xtra.model.helix.emote.EmoteSetDeserializer
 import com.github.andreyasadchy.xtra.model.helix.emote.EmoteSetResponse
 import com.github.andreyasadchy.xtra.repository.ApiRepository
+import com.github.andreyasadchy.xtra.repository.AuthPreferencesRepository
+import com.github.andreyasadchy.xtra.repository.ChatPreferencesRepository
+import com.github.andreyasadchy.xtra.repository.PreferenceRepository
+import com.github.andreyasadchy.xtra.repository.SharedPrefsPreferenceRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
+import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
 import com.github.andreyasadchy.xtra.util.FetchProvider
 import com.google.gson.GsonBuilder
 import com.tonyodev.fetch2.FetchConfiguration
@@ -54,11 +59,35 @@ class XtraModule {
         return repository
     }
 
+    @Provides
+    @Singleton
+    fun providesPreferenceRepository(context: Context): PreferenceRepository {
+        return SharedPrefsPreferenceRepository(context)
+    }
+
+    @Provides
+    @Singleton
+    fun providesAuthPreferencesRepository(preferenceRepository: PreferenceRepository): AuthPreferencesRepository {
+        return preferenceRepository
+    }
+
+    @Provides
+    @Singleton
+    fun providesChatPreferencesRepository(preferenceRepository: PreferenceRepository): ChatPreferencesRepository {
+        return preferenceRepository
+    }
+
+    @Provides
+    @Singleton
+    fun providesUserPreferencesRepository(preferenceRepository: PreferenceRepository): UserPreferencesRepository {
+        return preferenceRepository
+    }
+
     @Singleton
     @Provides
     fun providesHelixApi(
         client: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
+        gsonConverterFactory: GsonConverterFactory,
     ): HelixApi {
         return Retrofit.Builder()
             .baseUrl("https://api.twitch.tv/helix/")
@@ -139,7 +168,7 @@ class XtraModule {
     @Provides
     fun providesFetchConfigurationBuilder(
         application: Application,
-        okHttpClient: OkHttpClient
+        okHttpClient: OkHttpClient,
     ): FetchConfiguration.Builder {
         return FetchConfiguration.Builder(application)
             .enableLogging(BuildConfig.DEBUG)

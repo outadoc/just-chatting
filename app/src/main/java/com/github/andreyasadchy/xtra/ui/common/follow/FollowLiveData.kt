@@ -25,7 +25,6 @@ class FollowLiveData(
     private val userName: String?,
     private var channelLogo: String?,
     private val repository: TwitchService,
-    private val helixClientId: String? = null,
     private val user: User,
     private val viewModelScope: CoroutineScope
 ) : MutableLiveData<Boolean>() {
@@ -40,8 +39,6 @@ class FollowLiveData(
                             !user.id.isNullOrBlank() &&
                             user.id != userId -> {
                             repository.loadUserFollowing(
-                                helixClientId = helixClientId,
-                                helixToken = user.helixToken,
                                 userId = userId,
                                 channelId = user.id,
                                 userLogin = userLogin

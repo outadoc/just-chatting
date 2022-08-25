@@ -10,11 +10,14 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.github.andreyasadchy.xtra.R
+import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
+import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
@@ -27,8 +30,14 @@ import kotlinx.android.synthetic.main.fragment_media.appBar
 import kotlinx.android.synthetic.main.fragment_media.tabLayoutMedia
 import kotlinx.android.synthetic.main.fragment_media.toolbar
 import kotlinx.android.synthetic.main.fragment_media.viewPagerMedia
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FollowMediaFragment : Fragment(), Scrollable {
+class FollowMediaFragment : Fragment(), Injectable, Scrollable {
+
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
 
     companion object {
         private const val LOGGED_IN = "logged_in"
@@ -48,7 +57,7 @@ class FollowMediaFragment : Fragment(), Scrollable {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         return inflater.inflate(R.layout.fragment_media, container, false)
     }
@@ -59,12 +68,6 @@ class FollowMediaFragment : Fragment(), Scrollable {
         setAdapter()
 
         with(toolbar) {
-            val user = User.get(requireContext())
-
-            menu.findItem(R.id.login).title =
-                if (user !is User.NotLoggedIn) getString(R.string.log_out)
-                else getString(R.string.log_in)
-
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.search -> {
@@ -80,9 +83,10 @@ class FollowMediaFragment : Fragment(), Scrollable {
                         true
                     }
                     R.id.login -> {
-                        when (user) {
-                            is User.NotLoggedIn -> onLogin()
-                            else -> onLogout(user)
+                        lifecycleScope.launch {
+                            onLogout(
+                                user = userPreferencesRepository.user.first()
+                            )
                         }
                         true
                     }

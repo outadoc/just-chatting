@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class StreamInfoViewModel @Inject constructor(
-    private val repository: TwitchService
+    private val repository: TwitchService,
 ) : BaseViewModel() {
 
     sealed class State {
@@ -24,28 +24,20 @@ class StreamInfoViewModel @Inject constructor(
     private val _state = MutableLiveData<State>(State.Idle)
     val state: LiveData<State> = _state
 
-    fun loadUser(
-        channelId: String,
-        helixClientId: String? = null,
-        helixToken: String? = null
-    ) {
+    fun loadUser(channelId: String) {
         if (_state.value is State.Loading) return
         _state.value = State.Loading
 
         viewModelScope.launch {
             try {
                 val user = repository.loadUsersById(
-                    ids = mutableListOf(channelId),
-                    helixClientId = helixClientId,
-                    helixToken = helixToken
+                    ids = mutableListOf(channelId)
                 )?.firstOrNull()
 
                 user ?: error("Failed to load the user.")
 
                 val stream = repository.loadStreamWithUser(
-                    channelId = channelId,
-                    helixClientId = helixClientId,
-                    helixToken = helixToken
+                    channelId = channelId
                 )
 
                 _state.value = State.Loaded(user = user, stream = stream)

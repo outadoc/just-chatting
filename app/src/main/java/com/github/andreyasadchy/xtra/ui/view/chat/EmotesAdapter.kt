@@ -4,29 +4,18 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.ui.chat.EmoteSetItem
-import com.github.andreyasadchy.xtra.util.C
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.prefs
 
 class EmotesAdapter(
     private val clickListener: OnEmoteClickedListener
-) : ListAdapter<EmoteSetItem, ViewHolder>(object :
-    DiffUtil.ItemCallback<EmoteSetItem>() {
+) : ListAdapter<EmoteSetItem, ViewHolder>(EmoteSetItemItemCallback) {
 
-    override fun areItemsTheSame(oldItem: EmoteSetItem, newItem: EmoteSetItem): Boolean {
-        return oldItem == newItem
-    }
-
-    override fun areContentsTheSame(oldItem: EmoteSetItem, newItem: EmoteSetItem): Boolean {
-        return oldItem == newItem
-    }
-}) {
+    var animateEmotes: Boolean = true
 
     companion object {
         const val TYPE_EMOTE = 0
@@ -73,7 +62,7 @@ class EmotesAdapter(
             loadImage(
                 context,
                 emote.getUrl(
-                    animate = context.prefs().getBoolean(C.ANIMATED_EMOTES, true),
+                    animate = animateEmotes,
                     screenDensity = context.resources.displayMetrics.density,
                     isDarkTheme = context.isDarkMode
                 )

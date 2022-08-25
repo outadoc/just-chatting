@@ -11,13 +11,13 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
+import com.github.andreyasadchy.xtra.repository.ChatPreferencesRepository
 import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
-import com.github.andreyasadchy.xtra.ui.chat.EmoteSetItem
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.view.GridAutofitLayoutManager
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
@@ -30,6 +30,9 @@ class EmotesFragment : Fragment(), Injectable, Scrollable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var chatPreferencesRepository: ChatPreferencesRepository
 
     private val viewModel by activityViewModels<ChatViewModel> { viewModelFactory }
 
@@ -55,6 +58,12 @@ class EmotesFragment : Fragment(), Injectable, Scrollable {
         val emotesAdapter = EmotesAdapter(clickListener = { emote ->
             listener?.onEmoteClicked(emote)
         })
+
+        chatPreferencesRepository.animateEmotes
+            .asLiveData()
+            .observe(viewLifecycleOwner) { animateEmotes ->
+                emotesAdapter.animateEmotes = animateEmotes
+            }
 
         with(view as RecyclerView) {
             itemAnimator = null

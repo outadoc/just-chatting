@@ -15,7 +15,7 @@
 
     <item
         android:id="@+id/login"
-        android:title="@string/log_in"
+        android:title="@string/log_out"
         app:showAsAction="never" />
 
 </menu>

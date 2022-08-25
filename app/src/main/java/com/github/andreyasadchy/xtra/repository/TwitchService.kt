@@ -12,64 +12,22 @@ import kotlinx.coroutines.CoroutineScope
 
 interface TwitchService {
 
-    fun loadSearchChannels(
+    suspend fun loadSearchChannels(
         query: String,
-        helixClientId: String?,
-        helixToken: String?,
-        coroutineScope: CoroutineScope
+        coroutineScope: CoroutineScope,
     ): Listing<ChannelSearch>
 
-    fun loadFollowedStreams(
-        userId: String?,
-        helixClientId: String?,
-        helixToken: String?,
-        coroutineScope: CoroutineScope
-    ): Listing<Stream>
-
-    fun loadFollowedChannels(
-        userId: String?,
-        helixClientId: String?,
-        helixToken: String?,
+    suspend fun loadFollowedStreams(coroutineScope: CoroutineScope): Listing<Stream>
+    suspend fun loadFollowedChannels(
         sort: Sort,
         order: Order,
-        coroutineScope: CoroutineScope
+        coroutineScope: CoroutineScope,
     ): Listing<Follow>
 
-    suspend fun loadStreamWithUser(
-        channelId: String,
-        helixClientId: String?,
-        helixToken: String?
-    ): Stream?
-
-    suspend fun loadUsersById(
-        ids: List<String>,
-        helixClientId: String?,
-        helixToken: String?
-    ): List<User>?
-
-    suspend fun loadUsersByLogin(
-        logins: List<String>,
-        helixClientId: String?,
-        helixToken: String?
-    ): List<User>?
-
-    suspend fun loadCheerEmotes(
-        userId: String,
-        helixClientId: String?,
-        helixToken: String?
-    ): List<CheerEmote>
-
-    suspend fun loadEmotesFromSet(
-        helixClientId: String?,
-        helixToken: String?,
-        setIds: List<String>
-    ): List<TwitchEmote>?
-
-    suspend fun loadUserFollowing(
-        helixClientId: String?,
-        helixToken: String?,
-        userId: String?,
-        channelId: String?,
-        userLogin: String?
-    ): Boolean
+    suspend fun loadStreamWithUser(channelId: String): Stream?
+    suspend fun loadUsersById(ids: List<String>): List<User>?
+    suspend fun loadUsersByLogin(logins: List<String>): List<User>?
+    suspend fun loadCheerEmotes(userId: String): List<CheerEmote>
+    suspend fun loadEmotesFromSet(setIds: List<String>): List<TwitchEmote>?
+    suspend fun loadUserFollowing(userId: String?, channelId: String?, userLogin: String?): Boolean
 }

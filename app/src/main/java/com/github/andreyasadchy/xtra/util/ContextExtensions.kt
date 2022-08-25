@@ -2,20 +2,15 @@ package com.github.andreyasadchy.xtra.util
 
 import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
 import android.content.res.Configuration
-import android.net.ConnectivityManager
 import android.util.TypedValue
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.preference.PreferenceManager
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 
-val Context.isNetworkAvailable get() = getConnectivityManager(this).activeNetworkInfo?.isConnectedOrConnecting == true
-
-private fun getConnectivityManager(context: Context) =
-    context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-
-fun Context.prefs(): SharedPreferences = PreferenceManager.getDefaultSharedPreferences(this)
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "fr.outadoc.justchatting")
 
 fun Context.convertDpToPixels(dp: Float) =
     TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, this.resources.displayMetrics)

@@ -18,23 +18,23 @@ import androidx.webkit.WebViewFeature
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.id.ValidationResponse
+import com.github.andreyasadchy.xtra.repository.AuthPreferencesRepository
 import com.github.andreyasadchy.xtra.repository.AuthRepository
-import com.github.andreyasadchy.xtra.util.C
+import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
 import com.github.andreyasadchy.xtra.util.isDarkMode
-import com.github.andreyasadchy.xtra.util.prefs
 import com.github.andreyasadchy.xtra.util.shortToast
 import com.github.andreyasadchy.xtra.util.toast
 import kotlinx.android.synthetic.main.activity_login.havingTrouble
 import kotlinx.android.synthetic.main.activity_login.progressBar
 import kotlinx.android.synthetic.main.activity_login.webView
 import kotlinx.android.synthetic.main.activity_login.webViewContainer
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.io.IOException
-import java.util.regex.Pattern
 import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity(), Injectable {
@@ -42,24 +42,26 @@ class LoginActivity : AppCompatActivity(), Injectable {
     @Inject
     lateinit var repository: AuthRepository
 
-    private val tokenPattern = Pattern.compile("token=(.+?)(?=&)")
+    @Inject
+    lateinit var authPreferencesRepository: AuthPreferencesRepository
+
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        val helixClientId = prefs().getString(C.HELIX_CLIENT_ID, "") ?: ""
-        val user = User.get(this)
+        lifecycleScope.launch {
+            val user = userPreferencesRepository.user.first()
+            if (user !is User.NotLoggedIn) {
+                TwitchApiHelper.checkedValidation = false
+                userPreferencesRepository.updateUser(null)
 
-        if (user !is User.NotLoggedIn) {
-            TwitchApiHelper.checkedValidation = false
-            User.set(this, null)
-
-            lifecycleScope.launch {
                 try {
                     val token = user.helixToken
                     if (!token.isNullOrBlank()) {
-                        repository.revoke(helixClientId, token)
+                        repository.revokeToken()
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -67,11 +69,20 @@ class LoginActivity : AppCompatActivity(), Injectable {
             }
         }
 
-        initWebView(helixClientId)
+        lifecycleScope.launch {
+            combine(
+                authPreferencesRepository.helixClientId,
+                authPreferencesRepository.helixRedirect
+            ) { helixClientId, helixRedirect ->
+                helixClientId to helixRedirect
+            }.collect { (clientId, redirect) ->
+                initWebView(clientId, redirect)
+            }
+        }
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun initWebView(helixClientId: String) {
+    private fun initWebView(helixClientId: String, helixRedirect: String) {
         webViewContainer.isVisible = true
 
         val helixScopes = listOf(
@@ -83,7 +94,6 @@ class LoginActivity : AppCompatActivity(), Injectable {
             "user:read:follows"
         )
 
-        val helixRedirect = prefs().getString(C.HELIX_REDIRECT, "https://localhost")
         val helixAuthUrl =
             "https://id.twitch.tv/oauth2/authorize".toHttpUrl()
                 .newBuilder()
@@ -168,7 +178,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
                     view: WebView,
                     errorCode: Int,
                     description: String,
-                    failingUrl: String
+                    failingUrl: String,
                 ) {
                     val errorMessage = if (errorCode == -11) {
                         getString(R.string.browser_workaround)
@@ -187,7 +197,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
     }
 
     private fun loginIfValidUrl(url: String): Boolean {
-        val matcher = tokenPattern.matcher(url)
+        val matcher = "token=(.+?)(?=&)".toPattern().matcher(url)
         if (!matcher.find()) return false
 
         webViewContainer.isVisible = false
@@ -196,15 +206,9 @@ class LoginActivity : AppCompatActivity(), Injectable {
         val token = matcher.group(1)!!
         lifecycleScope.launch {
             try {
-                val response: ValidationResponse =
-                    repository.validate(TwitchApiHelper.addTokenPrefixHelix(token))
-                        ?: throw IOException()
-
-                TwitchApiHelper.checkedValidation = true
-
-                User.set(
-                    this@LoginActivity,
-                    User.LoggedIn(
+                val response = repository.validate(token) ?: throw IOException()
+                userPreferencesRepository.updateUser(
+                    user = User.LoggedIn(
                         id = response.userId,
                         login = response.login,
                         helixToken = token

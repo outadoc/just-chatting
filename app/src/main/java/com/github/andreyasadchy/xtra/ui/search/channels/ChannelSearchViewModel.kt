@@ -1,46 +1,35 @@
 package com.github.andreyasadchy.xtra.ui.search.channels
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.repository.Listing
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
-import com.github.andreyasadchy.xtra.util.nullIfEmpty
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ChannelSearchViewModel @Inject constructor(
     private val repository: TwitchService
 ) : PagedListViewModel<ChannelSearch>() {
 
-    private val query = MutableLiveData<String>()
-    private var helixClientId = MutableLiveData<String>()
-    private var helixToken = MutableLiveData<String>()
+    private val query = MutableStateFlow<String?>(null)
 
-    override val result: LiveData<Listing<ChannelSearch>> = Transformations.map(query) {
-        repository.loadSearchChannels(
-            query = it,
-            helixClientId = helixClientId.value?.nullIfEmpty(),
-            helixToken = helixToken.value?.nullIfEmpty(),
-            coroutineScope = viewModelScope
-        )
-    }
+    private val _result: Flow<Listing<ChannelSearch>> =
+        query.filterNotNull()
+            .distinctUntilChanged()
+            .map { query ->
+                repository.loadSearchChannels(query, viewModelScope)
+            }
 
-    fun setQuery(
-        query: String,
-        helixClientId: String? = null,
-        helixToken: String? = null
-    ) {
-        if (this.helixClientId.value != helixClientId) {
-            this.helixClientId.value = helixClientId
-        }
-        if (this.helixToken.value != helixToken) {
-            this.helixToken.value = helixToken
-        }
-        if (this.query.value != query) {
-            this.query.value = query
-        }
+    override val result: LiveData<Listing<ChannelSearch>> = _result.asLiveData()
+
+    fun setQuery(query: String) {
+        this.query.value = query
     }
 }

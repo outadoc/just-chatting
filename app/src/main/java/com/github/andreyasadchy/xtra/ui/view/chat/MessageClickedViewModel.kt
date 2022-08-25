@@ -14,21 +14,15 @@ class MessageClickedViewModel @Inject constructor(private val repository: Twitch
     private val user = MutableLiveData<User?>()
     private var isLoading = false
 
-    fun loadUser(
-        channelId: String,
-        helixClientId: String? = null,
-        helixToken: String? = null
-    ): MutableLiveData<User?> {
+    fun loadUser(channelId: String): MutableLiveData<User?> {
         if (user.value == null && !isLoading) {
             isLoading = true
             viewModelScope.launch {
                 try {
-                    val u = repository.loadUsersById(
-                        mutableListOf(channelId),
-                        helixClientId,
-                        helixToken
-                    )?.firstOrNull()
-                    user.postValue(u)
+                    user.postValue(
+                        repository.loadUsersById(listOf(channelId))
+                            ?.firstOrNull()
+                    )
                 } catch (e: Exception) {
                     _errors.postValue(e)
                 } finally {

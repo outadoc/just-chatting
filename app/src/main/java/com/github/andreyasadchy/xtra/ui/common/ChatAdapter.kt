@@ -44,15 +44,16 @@ import com.github.andreyasadchy.xtra.util.isDarkMode
 import kotlin.collections.set
 
 class ChatAdapter(
-    private val context: Context,
-    private val enableTimestamps: Boolean,
-    private val animateEmotes: Boolean
+    private val context: Context
 ) : ListAdapter<ChatEntry, ChatAdapter.ViewHolder>(ChatEntryDiffUtil) {
 
     private companion object {
         const val ITEM_TYPE_MESSAGE = 0
         const val ITEM_TYPE_NOTICE = 1
     }
+
+    var showTimestamps: Boolean = false
+    var animateEmotes: Boolean = true
 
     private val screenDensity get() = context.resources.displayMetrics.density
 
@@ -111,7 +112,7 @@ class ChatAdapter(
         holder.bindTimestamp(
             timestamp = chatMessage.timestamp
                 ?.formatTimestamp(context)
-                ?.takeIf { enableTimestamps }
+                ?.takeIf { showTimestamps }
         )
 
         when (chatMessage) {

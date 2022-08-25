@@ -6,20 +6,20 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
-import com.github.andreyasadchy.xtra.XtraApp
+import com.github.andreyasadchy.xtra.MainApplication
 import com.github.andreyasadchy.xtra.util.LifecycleListener
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
 
 object AppInjector {
 
-    fun init(xtraApp: XtraApp) {
+    fun init(mainApplication: MainApplication) {
         DaggerXtraComponent.builder()
-            .application(xtraApp)
+            .application(mainApplication)
             .build()
-            .inject(xtraApp)
+            .inject(mainApplication)
 
-        xtraApp.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
+        mainApplication.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
             override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
                 if (activity is Injectable) {
                     AndroidInjection.inject(activity)
@@ -36,13 +36,13 @@ object AppInjector {
                                     AndroidSupportInjection.inject(f)
                                 }
                                 if (f is LifecycleListener) {
-                                    xtraApp.addLifecycleListener(f)
+                                    mainApplication.addLifecycleListener(f)
                                 }
                             }
 
                             override fun onFragmentDestroyed(fm: FragmentManager, f: Fragment) {
                                 if (f is LifecycleListener) {
-                                    xtraApp.removeLifecycleListener(f)
+                                    mainApplication.removeLifecycleListener(f)
                                 }
                             }
                         },

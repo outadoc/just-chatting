@@ -1,7 +1,7 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import android.util.Log
-import com.github.andreyasadchy.xtra.XtraApp
+import com.github.andreyasadchy.xtra.MainApplication
 import com.github.andreyasadchy.xtra.model.chat.Command
 import com.tonyodev.fetch2core.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
@@ -23,7 +23,7 @@ abstract class BaseChatThread(
     private val listener: OnMessageReceivedListener,
     channelName: String
 ) {
-    private val appContext = XtraApp.INSTANCE.applicationContext
+    private val appContext = MainApplication.INSTANCE.applicationContext
 
     private var client: OkHttpClient = OkHttpClient()
     protected var socket: WebSocket? = null

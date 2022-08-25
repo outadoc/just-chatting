@@ -1,6 +1,6 @@
 package com.github.andreyasadchy.xtra.util.chat
 
-import com.github.andreyasadchy.xtra.XtraApp
+import com.github.andreyasadchy.xtra.MainApplication
 import com.tonyodev.fetch2core.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -24,7 +24,7 @@ class PubSubWebSocket(
     channelId: String,
     private val listener: OnMessageReceivedListener
 ) {
-    private val appContext = XtraApp.INSTANCE.applicationContext
+    private val appContext = MainApplication.INSTANCE.applicationContext
 
     private var client: OkHttpClient = OkHttpClient()
     private var socket: WebSocket? = null

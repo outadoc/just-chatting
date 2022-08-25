@@ -6,7 +6,7 @@ import androidx.paging.DataSource
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.github.andreyasadchy.xtra.XtraApp
+import com.github.andreyasadchy.xtra.MainApplication
 import com.github.andreyasadchy.xtra.api.HelixApi
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
@@ -102,7 +102,7 @@ class FollowedChannelsDataSource(
         val id = follow.to_id ?: return
         val profileImageUrl = follow.profileImageURL ?: return
         updateLocalUser(
-            context = XtraApp.INSTANCE.applicationContext,
+            context = MainApplication.INSTANCE.applicationContext,
             userId = id,
             profileImageURL = profileImageUrl
         )

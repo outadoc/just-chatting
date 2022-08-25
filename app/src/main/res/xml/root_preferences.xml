@@ -64,7 +64,7 @@
         app:iconSpaceReserved="false" />
 
     <EditTextPreference
-        android:defaultValue="ilfexgv3nnljz3isbm257gzwrzr7bi"
+        android:defaultValue="l9klwmh97qgn0s0me276ezsft5szp2"
         android:key="helix_client_id"
         android:maxLines="1"
         android:title="@string/api_helix"

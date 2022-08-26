@@ -92,6 +92,9 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                     if (userMessage == null) {
                         ChatEntry.Highlighted(
                             header = message,
+                            headerIconResId = msgId?.let { messageId ->
+                                TwitchApiHelper.getMessageIdIcon(messageId)
+                            },
                             data = null,
                             timestamp = timestamp
                         )
@@ -99,6 +102,9 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                         ChatEntry.Highlighted(
                             header = message ?: msgId?.let { messageId ->
                                 TwitchApiHelper.getMessageIdString(context, messageId)
+                            },
+                            headerIconResId = msgId?.let { messageId ->
+                                TwitchApiHelper.getMessageIdIcon(messageId)
                             },
                             data = ChatEntry.Data.Rich(
                                 message = userMessage.message,
@@ -116,17 +122,31 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                     }
                 }
                 is LiveChatMessage -> {
-                    val header = when {
-                        systemMsg != null -> systemMsg
-                        msgId != null -> TwitchApiHelper.getMessageIdString(context, msgId)
-                        isFirst -> context.getString(R.string.chat_first)
-                        rewardId != null -> context.getString(R.string.chat_reward)
-                        else -> null
+                    val (header, icon) = when {
+                        systemMsg != null -> {
+                            systemMsg to TwitchApiHelper.getMessageIdIcon(msgId)
+                        }
+                        msgId != null -> {
+                            Pair(
+                                TwitchApiHelper.getMessageIdString(context, msgId),
+                                TwitchApiHelper.getMessageIdIcon(msgId)
+                            )
+                        }
+                        isFirst -> {
+                            context.getString(R.string.chat_first) to R.drawable.ic_wave
+                        }
+                        rewardId != null -> {
+                            context.getString(R.string.chat_reward) to R.drawable.ic_toll
+                        }
+                        else -> {
+                            null to null
+                        }
                     }
 
                     if (header != null || isAction) {
                         ChatEntry.Highlighted(
                             header = header,
+                            headerIconResId = icon,
                             data = ChatEntry.Data.Rich(
                                 message = message,
                                 userId = userId,
@@ -149,7 +169,7 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                                 userId = userId,
                                 userName = userName,
                                 userLogin = userLogin,
-                                isAction = isAction,
+                                isAction = false,
                                 color = color,
                                 emotes = emotes,
                                 badges = badges,
@@ -162,7 +182,6 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                 is PubSubPointReward -> {
                     ChatEntry.Highlighted(
                         header = rewardCost?.toString(),
-                        headerImage = rewardImage,
                         data = ChatEntry.Data.Plain(
                             message = context.getString(
                                 R.string.user_redeemed,

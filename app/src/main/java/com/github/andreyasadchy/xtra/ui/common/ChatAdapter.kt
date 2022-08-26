@@ -21,6 +21,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.ColorInt
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.text.getSpans
@@ -44,7 +45,7 @@ import com.github.andreyasadchy.xtra.util.isDarkMode
 import kotlin.collections.set
 
 class ChatAdapter(
-    private val context: Context
+    private val context: Context,
 ) : ListAdapter<ChatEntry, ChatAdapter.ViewHolder>(ChatEntryDiffUtil) {
 
     private companion object {
@@ -81,7 +82,7 @@ class ChatAdapter(
         fun onMessageClick(
             originalMessage: CharSequence,
             formattedMessage: CharSequence,
-            userId: String?
+            userId: String?,
         )
     }
 
@@ -132,6 +133,16 @@ class ChatAdapter(
 
                 holder.noticeTitle?.apply {
                     text = chatMessage.header
+                    setCompoundDrawablesRelative(
+                        chatMessage.headerIconResId?.let { resId ->
+                            AppCompatResources.getDrawable(context, resId)?.apply {
+                                setBounds(0, 0, minimumWidth, minimumHeight);
+                            }
+                        },
+                        null,
+                        null,
+                        null
+                    )
                     isVisible = text.isNotEmpty()
                 }
             }
@@ -425,7 +436,7 @@ class ChatAdapter(
         images: List<Image>,
         originalMessage: CharSequence,
         builder: SpannableStringBuilder,
-        userId: String?
+        userId: String?,
     ) {
         images.forEach { image ->
             loadCoil(
@@ -443,7 +454,7 @@ class ChatAdapter(
         image: Image,
         originalMessage: CharSequence,
         builder: SpannableStringBuilder,
-        userId: String?
+        userId: String?,
     ) {
         val request = ImageRequest.Builder(context)
             .data(image.url)
@@ -585,19 +596,20 @@ class ChatAdapter(
 
         val message: TextView = itemView.findViewById(R.id.textView_chatMessage)
         val noticeTitle: TextView? = itemView.findViewById(R.id.textView_chatNoticeTitle)
-        private val inReplyTo: TextView? = itemView.findViewById(R.id.textView_inReplyTo)
+        private val inReplyTo: TextView = itemView.findViewById(R.id.textView_inReplyTo)
         private val messageContainer: ViewGroup? = itemView.findViewById(R.id.messageContainer)
         private val timestamp: TextView = itemView.findViewById(R.id.textView_timestamp)
 
         fun clearMessage() {
             messageContainer?.isVisible = false
+            inReplyTo.isVisible = false
         }
 
         fun bind(
             originalMessage: CharSequence,
             formattedMessage: Spannable,
             userId: String?,
-            inReplyTo: CharSequence?
+            inReplyTo: CharSequence?,
         ) {
             messageContainer?.isVisible = true
 
@@ -613,8 +625,8 @@ class ChatAdapter(
                 }
             }
 
-            this.inReplyTo?.isVisible = inReplyTo != null
-            this.inReplyTo?.text = inReplyTo
+            this.inReplyTo.isVisible = inReplyTo != null
+            this.inReplyTo.text = inReplyTo
         }
 
         fun bindTimestamp(timestamp: String?) {

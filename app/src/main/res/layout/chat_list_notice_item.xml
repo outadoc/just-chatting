@@ -29,10 +29,27 @@
                 android:id="@+id/textView_chatNoticeTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawablePadding="4dp"
                 android:paddingHorizontal="4dp"
                 android:textAppearance="?textAppearanceTitleSmall"
                 android:textColor="?attr/colorOnBackground"
+                app:drawableTint="?colorOnBackground"
+                tools:drawableStartCompat="@drawable/ic_sparkles"
                 tools:text="@tools:sample/lorem" />
+
+            <TextView
+                android:id="@+id/textView_inReplyTo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:alpha="0.5"
+                android:drawablePadding="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="?colorOnBackground"
+                app:drawableStartCompat="@drawable/ic_reply"
+                app:drawableTint="?colorOnBackground"
+                tools:text="@tools:sample/lorem/random" />
 
             <LinearLayout
                 android:id="@+id/messageContainer"

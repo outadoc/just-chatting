@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.ui.view.chat.model
 
 import com.github.andreyasadchy.xtra.model.chat.Badge
 import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
-import com.github.andreyasadchy.xtra.model.chat.RemoteImage
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import kotlinx.datetime.Instant
 
@@ -22,23 +21,23 @@ sealed class ChatEntry {
             val color: String?,
             val emotes: List<TwitchEmote>?,
             val badges: List<Badge>?,
-            val inReplyTo: LiveChatMessage.InReplyTo?
+            val inReplyTo: LiveChatMessage.InReplyTo?,
         ) : Data
 
         class Plain(
-            val message: String?
+            val message: String?,
         ) : Data
     }
 
     data class Simple(
         override val data: Data,
-        override val timestamp: Instant?
+        override val timestamp: Instant?,
     ) : ChatEntry()
 
     data class Highlighted(
         val header: String?,
-        val headerImage: RemoteImage? = null,
+        val headerIconResId: Int? = null,
         override val data: Data?,
-        override val timestamp: Instant?
+        override val timestamp: Instant?,
     ) : ChatEntry()
 }

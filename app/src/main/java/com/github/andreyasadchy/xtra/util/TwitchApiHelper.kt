@@ -1,6 +1,7 @@
 package com.github.andreyasadchy.xtra.util
 
 import android.content.Context
+import androidx.annotation.DrawableRes
 import com.github.andreyasadchy.xtra.R
 
 object TwitchApiHelper {
@@ -72,6 +73,16 @@ object TwitchApiHelper {
         return when (msgId) {
             "highlighted-message" -> context.getString(R.string.irc_msgid_highlighted_message)
             "announcement" -> context.getString(R.string.irc_msgid_announcement)
+            else -> null
+        }
+    }
+
+    @DrawableRes
+    fun getMessageIdIcon(msgId: String?): Int? {
+        return when (msgId) {
+            "highlighted-message" -> R.drawable.ic_sparkles
+            "announcement" -> R.drawable.ic_campaign
+            "resub", "sub" -> R.drawable.ic_star
             else -> null
         }
     }

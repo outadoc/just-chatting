@@ -7,7 +7,7 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
 import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.formatCount
 import com.github.andreyasadchy.xtra.util.loadImage
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userFollowers
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userImage
@@ -53,7 +53,7 @@ class ChannelSearchAdapter(
                 userFollowers.isVisible = true
                 userFollowers.text = context.getString(
                     R.string.followers,
-                    TwitchApiHelper.formatCount(item.followers_count)
+                    item.followers_count.formatCount()
                 )
             } else {
                 userFollowers.isVisible = false

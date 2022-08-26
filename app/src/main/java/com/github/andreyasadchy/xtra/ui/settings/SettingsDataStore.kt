@@ -28,7 +28,6 @@ class SettingsDataStore(applicationContext: Context) : PreferenceDataStore() {
         }
     }
 
-
     override fun getBoolean(key: String, defValue: Boolean): Boolean {
         return runBlocking {
             dataStore.data.map { prefs -> prefs[booleanPreferencesKey(key)] ?: defValue }.first()

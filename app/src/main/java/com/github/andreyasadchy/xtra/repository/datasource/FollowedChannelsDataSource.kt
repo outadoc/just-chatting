@@ -14,7 +14,7 @@ import com.github.andreyasadchy.xtra.model.helix.follows.Sort
 import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.util.DownloadUtils
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.getTemplateUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.io.path.Path
@@ -165,7 +165,7 @@ class FollowedChannelsDataSource(
                 try {
                     val loader = ImageLoader(context)
                     val request = ImageRequest.Builder(context)
-                        .data(TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage"))
+                        .data(getTemplateUrl(profileImageURL, "profileimage"))
                         .build()
 
                     val result = (loader.execute(request) as SuccessResult).drawable

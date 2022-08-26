@@ -13,7 +13,7 @@ import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.repository.datasource.FollowedChannelsDataSource
 import com.github.andreyasadchy.xtra.repository.datasource.FollowedStreamsDataSource
 import com.github.andreyasadchy.xtra.repository.datasource.SearchChannelsDataSource
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper.addTokenPrefixHelix
+import com.github.andreyasadchy.xtra.util.addTokenPrefixHelix
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first

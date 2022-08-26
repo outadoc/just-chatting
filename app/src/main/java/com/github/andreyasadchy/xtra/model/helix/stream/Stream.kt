@@ -3,7 +3,7 @@ package com.github.andreyasadchy.xtra.model.helix.stream
 import android.os.Parcelable
 import com.github.andreyasadchy.xtra.model.helix.tag.Tag
 import com.github.andreyasadchy.xtra.model.helix.user.User
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
+import com.github.andreyasadchy.xtra.util.getTemplateUrl
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -25,5 +25,5 @@ data class Stream(
 ) : Parcelable {
 
     val channelLogo: String?
-        get() = TwitchApiHelper.getTemplateUrl(profileImageURL, "profileimage")
+        get() = getTemplateUrl(profileImageURL, "profileimage")
 }

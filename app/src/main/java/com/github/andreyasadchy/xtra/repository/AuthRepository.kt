@@ -3,7 +3,7 @@ package com.github.andreyasadchy.xtra.repository
 import com.github.andreyasadchy.xtra.api.IdApi
 import com.github.andreyasadchy.xtra.model.id.ValidationResponse
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper.addTokenPrefixHelix
+import com.github.andreyasadchy.xtra.util.addTokenPrefixHelix
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext

@@ -136,7 +136,7 @@ class ChatAdapter(
                     setCompoundDrawablesRelative(
                         chatMessage.headerIconResId?.let { resId ->
                             AppCompatResources.getDrawable(context, resId)?.apply {
-                                setBounds(0, 0, minimumWidth, minimumHeight);
+                                setBounds(0, 0, minimumWidth, minimumHeight)
                             }
                         },
                         null,

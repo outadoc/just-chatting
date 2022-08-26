@@ -58,7 +58,8 @@ class ChatMessageParser @Inject constructor() {
             emotes = ircMessage.tags.parseEmotes(),
             badges = ircMessage.tags.parseBadges(),
             timestamp = ircMessage.tags.parseTimestamp(),
-            inReplyTo = ircMessage.tags.parseParentMessage()
+            inReplyTo = ircMessage.tags.parseParentMessage(),
+            msgId = ircMessage.tags.messageId
         )
     }
 

@@ -117,7 +117,8 @@ data class LiveChatMessage(
     val systemMsg: String? = null,
     val timestamp: Instant? = null,
     val rewardId: String? = null,
-    val inReplyTo: InReplyTo? = null
+    val inReplyTo: InReplyTo? = null,
+    val msgId: String? = null
 ) : ChatMessage {
     data class InReplyTo(
         val id: String,

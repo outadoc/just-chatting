@@ -118,6 +118,7 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                 is LiveChatMessage -> {
                     val header = when {
                         systemMsg != null -> systemMsg
+                        msgId != null -> TwitchApiHelper.getMessageIdString(context, msgId)
                         isFirst -> context.getString(R.string.chat_first)
                         rewardId != null -> context.getString(R.string.chat_reward)
                         else -> null
@@ -174,7 +175,8 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                 }
                 PingCommand,
                 is RoomState,
-                is UserState -> null
+                is UserState,
+                -> null
             }
         }
     }

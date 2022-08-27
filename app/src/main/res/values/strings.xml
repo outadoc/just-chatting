@@ -11,7 +11,6 @@
     <string name="videos">Videos</string>
     <string name="clips">Clips</string>
     <string name="scroll_down">Scroll down</string>
-    <string name="log_in">Log in</string>
     <string name="log_out">Log out</string>
     <string name="token_expired">Your session has expired. Please log in again</string>
     <string name="no_connection">No Internet connection</string>
@@ -80,7 +79,6 @@
     <string name="chat_input_emote_cd">Open emote picker</string>
     <string name="chat_reward">Channel point redemption</string>
     <string name="twitch">Twitch</string>
-    <string name="local">Local</string>
     <string name="days">d</string>
     <string name="seconds">s</string>
     <string name="show_uptime">Show stream uptime</string>

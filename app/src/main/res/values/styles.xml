@@ -27,20 +27,6 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
-    <style name="BottomSheetLight" parent="Theme.Material3.Light.BottomSheetDialog" />
-
-    <style name="BottomSheetAmoled" parent="Theme.Material3.Dark.BottomSheetDialog" />
-
-    <style name="DialogLight" parent="Theme.Material3.Light.Dialog" />
-
-    <style name="DialogAmoled" parent="Theme.Material3.Dark.Dialog" />
-
-    <style name="Thumbnail">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">0dp</item>
-        <item name="layout_constraintDimensionRatio">H,16:9</item>
-    </style>
-
     <style name="UserPicture">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">50dp</item>

@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <plurals name="views">
-        <item quantity="one">%s view</item>
-        <item quantity="other">@string/views</item>
-    </plurals>
     <plurals name="viewers">
         <item quantity="one">%s viewer</item>
         <item quantity="other">@string/viewers_count</item>

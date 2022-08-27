@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="spinnerFollowedEntries">
-        <item>@string/live</item>
-        <item>@string/channels</item>
-    </string-array>
 
     <array name="randomChatColors">
         <item>@color/chatUserColor0</item>

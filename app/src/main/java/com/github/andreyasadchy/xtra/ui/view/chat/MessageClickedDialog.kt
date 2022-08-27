@@ -66,6 +66,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
     private val viewModel by viewModels<MessageClickedViewModel> { viewModelFactory }
 
     private lateinit var listener: OnButtonClickListener

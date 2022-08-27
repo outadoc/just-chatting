@@ -8,20 +8,16 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.ViewModelProvider
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
-import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.repository.AuthPreferencesRepository
-import com.github.andreyasadchy.xtra.repository.AuthRepository
-import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.convertDpToPixels
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.shortToast
@@ -30,55 +26,38 @@ import kotlinx.android.synthetic.main.activity_login.havingTrouble
 import kotlinx.android.synthetic.main.activity_login.progressBar
 import kotlinx.android.synthetic.main.activity_login.webView
 import kotlinx.android.synthetic.main.activity_login.webViewContainer
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import java.io.IOException
 import javax.inject.Inject
 
 class LoginActivity : AppCompatActivity(), Injectable {
 
     @Inject
-    lateinit var repository: AuthRepository
+    lateinit var viewModelFactory: ViewModelProvider.Factory
 
-    @Inject
-    lateinit var authPreferencesRepository: AuthPreferencesRepository
-
-    @Inject
-    lateinit var userPreferencesRepository: UserPreferencesRepository
+    private val viewModel by viewModels<LoginViewModel> { viewModelFactory }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        lifecycleScope.launch {
-            val user = userPreferencesRepository.user.first()
-            if (user !is User.NotLoggedIn) {
-                TwitchApiHelper.checkedValidation = false
-                userPreferencesRepository.updateUser(null)
-
-                try {
-                    val token = user.helixToken
-                    if (!token.isNullOrBlank()) {
-                        repository.revokeToken()
+        viewModel.state.observe(this) { state ->
+            when (state) {
+                LoginViewModel.State.Initial -> {}
+                is LoginViewModel.State.LoadWebView -> {
+                    state.exception?.let {
+                        toast(R.string.connection_error)
                     }
-                } catch (e: Exception) {
-                    e.printStackTrace()
+
+                    initWebView(state.clientId, state.redirect)
+                }
+                LoginViewModel.State.Done -> {
+                    setResult(RESULT_OK)
+                    finish()
                 }
             }
         }
 
-        lifecycleScope.launch {
-            combine(
-                authPreferencesRepository.helixClientId,
-                authPreferencesRepository.helixRedirect
-            ) { helixClientId, helixRedirect ->
-                helixClientId to helixRedirect
-            }.collect { (clientId, redirect) ->
-                initWebView(clientId, redirect)
-            }
-        }
+        viewModel.onStart()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -203,25 +182,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
         webViewContainer.isVisible = false
         progressBar.isVisible = true
 
-        val token = matcher.group(1)!!
-        lifecycleScope.launch {
-            try {
-                val response = repository.validate(token) ?: throw IOException()
-                userPreferencesRepository.updateUser(
-                    user = User.LoggedIn(
-                        id = response.userId,
-                        login = response.login,
-                        helixToken = token
-                    )
-                )
-
-                setResult(RESULT_OK)
-                finish()
-            } catch (e: Exception) {
-                toast(R.string.connection_error)
-            }
-        }
-
+        viewModel.onTokenReceived(token = matcher.group(1)!!)
         return true
     }
 

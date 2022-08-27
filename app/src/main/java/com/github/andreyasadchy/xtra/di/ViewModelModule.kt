@@ -6,6 +6,7 @@ import com.github.andreyasadchy.xtra.ui.chat.ChannelChatViewModel
 import com.github.andreyasadchy.xtra.ui.chat.ChatViewModel
 import com.github.andreyasadchy.xtra.ui.common.GenericViewModelFactory
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsViewModel
+import com.github.andreyasadchy.xtra.ui.login.LoginViewModel
 import com.github.andreyasadchy.xtra.ui.main.MainViewModel
 import com.github.andreyasadchy.xtra.ui.search.channels.ChannelSearchViewModel
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsViewModel
@@ -61,4 +62,8 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(FollowedChannelsViewModel::class)
     abstract fun bindFollowedChannelsViewModel(followedChannelsViewModel: FollowedChannelsViewModel): ViewModel
+    @Binds
+    @IntoMap
+    @ViewModelKey(LoginViewModel::class)
+    abstract fun bindLoginViewModel(loginViewModel: LoginViewModel): ViewModel
 }

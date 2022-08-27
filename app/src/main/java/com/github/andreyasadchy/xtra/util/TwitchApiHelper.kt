@@ -82,6 +82,7 @@ fun String.getMessageIdIcon(): Int? {
         "highlighted-message" -> R.drawable.ic_sparkles
         "announcement" -> R.drawable.ic_campaign
         "resub", "sub" -> R.drawable.ic_star
+        "submysterygift", "subgift" -> R.drawable.ic_redeem
         else -> null
     }
 }

@@ -154,7 +154,7 @@
     <string name="irc_notice_untimeout_banned">%s is permanently banned. Use “/unban” to remove a ban.</string>
     <string name="irc_notice_untimeout_success">%s is no longer timed out in this channel.</string>
     <string name="irc_notice_unvip_success">You have removed %s as a VIP of this channel.</string>
-    <string name="irc_notice_usage_ban">Usage: “/ban &lt;username&gt; [reason]” Permanently prevent a user from chatting. Reason is optional and will be shown to the target and other moderators. Use “/unban” to remove a ban.</string>
+    <string name="irc_notice_usage_ban">Usage: “/ban &lt;username&gt; [reason]”\nPermanently prevent a user from chatting. Reason is optional and will be shown to the target and other moderators. Use “/unban” to remove a ban.</string>
     <string name="irc_notice_usage_clear">Usage: “/clear”\nClear chat history for all users in this room.</string>
     <string name="irc_notice_usage_color">Usage: “/color” &lt;color&gt;\nChange your username color. Color must be in hex (#000000) or one of the following: %s.</string>
     <string name="irc_notice_usage_commercial">Usage: “/commercial [length]”\nTriggers a commercial. Length (optional) must be a positive number of seconds.</string>
@@ -165,24 +165,24 @@
     <string name="irc_notice_usage_followers_off">Usage: /followersoff”\nDisables followers-only mode.</string>
     <string name="irc_notice_usage_followers_on">Usage: “/followers”\nEnables followers-only mode (only users who have followed for “duration” may chat). Examples: “30m”, “1 week”, “5 days 12 hours”. Must be less than 3 months.</string>
     <string name="irc_notice_usage_help">Usage: “/help”\nLists the commands available to you in this room.</string>
-    <string name="irc_notice_usage_host">Usage: “/host &lt;channel&gt;“\nHost another channel. Use “/unhost” to unset host mode.</string>
-    <string name="irc_notice_usage_marker">Usage: “/marker &lt;optional comment&gt;“\nAdds a stream marker (with an optional comment, max 140 characters) at the current timestamp. You can use markers in the Highlighter for easier editing.</string>
+    <string name="irc_notice_usage_host">Usage: “/host &lt;channel&gt;”\nHost another channel. Use “/unhost” to unset host mode.</string>
+    <string name="irc_notice_usage_marker">Usage: “/marker &lt;optional comment&gt;”\nAdds a stream marker (with an optional comment, max 140 characters) at the current timestamp. You can use markers in the Highlighter for easier editing.</string>
     <string name="irc_notice_usage_me">Usage: “/me &lt;message&gt;” - Express an action in the third-person.</string>
     <string name="irc_notice_usage_mod">Usage: “/mod &lt;username&gt;” - Grant moderator status to a user. Use “/mods” to list the moderators of this channel.</string>
     <string name="irc_notice_usage_mods">Usage: “/mods”\nLists the moderators of this channel.</string>
     <string name="irc_notice_usage_r9k_off">Usage: “/uniquechatoff” - Disables unique-chat mode.</string>
     <string name="irc_notice_usage_r9k_on">Usage: “/uniquechat” - Enables unique-chat mode. Use “/uniquechatoff” to disable.</string>
-    <string name="irc_notice_usage_raid">Usage: “/raid &lt;channel&gt;“\nRaid another channel.\nUse “/unraid” to cancel the Raid.</string>
+    <string name="irc_notice_usage_raid">Usage: “/raid &lt;channel&gt;”\nRaid another channel.\nUse “/unraid” to cancel the Raid.</string>
     <string name="irc_notice_usage_slow_off">Usage: “/slowoff”\nDisables slow mode.</string>
     <string name="irc_notice_usage_slow_on">Usage: “/slow” [duration]\nEnables slow mode (limit how often users may send messages). Duration (optional, default=%s) must be a positive integer number of seconds.\nUse “/slowoff” to disable.</string>
     <string name="irc_notice_usage_subs_off">Usage: “/subscribersoff”\nDisables subscribers-only mode.</string>
     <string name="irc_notice_usage_subs_on">Usage: “/subscribers”\nEnables subscribers-only mode (only subscribers may chat in this channel).\nUse “/subscribersoff” to disable.</string>
     <string name="irc_notice_usage_timeout">Usage: “/timeout &lt;username&gt; [duration][time unit] [reason]”\nTemporarily prevent a user from chatting. Duration (optional, default=10 minutes) must be a positive integer; time unit (optional, default=s) must be one of s, m, h, d, w; maximum duration is 2 weeks. Combinations like 1d2h are also allowed. Reason is optional and will be shown to the target user and other moderators.\nUse “untimeout” to remove a timeout.</string>
-    <string name="irc_notice_usage_unban">Usage: “/unban &lt;username&gt;“\nRemoves a ban on a user.</string>
+    <string name="irc_notice_usage_unban">Usage: “/unban &lt;username&gt;”\nRemoves a ban on a user.</string>
     <string name="irc_notice_usage_unhost">Usage: “/unhost”\nStop hosting another channel.</string>
     <string name="irc_notice_usage_unmod">Usage: “/unmod &lt;username&gt;” - Revoke moderator status from a user. Use “/mods” to list the moderators of this channel.</string>
     <string name="irc_notice_usage_unraid">Usage: “/unraid”\nCancel the Raid.</string>
-    <string name="irc_notice_usage_untimeout">Usage: “/untimeout &lt;username&gt;“\nRemoves a timeout on a user.</string>
+    <string name="irc_notice_usage_untimeout">Usage: “/untimeout &lt;username&gt;”\nRemoves a timeout on a user.</string>
     <string name="irc_notice_usage_unvip">Usage: “/unvip &lt;username&gt;” - Revoke VIP status from a user. Use “/vips” to list the VIPs of this channel.</string>
     <string name="irc_notice_usage_user">Usage: “/user” &lt;username&gt; - Display information about a specific user on this channel.</string>
     <string name="irc_notice_usage_vip">Usage: “/vip &lt;username&gt;” - Grant VIP status to a user. Use “/vips” to list the VIPs of this channel.</string>

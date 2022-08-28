@@ -55,16 +55,12 @@ sealed class Command : ChatCommand {
     data class SendMessageError(
         val timestamp: Instant?,
         val throwable: Throwable?
-    ) : Command() {
-        val message: String = throwable.toString()
-    }
+    ) : Command()
 
     data class SocketError(
         val timestamp: Instant?,
         val throwable: Throwable?
-    ) : Command() {
-        val message: String = throwable.toString()
-    }
+    ) : Command()
 }
 
 sealed interface ChatMessage : ChatCommand {

@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.util.chat
 
-import android.util.Log
 import com.github.andreyasadchy.xtra.model.chat.ChatCommand
 import com.github.andreyasadchy.xtra.model.chat.Command
 import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
@@ -19,7 +18,6 @@ class MessageListenerImpl(
 ) : OnMessageReceivedListener {
 
     override fun onCommand(command: ChatCommand) {
-        Log.d("Chat", "onCommand: $command")
         when (command) {
             is LiveChatMessage -> callback.onMessage(command)
             is Command.ClearChat -> if (showClearChat) callback.onMessage(command)

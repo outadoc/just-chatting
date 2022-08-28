@@ -19,56 +19,57 @@ object AppInjector {
             .build()
             .inject(mainApplication)
 
-        mainApplication.registerActivityLifecycleCallbacks(object : Application.ActivityLifecycleCallbacks {
-            override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-                if (activity is Injectable) {
-                    AndroidInjection.inject(activity)
+        mainApplication.registerActivityLifecycleCallbacks(object :
+                Application.ActivityLifecycleCallbacks {
+                override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+                    if (activity is Injectable) {
+                        AndroidInjection.inject(activity)
+                    }
+
+                    if (activity is FragmentActivity) {
+                        activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
+                            object : FragmentManager.FragmentLifecycleCallbacks() {
+                                override fun onFragmentCreated(
+                                    fm: FragmentManager,
+                                    f: Fragment,
+                                    savedInstanceState: Bundle?
+                                ) {
+                                    if (f is Injectable) {
+                                        AndroidSupportInjection.inject(f)
+                                    }
+                                    if (f is LifecycleListener) {
+                                        mainApplication.addLifecycleListener(f)
+                                    }
+                                }
+
+                                override fun onFragmentDestroyed(fm: FragmentManager, f: Fragment) {
+                                    if (f is LifecycleListener) {
+                                        mainApplication.removeLifecycleListener(f)
+                                    }
+                                }
+                            },
+                            true
+                        )
+                    }
                 }
 
-                if (activity is FragmentActivity) {
-                    activity.supportFragmentManager.registerFragmentLifecycleCallbacks(
-                        object : FragmentManager.FragmentLifecycleCallbacks() {
-                            override fun onFragmentCreated(
-                                fm: FragmentManager,
-                                f: Fragment,
-                                savedInstanceState: Bundle?
-                            ) {
-                                if (f is Injectable) {
-                                    AndroidSupportInjection.inject(f)
-                                }
-                                if (f is LifecycleListener) {
-                                    mainApplication.addLifecycleListener(f)
-                                }
-                            }
-
-                            override fun onFragmentDestroyed(fm: FragmentManager, f: Fragment) {
-                                if (f is LifecycleListener) {
-                                    mainApplication.removeLifecycleListener(f)
-                                }
-                            }
-                        },
-                        true
-                    )
+                override fun onActivityStarted(activity: Activity) {
                 }
-            }
 
-            override fun onActivityStarted(activity: Activity) {
-            }
+                override fun onActivityResumed(activity: Activity) {
+                }
 
-            override fun onActivityResumed(activity: Activity) {
-            }
+                override fun onActivityPaused(activity: Activity) {
+                }
 
-            override fun onActivityPaused(activity: Activity) {
-            }
+                override fun onActivityStopped(activity: Activity) {
+                }
 
-            override fun onActivityStopped(activity: Activity) {
-            }
+                override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+                }
 
-            override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-            }
-
-            override fun onActivityDestroyed(activity: Activity) {
-            }
-        })
+                override fun onActivityDestroyed(activity: Activity) {
+                }
+            })
     }
 }

@@ -22,6 +22,7 @@ class SettingsDataStore(applicationContext: Context) : PreferenceDataStore() {
             dataStore.data.map { prefs -> prefs[stringPreferencesKey(key)] ?: defValue!! }.first()
         }
     }
+
     override fun putString(key: String, value: String?) {
         runBlocking {
             dataStore.edit { prefs -> prefs[stringPreferencesKey(key)] = value!! }

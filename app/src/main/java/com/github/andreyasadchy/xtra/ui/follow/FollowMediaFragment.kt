@@ -22,7 +22,6 @@ import com.github.andreyasadchy.xtra.ui.common.NavigationHandler
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
-import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator

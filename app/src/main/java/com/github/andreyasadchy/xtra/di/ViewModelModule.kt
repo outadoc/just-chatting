@@ -62,6 +62,7 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(FollowedChannelsViewModel::class)
     abstract fun bindFollowedChannelsViewModel(followedChannelsViewModel: FollowedChannelsViewModel): ViewModel
+
     @Binds
     @IntoMap
     @ViewModelKey(LoginViewModel::class)

@@ -13,7 +13,7 @@ import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.repository.datasource.FollowedChannelsDataSource
 import com.github.andreyasadchy.xtra.repository.datasource.FollowedStreamsDataSource
 import com.github.andreyasadchy.xtra.repository.datasource.SearchChannelsDataSource
-import com.github.andreyasadchy.xtra.util.addTokenPrefixHelix
+import com.github.andreyasadchy.xtra.util.withBearerPrefix
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -36,7 +36,7 @@ class ApiRepository @Inject constructor(
         val factory = SearchChannelsDataSource.Factory(
             query = query,
             helixClientId = authPrefs.helixClientId.first(),
-            helixToken = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+            helixToken = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
             helixApi = helix,
             coroutineScope = coroutineScope
         )
@@ -56,7 +56,7 @@ class ApiRepository @Inject constructor(
             localFollowsChannel = localFollowsChannel,
             userId = userPreferencesRepository.user.first().id,
             helixClientId = authPrefs.helixClientId.first(),
-            helixToken = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+            helixToken = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
             helixApi = helix,
             coroutineScope = coroutineScope
         )
@@ -80,7 +80,7 @@ class ApiRepository @Inject constructor(
             localFollowsChannel = localFollowsChannel,
             userId = userPreferencesRepository.user.first().id,
             helixClientId = authPrefs.helixClientId.first(),
-            helixToken = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+            helixToken = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
             helixApi = helix,
             sort = sort,
             order = order,
@@ -101,7 +101,7 @@ class ApiRepository @Inject constructor(
         withContext(Dispatchers.IO) {
             helix.getStreams(
                 clientId = authPrefs.helixClientId.first(),
-                token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+                token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
                 ids = listOf(channelId)
             ).data?.firstOrNull()
         }
@@ -110,7 +110,7 @@ class ApiRepository @Inject constructor(
         withContext(Dispatchers.IO) {
             helix.getUsersById(
                 clientId = authPrefs.helixClientId.first(),
-                token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+                token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
                 ids = ids
             ).data
         }
@@ -119,7 +119,7 @@ class ApiRepository @Inject constructor(
         withContext(Dispatchers.IO) {
             helix.getUsersByLogin(
                 clientId = authPrefs.helixClientId.first(),
-                token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+                token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
                 logins = logins
             ).data
         }
@@ -128,7 +128,7 @@ class ApiRepository @Inject constructor(
         withContext(Dispatchers.IO) {
             helix.getCheerEmotes(
                 clientId = authPrefs.helixClientId.first(),
-                token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+                token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
                 userId = userId
             ).emotes
         }
@@ -137,7 +137,7 @@ class ApiRepository @Inject constructor(
         withContext(Dispatchers.IO) {
             helix.getEmotesFromSet(
                 clientId = authPrefs.helixClientId.first(),
-                token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+                token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
                 setIds = setIds
             ).emotes
         }
@@ -149,7 +149,7 @@ class ApiRepository @Inject constructor(
     ): Boolean = withContext(Dispatchers.IO) {
         helix.getUserFollows(
             clientId = authPrefs.helixClientId.first(),
-            token = userPreferencesRepository.user.first().helixToken?.addTokenPrefixHelix(),
+            token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
             userId = userId,
             channelId = channelId
         ).total == 1

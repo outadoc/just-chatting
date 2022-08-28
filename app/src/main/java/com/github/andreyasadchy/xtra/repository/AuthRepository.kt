@@ -3,7 +3,7 @@ package com.github.andreyasadchy.xtra.repository
 import com.github.andreyasadchy.xtra.api.IdApi
 import com.github.andreyasadchy.xtra.model.id.ValidationResponse
 import com.github.andreyasadchy.xtra.util.TwitchApiHelper
-import com.github.andreyasadchy.xtra.util.addTokenPrefixHelix
+import com.github.andreyasadchy.xtra.util.withBearerPrefix
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -18,7 +18,7 @@ class AuthRepository @Inject constructor(
 ) {
     suspend fun validate(token: String): ValidationResponse? =
         withContext(Dispatchers.IO) {
-            api.validateToken(token.addTokenPrefixHelix()).also {
+            api.validateToken(token.withBearerPrefix()).also {
                 TwitchApiHelper.checkedValidation = true
             }
         }

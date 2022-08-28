@@ -5,7 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
-import com.github.andreyasadchy.xtra.util.formatCount
+import com.github.andreyasadchy.xtra.util.formatNumber
 import com.github.andreyasadchy.xtra.util.formatTimestamp
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.chipGroupTagsContainer
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.scrollViewTagsContainer
@@ -25,7 +25,7 @@ class StreamsCompactAdapter(
         with(view) {
             if (item.viewer_count != null) {
                 viewers.isVisible = true
-                viewers.text = item.viewer_count.formatCount()
+                viewers.text = item.viewer_count.formatNumber()
             } else {
                 viewers.isVisible = false
             }

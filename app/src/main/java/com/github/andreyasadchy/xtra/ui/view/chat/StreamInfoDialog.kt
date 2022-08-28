@@ -15,10 +15,9 @@ import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.model.helix.user.User
 import com.github.andreyasadchy.xtra.ui.common.ExpandingBottomSheetDialogFragment
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.formatCount
+import com.github.andreyasadchy.xtra.util.formatNumber
 import com.github.andreyasadchy.xtra.util.formatTime
 import com.github.andreyasadchy.xtra.util.formatTimestamp
-import com.github.andreyasadchy.xtra.util.formatViewersCount
 import com.github.andreyasadchy.xtra.util.loadImage
 import kotlinx.android.synthetic.main.dialog_chat_message_click.bannerImage
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.gameName
@@ -115,7 +114,7 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment(), Injectable {
             userFollowers.isVisible = true
             userFollowers.text = requireContext().getString(
                 R.string.followers,
-                user.followers_count.formatCount()
+                user.followers_count.formatNumber()
             )
             if (user.bannerImageURL != null) {
                 userFollowers.setTextColor(Color.LTGRAY)
@@ -180,7 +179,11 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment(), Injectable {
 
         if (stream?.viewer_count != null) {
             viewers.isVisible = true
-            viewers.text = stream.viewer_count.formatViewersCount(requireContext())
+            viewers.text = context?.resources?.getQuantityString(
+                R.plurals.viewers,
+                stream.viewer_count,
+                stream.viewer_count.formatNumber()
+            )
         } else {
             viewers.isVisible = false
         }

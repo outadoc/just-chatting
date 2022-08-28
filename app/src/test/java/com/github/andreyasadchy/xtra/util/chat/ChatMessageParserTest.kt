@@ -329,7 +329,7 @@ class ChatMessageParserTest {
                     message = "On dirait EVE on line",
                     id = "7ffcf399-8d69-495c-920c-ea15a96eeee4",
                     userId = "108193474",
-                    userLogin = "brankhorst",
+                    userLogin = "brankhorst"
                 ),
                 msgId = null
             )

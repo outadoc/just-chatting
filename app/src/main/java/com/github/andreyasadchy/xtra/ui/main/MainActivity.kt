@@ -134,7 +134,7 @@ class MainActivity :
             transactionListener = object : FragNavController.TransactionListener {
                 override fun onFragmentTransaction(
                     fragment: Fragment?,
-                    transactionType: FragNavController.TransactionType,
+                    transactionType: FragNavController.TransactionType
                 ) {
                 }
 

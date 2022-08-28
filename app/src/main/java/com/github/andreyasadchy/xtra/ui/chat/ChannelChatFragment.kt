@@ -66,7 +66,7 @@ class ChannelChatFragment :
             name: String?,
             channelLogo: String?,
             showBackButton: Boolean,
-            updateLocal: Boolean = false,
+            updateLocal: Boolean = false
         ) = ChannelChatFragment().apply {
             arguments = Bundle().apply {
                 putString(C.CHANNEL_ID, id)
@@ -88,7 +88,7 @@ class ChannelChatFragment :
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_channel, container, false)
     }
@@ -429,7 +429,7 @@ class ChannelChatFragment :
         id: String?,
         login: String?,
         name: String?,
-        channelLogo: String?,
+        channelLogo: String?
     ) {
         if (id == null || login == null || name == null || channelLogo == null) return
         ChatNotificationUtils.openInBubbleOrStartActivity(

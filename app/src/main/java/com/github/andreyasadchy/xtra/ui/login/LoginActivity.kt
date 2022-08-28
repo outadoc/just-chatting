@@ -157,7 +157,7 @@ class LoginActivity : AppCompatActivity(), Injectable {
                     view: WebView,
                     errorCode: Int,
                     description: String,
-                    failingUrl: String,
+                    failingUrl: String
                 ) {
                     val errorMessage = if (errorCode == -11) {
                         getString(R.string.browser_workaround)

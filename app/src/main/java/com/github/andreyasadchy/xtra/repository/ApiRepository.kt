@@ -31,7 +31,7 @@ class ApiRepository @Inject constructor(
 
     override suspend fun loadSearchChannels(
         query: String,
-        coroutineScope: CoroutineScope,
+        coroutineScope: CoroutineScope
     ): Listing<ChannelSearch> {
         val factory = SearchChannelsDataSource.Factory(
             query = query,
@@ -74,7 +74,7 @@ class ApiRepository @Inject constructor(
     override suspend fun loadFollowedChannels(
         sort: Sort,
         order: Order,
-        coroutineScope: CoroutineScope,
+        coroutineScope: CoroutineScope
     ): Listing<Follow> {
         val factory = FollowedChannelsDataSource.Factory(
             localFollowsChannel = localFollowsChannel,
@@ -145,7 +145,7 @@ class ApiRepository @Inject constructor(
     override suspend fun loadUserFollowing(
         userId: String?,
         channelId: String?,
-        userLogin: String?,
+        userLogin: String?
     ): Boolean = withContext(Dispatchers.IO) {
         helix.getUserFollows(
             clientId = authPrefs.helixClientId.first(),

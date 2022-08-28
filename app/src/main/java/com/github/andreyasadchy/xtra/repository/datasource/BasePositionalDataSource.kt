@@ -22,7 +22,7 @@ abstract class BasePositionalDataSource<T>(
     protected fun loadInitial(
         params: LoadInitialParams,
         callback: LoadInitialCallback<T>,
-        request: suspend () -> List<T>,
+        request: suspend () -> List<T>
     ) {
         runBlocking {
             coroutineScope.launch(Dispatchers.IO) {
@@ -46,7 +46,7 @@ abstract class BasePositionalDataSource<T>(
     protected fun loadRange(
         params: LoadRangeParams,
         callback: LoadRangeCallback<T>,
-        request: suspend () -> List<T>,
+        request: suspend () -> List<T>
     ) {
         runBlocking {
             coroutineScope.launch(Dispatchers.IO) {

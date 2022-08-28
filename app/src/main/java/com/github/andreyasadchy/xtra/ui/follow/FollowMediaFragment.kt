@@ -56,7 +56,7 @@ class FollowMediaFragment : Fragment(), Injectable, Scrollable {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_media, container, false)
     }

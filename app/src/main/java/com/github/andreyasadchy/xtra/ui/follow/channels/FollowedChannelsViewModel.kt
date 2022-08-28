@@ -101,6 +101,6 @@ class FollowedChannelsViewModel @Inject constructor(
 
     private data class Filter(
         val sort: Sort = Sort.FOLLOWED_AT,
-        val order: Order = Order.DESC,
+        val order: Order = Order.DESC
     )
 }

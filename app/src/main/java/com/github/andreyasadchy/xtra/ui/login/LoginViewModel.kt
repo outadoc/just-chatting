@@ -26,7 +26,7 @@ class LoginViewModel @Inject constructor(
         data class LoadWebView(
             val clientId: String,
             val redirect: String,
-            val exception: Exception? = null,
+            val exception: Exception? = null
         ) : State()
 
         object Done : State()

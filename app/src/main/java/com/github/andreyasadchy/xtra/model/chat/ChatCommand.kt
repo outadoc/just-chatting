@@ -133,7 +133,7 @@ data class PubSubPointReward(
             get() = mapOf(
                 1f to url1,
                 2f to url2,
-                4f to url4,
+                4f to url4
             )
 
         override fun getUrl(screenDensity: Float): String? {

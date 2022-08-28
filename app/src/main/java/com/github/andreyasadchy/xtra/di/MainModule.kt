@@ -89,7 +89,7 @@ class MainModule {
     @Provides
     fun providesHelixApi(
         client: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory,
+        gsonConverterFactory: GsonConverterFactory
     ): HelixApi {
         return Retrofit.Builder()
             .baseUrl("https://api.twitch.tv/helix/")
@@ -170,7 +170,7 @@ class MainModule {
     @Provides
     fun providesFetchConfigurationBuilder(
         application: Application,
-        okHttpClient: OkHttpClient,
+        okHttpClient: OkHttpClient
     ): FetchConfiguration.Builder {
         return FetchConfiguration.Builder(application)
             .enableLogging(BuildConfig.DEBUG)

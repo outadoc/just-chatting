@@ -14,14 +14,14 @@ interface TwitchService {
 
     suspend fun loadSearchChannels(
         query: String,
-        coroutineScope: CoroutineScope,
+        coroutineScope: CoroutineScope
     ): Listing<ChannelSearch>
 
     suspend fun loadFollowedStreams(coroutineScope: CoroutineScope): Listing<Stream>
     suspend fun loadFollowedChannels(
         sort: Sort,
         order: Order,
-        coroutineScope: CoroutineScope,
+        coroutineScope: CoroutineScope
     ): Listing<Follow>
 
     suspend fun loadStreamWithUser(channelId: String): Stream?

@@ -82,7 +82,7 @@ class ChatAdapter(
         fun onMessageClick(
             originalMessage: CharSequence,
             formattedMessage: CharSequence,
-            userId: String?,
+            userId: String?
         )
     }
 
@@ -436,7 +436,7 @@ class ChatAdapter(
         images: List<Image>,
         originalMessage: CharSequence,
         builder: SpannableStringBuilder,
-        userId: String?,
+        userId: String?
     ) {
         images.forEach { image ->
             loadCoil(
@@ -454,7 +454,7 @@ class ChatAdapter(
         image: Image,
         originalMessage: CharSequence,
         builder: SpannableStringBuilder,
-        userId: String?,
+        userId: String?
     ) {
         val request = ImageRequest.Builder(context)
             .data(image.url)
@@ -491,7 +491,7 @@ class ChatAdapter(
                         userId = userId,
                         inReplyTo = null
                     )
-                },
+                }
             )
             .build()
 
@@ -564,7 +564,7 @@ class ChatAdapter(
         val accessibleColor = messageColor?.let { color ->
             ensureColorIsAccessible(
                 foreground = Color.parseColor(color),
-                background = backgroundColor,
+                background = backgroundColor
             )
         }
 
@@ -609,7 +609,7 @@ class ChatAdapter(
             originalMessage: CharSequence,
             formattedMessage: Spannable,
             userId: String?,
-            inReplyTo: CharSequence?,
+            inReplyTo: CharSequence?
         ) {
             messageContainer?.isVisible = true
 

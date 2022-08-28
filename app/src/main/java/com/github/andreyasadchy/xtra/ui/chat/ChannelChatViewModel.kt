@@ -66,7 +66,7 @@ class ChannelChatViewModel @Inject constructor(
 
     data class State(
         val showTimestamps: Boolean = false,
-        val animateEmotes: Boolean = true,
+        val animateEmotes: Boolean = true
     )
 
     val state = combine(
@@ -98,7 +98,7 @@ class ChannelChatViewModel @Inject constructor(
         channelId: String?,
         channelLogin: String?,
         channelName: String?,
-        profileImageURL: String?,
+        profileImageURL: String?
     ) {
         if (_userId.value != channelId && channelId != null) {
             _userId.value = channelId
@@ -159,7 +159,7 @@ class ChannelChatViewModel @Inject constructor(
 
     fun updateLocalUser(
         context: Context,
-        user: com.github.andreyasadchy.xtra.model.helix.user.User,
+        user: com.github.andreyasadchy.xtra.model.helix.user.User
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {

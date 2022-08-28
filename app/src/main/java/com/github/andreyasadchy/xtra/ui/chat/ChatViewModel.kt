@@ -124,7 +124,7 @@ class ChatViewModel @Inject constructor(
     fun startLive(
         channelId: String?,
         channelLogin: String?,
-        channelName: String?,
+        channelName: String?
     ) {
         viewModelScope.launch {
             val user = userPreferencesRepository.user.first() as? User.LoggedIn ?: return@launch
@@ -171,7 +171,7 @@ class ChatViewModel @Inject constructor(
     fun send(
         message: CharSequence,
         screenDensity: Float,
-        isDarkTheme: Boolean,
+        isDarkTheme: Boolean
     ) {
         viewModelScope.launch {
             chatController?.send(
@@ -192,7 +192,7 @@ class ChatViewModel @Inject constructor(
         channelId: String,
         channelLogin: String? = null,
         enableRecentMsg: Boolean? = false,
-        recentMsgLimit: Int? = null,
+        recentMsgLimit: Int? = null
     ) {
         _chatMessages.value = LinkedList()
 
@@ -336,7 +336,7 @@ class ChatViewModel @Inject constructor(
         showUserNotice: Boolean,
         showClearMsg: Boolean,
         showClearChat: Boolean,
-        displayName: String,
+        displayName: String
     ) : OnUserStateReceivedListener,
         OnRoomStateReceivedListener,
         OnChatMessageReceivedListener {
@@ -482,7 +482,7 @@ class ChatViewModel @Inject constructor(
         user: User.LoggedIn,
         private val channelId: String?,
         channelLogin: String,
-        private val chatStateListener: ChatStateListener,
+        private val chatStateListener: ChatStateListener
     ) : ChatController() {
 
         private val liveChat: LiveChatThread =
@@ -518,7 +518,7 @@ class ChatViewModel @Inject constructor(
             message: CharSequence,
             animateEmotes: Boolean,
             screenDensity: Float,
-            isDarkTheme: Boolean,
+            isDarkTheme: Boolean
         ) {
             loggedInChat.send(message)
 
@@ -570,7 +570,7 @@ class ChatViewModel @Inject constructor(
             message: CharSequence,
             animateEmotes: Boolean,
             screenDensity: Float,
-            isDarkTheme: Boolean,
+            isDarkTheme: Boolean
         )
 
         abstract suspend fun start()

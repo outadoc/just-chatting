@@ -9,13 +9,13 @@ sealed class User {
     data class LoggedIn(
         override val id: String,
         override val login: String,
-        override val helixToken: String,
+        override val helixToken: String
     ) : User()
 
     data class NotValidated(
         override val id: String?,
         override val login: String?,
-        override val helixToken: String?,
+        override val helixToken: String?
     ) : User()
 
     object NotLoggedIn : User() {

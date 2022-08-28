@@ -37,7 +37,7 @@ class PubSubListenerImpl(
             rewardImage = PubSubPointReward.RewardImage(
                 url1 = rewardImage?.optString("url_1x") ?: defaultImage?.optString("url_1x"),
                 url2 = rewardImage?.optString("url_2x") ?: defaultImage?.optString("url_2x"),
-                url4 = rewardImage?.optString("url_4x") ?: defaultImage?.optString("url_4x"),
+                url4 = rewardImage?.optString("url_4x") ?: defaultImage?.optString("url_4x")
             ),
             timestamp = messageData?.optString("timestamp")?.let {
                 Instant.parse(it)

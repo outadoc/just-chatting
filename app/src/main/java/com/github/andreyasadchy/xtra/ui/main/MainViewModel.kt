@@ -14,7 +14,6 @@ import com.github.andreyasadchy.xtra.repository.AuthRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.toast
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -28,7 +27,8 @@ class MainViewModel @Inject constructor(
     private val userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
 
-    private val _userToShow = MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>()
+    private val _userToShow =
+        MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>()
     val userToShow: MutableLiveData<com.github.andreyasadchy.xtra.model.helix.user.User?>
         get() = _userToShow
 
@@ -77,8 +77,6 @@ class MainViewModel @Inject constructor(
                     }
                 }
             }
-
-            TwitchApiHelper.checkedValidation = true
         }
     }
 }

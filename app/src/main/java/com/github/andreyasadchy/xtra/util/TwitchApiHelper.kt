@@ -1,9 +1,5 @@
 package com.github.andreyasadchy.xtra.util
 
-object TwitchApiHelper {
-    var checkedValidation = false
-}
-
 fun getTemplateUrl(url: String?, type: String): String? {
     if (url.isNullOrEmpty() || url.startsWith("https://vod-secure.twitch.tv/_404/404_processing"))
         return when (type) {

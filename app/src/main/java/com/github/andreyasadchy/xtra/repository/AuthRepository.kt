@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.repository
 
 import com.github.andreyasadchy.xtra.api.IdApi
 import com.github.andreyasadchy.xtra.model.id.ValidationResponse
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.withBearerPrefix
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -16,11 +15,10 @@ class AuthRepository @Inject constructor(
     private val authPreferencesRepository: AuthPreferencesRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
 ) {
+
     suspend fun validate(token: String): ValidationResponse? =
         withContext(Dispatchers.IO) {
-            api.validateToken(token.withBearerPrefix()).also {
-                TwitchApiHelper.checkedValidation = true
-            }
+            api.validateToken(token.withBearerPrefix())
         }
 
     suspend fun revokeToken() =

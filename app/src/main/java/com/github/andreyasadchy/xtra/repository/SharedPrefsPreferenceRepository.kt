@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import com.github.andreyasadchy.xtra.util.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -76,10 +75,6 @@ class SharedPrefsPreferenceRepository @Inject constructor(
                 val helixToken = prefs[USER_TOKEN]
 
                 if (name.isNullOrEmpty() || helixToken.isNullOrEmpty()) {
-                    if (TwitchApiHelper.checkedValidation) {
-                        TwitchApiHelper.checkedValidation = false
-                    }
-
                     User.NotValidated(id, name, helixToken)
                 } else {
                     User.LoggedIn(id, name, helixToken)

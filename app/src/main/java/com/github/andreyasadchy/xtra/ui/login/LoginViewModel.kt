@@ -8,7 +8,6 @@ import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.repository.AuthPreferencesRepository
 import com.github.andreyasadchy.xtra.repository.AuthRepository
 import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
-import com.github.andreyasadchy.xtra.util.TwitchApiHelper
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -40,7 +39,6 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             val user = userPreferencesRepository.user.first()
             if (user !is User.NotLoggedIn) {
-                TwitchApiHelper.checkedValidation = false
                 userPreferencesRepository.updateUser(null)
 
                 try {

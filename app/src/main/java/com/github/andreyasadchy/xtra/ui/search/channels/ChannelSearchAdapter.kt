@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.channel.ChannelSearch
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
-import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
+import com.github.andreyasadchy.xtra.ui.common.NavigationHandler
 import com.github.andreyasadchy.xtra.util.formatNumber
 import com.github.andreyasadchy.xtra.util.loadImage
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userFollowers
@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.us
 import kotlinx.android.synthetic.main.fragment_search_channels_list_item.view.userName
 
 class ChannelSearchAdapter(
-    private val listener: OnChannelSelectedListener
+    private val listener: NavigationHandler
 ) : BasePagedListAdapter<ChannelSearch>(
 
     object : DiffUtil.ItemCallback<ChannelSearch>() {

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
+import com.github.andreyasadchy.xtra.ui.common.NavigationHandler
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.PagedListViewModel
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
@@ -15,12 +16,8 @@ import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 abstract class BaseStreamsFragment<VM : PagedListViewModel<Stream>> :
     PagedListFragment<Stream, VM, BasePagedListAdapter<Stream>>(), Scrollable {
 
-    interface OnStreamSelectedListener {
-        fun startStream(stream: Stream)
-    }
-
     override val adapter: BasePagedListAdapter<Stream> by lazy {
-        StreamsCompactAdapter(activity as OnStreamSelectedListener)
+        StreamsCompactAdapter(activity as NavigationHandler)
     }
 
     override fun onCreateView(

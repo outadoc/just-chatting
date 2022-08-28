@@ -18,10 +18,10 @@ import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
+import com.github.andreyasadchy.xtra.ui.common.NavigationHandler
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import com.github.andreyasadchy.xtra.ui.follow.channels.FollowedChannelsFragment
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
-import com.github.andreyasadchy.xtra.ui.main.MainActivity
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
 import com.github.andreyasadchy.xtra.ui.streams.followed.FollowedStreamsFragment
 import com.google.android.material.tabs.TabLayout
@@ -71,15 +71,11 @@ class FollowMediaFragment : Fragment(), Injectable, Scrollable {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.search -> {
-                        (activity as? MainActivity)?.openSearch()
+                        (activity as? NavigationHandler)?.openSearch()
                         true
                     }
                     R.id.settings -> {
-                        activity?.startActivityFromFragment(
-                            this@FollowMediaFragment,
-                            Intent(activity, SettingsActivity::class.java),
-                            3
-                        )
+                        (activity as? NavigationHandler)?.openSettings()
                         true
                     }
                     R.id.login -> {

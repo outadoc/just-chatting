@@ -6,23 +6,26 @@ import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
-import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.chat.ChatNotificationUtils
-import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
+import com.github.andreyasadchy.xtra.ui.common.NavigationHandler
 import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
-import com.github.andreyasadchy.xtra.ui.streams.BaseStreamsFragment
+import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
+import com.github.andreyasadchy.xtra.util.toast
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.HasAndroidInjector
 
 class MainActivity :
     BaseActivity(),
-    BaseStreamsFragment.OnStreamSelectedListener,
-    OnChannelSelectedListener,
+    NavigationHandler,
     HasAndroidInjector,
     Injectable {
+
+    private companion object {
+        const val REQUEST_CODE_LOGIN = 2
+        const val REQUEST_CODE_SETTINGS = 3
+    }
 
     private val viewModel by viewModels<MainViewModel> { viewModelFactory }
 
@@ -37,33 +40,51 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel.userToShow.observe(this) { user ->
-            if (user != null && (!user.id.isNullOrBlank() || !user.login.isNullOrBlank())) {
-                viewChannel(
-                    id = user.id,
-                    login = user.login,
-                    name = user.display_name,
-                    channelLogo = user.channelLogo
-                )
+        viewModel.state.observe(this) { state ->
+            when (state) {
+                MainViewModel.State.Loading -> {}
+                is MainViewModel.State.Loaded -> {
+                    when (state.destination) {
+                        MainViewModel.Destination.Home -> {
+                            initNavigation(isLoggedIn = true)
+                            fragNavController.initialize(savedInstanceState = savedInstanceState)
+                        }
+                        is MainViewModel.Destination.Channel -> {
+                            ChatNotificationUtils.openInBubbleOrStartActivity(
+                                context = this,
+                                channelId = state.destination.id,
+                                channelLogin = state.destination.login,
+                                channelName = state.destination.name,
+                                channelLogo = state.destination.channelLogo
+                            )
+                        }
+                        is MainViewModel.Destination.Login -> {
+                            if (state.destination.causedByTokenExpiration) {
+                                toast(R.string.token_expired)
+                            }
+
+                            startActivityForResult(
+                                Intent(this, LoginActivity::class.java),
+                                REQUEST_CODE_LOGIN
+                            )
+                        }
+                        MainViewModel.Destination.Settings -> {
+                            startActivityForResult(
+                                Intent(this, SettingsActivity::class.java),
+                                REQUEST_CODE_SETTINGS
+                            )
+                        }
+                        MainViewModel.Destination.Search -> {
+                            fragNavController.pushFragment(SearchFragment())
+                        }
+                    }
+                }
             }
         }
 
-        viewModel.currentUser.observe(this) { user ->
-            if (user is User.NotLoggedIn) {
-                startActivityForResult(
-                    Intent(this, LoginActivity::class.java),
-                    2
-                )
-                return@observe
-            }
-
-            initNavigation(isLoggedIn = user is User.LoggedIn)
-            fragNavController.initialize(savedInstanceState = savedInstanceState)
+        intent.parseChannelFromIntent()?.let { login ->
+            viewModel.onViewChannelRequest(login)
         }
-
-        viewModel.validate(activity = this)
-
-        handleIntent(intent)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -73,87 +94,34 @@ class MainActivity :
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        handleIntent(intent)
+        intent.parseChannelFromIntent()
     }
 
-    /**
-     * Result of LoginActivity
-     */
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private fun Intent?.parseChannelFromIntent(): String? {
+        if (this?.action != Intent.ACTION_VIEW || data == null) return null
 
-        fun restartActivity() {
-            finish()
-            overridePendingTransition(0, 0)
-            startActivity(
-                Intent(
-                    this,
-                    MainActivity::class.java
-                ).apply { addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION) }
-            )
-            overridePendingTransition(0, 0)
-        }
-
-        when (requestCode) {
-            1 -> {
-                // Was not logged in
-                when (resultCode) {
-                    // Logged in
-                    RESULT_OK -> restartActivity()
-                }
-            }
-            // Was logged in
-            2 -> restartActivity()
-        }
+        val url = data.toString()
+        return url.substringAfter("twitch.tv/")
+            .substringBefore("/")
+            .takeIf { it.isNotBlank() }
     }
 
-    private fun handleIntent(intent: Intent?) {
-        if (intent?.action != Intent.ACTION_VIEW || intent.data == null) return
-
-        val url = intent.data.toString()
-        val login = url.substringAfter("twitch.tv/").substringBefore("/")
-
-        if (login.isNotBlank()) {
-            viewModel.loadUser(login = login)
-        }
+    override fun viewChannel(id: String?, login: String?, name: String?, channelLogo: String?) {
+        viewModel.onViewChannelRequest(id, login, name, channelLogo)
     }
 
-    // Navigation listeners
-
-    override fun startStream(stream: Stream) {
-        viewChannel(
-            id = stream.user_id,
-            login = stream.user_login,
-            name = stream.user_name,
-            channelLogo = stream.channelLogo
-        )
+    override fun openSearch() {
+        viewModel.onOpenSearchRequested()
     }
 
-    override fun viewChannel(
-        id: String?,
-        login: String?,
-        name: String?,
-        channelLogo: String?,
-        updateLocal: Boolean,
-    ) {
-        if (id == null || login == null || name == null || channelLogo == null) return
-        ChatNotificationUtils.openInBubbleOrStartActivity(
-            context = this@MainActivity,
-            channelId = id,
-            channelLogin = login,
-            channelName = name,
-            channelLogo = channelLogo
-        )
+    override fun openSettings() {
+        viewModel.onOpenSettingsRequested()
     }
 
     override fun onBackPressed() {
         if (fragNavController.isRootFragment || !fragNavController.popFragment()) {
             super.onBackPressed()
         }
-    }
-
-    fun openSearch() {
-        fragNavController.pushFragment(SearchFragment())
     }
 
     private fun initNavigation(isLoggedIn: Boolean) {

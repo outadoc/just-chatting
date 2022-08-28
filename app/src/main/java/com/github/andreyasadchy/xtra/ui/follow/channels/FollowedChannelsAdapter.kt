@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
-import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
+import com.github.andreyasadchy.xtra.ui.common.NavigationHandler
 import com.github.andreyasadchy.xtra.util.formatTime
 import com.github.andreyasadchy.xtra.util.loadImage
 import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userFollowed
@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.
 import kotlinx.datetime.Instant
 
 class FollowedChannelsAdapter(
-    private val listener: OnChannelSelectedListener
+    private val listener: NavigationHandler
 ) : BasePagedListAdapter<Follow>(
 
     object : DiffUtil.ItemCallback<Follow>() {
@@ -35,8 +35,7 @@ class FollowedChannelsAdapter(
                     item.to_id,
                     item.to_login,
                     item.to_name,
-                    item.channelLogo,
-                    item.followLocal
+                    item.channelLogo
                 )
             }
 

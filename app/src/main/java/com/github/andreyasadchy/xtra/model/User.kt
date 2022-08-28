@@ -25,7 +25,7 @@ sealed class User {
     }
 }
 
-fun User.NotValidated.validate(): User.LoggedIn? {
+fun User.NotValidated.asLoggedIn(): User.LoggedIn? {
     if (id == null || login == null || helixToken == null) return null
     return User.LoggedIn(id, login, helixToken)
 }

@@ -10,7 +10,7 @@ import com.github.andreyasadchy.xtra.model.helix.follows.Follow
 import com.github.andreyasadchy.xtra.model.helix.follows.Order
 import com.github.andreyasadchy.xtra.model.helix.follows.Sort
 import com.github.andreyasadchy.xtra.ui.common.BasePagedListAdapter
-import com.github.andreyasadchy.xtra.ui.common.OnChannelSelectedListener
+import com.github.andreyasadchy.xtra.ui.common.NavigationHandler
 import com.github.andreyasadchy.xtra.ui.common.PagedListFragment
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
 import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
@@ -24,7 +24,7 @@ class FollowedChannelsFragment :
 
     override val viewModel by viewModels<FollowedChannelsViewModel> { viewModelFactory }
     override val adapter: BasePagedListAdapter<Follow> by lazy {
-        FollowedChannelsAdapter(activity as OnChannelSelectedListener)
+        FollowedChannelsAdapter(activity as NavigationHandler)
     }
 
     override fun onCreateView(

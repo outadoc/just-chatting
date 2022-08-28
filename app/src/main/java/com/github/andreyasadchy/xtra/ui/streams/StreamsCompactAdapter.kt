@@ -5,6 +5,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
+import com.github.andreyasadchy.xtra.ui.common.NavigationHandler
 import com.github.andreyasadchy.xtra.util.formatNumber
 import com.github.andreyasadchy.xtra.util.formatTimestamp
 import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.chipGroupTagsContainer
@@ -15,7 +16,7 @@ import kotlinx.android.synthetic.main.item_single_tag.view.chipTag
 import kotlinx.datetime.Instant
 
 class StreamsCompactAdapter(
-    clickListener: BaseStreamsFragment.OnStreamSelectedListener
+    clickListener: NavigationHandler
 ) : BaseStreamsAdapter(clickListener) {
 
     override val layoutId: Int = R.layout.fragment_streams_list_item_compact

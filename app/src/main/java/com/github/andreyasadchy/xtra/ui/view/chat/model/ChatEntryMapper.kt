@@ -40,7 +40,7 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                 }
                 is Command.ClearMessage -> {
                     ChatEntry.Highlighted(
-                        header = context.getString(R.string.chat_clearmsg, message, userLogin),
+                        header = context.getString(R.string.chat_clearmsg, userLogin, message),
                         data = null,
                         timestamp = timestamp
                     )

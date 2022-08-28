@@ -149,20 +149,23 @@ class ChannelChatFragment :
             windowInsets
         }
 
-        initializeChannel()
-        initializeChat()
+        channelViewModel.state.observe(viewLifecycleOwner) { state ->
+            updateStreamLayout(state.stream)
 
-        channelViewModel.user.observe(viewLifecycleOwner) { user ->
-            user.login?.let { login ->
+            state.loadedUser?.let { user ->
+                updateUserLayout(user)
+            }
+
+            state.user.login?.let { login ->
                 chatView.setUsername(login)
             }
-        }
 
-        channelViewModel.state.observe(viewLifecycleOwner) { state ->
             chatView?.showTimestamps = state.showTimestamps
             chatView?.animateEmotes = state.animateEmotes
             chatInputView?.animateEmotes = state.animateEmotes
         }
+
+        initialize()
     }
 
     private fun formatChannelUri(channelLogin: String): Uri {
@@ -172,29 +175,14 @@ class ChannelChatFragment :
             .build()
     }
 
-    private fun initializeChannel() = channelViewModel.let { viewModel ->
-        viewModel.loadStream(
-            channelId = requireArguments().getString(C.CHANNEL_ID),
-            channelLogin = requireArguments().getString(C.CHANNEL_LOGIN),
-            channelName = requireArguments().getString(C.CHANNEL_DISPLAYNAME),
-            profileImageURL = requireArguments().getString(C.CHANNEL_PROFILEIMAGE)
-        )
-
-        viewModel.stream.observe(viewLifecycleOwner) { stream ->
-            updateStreamLayout(stream)
-        }
-
-        viewModel.loadedUser.observe(viewLifecycleOwner) { user ->
-            if (user != null) {
-                updateUserLayout(user)
-            }
-        }
-    }
-
-    private fun initializeChat() = chatViewModel.let { viewModel ->
+    private fun initialize() {
         val args = requireArguments()
 
-        viewModel.startLive(
+        channelViewModel.loadStream(
+            channelId = requireArguments().getString(C.CHANNEL_ID)!!
+        )
+
+        chatViewModel.startLive(
             channelId = args.getString(C.CHANNEL_ID),
             channelLogin = args.getString(C.CHANNEL_LOGIN),
             channelName = args.getString(C.CHANNEL_DISPLAYNAME)
@@ -212,7 +200,7 @@ class ChannelChatFragment :
         }
 
         chatInputView.setOnMessageSendListener { message ->
-            viewModel.send(
+            chatViewModel.send(
                 message = message,
                 screenDensity = requireContext().resources.displayMetrics.density,
                 isDarkTheme = requireContext().isDarkMode
@@ -234,27 +222,29 @@ class ChannelChatFragment :
             override fun getItemCount(): Int = 3
         }
 
-        viewModel.chatters.observe(viewLifecycleOwner, chatInputView::setChatters)
-        viewModel.messagePostConstraint.observe(
-            viewLifecycleOwner,
-            chatInputView::setMessagePostConstraint
-        )
-
         val emotesObserver = { emoteSets: List<EmoteSetItem> ->
             val emotes = emoteSets.mapNotNull { (it as? EmoteSetItem.Emote)?.emote }
             chatView.addEmotes(emotes)
             chatInputView.addEmotes(emotes)
         }
 
-        viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
-        viewModel.recentEmotes.observe(viewLifecycleOwner, emotesObserver)
-        viewModel.otherEmotes.observe(viewLifecycleOwner, emotesObserver)
-        viewModel.roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
-        viewModel.chatMessages.observe(viewLifecycleOwner, chatView::submitList)
-        viewModel.globalBadges.observe(viewLifecycleOwner, chatView::addGlobalBadges)
-        viewModel.channelBadges.observe(viewLifecycleOwner, chatView::addChannelBadges)
-        viewModel.cheerEmotes.observe(viewLifecycleOwner, chatView::addCheerEmotes)
-        viewModel.emotesLoaded.observe(viewLifecycleOwner, chatView::notifyEmotesLoaded)
+        with(chatViewModel) {
+            chatters.observe(viewLifecycleOwner, chatInputView::setChatters)
+            messagePostConstraint.observe(
+                viewLifecycleOwner,
+                chatInputView::setMessagePostConstraint
+            )
+
+            emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
+            recentEmotes.observe(viewLifecycleOwner, emotesObserver)
+            otherEmotes.observe(viewLifecycleOwner, emotesObserver)
+            roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
+            chatMessages.observe(viewLifecycleOwner, chatView::submitList)
+            globalBadges.observe(viewLifecycleOwner, chatView::addGlobalBadges)
+            channelBadges.observe(viewLifecycleOwner, chatView::addChannelBadges)
+            cheerEmotes.observe(viewLifecycleOwner, chatView::addCheerEmotes)
+            emotesLoaded.observe(viewLifecycleOwner, chatView::notifyEmotesLoaded)
+        }
     }
 
     private fun updateStreamLayout(stream: Stream?) {
@@ -337,10 +327,6 @@ class ChannelChatFragment :
         user.channelLogo?.let { channelLogo ->
             requireArguments().putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
             loadUserAvatar(channelLogo)
-        }
-
-        if (requireArguments().getBoolean(C.CHANNEL_UPDATELOCAL)) {
-            channelViewModel.updateLocalUser(requireContext(), user)
         }
     }
 

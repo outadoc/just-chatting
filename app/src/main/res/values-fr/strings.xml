@@ -242,7 +242,7 @@
     <string name="twitch">Twitch</string>
     <string name="unfollow">Ne plus suivre %s?</string>
     <string name="unfollowed">Non suivi %s</string>
-    <string name="uptime">%s durée de fonctionnent</string>
+    <string name="uptime">En direct depuis %s</string>
     <string name="user_redeemed">%1$s a récupéré %2$s</string>
     <string name="user_redeemed_header">%1$d points</string>
     <string name="view_profile">Voir le profil</string>

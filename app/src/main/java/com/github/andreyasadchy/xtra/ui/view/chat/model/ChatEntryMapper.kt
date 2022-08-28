@@ -151,9 +151,7 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                     } else {
                         ChatEntry.Simple(
                             ChatEntry.Data.Rich(
-                                message = inReplyTo?.let {
-                                    message?.removePrefix("@${it.userName} ")
-                                } ?: message,
+                                message = message,
                                 userId = userId,
                                 userName = userName,
                                 userLogin = userLogin,

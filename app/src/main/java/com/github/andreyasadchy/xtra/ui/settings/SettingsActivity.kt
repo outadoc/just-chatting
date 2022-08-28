@@ -58,12 +58,12 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
             if (changed) {
                 requireActivity().setResult(Activity.RESULT_OK)
             }
-
-            preferenceManager.preferenceDataStore =
-                SettingsDataStore(requireContext().applicationContext)
         }
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
+            preferenceManager.preferenceDataStore =
+                SettingsDataStore(requireContext().applicationContext)
+
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
             findPreference<Preference>("api_settings")?.setOnPreferenceClickListener {

@@ -17,9 +17,9 @@ class SettingsDataStore(applicationContext: Context) : PreferenceDataStore() {
 
     private val dataStore: DataStore<Preferences> = applicationContext.dataStore
 
-    override fun getString(key: String, defValue: String?): String {
+    override fun getString(key: String, defValue: String?): String? {
         return runBlocking {
-            dataStore.data.map { prefs -> prefs[stringPreferencesKey(key)] ?: defValue!! }.first()
+            dataStore.data.map { prefs -> prefs[stringPreferencesKey(key)] ?: defValue }.first()
         }
     }
 

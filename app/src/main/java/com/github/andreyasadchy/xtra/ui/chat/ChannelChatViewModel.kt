@@ -9,14 +9,11 @@ import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import coil.request.ImageRequest
 import coil.request.SuccessResult
-import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.repository.ChatPreferencesRepository
 import com.github.andreyasadchy.xtra.repository.LocalFollowChannelRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
-import com.github.andreyasadchy.xtra.ui.common.follow.FollowLiveData
-import com.github.andreyasadchy.xtra.ui.common.follow.FollowViewModel
 import com.github.andreyasadchy.xtra.util.DownloadUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.combine
@@ -31,7 +28,7 @@ class ChannelChatViewModel @Inject constructor(
     private val localFollowsChannel: LocalFollowChannelRepository,
     chatPreferencesRepository: ChatPreferencesRepository,
     userPreferencesRepository: UserPreferencesRepository,
-) : ViewModel(), FollowViewModel {
+) : ViewModel() {
 
     private val _stream = MutableLiveData<Stream?>()
     val stream: MutableLiveData<Stream?>
@@ -50,20 +47,6 @@ class ChannelChatViewModel @Inject constructor(
     private val _userName = MutableLiveData<String?>()
     private val _profileImageURL = MutableLiveData<String?>()
 
-    override val userId: String?
-        get() = _userId.value
-
-    override val userLogin: String?
-        get() = _userLogin.value
-
-    override val userName: String?
-        get() = _userName.value
-
-    override val channelLogo: String?
-        get() = _profileImageURL.value
-
-    override lateinit var follow: FollowLiveData
-
     data class State(
         val showTimestamps: Boolean = false,
         val animateEmotes: Boolean = true
@@ -78,21 +61,6 @@ class ChannelChatViewModel @Inject constructor(
             animateEmotes = animateEmotes
         )
     }.asLiveData()
-
-    override fun setUser(user: User) {
-        if (!this::follow.isInitialized) {
-            follow = FollowLiveData(
-                localFollowsChannel = localFollowsChannel,
-                userId = userId,
-                userLogin = userLogin,
-                userName = userName,
-                channelLogo = channelLogo,
-                repository = repository,
-                user = user,
-                viewModelScope = viewModelScope
-            )
-        }
-    }
 
     fun loadStream(
         channelId: String?,

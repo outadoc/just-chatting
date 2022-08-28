@@ -25,7 +25,6 @@ import androidx.palette.graphics.Palette.Swatch
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.di.Injectable
-import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.helix.stream.Stream
 import com.github.andreyasadchy.xtra.ui.common.Scrollable
@@ -36,12 +35,10 @@ import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import com.github.andreyasadchy.xtra.ui.view.chat.OnEmoteClickedListener
 import com.github.andreyasadchy.xtra.ui.view.chat.StreamInfoDialog
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.FragmentUtils
 import com.github.andreyasadchy.xtra.util.LifecycleListener
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
-import com.github.andreyasadchy.xtra.util.shortToast
 import com.google.android.material.shape.MaterialShapeDrawable
 import kotlinx.android.synthetic.main.fragment_channel.appBar
 import kotlinx.android.synthetic.main.fragment_channel.chatInputView
@@ -119,22 +116,6 @@ class ChannelChatFragment :
                         }
                         true
                     }
-                    R.id.follow -> with(channelViewModel.follow) {
-                        val following = value ?: false
-                        if (!following) {
-                            saveFollowChannel(context)
-                            value = true
-                        } else {
-                            val channelName = channelViewModel.userName
-                            if (channelName != null) {
-                                FragmentUtils.showUnfollowDialog(context, channelName) {
-                                    deleteFollowChannel(context)
-                                    value = false
-                                }
-                            }
-                        }
-                        true
-                    }
                     R.id.info -> {
                         StreamInfoDialog.newInstance(
                             userId = args.getString(C.CHANNEL_ID)!!
@@ -172,8 +153,6 @@ class ChannelChatFragment :
         initializeChat()
 
         channelViewModel.user.observe(viewLifecycleOwner) { user ->
-            initializeFollow(user)
-
             user.login?.let { login ->
                 chatView.setUsername(login)
             }
@@ -276,35 +255,6 @@ class ChannelChatFragment :
         viewModel.channelBadges.observe(viewLifecycleOwner, chatView::addChannelBadges)
         viewModel.cheerEmotes.observe(viewLifecycleOwner, chatView::addCheerEmotes)
         viewModel.emotesLoaded.observe(viewLifecycleOwner, chatView::notifyEmotesLoaded)
-    }
-
-    private fun initializeFollow(user: User) {
-        with(channelViewModel) {
-            setUser(user)
-            var initialized = false
-            val channelName = userName
-
-            follow.observe(viewLifecycleOwner) { following ->
-                if (initialized) {
-                    val context = requireContext()
-                    context.shortToast(
-                        context.getString(
-                            if (following) R.string.now_following else R.string.unfollowed,
-                            channelName
-                        )
-                    )
-                } else {
-                    initialized = true
-                }
-
-                toolbar.menu
-                    .findItem(R.id.follow)
-                    .setIcon(
-                        if (following) R.drawable.ic_favorite
-                        else R.drawable.ic_favorite_border
-                    )
-            }
-        }
     }
 
     private fun updateStreamLayout(stream: Stream?) {

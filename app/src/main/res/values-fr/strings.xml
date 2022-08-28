@@ -29,7 +29,7 @@
     <string name="descending">Descendant</string>
     <string name="emote_category_global">Global</string>
     <string name="emote_tab_others">Autres</string>
-    <string name="emote_tab_recent">Utilisation récente</string>
+    <string name="emote_tab_recent">Récentes</string>
     <string name="emote_tab_twitch">Twitch</string>
     <string name="enter_url">Entrer l\'URL</string>
     <string name="error">Erreur: %s</string>

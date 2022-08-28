@@ -26,28 +26,28 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                 }
                 is Command.Ban -> {
                     ChatEntry.Highlighted(
-                        header = context.getString(R.string.chat_ban, message),
+                        header = context.getString(R.string.chat_ban, userLogin),
                         data = null,
                         timestamp = timestamp
                     )
                 }
                 is Command.Timeout -> {
                     ChatEntry.Highlighted(
-                        header = context.getString(R.string.chat_timeout, message, duration),
+                        header = context.getString(R.string.chat_timeout, userLogin, duration),
                         data = null,
                         timestamp = timestamp
                     )
                 }
                 is Command.ClearMessage -> {
                     ChatEntry.Highlighted(
-                        header = context.getString(R.string.chat_clearmsg, message, duration),
+                        header = context.getString(R.string.chat_clearmsg, message, userLogin),
                         data = null,
                         timestamp = timestamp
                     )
                 }
                 is Command.Join -> {
                     ChatEntry.Highlighted(
-                        header = context.getString(R.string.chat_join, message),
+                        header = context.getString(R.string.chat_join, channelName),
                         data = null,
                         timestamp = timestamp
                     )
@@ -56,8 +56,8 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                     ChatEntry.Highlighted(
                         header = context.getString(
                             R.string.chat_disconnect,
-                            message,
-                            duration
+                            channelName,
+                            throwable
                         ),
                         data = null,
                         timestamp = timestamp
@@ -65,7 +65,7 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                 }
                 is Command.Notice -> {
                     ChatEntry.Highlighted(
-                        header = duration?.getNoticeString(context = context, message = message)
+                        header = messageId?.getNoticeString(context = context, message = message)
                             ?: message,
                         data = null,
                         timestamp = timestamp
@@ -88,14 +88,14 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                 is Command.UserNotice -> {
                     if (userMessage == null) {
                         ChatEntry.Highlighted(
-                            header = message,
+                            header = systemMsg,
                             headerIconResId = msgId?.getMessageIdIcon(),
                             data = null,
                             timestamp = timestamp
                         )
                     } else {
                         ChatEntry.Highlighted(
-                            header = message ?: msgId?.getMessageIdString(context),
+                            header = systemMsg ?: msgId?.getMessageIdString(context),
                             headerIconResId = msgId?.getMessageIdIcon(),
                             data = ChatEntry.Data.Rich(
                                 message = userMessage.message,

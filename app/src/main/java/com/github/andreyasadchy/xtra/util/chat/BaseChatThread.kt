@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -21,6 +22,7 @@ const val TAG = "ChatThread"
 abstract class BaseChatThread(
     private val scope: CoroutineScope,
     private val listener: OnMessageReceivedListener,
+    private val clock: Clock,
     channelName: String
 ) {
     private val appContext = MainApplication.INSTANCE.applicationContext
@@ -48,7 +50,10 @@ abstract class BaseChatThread(
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketIn", e)
             listener.onCommand(
-                Command.SocketError(throwable = e)
+                Command.SocketError(
+                    throwable = e,
+                    timestamp = clock.now()
+                )
             )
         }
     }

@@ -51,8 +51,8 @@ fun Map<String, String?>.parseParentMessage(): LiveChatMessage.InReplyTo? {
     )
 }
 
-val Map<String, String?>.banDuration: String?
-    get() = this["ban-duration"]?.takeUnless { it.isEmpty() }
+val Map<String, String?>.banDuration: Duration?
+    get() = this["ban-duration"]?.toIntOrNull()?.seconds
 
 val Map<String, String?>.color: String?
     get() = this["color"]?.takeUnless { it.isEmpty() }
@@ -76,10 +76,10 @@ val Map<String, String?>.isEmoteOnly: Boolean
     get() = this["emote-only"] == "1"
 
 val Map<String, String?>.minFollowDuration: Duration?
-    get() = this["followers-only"]?.toInt()?.takeUnless { it == -1 }?.minutes
+    get() = this["followers-only"]?.toIntOrNull()?.takeUnless { it == -1 }?.minutes
 
 val Map<String, String?>.slowModeDuration: Duration?
-    get() = this["slow"]?.toInt()?.takeUnless { it == 0 }?.seconds
+    get() = this["slow"]?.toIntOrNull()?.takeUnless { it == 0 }?.seconds
 
 val Map<String, String?>.uniqueMessagesOnly: Boolean
     get() = this["r9k"] == "1"

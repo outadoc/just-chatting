@@ -8,6 +8,7 @@ import com.github.andreyasadchy.xtra.model.chat.PingCommand
 import com.github.andreyasadchy.xtra.model.chat.RoomState
 import com.github.andreyasadchy.xtra.model.chat.UserState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.datetime.Clock
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -22,10 +23,11 @@ import kotlin.random.Random
  */
 class LiveChatThread(
     scope: CoroutineScope,
+    private val clock: Clock,
     private val channelName: String,
     private val listener: OnMessageReceivedListener,
     private val parser: ChatMessageParser
-) : BaseChatThread(scope, listener, channelName) {
+) : BaseChatThread(scope, listener, clock, channelName) {
 
     fun start() {
         connect(socketListener = LiveChatThreadListener())
@@ -45,8 +47,8 @@ class LiveChatThread(
 
             listener.onCommand(
                 Command.Join(
-                    message = channelName,
-                    duration = null
+                    channelName = channelName,
+                    timestamp = clock.now()
                 )
             )
         }
@@ -89,8 +91,9 @@ class LiveChatThread(
             if (t is IOException && !t.isSocketError) {
                 listener.onCommand(
                     Command.Disconnect(
-                        message = channelName,
-                        throwable = t
+                        channelName = channelName,
+                        throwable = t,
+                        timestamp = clock.now()
                     )
                 )
             }

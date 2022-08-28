@@ -38,6 +38,7 @@ import com.tonyodev.fetch2.FetchConfiguration
 import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import dagger.Module
 import dagger.Provides
+import kotlinx.datetime.Clock
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -49,9 +50,10 @@ import javax.inject.Singleton
 class MainModule {
 
     @Provides
-    fun providesApplicationContext(): Context {
-        return MainApplication.INSTANCE
-    }
+    fun providesApplicationContext(): Context = MainApplication.INSTANCE
+
+    @Provides
+    fun providesClock(): Clock = Clock.System
 
     @Singleton
     @Provides

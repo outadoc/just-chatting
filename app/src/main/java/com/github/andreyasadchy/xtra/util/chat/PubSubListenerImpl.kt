@@ -41,7 +41,11 @@ class PubSubListenerImpl(
             ),
             timestamp = messageData?.optString("timestamp")?.let {
                 Instant.parse(it)
-            }
+            },
+            color = null,
+            isAction = false,
+            emotes = null,
+            badges = null
         )
 
         callback.onMessage(pointReward)

@@ -5,89 +5,65 @@ import kotlin.time.Duration
 
 sealed interface ChatCommand
 
-sealed class Command(
-    open val message: String? = null,
-    open val duration: String? = null,
-    open val emotes: List<TwitchEmote>? = null,
-    open val timestamp: Instant? = null
-) : ChatCommand {
+sealed class Command : ChatCommand {
 
     data class UserNotice(
-        override val message: String? = null,
-        override val duration: String? = null,
-        override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null,
-        val userMessage: ChatMessage? = null,
-        val msgId: String? = null
+        val systemMsg: String?,
+        val timestamp: Instant?,
+        val userMessage: ChatMessage?,
+        val msgId: String?
     ) : Command()
 
     data class Notice(
-        override val message: String? = null,
-        override val duration: String? = null,
-        override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null
+        val message: String?,
+        val timestamp: Instant?,
+        val messageId: String?
     ) : Command()
 
     data class ClearChat(
-        override val message: String? = null,
-        override val duration: String? = null,
-        override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null
+        val timestamp: Instant?
     ) : Command()
 
     data class Timeout(
-        override val message: String? = null,
-        override val duration: String? = null,
-        override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null
+        val duration: Duration?,
+        val timestamp: Instant?,
+        val userLogin: String?
     ) : Command()
 
     data class Ban(
-        override val message: String? = null,
-        override val duration: String? = null,
-        override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null
+        val timestamp: Instant?,
+        val userLogin: String?
     ) : Command()
 
     data class ClearMessage(
-        override val message: String? = null,
-        override val duration: String? = null,
-        override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null
+        val message: String?,
+        val timestamp: Instant?,
+        val userLogin: String?
     ) : Command()
 
     data class Join(
-        override val message: String? = null,
-        override val duration: String? = null,
-        override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null
+        val channelName: String?,
+        val timestamp: Instant?
     ) : Command()
 
     data class Disconnect(
-        override val message: String? = null,
-        override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null,
-        val throwable: Throwable? = null
-    ) : Command() {
-        override val duration: String = throwable.toString()
-    }
+        val channelName: String?,
+        val timestamp: Instant?,
+        val throwable: Throwable?
+    ) : Command()
 
     data class SendMessageError(
-        override val duration: String? = null,
-        override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null,
-        val throwable: Throwable? = null
+        val timestamp: Instant?,
+        val throwable: Throwable?
     ) : Command() {
-        override val message: String = throwable.toString()
+        val message: String = throwable.toString()
     }
 
     data class SocketError(
-        override val duration: String? = null,
-        override val emotes: List<TwitchEmote>? = null,
-        override val timestamp: Instant? = null,
-        val throwable: Throwable? = null
+        val timestamp: Instant?,
+        val throwable: Throwable?
     ) : Command() {
-        override val message: String = throwable.toString()
+        val message: String = throwable.toString()
     }
 }
 
@@ -104,21 +80,21 @@ sealed interface ChatMessage : ChatCommand {
 }
 
 data class LiveChatMessage(
-    override val id: String? = null,
-    override val userId: String? = null,
-    override val userLogin: String? = null,
-    override val userName: String? = null,
-    override val message: String? = null,
-    override val color: String? = null,
+    override val id: String?,
+    override val userId: String?,
+    override val userLogin: String?,
+    override val userName: String?,
+    override val message: String?,
+    override val color: String?,
     override val isAction: Boolean = false,
-    override val emotes: List<TwitchEmote>? = null,
-    override val badges: List<Badge>? = null,
+    override val emotes: List<TwitchEmote>?,
+    override val badges: List<Badge>?,
     val isFirst: Boolean = false,
-    val systemMsg: String? = null,
-    val timestamp: Instant? = null,
-    val rewardId: String? = null,
-    val inReplyTo: InReplyTo? = null,
-    val msgId: String? = null
+    val systemMsg: String?,
+    val timestamp: Instant?,
+    val rewardId: String?,
+    val inReplyTo: InReplyTo?,
+    val msgId: String?
 ) : ChatMessage {
     data class InReplyTo(
         val id: String,
@@ -132,25 +108,25 @@ data class LiveChatMessage(
 object PingCommand : ChatCommand
 
 data class PubSubPointReward(
-    override val id: String? = null,
-    override val userId: String? = null,
-    override val userLogin: String? = null,
-    override val userName: String? = null,
-    override val message: String? = null,
-    override val color: String? = null,
+    override val id: String?,
+    override val userId: String?,
+    override val userLogin: String?,
+    override val userName: String?,
+    override val message: String?,
+    override val color: String?,
     override val isAction: Boolean = false,
-    override val emotes: List<TwitchEmote>? = null,
-    override val badges: List<Badge>? = null,
-    val rewardTitle: String? = null,
-    val rewardCost: Int? = null,
-    val rewardImage: RewardImage? = null,
-    val timestamp: Instant? = null
+    override val emotes: List<TwitchEmote>?,
+    override val badges: List<Badge>?,
+    val rewardTitle: String?,
+    val rewardCost: Int?,
+    val rewardImage: RewardImage?,
+    val timestamp: Instant?
 ) : ChatMessage {
 
     data class RewardImage(
-        val url1: String? = null,
-        val url2: String? = null,
-        val url4: String? = null
+        val url1: String?,
+        val url2: String?,
+        val url4: String?
     ) : RemoteImage {
 
         private val urlForDensity: Map<Float, String?>
@@ -171,9 +147,9 @@ data class PubSubPointReward(
 
 data class RoomState(
     val isEmoteOnly: Boolean = false,
-    val minFollowDuration: Duration? = null,
+    val minFollowDuration: Duration?,
     val uniqueMessagesOnly: Boolean = false,
-    val slowModeDuration: Duration? = null,
+    val slowModeDuration: Duration?,
     val isSubOnly: Boolean = false
 ) : ChatCommand
 

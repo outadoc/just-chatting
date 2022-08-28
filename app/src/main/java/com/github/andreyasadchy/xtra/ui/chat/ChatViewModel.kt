@@ -58,6 +58,7 @@ class ChatViewModel @Inject constructor(
     private val chatPreferencesRepository: ChatPreferencesRepository,
     private val authPreferencesRepository: AuthPreferencesRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
+    private val clock: Clock
 ) : BaseViewModel() {
 
     private val _otherEmotes = MutableLiveData<List<EmoteSetItem>>()
@@ -487,6 +488,7 @@ class ChatViewModel @Inject constructor(
         private val liveChat: LiveChatThread =
             LiveChatThread(
                 scope = viewModelScope,
+                clock = clock,
                 channelName = channelLogin,
                 listener = chatStateListener.messageListener,
                 parser = chatMessageParser
@@ -495,6 +497,7 @@ class ChatViewModel @Inject constructor(
         private val loggedInChat: LoggedInChatThread =
             LoggedInChatThread(
                 scope = viewModelScope,
+                clock = clock,
                 userLogin = user.login,
                 userToken = user.helixToken,
                 channelName = channelLogin,

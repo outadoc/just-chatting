@@ -9,6 +9,7 @@ import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
 import com.github.andreyasadchy.xtra.model.chat.RoomState
 import com.github.andreyasadchy.xtra.model.chat.UserState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.datetime.Clock
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
@@ -24,12 +25,13 @@ import java.io.IOException
  */
 class LoggedInChatThread(
     scope: CoroutineScope,
+    private val clock: Clock,
     private val userLogin: String?,
     private val userToken: String?,
     channelName: String,
     private val listener: OnMessageReceivedListener,
     private val parser: ChatMessageParser
-) : BaseChatThread(scope, listener, channelName) {
+) : BaseChatThread(scope, listener, clock, channelName) {
 
     fun start() {
         connect(socketListener = LiveChatThreadListener())
@@ -88,7 +90,10 @@ class LoggedInChatThread(
         } catch (e: IOException) {
             Log.e(TAG, "Error sending message", e)
             listener.onCommand(
-                Command.SendMessageError(throwable = e)
+                Command.SendMessageError(
+                    throwable = e,
+                    timestamp = clock.now()
+                )
             )
         }
     }

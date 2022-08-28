@@ -59,13 +59,14 @@ class ChatMessageParser @Inject constructor() {
             badges = ircMessage.tags.parseBadges(),
             timestamp = ircMessage.tags.parseTimestamp(),
             inReplyTo = ircMessage.tags.parseParentMessage(),
-            msgId = ircMessage.tags.messageId
+            msgId = ircMessage.tags.messageId,
+            systemMsg = ircMessage.tags.systemMsg
         )
     }
 
     private fun parseUserNotice(ircMessage: IrcMessage): Command.UserNotice {
         return Command.UserNotice(
-            message = ircMessage.tags.systemMsg,
+            systemMsg = ircMessage.tags.systemMsg,
             timestamp = ircMessage.tags.parseTimestamp(),
             userMessage = parseMessage(ircMessage),
             msgId = ircMessage.tags.messageId
@@ -74,8 +75,8 @@ class ChatMessageParser @Inject constructor() {
 
     private fun parseClearMessage(ircMessage: IrcMessage): Command.ClearMessage {
         return Command.ClearMessage(
-            message = ircMessage.tags.login,
-            duration = ircMessage.parameters.getOrNull(1),
+            message = ircMessage.parameters.getOrNull(1),
+            userLogin = ircMessage.tags.login,
             timestamp = ircMessage.tags.parseTimestamp()
         )
     }
@@ -87,17 +88,16 @@ class ChatMessageParser @Inject constructor() {
         return when {
             user == null ->
                 Command.ClearChat(
-                    duration = duration,
                     timestamp = ircMessage.tags.parseTimestamp()
                 )
             duration != null ->
                 Command.Timeout(
-                    message = user,
+                    userLogin = user,
                     duration = duration,
                     timestamp = ircMessage.tags.parseTimestamp()
                 )
             else -> Command.Ban(
-                message = user,
+                userLogin = user,
                 timestamp = ircMessage.tags.parseTimestamp()
             )
         }
@@ -109,7 +109,8 @@ class ChatMessageParser @Inject constructor() {
 
         return Command.Notice(
             message = notice.message,
-            duration = ircMessage.tags.messageId
+            messageId = ircMessage.tags.messageId,
+            timestamp = ircMessage.tags.parseTimestamp()
         )
     }
 

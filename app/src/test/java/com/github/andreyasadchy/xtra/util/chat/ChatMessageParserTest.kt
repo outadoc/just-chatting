@@ -14,6 +14,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 class ChatMessageParserTest {
 
@@ -74,7 +75,11 @@ class ChatMessageParserTest {
                     Badge(id = "turbo", version = "1")
                 ),
                 isFirst = false,
-                timestamp = Instant.parse("2017-10-05T23:36:12.675Z")
+                timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
+                systemMsg = null,
+                rewardId = null,
+                inReplyTo = null,
+                msgId = null
             )
         }
     }
@@ -97,7 +102,11 @@ class ChatMessageParserTest {
                     Badge(id = "subscriber", version = "3009")
                 ),
                 isFirst = false,
-                timestamp = Instant.parse("2022-07-08T16:47:29.487Z")
+                timestamp = Instant.parse("2022-07-08T16:47:29.487Z"),
+                systemMsg = null,
+                rewardId = null,
+                inReplyTo = null,
+                msgId = null
             )
         }
     }
@@ -107,7 +116,7 @@ class ChatMessageParserTest {
         input { "@badge-info=subscriber/41;badges=subscriber/36,bits/1000;color=#FFFFFF;display-name=Frfun;emotes=emotesv2_53f30305e78246aea4bc24d299dd09e7:0-5/emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8:25-38;flags=;id=4c5a38ff-6bb3-4cad-a555-dc8a736cfc38;login=frfun;mod=0;msg-id=resub;msg-param-cumulative-months=41;msg-param-months=0;msg-param-multimonth-duration=0;msg-param-multimonth-tenure=0;msg-param-should-share-streak=1;msg-param-streak-months=40;msg-param-sub-plan-name=Channel\\sSubscription\\s(maghla);msg-param-sub-plan=Prime;msg-param-was-gifted=false;room-id=131215608;subscriber=1;system-msg=Frfun\\ssubscribed\\swith\\sPrime.\\sThey've\\ssubscribed\\sfor\\s41\\smonths,\\scurrently\\son\\sa\\s40\\smonth\\sstreak!;tmi-sent-ts=1657298959852;user-id=99037844;user-type= :tmi.twitch.tv USERNOTICE #maghla :coxPet pat pat le requin moumou4Content" }
         expected {
             Command.UserNotice(
-                message = "Frfun subscribed with Prime. They've subscribed for 41 months, currently on a 40 month streak!",
+                systemMsg = "Frfun subscribed with Prime. They've subscribed for 41 months, currently on a 40 month streak!",
                 timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
                 msgId = "resub",
                 userMessage = LiveChatMessage(
@@ -117,6 +126,7 @@ class ChatMessageParserTest {
                     userName = "Frfun",
                     message = "coxPet pat pat le requin moumou4Content",
                     color = "#FFFFFF",
+                    systemMsg = "Frfun subscribed with Prime. They've subscribed for 41 months, currently on a 40 month streak!",
                     isAction = false,
                     emotes = listOf(
                         TwitchEmote(
@@ -157,7 +167,8 @@ class ChatMessageParserTest {
                     isFirst = false,
                     timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
                     rewardId = null,
-                    msgId = "resub"
+                    msgId = "resub",
+                    inReplyTo = null
                 )
             )
         }
@@ -183,8 +194,12 @@ class ChatMessageParserTest {
                     ),
                     timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
                     message = "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !",
-                    msgId = "announcement"
-                )
+                    msgId = "announcement",
+                    systemMsg = null,
+                    rewardId = null,
+                    inReplyTo = null
+                ),
+                systemMsg = null
             )
         }
     }
@@ -194,9 +209,10 @@ class ChatMessageParserTest {
         input { "@badge-info=;badges=hype-train/2;color=#C8C8C8;display-name=maxent__;emotes=;flags=;historical=1;id=5bca8513-e6b2-455b-a898-1cc7d3bf5332;login=maxent__;mod=0;msg-id=raid;msg-param-displayName=maxent__;msg-param-login=maxent__;msg-param-profileImageURL=https://static-cdn.jtvnw.net/jtv_user_pictures/12a5e085-db37-4e5d-b59a-77eb9f6dd8a2-profile_image-70x70.png;msg-param-viewerCount=3;rm-received-ts=1657303912918;room-id=402890635;subscriber=0;system-msg=3\\sraiders\\sfrom\\smaxent__\\shave\\sjoined!;tmi-sent-ts=1657303912832;user-id=563254735;user-type= :tmi.twitch.tv USERNOTICE #pelerine\n" }
         expected {
             Command.UserNotice(
-                message = "3 raiders from maxent__ have joined!",
+                systemMsg = "3 raiders from maxent__ have joined!",
                 timestamp = Instant.parse("2022-07-08T18:11:52.832Z"),
-                msgId = "raid"
+                msgId = "raid",
+                userMessage = null
             )
         }
     }
@@ -240,7 +256,7 @@ class ChatMessageParserTest {
         input { "@room-id=12345678;target-user-id=87654321;tmi-sent-ts=1642715756806 :tmi.twitch.tv CLEARCHAT #dallas :ronni" }
         expected {
             Command.Ban(
-                message = "ronni",
+                userLogin = "ronni",
                 timestamp = Instant.parse("2022-01-20T21:55:56.806Z")
             )
         }
@@ -251,8 +267,8 @@ class ChatMessageParserTest {
         input { "@ban-duration=350;room-id=12345678;target-user-id=87654321;tmi-sent-ts=1642719320727 :tmi.twitch.tv CLEARCHAT #dallas :ronni" }
         expected {
             Command.Timeout(
-                message = "ronni",
-                duration = "350",
+                userLogin = "ronni",
+                duration = 350.seconds,
                 timestamp = Instant.parse("2022-01-20T22:55:20.727Z")
             )
         }
@@ -314,7 +330,8 @@ class ChatMessageParserTest {
                     id = "7ffcf399-8d69-495c-920c-ea15a96eeee4",
                     userId = "108193474",
                     userLogin = "brankhorst",
-                )
+                ),
+                msgId = null
             )
         }
     }
@@ -340,7 +357,8 @@ class ChatMessageParserTest {
                 systemMsg = null,
                 timestamp = Instant.parse("2022-08-25T18:32:59.625Z"),
                 rewardId = null,
-                msgId = "highlighted-message"
+                msgId = "highlighted-message",
+                inReplyTo = null
             )
         }
     }

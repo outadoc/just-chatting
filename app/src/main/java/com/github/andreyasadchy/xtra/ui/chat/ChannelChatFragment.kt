@@ -222,29 +222,27 @@ class ChannelChatFragment :
             override fun getItemCount(): Int = 3
         }
 
-        val emotesObserver = { emoteSets: List<EmoteSetItem> ->
-            val emotes = emoteSets.mapNotNull { (it as? EmoteSetItem.Emote)?.emote }
-            chatView.addEmotes(emotes)
-            chatInputView.addEmotes(emotes)
-        }
+        chatViewModel.state.observe(viewLifecycleOwner) { state ->
+            val allEmotes = state.emotesFromSets.toEmoteSet() +
+                    state.recentEmotes.toEmoteSet() +
+                    state.otherEmotes.toEmoteSet()
 
-        with(chatViewModel) {
-            chatters.observe(viewLifecycleOwner, chatInputView::setChatters)
-            messagePostConstraint.observe(
-                viewLifecycleOwner,
-                chatInputView::setMessagePostConstraint
-            )
+            chatInputView.setEmotes(allEmotes)
+            chatInputView.setChatters(state.chatters)
+            chatInputView.setMessagePostConstraint(state.messagePostConstraint)
 
-            emotesFromSets.observe(viewLifecycleOwner, emotesObserver)
-            recentEmotes.observe(viewLifecycleOwner, emotesObserver)
-            otherEmotes.observe(viewLifecycleOwner, emotesObserver)
-            roomState.observe(viewLifecycleOwner) { chatView.notifyRoomState(it) }
-            chatMessages.observe(viewLifecycleOwner, chatView::submitList)
-            globalBadges.observe(viewLifecycleOwner, chatView::addGlobalBadges)
-            channelBadges.observe(viewLifecycleOwner, chatView::addChannelBadges)
-            cheerEmotes.observe(viewLifecycleOwner, chatView::addCheerEmotes)
-            emotesLoaded.observe(viewLifecycleOwner, chatView::notifyEmotesLoaded)
+            chatView.setEmotes(allEmotes)
+            chatView.submitList(state.chatMessages)
+            chatView.notifyRoomState(state.roomState)
+            chatView.addGlobalBadges(state.globalBadges)
+            chatView.addChannelBadges(state.channelBadges)
+            chatView.addCheerEmotes(state.cheerEmotes)
+            chatView.notifyEmotesLoaded(state.emotesLoaded)
         }
+    }
+
+    private fun List<EmoteSetItem>.toEmoteSet(): Set<Emote> {
+        return mapNotNull { (it as? EmoteSetItem.Emote)?.emote }.toSet()
     }
 
     private fun updateStreamLayout(stream: Stream?) {

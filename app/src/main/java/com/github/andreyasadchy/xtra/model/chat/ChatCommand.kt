@@ -143,9 +143,9 @@ data class PubSubPointReward(
 
 data class RoomState(
     val isEmoteOnly: Boolean = false,
-    val minFollowDuration: Duration?,
+    val minFollowDuration: Duration? = null,
     val uniqueMessagesOnly: Boolean = false,
-    val slowModeDuration: Duration?,
+    val slowModeDuration: Duration? = null,
     val isSubOnly: Boolean = false
 ) : ChatCommand
 

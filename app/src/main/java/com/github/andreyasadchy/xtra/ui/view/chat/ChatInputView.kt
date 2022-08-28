@@ -22,13 +22,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.chat.BttvEmote
 import com.github.andreyasadchy.xtra.model.chat.Chatter
 import com.github.andreyasadchy.xtra.model.chat.Emote
-import com.github.andreyasadchy.xtra.model.chat.FfzEmote
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
-import com.github.andreyasadchy.xtra.model.chat.StvEmote
-import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.ui.chat.MessagePostConstraint
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
@@ -57,8 +53,6 @@ class ChatInputView : LinearLayout {
 
     private val _emotePickerSelectedTab = MutableLiveData<Int>()
     val emotePickerSelectedTab: LiveData<Int> = _emotePickerSelectedTab
-
-    private var hasRecentEmotes: Boolean? = null
 
     private val autoCompleteAdapter = AutoCompleteAdapter(context)
 
@@ -168,20 +162,12 @@ class ChatInputView : LinearLayout {
             }.attach()
         }
 
-    fun addEmotes(list: List<Emote>) {
-        when (list.firstOrNull()) {
-            is BttvEmote, is FfzEmote, is StvEmote -> {
-                autoCompleteAdapter.addAll(
-                    list.map { AutoCompleteItem.EmoteItem(it) }
-                )
-            }
-            is TwitchEmote -> {
-                autoCompleteAdapter.addAll(
-                    list.map { AutoCompleteItem.EmoteItem(it) }
-                )
-            }
-            is RecentEmote -> hasRecentEmotes = true
-        }
+    fun setEmotes(list: Collection<Emote>) {
+        autoCompleteAdapter.clear()
+        autoCompleteAdapter.addAll(
+            list.filterNot { it is RecentEmote }
+                .map { AutoCompleteItem.EmoteItem(it) }
+        )
     }
 
     fun setChatters(chatters: Collection<Chatter>) {

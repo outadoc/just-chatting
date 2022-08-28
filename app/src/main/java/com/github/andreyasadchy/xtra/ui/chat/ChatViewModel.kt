@@ -2,8 +2,7 @@ package com.github.andreyasadchy.xtra.ui.chat
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.feature.irc.ChatMessageParser
 import com.github.andreyasadchy.xtra.model.User
@@ -40,7 +39,9 @@ import com.github.andreyasadchy.xtra.util.combineWith
 import com.github.andreyasadchy.xtra.util.isOdd
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
@@ -61,63 +62,46 @@ class ChatViewModel @Inject constructor(
     private val clock: Clock
 ) : BaseViewModel() {
 
-    private val _otherEmotes = MutableLiveData<List<EmoteSetItem>>()
-    val otherEmotes: LiveData<List<EmoteSetItem>>
-        get() = _otherEmotes
-
-    val globalBadges = MutableLiveData<List<TwitchBadge>?>()
-    val channelBadges = MutableLiveData<List<TwitchBadge>>()
-    val cheerEmotes = MutableLiveData<List<CheerEmote>>()
-    var emoteSetsAdded = false
-    val emotesFromSets = MutableLiveData<List<EmoteSetItem>>()
-    val emotesLoaded = MutableLiveData<Boolean>()
-    val roomState = MutableLiveData<RoomState>()
-
-    private val _lastSentMessageInstant = MutableLiveData<Instant?>(null)
-
-    val messagePostConstraint: LiveData<MessagePostConstraint?> =
-        _lastSentMessageInstant.combineWith(roomState) { lastSentMessageInstant, roomState ->
-            if (lastSentMessageInstant == null || roomState?.slowModeDuration?.isPositive() != true) {
-                null
-            } else {
-                MessagePostConstraint(
-                    lastMessageSentAt = lastSentMessageInstant,
-                    slowModeDuration = roomState.slowModeDuration
-                )
+    data class State(
+        val allEmotesMap: Map<String, Emote> = emptyMap(),
+        val channelBadges: List<TwitchBadge> = emptyList(),
+        val chatMessages: List<ChatEntry> = LinkedList(),
+        val chatters: Set<Chatter> = emptySet(),
+        val cheerEmotes: List<CheerEmote> = emptyList(),
+        val emoteSetsAdded: Boolean = false,
+        val emotesFromSets: List<EmoteSetItem> = emptyList(),
+        val emotesLoaded: Boolean = false,
+        val globalBadges: List<TwitchBadge>? = null,
+        val lastSentMessageInstant: Instant? = null,
+        val otherEmotes: List<EmoteSetItem> = emptyList(),
+        val recentEmotes: List<EmoteSetItem> = emptyList(),
+        val roomState: RoomState = RoomState()
+    ) {
+        val messagePostConstraint: MessagePostConstraint? =
+            lastSentMessageInstant?.let {
+                if (roomState.slowModeDuration?.isPositive() != true) {
+                    null
+                } else {
+                    MessagePostConstraint(
+                        lastMessageSentAt = it,
+                        slowModeDuration = roomState.slowModeDuration
+                    )
+                }
             }
-        }
+    }
 
-    private val _chatMessages = MutableLiveData<List<ChatEntry>>()
-    val chatMessages: LiveData<List<ChatEntry>>
-        get() = _chatMessages
+    private val _state = MutableStateFlow(State())
+    val state: LiveData<State> = playerRepository.loadRecentEmotes()
+        .combineWith(_state.asLiveData()) { recentEmotes, state ->
+            state.copy(
+                recentEmotes = recentEmotes
+                    .filter { recentEmote -> state.allEmotesMap.containsKey(recentEmote.name) }
+                    .map { emote -> EmoteSetItem.Emote(emote) }
+            )
+        }
 
     private var chatStateListener: ChatStateListener? = null
     private var chatController: ChatController? = null
-
-    private val _chatters = MutableLiveData<Set<Chatter>>()
-    val chatters: LiveData<Set<Chatter>> get() = _chatters
-
-    val recentEmotes: LiveData<List<EmoteSetItem>> =
-        MediatorLiveData<List<EmoteSetItem>>().apply {
-            addSource(emotesFromSets) { twitch ->
-                removeSource(emotesFromSets)
-                addSource(_otherEmotes) { other ->
-                    removeSource(_otherEmotes)
-
-                    val knownEmotes =
-                        (twitch + other).filterIsInstance<EmoteSetItem.Emote>()
-                            .map { it.emote }
-
-                    addSource(playerRepository.loadRecentEmotes()) { recent ->
-                        value = recent
-                            .filter { recentEmote ->
-                                knownEmotes.any { emote -> emote.name == recentEmote.name }
-                            }
-                            .map { emote -> EmoteSetItem.Emote(emote) }
-                    }
-                }
-            }
-        }
 
     private var maxAdapterCount: Int = -1
 
@@ -174,12 +158,25 @@ class ChatViewModel @Inject constructor(
         isDarkTheme: Boolean
     ) {
         viewModelScope.launch {
-            chatController?.send(
-                message = message,
-                animateEmotes = chatPreferencesRepository.animateEmotes.first(),
-                screenDensity = screenDensity,
-                isDarkTheme = isDarkTheme
-            )
+            chatController?.send(message = message)
+
+            val currentTime = clock.now().toEpochMilliseconds()
+            val usedEmotes: List<RecentEmote> =
+                message.split(' ').mapNotNull { word ->
+                    state.value?.allEmotesMap?.get(word)?.let { emote ->
+                        RecentEmote(
+                            name = word,
+                            url = emote.getUrl(
+                                animate = chatPreferencesRepository.animateEmotes.first(),
+                                screenDensity = screenDensity,
+                                isDarkTheme = isDarkTheme
+                            ),
+                            usedAt = currentTime
+                        )
+                    }
+                }
+
+            playerRepository.insertRecentEmotes(usedEmotes)
         }
     }
 
@@ -194,8 +191,6 @@ class ChatViewModel @Inject constructor(
         enableRecentMsg: Boolean? = false,
         recentMsgLimit: Int? = null
     ) {
-        _chatMessages.value = LinkedList()
-
         start()
 
         viewModelScope.launch {
@@ -212,28 +207,20 @@ class ChatViewModel @Inject constructor(
                 }
             }
 
-            savedGlobalBadges.also {
-                if (it != null) {
-                    globalBadges.value = it
-                } else {
-                    try {
-                        val badges = playerRepository.loadGlobalBadges().body()?.badges
-                        if (badges != null) {
-                            savedGlobalBadges = badges
-                            globalBadges.value = badges
-                        }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Failed to load global badges", e)
-                    }
+            val globalBadges = savedGlobalBadges ?: try {
+                playerRepository.loadGlobalBadges().body()?.badges?.also { badges ->
+                    savedGlobalBadges = badges
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to load global badges", e)
+                null
             }
 
-            try {
-                channelBadges.postValue(
-                    playerRepository.loadChannelBadges(channelId).body()?.badges
-                )
+            val channelBadges = try {
+                playerRepository.loadChannelBadges(channelId).body()?.badges
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load badges for channel $channelId", e)
+                null
             }
 
             val stvEmotes: List<StvEmote> = try {
@@ -308,24 +295,28 @@ class ChatViewModel @Inject constructor(
                 groups.flatMap { (_, emotes) -> emotes }
             )
 
-            _otherEmotes.postValue(
+            val otherEmotes =
                 groups.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group))
                         .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
                 }
-            )
 
-            try {
-                cheerEmotes.postValue(
-                    repository.loadCheerEmotes(
-                        userId = channelId
-                    )
-                )
+            val cheerEmotes = try {
+                repository.loadCheerEmotes(userId = channelId)
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load cheermotes for channel $channelId", e)
+                null
             }
 
-            emotesLoaded.value = true
+            _state.update { state ->
+                state.copy(
+                    emotesLoaded = true,
+                    cheerEmotes = cheerEmotes ?: state.cheerEmotes,
+                    otherEmotes = otherEmotes,
+                    channelBadges = channelBadges ?: state.channelBadges,
+                    globalBadges = globalBadges
+                )
+            }
         }
     }
 
@@ -350,42 +341,51 @@ class ChatViewModel @Inject constructor(
             showClearChat = showClearChat
         )
 
-        private val _allEmotesMap = mutableMapOf<String, Emote>()
-        val allEmotesMap: Map<String, Emote> = _allEmotesMap
-
         init {
-            _chatters.postValue(setOf(Chatter(displayName)))
+            _state.update { state ->
+                state.copy(
+                    chatters = state.chatters + Chatter(displayName)
+                )
+            }
         }
 
         suspend fun appendMessages(messages: List<ChatCommand>) =
             withContext(Dispatchers.Default) {
-                messages.forEach { message ->
-                    // Process side-effects
-                    // Remember names of chatters
-                    if (message is ChatMessage) {
-                        message.userName?.let { userName ->
-                            _chatters.postValue(
-                                _chatters.value.orEmpty()
-                                    .plusElement(Chatter(userName))
-                            )
-                        }
-                    }
-
+                _state.update { state ->
                     // Note that this is the last message we've sent
-                    if (message is LiveChatMessage && message.userId != null && message.userId == user.id) {
-                        _lastSentMessageInstant.postValue(message.timestamp)
-                    }
+                    val lastSentMessageInstant: Instant? =
+                        messages.filterIsInstance<LiveChatMessage>()
+                            .lastOrNull { message ->
+                                message.userId != null && message.userId == user.id
+                            }
+                            ?.timestamp
+
+                    // Remember names of chatters
+                    val newChatters =
+                        messages.asSequence()
+                            .filterIsInstance<ChatMessage>()
+                            .mapNotNull { message -> message.userName }
+                            .map { userName -> Chatter(userName) }
+                            .toSet()
+
+                    val newMessages = state.chatMessages
+                        .toMutableList()
+                        .apply {
+                            addAll(messages.mapNotNull { chatEntryMapper.map(it) })
+                        }
+
+                    // We alternate the background of each chat row.
+                    // If we remove just one item, the backgrounds will shift, so we always need to remove
+                    // an even number of items.
+                    val maxCount = maxAdapterCount + if (newMessages.size.isOdd) 1 else 0
+
+                    state.copy(
+                        chatMessages = newMessages.takeLast(maxCount),
+                        lastSentMessageInstant = lastSentMessageInstant
+                            ?: state.lastSentMessageInstant,
+                        chatters = state.chatters + newChatters
+                    )
                 }
-
-                val newList = _chatMessages.value.orEmpty() +
-                    messages.mapNotNull { chatEntryMapper.map(it) }
-
-                // We alternate the background of each chat row.
-                // If we remove just one item, the backgrounds will shift, so we always need to remove
-                // an even number of items.
-                val maxCount = maxAdapterCount + if (newList.size.isOdd) 1 else 0
-
-                _chatMessages.postValue(newList.takeLast(maxCount))
             }
 
         override fun onMessage(message: ChatCommand) {
@@ -399,7 +399,7 @@ class ChatViewModel @Inject constructor(
                 return
             }
 
-            if (savedEmoteSets != sets || !emoteSetsAdded) {
+            if (savedEmoteSets != sets || state.value?.emoteSetsAdded != true) {
                 viewModelScope.launch(Dispatchers.Default) {
                     loadEmotes(sets)
                 }
@@ -413,9 +413,7 @@ class ChatViewModel @Inject constructor(
                     .chunked(25)
                     .flatMap { setIds ->
                         try {
-                            repository.loadEmotesFromSet(
-                                setIds = setIds
-                            )
+                            repository.loadEmotesFromSet(setIds = setIds)
                         } catch (e: Exception) {
                             e.printStackTrace()
                             null
@@ -459,21 +457,31 @@ class ChatViewModel @Inject constructor(
             if (emotes.isNotEmpty()) {
                 savedEmoteSets = sets
                 savedEmotesFromSets = emotes
-                emoteSetsAdded = true
 
                 addEmotes(emotes)
 
-                emotesFromSets.postValue(sortedEmotes)
+                _state.update { state ->
+                    state.copy(
+                        emotesFromSets = sortedEmotes,
+                        emoteSetsAdded = true
+                    )
+                }
             }
         }
 
-        override fun onRoomState(list: RoomState) {
-            roomState.postValue(list)
+        override fun onRoomState(roomState: RoomState) {
+            _state.update { state ->
+                state.copy(roomState = roomState)
+            }
         }
 
         fun addEmotes(list: List<Emote>) {
             if (user is User.LoggedIn) {
-                _allEmotesMap.putAll(list.associateBy { it.name })
+                _state.update { state ->
+                    state.copy(
+                        allEmotesMap = state.allEmotesMap + list.associateBy { it.name }
+                    )
+                }
             }
         }
     }
@@ -514,38 +522,8 @@ class ChatViewModel @Inject constructor(
                 )
             } else null
 
-        override fun send(
-            message: CharSequence,
-            animateEmotes: Boolean,
-            screenDensity: Float,
-            isDarkTheme: Boolean
-        ) {
+        override fun send(message: CharSequence) {
             loggedInChat.send(message)
-
-            val usedEmotes = hashSetOf<RecentEmote>()
-            val currentTime = Clock.System.now().toEpochMilliseconds()
-
-            message.split(' ').forEach { word ->
-                chatStateListener.allEmotesMap[word]?.let { emote ->
-                    usedEmotes.add(
-                        RecentEmote(
-                            name = word,
-                            url = emote.getUrl(
-                                animate = animateEmotes,
-                                screenDensity = screenDensity,
-                                isDarkTheme = isDarkTheme
-                            ),
-                            usedAt = currentTime
-                        )
-                    )
-                }
-            }
-
-            if (usedEmotes.isNotEmpty()) {
-                viewModelScope.launch {
-                    playerRepository.insertRecentEmotes(usedEmotes)
-                }
-            }
         }
 
         override suspend fun start() {
@@ -566,12 +544,7 @@ class ChatViewModel @Inject constructor(
 
     abstract inner class ChatController {
 
-        abstract fun send(
-            message: CharSequence,
-            animateEmotes: Boolean,
-            screenDensity: Float,
-            isDarkTheme: Boolean
-        )
+        abstract fun send(message: CharSequence)
 
         abstract suspend fun start()
         abstract fun stop()

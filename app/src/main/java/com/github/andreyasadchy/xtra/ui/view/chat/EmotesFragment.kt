@@ -83,10 +83,14 @@ class EmotesFragment : Fragment(), Injectable, Scrollable {
             }
         }
 
-        when (args.getInt(KEY_POSITION)) {
-            0 -> viewModel.recentEmotes.observe(viewLifecycleOwner, emotesAdapter::submitList)
-            1 -> viewModel.emotesFromSets.observe(viewLifecycleOwner, emotesAdapter::submitList)
-            else -> viewModel.otherEmotes.observe(viewLifecycleOwner, emotesAdapter::submitList)
+        viewModel.state.observe(viewLifecycleOwner) { state ->
+            emotesAdapter.submitList(
+                when (args.getInt(KEY_POSITION)) {
+                    0 -> state.recentEmotes
+                    1 -> state.emotesFromSets
+                    else -> state.otherEmotes
+                }
+            )
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->

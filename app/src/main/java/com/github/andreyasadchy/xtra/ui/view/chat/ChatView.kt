@@ -21,11 +21,9 @@ import com.github.andreyasadchy.xtra.model.chat.Emote
 import com.github.andreyasadchy.xtra.model.chat.FfzEmote
 import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
-import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.RoomState
 import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
-import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
 import com.github.andreyasadchy.xtra.ui.view.AlternatingBackgroundItemDecoration
 import com.github.andreyasadchy.xtra.ui.view.chat.model.ChatEntry
@@ -42,8 +40,6 @@ import kotlin.time.Duration
 class ChatView : LinearLayout {
 
     private lateinit var adapter: ChatAdapter
-
-    private var hasRecentEmotes: Boolean? = null
 
     private var messageClickListener: OnMessageClickListener? = null
 
@@ -196,10 +192,10 @@ class ChatView : LinearLayout {
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-            !textFollowers.isGone ||
-            !textUnique.isGone ||
-            !textSlow.isGone ||
-            !textSubs.isGone
+                    !textFollowers.isGone ||
+                    !textUnique.isGone ||
+                    !textSlow.isGone ||
+                    !textSubs.isGone
     }
 
     fun addGlobalBadges(list: List<TwitchBadge>?) {
@@ -216,14 +212,10 @@ class ChatView : LinearLayout {
         adapter.addCheerEmotes(list)
     }
 
-    fun addEmotes(list: List<Emote>) {
-        when (list.firstOrNull()) {
-            is BttvEmote, is FfzEmote, is StvEmote -> {
-                adapter.addEmotes(list)
-            }
-            is TwitchEmote -> {}
-            is RecentEmote -> hasRecentEmotes = true
-        }
+    fun setEmotes(list: Set<Emote>) {
+        adapter.addEmotes(
+            list.filter { it is BttvEmote || it is FfzEmote || it is StvEmote }
+        )
     }
 
     fun setUsername(username: String) {

@@ -169,7 +169,8 @@ class ChatEntryMapper @Inject constructor(private val context: Context) {
                 }
                 is PubSubPointReward -> {
                     ChatEntry.Highlighted(
-                        header = rewardCost?.toString(),
+                        header = context.getString(R.string.user_redeemed_header, rewardCost),
+                        headerIconResId = R.drawable.ic_toll,
                         data = ChatEntry.Data.Plain(
                             message = context.getString(
                                 R.string.user_redeemed,

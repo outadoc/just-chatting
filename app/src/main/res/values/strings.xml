@@ -245,6 +245,7 @@
     <string name="unfollowed">Unfollowed %s</string>
     <string name="uptime">%s uptime</string>
     <string name="user_redeemed">%1$s redeemed %2$s</string>
+    <string name="user_redeemed_header">%1$d points</string>
     <string name="view_profile">View profile</string>
     <string name="viewers_count">%s viewers</string>
     <string name="watch_live">Watch live</string>

@@ -244,6 +244,7 @@
     <string name="unfollowed">Non suivi %s</string>
     <string name="uptime">%s durée de fonctionnent</string>
     <string name="user_redeemed">%1$s a récupéré %2$s</string>
+    <string name="user_redeemed_header">%1$d points</string>
     <string name="view_profile">Voir le profil</string>
     <string name="viewers_count">%s spectateurs</string>
     <string name="watch_live">Regarder en direct</string>

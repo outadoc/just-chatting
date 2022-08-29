@@ -39,6 +39,9 @@ import com.github.andreyasadchy.xtra.util.combineWith
 import com.github.andreyasadchy.xtra.util.isOdd
 import com.github.andreyasadchy.xtra.util.nullIfEmpty
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -68,7 +71,6 @@ class ChatViewModel @Inject constructor(
         val chatMessages: List<ChatEntry> = LinkedList(),
         val chatters: Set<Chatter> = emptySet(),
         val cheerEmotes: List<CheerEmote> = emptyList(),
-        val emoteSetsAdded: Boolean = false,
         val emotesFromSets: List<EmoteSetItem> = emptyList(),
         val globalBadges: List<TwitchBadge> = emptyList(),
         val lastSentMessageInstant: Instant? = null,
@@ -206,86 +208,102 @@ class ChatViewModel @Inject constructor(
                 }
             }
 
-            val globalBadges = savedGlobalBadges ?: try {
-                playerRepository.loadGlobalBadges().body()?.badges?.also { badges ->
-                    savedGlobalBadges = badges
+            val globalBadges = async {
+                savedGlobalBadges ?: try {
+                    playerRepository.loadGlobalBadges().body()?.badges?.also { badges ->
+                        savedGlobalBadges = badges
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load global badges", e)
+                    null
                 }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load global badges", e)
-                null
             }
 
-            val channelBadges = try {
-                playerRepository.loadChannelBadges(channelId).body()?.badges
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load badges for channel $channelId", e)
-                null
+            val channelBadges = async {
+                try {
+                    playerRepository.loadChannelBadges(channelId).body()?.badges
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load badges for channel $channelId", e)
+                    null
+                }
             }
 
-            val stvEmotes: List<StvEmote> = try {
-                val channelStv = playerRepository.loadStvEmotes(channelId)
-                channelStv.body()?.emotes
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load 7tv emotes for channel $channelId", e)
-                null
-            }.orEmpty()
+            val stvEmotes = async {
+                try {
+                    val channelStv = playerRepository.loadStvEmotes(channelId)
+                    channelStv.body()?.emotes
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load 7tv emotes for channel $channelId", e)
+                    null
+                }.orEmpty()
+            }
 
-            val bttvEmotes: List<BttvEmote> = try {
-                val channelBttv = playerRepository.loadBttvEmotes(channelId)
-                channelBttv.body()?.emotes
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load BTTV emotes for channel $channelId", e)
-                null
-            }.orEmpty()
+            val bttvEmotes = async {
+                try {
+                    val channelBttv = playerRepository.loadBttvEmotes(channelId)
+                    channelBttv.body()?.emotes
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load BTTV emotes for channel $channelId", e)
+                    null
+                }.orEmpty()
+            }
 
-            val ffzEmotes: List<FfzEmote> = try {
-                val channelFfz = playerRepository.loadBttvFfzEmotes(channelId)
-                channelFfz.body()?.emotes
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load FFZ emotes for channel $channelId", e)
-                null
-            }.orEmpty()
+            val ffzEmotes = async {
+                try {
+                    val channelFfz = playerRepository.loadBttvFfzEmotes(channelId)
+                    channelFfz.body()?.emotes
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load FFZ emotes for channel $channelId", e)
+                    null
+                }.orEmpty()
+            }
 
-            val globalStv: List<StvEmote> = globalStvEmotes ?: try {
-                playerRepository.loadGlobalStvEmotes()
-                    .body()
-                    ?.emotes
-                    ?.also { emotes ->
-                        globalStvEmotes = emotes
-                    }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load global 7tv emotes", e)
-                null
-            }.orEmpty()
+            val globalStv = async {
+                globalStvEmotes ?: try {
+                    playerRepository.loadGlobalStvEmotes()
+                        .body()
+                        ?.emotes
+                        ?.also { emotes ->
+                            globalStvEmotes = emotes
+                        }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load global 7tv emotes", e)
+                    null
+                }.orEmpty()
+            }
 
-            val globalBttv: List<BttvEmote> = globalBttvEmotes ?: try {
-                playerRepository.loadGlobalBttvEmotes()
-                    .body()
-                    ?.emotes
-                    ?.also { emotes ->
-                        globalBttvEmotes = emotes
-                    }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load global BTTV emotes", e)
-                null
-            }.orEmpty()
+            val globalBttv = async {
+                globalBttvEmotes ?: try {
+                    playerRepository.loadGlobalBttvEmotes()
+                        .body()
+                        ?.emotes
+                        ?.also { emotes ->
+                            globalBttvEmotes = emotes
+                        }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load global BTTV emotes", e)
+                    null
+                }.orEmpty()
+            }
 
-            val globalFfz: List<FfzEmote> = globalFfzEmotes ?: try {
-                playerRepository.loadBttvGlobalFfzEmotes()
-                    .body()
-                    ?.emotes
-                    ?.also { emotes ->
-                        globalFfzEmotes = emotes
-                    }
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to load global FFZ emotes", e)
-                null
-            }.orEmpty()
+            val globalFfz = async {
+                globalFfzEmotes ?: try {
+                    playerRepository.loadBttvGlobalFfzEmotes()
+                        .body()
+                        ?.emotes
+                        ?.also { emotes ->
+                            globalFfzEmotes = emotes
+                        }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Failed to load global FFZ emotes", e)
+                    null
+                }.orEmpty()
+            }
 
             val groups = mapOf(
-                "BetterTTV" to bttvEmotes + globalBttv,
-                "7TV" to stvEmotes + globalStv,
-                "FrankerFaceZ" to ffzEmotes + globalFfz
+                "BetterTTV" to bttvEmotes.await() + globalBttv.await(),
+                "7TV" to stvEmotes.await() + globalStv.await(),
+                "FrankerFaceZ" to ffzEmotes.await() + globalFfz.await()
             ).filterValues { emotes ->
                 emotes.isNotEmpty()
             }
@@ -310,8 +328,8 @@ class ChatViewModel @Inject constructor(
                         .associateBy { it.name },
                     cheerEmotes = cheerEmotes ?: state.cheerEmotes,
                     otherEmotes = otherEmotes,
-                    channelBadges = channelBadges ?: state.channelBadges,
-                    globalBadges = globalBadges ?: state.globalBadges
+                    channelBadges = channelBadges.await() ?: state.channelBadges,
+                    globalBadges = globalBadges.await() ?: state.globalBadges
                 )
             }
         }
@@ -396,25 +414,29 @@ class ChatViewModel @Inject constructor(
                 return
             }
 
-            if (savedEmoteSets != sets || state.value?.emoteSetsAdded != true) {
+            if (savedEmoteSets != sets) {
                 viewModelScope.launch(Dispatchers.Default) {
                     loadTwitchEmotes(sets)
                 }
             }
         }
 
-        private suspend fun loadTwitchEmotes(sets: List<String>) {
+        private suspend fun loadTwitchEmotes(sets: List<String>) = coroutineScope {
             val emotes: List<TwitchEmote> =
                 sets.asReversed()
                     .chunked(25)
-                    .flatMap { setIds ->
-                        try {
-                            repository.loadEmotesFromSet(setIds = setIds)
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                            null
-                        }.orEmpty()
+                    .map { setIds ->
+                        async {
+                            try {
+                                repository.loadEmotesFromSet(setIds = setIds)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                null
+                            }.orEmpty()
+                        }
                     }
+                    .awaitAll()
+                    .flatten()
 
             val emoteOwners: Map<String, com.github.andreyasadchy.xtra.model.helix.user.User> =
                 try {
@@ -459,8 +481,7 @@ class ChatViewModel @Inject constructor(
                         allEmotesMap = state.allEmotesMap.plus(
                             emotes.associateBy { emote -> emote.name }
                         ),
-                        emotesFromSets = sortedEmotes,
-                        emoteSetsAdded = true
+                        emotesFromSets = sortedEmotes
                     )
                 }
             }

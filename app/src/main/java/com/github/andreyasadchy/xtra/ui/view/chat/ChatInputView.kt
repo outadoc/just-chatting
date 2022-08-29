@@ -187,9 +187,8 @@ class ChatInputView : LinearLayout {
         // If the constraint is in the past, just ignore it
         val now = Clock.System.now()
         val canPostAt = constraint.lastMessageSentAt + constraint.slowModeDuration
-        val durationUntilCanPost = canPostAt - now
 
-        if (durationUntilCanPost.isNegative()) {
+        if (canPostAt < now) {
             progressCannotSendUntil.isInvisible = true
             return
         }
@@ -199,11 +198,11 @@ class ChatInputView : LinearLayout {
             progressAnimator = null
         }
 
-        // noinspection Recycle
         progressAnimator = ValueAnimator.ofInt(0, Int.MAX_VALUE)
             .apply {
                 interpolator = null
-                duration = durationUntilCanPost.inWholeMilliseconds
+                duration = constraint.slowModeDuration.inWholeMilliseconds
+
                 addUpdateListener { animation ->
                     with(progressCannotSendUntil) {
                         max = Int.MAX_VALUE
@@ -211,7 +210,10 @@ class ChatInputView : LinearLayout {
                         isInvisible = progress == 0
                     }
                 }
+
                 reverse()
+
+                currentPlayTime = (now - constraint.lastMessageSentAt).inWholeMilliseconds
             }
     }
 

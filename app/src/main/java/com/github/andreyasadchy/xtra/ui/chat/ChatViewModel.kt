@@ -102,110 +102,75 @@ class ChatViewModel @Inject constructor(
     private var chatStateListener: ChatStateListener? = null
     private var chatController: ChatController? = null
 
-    private var maxAdapterCount: Int = -1
-
     fun startLive(
-        channelId: String?,
-        channelLogin: String?,
-        channelName: String?
+        channelId: String,
+        channelLogin: String,
+        channelName: String
     ) {
         viewModelScope.launch {
             val user = userPreferencesRepository.user.first() as? User.LoggedIn ?: return@launch
 
-            maxAdapterCount = chatPreferencesRepository.messageLimit.first()
-
-            if (chatController == null && channelLogin != null && channelName != null) {
-                val listener = ChatStateListener(
+            if (chatController == null) {
+                chatStateListener = ChatStateListener(
                     user = user,
-                    helixClientId = authPreferencesRepository.helixClientId.first(),
                     channelId = channelId,
                     displayName = channelName,
+                    helixClientId = authPreferencesRepository.helixClientId.first(),
                     showUserNotice = chatPreferencesRepository.showUserNotice.first(),
                     showClearMsg = chatPreferencesRepository.showClearMsg.first(),
-                    showClearChat = chatPreferencesRepository.showClearChat.first()
-                )
-
-                chatStateListener = listener
-                chatController = LiveChatController(
-                    user = user,
-                    channelId = channelId,
-                    channelLogin = channelLogin,
-                    chatStateListener = listener
-                )
-
-                if (channelId != null) {
-                    init(
+                    showClearChat = chatPreferencesRepository.showClearChat.first(),
+                    maxAdapterCount = chatPreferencesRepository.messageLimit.first()
+                ).also { listener ->
+                    chatController = LiveChatController(
+                        user = user,
                         channelId = channelId,
                         channelLogin = channelLogin,
-                        enableRecentMsg = chatPreferencesRepository.enableRecentMsg.first(),
-                        recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first()
+                        chatStateListener = listener
                     )
                 }
+
+                val enableRecentMsg = chatPreferencesRepository.enableRecentMsg.first()
+                val recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first()
+
+                if (enableRecentMsg && recentMsgLimit > 0) {
+                    loadRecentMessages(
+                        user = user,
+                        maxAdapterCount = chatPreferencesRepository.messageLimit.first(),
+                        channelLogin = channelLogin,
+                        recentMsgLimit = recentMsgLimit
+                    )
+                }
+
+                chatController?.start()
+                loadEmotes(channelId)
             }
         }
     }
 
-    fun start() {
-        viewModelScope.launch {
-            chatController?.start()
+    private suspend fun loadRecentMessages(
+        user: User,
+        channelLogin: String,
+        recentMsgLimit: Int,
+        maxAdapterCount: Int
+    ) {
+        try {
+            playerRepository.loadRecentMessages(channelLogin, recentMsgLimit)
+                .body()
+                ?.messages
+                ?.let { messages ->
+                    onMessages(
+                        user = user,
+                        maxAdapterCount = maxAdapterCount,
+                        messages = messages
+                    )
+                }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to load recent messages for channel $channelLogin", e)
         }
     }
 
-    fun send(
-        message: CharSequence,
-        screenDensity: Float,
-        isDarkTheme: Boolean
-    ) {
-        viewModelScope.launch {
-            chatController?.send(message = message)
-
-            val currentTime = clock.now().toEpochMilliseconds()
-            val usedEmotes: List<RecentEmote> =
-                message.split(' ').mapNotNull { word ->
-                    state.value?.allEmotesMap?.get(word)?.let { emote ->
-                        RecentEmote(
-                            name = word,
-                            url = emote.getUrl(
-                                animate = chatPreferencesRepository.animateEmotes.first(),
-                                screenDensity = screenDensity,
-                                isDarkTheme = isDarkTheme
-                            ),
-                            usedAt = currentTime
-                        )
-                    }
-                }
-
-            playerRepository.insertRecentEmotes(usedEmotes)
-        }
-    }
-
-    override fun onCleared() {
-        chatController?.stop()
-        super.onCleared()
-    }
-
-    private fun init(
-        channelId: String,
-        channelLogin: String? = null,
-        enableRecentMsg: Boolean? = false,
-        recentMsgLimit: Int? = null
-    ) {
-        start()
-
-        viewModelScope.launch {
-            if (channelLogin != null && enableRecentMsg == true && recentMsgLimit != null && recentMsgLimit > 0) {
-                try {
-                    playerRepository.loadRecentMessages(channelLogin, recentMsgLimit)
-                        .body()
-                        ?.messages
-                        ?.let { messages ->
-                            chatStateListener?.appendMessages(messages)
-                        }
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to load recent messages for channel $channelLogin", e)
-                }
-            }
-
+    private suspend fun loadEmotes(channelId: String) = coroutineScope {
+        withContext(Dispatchers.Default) {
             val globalBadges = async {
                 try {
                     playerRepository.loadGlobalBadges().body()?.badges
@@ -313,6 +278,72 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    private fun onMessages(user: User, maxAdapterCount: Int, messages: List<ChatCommand>) {
+        _state.update { state ->
+            // Note that this is the last message we've sent
+            val lastSentMessageInstant: Instant? =
+                messages.filterIsInstance<LiveChatMessage>()
+                    .lastOrNull { message ->
+                        message.userId != null && message.userId == user.id
+                    }
+                    ?.timestamp
+
+            // Remember names of chatters
+            val newChatters =
+                messages.asSequence()
+                    .filterIsInstance<ChatMessage>()
+                    .mapNotNull { message -> message.userName }
+                    .map { userName -> Chatter(userName) }
+                    .toSet()
+
+            val newMessages = state.chatMessages
+                .toMutableList()
+                .apply {
+                    addAll(messages.mapNotNull { chatEntryMapper.map(it) })
+                }
+
+            // We alternate the background of each chat row.
+            // If we remove just one item, the backgrounds will shift, so we always need to remove
+            // an even number of items.
+            val maxCount = maxAdapterCount + if (newMessages.size.isOdd) 1 else 0
+
+            state.copy(
+                chatMessages = newMessages.takeLast(maxCount),
+                lastSentMessageInstant = lastSentMessageInstant
+                    ?: state.lastSentMessageInstant,
+                chatters = state.chatters + newChatters
+            )
+        }
+    }
+
+    fun send(
+        message: CharSequence,
+        screenDensity: Float,
+        isDarkTheme: Boolean
+    ) {
+        viewModelScope.launch {
+            chatController?.send(message = message)
+
+            val currentTime = clock.now().toEpochMilliseconds()
+            val usedEmotes: List<RecentEmote> =
+                message.split(' ').mapNotNull { word ->
+                    state.value?.allEmotesMap?.get(word)?.let { emote ->
+                        RecentEmote(
+                            name = word,
+                            url = emote.getUrl(
+                                animate = chatPreferencesRepository.animateEmotes.first(),
+                                screenDensity = screenDensity,
+                                isDarkTheme = isDarkTheme
+                            ),
+                            usedAt = currentTime
+                        )
+                    }
+                }
+
+            playerRepository.insertRecentEmotes(usedEmotes)
+        }
+    }
+
     inner class ChatStateListener(
         private val user: User,
         private val helixClientId: String?,
@@ -320,7 +351,8 @@ class ChatViewModel @Inject constructor(
         showUserNotice: Boolean,
         showClearMsg: Boolean,
         showClearChat: Boolean,
-        displayName: String
+        displayName: String,
+        private val maxAdapterCount: Int
     ) : OnUserStateReceivedListener,
         OnRoomStateReceivedListener,
         OnChatMessageReceivedListener {
@@ -342,49 +374,12 @@ class ChatViewModel @Inject constructor(
             }
         }
 
-        suspend fun appendMessages(messages: List<ChatCommand>) =
-            withContext(Dispatchers.Default) {
-                _state.update { state ->
-                    // Note that this is the last message we've sent
-                    val lastSentMessageInstant: Instant? =
-                        messages.filterIsInstance<LiveChatMessage>()
-                            .lastOrNull { message ->
-                                message.userId != null && message.userId == user.id
-                            }
-                            ?.timestamp
-
-                    // Remember names of chatters
-                    val newChatters =
-                        messages.asSequence()
-                            .filterIsInstance<ChatMessage>()
-                            .mapNotNull { message -> message.userName }
-                            .map { userName -> Chatter(userName) }
-                            .toSet()
-
-                    val newMessages = state.chatMessages
-                        .toMutableList()
-                        .apply {
-                            addAll(messages.mapNotNull { chatEntryMapper.map(it) })
-                        }
-
-                    // We alternate the background of each chat row.
-                    // If we remove just one item, the backgrounds will shift, so we always need to remove
-                    // an even number of items.
-                    val maxCount = maxAdapterCount + if (newMessages.size.isOdd) 1 else 0
-
-                    state.copy(
-                        chatMessages = newMessages.takeLast(maxCount),
-                        lastSentMessageInstant = lastSentMessageInstant
-                            ?: state.lastSentMessageInstant,
-                        chatters = state.chatters + newChatters
-                    )
-                }
-            }
-
         override fun onMessage(message: ChatCommand) {
-            viewModelScope.launch {
-                appendMessages(listOf(message))
-            }
+            onMessages(
+                user = user,
+                maxAdapterCount = maxAdapterCount,
+                messages = listOf(message)
+            )
         }
 
         override fun onUserState(sets: List<String>) {
@@ -524,6 +519,11 @@ class ChatViewModel @Inject constructor(
             loggedInChat.disconnect()
             pubSub?.disconnect()
         }
+    }
+
+    override fun onCleared() {
+        chatController?.stop()
+        super.onCleared()
     }
 
     abstract inner class ChatController {

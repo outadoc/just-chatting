@@ -183,9 +183,9 @@ class ChannelChatFragment :
         )
 
         chatViewModel.startLive(
-            channelId = args.getString(C.CHANNEL_ID),
-            channelLogin = args.getString(C.CHANNEL_LOGIN),
-            channelName = args.getString(C.CHANNEL_DISPLAYNAME)
+            channelId = args.getString(C.CHANNEL_ID)!!,
+            channelLogin = args.getString(C.CHANNEL_LOGIN)!!,
+            channelName = args.getString(C.CHANNEL_DISPLAYNAME)!!
         )
 
         chatView.setOnMessageClickListener { original, formatted, userId ->

@@ -149,12 +149,6 @@ class ChatView : LinearLayout {
         recyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 
-    fun notifyEmotesLoaded(loaded: Boolean) {
-        adapter.itemCount.let { messageCount ->
-            adapter.notifyItemRangeChanged(messageCount - 40, 40)
-        }
-    }
-
     fun notifyRoomState(roomState: RoomState) {
         textEmote.isVisible = roomState.isEmoteOnly
 

@@ -24,7 +24,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
 import com.github.andreyasadchy.xtra.model.chat.Chatter
 import com.github.andreyasadchy.xtra.model.chat.Emote
-import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.ui.chat.MessagePostConstraint
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
@@ -162,19 +161,16 @@ class ChatInputView : LinearLayout {
             }.attach()
         }
 
-    fun setEmotes(list: Collection<Emote>) {
-        autoCompleteAdapter.clear()
-        autoCompleteAdapter.addAll(
-            list.filterNot { it is RecentEmote }
-                .map { AutoCompleteItem.EmoteItem(it) }
-        )
-    }
+    fun setAutocompleteItems(emotes: Collection<Emote>, chatters: Collection<Chatter>) {
+        val allItems =
+            chatters.map { AutoCompleteItem.UserItem(it) } +
+                    emotes.distinctBy { emote -> emote.name }
+                        .map { AutoCompleteItem.EmoteItem(it) }
 
-    fun setChatters(chatters: Collection<Chatter>) {
-        autoCompleteAdapter.clear()
-        autoCompleteAdapter.addAll(
-            chatters.map { AutoCompleteItem.UserItem(it) }
-        )
+        if (allItems.count() != autoCompleteAdapter.count) {
+            autoCompleteAdapter.clear()
+            autoCompleteAdapter.addAll(allItems)
+        }
     }
 
     fun setOnMessageSendListener(callback: OnMessageSendListener) {

@@ -227,8 +227,7 @@ class ChannelChatFragment :
                     state.recentEmotes.toEmoteSet() +
                     state.otherEmotes.toEmoteSet()
 
-            chatInputView.setEmotes(allEmotes)
-            chatInputView.setChatters(state.chatters)
+            chatInputView.setAutocompleteItems(emotes = allEmotes, chatters = state.chatters)
             chatInputView.setMessagePostConstraint(state.messagePostConstraint)
 
             chatView.setEmotes(allEmotes)
@@ -237,7 +236,6 @@ class ChannelChatFragment :
             chatView.addGlobalBadges(state.globalBadges)
             chatView.addChannelBadges(state.channelBadges)
             chatView.addCheerEmotes(state.cheerEmotes)
-            chatView.notifyEmotesLoaded(state.emotesLoaded)
         }
     }
 

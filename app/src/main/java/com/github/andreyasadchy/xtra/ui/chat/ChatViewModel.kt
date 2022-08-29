@@ -70,7 +70,6 @@ class ChatViewModel @Inject constructor(
         val cheerEmotes: List<CheerEmote> = emptyList(),
         val emoteSetsAdded: Boolean = false,
         val emotesFromSets: List<EmoteSetItem> = emptyList(),
-        val emotesLoaded: Boolean = false,
         val globalBadges: List<TwitchBadge>? = null,
         val lastSentMessageInstant: Instant? = null,
         val otherEmotes: List<EmoteSetItem> = emptyList(),
@@ -310,7 +309,6 @@ class ChatViewModel @Inject constructor(
 
             _state.update { state ->
                 state.copy(
-                    emotesLoaded = true,
                     cheerEmotes = cheerEmotes ?: state.cheerEmotes,
                     otherEmotes = otherEmotes,
                     channelBadges = channelBadges ?: state.channelBadges,

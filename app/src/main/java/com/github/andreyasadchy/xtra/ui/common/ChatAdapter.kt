@@ -511,7 +511,10 @@ class ChatAdapter(
     }
 
     fun addEmotes(list: Collection<Emote>) {
-        emotes.putAll(list.associateBy { it.name })
+        if (list.size > emotes.size) {
+            emotes.putAll(list.associateBy { it.name })
+            notifyItemRangeChanged(itemCount - 40, 40)
+        }
     }
 
     fun setUsername(username: String) {

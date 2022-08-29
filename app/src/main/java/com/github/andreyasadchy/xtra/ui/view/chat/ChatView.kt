@@ -192,10 +192,8 @@ class ChatView : LinearLayout {
                     !textSubs.isGone
     }
 
-    fun addGlobalBadges(list: List<TwitchBadge>?) {
-        if (list != null) {
-            adapter.addGlobalBadges(list)
-        }
+    fun addGlobalBadges(list: List<TwitchBadge>) {
+        adapter.addGlobalBadges(list)
     }
 
     fun addChannelBadges(list: List<TwitchBadge>) {
@@ -207,9 +205,7 @@ class ChatView : LinearLayout {
     }
 
     fun setEmotes(list: Set<Emote>) {
-        adapter.addEmotes(
-            list.filter { it is BttvEmote || it is FfzEmote || it is StvEmote }
-        )
+        adapter.addEmotes(list)
     }
 
     fun setUsername(username: String) {

@@ -70,7 +70,7 @@ class ChatViewModel @Inject constructor(
         val cheerEmotes: List<CheerEmote> = emptyList(),
         val emoteSetsAdded: Boolean = false,
         val emotesFromSets: List<EmoteSetItem> = emptyList(),
-        val globalBadges: List<TwitchBadge>? = null,
+        val globalBadges: List<TwitchBadge> = emptyList(),
         val lastSentMessageInstant: Instant? = null,
         val otherEmotes: List<EmoteSetItem> = emptyList(),
         val recentEmotes: List<EmoteSetItem> = emptyList(),
@@ -290,11 +290,7 @@ class ChatViewModel @Inject constructor(
                 emotes.isNotEmpty()
             }
 
-            chatStateListener?.addEmotes(
-                groups.flatMap { (_, emotes) -> emotes }
-            )
-
-            val otherEmotes =
+            val otherEmotes: List<EmoteSetItem> =
                 groups.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group))
                         .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
@@ -309,10 +305,13 @@ class ChatViewModel @Inject constructor(
 
             _state.update { state ->
                 state.copy(
+                    allEmotesMap = state.allEmotesMap + groups
+                        .flatMap { (_, emotes) -> emotes }
+                        .associateBy { it.name },
                     cheerEmotes = cheerEmotes ?: state.cheerEmotes,
                     otherEmotes = otherEmotes,
                     channelBadges = channelBadges ?: state.channelBadges,
-                    globalBadges = globalBadges
+                    globalBadges = globalBadges ?: state.globalBadges
                 )
             }
         }
@@ -392,22 +391,21 @@ class ChatViewModel @Inject constructor(
             }
         }
 
-        override fun onUserState(sets: List<String>?) {
+        override fun onUserState(sets: List<String>) {
             if (helixClientId == null || user.helixToken?.nullIfEmpty() == null) {
                 return
             }
 
             if (savedEmoteSets != sets || state.value?.emoteSetsAdded != true) {
                 viewModelScope.launch(Dispatchers.Default) {
-                    loadEmotes(sets)
+                    loadTwitchEmotes(sets)
                 }
             }
         }
 
-        private suspend fun loadEmotes(sets: List<String>?) {
+        private suspend fun loadTwitchEmotes(sets: List<String>) {
             val emotes: List<TwitchEmote> =
-                sets.orEmpty()
-                    .asReversed()
+                sets.asReversed()
                     .chunked(25)
                     .flatMap { setIds ->
                         try {
@@ -456,10 +454,11 @@ class ChatViewModel @Inject constructor(
                 savedEmoteSets = sets
                 savedEmotesFromSets = emotes
 
-                addEmotes(emotes)
-
                 _state.update { state ->
                     state.copy(
+                        allEmotesMap = state.allEmotesMap.plus(
+                            emotes.associateBy { emote -> emote.name }
+                        ),
                         emotesFromSets = sortedEmotes,
                         emoteSetsAdded = true
                     )
@@ -472,23 +471,13 @@ class ChatViewModel @Inject constructor(
                 state.copy(roomState = roomState)
             }
         }
-
-        fun addEmotes(list: List<Emote>) {
-            if (user is User.LoggedIn) {
-                _state.update { state ->
-                    state.copy(
-                        allEmotesMap = state.allEmotesMap + list.associateBy { it.name }
-                    )
-                }
-            }
-        }
     }
 
     inner class LiveChatController(
         user: User.LoggedIn,
         private val channelId: String?,
         channelLogin: String,
-        private val chatStateListener: ChatStateListener
+        chatStateListener: ChatStateListener
     ) : ChatController() {
 
         private val liveChat: LiveChatThread =

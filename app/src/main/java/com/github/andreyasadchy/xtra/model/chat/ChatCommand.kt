@@ -149,4 +149,4 @@ data class RoomState(
     val isSubOnly: Boolean = false
 ) : ChatCommand
 
-data class UserState(val emoteSets: List<String>?) : ChatCommand
+data class UserState(val emoteSets: List<String>) : ChatCommand

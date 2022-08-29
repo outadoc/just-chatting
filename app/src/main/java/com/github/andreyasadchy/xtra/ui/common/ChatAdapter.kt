@@ -14,6 +14,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.text.style.StyleSpan
 import android.text.style.URLSpan
+import android.util.Log
 import android.util.Patterns
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -72,9 +73,9 @@ class ChatAdapter(
     }
 
     private val userColors = HashMap<String, Int>()
+    private val emotes = HashMap<String, Emote>()
     private var globalBadges: List<TwitchBadge>? = null
     private var channelBadges: List<TwitchBadge>? = null
-    private val emotes = HashMap<String, Emote>()
     private var cheerEmotes: List<CheerEmote>? = null
     private var loggedInUser: String? = null
 
@@ -304,9 +305,11 @@ class ChatAdapter(
             var wasMentioned = false
 
             words.forEach { word ->
+                var emote = emotes[word]
+
                 val length = word.length
                 val endIndex = builderIndex + length
-                var emote = emotes[word]
+
                 val bitsCount = word.takeLastWhile { it.isDigit() }
                 val bitsName = word.substringBeforeLast(bitsCount)
 

@@ -125,7 +125,7 @@ class ChatMessageParser @Inject constructor() {
     }
 
     private fun parseUserState(ircMessage: IrcMessage): UserState {
-        return UserState(emoteSets = ircMessage.tags.emoteSets)
+        return UserState(emoteSets = ircMessage.tags.emoteSets.orEmpty())
     }
 
     companion object {

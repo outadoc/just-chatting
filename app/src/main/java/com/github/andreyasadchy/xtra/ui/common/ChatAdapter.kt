@@ -481,7 +481,7 @@ class ChatAdapter(
                         )
 
                         if (animateEmotes) {
-                            (result as? Animatable)?.start()
+                            (result as? Animatable)?.ensureStarted()
                         }
                     } catch (e: IndexOutOfBoundsException) {
                         e.printStackTrace()
@@ -513,8 +513,9 @@ class ChatAdapter(
     }
 
     fun addEmotes(list: Collection<Emote>) {
-        if (list.size > emotes.size) {
-            emotes.putAll(list.associateBy { it.name })
+        val map = list.associateBy { it.name }
+        if (map.size > emotes.size) {
+            emotes.putAll(map)
             notifyItemRangeChanged(itemCount - 40, 40)
         }
     }
@@ -535,7 +536,7 @@ class ChatAdapter(
             ?.getSpans<ImageSpan>()
             ?.map { it.drawable }
             ?.filterIsInstance<Animatable>()
-            ?.forEach { image -> image.start() }
+            ?.forEach { image -> image.ensureStarted() }
     }
 
     override fun onViewDetachedFromWindow(holder: ViewHolder) {
@@ -595,6 +596,10 @@ class ChatAdapter(
             widthRatio <= 1.2f -> (emoteSize * widthRatio).toInt() to emoteSize
             else -> (scaledEmoteSize * widthRatio).toInt() to scaledEmoteSize
         }
+    }
+
+    private fun Animatable.ensureStarted() {
+        if (!isRunning) start()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

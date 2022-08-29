@@ -6,17 +6,14 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.feature.irc.ChatMessageParser
 import com.github.andreyasadchy.xtra.model.User
-import com.github.andreyasadchy.xtra.model.chat.BttvEmote
 import com.github.andreyasadchy.xtra.model.chat.ChatCommand
 import com.github.andreyasadchy.xtra.model.chat.ChatMessage
 import com.github.andreyasadchy.xtra.model.chat.Chatter
 import com.github.andreyasadchy.xtra.model.chat.CheerEmote
 import com.github.andreyasadchy.xtra.model.chat.Emote
-import com.github.andreyasadchy.xtra.model.chat.FfzEmote
 import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.RoomState
-import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
 import com.github.andreyasadchy.xtra.repository.AuthPreferencesRepository
@@ -71,6 +68,7 @@ class ChatViewModel @Inject constructor(
         val chatMessages: List<ChatEntry> = LinkedList(),
         val chatters: Set<Chatter> = emptySet(),
         val cheerEmotes: List<CheerEmote> = emptyList(),
+        val emoteSets: List<String> = emptyList(),
         val emotesFromSets: List<EmoteSetItem> = emptyList(),
         val globalBadges: List<TwitchBadge> = emptyList(),
         val lastSentMessageInstant: Instant? = null,
@@ -209,10 +207,8 @@ class ChatViewModel @Inject constructor(
             }
 
             val globalBadges = async {
-                savedGlobalBadges ?: try {
-                    playerRepository.loadGlobalBadges().body()?.badges?.also { badges ->
-                        savedGlobalBadges = badges
-                    }
+                try {
+                    playerRepository.loadGlobalBadges().body()?.badges
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load global badges", e)
                     null
@@ -230,8 +226,7 @@ class ChatViewModel @Inject constructor(
 
             val stvEmotes = async {
                 try {
-                    val channelStv = playerRepository.loadStvEmotes(channelId)
-                    channelStv.body()?.emotes
+                    playerRepository.loadStvEmotes(channelId).body()?.emotes
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load 7tv emotes for channel $channelId", e)
                     null
@@ -240,8 +235,7 @@ class ChatViewModel @Inject constructor(
 
             val bttvEmotes = async {
                 try {
-                    val channelBttv = playerRepository.loadBttvEmotes(channelId)
-                    channelBttv.body()?.emotes
+                    playerRepository.loadBttvEmotes(channelId).body()?.emotes
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load BTTV emotes for channel $channelId", e)
                     null
@@ -250,8 +244,7 @@ class ChatViewModel @Inject constructor(
 
             val ffzEmotes = async {
                 try {
-                    val channelFfz = playerRepository.loadBttvFfzEmotes(channelId)
-                    channelFfz.body()?.emotes
+                    playerRepository.loadBttvFfzEmotes(channelId).body()?.emotes
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load FFZ emotes for channel $channelId", e)
                     null
@@ -259,13 +252,8 @@ class ChatViewModel @Inject constructor(
             }
 
             val globalStv = async {
-                globalStvEmotes ?: try {
-                    playerRepository.loadGlobalStvEmotes()
-                        .body()
-                        ?.emotes
-                        ?.also { emotes ->
-                            globalStvEmotes = emotes
-                        }
+                try {
+                    playerRepository.loadGlobalStvEmotes().body()?.emotes
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load global 7tv emotes", e)
                     null
@@ -273,13 +261,8 @@ class ChatViewModel @Inject constructor(
             }
 
             val globalBttv = async {
-                globalBttvEmotes ?: try {
-                    playerRepository.loadGlobalBttvEmotes()
-                        .body()
-                        ?.emotes
-                        ?.also { emotes ->
-                            globalBttvEmotes = emotes
-                        }
+                try {
+                    playerRepository.loadGlobalBttvEmotes().body()?.emotes
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load global BTTV emotes", e)
                     null
@@ -287,13 +270,8 @@ class ChatViewModel @Inject constructor(
             }
 
             val globalFfz = async {
-                globalFfzEmotes ?: try {
-                    playerRepository.loadBttvGlobalFfzEmotes()
-                        .body()
-                        ?.emotes
-                        ?.also { emotes ->
-                            globalFfzEmotes = emotes
-                        }
+                try {
+                    playerRepository.loadBttvGlobalFfzEmotes().body()?.emotes
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load global FFZ emotes", e)
                     null
@@ -414,7 +392,7 @@ class ChatViewModel @Inject constructor(
                 return
             }
 
-            if (savedEmoteSets != sets) {
+            if (state.value?.emoteSets != sets) {
                 viewModelScope.launch(Dispatchers.Default) {
                     loadTwitchEmotes(sets)
                 }
@@ -473,11 +451,9 @@ class ChatViewModel @Inject constructor(
                     }
 
             if (emotes.isNotEmpty()) {
-                savedEmoteSets = sets
-                savedEmotesFromSets = emotes
-
                 _state.update { state ->
                     state.copy(
+                        emoteSets = sets,
                         allEmotesMap = state.allEmotesMap.plus(
                             emotes.associateBy { emote -> emote.name }
                         ),
@@ -560,12 +536,5 @@ class ChatViewModel @Inject constructor(
 
     companion object {
         private const val TAG = "ChatViewModel"
-
-        private var savedEmoteSets: List<String>? = null
-        private var savedEmotesFromSets: List<Emote>? = null
-        private var savedGlobalBadges: List<TwitchBadge>? = null
-        private var globalStvEmotes: List<StvEmote>? = null
-        private var globalBttvEmotes: List<BttvEmote>? = null
-        private var globalFfzEmotes: List<FfzEmote>? = null
     }
 }

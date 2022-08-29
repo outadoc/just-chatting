@@ -14,7 +14,6 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.ImageSpan
 import android.text.style.StyleSpan
 import android.text.style.URLSpan
-import android.util.Log
 import android.util.Patterns
 import android.util.TypedValue
 import android.view.LayoutInflater

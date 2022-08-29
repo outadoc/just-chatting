@@ -35,7 +35,6 @@ import com.github.andreyasadchy.xtra.ui.view.chat.MessageClickedDialog
 import com.github.andreyasadchy.xtra.ui.view.chat.OnEmoteClickedListener
 import com.github.andreyasadchy.xtra.ui.view.chat.StreamInfoDialog
 import com.github.andreyasadchy.xtra.util.C
-import com.github.andreyasadchy.xtra.util.LifecycleListener
 import com.github.andreyasadchy.xtra.util.hideKeyboard
 import com.github.andreyasadchy.xtra.util.isDarkMode
 import com.github.andreyasadchy.xtra.util.loadImage
@@ -48,7 +47,6 @@ import javax.inject.Inject
 
 class ChannelChatFragment :
     Fragment(),
-    LifecycleListener,
     MessageClickedDialog.OnButtonClickListener,
     OnEmoteClickedListener,
     Scrollable,
@@ -224,8 +222,8 @@ class ChannelChatFragment :
 
         chatViewModel.state.observe(viewLifecycleOwner) { state ->
             val allEmotes = state.emotesFromSets.toEmoteSet() +
-                    state.recentEmotes.toEmoteSet() +
-                    state.otherEmotes.toEmoteSet()
+                state.recentEmotes.toEmoteSet() +
+                state.otherEmotes.toEmoteSet()
 
             chatInputView.setAutocompleteItems(emotes = allEmotes, chatters = state.chatters)
             chatInputView.setMessagePostConstraint(state.messagePostConstraint)
@@ -375,11 +373,5 @@ class ChannelChatFragment :
 
     override fun scrollToTop() {
         appBar?.setExpanded(true, true)
-    }
-
-    override fun onMovedToBackground() {
-    }
-
-    override fun onMovedToForeground() {
     }
 }

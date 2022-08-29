@@ -15,14 +15,11 @@ import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.github.andreyasadchy.xtra.R
-import com.github.andreyasadchy.xtra.model.chat.BttvEmote
 import com.github.andreyasadchy.xtra.model.chat.CheerEmote
 import com.github.andreyasadchy.xtra.model.chat.Emote
-import com.github.andreyasadchy.xtra.model.chat.FfzEmote
 import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
 import com.github.andreyasadchy.xtra.model.chat.PubSubPointReward
 import com.github.andreyasadchy.xtra.model.chat.RoomState
-import com.github.andreyasadchy.xtra.model.chat.StvEmote
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.ui.common.ChatAdapter
 import com.github.andreyasadchy.xtra.ui.view.AlternatingBackgroundItemDecoration
@@ -186,10 +183,10 @@ class ChatView : LinearLayout {
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-                    !textFollowers.isGone ||
-                    !textUnique.isGone ||
-                    !textSlow.isGone ||
-                    !textSubs.isGone
+            !textFollowers.isGone ||
+            !textUnique.isGone ||
+            !textSlow.isGone ||
+            !textSubs.isGone
     }
 
     fun addGlobalBadges(list: List<TwitchBadge>) {

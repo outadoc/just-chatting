@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.github.andreyasadchy.xtra.MainApplication
-import com.github.andreyasadchy.xtra.util.LifecycleListener
 import dagger.android.AndroidInjection
 import dagger.android.support.AndroidSupportInjection
 
@@ -36,15 +35,6 @@ object AppInjector {
                                 ) {
                                     if (f is Injectable) {
                                         AndroidSupportInjection.inject(f)
-                                    }
-                                    if (f is LifecycleListener) {
-                                        mainApplication.addLifecycleListener(f)
-                                    }
-                                }
-
-                                override fun onFragmentDestroyed(fm: FragmentManager, f: Fragment) {
-                                    if (f is LifecycleListener) {
-                                        mainApplication.removeLifecycleListener(f)
                                     }
                                 }
                             },

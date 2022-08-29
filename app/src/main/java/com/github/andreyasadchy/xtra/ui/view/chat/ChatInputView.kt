@@ -164,8 +164,8 @@ class ChatInputView : LinearLayout {
     fun setAutocompleteItems(emotes: Collection<Emote>, chatters: Collection<Chatter>) {
         val allItems =
             chatters.map { AutoCompleteItem.UserItem(it) } +
-                    emotes.distinctBy { emote -> emote.name }
-                        .map { AutoCompleteItem.EmoteItem(it) }
+                emotes.distinctBy { emote -> emote.name }
+                    .map { AutoCompleteItem.EmoteItem(it) }
 
         if (allItems.count() != autoCompleteAdapter.count) {
             autoCompleteAdapter.clear()

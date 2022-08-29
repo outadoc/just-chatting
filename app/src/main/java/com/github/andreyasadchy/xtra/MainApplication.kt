@@ -3,7 +3,6 @@ package com.github.andreyasadchy.xtra
 import android.app.Application
 import android.content.Context
 import android.os.Build
-import androidx.lifecycle.ProcessLifecycleOwner
 import coil.ImageLoader
 import coil.ImageLoaderFactory
 import coil.decode.GifDecoder
@@ -13,8 +12,6 @@ import coil.memory.MemoryCache
 import coil.transition.Transition
 import coil.util.DebugLogger
 import com.github.andreyasadchy.xtra.di.AppInjector
-import com.github.andreyasadchy.xtra.util.AppLifecycleObserver
-import com.github.andreyasadchy.xtra.util.LifecycleListener
 import com.google.android.material.color.DynamicColors
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -30,15 +27,11 @@ class MainApplication : Application(), HasAndroidInjector, ImageLoaderFactory {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
-    private val appLifecycleObserver = AppLifecycleObserver()
-
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
         AppInjector.init(this)
         DynamicColors.applyToActivitiesIfAvailable(this)
-
-        ProcessLifecycleOwner.get().lifecycle.addObserver(appLifecycleObserver)
     }
 
     override fun attachBaseContext(base: Context?) {
@@ -47,14 +40,6 @@ class MainApplication : Application(), HasAndroidInjector, ImageLoaderFactory {
 
     override fun androidInjector(): AndroidInjector<Any> {
         return dispatchingAndroidInjector
-    }
-
-    fun addLifecycleListener(listener: LifecycleListener) {
-        appLifecycleObserver.addListener(listener)
-    }
-
-    fun removeLifecycleListener(listener: LifecycleListener) {
-        appLifecycleObserver.removeListener(listener)
     }
 
     override fun newImageLoader(): ImageLoader =

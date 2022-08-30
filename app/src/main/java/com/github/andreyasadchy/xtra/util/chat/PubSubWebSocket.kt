@@ -1,7 +1,7 @@
 package com.github.andreyasadchy.xtra.util.chat
 
 import com.github.andreyasadchy.xtra.MainApplication
-import com.tonyodev.fetch2core.isNetworkAvailable
+import com.github.andreyasadchy.xtra.util.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -53,7 +53,7 @@ class PubSubWebSocket(
         scope.launch(Dispatchers.IO) {
             disconnect()
 
-            while (isActive && !appContext.isNetworkAvailable()) {
+            while (isActive && !appContext.isNetworkAvailable) {
                 delay(1.seconds)
             }
 

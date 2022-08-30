@@ -3,7 +3,7 @@ package com.github.andreyasadchy.xtra.util.chat
 import android.util.Log
 import com.github.andreyasadchy.xtra.MainApplication
 import com.github.andreyasadchy.xtra.model.chat.Command
-import com.tonyodev.fetch2core.isNetworkAvailable
+import com.github.andreyasadchy.xtra.util.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -67,7 +67,7 @@ abstract class BaseChatThread(
         scope.launch(Dispatchers.IO) {
             disconnect()
 
-            while (isActive && !appContext.isNetworkAvailable()) {
+            while (isActive && !appContext.isNetworkAvailable) {
                 delay(1.seconds)
             }
 

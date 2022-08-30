@@ -21,8 +21,6 @@
 #-renamesourcefileattribute SourceFile
 -dontwarn com.github.andreyasadchy.xtra.ui.**
 
--keep class com.woxthebox.draglistview.** { *; }
-
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
 }

@@ -3,6 +3,7 @@ package com.github.andreyasadchy.xtra.util
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.net.ConnectivityManager
 import android.util.TypedValue
 import android.widget.Toast
 import androidx.annotation.StringRes
@@ -30,10 +31,13 @@ fun Context.shortToast(@StringRes resId: Int) {
     Toast.makeText(this, resId, Toast.LENGTH_SHORT).show()
 }
 
-fun Context.toast(text: CharSequence) {
-    Toast.makeText(this, text, Toast.LENGTH_LONG).show()
-}
-
-fun Context.shortToast(text: CharSequence) {
-    Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
-}
+val Context.isNetworkAvailable: Boolean
+    get() {
+        val manager = this.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val activeNetworkInfo = manager.activeNetworkInfo
+        var connected = activeNetworkInfo != null && activeNetworkInfo.isConnected
+        if (!connected) {
+            connected = manager.allNetworkInfo.any { it.isConnected } ?: false
+        }
+        return connected
+    }

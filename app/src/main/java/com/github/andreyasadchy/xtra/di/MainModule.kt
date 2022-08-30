@@ -1,6 +1,5 @@
 package com.github.andreyasadchy.xtra.di
 
-import android.app.Application
 import android.content.Context
 import com.github.andreyasadchy.xtra.BuildConfig
 import com.github.andreyasadchy.xtra.MainApplication
@@ -32,10 +31,7 @@ import com.github.andreyasadchy.xtra.repository.PreferenceRepository
 import com.github.andreyasadchy.xtra.repository.SharedPrefsPreferenceRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
-import com.github.andreyasadchy.xtra.util.FetchProvider
 import com.google.gson.GsonBuilder
-import com.tonyodev.fetch2.FetchConfiguration
-import com.tonyodev.fetch2okhttp.OkHttpDownloader
 import dagger.Module
 import dagger.Provides
 import kotlinx.datetime.Clock
@@ -158,26 +154,5 @@ class MainModule {
             readTimeout(5, TimeUnit.MINUTES)
         }
         return builder.build()
-    }
-
-    @Singleton
-    @Provides
-    fun providesFetchProvider(fetchConfigurationBuilder: FetchConfiguration.Builder): FetchProvider {
-        return FetchProvider(fetchConfigurationBuilder)
-    }
-
-    @Singleton
-    @Provides
-    fun providesFetchConfigurationBuilder(
-        application: Application,
-        okHttpClient: OkHttpClient
-    ): FetchConfiguration.Builder {
-        return FetchConfiguration.Builder(application)
-            .enableLogging(BuildConfig.DEBUG)
-            .enableRetryOnNetworkGain(true)
-            .setDownloadConcurrentLimit(3)
-            .setHttpDownloader(OkHttpDownloader(okHttpClient))
-            .setProgressReportingInterval(1000L)
-            .setAutoRetryMaxAttempts(3)
     }
 }

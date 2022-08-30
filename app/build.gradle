@@ -130,9 +130,6 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
 
-    implementation "androidx.tonyodev.fetch2:xfetch2:$fetch"
-    implementation "androidx.tonyodev.fetch2okhttp:xfetch2okhttp:$fetch"
-
     implementation 'androidx.webkit:webkit:1.4.0'
 
     implementation 'org.checkerframework:checker-qual:3.22.0'

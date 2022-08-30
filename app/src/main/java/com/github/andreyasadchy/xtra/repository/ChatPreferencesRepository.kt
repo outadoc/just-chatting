@@ -4,9 +4,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ChatPreferencesRepository {
     val animateEmotes: Flow<Boolean>
-    val showUserNotice: Flow<Boolean>
-    val showClearMsg: Flow<Boolean>
-    val showClearChat: Flow<Boolean>
     val showTimestamps: Flow<Boolean>
     val enableRecentMsg: Flow<Boolean>
     val recentMsgLimit: Flow<Int>

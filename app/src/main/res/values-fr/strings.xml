@@ -227,9 +227,6 @@
     <string name="search">Chercher</string>
     <string name="settings">Réglages</string>
     <string name="settings_chat">CHAT</string>
-    <string name="show_clearchat">Afficher les mises en silence et les bannissement</string>
-    <string name="show_clearmsg">Afficher les suppressions de messages uniques</string>
-    <string name="show_usernotice">Afficher les avis des utilisateurs (abonnés, raids)</string>
     <string name="sort">Trier</string>
     <string name="sort_and_order">Trier par: %1$s. Ordre: %2$s</string>
     <string name="sort_and_period">Trier par: %1$s. Periode: %2$s</string>

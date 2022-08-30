@@ -55,9 +55,9 @@ class EmotesFragment : Fragment(), Injectable, Scrollable {
         val context = requireContext()
         val args = requireArguments()
 
-        val emotesAdapter = EmotesAdapter(clickListener = { emote ->
-            listener?.onEmoteClicked(emote)
-        })
+        val emotesAdapter = EmotesAdapter(
+            clickListener = { emote -> listener?.onEmoteClicked(emote) }
+        )
 
         chatPreferencesRepository.animateEmotes
             .asLiveData()
@@ -87,9 +87,9 @@ class EmotesFragment : Fragment(), Injectable, Scrollable {
             emotesAdapter.submitList(
                 when (args.getInt(KEY_POSITION)) {
                     0 -> state.recentEmotes
-                    1 -> state.emotesFromSets
+                    1 -> state.twitchEmotes
                     else -> state.otherEmotes
-                }
+                }.toList()
             )
         }
 

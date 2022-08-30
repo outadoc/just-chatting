@@ -16,6 +16,7 @@ import com.github.andreyasadchy.xtra.model.chat.RecentEmote
 import com.github.andreyasadchy.xtra.model.chat.RoomState
 import com.github.andreyasadchy.xtra.model.chat.TwitchBadge
 import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
+import com.github.andreyasadchy.xtra.model.chat.UserState
 import com.github.andreyasadchy.xtra.repository.AuthPreferencesRepository
 import com.github.andreyasadchy.xtra.repository.ChatPreferencesRepository
 import com.github.andreyasadchy.xtra.repository.PlayerRepository
@@ -63,19 +64,27 @@ class ChatViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     data class State(
-        val allEmotesMap: Map<String, Emote> = emptyMap(),
         val channelBadges: List<TwitchBadge> = emptyList(),
         val chatMessages: List<ChatEntry> = LinkedList(),
         val chatters: Set<Chatter> = emptySet(),
         val cheerEmotes: List<CheerEmote> = emptyList(),
-        val emoteSets: List<String> = emptyList(),
-        val emotesFromSets: List<EmoteSetItem> = emptyList(),
         val globalBadges: List<TwitchBadge> = emptyList(),
         val lastSentMessageInstant: Instant? = null,
-        val otherEmotes: List<EmoteSetItem> = emptyList(),
-        val recentEmotes: List<EmoteSetItem> = emptyList(),
+        val twitchEmotes: Set<EmoteSetItem> = emptySet(),
+        val otherEmotes: Set<EmoteSetItem> = emptySet(),
+        val recentEmotes: Set<EmoteSetItem> = emptySet(),
+        val userState: UserState = UserState(),
         val roomState: RoomState = RoomState()
     ) {
+        val allEmotes: Set<Emote> =
+            (twitchEmotes + recentEmotes + otherEmotes)
+                .filterIsInstance<EmoteSetItem.Emote>()
+                .map { it.emote }
+                .toSet()
+
+        val allEmotesMap: Map<String, Emote> =
+            allEmotes.associateBy { emote -> emote.name }
+
         val messagePostConstraint: MessagePostConstraint? =
             lastSentMessageInstant?.let {
                 if (roomState.slowModeDuration?.isPositive() != true) {
@@ -96,6 +105,7 @@ class ChatViewModel @Inject constructor(
                 recentEmotes = recentEmotes
                     .filter { recentEmote -> state.allEmotesMap.containsKey(recentEmote.name) }
                     .map { emote -> EmoteSetItem.Emote(emote) }
+                    .toSet()
             )
         }
 
@@ -107,7 +117,7 @@ class ChatViewModel @Inject constructor(
         channelLogin: String,
         channelName: String
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             val user = userPreferencesRepository.user.first() as? User.LoggedIn ?: return@launch
 
             if (chatController == null) {
@@ -116,9 +126,6 @@ class ChatViewModel @Inject constructor(
                     channelId = channelId,
                     displayName = channelName,
                     helixClientId = authPreferencesRepository.helixClientId.first(),
-                    showUserNotice = chatPreferencesRepository.showUserNotice.first(),
-                    showClearMsg = chatPreferencesRepository.showClearMsg.first(),
-                    showClearChat = chatPreferencesRepository.showClearChat.first(),
                     maxAdapterCount = chatPreferencesRepository.messageLimit.first()
                 ).also { listener ->
                     chatController = LiveChatController(
@@ -251,11 +258,11 @@ class ChatViewModel @Inject constructor(
                 emotes.isNotEmpty()
             }
 
-            val otherEmotes: List<EmoteSetItem> =
+            val otherEmotes: Set<EmoteSetItem> =
                 groups.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group))
                         .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
-                }
+                }.toSet()
 
             val cheerEmotes = try {
                 repository.loadCheerEmotes(userId = channelId)
@@ -266,9 +273,6 @@ class ChatViewModel @Inject constructor(
 
             _state.update { state ->
                 state.copy(
-                    allEmotesMap = state.allEmotesMap + groups
-                        .flatMap { (_, emotes) -> emotes }
-                        .associateBy { it.name },
                     cheerEmotes = cheerEmotes ?: state.cheerEmotes,
                     otherEmotes = otherEmotes,
                     channelBadges = channelBadges.await() ?: state.channelBadges,
@@ -321,7 +325,7 @@ class ChatViewModel @Inject constructor(
         screenDensity: Float,
         isDarkTheme: Boolean
     ) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.Default) {
             chatController?.send(message = message)
 
             val currentTime = clock.now().toEpochMilliseconds()
@@ -348,11 +352,8 @@ class ChatViewModel @Inject constructor(
         private val user: User,
         private val helixClientId: String?,
         private val channelId: String?,
-        showUserNotice: Boolean,
-        showClearMsg: Boolean,
-        showClearChat: Boolean,
-        displayName: String,
-        private val maxAdapterCount: Int
+        private val maxAdapterCount: Int,
+        displayName: String
     ) : OnUserStateReceivedListener,
         OnRoomStateReceivedListener,
         OnChatMessageReceivedListener {
@@ -360,10 +361,7 @@ class ChatViewModel @Inject constructor(
         val messageListener = MessageListenerImpl(
             callback = this,
             callbackUserState = this,
-            callbackRoomState = this,
-            showUserNotice = showUserNotice,
-            showClearMsg = showClearMsg,
-            showClearChat = showClearChat
+            callbackRoomState = this
         )
 
         init {
@@ -382,78 +380,72 @@ class ChatViewModel @Inject constructor(
             )
         }
 
-        override fun onUserState(sets: List<String>) {
+        override fun onUserState(userState: UserState) {
             if (helixClientId == null || user.helixToken?.nullIfEmpty() == null) {
                 return
             }
 
-            if (state.value?.emoteSets != sets) {
+            if (state.value?.userState != userState) {
                 viewModelScope.launch(Dispatchers.Default) {
-                    loadTwitchEmotes(sets)
-                }
-            }
-        }
+                    val emotes: List<TwitchEmote> =
+                        userState.emoteSets.asReversed()
+                            .chunked(25)
+                            .map { setIds ->
+                                async {
+                                    try {
+                                        repository.loadEmotesFromSet(setIds = setIds)
+                                    } catch (e: Exception) {
+                                        e.printStackTrace()
+                                        null
+                                    }.orEmpty()
+                                }
+                            }
+                            .awaitAll()
+                            .flatten()
 
-        private suspend fun loadTwitchEmotes(sets: List<String>) = coroutineScope {
-            val emotes: List<TwitchEmote> =
-                sets.asReversed()
-                    .chunked(25)
-                    .map { setIds ->
-                        async {
-                            try {
-                                repository.loadEmotesFromSet(setIds = setIds)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                null
-                            }.orEmpty()
+                    val emoteOwners: Map<String, com.github.andreyasadchy.xtra.model.helix.user.User> =
+                        try {
+                            repository.loadUsersById(
+                                ids = emotes
+                                    .mapNotNull { it.ownerId }
+                                    .toSet()
+                                    .mapNotNull {
+                                        it.toLongOrNull()
+                                            ?.takeIf { id -> id > 0 }
+                                            ?.toString()
+                                    }
+                            )
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                            null
+                        }
+                            .orEmpty()
+                            .associateBy { user -> user.id!! }
+
+                    val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
+                        emotes.filter { emote -> emote.ownerId == channelId }
+                            .groupBy { emoteOwners[channelId]?.display_name }
+
+                    val groupedEmotes: Map<String?, List<TwitchEmote>> =
+                        emotes.filter { emote -> emote.ownerId != channelId }
+                            .groupBy { emote -> emoteOwners[emote.ownerId]?.display_name }
+
+                    val sortedEmotes: Set<EmoteSetItem> =
+                        (groupedChannelEmotes + groupedEmotes)
+                            .flatMap { (ownerName, emotes) ->
+                                listOf(EmoteSetItem.Header(title = ownerName))
+                                    .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
+                            }
+                            .toSet()
+
+                    if (emotes.isNotEmpty()) {
+                        _state.update { state ->
+                            state.copy(
+                                userState = userState,
+                                twitchEmotes = sortedEmotes
+                            )
                         }
                     }
-                    .awaitAll()
-                    .flatten()
-
-            val emoteOwners: Map<String, com.github.andreyasadchy.xtra.model.helix.user.User> =
-                try {
-                    repository.loadUsersById(
-                        ids = emotes
-                            .mapNotNull { it.ownerId }
-                            .toSet()
-                            .mapNotNull {
-                                it.toLongOrNull()
-                                    ?.takeIf { id -> id > 0 }
-                                    ?.toString()
-                            }
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    null
-                }
-                    .orEmpty()
-                    .associateBy { user -> user.id!! }
-
-            val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
-                emotes.filter { emote -> emote.ownerId == channelId }
-                    .groupBy { emoteOwners[channelId]?.display_name }
-
-            val groupedEmotes: Map<String?, List<TwitchEmote>> =
-                emotes.filter { emote -> emote.ownerId != channelId }
-                    .groupBy { emote -> emoteOwners[emote.ownerId]?.display_name }
-
-            val sortedEmotes: List<EmoteSetItem> =
-                (groupedChannelEmotes + groupedEmotes)
-                    .flatMap { (ownerName, emotes) ->
-                        listOf(EmoteSetItem.Header(title = ownerName))
-                            .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
-                    }
-
-            if (emotes.isNotEmpty()) {
-                _state.update { state ->
-                    state.copy(
-                        emoteSets = sets,
-                        allEmotesMap = state.allEmotesMap.plus(
-                            emotes.associateBy { emote -> emote.name }
-                        ),
-                        emotesFromSets = sortedEmotes
-                    )
                 }
             }
         }

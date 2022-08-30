@@ -11,25 +11,22 @@ import com.github.andreyasadchy.xtra.model.chat.UserState
 class MessageListenerImpl(
     private val callback: OnChatMessageReceivedListener,
     private val callbackUserState: OnUserStateReceivedListener,
-    private val callbackRoomState: OnRoomStateReceivedListener,
-    private val showUserNotice: Boolean,
-    private val showClearMsg: Boolean,
-    private val showClearChat: Boolean,
+    private val callbackRoomState: OnRoomStateReceivedListener
 ) : OnMessageReceivedListener {
 
     override fun onCommand(command: ChatCommand) {
         when (command) {
             is LiveChatMessage -> callback.onMessage(command)
-            is Command.ClearChat -> if (showClearChat) callback.onMessage(command)
-            is Command.ClearMessage -> if (showClearMsg) callback.onMessage(command)
-            is Command.UserNotice -> if (showUserNotice) callback.onMessage(command)
+            is Command.ClearChat -> callback.onMessage(command)
+            is Command.ClearMessage -> callback.onMessage(command)
+            is Command.UserNotice -> callback.onMessage(command)
             is Command.Notice -> callback.onMessage(command)
             is Command.Join -> callback.onMessage(command)
             is Command.Disconnect -> callback.onMessage(command)
             is Command.SendMessageError -> callback.onMessage(command)
             is Command.SocketError -> callback.onMessage(command)
             is RoomState -> callbackRoomState.onRoomState(command)
-            is UserState -> callbackUserState.onUserState(command.emoteSets)
+            is UserState -> callbackUserState.onUserState(command)
             is PubSubPointReward,
             is Command.Ban,
             is Command.Timeout,

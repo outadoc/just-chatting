@@ -221,24 +221,19 @@ class ChannelChatFragment :
         }
 
         chatViewModel.state.observe(viewLifecycleOwner) { state ->
-            val allEmotes = state.emotesFromSets.toEmoteSet() +
-                state.recentEmotes.toEmoteSet() +
-                state.otherEmotes.toEmoteSet()
-
-            chatInputView.setAutocompleteItems(emotes = allEmotes, chatters = state.chatters)
             chatInputView.setMessagePostConstraint(state.messagePostConstraint)
+            chatInputView.setAutocompleteItems(
+                emotes = state.allEmotes,
+                chatters = state.chatters
+            )
 
-            chatView.setEmotes(allEmotes)
+            chatView.setEmotes(state.allEmotes)
             chatView.submitList(state.chatMessages)
             chatView.notifyRoomState(state.roomState)
             chatView.addGlobalBadges(state.globalBadges)
             chatView.addChannelBadges(state.channelBadges)
             chatView.addCheerEmotes(state.cheerEmotes)
         }
-    }
-
-    private fun List<EmoteSetItem>.toEmoteSet(): Set<Emote> {
-        return mapNotNull { (it as? EmoteSetItem.Emote)?.emote }.toSet()
     }
 
     private fun updateStreamLayout(stream: Stream?) {

@@ -32,21 +32,6 @@ class SharedPrefsPreferenceRepository @Inject constructor(
             prefs[CHAT_ANIMATED_EMOTES] ?: true
         }
 
-    override val showUserNotice: Flow<Boolean>
-        get() = dataStore.data.map { prefs ->
-            prefs[CHAT_SHOW_USERNOTICE] ?: true
-        }
-
-    override val showClearMsg: Flow<Boolean>
-        get() = dataStore.data.map { prefs ->
-            prefs[CHAT_SHOW_CLEARMSG] ?: true
-        }
-
-    override val showClearChat: Flow<Boolean>
-        get() = dataStore.data.map { prefs ->
-            prefs[CHAT_SHOW_CLEARCHAT] ?: true
-        }
-
     override val showTimestamps: Flow<Boolean>
         get() = dataStore.data.map { prefs ->
             prefs[CHAT_TIMESTAMPS] ?: false
@@ -105,8 +90,5 @@ class SharedPrefsPreferenceRepository @Inject constructor(
         val CHAT_RECENT = booleanPreferencesKey("chat_recent")
         val CHAT_LIMIT = intPreferencesKey("chat_limit")
         val CHAT_RECENT_LIMIT = intPreferencesKey("chat_recent_limit")
-        val CHAT_SHOW_USERNOTICE = booleanPreferencesKey("chat_show_usernotice")
-        val CHAT_SHOW_CLEARMSG = booleanPreferencesKey("chat_show_clearmsg")
-        val CHAT_SHOW_CLEARCHAT = booleanPreferencesKey("chat_show_clearchat")
     }
 }

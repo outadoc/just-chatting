@@ -17,24 +17,6 @@
         android:title="@string/timestamps"
         app:iconSpaceReserved="false" />
 
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="chat_show_usernotice"
-        android:title="@string/show_usernotice"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="chat_show_clearmsg"
-        android:title="@string/show_clearmsg"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="chat_show_clearchat"
-        android:title="@string/show_clearchat"
-        app:iconSpaceReserved="false" />
-
     <SeekBarPreference
         android:defaultValue="600"
         android:key="chat_limit"

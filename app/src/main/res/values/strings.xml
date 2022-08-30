@@ -228,9 +228,6 @@
     <string name="search">Search</string>
     <string name="settings">Settings</string>
     <string name="settings_chat">Chat</string>
-    <string name="show_clearchat">Show timeouts and bans</string>
-    <string name="show_clearmsg">Show deletions of single messages</string>
-    <string name="show_usernotice">Show user notices (subs, raids)</string>
     <string name="sort">Sort</string>
     <string name="sort_and_order">Sort by: %1$s. Order: %2$s</string>
     <string name="sort_and_period">Sort by: %1$s. Period: %2$s</string>

@@ -12,6 +12,7 @@ import com.github.andreyasadchy.xtra.ui.follow.FollowMediaFragment
 import com.github.andreyasadchy.xtra.ui.login.LoginActivity
 import com.github.andreyasadchy.xtra.ui.search.SearchFragment
 import com.github.andreyasadchy.xtra.ui.settings.SettingsActivity
+import com.github.andreyasadchy.xtra.util.observeEvent
 import com.github.andreyasadchy.xtra.util.toast
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.HasAndroidInjector
@@ -40,11 +41,11 @@ class MainActivity :
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModel.state.observe(this) { state ->
-            when (state) {
+        viewModel.events.observeEvent(this) { event ->
+            when (event) {
                 MainViewModel.State.Loading -> {}
-                is MainViewModel.State.Loaded -> {
-                    when (state.destination) {
+                is MainViewModel.State.NavigateTo -> {
+                    when (event.destination) {
                         MainViewModel.Destination.Home -> {
                             initNavigation(isLoggedIn = true)
                             fragNavController.initialize(savedInstanceState = savedInstanceState)
@@ -52,14 +53,14 @@ class MainActivity :
                         is MainViewModel.Destination.Channel -> {
                             ChatNotificationUtils.openInBubbleOrStartActivity(
                                 context = this,
-                                channelId = state.destination.id,
-                                channelLogin = state.destination.login,
-                                channelName = state.destination.name,
-                                channelLogo = state.destination.channelLogo
+                                channelId = event.destination.id,
+                                channelLogin = event.destination.login,
+                                channelName = event.destination.name,
+                                channelLogo = event.destination.channelLogo
                             )
                         }
                         is MainViewModel.Destination.Login -> {
-                            if (state.destination.causedByTokenExpiration) {
+                            if (event.destination.causedByTokenExpiration) {
                                 toast(R.string.token_expired)
                             }
 

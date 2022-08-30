@@ -2,7 +2,6 @@ package com.github.andreyasadchy.xtra.ui.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.github.andreyasadchy.xtra.model.User
 import com.github.andreyasadchy.xtra.model.asLoggedIn
@@ -10,6 +9,8 @@ import com.github.andreyasadchy.xtra.repository.AuthPreferencesRepository
 import com.github.andreyasadchy.xtra.repository.AuthRepository
 import com.github.andreyasadchy.xtra.repository.TwitchService
 import com.github.andreyasadchy.xtra.repository.UserPreferencesRepository
+import com.github.andreyasadchy.xtra.util.Event
+import com.github.andreyasadchy.xtra.util.asEventLiveData
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
@@ -29,7 +30,7 @@ class MainViewModel @Inject constructor(
 
     sealed class State {
         object Loading : State()
-        data class Loaded(val destination: Destination) : State()
+        data class NavigateTo(val destination: Destination) : State()
     }
 
     sealed class Destination {
@@ -53,7 +54,7 @@ class MainViewModel @Inject constructor(
 
     private val _userRequestedDestination = MutableSharedFlow<Destination>(replay = 1)
 
-    private val _state = flow {
+    private val _events = flow {
         emit(State.Loading)
         combine(
             userPreferencesRepository.user,
@@ -61,10 +62,10 @@ class MainViewModel @Inject constructor(
         ) { user, helixClientId ->
             when (user) {
                 is User.LoggedIn -> {
-                    emit(State.Loaded(Destination.Home))
+                    emit(State.NavigateTo(Destination.Home))
                 }
                 User.NotLoggedIn -> {
-                    emit(State.Loaded(Destination.Login()))
+                    emit(State.NavigateTo(Destination.Login()))
                 }
                 is User.NotValidated -> {
                     try {
@@ -82,7 +83,7 @@ class MainViewModel @Inject constructor(
                         if ((e is IllegalStateException && e.message == "401") || (e is HttpException && e.code() == 401)) {
                             userPreferencesRepository.updateUser(null)
                             emit(
-                                State.Loaded(
+                                State.NavigateTo(
                                     Destination.Login(causedByTokenExpiration = true)
                                 )
                             )
@@ -91,11 +92,11 @@ class MainViewModel @Inject constructor(
                 }
             }
 
-            emitAll(_userRequestedDestination.map { State.Loaded(it) })
+            emitAll(_userRequestedDestination.map { State.NavigateTo(it) })
         }.collect()
     }
 
-    val state: LiveData<State> = _state.asLiveData()
+    val events: LiveData<Event<State>> = _events.asEventLiveData()
 
     fun onViewChannelRequest(login: String) {
         viewModelScope.launch {

@@ -17,7 +17,19 @@ package chat.willow.kale
 
 import chat.willow.kale.core.tag.KaleTagRouter
 import chat.willow.kale.irc.message.extension.batch.BatchMessage
-import chat.willow.kale.irc.message.rfc1459.*
+import chat.willow.kale.irc.message.rfc1459.InviteMessage
+import chat.willow.kale.irc.message.rfc1459.JoinMessage
+import chat.willow.kale.irc.message.rfc1459.KickMessage
+import chat.willow.kale.irc.message.rfc1459.ModeMessage
+import chat.willow.kale.irc.message.rfc1459.NickMessage
+import chat.willow.kale.irc.message.rfc1459.PartMessage
+import chat.willow.kale.irc.message.rfc1459.PassMessage
+import chat.willow.kale.irc.message.rfc1459.PingMessage
+import chat.willow.kale.irc.message.rfc1459.PongMessage
+import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
+import chat.willow.kale.irc.message.rfc1459.QuitMessage
+import chat.willow.kale.irc.message.rfc1459.TopicMessage
+import chat.willow.kale.irc.message.rfc1459.UserMessage
 import chat.willow.kale.irc.prefix.Prefix
 
 object KaleRunner {

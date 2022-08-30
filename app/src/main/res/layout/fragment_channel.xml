@@ -32,7 +32,7 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <com.github.andreyasadchy.xtra.ui.view.chat.ChatView
+        <fr.outadoc.justchatting.ui.view.chat.ChatView
             android:id="@+id/chatView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -40,7 +40,7 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <com.github.andreyasadchy.xtra.ui.view.chat.ChatInputView
+    <fr.outadoc.justchatting.ui.view.chat.ChatInputView
         android:id="@+id/chatInputView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

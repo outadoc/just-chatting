@@ -19,7 +19,19 @@ import chat.willow.kale.core.message.IMessageSerialiser
 import chat.willow.kale.irc.message.extension.cap.CapMessage
 import chat.willow.kale.irc.message.extension.monitor.MonitorMessage
 import chat.willow.kale.irc.message.extension.sasl.AuthenticateMessage
-import chat.willow.kale.irc.message.rfc1459.*
+import chat.willow.kale.irc.message.rfc1459.InviteMessage
+import chat.willow.kale.irc.message.rfc1459.JoinMessage
+import chat.willow.kale.irc.message.rfc1459.KickMessage
+import chat.willow.kale.irc.message.rfc1459.ModeMessage
+import chat.willow.kale.irc.message.rfc1459.NickMessage
+import chat.willow.kale.irc.message.rfc1459.NoticeMessage
+import chat.willow.kale.irc.message.rfc1459.PartMessage
+import chat.willow.kale.irc.message.rfc1459.PingMessage
+import chat.willow.kale.irc.message.rfc1459.PongMessage
+import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
+import chat.willow.kale.irc.message.rfc1459.QuitMessage
+import chat.willow.kale.irc.message.rfc1459.TopicMessage
+import chat.willow.kale.irc.message.rfc1459.UserMessage
 import chat.willow.kale.irc.message.utility.RawMessage
 import kotlin.reflect.KClass
 

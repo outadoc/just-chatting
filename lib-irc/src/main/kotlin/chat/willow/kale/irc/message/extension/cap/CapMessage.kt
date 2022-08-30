@@ -16,9 +16,17 @@
 package chat.willow.kale.irc.message.extension.cap
 
 import chat.willow.kale.core.ICommand
-import chat.willow.kale.core.message.*
+import chat.willow.kale.core.message.IMessageParser
+import chat.willow.kale.core.message.ISubcommand
+import chat.willow.kale.core.message.IrcMessage
+import chat.willow.kale.core.message.IrcMessageComponents
+import chat.willow.kale.core.message.KaleDescriptor
+import chat.willow.kale.core.message.SubcommandParser
+import chat.willow.kale.core.message.SubcommandSerialiser
+import chat.willow.kale.core.message.subcommandMatcher
 import chat.willow.kale.irc.CharacterCodes
-import chat.willow.kale.irc.message.*
+import chat.willow.kale.irc.message.ParseHelper
+import chat.willow.kale.irc.message.SerialiserHelper
 import chat.willow.kale.irc.prefix.Prefix
 import chat.willow.kale.irc.prefix.PrefixParser
 import chat.willow.kale.irc.prefix.PrefixSerialiser

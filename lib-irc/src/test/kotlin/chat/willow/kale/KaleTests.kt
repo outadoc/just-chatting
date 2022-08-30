@@ -15,7 +15,12 @@
  */
 package chat.willow.kale
 
-import chat.willow.kale.core.message.*
+import chat.willow.kale.core.message.IMessageSerialiser
+import chat.willow.kale.core.message.IrcMessage
+import chat.willow.kale.core.message.IrcMessageComponents
+import chat.willow.kale.core.message.KaleDescriptor
+import chat.willow.kale.core.message.KaleObservable
+import chat.willow.kale.core.message.MessageParser
 import chat.willow.kale.core.tag.IKaleTagRouter
 import chat.willow.kale.core.tag.ITagStore
 import com.nhaarman.mockito_kotlin.any

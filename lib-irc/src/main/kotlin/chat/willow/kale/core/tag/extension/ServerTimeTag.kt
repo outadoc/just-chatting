@@ -21,7 +21,7 @@ import chat.willow.kale.core.tag.Tag
 import chat.willow.kale.loggerFor
 import java.text.SimpleDateFormat
 import java.time.Instant
-import java.util.*
+import java.util.TimeZone
 
 data class ServerTimeTag(val time: Instant) {
 

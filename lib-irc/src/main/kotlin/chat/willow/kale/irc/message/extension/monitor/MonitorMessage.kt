@@ -16,7 +16,12 @@
 package chat.willow.kale.irc.message.extension.monitor
 
 import chat.willow.kale.core.ICommand
-import chat.willow.kale.core.message.*
+import chat.willow.kale.core.message.ISubcommand
+import chat.willow.kale.core.message.IrcMessageComponents
+import chat.willow.kale.core.message.KaleDescriptor
+import chat.willow.kale.core.message.SubcommandParser
+import chat.willow.kale.core.message.SubcommandSerialiser
+import chat.willow.kale.core.message.subcommandMatcher
 import chat.willow.kale.irc.CharacterCodes
 
 object MonitorMessage : ICommand {

@@ -19,7 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file title.
 #-renamesourcefileattribute SourceFile
--dontwarn com.github.andreyasadchy.xtra.ui.**
+-dontwarn fr.outadoc.justchatting.ui.**
 
 -keepclassmembernames class kotlinx.** {
     volatile <fields>;
@@ -50,7 +50,7 @@
 
 -keepattributes EnclosingMethod
 # Application classes that will be serialized/deserialized over Gson
--keep class com.github.andreyasadchy.xtra.model.** { *; }
+-keep class fr.outadoc.justchatting.model.** { *; }
 
 # Prevent proguard from stripping interface information from TypeAdapterFactory,
 # JsonSerializer, JsonDeserializer instances (so they can be used in @JsonAdapter)

@@ -15,14 +15,20 @@
  */
 package chat.willow.kale.irc.message.rfc1459
 
-import chat.willow.kale.*
+import chat.willow.kale.IKaleParsingStateDelegate
 import chat.willow.kale.core.ICommand
-import chat.willow.kale.core.message.*
+import chat.willow.kale.core.message.IrcMessageComponents
+import chat.willow.kale.core.message.KaleDescriptor
+import chat.willow.kale.core.message.MessageParser
+import chat.willow.kale.core.message.MessageSerialiser
+import chat.willow.kale.core.message.commandMatcher
 import chat.willow.kale.irc.CharacterCodes
 import chat.willow.kale.irc.prefix.Prefix
 import chat.willow.kale.irc.prefix.PrefixParser
 import chat.willow.kale.irc.prefix.PrefixSerialiser
-import java.util.*
+import chat.willow.kale.loggerFor
+import java.util.LinkedList
+import java.util.Queue
 
 object ModeMessage : ICommand {
 

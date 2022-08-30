@@ -1,14 +1,14 @@
-package com.github.andreyasadchy.xtra.util.chat
+package fr.outadoc.justchatting.util.chat
 
-import com.github.andreyasadchy.xtra.feature.irc.ChatMessageParser
-import com.github.andreyasadchy.xtra.model.chat.Badge
-import com.github.andreyasadchy.xtra.model.chat.ChatCommand
-import com.github.andreyasadchy.xtra.model.chat.Command
-import com.github.andreyasadchy.xtra.model.chat.LiveChatMessage
-import com.github.andreyasadchy.xtra.model.chat.PingCommand
-import com.github.andreyasadchy.xtra.model.chat.RoomState
-import com.github.andreyasadchy.xtra.model.chat.TwitchEmote
-import com.github.andreyasadchy.xtra.model.chat.UserState
+import fr.outadoc.justchatting.irc.ChatMessageParser
+import fr.outadoc.justchatting.model.chat.Badge
+import fr.outadoc.justchatting.model.chat.ChatCommand
+import fr.outadoc.justchatting.model.chat.Command
+import fr.outadoc.justchatting.model.chat.LiveChatMessage
+import fr.outadoc.justchatting.model.chat.PingCommand
+import fr.outadoc.justchatting.model.chat.RoomState
+import fr.outadoc.justchatting.model.chat.TwitchEmote
+import fr.outadoc.justchatting.model.chat.UserState
 import kotlinx.datetime.Instant
 import org.junit.Assert
 import org.junit.Before

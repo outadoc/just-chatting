@@ -1,0 +1,60 @@
+package fr.outadoc.justchatting.ui.streams
+
+import android.view.LayoutInflater
+import android.view.View
+import androidx.core.view.isVisible
+import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.model.helix.stream.Stream
+import fr.outadoc.justchatting.ui.common.NavigationHandler
+import fr.outadoc.justchatting.util.formatNumber
+import fr.outadoc.justchatting.util.formatTimestamp
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.chipGroupTagsContainer
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.scrollViewTagsContainer
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.uptime
+import kotlinx.android.synthetic.main.fragment_streams_list_item_compact.view.viewers
+import kotlinx.android.synthetic.main.item_single_tag.view.chipTag
+import kotlinx.datetime.Instant
+
+class StreamsCompactAdapter(
+    clickListener: NavigationHandler
+) : BaseStreamsAdapter(clickListener) {
+
+    override val layoutId: Int = R.layout.fragment_streams_list_item_compact
+
+    override fun bind(item: Stream, view: View) {
+        super.bind(item, view)
+        with(view) {
+            if (item.viewer_count != null) {
+                viewers.isVisible = true
+                viewers.text = item.viewer_count.formatNumber()
+            } else {
+                viewers.isVisible = false
+            }
+
+            if (item.started_at != null) {
+                val text = Instant.parse(item.started_at).formatTimestamp(context)
+                if (text != null) {
+                    uptime.isVisible = true
+                    uptime.text = text
+                } else {
+                    uptime.isVisible = false
+                }
+            } else {
+                uptime.isVisible = false
+            }
+
+            if (item.tags != null) {
+                val inflater = LayoutInflater.from(context)
+                chipGroupTagsContainer.removeAllViews()
+                for (tag in item.tags) {
+                    val chip = inflater.inflate(R.layout.item_single_tag, null)
+                    chip.chipTag.text = tag.name
+                    chipGroupTagsContainer.addView(chip)
+                }
+                scrollViewTagsContainer.isVisible = true
+            } else {
+                scrollViewTagsContainer.isVisible = false
+            }
+        }
+    }
+}

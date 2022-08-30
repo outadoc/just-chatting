@@ -16,7 +16,11 @@
 package chat.willow.kale.irc.message.extension.extended_join
 
 import chat.willow.kale.core.ICommand
-import chat.willow.kale.core.message.*
+import chat.willow.kale.core.message.IrcMessageComponents
+import chat.willow.kale.core.message.KaleDescriptor
+import chat.willow.kale.core.message.MessageParser
+import chat.willow.kale.core.message.MessageSerialiser
+import chat.willow.kale.core.message.commandMatcher
 import chat.willow.kale.irc.prefix.Prefix
 import chat.willow.kale.irc.prefix.PrefixParser
 import chat.willow.kale.irc.prefix.PrefixSerialiser

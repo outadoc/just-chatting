@@ -18,21 +18,21 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
 
-    <com.github.andreyasadchy.xtra.ui.view.CustomSwipeRefreshLayout
+    <fr.outadoc.justchatting.ui.view.CustomSwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <com.github.andreyasadchy.xtra.ui.view.GridRecyclerView
+        <fr.outadoc.justchatting.ui.view.GridRecyclerView
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:clipToPadding="false"
             tools:listitem="@layout/fragment_followed_channels_list_item" />
 
-    </com.github.andreyasadchy.xtra.ui.view.CustomSwipeRefreshLayout>
+    </fr.outadoc.justchatting.ui.view.CustomSwipeRefreshLayout>
 
     <TextView
         android:id="@+id/nothingHere"

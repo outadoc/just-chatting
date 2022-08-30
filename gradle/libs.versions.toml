@@ -1,4 +1,5 @@
 [versions]
+android = "7.2.2"
 coil = "2.1.0"
 dagger = "2.42"
 emoji = "1.1.0"
@@ -6,6 +7,14 @@ kotlin = "1.7.10"
 lifecycle = "2.4.1"
 retrofit = "2.9.0"
 room = "2.4.2"
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "android" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-androidExtensions = { id = "org.jetbrains.kotlin.android.extensions", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+spotless = { id = "com.diffplug.spotless", version = "6.6.1" }
 
 [libraries]
 androidx-appcompat = "androidx.appcompat:appcompat:1.4.2"
@@ -24,7 +33,7 @@ androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-preference = "androidx.preference:preference-ktx:1.2.0"
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-core = { module = "androidx.room:room-ktx", version.ref = "room" }
-androidx-room-runtime = { module = "androidx.room:room-runtim", version.ref = "room" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 androidx-webkit = "androidx.webkit:webkit:1.4.0"
 coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }

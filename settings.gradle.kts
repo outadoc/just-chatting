@@ -15,7 +15,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = 'just-chatting'
+rootProject.name = "just-chatting"
 
-include ':app'
-include ':lib-irc'
+include(":app")
+include(":lib-irc")

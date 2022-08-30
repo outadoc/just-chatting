@@ -17,11 +17,7 @@ import com.github.andreyasadchy.xtra.util.toast
 import com.ncapdevi.fragnav.FragNavController
 import dagger.android.HasAndroidInjector
 
-class MainActivity :
-    BaseActivity(),
-    NavigationHandler,
-    HasAndroidInjector,
-    Injectable {
+class MainActivity : BaseActivity(), NavigationHandler, HasAndroidInjector, Injectable {
 
     private companion object {
         const val REQUEST_CODE_LOGIN = 2
@@ -35,8 +31,6 @@ class MainActivity :
         R.id.fragmentContainer
     )
 
-    // Lifecycle methods
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -47,7 +41,7 @@ class MainActivity :
                 is MainViewModel.State.NavigateTo -> {
                     when (event.destination) {
                         MainViewModel.Destination.Home -> {
-                            initNavigation(isLoggedIn = true)
+                            initNavigation()
                             fragNavController.initialize(savedInstanceState = savedInstanceState)
                         }
                         is MainViewModel.Destination.Channel -> {
@@ -125,12 +119,9 @@ class MainActivity :
         }
     }
 
-    private fun initNavigation(isLoggedIn: Boolean) {
+    private fun initNavigation() {
         fragNavController.apply {
-            rootFragments = listOf(
-                FollowMediaFragment.newInstance(loggedIn = isLoggedIn)
-            )
-
+            rootFragments = listOf(FollowMediaFragment.newInstance())
             fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
             transactionListener = object : FragNavController.TransactionListener {
                 override fun onFragmentTransaction(

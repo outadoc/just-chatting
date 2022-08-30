@@ -39,14 +39,7 @@ class FollowMediaFragment : Fragment(), Injectable, Scrollable {
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
     companion object {
-        private const val LOGGED_IN = "logged_in"
-
-        fun newInstance(loggedIn: Boolean) =
-            FollowMediaFragment().apply {
-                arguments = Bundle().apply {
-                    putBoolean(LOGGED_IN, loggedIn)
-                }
-            }
+        fun newInstance() = FollowMediaFragment()
     }
 
     private var previousItem = -1

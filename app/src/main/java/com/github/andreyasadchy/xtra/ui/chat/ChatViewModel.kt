@@ -109,7 +109,6 @@ class ChatViewModel @Inject constructor(
             )
         }
 
-    private var chatStateListener: ChatStateListener? = null
     private var chatController: ChatController? = null
 
     fun startLive(
@@ -121,20 +120,18 @@ class ChatViewModel @Inject constructor(
             val user = userPreferencesRepository.user.first() as? User.LoggedIn ?: return@launch
 
             if (chatController == null) {
-                chatStateListener = ChatStateListener(
+                chatController = LiveChatController(
                     user = user,
                     channelId = channelId,
-                    displayName = channelName,
-                    helixClientId = authPreferencesRepository.helixClientId.first(),
-                    maxAdapterCount = chatPreferencesRepository.messageLimit.first()
-                ).also { listener ->
-                    chatController = LiveChatController(
+                    channelLogin = channelLogin,
+                    chatStateListener = ChatStateListener(
                         user = user,
                         channelId = channelId,
-                        channelLogin = channelLogin,
-                        chatStateListener = listener
+                        displayName = channelName,
+                        helixClientId = authPreferencesRepository.helixClientId.first(),
+                        maxAdapterCount = chatPreferencesRepository.messageLimit.first()
                     )
-                }
+                )
 
                 val enableRecentMsg = chatPreferencesRepository.enableRecentMsg.first()
                 val recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first()
@@ -459,7 +456,7 @@ class ChatViewModel @Inject constructor(
 
     inner class LiveChatController(
         user: User.LoggedIn,
-        private val channelId: String?,
+        channelId: String?,
         channelLogin: String,
         chatStateListener: ChatStateListener
     ) : ChatController() {
@@ -500,10 +497,7 @@ class ChatViewModel @Inject constructor(
         override suspend fun start() {
             liveChat.start()
             loggedInChat.start()
-
-            if (!channelId.isNullOrBlank()) {
-                pubSub?.start()
-            }
+            pubSub?.start()
         }
 
         override fun stop() {

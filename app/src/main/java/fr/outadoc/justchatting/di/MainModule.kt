@@ -103,7 +103,7 @@ val mainModule = module {
         )
     }
 
-    single<OkHttpClient> {
+    single {
         OkHttpClient.Builder()
             .apply {
                 if (BuildConfig.DEBUG) {

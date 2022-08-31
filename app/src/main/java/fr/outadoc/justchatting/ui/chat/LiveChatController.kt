@@ -9,7 +9,6 @@ import fr.outadoc.justchatting.util.chat.PubSubWebSocket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.datetime.Clock
 
-
 class LiveChatController(
     user: User.LoggedIn,
     channelId: String?,

@@ -112,7 +112,9 @@ class ChatViewModel(
         channelName: String
     ) {
         viewModelScope.launch(Dispatchers.Default) {
-            val user = userPreferencesRepository.user.first() as? fr.outadoc.justchatting.model.User.LoggedIn ?: return@launch
+            val user =
+                userPreferencesRepository.user.first() as? fr.outadoc.justchatting.model.User.LoggedIn
+                    ?: return@launch
 
             if (chatController == null) {
                 chatController = LiveChatController(
@@ -134,13 +136,15 @@ class ChatViewModel(
                 val enableRecentMsg = chatPreferencesRepository.enableRecentMsg.first()
                 val recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first()
 
-                if (enableRecentMsg && recentMsgLimit > 0) {
-                    loadRecentMessages(
-                        user = user,
-                        maxAdapterCount = chatPreferencesRepository.messageLimit.first(),
-                        channelLogin = channelLogin,
-                        recentMsgLimit = recentMsgLimit
-                    )
+                launch {
+                    if (enableRecentMsg && recentMsgLimit > 0) {
+                        loadRecentMessages(
+                            user = user,
+                            maxAdapterCount = chatPreferencesRepository.messageLimit.first(),
+                            channelLogin = channelLogin,
+                            recentMsgLimit = recentMsgLimit
+                        )
+                    }
                 }
 
                 chatController?.start()
@@ -277,7 +281,11 @@ class ChatViewModel(
         }
     }
 
-    private fun onMessages(user: fr.outadoc.justchatting.model.User, maxAdapterCount: Int, messages: List<ChatCommand>) {
+    private fun onMessages(
+        user: fr.outadoc.justchatting.model.User,
+        maxAdapterCount: Int,
+        messages: List<ChatCommand>
+    ) {
         _state.update { state ->
             // Note that this is the last message we've sent
             val lastSentMessageInstant: Instant? =

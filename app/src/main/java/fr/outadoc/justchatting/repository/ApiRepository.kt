@@ -18,11 +18,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class ApiRepository @Inject constructor(
+class ApiRepository(
     private val helix: HelixApi,
     private val localFollowsChannel: LocalFollowChannelRepository,
     private val authPrefs: AuthPreferencesRepository,

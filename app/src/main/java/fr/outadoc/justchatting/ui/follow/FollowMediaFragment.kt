@@ -17,7 +17,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.di.Injectable
 import fr.outadoc.justchatting.model.User
 import fr.outadoc.justchatting.repository.UserPreferencesRepository
 import fr.outadoc.justchatting.ui.common.NavigationHandler
@@ -31,12 +30,11 @@ import kotlinx.android.synthetic.main.fragment_media.toolbar
 import kotlinx.android.synthetic.main.fragment_media.viewPagerMedia
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-class FollowMediaFragment : Fragment(), Injectable, Scrollable {
+class FollowMediaFragment : Fragment(), Scrollable {
 
-    @Inject
-    lateinit var userPreferencesRepository: UserPreferencesRepository
+    private val userPreferencesRepository: UserPreferencesRepository by inject()
 
     companion object {
         fun newInstance() = FollowMediaFragment()

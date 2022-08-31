@@ -44,11 +44,10 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import java.util.LinkedList
-import javax.inject.Inject
 import kotlin.collections.component1
 import kotlin.collections.component2
 
-class ChatViewModel @Inject constructor(
+class ChatViewModel(
     private val repository: TwitchService,
     private val playerRepository: PlayerRepository,
     private val chatMessageParser: ChatMessageParser,

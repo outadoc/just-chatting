@@ -8,16 +8,13 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.EditText
 import android.widget.LinearLayout
-import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.di.Injectable
 import fr.outadoc.justchatting.util.convertDpToPixels
 import fr.outadoc.justchatting.util.isDarkMode
 import fr.outadoc.justchatting.util.shortToast
@@ -27,14 +24,11 @@ import kotlinx.android.synthetic.main.activity_login.progressBar
 import kotlinx.android.synthetic.main.activity_login.webView
 import kotlinx.android.synthetic.main.activity_login.webViewContainer
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LoginActivity : AppCompatActivity(), Injectable {
+class LoginActivity : AppCompatActivity() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<LoginViewModel> { viewModelFactory }
+    private val viewModel: LoginViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -1,14 +1,11 @@
 package fr.outadoc.justchatting.di
 
-import android.content.Context
 import com.google.gson.GsonBuilder
-import dagger.Module
-import dagger.Provides
 import fr.outadoc.justchatting.BuildConfig
-import fr.outadoc.justchatting.MainApplication
 import fr.outadoc.justchatting.api.HelixApi
 import fr.outadoc.justchatting.api.IdApi
 import fr.outadoc.justchatting.api.MiscApi
+import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.model.chat.BttvChannelDeserializer
 import fr.outadoc.justchatting.model.chat.BttvChannelResponse
 import fr.outadoc.justchatting.model.chat.BttvFfzDeserializer
@@ -34,97 +31,65 @@ import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.repository.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.repository.UserPreferencesRepository
+import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import kotlinx.datetime.Clock
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 
-@Module
-class MainModule {
+val mainModule = module {
 
-    @Provides
-    fun providesApplicationContext(): Context = MainApplication.INSTANCE
+    single<Clock> { Clock.System }
 
-    @Provides
-    fun providesClock(): Clock = Clock.System
+    single<TwitchService> { ApiRepository(get(), get(), get(), get()) }
 
-    @Singleton
-    @Provides
-    fun providesTwitchService(repository: ApiRepository): TwitchService {
-        return repository
-    }
+    single<PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }
+    single<AuthPreferencesRepository> { get<PreferenceRepository>() }
+    single<ChatPreferencesRepository> { get<PreferenceRepository>() }
+    single<UserPreferencesRepository> { get<PreferenceRepository>() }
 
-    @Provides
-    @Singleton
-    fun providesPreferenceRepository(context: Context): PreferenceRepository {
-        return SharedPrefsPreferenceRepository(context)
-    }
+    single { ChatMessageParser() }
+    single { ChatEntryMapper(get()) }
 
-    @Provides
-    @Singleton
-    fun providesAuthPreferencesRepository(preferenceRepository: PreferenceRepository): AuthPreferencesRepository {
-        return preferenceRepository
-    }
-
-    @Provides
-    @Singleton
-    fun providesChatPreferencesRepository(preferenceRepository: PreferenceRepository): ChatPreferencesRepository {
-        return preferenceRepository
-    }
-
-    @Provides
-    @Singleton
-    fun providesUserPreferencesRepository(preferenceRepository: PreferenceRepository): UserPreferencesRepository {
-        return preferenceRepository
-    }
-
-    @Singleton
-    @Provides
-    fun providesHelixApi(
-        client: OkHttpClient,
-        gsonConverterFactory: GsonConverterFactory
-    ): HelixApi {
-        return Retrofit.Builder()
+    single<HelixApi> {
+        Retrofit.Builder()
             .baseUrl("https://api.twitch.tv/helix/")
-            .client(client)
-            .addConverterFactory(gsonConverterFactory)
+            .client(get())
+            .addConverterFactory(get<GsonConverterFactory>())
             .build()
             .create(HelixApi::class.java)
     }
 
-    @Singleton
-    @Provides
-    fun providesMiscApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): MiscApi {
-        return Retrofit.Builder()
+    single<MiscApi> {
+        Retrofit.Builder()
             .baseUrl("https://api.twitch.tv/") // placeholder url
-            .client(client)
-            .addConverterFactory(gsonConverterFactory)
+            .client(get())
+            .addConverterFactory(get<GsonConverterFactory>())
             .build()
             .create(MiscApi::class.java)
     }
 
-    @Singleton
-    @Provides
-    fun providesIdApi(client: OkHttpClient, gsonConverterFactory: GsonConverterFactory): IdApi {
-        return Retrofit.Builder()
+    single<IdApi> {
+        Retrofit.Builder()
             .baseUrl("https://id.twitch.tv/oauth2/")
-            .client(client)
-            .addConverterFactory(gsonConverterFactory)
+            .client(get())
+            .addConverterFactory(get<GsonConverterFactory>())
             .build()
             .create(IdApi::class.java)
     }
 
-    @Singleton
-    @Provides
-    fun providesGsonConverterFactory(): GsonConverterFactory {
-        return GsonConverterFactory.create(
+    single<GsonConverterFactory> {
+        GsonConverterFactory.create(
             GsonBuilder()
                 .registerTypeAdapter(EmoteSetResponse::class.java, EmoteSetDeserializer())
                 .registerTypeAdapter(CheerEmotesResponse::class.java, CheerEmotesDeserializer())
-                .registerTypeAdapter(TwitchBadgesResponse::class.java, TwitchBadgesDeserializer())
+                .registerTypeAdapter(
+                    TwitchBadgesResponse::class.java,
+                    TwitchBadgesDeserializer()
+                )
                 .registerTypeAdapter(
                     RecentMessagesResponse::class.java,
                     RecentMessagesDeserializer()
@@ -138,21 +103,20 @@ class MainModule {
         )
     }
 
-    @Singleton
-    @Provides
-    fun providesOkHttpClient(): OkHttpClient {
-        val builder = OkHttpClient.Builder().apply {
-            if (BuildConfig.DEBUG) {
-                addInterceptor(
-                    HttpLoggingInterceptor().apply {
-                        level = HttpLoggingInterceptor.Level.HEADERS
-                    }
-                )
+    single<OkHttpClient> {
+        OkHttpClient.Builder()
+            .apply {
+                if (BuildConfig.DEBUG) {
+                    addInterceptor(
+                        HttpLoggingInterceptor().apply {
+                            level = HttpLoggingInterceptor.Level.HEADERS
+                        }
+                    )
+                }
+                connectTimeout(5, TimeUnit.MINUTES)
+                writeTimeout(5, TimeUnit.MINUTES)
+                readTimeout(5, TimeUnit.MINUTES)
             }
-            connectTimeout(5, TimeUnit.MINUTES)
-            writeTimeout(5, TimeUnit.MINUTES)
-            readTimeout(5, TimeUnit.MINUTES)
-        }
-        return builder.build()
+            .build()
     }
 }

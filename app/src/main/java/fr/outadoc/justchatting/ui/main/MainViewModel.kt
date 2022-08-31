@@ -19,9 +19,8 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import javax.inject.Inject
 
-class MainViewModel @Inject constructor(
+class MainViewModel(
     private val repository: TwitchService,
     private val authRepository: AuthRepository,
     private val authPreferencesRepository: AuthPreferencesRepository,

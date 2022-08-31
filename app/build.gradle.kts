@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.android.extensions")
-    id("org.jetbrains.kotlin.kapt")
+    id("com.google.devtools.ksp")
     id("com.diffplug.spotless")
 }
 
@@ -17,15 +17,6 @@ android {
         versionCode = 1
         versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments += mapOf(
-                    "room.schemaLocation" to "$projectDir/schemas",
-                    "room.incremental" to "true"
-                )
-            }
-        }
     }
 
     buildTypes {
@@ -74,6 +65,11 @@ android {
     }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+}
+
 spotless {
     kotlin {
         target("**/*.kt")
@@ -111,11 +107,10 @@ dependencies {
     implementation(libs.androidx.webkit)
     implementation(libs.coil.core)
     implementation(libs.coil.gif)
-    implementation(libs.dagger.android.core)
-    implementation(libs.dagger.android.support)
-    implementation(libs.dagger.core)
     implementation(libs.flexbox)
     implementation(libs.fragnav)
+    implementation(libs.koin.android)
+    implementation(libs.koin.core)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)
     implementation(libs.material)
@@ -124,9 +119,7 @@ dependencies {
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gson)
 
-    kapt(libs.androidx.room.compiler)
-    kapt(libs.dagger.android.processor)
-    kapt(libs.dagger.compiler)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
 

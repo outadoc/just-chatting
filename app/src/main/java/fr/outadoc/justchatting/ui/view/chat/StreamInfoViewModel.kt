@@ -8,11 +8,8 @@ import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.ui.common.BaseViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class StreamInfoViewModel @Inject constructor(
-    private val repository: TwitchService,
-) : BaseViewModel() {
+class StreamInfoViewModel(private val repository: TwitchService) : BaseViewModel() {
 
     sealed class State {
         object Idle : State()

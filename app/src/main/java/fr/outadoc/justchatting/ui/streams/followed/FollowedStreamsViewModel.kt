@@ -10,10 +10,9 @@ import fr.outadoc.justchatting.ui.common.PagedListViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class FollowedStreamsViewModel @Inject constructor(
-    private val repository: TwitchService,
+class FollowedStreamsViewModel(
+    private val repository: TwitchService
 ) : PagedListViewModel<Stream>() {
 
     private val _result = MutableStateFlow<Listing<Stream>?>(null)

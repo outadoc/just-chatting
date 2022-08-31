@@ -7,10 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.di.Injectable
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.common.ExpandingBottomSheetDialogFragment
@@ -30,9 +27,9 @@ import kotlinx.android.synthetic.main.dialog_chat_stream_info.userLayout
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.userName
 import kotlinx.android.synthetic.main.dialog_chat_stream_info.viewers
 import kotlinx.datetime.Instant
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class StreamInfoDialog : ExpandingBottomSheetDialogFragment(), Injectable {
+class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
 
     companion object {
         private const val KEY_USERID = "userid"
@@ -44,10 +41,7 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         }
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<StreamInfoViewModel> { viewModelFactory }
+    private val viewModel: StreamInfoViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,

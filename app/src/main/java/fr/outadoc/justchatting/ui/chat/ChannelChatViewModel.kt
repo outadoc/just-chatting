@@ -14,9 +14,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
-import javax.inject.Inject
 
-class ChannelChatViewModel @Inject constructor(
+class ChannelChatViewModel(
     private val repository: TwitchService,
     chatPreferencesRepository: ChatPreferencesRepository,
     userPreferencesRepository: UserPreferencesRepository,

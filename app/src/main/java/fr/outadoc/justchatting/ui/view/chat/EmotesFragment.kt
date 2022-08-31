@@ -10,31 +10,24 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.RecyclerView
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.di.Injectable
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.chat.ChatViewModel
 import fr.outadoc.justchatting.ui.common.Scrollable
 import fr.outadoc.justchatting.ui.view.GridAutofitLayoutManager
 import fr.outadoc.justchatting.util.convertDpToPixels
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class EmotesFragment : Fragment(), Injectable, Scrollable {
+class EmotesFragment : Fragment(), Scrollable {
 
     private var listener: OnEmoteClickedListener? = null
     private lateinit var layoutManager: GridAutofitLayoutManager
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    @Inject
-    lateinit var chatPreferencesRepository: ChatPreferencesRepository
-
-    private val viewModel by activityViewModels<ChatViewModel> { viewModelFactory }
+    private val chatPreferencesRepository: ChatPreferencesRepository by inject()
+    private val viewModel: ChatViewModel by viewModel()
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

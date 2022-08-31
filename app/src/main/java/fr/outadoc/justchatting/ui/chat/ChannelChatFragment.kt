@@ -18,14 +18,11 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Palette.Swatch
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.shape.MaterialShapeDrawable
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.di.Injectable
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
@@ -44,14 +41,13 @@ import kotlinx.android.synthetic.main.fragment_channel.appBar
 import kotlinx.android.synthetic.main.fragment_channel.chatInputView
 import kotlinx.android.synthetic.main.fragment_channel.chatView
 import kotlinx.android.synthetic.main.fragment_channel.toolbar
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChannelChatFragment :
     Fragment(),
     MessageClickedDialog.OnButtonClickListener,
     OnEmoteClickedListener,
-    Scrollable,
-    Injectable {
+    Scrollable {
 
     companion object {
         private const val ARG_SHOW_BACK_BUTTON = "show_back_button"
@@ -75,11 +71,8 @@ class ChannelChatFragment :
         }
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val channelViewModel by activityViewModels<ChannelChatViewModel> { viewModelFactory }
-    private val chatViewModel by activityViewModels<ChatViewModel> { viewModelFactory }
+    private val channelViewModel: ChannelChatViewModel by viewModel()
+    private val chatViewModel: ChatViewModel by viewModel()
 
     override fun onCreateView(
         inflater: LayoutInflater,

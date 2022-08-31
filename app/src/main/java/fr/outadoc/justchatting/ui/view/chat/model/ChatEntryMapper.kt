@@ -10,9 +10,8 @@ import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PubSubPointReward
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState
-import javax.inject.Inject
 
-class ChatEntryMapper @Inject constructor(private val context: Context) {
+class ChatEntryMapper(private val context: Context) {
 
     fun map(chatCommand: ChatCommand): ChatEntry? {
         return with(chatCommand) {

@@ -12,11 +12,8 @@ import fr.outadoc.justchatting.model.chat.TwitchBadgesResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class PlayerRepository @Inject constructor(
+class PlayerRepository(
     private val misc: MiscApi,
     private val recentEmotes: RecentEmotesDao
 ) {

@@ -1,8 +1,8 @@
 [versions]
 android = "7.2.2"
 coil = "2.1.0"
-dagger = "2.42"
 emoji = "1.1.0"
+koin = "3.2.0"
 kotlin = "1.7.10"
 lifecycle = "2.4.1"
 retrofit = "2.9.0"
@@ -13,7 +13,7 @@ android-application = { id = "com.android.application", version.ref = "android" 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-androidExtensions = { id = "org.jetbrains.kotlin.android.extensions", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
-kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version = "1.7.10-1.0.6" }
 spotless = { id = "com.diffplug.spotless", version = "6.6.1" }
 
 [libraries]
@@ -38,16 +38,13 @@ androidx-swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.
 androidx-webkit = "androidx.webkit:webkit:1.4.0"
 coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
-dagger-android-core = { module = "com.google.dagger:dagger-android", version.ref = "dagger" }
-dagger-android-processor = { module = "com.google.dagger:dagger-android-processor", version.ref = "dagger" }
-dagger-android-support = { module = "com.google.dagger:dagger-android-support", version.ref = "dagger" }
-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "dagger" }
-dagger-core = { module = "com.google.dagger:dagger", version.ref = "dagger" }
 desugar = "com.android.tools:desugar_jdk_libs:1.1.5"
 flexbox = "com.google.android.flexbox:flexbox:3.0.0"
 fragnav = "com.ncapdevi:frag-nav:3.3.0"
 javax-jaxb-api = "javax.xml.bind:jaxb-api:2.3.0"
 junit = "junit:junit:4.13.2"
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 kotlinpoet = "com.squareup:kotlinpoet:1.12.0"
 kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.2"
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.3.2"

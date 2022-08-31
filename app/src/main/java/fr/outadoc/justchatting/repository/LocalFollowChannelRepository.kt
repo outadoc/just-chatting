@@ -10,11 +10,8 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class LocalFollowChannelRepository @Inject constructor(
+class LocalFollowChannelRepository(
     private val localFollowsChannelDao: LocalFollowsChannelDao,
     private val videosDao: VideosDao,
     private val bookmarksDao: BookmarksDao
@@ -33,7 +30,7 @@ class LocalFollowChannelRepository @Inject constructor(
     fun deleteFollow(context: Context, item: LocalFollowChannel) {
         GlobalScope.launch {
             if (item.user_id.isNotBlank() && bookmarksDao.getByUserId(item.user_id)
-                .isNullOrEmpty() && videosDao.getByUserId(item.user_id.toInt()).isNullOrEmpty()
+                    .isNullOrEmpty() && videosDao.getByUserId(item.user_id.toInt()).isNullOrEmpty()
             ) {
                 File(context.filesDir.toString() + File.separator + "profile_pics" + File.separator + "${item.user_id}.png").delete()
             }

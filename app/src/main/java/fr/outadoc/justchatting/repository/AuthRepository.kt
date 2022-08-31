@@ -6,11 +6,8 @@ import fr.outadoc.justchatting.util.withBearerPrefix
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class AuthRepository @Inject constructor(
+class AuthRepository(
     private val api: IdApi,
     private val authPreferencesRepository: AuthPreferencesRepository,
     private val userPreferencesRepository: UserPreferencesRepository,

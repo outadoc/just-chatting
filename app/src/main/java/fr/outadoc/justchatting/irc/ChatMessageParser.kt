@@ -12,9 +12,8 @@ import fr.outadoc.justchatting.model.chat.LiveChatMessage
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState
-import javax.inject.Inject
 
-class ChatMessageParser @Inject constructor() {
+class ChatMessageParser {
 
     fun parse(message: String): ChatCommand? {
         val ircMessage = IrcMessageParser.parse(message)

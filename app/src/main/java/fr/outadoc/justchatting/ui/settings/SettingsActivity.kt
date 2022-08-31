@@ -3,18 +3,10 @@ package fr.outadoc.justchatting.ui.settings
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.di.Injectable
 import kotlinx.android.synthetic.main.activity_settings.toolbar
-import javax.inject.Inject
 
-class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
-
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+class SettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +23,7 @@ class SettingsActivity : AppCompatActivity(), HasAndroidInjector, Injectable {
         }
     }
 
-    override fun androidInjector(): AndroidInjector<Any> {
-        return dispatchingAndroidInjector
-    }
-
-    class SettingsFragment : PreferenceFragmentCompat(), Injectable {
+    class SettingsFragment : PreferenceFragmentCompat() {
 
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             preferenceManager.preferenceDataStore =

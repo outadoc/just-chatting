@@ -20,9 +20,8 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
-class FollowedChannelsViewModel @Inject constructor(
+class FollowedChannelsViewModel(
     private val repository: TwitchService,
     private val sortChannelRepository: SortChannelRepository,
 ) : PagedListViewModel<Follow>() {
@@ -87,15 +86,15 @@ class FollowedChannelsViewModel @Inject constructor(
         viewModelScope.launch {
             val sortDefaults = sortChannelRepository.getById("followed_channels")
             (
-                sortDefaults?.apply {
-                    videoSort = sort.value
-                    videoType = order.value
-                } ?: SortChannel(
-                    id = "followed_channels",
-                    videoSort = sort.value,
-                    videoType = order.value
-                )
-                ).let { sortChannelRepository.save(it) }
+                    sortDefaults?.apply {
+                        videoSort = sort.value
+                        videoType = order.value
+                    } ?: SortChannel(
+                        id = "followed_channels",
+                        videoSort = sort.value,
+                        videoType = order.value
+                    )
+                    ).let { sortChannelRepository.save(it) }
         }
     }
 

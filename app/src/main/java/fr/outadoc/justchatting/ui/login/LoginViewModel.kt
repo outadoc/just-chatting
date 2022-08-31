@@ -13,9 +13,8 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.IOException
-import javax.inject.Inject
 
-class LoginViewModel @Inject constructor(
+class LoginViewModel(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val authPreferencesRepository: AuthPreferencesRepository,
     private val authRepository: AuthRepository,

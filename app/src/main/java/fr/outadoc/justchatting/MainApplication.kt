@@ -12,34 +12,33 @@ import coil.memory.MemoryCache
 import coil.transition.Transition
 import coil.util.DebugLogger
 import com.google.android.material.color.DynamicColors
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
-import fr.outadoc.justchatting.di.AppInjector
-import javax.inject.Inject
+import fr.outadoc.justchatting.di.databaseModule
+import fr.outadoc.justchatting.di.mainModule
+import fr.outadoc.justchatting.di.viewModelModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
-class MainApplication : Application(), HasAndroidInjector, ImageLoaderFactory {
+class MainApplication : Application(), ImageLoaderFactory {
 
     companion object {
         lateinit var INSTANCE: Application
     }
 
-    @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
-
     override fun onCreate() {
         super.onCreate()
         INSTANCE = this
-        AppInjector.init(this)
         DynamicColors.applyToActivitiesIfAvailable(this)
+
+        startKoin {
+            androidLogger()
+            androidContext(this@MainApplication)
+            modules(mainModule, viewModelModule, databaseModule)
+        }
     }
 
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
-    }
-
-    override fun androidInjector(): AndroidInjector<Any> {
-        return dispatchingAndroidInjector
     }
 
     override fun newImageLoader(): ImageLoader =

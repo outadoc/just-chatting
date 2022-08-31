@@ -9,11 +9,8 @@ import fr.outadoc.justchatting.model.User
 import fr.outadoc.justchatting.util.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class SharedPrefsPreferenceRepository @Inject constructor(
-    applicationContext: Context,
-) : PreferenceRepository {
+class SharedPrefsPreferenceRepository(applicationContext: Context) : PreferenceRepository {
 
     private val dataStore = applicationContext.dataStore
 

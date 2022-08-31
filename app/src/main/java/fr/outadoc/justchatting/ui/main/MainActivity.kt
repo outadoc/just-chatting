@@ -2,12 +2,9 @@ package fr.outadoc.justchatting.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import com.ncapdevi.fragnav.FragNavController
-import dagger.android.HasAndroidInjector
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.di.Injectable
 import fr.outadoc.justchatting.ui.chat.ChatNotificationUtils
 import fr.outadoc.justchatting.ui.common.NavigationHandler
 import fr.outadoc.justchatting.ui.follow.FollowMediaFragment
@@ -16,15 +13,16 @@ import fr.outadoc.justchatting.ui.search.SearchFragment
 import fr.outadoc.justchatting.ui.settings.SettingsActivity
 import fr.outadoc.justchatting.util.observeEvent
 import fr.outadoc.justchatting.util.toast
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : BaseActivity(), NavigationHandler, HasAndroidInjector, Injectable {
+class MainActivity : BaseActivity(), NavigationHandler {
 
     private companion object {
         const val REQUEST_CODE_LOGIN = 2
         const val REQUEST_CODE_SETTINGS = 3
     }
 
-    private val viewModel by viewModels<MainViewModel> { viewModelFactory }
+    private val viewModel: MainViewModel by viewModel()
 
     private val fragNavController = FragNavController(
         supportFragmentManager,

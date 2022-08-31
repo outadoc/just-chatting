@@ -7,24 +7,18 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import fr.outadoc.justchatting.di.Injectable
 import fr.outadoc.justchatting.repository.LoadingState
 import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
 import kotlinx.android.synthetic.main.common_recycler_view_layout.progressBar
 import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 import kotlinx.android.synthetic.main.common_recycler_view_layout.swipeRefresh
-import javax.inject.Inject
 
 abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> :
-    Fragment(), Injectable {
+    Fragment() {
 
     protected abstract val viewModel: VM
     protected abstract val adapter: Adapter
-
-    @Inject
-    protected lateinit var viewModelFactory: ViewModelProvider.Factory
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

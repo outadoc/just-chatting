@@ -12,9 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
-import javax.inject.Inject
 
-class ChannelSearchViewModel @Inject constructor(
+class ChannelSearchViewModel(
     private val repository: TwitchService
 ) : PagedListViewModel<ChannelSearch>() {
 

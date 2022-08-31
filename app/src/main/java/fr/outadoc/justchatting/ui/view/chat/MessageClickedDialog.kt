@@ -11,10 +11,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.di.Injectable
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.common.ExpandingBottomSheetDialogFragment
 import fr.outadoc.justchatting.util.formatNumber
@@ -32,9 +29,9 @@ import kotlinx.android.synthetic.main.dialog_chat_message_click.userLayout
 import kotlinx.android.synthetic.main.dialog_chat_message_click.userName
 import kotlinx.android.synthetic.main.dialog_chat_message_click.viewProfile
 import kotlinx.datetime.Instant
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
 
-class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
+class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
 
     interface OnButtonClickListener {
         fun onReplyClicked(userName: String)
@@ -64,10 +61,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment(), Injectable {
         }
     }
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
-    private val viewModel by viewModels<MessageClickedViewModel> { viewModelFactory }
+    private val viewModel: MessageClickedViewModel by inject()
 
     private lateinit var listener: OnButtonClickListener
 

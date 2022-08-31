@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.helix.follows.Follow
 import fr.outadoc.justchatting.model.helix.follows.Order
@@ -16,13 +15,15 @@ import fr.outadoc.justchatting.ui.common.Scrollable
 import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
 import kotlinx.android.synthetic.main.fragment_followed_channels.sortBar
 import kotlinx.android.synthetic.main.sort_bar.sortText
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FollowedChannelsFragment :
     PagedListFragment<Follow, FollowedChannelsViewModel, BasePagedListAdapter<Follow>>(),
     FollowedChannelsSortDialog.OnFilter,
     Scrollable {
 
-    override val viewModel by viewModels<FollowedChannelsViewModel> { viewModelFactory }
+    override val viewModel: FollowedChannelsViewModel by viewModel()
+
     override val adapter: BasePagedListAdapter<Follow> by lazy {
         FollowedChannelsAdapter(activity as NavigationHandler)
     }

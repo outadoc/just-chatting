@@ -6,10 +6,10 @@ import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.ui.common.BaseViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class MessageClickedViewModel @Inject constructor(private val repository: TwitchService) :
-    BaseViewModel() {
+class MessageClickedViewModel(
+    private val repository: TwitchService
+) : BaseViewModel() {
 
     private val user = MutableLiveData<User?>()
     private var isLoading = false

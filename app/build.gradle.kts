@@ -62,12 +62,6 @@ android {
     }
 
     sourceSets {
-        named("main") {
-            java {
-                srcDirs("src/main/kotlin")
-            }
-        }
-
         named("androidTest") {
             assets {
                 srcDirs(files("$projectDir/schemas"))

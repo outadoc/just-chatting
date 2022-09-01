@@ -4,13 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.KeyEvent
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.LinearLayout
-import android.widget.MultiAutoCompleteTextView
-import android.widget.TextView
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isGone
@@ -28,12 +22,7 @@ import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.ui.chat.MessagePostConstraint
 import fr.outadoc.justchatting.util.hideKeyboard
-import fr.outadoc.justchatting.util.isDarkMode
-import fr.outadoc.justchatting.util.loadImage
 import fr.outadoc.justchatting.util.showKeyboard
-import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.image
-import kotlinx.android.synthetic.main.auto_complete_emotes_list_item.view.name
 import kotlinx.android.synthetic.main.view_chat_input.view.editText
 import kotlinx.android.synthetic.main.view_chat_input.view.emotePicker
 import kotlinx.android.synthetic.main.view_chat_input.view.emotePickerPager
@@ -85,7 +74,7 @@ class ChatInputView : LinearLayout {
         orientation = VERTICAL
 
         editText.setAdapter(autoCompleteAdapter)
-        editText.setTokenizer(SpaceTokenizer())
+        editText.setTokenizer(AutoCompleteSpaceTokenizer())
 
         editText.addTextChangedListener(afterTextChanged = { text ->
             send.isVisible = text?.isNotBlank() == true
@@ -259,110 +248,5 @@ class ChatInputView : LinearLayout {
                 false
             }
         } == true
-    }
-
-    class SpaceTokenizer : MultiAutoCompleteTextView.Tokenizer {
-
-        override fun findTokenStart(text: CharSequence, cursor: Int): Int {
-            var i = cursor
-
-            while (i > 0 && text[i - 1] != ' ') {
-                i--
-            }
-            while (i < cursor && text[i] == ' ') {
-                i++
-            }
-
-            return i
-        }
-
-        override fun findTokenEnd(text: CharSequence, cursor: Int): Int {
-            var i = cursor
-            val len = text.length
-
-            while (i < len) {
-                if (text[i] == ' ') {
-                    return i
-                } else {
-                    i++
-                }
-            }
-
-            return len
-        }
-
-        override fun terminateToken(text: CharSequence): CharSequence {
-            return "${text.trimStart(':')} "
-        }
-    }
-
-    class AutoCompleteAdapter(context: Context) : ArrayAdapter<AutoCompleteItem>(context, 0) {
-
-        var animateEmotes: Boolean = true
-
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-            val item = getItem(position) ?: error("Invalid item id")
-            val viewHolder = when (getItemViewType(position)) {
-                TYPE_EMOTE -> {
-                    val viewHolder = convertView?.tag as? ViewHolder
-                        ?: ViewHolder(
-                            LayoutInflater.from(context).inflate(
-                                R.layout.auto_complete_emotes_list_item,
-                                parent,
-                                false
-                            )
-                        )
-
-                    item as AutoCompleteItem.EmoteItem
-                    viewHolder.apply {
-                        containerView.tag = this
-                        containerView.image.loadImage(
-                            context = context,
-                            url = item.emote.getUrl(
-                                animate = animateEmotes,
-                                screenDensity = context.resources.displayMetrics.density,
-                                isDarkTheme = context.isDarkMode
-                            )
-                        )
-                        containerView.name.text = item.emote.name
-                    }
-                }
-                TYPE_USERNAME -> {
-                    val viewHolder = convertView?.tag as? ViewHolder
-                        ?: ViewHolder(
-                            LayoutInflater.from(context).inflate(
-                                android.R.layout.simple_list_item_1,
-                                parent,
-                                false
-                            )
-                        )
-
-                    item as AutoCompleteItem.UserItem
-                    viewHolder.apply {
-                        containerView.tag = this
-                        (containerView as TextView).text = item.chatter.name
-                    }
-                }
-                else -> error("Invalid item type")
-            }
-
-            return viewHolder.containerView
-        }
-
-        override fun getItemViewType(position: Int): Int =
-            when (getItem(position)) {
-                is AutoCompleteItem.EmoteItem -> TYPE_EMOTE
-                is AutoCompleteItem.UserItem -> TYPE_USERNAME
-                null -> error("Invalid item id")
-            }
-
-        override fun getViewTypeCount(): Int = 2
-
-        class ViewHolder(override val containerView: View) : LayoutContainer
-
-        private companion object {
-            const val TYPE_EMOTE = 0
-            const val TYPE_USERNAME = 1
-        }
     }
 }

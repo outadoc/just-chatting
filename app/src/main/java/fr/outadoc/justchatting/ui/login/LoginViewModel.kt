@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import okhttp3.HttpUrl
+import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.io.IOException
 
 class LoginViewModel(
@@ -23,8 +25,7 @@ class LoginViewModel(
     sealed class State {
         object Initial : State()
         data class LoadWebView(
-            val clientId: String,
-            val redirect: String,
+            val url: HttpUrl,
             val exception: Exception? = null
         ) : State()
 
@@ -50,11 +51,29 @@ class LoginViewModel(
                 }
             }
 
+            val helixScopes = listOf(
+                "chat:read",
+                "chat:edit",
+                "channel:moderate",
+                "channel_editor",
+                "whispers:edit",
+                "user:read:follows"
+            )
+
+            val clientId = authPreferencesRepository.helixClientId.first()
+            val redirectUri = authPreferencesRepository.helixRedirect.first()
+
+            val helixAuthUrl: HttpUrl =
+                "https://id.twitch.tv/oauth2/authorize".toHttpUrl()
+                    .newBuilder()
+                    .addQueryParameter("response_type", "token")
+                    .addQueryParameter("client_id", clientId)
+                    .addQueryParameter("redirect_uri", redirectUri)
+                    .addQueryParameter("scope", helixScopes.joinToString(" "))
+                    .build()
+
             _state.update {
-                State.LoadWebView(
-                    clientId = authPreferencesRepository.helixClientId.first(),
-                    redirect = authPreferencesRepository.helixRedirect.first()
-                )
+                State.LoadWebView(url = helixAuthUrl)
             }
         }
     }

@@ -23,7 +23,8 @@ import kotlinx.android.synthetic.main.activity_login.havingTrouble
 import kotlinx.android.synthetic.main.activity_login.progressBar
 import kotlinx.android.synthetic.main.activity_login.webView
 import kotlinx.android.synthetic.main.activity_login.webViewContainer
-import okhttp3.HttpUrl.Companion.toHttpUrl
+import okhttp3.HttpUrl
+import org.intellij.lang.annotations.Language
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
@@ -42,7 +43,7 @@ class LoginActivity : AppCompatActivity() {
                         toast(R.string.connection_error)
                     }
 
-                    initWebView(state.clientId, state.redirect)
+                    initWebView(state.url)
                 }
                 LoginViewModel.State.Done -> {
                     setResult(RESULT_OK)
@@ -55,33 +56,14 @@ class LoginActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SetJavaScriptEnabled")
-    private fun initWebView(helixClientId: String, helixRedirect: String) {
+    private fun initWebView(helixAuthUrl: HttpUrl) {
         webViewContainer.isVisible = true
-
-        val helixScopes = listOf(
-            "chat:read",
-            "chat:edit",
-            "channel:moderate",
-            "channel_editor",
-            "whispers:edit",
-            "user:read:follows"
-        )
-
-        val helixAuthUrl =
-            "https://id.twitch.tv/oauth2/authorize".toHttpUrl()
-                .newBuilder()
-                .addQueryParameter("response_type", "token")
-                .addQueryParameter("client_id", helixClientId)
-                .addQueryParameter("redirect_uri", helixRedirect)
-                .addQueryParameter("scope", helixScopes.joinToString(" "))
-                .build()
-                .toString()
 
         havingTrouble.setOnClickListener {
             AlertDialog.Builder(this)
                 .setMessage(getString(R.string.login_problem_solution))
                 .setPositiveButton(R.string.log_in) { _, _ ->
-                    val intent = Intent(Intent.ACTION_VIEW, helixAuthUrl.toUri())
+                    val intent = Intent(Intent.ACTION_VIEW, helixAuthUrl.toString().toUri())
                     if (intent.resolveActivity(packageManager) != null) {
                         webView.reload()
                         startActivity(intent)
@@ -159,13 +141,15 @@ class LoginActivity : AppCompatActivity() {
                         getString(R.string.error, "$errorCode $description")
                     }
 
-                    val html = "<html><body><div align=\"center\">$errorMessage</div></body>"
+                    @Language("HTML")
+                    val html = """<html><body><div align="center">$errorMessage</div></body>"""
+
                     loadUrl("about:blank")
                     loadDataWithBaseURL(null, html, "text/html", "UTF-8", null)
                 }
             }
 
-            loadUrl(helixAuthUrl)
+            loadUrl(helixAuthUrl.toString())
         }
     }
 

@@ -38,6 +38,7 @@ import fr.outadoc.justchatting.util.C
 import fr.outadoc.justchatting.util.hideKeyboard
 import fr.outadoc.justchatting.util.isDarkMode
 import fr.outadoc.justchatting.util.loadImage
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChannelChatFragment :
@@ -69,7 +70,7 @@ class ChannelChatFragment :
     }
 
     private val channelViewModel: ChannelChatViewModel by viewModel()
-    private val chatViewModel: ChatViewModel by viewModel()
+    private val chatViewModel: ChatViewModel by sharedViewModel()
 
     private var viewHolder: FragmentChannelBinding? = null
 

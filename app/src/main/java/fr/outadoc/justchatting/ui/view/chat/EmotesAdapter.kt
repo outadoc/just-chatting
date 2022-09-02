@@ -1,19 +1,20 @@
 package fr.outadoc.justchatting.ui.view.chat
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.FragmentEmotesListHeaderBinding
+import fr.outadoc.justchatting.databinding.FragmentEmotesListItemBinding
 import fr.outadoc.justchatting.ui.chat.EmoteSetItem
 import fr.outadoc.justchatting.util.isDarkMode
 import fr.outadoc.justchatting.util.loadImage
 
 class EmotesAdapter(
     private val clickListener: OnEmoteClickedListener
-) : ListAdapter<EmoteSetItem, ViewHolder>(EmoteSetItemItemCallback) {
+) : ListAdapter<EmoteSetItem, EmotesAdapter.ViewHolder>(EmoteSetItemItemCallback) {
 
     var animateEmotes: Boolean = true
 
@@ -23,14 +24,15 @@ class EmotesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val viewId = when (viewType) {
-            TYPE_HEADER -> R.layout.fragment_emotes_list_header
-            else -> R.layout.fragment_emotes_list_item
+        val inflater = LayoutInflater.from(parent.context)
+        return when (viewType) {
+            TYPE_HEADER -> ViewHolder.Header(
+                FragmentEmotesListHeaderBinding.inflate(inflater, parent, false)
+            )
+            else -> ViewHolder.Emote(
+                FragmentEmotesListItemBinding.inflate(inflater, parent, false)
+            )
         }
-
-        return object : ViewHolder(
-            LayoutInflater.from(parent.context).inflate(viewId, parent, false)
-        ) {}
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -49,16 +51,17 @@ class EmotesAdapter(
 
     private fun bindHeader(holder: ViewHolder, position: Int) {
         val header = (getItem(position) as? EmoteSetItem.Header) ?: return
-        val titleView: TextView = holder.itemView.findViewById(R.id.textView_header)
-        titleView.text = header.title
-            ?: titleView.context.getString(R.string.emote_category_global)
+        val binding = (holder as ViewHolder.Header).binding
+
+        binding.textViewHeader.text = header.title
+            ?: binding.root.context.getString(R.string.emote_category_global)
     }
 
     private fun bindEmote(holder: ViewHolder, position: Int) {
         val emote = (getItem(position) as? EmoteSetItem.Emote)?.emote ?: return
-        val imageView: ImageView = holder.itemView.findViewById(R.id.imageView_emote)
+        val binding = (holder as ViewHolder.Emote).binding
 
-        imageView.apply {
+        binding.imageViewEmote.apply {
             loadImage(
                 emote.getUrl(
                     animate = animateEmotes,
@@ -70,5 +73,13 @@ class EmotesAdapter(
                 clickListener.onEmoteClicked(emote)
             }
         }
+    }
+
+    sealed class ViewHolder(
+        val view: View
+    ) : androidx.recyclerview.widget.RecyclerView.ViewHolder(view) {
+
+        class Header(val binding: FragmentEmotesListHeaderBinding) : ViewHolder(binding.root)
+        class Emote(val binding: FragmentEmotesListItemBinding) : ViewHolder(binding.root)
     }
 }

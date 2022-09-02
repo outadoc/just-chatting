@@ -19,7 +19,7 @@ import fr.outadoc.justchatting.ui.common.Scrollable
 import fr.outadoc.justchatting.ui.view.GridAutofitLayoutManager
 import fr.outadoc.justchatting.util.convertDpToPixels
 import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class EmotesFragment : Fragment(), Scrollable {
 
@@ -28,7 +28,7 @@ class EmotesFragment : Fragment(), Scrollable {
 
     private val chatPreferencesRepository: ChatPreferencesRepository by inject()
 
-    private val viewModel: ChatViewModel by viewModel()
+    private val viewModel: ChatViewModel by sharedViewModel()
     private var viewHolder: FragmentEmotesBinding? = null
 
     override fun onAttach(context: Context) {

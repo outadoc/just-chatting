@@ -167,7 +167,8 @@ class ChatViewModel(
                     onMessages(
                         user = user,
                         maxAdapterCount = maxAdapterCount,
-                        messages = messages
+                        messages = messages,
+                        append = false
                     )
                 }
         } catch (e: Exception) {
@@ -284,7 +285,8 @@ class ChatViewModel(
     private fun onMessages(
         user: fr.outadoc.justchatting.model.User,
         maxAdapterCount: Int,
-        messages: List<ChatCommand>
+        messages: List<ChatCommand>,
+        append: Boolean = true
     ) {
         _state.update { state ->
             // Note that this is the last message we've sent
@@ -306,7 +308,12 @@ class ChatViewModel(
             val newMessages = state.chatMessages
                 .toMutableList()
                 .apply {
-                    addAll(messages.mapNotNull { chatEntryMapper.map(it) })
+                    val messagesToAdd = messages.mapNotNull { chatEntryMapper.map(it) }
+                    if (append) {
+                        addAll(messagesToAdd)
+                    } else {
+                        addAll(0, messagesToAdd)
+                    }
                 }
 
             // We alternate the background of each chat row.

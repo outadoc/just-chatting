@@ -23,6 +23,7 @@ import androidx.palette.graphics.Palette.Swatch
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.shape.MaterialShapeDrawable
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.FragmentChannelBinding
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
@@ -37,10 +38,6 @@ import fr.outadoc.justchatting.util.C
 import fr.outadoc.justchatting.util.hideKeyboard
 import fr.outadoc.justchatting.util.isDarkMode
 import fr.outadoc.justchatting.util.loadImage
-import kotlinx.android.synthetic.main.fragment_channel.appBar
-import kotlinx.android.synthetic.main.fragment_channel.chatInputView
-import kotlinx.android.synthetic.main.fragment_channel.chatView
-import kotlinx.android.synthetic.main.fragment_channel.toolbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChannelChatFragment :
@@ -74,12 +71,31 @@ class ChannelChatFragment :
     private val channelViewModel: ChannelChatViewModel by viewModel()
     private val chatViewModel: ChatViewModel by viewModel()
 
+    private var viewHolder: FragmentChannelBinding? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        val args = requireArguments()
+
+        channelViewModel.loadStream(
+            channelId = requireArguments().getString(C.CHANNEL_ID)!!
+        )
+
+        chatViewModel.startLive(
+            channelId = args.getString(C.CHANNEL_ID)!!,
+            channelLogin = args.getString(C.CHANNEL_LOGIN)!!,
+            channelName = args.getString(C.CHANNEL_DISPLAYNAME)!!
+        )
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_channel, container, false)
+        viewHolder = FragmentChannelBinding.inflate(inflater, container, false)
+        return viewHolder?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -87,7 +103,7 @@ class ChannelChatFragment :
 
         val args = requireArguments()
 
-        toolbar.apply {
+        viewHolder?.toolbar?.apply {
             title = args.getString(C.CHANNEL_DISPLAYNAME)
 
             if (args.getBoolean(ARG_SHOW_BACK_BUTTON)) {
@@ -123,41 +139,103 @@ class ChannelChatFragment :
         }
 
         activity?.onBackPressedDispatcher?.addCallback(this) {
-            if (!chatInputView.hideEmotesMenu()) {
-                isEnabled = false
-                activity?.onBackPressed()
-                isEnabled = true
+            viewHolder?.apply {
+                if (!chatInputView.hideEmotesMenu()) {
+                    isEnabled = false
+                    activity?.onBackPressed()
+                    isEnabled = true
+                }
             }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-            toolbar.setPadding(
-                toolbar.paddingLeft,
-                insets.top,
-                toolbar.paddingRight,
-                toolbar.paddingBottom
-            )
+            viewHolder?.apply {
+                toolbar.setPadding(
+                    toolbar.paddingLeft,
+                    insets.top,
+                    toolbar.paddingRight,
+                    toolbar.paddingBottom
+                )
+            }
             windowInsets
         }
 
         channelViewModel.state.observe(viewLifecycleOwner) { state ->
-            updateStreamLayout(state.stream)
+            viewHolder?.apply {
+                updateStreamLayout(state.stream)
 
-            state.loadedUser?.let { user ->
-                updateUserLayout(user)
+                state.loadedUser?.let { user ->
+                    updateUserLayout(user)
+                }
+
+                state.user.login?.let { login ->
+                    chatView.setUsername(login)
+                }
+
+                chatView.showTimestamps = state.showTimestamps
+                chatView.animateEmotes = state.animateEmotes
+                chatInputView.animateEmotes = state.animateEmotes
             }
-
-            state.user.login?.let { login ->
-                chatView.setUsername(login)
-            }
-
-            chatView?.showTimestamps = state.showTimestamps
-            chatView?.animateEmotes = state.animateEmotes
-            chatInputView?.animateEmotes = state.animateEmotes
         }
 
-        initialize()
+        viewHolder?.apply {
+
+            chatView.setOnMessageClickListener { original, formatted, userId ->
+                hideKeyboard()
+
+                MessageClickedDialog.newInstance(
+                    originalMessage = original,
+                    formattedMessage = formatted,
+                    userId = userId
+                ).show(childFragmentManager, "closeOnPip")
+            }
+
+            chatInputView.setOnMessageSendListener { message ->
+                chatViewModel.send(
+                    message = message,
+                    screenDensity = requireContext().resources.displayMetrics.density,
+                    isDarkTheme = requireContext().isDarkMode
+                )
+
+                chatView.scrollToBottom()
+            }
+
+            chatInputView.emotePickerSelectedTab.observe(viewLifecycleOwner) { position ->
+                val fragment = childFragmentManager.findFragmentByTag("f$position")
+                (fragment as? Scrollable)?.scrollToTop()
+            }
+
+            chatInputView.emotePickerAdapter =
+                object : FragmentStateAdapter(this@ChannelChatFragment) {
+
+                    override fun createFragment(position: Int): Fragment =
+                        EmotesFragment.newInstance(position)
+
+                    override fun getItemCount(): Int = 3
+                }
+        }
+
+        chatViewModel.state.observe(viewLifecycleOwner) { state ->
+            viewHolder?.apply {
+                with(chatInputView) {
+                    setMessagePostConstraint(state.messagePostConstraint)
+                    setAutocompleteItems(
+                        emotes = state.allEmotes,
+                        chatters = state.chatters
+                    )
+                }
+
+                with(chatView) {
+                    setEmotes(state.allEmotes)
+                    submitList(state.chatMessages)
+                    notifyRoomState(state.roomState)
+                    addGlobalBadges(state.globalBadges)
+                    addChannelBadges(state.channelBadges)
+                    addCheerEmotes(state.cheerEmotes)
+                }
+            }
+        }
     }
 
     private fun formatChannelUri(channelLogin: String): Uri {
@@ -167,70 +245,7 @@ class ChannelChatFragment :
             .build()
     }
 
-    private fun initialize() {
-        val args = requireArguments()
-
-        channelViewModel.loadStream(
-            channelId = requireArguments().getString(C.CHANNEL_ID)!!
-        )
-
-        chatViewModel.startLive(
-            channelId = args.getString(C.CHANNEL_ID)!!,
-            channelLogin = args.getString(C.CHANNEL_LOGIN)!!,
-            channelName = args.getString(C.CHANNEL_DISPLAYNAME)!!
-        )
-
-        chatView.setOnMessageClickListener { original, formatted, userId ->
-            hideKeyboard()
-
-            MessageClickedDialog.newInstance(
-                messagingEnabled = true,
-                originalMessage = original,
-                formattedMessage = formatted,
-                userId = userId
-            ).show(childFragmentManager, "closeOnPip")
-        }
-
-        chatInputView.setOnMessageSendListener { message ->
-            chatViewModel.send(
-                message = message,
-                screenDensity = requireContext().resources.displayMetrics.density,
-                isDarkTheme = requireContext().isDarkMode
-            )
-
-            chatView.scrollToBottom()
-        }
-
-        chatInputView.emotePickerSelectedTab.observe(viewLifecycleOwner) { position ->
-            val fragment = childFragmentManager.findFragmentByTag("f$position")
-            (fragment as? Scrollable)?.scrollToTop()
-        }
-
-        chatInputView.emotePickerAdapter = object : FragmentStateAdapter(this) {
-
-            override fun createFragment(position: Int): Fragment =
-                EmotesFragment.newInstance(position)
-
-            override fun getItemCount(): Int = 3
-        }
-
-        chatViewModel.state.observe(viewLifecycleOwner) { state ->
-            chatInputView.setMessagePostConstraint(state.messagePostConstraint)
-            chatInputView.setAutocompleteItems(
-                emotes = state.allEmotes,
-                chatters = state.chatters
-            )
-
-            chatView.setEmotes(state.allEmotes)
-            chatView.submitList(state.chatMessages)
-            chatView.notifyRoomState(state.roomState)
-            chatView.addGlobalBadges(state.globalBadges)
-            chatView.addChannelBadges(state.channelBadges)
-            chatView.addCheerEmotes(state.cheerEmotes)
-        }
-    }
-
-    private fun updateStreamLayout(stream: Stream?) {
+    private fun FragmentChannelBinding.updateStreamLayout(stream: Stream?) {
         stream?.user_name.let {
             if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
                 toolbar.title = it
@@ -245,13 +260,13 @@ class ChannelChatFragment :
         }
 
         if (stream?.title != null) {
-            toolbar?.subtitle = stream.title.trim()
+            toolbar.subtitle = stream.title.trim()
         } else {
-            toolbar?.subtitle = null
+            toolbar.subtitle = null
         }
     }
 
-    private fun loadUserAvatar(channelLogo: String) {
+    private fun FragmentChannelBinding.loadUserAvatar(channelLogo: String) {
         requireArguments().putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
 
         val context = context ?: return
@@ -276,7 +291,7 @@ class ChannelChatFragment :
         }
     }
 
-    private fun updateToolbarColor(swatch: Swatch) {
+    private fun FragmentChannelBinding.updateToolbarColor(swatch: Swatch) {
         val backgroundColor = swatch.rgb
         val textColor = ensureMinimumAlpha(
             foreground = swatch.titleTextColor,
@@ -306,7 +321,7 @@ class ChannelChatFragment :
         }
     }
 
-    private fun updateUserLayout(user: User) {
+    private fun FragmentChannelBinding.updateUserLayout(user: User) {
         user.channelLogo?.let { channelLogo ->
             requireArguments().putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
             loadUserAvatar(channelLogo)
@@ -316,7 +331,7 @@ class ChannelChatFragment :
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            appBar.setExpanded(false, false)
+            viewHolder?.appBar?.setExpanded(false, false)
         }
     }
 
@@ -328,20 +343,22 @@ class ChannelChatFragment :
     }
 
     private fun hideKeyboard() {
-        chatInputView.hideKeyboard()
-        chatInputView.clearFocus()
+        viewHolder?.apply {
+            chatInputView.hideKeyboard()
+            chatInputView.clearFocus()
+        }
     }
 
     override fun onEmoteClicked(emote: Emote) {
-        chatInputView.appendEmote(emote)
+        viewHolder?.chatInputView?.appendEmote(emote)
     }
 
     override fun onReplyClicked(userName: String) {
-        chatInputView.reply(userName)
+        viewHolder?.chatInputView?.reply(userName)
     }
 
     override fun onCopyMessageClicked(message: String) {
-        chatInputView.setMessage(message)
+        viewHolder?.chatInputView?.setMessage(message)
     }
 
     override fun onViewProfileClicked(
@@ -361,6 +378,11 @@ class ChannelChatFragment :
     }
 
     override fun scrollToTop() {
-        appBar?.setExpanded(true, true)
+        viewHolder?.appBar?.setExpanded(true, true)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewHolder = null
     }
 }

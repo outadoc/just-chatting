@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.CommonRecyclerViewLayoutBinding
+import fr.outadoc.justchatting.databinding.FragmentFollowedChannelsBinding
 import fr.outadoc.justchatting.model.helix.follows.Follow
 import fr.outadoc.justchatting.model.helix.follows.Order
 import fr.outadoc.justchatting.model.helix.follows.Sort
@@ -12,9 +14,6 @@ import fr.outadoc.justchatting.ui.common.BasePagedListAdapter
 import fr.outadoc.justchatting.ui.common.NavigationHandler
 import fr.outadoc.justchatting.ui.common.PagedListFragment
 import fr.outadoc.justchatting.ui.common.Scrollable
-import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
-import kotlinx.android.synthetic.main.fragment_followed_channels.sortBar
-import kotlinx.android.synthetic.main.sort_bar.sortText
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class FollowedChannelsFragment :
@@ -23,6 +22,10 @@ class FollowedChannelsFragment :
     Scrollable {
 
     override val viewModel: FollowedChannelsViewModel by viewModel()
+    private var viewHolder: FragmentFollowedChannelsBinding? = null
+
+    override val commonViewHolder: CommonRecyclerViewLayoutBinding?
+        get() = viewHolder?.layoutRecyclerView
 
     override val adapter: BasePagedListAdapter<Follow> by lazy {
         FollowedChannelsAdapter(activity as NavigationHandler)
@@ -33,21 +36,27 @@ class FollowedChannelsFragment :
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_followed_channels, container, false)
+        viewHolder = FragmentFollowedChannelsBinding.inflate(inflater, container, false)
+        return viewHolder?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.sortText.observe(viewLifecycleOwner) {
-            sortText.text = it
+            viewHolder?.sortBar?.sortText?.text = it
         }
 
         viewModel.setUser(context = requireContext())
 
-        sortBar.setOnClickListener {
-            FollowedChannelsSortDialog.newInstance(sort = viewModel.sort, order = viewModel.order)
-                .show(childFragmentManager, null)
+        viewHolder?.sortBar?.root?.setOnClickListener {
+            FollowedChannelsSortDialog.newInstance(
+                sort = viewModel.sort,
+                order = viewModel.order
+            ).show(
+                childFragmentManager,
+                null
+            )
         }
     }
 
@@ -66,6 +75,6 @@ class FollowedChannelsFragment :
     }
 
     override fun scrollToTop() {
-        recyclerView?.scrollToPosition(0)
+        viewHolder?.layoutRecyclerView?.recyclerView?.scrollToPosition(0)
     }
 }

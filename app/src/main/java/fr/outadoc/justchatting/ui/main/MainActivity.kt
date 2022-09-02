@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.ncapdevi.fragnav.FragNavController
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.ActivityMainBinding
 import fr.outadoc.justchatting.ui.chat.ChatNotificationUtils
 import fr.outadoc.justchatting.ui.common.NavigationHandler
 import fr.outadoc.justchatting.ui.follow.FollowMediaFragment
@@ -23,6 +24,7 @@ class MainActivity : BaseActivity(), NavigationHandler {
     }
 
     private val viewModel: MainViewModel by viewModel()
+    private lateinit var viewHolder: ActivityMainBinding
 
     private val fragNavController = FragNavController(
         supportFragmentManager,
@@ -31,7 +33,9 @@ class MainActivity : BaseActivity(), NavigationHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        viewHolder = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(viewHolder.root)
 
         viewModel.events.observeEvent(this) { event ->
             when (event) {

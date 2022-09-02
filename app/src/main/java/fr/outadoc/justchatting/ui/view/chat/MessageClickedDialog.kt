@@ -8,26 +8,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.content.getSystemService
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.DialogChatMessageClickBinding
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.common.ExpandingBottomSheetDialogFragment
 import fr.outadoc.justchatting.util.formatNumber
 import fr.outadoc.justchatting.util.formatTime
 import fr.outadoc.justchatting.util.loadImage
-import kotlinx.android.synthetic.main.dialog_chat_message_click.bannerImage
-import kotlinx.android.synthetic.main.dialog_chat_message_click.copyClip
-import kotlinx.android.synthetic.main.dialog_chat_message_click.copyMessage
-import kotlinx.android.synthetic.main.dialog_chat_message_click.message
-import kotlinx.android.synthetic.main.dialog_chat_message_click.reply
-import kotlinx.android.synthetic.main.dialog_chat_message_click.userCreated
-import kotlinx.android.synthetic.main.dialog_chat_message_click.userFollowers
-import kotlinx.android.synthetic.main.dialog_chat_message_click.userImage
-import kotlinx.android.synthetic.main.dialog_chat_message_click.userLayout
-import kotlinx.android.synthetic.main.dialog_chat_message_click.userName
-import kotlinx.android.synthetic.main.dialog_chat_message_click.viewProfile
 import kotlinx.datetime.Instant
 import org.koin.android.ext.android.inject
 
@@ -40,20 +30,18 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
     }
 
     companion object {
-        private const val KEY_MESSAGING = "messaging"
         private const val KEY_ORIGINAL = "original"
         private const val KEY_FORMATTED = "formatted"
         private const val KEY_USERID = "userid"
+
         private val savedUsers = mutableListOf<User>()
 
         fun newInstance(
-            messagingEnabled: Boolean,
             originalMessage: CharSequence,
             formattedMessage: CharSequence,
             userId: String?
         ) = MessageClickedDialog().apply {
             arguments = bundleOf(
-                KEY_MESSAGING to messagingEnabled,
                 KEY_ORIGINAL to originalMessage,
                 KEY_FORMATTED to formattedMessage,
                 KEY_USERID to userId
@@ -61,9 +49,10 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
         }
     }
 
-    private val viewModel: MessageClickedViewModel by inject()
-
     private lateinit var listener: OnButtonClickListener
+
+    private val viewModel: MessageClickedViewModel by inject()
+    private var viewHolder: DialogChatMessageClickBinding? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -75,70 +64,77 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.dialog_chat_message_click, container, false)
+        viewHolder = DialogChatMessageClickBinding.inflate(inflater, container, false)
+        return viewHolder?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val args = requireArguments()
-        message.text = args.getCharSequence(KEY_FORMATTED)!!
-        val msg = args.getCharSequence(KEY_ORIGINAL)!!
+
+        val formattedMsg = args.getCharSequence(KEY_FORMATTED)!!
+        val originalMsg = args.getCharSequence(KEY_ORIGINAL)!!
         val userId = args.getString(KEY_USERID)
-        val clipboard = getSystemService(requireContext(), ClipboardManager::class.java)
-        if (userId != null) {
-            val item = savedUsers.find { it.id == userId }
-            if (item != null) {
-                updateUserLayout(item)
-            } else {
-                viewModel.loadUser(channelId = userId)
-                    .observe(viewLifecycleOwner) { user ->
-                        if (user != null) {
-                            savedUsers.add(user)
-                            updateUserLayout(user)
-                        } else {
-                            viewProfile.isVisible = true
+
+        viewHolder?.apply {
+            message.text = formattedMsg
+
+            if (userId != null) {
+                val item = savedUsers.find { it.id == userId }
+                if (item != null) {
+                    updateUserLayout(item)
+                } else {
+                    viewModel.loadUser(channelId = userId)
+                        .observe(viewLifecycleOwner) { user ->
+                            if (user != null) {
+                                savedUsers.add(user)
+                                updateUserLayout(user)
+                            } else {
+                                viewProfile.isVisible = true
+                            }
                         }
-                    }
-            }
-            if (args.getBoolean(KEY_MESSAGING)) {
-                reply.isVisible = true
-                reply.setOnClickListener {
-                    listener.onReplyClicked(extractUserName(msg))
-                    dismiss()
                 }
-                copyMessage.isVisible = true
+
                 copyMessage.setOnClickListener {
-                    listener.onCopyMessageClicked(msg.substring(msg.indexOf(':') + 2))
+                    listener.onCopyMessageClicked(originalMsg.substring(originalMsg.indexOf(':') + 2))
                     dismiss()
                 }
-            } else {
-                reply.isVisible = false
-                copyMessage.isVisible = false
+
+                reply.isVisible = true
+                copyMessage.isVisible = true
             }
-        }
-        copyClip.setOnClickListener {
-            clipboard?.setPrimaryClip(
-                ClipData.newPlainText(
-                    "label",
-                    if (userId != null) msg.substring(msg.indexOf(':') + 2) else msg
+
+            copyClip.setOnClickListener {
+                val clipboard = requireContext().getSystemService<ClipboardManager>()
+                clipboard?.setPrimaryClip(
+                    ClipData.newPlainText(
+                        "label",
+                        if (userId != null) {
+                            originalMsg.substring(originalMsg.indexOf(':') + 2)
+                        } else {
+                            originalMsg
+                        }
+                    )
                 )
-            )
-            dismiss()
+
+                dismiss()
+            }
         }
     }
 
-    private fun updateUserLayout(user: User) {
+    private fun DialogChatMessageClickBinding.updateUserLayout(user: User) {
         if (user.bannerImageURL != null) {
             userLayout.isVisible = true
             bannerImage.isVisible = true
-            bannerImage.loadImage(requireContext(), user.bannerImageURL)
+            bannerImage.loadImage(user.bannerImageURL)
         } else {
             bannerImage.isVisible = false
         }
+
         if (user.channelLogo != null) {
             userLayout.isVisible = true
             userImage.isVisible = true
-            userImage.loadImage(requireContext(), user.channelLogo, circle = true)
+            userImage.loadImage(user.channelLogo, circle = true)
             userImage.setOnClickListener {
                 listener.onViewProfileClicked(
                     user.id,
@@ -151,6 +147,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
         } else {
             userImage.isVisible = false
         }
+
         if (user.display_name != null) {
             userLayout.isVisible = true
             userName.isVisible = true
@@ -164,12 +161,14 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
                 )
                 dismiss()
             }
+
             if (user.bannerImageURL != null) {
                 userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
             }
         } else {
             userName.isVisible = false
         }
+
         if (user.followers_count != null) {
             userLayout.isVisible = true
             userFollowers.isVisible = true
@@ -177,6 +176,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
                 R.string.followers,
                 user.followers_count.formatNumber()
             )
+
             if (user.bannerImageURL != null) {
                 userFollowers.setTextColor(Color.LTGRAY)
                 userFollowers.setShadowLayer(4f, 0f, 0f, Color.BLACK)
@@ -184,6 +184,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
         } else {
             userFollowers.isVisible = false
         }
+
         if (user.created_at != null) {
             userLayout.isVisible = true
             userCreated.isVisible = true
@@ -191,6 +192,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
                 R.string.created_at,
                 Instant.parse(user.created_at).formatTime(requireContext())
             )
+
             if (user.bannerImageURL != null) {
                 userCreated.setTextColor(Color.LTGRAY)
                 userCreated.setShadowLayer(4f, 0f, 0f, Color.BLACK)
@@ -198,22 +200,19 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
         } else {
             userCreated.isVisible = false
         }
+
+        if (user.login != null) {
+            reply.isVisible = true
+            reply.setOnClickListener {
+                listener.onReplyClicked(user.login)
+                dismiss()
+            }
+        } else {
+            reply.isVisible = false
+        }
+
         if (!userImage.isVisible && !userName.isVisible) {
             viewProfile.isVisible = true
         }
-    }
-
-    private fun extractUserName(text: CharSequence): String {
-        val userName = StringBuilder()
-        for (c in text) {
-            if (!c.isWhitespace()) {
-                if (c != ':') {
-                    userName.append(c)
-                } else {
-                    break
-                }
-            }
-        }
-        return userName.toString()
     }
 }

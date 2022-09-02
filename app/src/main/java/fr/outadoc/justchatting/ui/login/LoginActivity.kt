@@ -15,14 +15,11 @@ import androidx.core.view.isVisible
 import androidx.webkit.WebSettingsCompat
 import androidx.webkit.WebViewFeature
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.ActivityLoginBinding
 import fr.outadoc.justchatting.util.convertDpToPixels
 import fr.outadoc.justchatting.util.isDarkMode
 import fr.outadoc.justchatting.util.shortToast
 import fr.outadoc.justchatting.util.toast
-import kotlinx.android.synthetic.main.activity_login.havingTrouble
-import kotlinx.android.synthetic.main.activity_login.progressBar
-import kotlinx.android.synthetic.main.activity_login.webView
-import kotlinx.android.synthetic.main.activity_login.webViewContainer
 import okhttp3.HttpUrl
 import org.intellij.lang.annotations.Language
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -30,10 +27,13 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class LoginActivity : AppCompatActivity() {
 
     private val viewModel: LoginViewModel by viewModel()
+    private lateinit var viewHolder: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+
+        viewHolder = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(viewHolder.root)
 
         viewModel.state.observe(this) { state ->
             when (state) {
@@ -57,15 +57,15 @@ class LoginActivity : AppCompatActivity() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView(helixAuthUrl: HttpUrl) {
-        webViewContainer.isVisible = true
+        viewHolder.webViewContainer.isVisible = true
 
-        havingTrouble.setOnClickListener {
+        viewHolder.havingTrouble.setOnClickListener {
             AlertDialog.Builder(this)
                 .setMessage(getString(R.string.login_problem_solution))
                 .setPositiveButton(R.string.log_in) { _, _ ->
                     val intent = Intent(Intent.ACTION_VIEW, helixAuthUrl.toString().toUri())
                     if (intent.resolveActivity(packageManager) != null) {
-                        webView.reload()
+                        viewHolder.webView.reload()
                         startActivity(intent)
                     } else {
                         toast(R.string.no_browser_found)
@@ -107,15 +107,15 @@ class LoginActivity : AppCompatActivity() {
 
         clearCookies()
 
-        with(webView) {
+        with(viewHolder.webView) {
             if (isDarkMode) {
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-                    WebSettingsCompat.setForceDark(this.settings, WebSettingsCompat.FORCE_DARK_ON)
+                    WebSettingsCompat.setForceDark(settings, WebSettingsCompat.FORCE_DARK_ON)
                 }
 
                 if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
                     WebSettingsCompat.setForceDarkStrategy(
-                        this.settings,
+                        settings,
                         WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY
                     )
                 }
@@ -157,8 +157,8 @@ class LoginActivity : AppCompatActivity() {
         val matcher = "token=(.+?)(?=&)".toPattern().matcher(url)
         if (!matcher.find()) return false
 
-        webViewContainer.isVisible = false
-        progressBar.isVisible = true
+        viewHolder.webViewContainer.isVisible = false
+        viewHolder.progressBar.isVisible = true
 
         viewModel.onTokenReceived(token = matcher.group(1)!!)
         return true

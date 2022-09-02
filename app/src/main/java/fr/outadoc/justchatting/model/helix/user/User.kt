@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.model.helix.user
 
 import android.os.Parcelable
 import fr.outadoc.justchatting.util.getTemplateUrl
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class User(

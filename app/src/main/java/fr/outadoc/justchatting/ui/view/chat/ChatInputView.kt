@@ -4,6 +4,7 @@ import android.animation.ValueAnimator
 import android.content.Context
 import android.util.AttributeSet
 import android.view.KeyEvent
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -18,19 +19,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.ViewChatInputBinding
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.ui.chat.MessagePostConstraint
 import fr.outadoc.justchatting.util.hideKeyboard
 import fr.outadoc.justchatting.util.showKeyboard
-import kotlinx.android.synthetic.main.view_chat_input.view.editText
-import kotlinx.android.synthetic.main.view_chat_input.view.emotePicker
-import kotlinx.android.synthetic.main.view_chat_input.view.emotePickerPager
-import kotlinx.android.synthetic.main.view_chat_input.view.emotePickerTabLayout
-import kotlinx.android.synthetic.main.view_chat_input.view.messageView
-import kotlinx.android.synthetic.main.view_chat_input.view.progressCannotSendUntil
-import kotlinx.android.synthetic.main.view_chat_input.view.send
-import kotlinx.android.synthetic.main.view_chat_input.view.textInputLayoutChat
 import kotlinx.datetime.Clock
 
 class ChatInputView : LinearLayout {
@@ -46,6 +40,8 @@ class ChatInputView : LinearLayout {
 
     private var messageCallback: OnMessageSendListener? = null
     private var progressAnimator: ValueAnimator? = null
+
+    private lateinit var viewHolder: ViewChatInputBinding
 
     var animateEmotes: Boolean
         get() = autoCompleteAdapter.animateEmotes
@@ -70,65 +66,69 @@ class ChatInputView : LinearLayout {
     }
 
     private fun init(context: Context) {
-        inflate(context, R.layout.view_chat_input, this)
+        viewHolder = ViewChatInputBinding.inflate(LayoutInflater.from(context), this)
         orientation = VERTICAL
 
-        editText.setAdapter(autoCompleteAdapter)
-        editText.setTokenizer(AutoCompleteSpaceTokenizer())
+        viewHolder.apply {
+            editText.setAdapter(autoCompleteAdapter)
+            editText.setTokenizer(AutoCompleteSpaceTokenizer())
 
-        editText.addTextChangedListener(afterTextChanged = { text ->
-            send.isVisible = text?.isNotBlank() == true
-        })
+            editText.addTextChangedListener(afterTextChanged = { text ->
+                send.isVisible = text?.isNotBlank() == true
+            })
 
-        editText.setOnKeyListener { _, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                sendMessage()
-            } else {
-                false
+            editText.setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    sendMessage()
+                } else {
+                    false
+                }
             }
+
+            textInputLayoutChat.setStartIconOnClickListener {
+                // TODO add animation
+                if (emotePicker.isGone) {
+                    editText.hideKeyboard()
+                    emotePicker.isVisible = true
+                } else {
+                    editText.showKeyboard()
+                    emotePicker.isVisible = false
+                }
+            }
+
+            send.setOnClickListener { sendMessage() }
+            messageView.isVisible = true
+
+            emotePickerTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab?) {}
+                override fun onTabUnselected(tab: TabLayout.Tab?) {}
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                    val position = tab?.position ?: return
+                    _emotePickerSelectedTab.postValue(position)
+                }
+            })
         }
-
-        textInputLayoutChat.setStartIconOnClickListener {
-            // TODO add animation
-            if (emotePicker.isGone) {
-                editText.hideKeyboard()
-                emotePicker.isVisible = true
-            } else {
-                editText.showKeyboard()
-                emotePicker.isVisible = false
-            }
-        }
-
-        send.setOnClickListener { sendMessage() }
-        messageView.isVisible = true
-
-        emotePickerTabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {}
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {
-                val position = tab?.position ?: return
-                _emotePickerSelectedTab.postValue(position)
-            }
-        })
 
         ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
             val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
 
-            messageView.setPadding(
-                messageView.paddingLeft,
-                messageView.paddingTop,
-                messageView.paddingRight,
-                if (imeInsets.bottom > 0) imeInsets.bottom else navBarInsets.bottom
-            )
+            viewHolder.apply {
+                messageView.setPadding(
+                    messageView.paddingLeft,
+                    messageView.paddingTop,
+                    messageView.paddingRight,
+                    if (imeInsets.bottom > 0) imeInsets.bottom else navBarInsets.bottom
+                )
 
-            if (imeInsets.bottom > 0) {
-                // Hide emote picker when keyboard is opened
-                hideEmotesMenu()
+                if (imeInsets.bottom > 0) {
+                    // Hide emote picker when keyboard is opened
+                    hideEmotesMenu()
 
-                // Set emote picker height to keyboard height
-                emotePicker.updateLayoutParams {
-                    height = imeInsets.bottom
+                    // Set emote picker height to keyboard height
+                    emotePicker.updateLayoutParams {
+                        height = imeInsets.bottom
+                    }
                 }
             }
 
@@ -137,11 +137,14 @@ class ChatInputView : LinearLayout {
     }
 
     var emotePickerAdapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>?
-        get() = emotePickerPager.adapter
+        get() = viewHolder.emotePickerPager.adapter
         set(value) {
-            emotePickerPager.adapter = value
+            viewHolder.emotePickerPager.adapter = value
 
-            TabLayoutMediator(emotePickerTabLayout, emotePickerPager) { tab, position ->
+            TabLayoutMediator(
+                viewHolder.emotePickerTabLayout,
+                viewHolder.emotePickerPager
+            ) { tab, position ->
                 tab.text = when (position) {
                     0 -> context.getString(R.string.emote_tab_recent)
                     1 -> context.getString(R.string.emote_tab_twitch)
@@ -169,7 +172,7 @@ class ChatInputView : LinearLayout {
     fun setMessagePostConstraint(constraint: MessagePostConstraint?) {
         // No constraint, no need for an indicator
         if (constraint == null) {
-            progressCannotSendUntil.isInvisible = true
+            viewHolder.progressCannotSendUntil.isInvisible = true
             return
         }
 
@@ -178,7 +181,7 @@ class ChatInputView : LinearLayout {
         val canPostAt = constraint.lastMessageSentAt + constraint.slowModeDuration
 
         if (canPostAt < now) {
-            progressCannotSendUntil.isInvisible = true
+            viewHolder.progressCannotSendUntil.isInvisible = true
             return
         }
 
@@ -193,7 +196,7 @@ class ChatInputView : LinearLayout {
                 duration = constraint.slowModeDuration.inWholeMilliseconds
 
                 addUpdateListener { animation ->
-                    with(progressCannotSendUntil) {
+                    with(viewHolder.progressCannotSendUntil) {
                         max = Int.MAX_VALUE
                         progress = animation.animatedValue as Int
                         isInvisible = progress == 0
@@ -207,8 +210,8 @@ class ChatInputView : LinearLayout {
     }
 
     fun hideEmotesMenu(): Boolean {
-        return if (emotePicker.isVisible) {
-            emotePicker.isVisible = false
+        return if (viewHolder.emotePicker.isVisible) {
+            viewHolder.emotePicker.isVisible = false
             true
         } else {
             false
@@ -216,12 +219,12 @@ class ChatInputView : LinearLayout {
     }
 
     fun appendEmote(emote: Emote) {
-        editText.text.append(emote.name).append(' ')
+        viewHolder.editText.text.append(emote.name).append(' ')
     }
 
     fun reply(userName: CharSequence) {
         val text = "@$userName "
-        editText.apply {
+        viewHolder.editText.apply {
             setText(text)
             setSelection(text.length)
             showKeyboard()
@@ -229,18 +232,18 @@ class ChatInputView : LinearLayout {
     }
 
     fun setMessage(text: CharSequence) {
-        editText.setText(text)
+        viewHolder.editText.setText(text)
     }
 
     private fun sendMessage(): Boolean {
-        editText.hideKeyboard()
-        editText.clearFocus()
+        viewHolder.editText.hideKeyboard()
+        viewHolder.editText.clearFocus()
 
         hideEmotesMenu()
 
         return messageCallback?.let { listener ->
-            val text = editText.text.trim()
-            editText.text.clear()
+            val text = viewHolder.editText.text.trim()
+            viewHolder.editText.text.clear()
             if (text.isNotEmpty()) {
                 listener.send(text)
                 true

@@ -4,15 +4,12 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.FragmentFollowedChannelsListItemBinding
 import fr.outadoc.justchatting.model.helix.follows.Follow
 import fr.outadoc.justchatting.ui.common.BasePagedListAdapter
 import fr.outadoc.justchatting.ui.common.NavigationHandler
 import fr.outadoc.justchatting.util.formatTime
 import fr.outadoc.justchatting.util.loadImage
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userFollowed
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userImage
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.userStream
-import kotlinx.android.synthetic.main.fragment_followed_channels_list_item.view.username
 import kotlinx.datetime.Instant
 
 class FollowedChannelsAdapter(
@@ -29,8 +26,9 @@ class FollowedChannelsAdapter(
     override val layoutId: Int = R.layout.fragment_followed_channels_list_item
 
     override fun bind(item: Follow, view: View) {
-        with(view) {
-            setOnClickListener {
+        val binding = FragmentFollowedChannelsListItemBinding.bind(view)
+        with(binding) {
+            view.setOnClickListener {
                 listener.viewChannel(
                     item.to_id,
                     item.to_login,
@@ -42,7 +40,6 @@ class FollowedChannelsAdapter(
             if (item.channelLogo != null) {
                 userImage.isVisible = true
                 userImage.loadImage(
-                    context,
                     item.channelLogo,
                     circle = true
                 )
@@ -60,9 +57,9 @@ class FollowedChannelsAdapter(
             val lastBroadcast = item.lastBroadcast
             if (lastBroadcast != null) {
                 userStream.isVisible = true
-                userStream.text = context.getString(
+                userStream.text = view.context.getString(
                     R.string.last_broadcast_date,
-                    Instant.parse(lastBroadcast).formatTime(context)
+                    Instant.parse(lastBroadcast).formatTime(view.context)
                 )
             } else {
                 userStream.isVisible = false
@@ -71,9 +68,9 @@ class FollowedChannelsAdapter(
             val followedAt = item.followed_at
             if (followedAt != null) {
                 userFollowed.isVisible = true
-                userFollowed.text = context.getString(
+                userFollowed.text = view.context.getString(
                     R.string.followed_at,
-                    Instant.parse(followedAt).formatTime(context)
+                    Instant.parse(followedAt).formatTime(view.context)
                 )
             } else {
                 userFollowed.isVisible = false

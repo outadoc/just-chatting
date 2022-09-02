@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.asLiveData
 import androidx.recyclerview.widget.RecyclerView
-import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.FragmentEmotesBinding
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.chat.ChatViewModel
 import fr.outadoc.justchatting.ui.common.Scrollable
@@ -27,7 +27,9 @@ class EmotesFragment : Fragment(), Scrollable {
     private lateinit var layoutManager: GridAutofitLayoutManager
 
     private val chatPreferencesRepository: ChatPreferencesRepository by inject()
+
     private val viewModel: ChatViewModel by viewModel()
+    private var viewHolder: FragmentEmotesBinding? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -39,7 +41,8 @@ class EmotesFragment : Fragment(), Scrollable {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_emotes, container, false)
+        viewHolder = FragmentEmotesBinding.inflate(layoutInflater, container, false)
+        return viewHolder?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -115,6 +118,11 @@ class EmotesFragment : Fragment(), Scrollable {
     }
 
     override fun scrollToTop() {
-        (view as? RecyclerView)?.smoothScrollToPosition(0)
+        viewHolder?.recyclerViewEmotes?.smoothScrollToPosition(0)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewHolder = null
     }
 }

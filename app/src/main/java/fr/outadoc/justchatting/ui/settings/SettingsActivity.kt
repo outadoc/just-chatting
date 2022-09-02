@@ -4,16 +4,20 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.PreferenceFragmentCompat
 import fr.outadoc.justchatting.R
-import kotlinx.android.synthetic.main.activity_settings.toolbar
+import fr.outadoc.justchatting.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {
 
+    private lateinit var viewHolder: ActivitySettingsBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
 
-        toolbar.setNavigationIcon(R.drawable.ic_back)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        viewHolder = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(viewHolder.root)
+
+        viewHolder.toolbar.setNavigationIcon(R.drawable.ic_back)
+        viewHolder.toolbar.setNavigationOnClickListener { onBackPressed() }
 
         if (savedInstanceState == null) {
             supportFragmentManager

@@ -4,7 +4,7 @@ import android.os.Parcelable
 import fr.outadoc.justchatting.model.helix.tag.Tag
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.util.getTemplateUrl
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Stream(

@@ -60,7 +60,6 @@ class EmotesAdapter(
 
         imageView.apply {
             loadImage(
-                context,
                 emote.getUrl(
                     animate = animateEmotes,
                     screenDensity = context.resources.displayMetrics.density,

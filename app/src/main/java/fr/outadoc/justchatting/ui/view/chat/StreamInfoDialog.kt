@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.DialogChatStreamInfoBinding
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.common.ExpandingBottomSheetDialogFragment
@@ -16,16 +17,6 @@ import fr.outadoc.justchatting.util.formatNumber
 import fr.outadoc.justchatting.util.formatTime
 import fr.outadoc.justchatting.util.formatTimestamp
 import fr.outadoc.justchatting.util.loadImage
-import kotlinx.android.synthetic.main.dialog_chat_message_click.bannerImage
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.gameName
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.lastBroadcast
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.uptime
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.userCreated
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.userFollowers
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.userImage
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.userLayout
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.userName
-import kotlinx.android.synthetic.main.dialog_chat_stream_info.viewers
 import kotlinx.datetime.Instant
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -42,13 +33,15 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
     }
 
     private val viewModel: StreamInfoViewModel by viewModel()
+    private var viewHolder: DialogChatStreamInfoBinding? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.dialog_chat_stream_info, container, false)
+        viewHolder = DialogChatStreamInfoBinding.inflate(inflater, container, false)
+        return viewHolder?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,8 +56,10 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
                     state.error.printStackTrace()
                 }
                 is StreamInfoViewModel.State.Loaded -> {
-                    updateUserLayout(state.user)
-                    updateStreamLayout(state.stream)
+                    viewHolder?.apply {
+                        updateUserLayout(state.user)
+                        updateStreamLayout(state.stream)
+                    }
                 }
                 StreamInfoViewModel.State.Loading -> {
                 }
@@ -74,11 +69,11 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
         viewModel.loadUser(channelId = userId)
     }
 
-    private fun updateUserLayout(user: User) {
+    private fun DialogChatStreamInfoBinding.updateUserLayout(user: User) {
         if (user.bannerImageURL != null) {
             userLayout.isVisible = true
             bannerImage.isVisible = true
-            bannerImage.loadImage(requireContext(), user.bannerImageURL)
+            bannerImage.loadImage(user.bannerImageURL)
         } else {
             bannerImage.isVisible = false
         }
@@ -86,7 +81,7 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
         if (user.channelLogo != null) {
             userLayout.isVisible = true
             userImage.isVisible = true
-            userImage.loadImage(requireContext(), user.channelLogo, circle = true)
+            userImage.loadImage(user.channelLogo, circle = true)
         } else {
             userImage.isVisible = false
         }
@@ -134,7 +129,7 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
         }
     }
 
-    private fun updateStreamLayout(stream: Stream?) {
+    private fun DialogChatStreamInfoBinding.updateStreamLayout(stream: Stream?) {
         if (stream?.viewer_count == null && stream?.lastBroadcast != null) {
             Instant.parse(stream.lastBroadcast)
                 .formatTime(requireContext())
@@ -147,7 +142,7 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
         val channelLogo = stream?.channelLogo
         if (!userImage.isVisible && channelLogo != null) {
             userImage.isVisible = true
-            userImage.loadImage(requireContext(), channelLogo, circle = true)
+            userImage.loadImage(channelLogo, circle = true)
             requireArguments().putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
         }
 

@@ -11,6 +11,8 @@
         android:visibility="gone"
         tools:visibility="visible" />
 
-    <include layout="@layout/common_recycler_view_layout" />
+    <include
+        android:id="@+id/layout_recyclerView"
+        layout="@layout/common_recycler_view_layout" />
 
 </LinearLayout>

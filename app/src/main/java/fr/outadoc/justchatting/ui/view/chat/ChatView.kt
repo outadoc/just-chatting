@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.view.View
+import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.ViewCompat
@@ -15,6 +15,7 @@ import androidx.core.view.updateLayoutParams
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.databinding.ViewChatBinding
 import fr.outadoc.justchatting.model.chat.CheerEmote
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.LiveChatMessage
@@ -24,14 +25,6 @@ import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.ui.common.ChatAdapter
 import fr.outadoc.justchatting.ui.view.AlternatingBackgroundItemDecoration
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
-import kotlinx.android.synthetic.main.view_chat.view.btnDown
-import kotlinx.android.synthetic.main.view_chat.view.flexboxChatMode
-import kotlinx.android.synthetic.main.view_chat.view.recyclerView
-import kotlinx.android.synthetic.main.view_chat.view.textEmote
-import kotlinx.android.synthetic.main.view_chat.view.textFollowers
-import kotlinx.android.synthetic.main.view_chat.view.textSlow
-import kotlinx.android.synthetic.main.view_chat.view.textSubs
-import kotlinx.android.synthetic.main.view_chat.view.textUnique
 import kotlin.time.Duration
 
 class ChatView : LinearLayout {
@@ -41,6 +34,8 @@ class ChatView : LinearLayout {
     private var messageClickListener: OnMessageClickListener? = null
 
     private val rewardList = mutableListOf<Pair<LiveChatMessage?, PubSubPointReward?>>()
+
+    private lateinit var viewHolder: ViewChatBinding
 
     var showTimestamps: Boolean
         get() = adapter.showTimestamps
@@ -71,7 +66,7 @@ class ChatView : LinearLayout {
     }
 
     private fun init(context: Context) {
-        View.inflate(context, R.layout.view_chat, this)
+        viewHolder = ViewChatBinding.inflate(LayoutInflater.from(context), this)
         orientation = VERTICAL
 
         adapter = ChatAdapter(context = context)
@@ -79,7 +74,7 @@ class ChatView : LinearLayout {
             messageClickListener?.send(original, formatted, userId)
         }
 
-        recyclerView.let {
+        viewHolder.recyclerView.let {
             it.adapter = adapter
             it.itemAnimator = null
             it.layoutManager = object : LinearLayoutManager(context) {
@@ -93,14 +88,14 @@ class ChatView : LinearLayout {
                 override fun onScrollStateChanged(state: Int) {
                     super.onScrollStateChanged(state)
                     isChatTouched = state != RecyclerView.SCROLL_STATE_IDLE
-                    btnDown.isVisible = shouldShowButton()
+                    viewHolder.btnDown.isVisible = shouldShowButton()
                 }
 
                 override fun onLayoutCompleted(state: RecyclerView.State?) {
                     super.onLayoutCompleted(state)
                     state ?: return
 
-                    if (!isChatTouched && btnDown.isGone) {
+                    if (!isChatTouched && viewHolder.btnDown.isGone) {
                         scrollToPosition(state.itemCount - 1)
                     }
                 }
@@ -118,7 +113,7 @@ class ChatView : LinearLayout {
             )
         }
 
-        btnDown.setOnClickListener {
+        viewHolder.btnDown.setOnClickListener {
             post {
                 scrollToBottom()
                 it.isVisible = !it.isVisible
@@ -127,7 +122,7 @@ class ChatView : LinearLayout {
 
         ViewCompat.setOnApplyWindowInsetsListener(this) { _, windowInsets ->
             val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            btnDown.updateLayoutParams<MarginLayoutParams> {
+            viewHolder.btnDown.updateLayoutParams<MarginLayoutParams> {
                 bottomMargin = topMargin + navBarInsets.bottom
             }
             windowInsets
@@ -143,10 +138,10 @@ class ChatView : LinearLayout {
     }
 
     fun scrollToBottom() {
-        recyclerView.scrollToPosition(adapter.itemCount - 1)
+        viewHolder.recyclerView.scrollToPosition(adapter.itemCount - 1)
     }
 
-    fun notifyRoomState(roomState: RoomState) {
+    fun notifyRoomState(roomState: RoomState) = viewHolder.apply {
         textEmote.isVisible = roomState.isEmoteOnly
 
         if (roomState.minFollowDuration != null) {
@@ -210,16 +205,16 @@ class ChatView : LinearLayout {
     }
 
     override fun onDetachedFromWindow() {
-        recyclerView.adapter = null
+        viewHolder.recyclerView.adapter = null
         super.onDetachedFromWindow()
     }
 
     private fun shouldShowButton(): Boolean {
-        val offset = recyclerView.computeVerticalScrollOffset()
+        val offset = viewHolder.recyclerView.computeVerticalScrollOffset()
         if (offset < 0) return false
 
-        val extent = recyclerView.computeVerticalScrollExtent()
-        val range = recyclerView.computeVerticalScrollRange()
+        val extent = viewHolder.recyclerView.computeVerticalScrollExtent()
+        val range = viewHolder.recyclerView.computeVerticalScrollRange()
         val ratio = offset / (range - extent)
         return ratio < 1f
     }

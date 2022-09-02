@@ -14,7 +14,6 @@ import coil.transform.CircleCropTransformation
 
 @SuppressLint("CheckResult")
 fun ImageView.loadImage(
-    context: Context,
     url: String?,
     circle: Boolean = false
 ) {

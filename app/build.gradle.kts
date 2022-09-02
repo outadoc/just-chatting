@@ -1,8 +1,8 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.android.extensions")
     id("com.google.devtools.ksp")
+    id("kotlin-android")
+    id("kotlin-parcelize")
     id("com.diffplug.spotless")
 }
 
@@ -35,6 +35,10 @@ android {
             )
             signingConfig = signingConfigs.getByName("debug")
         }
+    }
+
+    buildFeatures {
+        viewBinding = true
     }
 
     signingConfigs {

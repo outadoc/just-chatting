@@ -8,17 +8,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.RecyclerView
+import fr.outadoc.justchatting.databinding.CommonRecyclerViewLayoutBinding
 import fr.outadoc.justchatting.repository.LoadingState
-import kotlinx.android.synthetic.main.common_recycler_view_layout.nothingHere
-import kotlinx.android.synthetic.main.common_recycler_view_layout.progressBar
-import kotlinx.android.synthetic.main.common_recycler_view_layout.recyclerView
-import kotlinx.android.synthetic.main.common_recycler_view_layout.swipeRefresh
 
 abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> :
     Fragment() {
 
     protected abstract val viewModel: VM
     protected abstract val adapter: Adapter
+
+    protected abstract val commonViewHolder: CommonRecyclerViewLayoutBinding?
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -31,7 +30,7 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
                     override fun onItemRangeInserted(positionStart: Int, itemCount: Int) {
                         try {
                             if (positionStart == 0) {
-                                recyclerView?.scrollToPosition(0)
+                                commonViewHolder?.recyclerView?.scrollToPosition(0)
                             }
                         } catch (e: Exception) {
                         }
@@ -40,46 +39,55 @@ abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePa
             }
         })
 
-        recyclerView.adapter = adapter
+        commonViewHolder?.recyclerView?.adapter = adapter
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
 
-            recyclerView.setPadding(
-                view.paddingLeft,
-                view.paddingTop,
-                view.paddingRight,
-                insets.bottom
-            )
+            commonViewHolder?.apply {
+                recyclerView.setPadding(
+                    view.paddingLeft,
+                    view.paddingTop,
+                    view.paddingRight,
+                    insets.bottom
+                )
+            }
 
             windowInsets
         }
 
         viewModel.list.observe(viewLifecycleOwner) {
             adapter.submitList(it)
-            nothingHere?.isVisible = it.isEmpty()
+            commonViewHolder?.nothingHere?.isVisible = it.isEmpty()
         }
 
         viewModel.loadingState.observe(viewLifecycleOwner) {
-            val isLoading = it == LoadingState.LOADING
-            val isListEmpty = adapter.currentList.isNullOrEmpty()
-            if (isLoading) {
-                nothingHere?.isVisible = false
-            }
-            progressBar?.isVisible = isLoading && isListEmpty
-            if (swipeRefresh?.isEnabled == true) {
-                swipeRefresh.isRefreshing = isLoading && !isListEmpty
+            commonViewHolder?.apply {
+                val isLoading = it == LoadingState.LOADING
+                val isListEmpty = adapter.currentList.isNullOrEmpty()
+
+                if (isLoading) {
+                    nothingHere.isVisible = false
+                }
+
+                progressBar.isVisible = isLoading && isListEmpty
+
+                if (swipeRefresh.isEnabled) {
+                    swipeRefresh.isRefreshing = isLoading && !isListEmpty
+                }
             }
         }
 
         viewModel.pagingState.observe(viewLifecycleOwner, Observer(adapter::setPagingState))
 
-        if (swipeRefresh?.isEnabled == true) {
-            swipeRefresh.setOnRefreshListener { viewModel.refresh() }
+        commonViewHolder?.apply {
+            if (swipeRefresh.isEnabled) {
+                swipeRefresh.setOnRefreshListener { viewModel.refresh() }
+            }
         }
     }
 
-    private fun shouldShowButton(): Boolean {
+    private fun CommonRecyclerViewLayoutBinding.shouldShowButton(): Boolean {
         val offset = recyclerView.computeVerticalScrollOffset()
         if (offset < 0) {
             return false

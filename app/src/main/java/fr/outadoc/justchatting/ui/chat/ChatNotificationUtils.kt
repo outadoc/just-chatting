@@ -76,6 +76,7 @@ object ChatNotificationUtils {
                     .setIcon(icon)
                     .setShortLabel(channelName)
                     .setPerson(person)
+                    .setIsConversation()
                     .build()
             )
         )

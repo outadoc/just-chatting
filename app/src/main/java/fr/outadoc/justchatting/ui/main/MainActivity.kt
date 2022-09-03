@@ -37,50 +37,46 @@ class MainActivity : BaseActivity(), NavigationHandler {
         viewHolder = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewHolder.root)
 
-        viewModel.events.observeEvent(this) { event ->
-            when (event) {
-                MainViewModel.State.Loading -> {}
-                is MainViewModel.State.NavigateTo -> {
-                    when (event.destination) {
-                        MainViewModel.Destination.Home -> {
-                            initNavigation()
-                            fragNavController.initialize(savedInstanceState = savedInstanceState)
-                        }
-                        is MainViewModel.Destination.Channel -> {
-                            ChatNotificationUtils.openInBubbleOrStartActivity(
-                                context = this,
-                                channelId = event.destination.id,
-                                channelLogin = event.destination.login,
-                                channelName = event.destination.name,
-                                channelLogo = event.destination.channelLogo
-                            )
-                        }
-                        is MainViewModel.Destination.Login -> {
-                            if (event.destination.causedByTokenExpiration) {
-                                toast(R.string.token_expired)
-                            }
+        initNavigation()
+        fragNavController.initialize(savedInstanceState = savedInstanceState)
 
-                            startActivityForResult(
-                                Intent(this, LoginActivity::class.java),
-                                REQUEST_CODE_LOGIN
-                            )
-                        }
-                        MainViewModel.Destination.Settings -> {
-                            startActivityForResult(
-                                Intent(this, SettingsActivity::class.java),
-                                REQUEST_CODE_SETTINGS
-                            )
-                        }
-                        MainViewModel.Destination.Search -> {
-                            fragNavController.pushFragment(SearchFragment())
-                        }
+        viewModel.events.observeEvent(this) { destination ->
+            when (destination) {
+                is MainViewModel.Destination.Channel -> {
+                    ChatNotificationUtils.openInBubbleOrStartActivity(
+                        context = this,
+                        channelId = destination.id,
+                        channelLogin = destination.login,
+                        channelName = destination.name,
+                        channelLogo = destination.channelLogo
+                    )
+                }
+                is MainViewModel.Destination.Login -> {
+                    if (destination.causedByTokenExpiration) {
+                        toast(R.string.token_expired)
                     }
+
+                    startActivityForResult(
+                        Intent(this, LoginActivity::class.java),
+                        REQUEST_CODE_LOGIN
+                    )
+                }
+                MainViewModel.Destination.Settings -> {
+                    startActivityForResult(
+                        Intent(this, SettingsActivity::class.java),
+                        REQUEST_CODE_SETTINGS
+                    )
+                }
+                MainViewModel.Destination.Search -> {
+                    fragNavController.pushFragment(SearchFragment())
                 }
             }
         }
 
-        intent.parseChannelFromIntent()?.let { login ->
-            viewModel.onViewChannelRequest(login)
+        if (savedInstanceState == null) {
+            intent.parseChannelFromIntent()?.let { login ->
+                viewModel.onViewChannelRequest(login)
+            }
         }
     }
 

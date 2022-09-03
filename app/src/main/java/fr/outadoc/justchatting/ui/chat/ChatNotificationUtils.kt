@@ -271,5 +271,4 @@ object ChatNotificationUtils {
             PendingIntent.FLAG_UPDATE_CURRENT or mutableFlag or immutableFlag
         )
     }
-
 }

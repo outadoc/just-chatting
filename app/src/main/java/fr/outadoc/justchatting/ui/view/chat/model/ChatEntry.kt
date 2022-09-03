@@ -1,10 +1,8 @@
 package fr.outadoc.justchatting.ui.view.chat.model
 
 import fr.outadoc.justchatting.model.chat.Badge
-import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.LiveChatMessage
 import fr.outadoc.justchatting.model.chat.TwitchChatEmote
-import fr.outadoc.justchatting.model.chat.TwitchEmote
 import kotlinx.datetime.Instant
 
 sealed class ChatEntry {

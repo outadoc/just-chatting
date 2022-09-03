@@ -38,7 +38,6 @@ import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.Image
 import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.model.chat.TwitchChatEmote
-import fr.outadoc.justchatting.model.chat.TwitchEmote
 import fr.outadoc.justchatting.ui.view.chat.VerticalImageSpan
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.util.formatTimestamp

@@ -41,7 +41,7 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
                             minBits = minBits.asInt,
                             color = color.asString,
                             images = darkImages?.getImages("dark").orEmpty() +
-                                    lightImages?.getImages("light").orEmpty()
+                                lightImages?.getImages("light").orEmpty()
                         )
                     }
             }
@@ -59,7 +59,7 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
             ?.asJsonObject
 
         return staticUrls?.toMap("static", theme).orEmpty() +
-                animatedUrls?.toMap("animated", theme).orEmpty()
+            animatedUrls?.toMap("animated", theme).orEmpty()
     }
 
     private fun JsonObject.toMap(animation: String, theme: String): List<CheerEmote.Image> {

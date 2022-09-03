@@ -80,13 +80,18 @@ class EmotesFragment : Fragment(), Scrollable {
         }
 
         viewModel.state.observe(viewLifecycleOwner) { state ->
-            emotesAdapter.submitList(
-                when (args.getInt(KEY_POSITION)) {
-                    0 -> state.recentEmotes
-                    1 -> state.twitchEmotes
-                    else -> state.otherEmotes
-                }.toList()
-            )
+            when (state) {
+                ChatViewModel.State.Initial -> {}
+                is ChatViewModel.State.Chatting -> {
+                    emotesAdapter.submitList(
+                        when (args.getInt(KEY_POSITION)) {
+                            0 -> state.recentEmotes
+                            1 -> state.twitchEmotes
+                            else -> state.otherEmotes
+                        }.toList()
+                    )
+                }
+            }
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, windowInsets ->

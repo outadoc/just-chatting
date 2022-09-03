@@ -16,7 +16,7 @@ val viewModelModule = module {
 
     viewModel { ChannelChatViewModel(get(), get(), get()) }
     viewModel { ChannelSearchViewModel(get()) }
-    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { FollowedChannelsViewModel(get(), get()) }
     viewModel { FollowedStreamsViewModel(get()) }
     viewModel { LoginViewModel(get(), get(), get()) }

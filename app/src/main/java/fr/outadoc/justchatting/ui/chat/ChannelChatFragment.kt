@@ -177,22 +177,27 @@ class ChannelChatFragment :
         }
 
         chatViewModel.state.observe(viewLifecycleOwner) { state ->
-            viewHolder?.apply {
-                with(chatInputView) {
-                    setMessagePostConstraint(state.messagePostConstraint)
-                    setAutocompleteItems(
-                        emotes = state.allEmotes,
-                        chatters = state.chatters
-                    )
-                }
+            when (state) {
+                ChatViewModel.State.Initial -> {}
+                is ChatViewModel.State.Chatting -> {
+                    viewHolder?.apply {
+                        with(chatInputView) {
+                            setMessagePostConstraint(state.messagePostConstraint)
+                            setAutocompleteItems(
+                                emotes = state.allEmotes,
+                                chatters = state.chatters
+                            )
+                        }
 
-                with(chatView) {
-                    setEmotes(state.allEmotes)
-                    submitList(state.chatMessages)
-                    notifyRoomState(state.roomState)
-                    addGlobalBadges(state.globalBadges)
-                    addChannelBadges(state.channelBadges)
-                    addCheerEmotes(state.cheerEmotes)
+                        with(chatView) {
+                            setEmotes(state.allEmotes)
+                            submitList(state.chatMessages)
+                            notifyRoomState(state.roomState)
+                            addGlobalBadges(state.globalBadges)
+                            addChannelBadges(state.channelBadges)
+                            addCheerEmotes(state.cheerEmotes)
+                        }
+                    }
                 }
             }
         }

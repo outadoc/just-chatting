@@ -12,7 +12,6 @@ import fr.outadoc.justchatting.databinding.DialogChatStreamInfoBinding
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.common.ExpandingBottomSheetDialogFragment
-import fr.outadoc.justchatting.util.C
 import fr.outadoc.justchatting.util.formatNumber
 import fr.outadoc.justchatting.util.formatTime
 import fr.outadoc.justchatting.util.formatTimestamp
@@ -143,20 +142,13 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
         if (!userImage.isVisible && channelLogo != null) {
             userImage.isVisible = true
             userImage.loadImage(channelLogo, circle = true)
-            requireArguments().putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
         }
 
-        stream?.user_name.let {
-            if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
-                userName.text = it
-                requireArguments().putString(C.CHANNEL_DISPLAYNAME, it)
-            }
-        }
-
-        stream?.user_login.let {
-            if (it != null && it != requireArguments().getString(C.CHANNEL_LOGIN)) {
-                requireArguments().putString(C.CHANNEL_LOGIN, it)
-            }
+        if (stream?.user_name != null) {
+            userName.isVisible = true
+            userName.text = stream.user_name
+        } else {
+            userName.isVisible = false
         }
 
         if (stream?.game_name != null) {

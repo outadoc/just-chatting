@@ -3,29 +3,21 @@ package fr.outadoc.justchatting.ui.chat
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.core.net.toUri
 import fr.outadoc.justchatting.ui.main.BaseActivity
-import fr.outadoc.justchatting.util.C
+import fr.outadoc.justchatting.util.formatChannelUri
 
 class ChatActivity : BaseActivity() {
 
     companion object {
-        fun createIntent(
-            context: Context,
-            channelId: String,
-            channelLogin: String,
-            channelName: String,
-            channelLogo: String
-        ): Intent {
+        private const val CHANNEL_LOGIN = "channel_login"
+
+        fun createIntent(context: Context, channelLogin: String): Intent {
             return Intent(context, ChatActivity::class.java).apply {
-                data = "https://twitch.tv/$channelLogin".toUri()
+                data = formatChannelUri(channelLogin)
                 action = Intent.ACTION_VIEW
                 flags = 0
 
-                putExtra(C.CHANNEL_ID, channelId)
-                putExtra(C.CHANNEL_LOGIN, channelLogin)
-                putExtra(C.CHANNEL_DISPLAYNAME, channelName)
-                putExtra(C.CHANNEL_PROFILEIMAGE, channelLogo)
+                putExtra(CHANNEL_LOGIN, channelLogin)
             }
         }
     }
@@ -38,10 +30,7 @@ class ChatActivity : BaseActivity() {
             .replace(
                 android.R.id.content,
                 ChannelChatFragment.newInstance(
-                    id = intent.getStringExtra(C.CHANNEL_ID),
-                    login = intent.getStringExtra(C.CHANNEL_LOGIN),
-                    name = intent.getStringExtra(C.CHANNEL_DISPLAYNAME),
-                    channelLogo = intent.getStringExtra(C.CHANNEL_PROFILEIMAGE)
+                    login = intent.getStringExtra(CHANNEL_LOGIN)!!
                 )
             )
             .commit()

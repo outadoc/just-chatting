@@ -6,13 +6,13 @@ import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.InsetDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -34,7 +34,7 @@ import fr.outadoc.justchatting.ui.view.chat.EmotesFragment
 import fr.outadoc.justchatting.ui.view.chat.MessageClickedDialog
 import fr.outadoc.justchatting.ui.view.chat.OnEmoteClickedListener
 import fr.outadoc.justchatting.ui.view.chat.StreamInfoDialog
-import fr.outadoc.justchatting.util.C
+import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.hideKeyboard
 import fr.outadoc.justchatting.util.isDarkMode
 import fr.outadoc.justchatting.util.loadImage
@@ -48,21 +48,12 @@ class ChannelChatFragment :
     Scrollable {
 
     companion object {
-        fun newInstance(
-            id: String?,
-            login: String?,
-            name: String?,
-            channelLogo: String?,
-            updateLocal: Boolean = false
-        ) = ChannelChatFragment().apply {
-            arguments = Bundle().apply {
-                putString(C.CHANNEL_ID, id)
-                putString(C.CHANNEL_LOGIN, login)
-                putString(C.CHANNEL_DISPLAYNAME, name)
-                putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
-                putBoolean(C.CHANNEL_UPDATELOCAL, updateLocal)
+        private const val CHANNEL_LOGIN = "channel_login"
+
+        fun newInstance(login: String) =
+            ChannelChatFragment().apply {
+                arguments = bundleOf(CHANNEL_LOGIN to login)
             }
-        }
     }
 
     private val channelViewModel: ChannelChatViewModel by viewModel()
@@ -73,16 +64,8 @@ class ChannelChatFragment :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val args = requireArguments()
-
         channelViewModel.loadStream(
-            channelId = requireArguments().getString(C.CHANNEL_ID)!!
-        )
-
-        chatViewModel.startLive(
-            channelId = args.getString(C.CHANNEL_ID)!!,
-            channelLogin = args.getString(C.CHANNEL_LOGIN)!!,
-            channelName = args.getString(C.CHANNEL_DISPLAYNAME)!!
+            channelLogin = requireArguments().getString(CHANNEL_LOGIN)!!
         )
     }
 
@@ -97,35 +80,6 @@ class ChannelChatFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val args = requireArguments()
-
-        viewHolder?.toolbar?.apply {
-            title = args.getString(C.CHANNEL_DISPLAYNAME)
-
-            setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.watchLive -> {
-                        args.getString(C.CHANNEL_LOGIN)?.let { login ->
-                            startActivity(
-                                Intent(Intent.ACTION_VIEW, formatChannelUri(login))
-                            )
-                        }
-                        true
-                    }
-                    R.id.info -> {
-                        StreamInfoDialog.newInstance(
-                            userId = args.getString(C.CHANNEL_ID)!!
-                        ).show(
-                            childFragmentManager,
-                            "closeOnPip"
-                        )
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }
 
         activity?.onBackPressedDispatcher?.addCallback(this) {
             viewHolder?.apply {
@@ -156,6 +110,12 @@ class ChannelChatFragment :
 
                 state.loadedUser?.let { user ->
                     updateUserLayout(user)
+
+                    chatViewModel.startLive(
+                        channelId = user.id!!,
+                        channelLogin = user.login!!,
+                        channelName = user.display_name!!
+                    )
                 }
 
                 state.user.login?.let { login ->
@@ -227,27 +187,7 @@ class ChannelChatFragment :
         }
     }
 
-    private fun formatChannelUri(channelLogin: String): Uri {
-        return Uri.parse("https://twitch.tv")
-            .buildUpon()
-            .appendPath(channelLogin)
-            .build()
-    }
-
     private fun FragmentChannelBinding.updateStreamLayout(stream: Stream?) {
-        stream?.user_name.let {
-            if (it != null && it != requireArguments().getString(C.CHANNEL_DISPLAYNAME)) {
-                toolbar.title = it
-                requireArguments().putString(C.CHANNEL_DISPLAYNAME, it)
-            }
-        }
-
-        stream?.user_login.let {
-            if (it != null && it != requireArguments().getString(C.CHANNEL_LOGIN)) {
-                requireArguments().putString(C.CHANNEL_LOGIN, it)
-            }
-        }
-
         if (stream?.title != null) {
             toolbar.subtitle = stream.title.trim()
         } else {
@@ -256,8 +196,6 @@ class ChannelChatFragment :
     }
 
     private fun FragmentChannelBinding.loadUserAvatar(channelLogo: String) {
-        requireArguments().putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
-
         val context = context ?: return
         val size = context.resources.getDimension(R.dimen.chat_streamPictureSize).toInt()
         val endMargin = context.resources.getDimension(R.dimen.chat_streamPictureMarginEnd).toInt()
@@ -311,8 +249,32 @@ class ChannelChatFragment :
     }
 
     private fun FragmentChannelBinding.updateUserLayout(user: User) {
+        toolbar.apply {
+            title = user.display_name
+
+            setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.watchLive -> {
+                        user.login?.let { login ->
+                            startActivity(
+                                Intent(Intent.ACTION_VIEW, formatChannelUri(login))
+                            )
+                        }
+                        true
+                    }
+                    R.id.info -> {
+                        user.id?.let { userId ->
+                            StreamInfoDialog.newInstance(userId = userId)
+                                .show(childFragmentManager, "closeOnPip")
+                        }
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }
+
         user.channelLogo?.let { channelLogo ->
-            requireArguments().putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
             loadUserAvatar(channelLogo)
         }
     }

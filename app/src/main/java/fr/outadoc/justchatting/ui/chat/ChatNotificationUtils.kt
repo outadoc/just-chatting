@@ -22,6 +22,7 @@ import coil.transform.CircleCropTransformation
 import fr.outadoc.justchatting.R
 
 object ChatNotificationUtils {
+
     private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
 
     fun openInBubbleOrStartActivity(
@@ -35,7 +36,7 @@ object ChatNotificationUtils {
         if (channel != null && areBubblesAllowed(context, channel)) {
             openInBubble(context, channelId, channelLogin, channelName, channelLogo)
         } else {
-            startActivity(context, channelId, channelLogin, channelName, channelLogo)
+            startActivity(context, channelLogin)
         }
     }
 
@@ -61,20 +62,11 @@ object ChatNotificationUtils {
         return false
     }
 
-    private fun startActivity(
-        context: Context,
-        channelId: String,
-        channelLogin: String,
-        channelName: String,
-        channelLogo: String
-    ) {
+    private fun startActivity(context: Context, channelLogin: String) {
         context.startActivity(
             ChatActivity.createIntent(
                 context = context,
-                channelId = channelId,
-                channelLogin = channelLogin,
-                channelName = channelName,
-                channelLogo = channelLogo
+                channelLogin = channelLogin
             )
         )
     }
@@ -98,7 +90,6 @@ object ChatNotificationUtils {
                         channelId = channelId,
                         channelLogin = channelLogin,
                         channelName = channelName,
-                        channelLogo = channelLogo,
                         channelLogoBitmap = (drawable as? BitmapDrawable)?.bitmap
                     )
                 },
@@ -108,7 +99,6 @@ object ChatNotificationUtils {
                         channelId = channelId,
                         channelLogin = channelLogin,
                         channelName = channelName,
-                        channelLogo = channelLogo,
                         channelLogoBitmap = (drawable as? BitmapDrawable)?.bitmap
                     )
                 }
@@ -123,7 +113,6 @@ object ChatNotificationUtils {
         channelId: String,
         channelLogin: String,
         channelName: String,
-        channelLogo: String,
         channelLogoBitmap: Bitmap?
     ) {
         val icon = channelLogoBitmap?.let { IconCompat.createWithBitmap(it) }
@@ -140,10 +129,7 @@ object ChatNotificationUtils {
             context = context,
             intent = ChatActivity.createIntent(
                 context = context,
-                channelId = channelId,
-                channelLogin = channelLogin,
-                channelName = channelName,
-                channelLogo = channelLogo
+                channelLogin = channelLogin
             ),
             channelId = channelId,
             channelName = channelName,
@@ -156,7 +142,6 @@ object ChatNotificationUtils {
             channelId = channelId,
             channelLogin = channelLogin,
             channelName = channelName,
-            channelLogo = channelLogo,
             icon = icon,
             person = person
         )
@@ -221,7 +206,6 @@ object ChatNotificationUtils {
         channelId: String,
         channelLogin: String,
         channelName: String,
-        channelLogo: String,
         icon: IconCompat,
         person: Person
     ) = NotificationManagerCompat.from(context).apply {
@@ -232,10 +216,7 @@ object ChatNotificationUtils {
                 .setContentIntent(
                     createPendingIntent(
                         context = context,
-                        channelId = channelId,
                         channelLogin = channelLogin,
-                        channelName = channelName,
-                        channelLogo = channelLogo,
                         mutable = false
                     )
                 )
@@ -249,10 +230,7 @@ object ChatNotificationUtils {
                     NotificationCompat.BubbleMetadata.Builder(
                         createPendingIntent(
                             context = context,
-                            channelId = channelId,
                             channelLogin = channelLogin,
-                            channelName = channelName,
-                            channelLogo = channelLogo,
                             mutable = true
                         ),
                         icon
@@ -275,10 +253,7 @@ object ChatNotificationUtils {
 
     private fun createPendingIntent(
         context: Context,
-        channelId: String,
         channelLogin: String,
-        channelName: String,
-        channelLogo: String,
         mutable: Boolean
     ): PendingIntent {
         val mutableFlag =
@@ -292,7 +267,7 @@ object ChatNotificationUtils {
         return PendingIntent.getActivity(
             context,
             0,
-            ChatActivity.createIntent(context, channelId, channelLogin, channelName, channelLogo),
+            ChatActivity.createIntent(context, channelLogin),
             PendingIntent.FLAG_UPDATE_CURRENT or mutableFlag or immutableFlag
         )
     }

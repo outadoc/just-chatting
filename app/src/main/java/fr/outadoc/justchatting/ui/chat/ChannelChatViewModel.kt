@@ -32,14 +32,14 @@ class ChannelChatViewModel(
         ) : State()
     }
 
-    private val _channelId = MutableSharedFlow<String>(replay = 1)
+    private val _channelLogin = MutableSharedFlow<String>(replay = 1)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val state: LiveData<State.Loaded> = _channelId
-        .map { channelId ->
+    val state: LiveData<State.Loaded> = _channelLogin
+        .map { channelLogin ->
             try {
-                val stream = repository.loadStreamWithUser(channelId = channelId)
-                val user = stream?.channelUser ?: loadUser(channelId)
+                val user = loadUser(channelLogin) ?: error("User not loaded")
+                val stream = repository.loadStreamWithUser(channelId = user.id!!)
                 stream to user
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -64,18 +64,16 @@ class ChannelChatViewModel(
         .onStart { State.Loading }
         .asLiveData()
 
-    private suspend fun loadUser(
-        channelId: String
-    ): User? {
+    private suspend fun loadUser(channelLogin: String): User? {
         return try {
-            repository.loadUsersById(ids = listOf(channelId))?.firstOrNull()
+            repository.loadUsersByLogin(logins = listOf(channelLogin))?.firstOrNull()
         } catch (e: Exception) {
             e.printStackTrace()
             null
         }
     }
 
-    fun loadStream(channelId: String) {
-        _channelId.tryEmit(channelId)
+    fun loadStream(channelLogin: String) {
+        _channelLogin.tryEmit(channelLogin)
     }
 }

@@ -2,7 +2,9 @@ package fr.outadoc.justchatting.ui.chat
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.view.Display
 import fr.outadoc.justchatting.ui.main.BaseActivity
 import fr.outadoc.justchatting.util.formatChannelUri
 
@@ -35,4 +37,17 @@ class ChatActivity : BaseActivity() {
             )
             .commit()
     }
+
+    private val isLaunchedFromBubbleCompat: Boolean
+        get() = if (Build.VERSION.SDK_INT >= 31) {
+            isLaunchedFromBubble
+        } else {
+            val displayId = if (Build.VERSION.SDK_INT >= 30) {
+                display?.displayId
+            } else {
+                @Suppress("DEPRECATION")
+                windowManager.defaultDisplay.displayId
+            }
+            displayId != Display.DEFAULT_DISPLAY
+        }
 }

@@ -206,6 +206,8 @@ class ChannelChatFragment :
 
     private fun FragmentChannelBinding.loadUserAvatar(user: User) {
         val context = context ?: return
+        val activity = activity ?: return
+
         val logo = user.channelLogo ?: return
 
         lifecycleScope.launch {
@@ -226,11 +228,13 @@ class ChannelChatFragment :
                         updateToolbarColor(swatch)
                     }
 
-                activity?.setTaskDescription(
+                activity.setTaskDescription(
                     ActivityManager.TaskDescription(user.display_name, bitmap)
                 )
 
-                createShortcut(user, bitmap)
+                if (!activity.isLaunchedFromBubble) {
+                    setUpForBubbling(user, bitmap)
+                }
             }
         }
     }
@@ -252,7 +256,7 @@ class ChannelChatFragment :
         )
     }
 
-    private fun createShortcut(channel: User, channelLogo: Bitmap) {
+    private fun setUpForBubbling(channel: User, channelLogo: Bitmap) {
         val context = context ?: return
         ChatNotificationUtils.createGenericBubbleChannelIfNeeded(context)
 

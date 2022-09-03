@@ -21,7 +21,7 @@ object ChatNotificationUtils {
 
     private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
 
-    private fun areBubblesAllowed(
+    fun areBubblesAllowed(
         context: Context,
         channel: NotificationChannelCompat
     ): Boolean {

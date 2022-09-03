@@ -5,13 +5,18 @@ import android.app.ActivityManager
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.core.app.Person
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.graphics.drawable.IconCompat
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -202,21 +207,18 @@ class ChannelChatFragment :
         val context = context ?: return
         val logo = user.channelLogo ?: return
 
-        val size = context.resources.getDimension(R.dimen.chat_streamPictureSize).toInt()
-        val endMargin = context.resources.getDimension(R.dimen.chat_streamPictureMarginEnd).toInt()
-
         lifecycleScope.launch {
-            val drawable = loadImageToBitmap(
+            val bitmap = loadImageToBitmap(
                 context = context,
                 imageUrl = logo,
                 circle = true,
-                width = size,
-                height = size
+                width = 256,
+                height = 256
             )
 
-            toolbar.logo = InsetDrawable(drawable, 0, 0, endMargin, 0)
+            if (bitmap != null) {
+                toolbar.logo = bitmap.createToolbarLogoDrawable()
 
-            drawable?.bitmap?.let { bitmap ->
                 val palette = Palette.Builder(bitmap).generateAsync()
                 (palette?.dominantSwatch ?: palette?.dominantSwatch)
                     ?.let { swatch ->
@@ -226,8 +228,53 @@ class ChannelChatFragment :
                 activity?.setTaskDescription(
                     ActivityManager.TaskDescription(user.display_name, bitmap)
                 )
+
+                createShortcut(user, bitmap)
             }
         }
+    }
+
+    private fun Bitmap.createToolbarLogoDrawable(): Drawable? {
+        val context = context ?: return null
+
+        val size = context.resources.getDimension(R.dimen.chat_streamPictureSize).toInt()
+        val endMargin = context.resources.getDimension(R.dimen.chat_streamPictureMarginEnd).toInt()
+
+        val bmp = Bitmap.createScaledBitmap(this, size, size, true)
+
+        return InsetDrawable(
+            BitmapDrawable(context.resources, bmp),
+            /* insetLeft = */ 0,
+            /* insetTop = */ 0,
+            /* insetRight = */ endMargin,
+            /* insetBottom = */ 0
+        )
+    }
+
+    private fun createShortcut(channel: User, channelLogo: Bitmap) {
+        val context = context ?: return
+        ChatNotificationUtils.createGenericBubbleChannelIfNeeded(context)
+
+        val icon = channelLogo.let { IconCompat.createWithBitmap(it) }
+
+        val person: Person =
+            Person.Builder()
+                .setKey(channel.id)
+                .setName(channel.display_name)
+                .setIcon(icon)
+                .build()
+
+        ChatNotificationUtils.createShortcutForChannel(
+            context = context,
+            intent = ChatActivity.createIntent(
+                context = context,
+                channelLogin = channel.login
+            ),
+            channelId = channel.id,
+            channelName = channel.display_name,
+            person = person,
+            icon = icon
+        )
     }
 
     private fun FragmentChannelBinding.updateToolbarColor(swatch: Swatch) {

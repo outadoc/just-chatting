@@ -140,7 +140,7 @@ object ChatNotificationUtils {
 
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 
-    private fun createShortcutForChannel(
+    fun createShortcutForChannel(
         context: Context,
         intent: Intent,
         channelId: String,
@@ -176,7 +176,7 @@ object ChatNotificationUtils {
         )
     }
 
-    private fun createGenericBubbleChannelIfNeeded(context: Context): NotificationChannelCompat? {
+    fun createGenericBubbleChannelIfNeeded(context: Context): NotificationChannelCompat? {
         with(NotificationManagerCompat.from(context)) {
             createNotificationChannel(
                 NotificationChannelCompat.Builder(

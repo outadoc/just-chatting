@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.util
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -42,11 +43,10 @@ suspend fun loadImageToBitmap(
     circle: Boolean = false,
     width: Int,
     height: Int
-): BitmapDrawable? {
+): Bitmap? {
     return suspendCancellableCoroutine { cont ->
         val request = ImageRequest.Builder(context)
             .data(imageUrl)
-            .crossfade(true)
             .size(width, height)
             .apply {
                 if (circle) transformations(CircleCropTransformation())
@@ -54,12 +54,12 @@ suspend fun loadImageToBitmap(
             .target(
                 onSuccess = { drawable ->
                     cont.resumeWith(
-                        Result.success(drawable as? BitmapDrawable)
+                        Result.success((drawable as? BitmapDrawable)?.bitmap)
                     )
                 },
                 onError = { drawable ->
                     cont.resumeWith(
-                        Result.success(drawable as? BitmapDrawable)
+                        Result.success((drawable as? BitmapDrawable)?.bitmap)
                     )
                 }
             )

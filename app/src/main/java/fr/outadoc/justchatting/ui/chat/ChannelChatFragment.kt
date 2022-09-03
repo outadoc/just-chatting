@@ -36,6 +36,7 @@ import fr.outadoc.justchatting.ui.view.chat.MessageClickedDialog
 import fr.outadoc.justchatting.ui.view.chat.OnEmoteClickedListener
 import fr.outadoc.justchatting.ui.view.chat.StreamInfoDialog
 import fr.outadoc.justchatting.util.formatChannelUri
+import fr.outadoc.justchatting.util.generateAsync
 import fr.outadoc.justchatting.util.hideKeyboard
 import fr.outadoc.justchatting.util.isDarkMode
 import fr.outadoc.justchatting.util.loadImageToBitmap
@@ -216,10 +217,11 @@ class ChannelChatFragment :
             toolbar.logo = InsetDrawable(drawable, 0, 0, endMargin, 0)
 
             drawable?.bitmap?.let { bitmap ->
-                Palette.Builder(bitmap).generate { palette ->
-                    (palette?.dominantSwatch ?: palette?.dominantSwatch)
-                        ?.let { swatch -> updateToolbarColor(swatch) }
-                }
+                val palette = Palette.Builder(bitmap).generateAsync()
+                (palette?.dominantSwatch ?: palette?.dominantSwatch)
+                    ?.let { swatch ->
+                        updateToolbarColor(swatch)
+                    }
 
                 activity?.setTaskDescription(
                     ActivityManager.TaskDescription(user.display_name, bitmap)

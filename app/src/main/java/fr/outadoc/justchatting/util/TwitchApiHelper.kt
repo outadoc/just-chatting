@@ -9,15 +9,11 @@ fun getTemplateUrl(url: String?, type: String): String? {
         }
 
     val width = when (type) {
-        "game" -> "285"
-        "video" -> "1280"
         "profileimage" -> "300"
         else -> ""
     }
 
     val height = when (type) {
-        "game" -> "380"
-        "video" -> "720"
         "profileimage" -> "300"
         else -> ""
     }

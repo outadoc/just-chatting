@@ -430,7 +430,7 @@ class ChatViewModel(
                             null
                         }
                             .orEmpty()
-                            .associateBy { user -> user.id!! }
+                            .associateBy { user -> user.id }
 
                     val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
                         emotes.filter { emote -> emote.ownerId == channelId }

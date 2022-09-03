@@ -112,9 +112,9 @@ class ChannelChatFragment :
                     updateUserLayout(user)
 
                     chatViewModel.startLive(
-                        channelId = user.id!!,
-                        channelLogin = user.login!!,
-                        channelName = user.display_name!!
+                        channelId = user.id,
+                        channelLogin = user.login,
+                        channelName = user.display_name
                     )
                 }
 
@@ -255,18 +255,14 @@ class ChannelChatFragment :
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.watchLive -> {
-                        user.login?.let { login ->
-                            startActivity(
-                                Intent(Intent.ACTION_VIEW, formatChannelUri(login))
-                            )
-                        }
+                        startActivity(
+                            Intent(Intent.ACTION_VIEW, formatChannelUri(user.login))
+                        )
                         true
                     }
                     R.id.info -> {
-                        user.id?.let { userId ->
-                            StreamInfoDialog.newInstance(userId = userId)
-                                .show(childFragmentManager, "closeOnPip")
-                        }
+                        StreamInfoDialog.newInstance(userId = user.id)
+                            .show(childFragmentManager, "closeOnPip")
                         true
                     }
                     else -> false

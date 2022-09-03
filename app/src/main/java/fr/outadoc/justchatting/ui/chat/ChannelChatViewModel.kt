@@ -39,7 +39,7 @@ class ChannelChatViewModel(
         .map { channelLogin ->
             try {
                 val user = loadUser(channelLogin) ?: error("User not loaded")
-                val stream = repository.loadStreamWithUser(channelId = user.id!!)
+                val stream = repository.loadStreamWithUser(channelId = user.id)
                 stream to user
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -6,15 +6,12 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class User(
-    val id: String? = null,
-    val login: String? = null,
-    val display_name: String? = null,
-    val type: String? = null,
-    val broadcaster_type: String? = null,
+    val id: String,
+    val login: String,
+    val display_name: String,
     val description: String? = null,
     val profile_image_url: String? = null,
     val offline_image_url: String? = null,
-    val view_count: Int? = null,
     val created_at: String? = null,
     val followers_count: Int? = null,
     val bannerImageURL: String? = null

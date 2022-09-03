@@ -31,13 +31,13 @@ data class TwitchEmote(
             ?.second
             ?: "1.0"
 
-        val preferredFormat = if (animate) "animated" else "static"
+        val preferredFormat = if (animate) "default" else "static"
         val preferredTheme = if (isDarkTheme) "dark" else "light"
 
         return createUrlForEmote(
             id = id,
             format = supportedFormats.firstOrNull { it == preferredFormat }
-                ?: supportedFormats.first(),
+                ?: "default",
             theme = supportedThemes.firstOrNull { it == preferredTheme }
                 ?: supportedThemes.first(),
             scale = closestDensity

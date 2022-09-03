@@ -21,7 +21,7 @@ const val TAG = "ChatThread"
 
 abstract class BaseChatThread(
     private val scope: CoroutineScope,
-    private val listener: OnMessageReceivedListener,
+    private val listener: OnCommandReceivedListener,
     private val clock: Clock,
     channelName: String
 ) {

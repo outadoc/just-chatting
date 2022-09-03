@@ -8,11 +8,11 @@ import fr.outadoc.justchatting.model.chat.PubSubPointReward
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState
 
-class MessageListenerImpl(
+class CommandListenerImpl(
     private val callback: OnChatMessageReceivedListener,
     private val callbackUserState: OnUserStateReceivedListener,
     private val callbackRoomState: OnRoomStateReceivedListener
-) : OnMessageReceivedListener {
+) : OnCommandReceivedListener {
 
     override fun onCommand(command: ChatCommand) {
         when (command) {

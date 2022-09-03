@@ -5,7 +5,7 @@ import kotlinx.datetime.Instant
 import org.json.JSONObject
 
 class PubSubListenerImpl(
-    private val callback: OnChatMessageReceivedListener
+    private val callback: OnCommandReceivedListener
 ) : PubSubWebSocket.OnMessageReceivedListener {
 
     override fun onPointReward(text: String) {
@@ -48,6 +48,6 @@ class PubSubListenerImpl(
             badges = null
         )
 
-        callback.onMessage(pointReward)
+        callback.onCommand(pointReward)
     }
 }

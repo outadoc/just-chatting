@@ -4,6 +4,7 @@ import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.model.User
 import fr.outadoc.justchatting.util.chat.LiveChatThread
 import fr.outadoc.justchatting.util.chat.LoggedInChatThread
+import fr.outadoc.justchatting.util.chat.OnCommandReceivedListener
 import fr.outadoc.justchatting.util.chat.PubSubListenerImpl
 import fr.outadoc.justchatting.util.chat.PubSubWebSocket
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +14,7 @@ class LiveChatController(
     user: User.LoggedIn,
     channelId: String?,
     channelLogin: String,
-    chatStateListener: ChatViewModel.ChatStateListener,
+    messageListener: OnCommandReceivedListener,
     coroutineScope: CoroutineScope,
     clock: Clock,
     chatMessageParser: ChatMessageParser
@@ -24,7 +25,7 @@ class LiveChatController(
             scope = coroutineScope,
             clock = clock,
             channelName = channelLogin,
-            listener = chatStateListener.messageListener,
+            listener = messageListener,
             parser = chatMessageParser
         )
 
@@ -35,7 +36,7 @@ class LiveChatController(
             userLogin = user.login,
             userToken = user.helixToken,
             channelName = channelLogin,
-            listener = chatStateListener.messageListener,
+            listener = messageListener,
             parser = chatMessageParser
         )
 
@@ -44,7 +45,7 @@ class LiveChatController(
             PubSubWebSocket(
                 scope = coroutineScope,
                 channelId = channelId,
-                listener = PubSubListenerImpl(callback = chatStateListener)
+                listener = PubSubListenerImpl(callback = messageListener)
             )
         } else null
 

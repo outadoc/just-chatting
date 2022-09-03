@@ -25,7 +25,7 @@ import fr.outadoc.justchatting.repository.UserPreferencesRepository
 import fr.outadoc.justchatting.ui.common.BaseViewModel
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
-import fr.outadoc.justchatting.util.chat.MessageListenerImpl
+import fr.outadoc.justchatting.util.chat.CommandListenerImpl
 import fr.outadoc.justchatting.util.chat.OnChatMessageReceivedListener
 import fr.outadoc.justchatting.util.chat.OnRoomStateReceivedListener
 import fr.outadoc.justchatting.util.chat.OnUserStateReceivedListener
@@ -124,13 +124,13 @@ class ChatViewModel(
                     clock = clock,
                     coroutineScope = viewModelScope,
                     chatMessageParser = chatMessageParser,
-                    chatStateListener = ChatStateListener(
+                    messageListener = ChatStateListener(
                         user = user,
                         channelId = channelId,
                         displayName = channelName,
                         helixClientId = authPreferencesRepository.helixClientId.first(),
                         maxAdapterCount = chatPreferencesRepository.messageLimit.first()
-                    )
+                    ).messageListener
                 )
 
                 val enableRecentMsg = chatPreferencesRepository.enableRecentMsg.first()
@@ -368,7 +368,7 @@ class ChatViewModel(
         OnRoomStateReceivedListener,
         OnChatMessageReceivedListener {
 
-        val messageListener = MessageListenerImpl(
+        val messageListener = CommandListenerImpl(
             callback = this,
             callbackUserState = this,
             callbackRoomState = this

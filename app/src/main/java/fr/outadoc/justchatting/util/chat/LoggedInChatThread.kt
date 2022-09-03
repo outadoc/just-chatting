@@ -29,7 +29,7 @@ class LoggedInChatThread(
     private val userLogin: String?,
     private val userToken: String?,
     channelName: String,
-    private val listener: OnMessageReceivedListener,
+    private val listener: OnCommandReceivedListener,
     private val parser: ChatMessageParser
 ) : BaseChatThread(scope, listener, clock, channelName) {
 

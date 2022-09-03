@@ -25,7 +25,7 @@ class LiveChatThread(
     scope: CoroutineScope,
     private val clock: Clock,
     private val channelName: String,
-    private val listener: OnMessageReceivedListener,
+    private val listener: OnCommandReceivedListener,
     private val parser: ChatMessageParser
 ) : BaseChatThread(scope, listener, clock, channelName) {
 

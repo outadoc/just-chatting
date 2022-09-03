@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.di
 
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.api.HelixApi
@@ -113,6 +114,7 @@ val mainModule = module {
                         }
                     )
                 }
+                addInterceptor(ChuckerInterceptor.Builder(get()).build())
                 connectTimeout(5, TimeUnit.MINUTES)
                 writeTimeout(5, TimeUnit.MINUTES)
                 readTimeout(5, TimeUnit.MINUTES)

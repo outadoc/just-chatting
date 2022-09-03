@@ -125,6 +125,9 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
 
+    debugImplementation(libs.chucker.runtime)
+    releaseImplementation(libs.chucker.noop)
+
     testImplementation(libs.junit)
 
     coreLibraryDesugaring(libs.desugar)

@@ -172,15 +172,14 @@ class ChatEntryMapper(private val context: Context) {
                 }
                 is PubSubPointReward -> {
                     ChatEntry.Highlighted(
-                        header = context.getString(R.string.user_redeemed_header, rewardCost),
-                        headerIconResId = R.drawable.ic_toll,
-                        data = ChatEntry.Data.Plain(
-                            message = context.getString(
-                                R.string.user_redeemed,
-                                userName,
-                                rewardTitle
-                            )
+                        header = context.getString(
+                            R.string.user_redeemed,
+                            userName,
+                            rewardTitle,
+                            rewardCost
                         ),
+                        headerIconResId = R.drawable.ic_toll,
+                        data = null,
                         timestamp = timestamp
                     )
                 }

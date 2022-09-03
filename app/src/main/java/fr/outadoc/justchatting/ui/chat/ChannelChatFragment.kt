@@ -48,14 +48,11 @@ class ChannelChatFragment :
     Scrollable {
 
     companion object {
-        private const val ARG_SHOW_BACK_BUTTON = "show_back_button"
-
         fun newInstance(
             id: String?,
             login: String?,
             name: String?,
             channelLogo: String?,
-            showBackButton: Boolean,
             updateLocal: Boolean = false
         ) = ChannelChatFragment().apply {
             arguments = Bundle().apply {
@@ -64,7 +61,6 @@ class ChannelChatFragment :
                 putString(C.CHANNEL_DISPLAYNAME, name)
                 putString(C.CHANNEL_PROFILEIMAGE, channelLogo)
                 putBoolean(C.CHANNEL_UPDATELOCAL, updateLocal)
-                putBoolean(ARG_SHOW_BACK_BUTTON, showBackButton)
             }
         }
     }
@@ -106,14 +102,6 @@ class ChannelChatFragment :
 
         viewHolder?.toolbar?.apply {
             title = args.getString(C.CHANNEL_DISPLAYNAME)
-
-            if (args.getBoolean(ARG_SHOW_BACK_BUTTON)) {
-                setNavigationIcon(R.drawable.ic_back)
-            }
-
-            setNavigationOnClickListener {
-                activity?.onBackPressed()
-            }
 
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {

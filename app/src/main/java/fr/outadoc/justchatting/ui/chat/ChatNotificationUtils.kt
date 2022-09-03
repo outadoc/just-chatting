@@ -20,7 +20,6 @@ import coil.imageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.util.C
 
 object ChatNotificationUtils {
     private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
@@ -70,7 +69,7 @@ object ChatNotificationUtils {
         channelLogo: String
     ) {
         context.startActivity(
-            createIntent(
+            ChatActivity.createIntent(
                 context = context,
                 channelId = channelId,
                 channelLogin = channelLogin,
@@ -139,7 +138,7 @@ object ChatNotificationUtils {
 
         createShortcutForChannel(
             context = context,
-            intent = createIntent(
+            intent = ChatActivity.createIntent(
                 context = context,
                 channelId = channelId,
                 channelLogin = channelLogin,
@@ -293,26 +292,9 @@ object ChatNotificationUtils {
         return PendingIntent.getActivity(
             context,
             0,
-            createIntent(context, channelId, channelLogin, channelName, channelLogo),
+            ChatActivity.createIntent(context, channelId, channelLogin, channelName, channelLogo),
             PendingIntent.FLAG_UPDATE_CURRENT or mutableFlag or immutableFlag
         )
     }
 
-    private fun createIntent(
-        context: Context,
-        channelId: String,
-        channelLogin: String,
-        channelName: String,
-        channelLogo: String
-    ): Intent {
-        return Intent(context, ChatActivity::class.java).apply {
-            action = Intent.ACTION_VIEW
-            flags = 0
-
-            putExtra(C.CHANNEL_ID, channelId)
-            putExtra(C.CHANNEL_LOGIN, channelLogin)
-            putExtra(C.CHANNEL_DISPLAYNAME, channelName)
-            putExtra(C.CHANNEL_PROFILEIMAGE, channelLogo)
-        }
-    }
 }

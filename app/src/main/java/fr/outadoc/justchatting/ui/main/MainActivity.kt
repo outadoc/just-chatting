@@ -18,11 +18,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(), NavigationHandler {
 
-    private companion object {
-        const val REQUEST_CODE_LOGIN = 2
-        const val REQUEST_CODE_SETTINGS = 3
-    }
-
     private val viewModel: MainViewModel by viewModel()
     private lateinit var viewHolder: ActivityMainBinding
 
@@ -55,16 +50,10 @@ class MainActivity : BaseActivity(), NavigationHandler {
                         toast(R.string.token_expired)
                     }
 
-                    startActivityForResult(
-                        Intent(this, LoginActivity::class.java),
-                        REQUEST_CODE_LOGIN
-                    )
+                    startActivity(Intent(this, LoginActivity::class.java))
                 }
                 MainViewModel.Destination.Settings -> {
-                    startActivityForResult(
-                        Intent(this, SettingsActivity::class.java),
-                        REQUEST_CODE_SETTINGS
-                    )
+                    startActivity(Intent(this, SettingsActivity::class.java))
                 }
                 MainViewModel.Destination.Search -> {
                     fragNavController.pushFragment(SearchFragment())

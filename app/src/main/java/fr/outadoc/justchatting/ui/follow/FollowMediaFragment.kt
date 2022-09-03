@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.ui.follow
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -118,16 +117,6 @@ class FollowMediaFragment : Fragment(), Scrollable {
         }.show()
     }
 
-    private fun onLogin() {
-        activity?.startActivityForResult(
-            Intent(
-                activity,
-                LoginActivity::class.java
-            ),
-            1
-        )
-    }
-
     private fun FragmentMediaBinding.setAdapter() {
         viewPagerMedia.adapter = object : FragmentStateAdapter(this@FollowMediaFragment) {
             override fun getItemCount(): Int = 2
@@ -171,13 +160,6 @@ class FollowMediaFragment : Fragment(), Scrollable {
 
     private fun ViewPager2.findCurrentFragment(): Fragment? {
         return childFragmentManager.findFragmentByTag("f$currentItem")
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 3 && resultCode == Activity.RESULT_OK) {
-            requireActivity().recreate()
-        }
     }
 
     override fun onDestroyView() {

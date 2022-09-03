@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.ui.chat
 
-import android.app.Activity
 import android.app.ActivityManager
 import android.content.Intent
 import android.content.res.ColorStateList
@@ -336,13 +335,6 @@ class ChannelChatFragment :
         super.onConfigurationChanged(newConfig)
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             viewHolder?.appBar?.setExpanded(false, false)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 3 && resultCode == Activity.RESULT_OK) {
-            requireActivity().recreate()
         }
     }
 

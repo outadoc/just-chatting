@@ -2,13 +2,13 @@ package fr.outadoc.justchatting.irc
 
 import fr.outadoc.justchatting.model.chat.Badge
 import fr.outadoc.justchatting.model.chat.LiveChatMessage
-import fr.outadoc.justchatting.model.chat.TwitchEmote
+import fr.outadoc.justchatting.model.chat.TwitchChatEmote
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-fun Map<String, String?>.parseEmotes(): List<TwitchEmote>? {
+fun Map<String, String?>.parseEmotes(): List<TwitchChatEmote>? {
     return this["emotes"]
         ?.splitAndMakeMap(split = "/", map = ":")
         ?.entries
@@ -17,7 +17,7 @@ fun Map<String, String?>.parseEmotes(): List<TwitchEmote>? {
                 ?.split(",")
                 ?.map { indexes ->
                     val index = indexes.split("-")
-                    TwitchEmote(
+                    TwitchChatEmote(
                         name = emote.key,
                         id = emote.key,
                         begin = index[0].toInt(),

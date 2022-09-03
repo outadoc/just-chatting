@@ -37,6 +37,7 @@ import fr.outadoc.justchatting.model.chat.CheerEmote
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.Image
 import fr.outadoc.justchatting.model.chat.TwitchBadge
+import fr.outadoc.justchatting.model.chat.TwitchChatEmote
 import fr.outadoc.justchatting.model.chat.TwitchEmote
 import fr.outadoc.justchatting.ui.view.chat.VerticalImageSpan
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
@@ -250,9 +251,9 @@ class ChatAdapter(
                         emote.end + realBegin - emote.begin
                     }
 
-                    TwitchEmote(
-                        name = emote.name,
+                    TwitchChatEmote(
                         id = emote.id,
+                        name = emote.name,
                         begin = realBegin,
                         end = realEnd
                     )

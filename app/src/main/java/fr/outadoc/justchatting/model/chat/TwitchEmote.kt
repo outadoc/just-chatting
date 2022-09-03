@@ -1,35 +1,28 @@
 package fr.outadoc.justchatting.model.chat
 
 import com.google.gson.annotations.SerializedName
-import okhttp3.HttpUrl.Companion.toHttpUrl
 
 data class TwitchEmote(
     @SerializedName("_id")
-    override val name: String,
     val id: String,
-    var begin: Int = 0,
-    var end: Int = 0,
+    override val name: String,
     val setId: String? = null,
     override val ownerId: String? = null,
-    private val supportedFormats: List<String> = listOf("default"),
-    private val supportedScales: Map<Float, String> = mapOf(
-        1f to "1.0",
-        2f to "2.0",
-        3f to "3.0"
-    ),
-    private val supportedThemes: List<String> = listOf("dark")
+    private val supportedFormats: List<String>,
+    private val supportedScales: List<String>,
+    private val supportedThemes: List<String>,
+    private val urlTemplate: String
 ) : Emote() {
 
-    companion object {
-        private const val BASE_EMOTE_URL = "https://static-cdn.jtvnw.net/emoticons/v2"
-    }
+    private val supportedScalesMap: List<Pair<String, Float>> =
+        supportedScales.associateWith { it.toFloat() }.toList()
 
     override fun getUrl(animate: Boolean, screenDensity: Float, isDarkTheme: Boolean): String {
-        val closestDensity: String = supportedScales
-            .toList()
-            .minByOrNull { density -> screenDensity - density.first }
-            ?.second
-            ?: "1.0"
+        val closestDensity: String =
+            supportedScalesMap
+                .minByOrNull { density -> screenDensity - density.second }
+                ?.first
+                ?: "1.0"
 
         val preferredFormat = if (animate) "default" else "static"
         val preferredTheme = if (isDarkTheme) "dark" else "light"
@@ -50,13 +43,10 @@ data class TwitchEmote(
         theme: String,
         scale: String
     ): String {
-        return BASE_EMOTE_URL.toHttpUrl()
-            .newBuilder()
-            .addPathSegment(id)
-            .addPathSegment(format)
-            .addPathSegment(theme)
-            .addPathSegment(scale)
-            .build()
-            .toString()
+        return urlTemplate
+            .replace("{{id}}", id)
+            .replace("{{format}}", format)
+            .replace("{{theme_mode}}", theme)
+            .replace("{{scale}}", scale)
     }
 }

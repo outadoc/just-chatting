@@ -15,8 +15,6 @@ import fr.outadoc.justchatting.model.chat.BttvGlobalDeserializer
 import fr.outadoc.justchatting.model.chat.BttvGlobalResponse
 import fr.outadoc.justchatting.model.chat.CheerEmotesDeserializer
 import fr.outadoc.justchatting.model.chat.CheerEmotesResponse
-import fr.outadoc.justchatting.model.chat.EmoteCardDeserializer
-import fr.outadoc.justchatting.model.chat.EmoteCardResponse
 import fr.outadoc.justchatting.model.chat.RecentMessagesDeserializer
 import fr.outadoc.justchatting.model.chat.RecentMessagesResponse
 import fr.outadoc.justchatting.model.chat.StvEmotesDeserializer
@@ -99,7 +97,6 @@ val mainModule = module {
                 .registerTypeAdapter(BttvGlobalResponse::class.java, BttvGlobalDeserializer())
                 .registerTypeAdapter(BttvChannelResponse::class.java, BttvChannelDeserializer())
                 .registerTypeAdapter(BttvFfzResponse::class.java, BttvFfzDeserializer())
-                .registerTypeAdapter(EmoteCardResponse::class.java, EmoteCardDeserializer())
                 .create()
         )
     }

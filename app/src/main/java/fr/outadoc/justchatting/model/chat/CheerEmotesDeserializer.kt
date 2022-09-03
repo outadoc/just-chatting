@@ -15,35 +15,36 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
         typeOfT: Type,
         context: JsonDeserializationContext
     ): CheerEmotesResponse {
-        val emotes = mutableListOf<CheerEmote>()
-        for (i in json.asJsonObject.get("data").asJsonArray) {
-            val name = i.asJsonObject.get("prefix")
-            for (tier in i.asJsonObject.get("tiers").asJsonArray) {
-                val minBits = tier.asJsonObject.get("min_bits")
-                val color = tier.asJsonObject.get("color")
-                val images = tier.asJsonObject.get("images").asJsonObject
+        val emotes = json.asJsonObject.get("data")
+            .asJsonArray
+            .map { it.asJsonObject }
+            .flatMap { emote ->
+                val name = emote.get("prefix")
+                emote.get("tiers").asJsonArray
+                    .map { tier ->
+                        val minBits = tier.asJsonObject.get("min_bits")
+                        val color = tier.asJsonObject.get("color")
+                        val images = tier.asJsonObject.get("images").asJsonObject
 
-                val darkImages = images
-                    .get("dark")
-                    .takeUnless { it.isJsonNull }
-                    ?.asJsonObject
+                        val darkImages = images
+                            .get("dark")
+                            .takeUnless { it.isJsonNull }
+                            ?.asJsonObject
 
-                val lightImages = images
-                    .get("dark")
-                    .takeUnless { it.isJsonNull }
-                    ?.asJsonObject
+                        val lightImages = images
+                            .get("dark")
+                            .takeUnless { it.isJsonNull }
+                            ?.asJsonObject
 
-                emotes.add(
-                    CheerEmote(
-                        name = name.asString,
-                        minBits = minBits.asInt,
-                        color = color.asString,
-                        images = darkImages?.getImages("dark").orEmpty() +
-                            lightImages?.getImages("light").orEmpty()
-                    )
-                )
+                        CheerEmote(
+                            name = name.asString,
+                            minBits = minBits.asInt,
+                            color = color.asString,
+                            images = darkImages?.getImages("dark").orEmpty() +
+                                    lightImages?.getImages("light").orEmpty()
+                        )
+                    }
             }
-        }
 
         return CheerEmotesResponse(emotes)
     }
@@ -58,7 +59,7 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
             ?.asJsonObject
 
         return staticUrls?.toMap("static", theme).orEmpty() +
-            animatedUrls?.toMap("animated", theme).orEmpty()
+                animatedUrls?.toMap("animated", theme).orEmpty()
     }
 
     private fun JsonObject.toMap(animation: String, theme: String): List<CheerEmote.Image> {

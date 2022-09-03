@@ -2,14 +2,14 @@ package fr.outadoc.justchatting.model.chat
 
 class FfzEmote(
     override val name: String,
-    private val urls: Map<Float, String>
+    urls: Map<String, String>
 ) : Emote() {
 
+    private val urlsMap: List<Pair<Float, String>> =
+        urls.map { (key, url) -> key.trimEnd('x').toFloat() to url }
+
     override fun getUrl(animate: Boolean, screenDensity: Float, isDarkTheme: Boolean): String {
-        return urls
-            .toList()
-            .minByOrNull { url -> screenDensity - url.first }
-            ?.second
-            ?: error("No URLs were provided for this FfzEmote")
+        return urlsMap.minByOrNull { url -> screenDensity - url.first }
+            ?.second ?: error("No URLs were provided for this FfzEmote")
     }
 }

@@ -15,21 +15,20 @@ class StvEmotesDeserializer : JsonDeserializer<StvEmotesResponse> {
         typeOfT: Type,
         context: JsonDeserializationContext
     ): StvEmotesResponse {
-        val emotes = mutableListOf<StvEmote>()
-        for (i in 0 until json.asJsonArray.size()) {
-            val emote = json.asJsonArray.get(i).asJsonObject
-            val urls = emote.getAsJsonArray("urls")
-            val visibility = emote.getAsJsonArray("visibility_simple")
-            val isZeroWidth = visibility.any { it.asString == "ZERO_WIDTH" }
+        val emotes = json.asJsonArray
+            .map { it.asJsonObject }
+            .map { emote ->
+                val urls = emote.getAsJsonArray("urls")
+                val visibility = emote.getAsJsonArray("visibility_simple")
+                val isZeroWidth = visibility.any { it.asString == "ZERO_WIDTH" }
 
-            emotes.add(
                 StvEmote(
                     name = emote.get("name").asString,
                     urls = urls.toMap(),
                     isZeroWidth = isZeroWidth
                 )
-            )
-        }
+            }
+
         return StvEmotesResponse(emotes)
     }
 

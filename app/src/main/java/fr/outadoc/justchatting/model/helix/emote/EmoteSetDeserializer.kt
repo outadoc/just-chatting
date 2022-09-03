@@ -15,12 +15,10 @@ class EmoteSetDeserializer : JsonDeserializer<EmoteSetResponse> {
         typeOfT: Type,
         context: JsonDeserializationContext
     ): EmoteSetResponse {
-        val emotes = mutableListOf<TwitchEmote>()
         val urlTemplate = json.asJsonObject.get("template").asString
-
-        for (i in 0 until json.asJsonObject.getAsJsonArray("data").size()) {
-            val emote = json.asJsonObject.getAsJsonArray("data").get(i).asJsonObject
-            emotes.add(
+        val emotes = json.asJsonObject.getAsJsonArray("data")
+            .map { it.asJsonObject }
+            .map { emote ->
                 TwitchEmote(
                     id = emote.get("id").asString,
                     name = emote.get("name").asString,
@@ -31,9 +29,9 @@ class EmoteSetDeserializer : JsonDeserializer<EmoteSetResponse> {
                     ownerId = emote.get("owner_id").asString,
                     urlTemplate = urlTemplate
                 )
-            )
-        }
+            }
+            .sortedByDescending { it.setId }
 
-        return EmoteSetResponse(emotes.sortedByDescending { it.setId })
+        return EmoteSetResponse(emotes)
     }
 }

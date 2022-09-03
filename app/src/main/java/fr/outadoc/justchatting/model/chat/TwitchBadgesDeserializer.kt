@@ -4,6 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
+import fr.outadoc.justchatting.util.asStringOrNull
 import java.lang.reflect.Type
 
 class TwitchBadgesDeserializer : JsonDeserializer<TwitchBadgesResponse> {
@@ -38,7 +39,4 @@ class TwitchBadgesDeserializer : JsonDeserializer<TwitchBadgesResponse> {
 
         return TwitchBadgesResponse(badges)
     }
-
-    private val JsonElement.asStringOrNull: String?
-        get() = takeUnless { it.isJsonNull }?.asString
 }

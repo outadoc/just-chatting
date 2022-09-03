@@ -14,16 +14,15 @@ class BttvGlobalDeserializer : JsonDeserializer<BttvGlobalResponse> {
         typeOfT: Type,
         context: JsonDeserializationContext
     ): BttvGlobalResponse {
-        val emotes = mutableListOf<BttvEmote>()
-        for (i in 0 until json.asJsonArray.size()) {
-            val emote = json.asJsonArray.get(i).asJsonObject
-            emotes.add(
+        val emotes = json.asJsonArray
+            .map { it.asJsonObject }
+            .map { emote ->
                 BttvEmote(
                     id = emote.get("id").asString,
                     name = emote.get("code").asString
                 )
-            )
-        }
+            }
+
         return BttvGlobalResponse(emotes)
     }
 }

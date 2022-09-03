@@ -1,11 +1,8 @@
 package fr.outadoc.justchatting.ui.chat
 
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -16,29 +13,12 @@ import androidx.core.content.getSystemService
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
-import coil.imageLoader
-import coil.request.ImageRequest
-import coil.transform.CircleCropTransformation
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.util.toPendingIntent
 
 object ChatNotificationUtils {
 
     private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
-
-    fun openInBubbleOrStartActivity(
-        context: Context,
-        channelId: String,
-        channelLogin: String,
-        channelName: String,
-        channelLogo: String
-    ) {
-        val channel = createGenericBubbleChannelIfNeeded(context)
-        if (channel != null && areBubblesAllowed(context, channel)) {
-            openInBubble(context, channelId, channelLogin, channelName, channelLogo)
-        } else {
-            //startActivity(context, channelLogin)
-        }
-    }
 
     private fun areBubblesAllowed(
         context: Context,
@@ -60,82 +40,6 @@ object ChatNotificationUtils {
             return true
 
         return false
-    }
-
-    private fun openInBubble(
-        context: Context,
-        channelId: String,
-        channelLogin: String,
-        channelName: String,
-        channelLogo: String
-    ) {
-        val request = ImageRequest.Builder(context)
-            .data(channelLogo)
-            .crossfade(true)
-            .size(256, 256)
-            .transformations(CircleCropTransformation())
-            .target(
-                onSuccess = { drawable ->
-                    onChannelLogoLoaded(
-                        context = context,
-                        channelId = channelId,
-                        channelLogin = channelLogin,
-                        channelName = channelName,
-                        channelLogoBitmap = (drawable as? BitmapDrawable)?.bitmap
-                    )
-                },
-                onError = { drawable ->
-                    onChannelLogoLoaded(
-                        context = context,
-                        channelId = channelId,
-                        channelLogin = channelLogin,
-                        channelName = channelName,
-                        channelLogoBitmap = (drawable as? BitmapDrawable)?.bitmap
-                    )
-                }
-            )
-            .build()
-
-        context.imageLoader.enqueue(request)
-    }
-
-    private fun onChannelLogoLoaded(
-        context: Context,
-        channelId: String,
-        channelLogin: String,
-        channelName: String,
-        channelLogoBitmap: Bitmap?
-    ) {
-        val icon = channelLogoBitmap?.let { IconCompat.createWithBitmap(it) }
-            ?: IconCompat.createWithResource(context, R.mipmap.ic_launcher)
-
-        val person: Person =
-            Person.Builder()
-                .setKey(channelId)
-                .setName(channelName)
-                .setIcon(icon)
-                .build()
-
-        createShortcutForChannel(
-            context = context,
-            intent = ChatActivity.createIntent(
-                context = context,
-                channelLogin = channelLogin
-            ),
-            channelId = channelId,
-            channelName = channelName,
-            person = person,
-            icon = icon
-        )
-
-        createBubble(
-            context = context,
-            channelId = channelId,
-            channelLogin = channelLogin,
-            channelName = channelName,
-            icon = icon,
-            person = person
-        )
     }
 
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
@@ -200,16 +104,14 @@ object ChatNotificationUtils {
         icon: IconCompat,
         person: Person
     ) = NotificationManagerCompat.from(context).apply {
+        val intent = ChatActivity.createIntent(context, channelLogin)
+
         notify(
             notificationIdFor(channelId),
             NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(channelName)
                 .setContentIntent(
-                    createPendingIntent(
-                        context = context,
-                        channelLogin = channelLogin,
-                        mutable = false
-                    )
+                    intent.toPendingIntent(context, mutable = false)
                 )
                 .setSmallIcon(R.drawable.ic_stream)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
@@ -219,11 +121,7 @@ object ChatNotificationUtils {
                 .addPerson(person)
                 .setBubbleMetadata(
                     NotificationCompat.BubbleMetadata.Builder(
-                        createPendingIntent(
-                            context = context,
-                            channelLogin = channelLogin,
-                            mutable = true
-                        ),
+                        intent.toPendingIntent(context, mutable = true),
                         icon
                     )
                         .setAutoExpandBubble(true)
@@ -239,27 +137,6 @@ object ChatNotificationUtils {
                         )
                 )
                 .build()
-        )
-    }
-
-    private fun createPendingIntent(
-        context: Context,
-        channelLogin: String,
-        mutable: Boolean
-    ): PendingIntent {
-        val mutableFlag =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && mutable) PendingIntent.FLAG_MUTABLE
-            else 0
-
-        val immutableFlag =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !mutable) PendingIntent.FLAG_IMMUTABLE
-            else 0
-
-        return PendingIntent.getActivity(
-            context,
-            0,
-            ChatActivity.createIntent(context, channelLogin),
-            PendingIntent.FLAG_UPDATE_CURRENT or mutableFlag or immutableFlag
         )
     }
 }

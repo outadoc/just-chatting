@@ -24,10 +24,10 @@ import kotlin.random.Random
 class LiveChatThread(
     scope: CoroutineScope,
     private val clock: Clock,
-    private val channelName: String,
+    private val channelLogin: String,
     private val listener: OnCommandReceivedListener,
     private val parser: ChatMessageParser
-) : BaseChatThread(scope, listener, clock, channelName) {
+) : BaseChatThread(scope, listener, clock, channelLogin) {
 
     fun start() {
         connect(socketListener = LiveChatThreadListener())
@@ -47,7 +47,7 @@ class LiveChatThread(
 
             listener.onCommand(
                 Command.Join(
-                    channelName = channelName,
+                    channelLogin = channelLogin,
                     timestamp = clock.now()
                 )
             )
@@ -91,7 +91,7 @@ class LiveChatThread(
             if (t is IOException && !t.isSocketError) {
                 listener.onCommand(
                     Command.Disconnect(
-                        channelName = channelName,
+                        channelLogin = channelLogin,
                         throwable = t,
                         timestamp = clock.now()
                     )

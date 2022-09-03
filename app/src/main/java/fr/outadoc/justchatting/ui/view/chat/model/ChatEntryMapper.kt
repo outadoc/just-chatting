@@ -46,7 +46,7 @@ class ChatEntryMapper(private val context: Context) {
                 }
                 is Command.Join -> {
                     ChatEntry.Highlighted(
-                        header = context.getString(R.string.chat_join, channelName),
+                        header = context.getString(R.string.chat_join, channelLogin),
                         data = null,
                         timestamp = timestamp
                     )
@@ -55,7 +55,7 @@ class ChatEntryMapper(private val context: Context) {
                     ChatEntry.Highlighted(
                         header = context.getString(
                             R.string.chat_disconnect,
-                            channelName,
+                            channelLogin,
                             throwable
                         ),
                         data = null,

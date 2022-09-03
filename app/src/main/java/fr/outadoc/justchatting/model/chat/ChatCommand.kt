@@ -42,12 +42,12 @@ sealed class Command : ChatCommand {
     ) : Command()
 
     data class Join(
-        val channelName: String?,
+        val channelLogin: String?,
         val timestamp: Instant?
     ) : Command()
 
     data class Disconnect(
-        val channelName: String?,
+        val channelLogin: String?,
         val timestamp: Instant?,
         val throwable: Throwable?
     ) : Command()

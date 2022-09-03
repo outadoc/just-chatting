@@ -12,7 +12,7 @@ import kotlinx.datetime.Clock
 
 class LiveChatController(
     user: User.LoggedIn,
-    channelId: String?,
+    channelId: String,
     channelLogin: String,
     messageListener: OnCommandReceivedListener,
     coroutineScope: CoroutineScope,
@@ -20,34 +20,29 @@ class LiveChatController(
     chatMessageParser: ChatMessageParser
 ) : ChatController {
 
-    private val liveChat: LiveChatThread =
-        LiveChatThread(
-            scope = coroutineScope,
-            clock = clock,
-            channelName = channelLogin,
-            listener = messageListener,
-            parser = chatMessageParser
-        )
+    private val liveChat = LiveChatThread(
+        scope = coroutineScope,
+        clock = clock,
+        channelLogin = channelLogin,
+        listener = messageListener,
+        parser = chatMessageParser
+    )
 
-    private val loggedInChat: LoggedInChatThread =
-        LoggedInChatThread(
-            scope = coroutineScope,
-            clock = clock,
-            userLogin = user.login,
-            userToken = user.helixToken,
-            channelName = channelLogin,
-            listener = messageListener,
-            parser = chatMessageParser
-        )
+    private val loggedInChat = LoggedInChatThread(
+        scope = coroutineScope,
+        clock = clock,
+        userLogin = user.login,
+        userToken = user.helixToken,
+        channelName = channelLogin,
+        listener = messageListener,
+        parser = chatMessageParser
+    )
 
-    private val pubSub: PubSubWebSocket? =
-        if (!channelId.isNullOrEmpty()) {
-            PubSubWebSocket(
-                scope = coroutineScope,
-                channelId = channelId,
-                listener = PubSubListenerImpl(callback = messageListener)
-            )
-        } else null
+    private val pubSub = PubSubWebSocket(
+        scope = coroutineScope,
+        channelId = channelId,
+        listener = PubSubListenerImpl(callback = messageListener)
+    )
 
     override fun send(message: CharSequence) {
         loggedInChat.send(message)
@@ -56,12 +51,12 @@ class LiveChatController(
     override suspend fun start() {
         liveChat.start()
         loggedInChat.start()
-        pubSub?.start()
+        pubSub.start()
     }
 
     override fun stop() {
         liveChat.disconnect()
         loggedInChat.disconnect()
-        pubSub?.disconnect()
+        pubSub.disconnect()
     }
 }

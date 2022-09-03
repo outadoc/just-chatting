@@ -14,6 +14,7 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.util.toPendingIntent
 
 object ChatNotificationUtils {
@@ -96,47 +97,47 @@ object ChatNotificationUtils {
         }
     }
 
-    private fun createBubble(
+    fun createBubble(
         context: Context,
-        channelId: String,
-        channelLogin: String,
-        channelName: String,
+        user: User,
         icon: IconCompat,
         person: Person
-    ) = NotificationManagerCompat.from(context).apply {
-        val intent = ChatActivity.createIntent(context, channelLogin)
+    ): NotificationManagerCompat {
+        return NotificationManagerCompat.from(context).apply {
+            val intent = ChatActivity.createIntent(context, user.login)
 
-        notify(
-            notificationIdFor(channelId),
-            NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                .setContentTitle(channelName)
-                .setContentIntent(
-                    intent.toPendingIntent(context, mutable = false)
-                )
-                .setSmallIcon(R.drawable.ic_stream)
-                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setLocusId(LocusIdCompat(channelId))
-                .setShortcutId(channelId)
-                .addPerson(person)
-                .setBubbleMetadata(
-                    NotificationCompat.BubbleMetadata.Builder(
-                        intent.toPendingIntent(context, mutable = true),
-                        icon
+            notify(
+                notificationIdFor(user.id),
+                NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+                    .setContentTitle(user.display_name)
+                    .setContentIntent(
+                        intent.toPendingIntent(context, mutable = false)
                     )
-                        .setAutoExpandBubble(true)
-                        .setSuppressNotification(true)
-                        .build()
-                )
-                .setStyle(
-                    NotificationCompat.MessagingStyle(person)
-                        .addMessage(
-                            context.getString(R.string.notification_channel_bubbles_openPrompt),
-                            System.currentTimeMillis(),
-                            person
+                    .setSmallIcon(R.drawable.ic_stream)
+                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setLocusId(LocusIdCompat(user.id))
+                    .setShortcutId(user.id)
+                    .addPerson(person)
+                    .setBubbleMetadata(
+                        NotificationCompat.BubbleMetadata.Builder(
+                            intent.toPendingIntent(context, mutable = true),
+                            icon
                         )
-                )
-                .build()
-        )
+                            .setAutoExpandBubble(true)
+                            .setSuppressNotification(true)
+                            .build()
+                    )
+                    .setStyle(
+                        NotificationCompat.MessagingStyle(person)
+                            .addMessage(
+                                context.getString(R.string.notification_channel_bubbles_openPrompt),
+                                System.currentTimeMillis(),
+                                person
+                            )
+                    )
+                    .build()
+            )
+        }
     }
 }

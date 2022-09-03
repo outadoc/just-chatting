@@ -68,6 +68,8 @@ class ChannelChatFragment :
 
     private var viewHolder: FragmentChannelBinding? = null
 
+    private var openInBubble: (() -> Unit)? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -274,6 +276,27 @@ class ChannelChatFragment :
             person = person,
             icon = icon
         )
+
+        setOpenInBubbleMenuItem(channel, icon, person)
+    }
+
+    private fun setOpenInBubbleMenuItem(
+        channel: User,
+        icon: IconCompat,
+        person: Person
+    ) {
+        viewHolder?.toolbar?.menu?.findItem(R.id.openInBubble)?.isVisible = true
+
+        openInBubble = {
+            context?.apply {
+                ChatNotificationUtils.createBubble(
+                    context = this,
+                    user = channel,
+                    icon = icon,
+                    person = person
+                )
+            }
+        }
     }
 
     private fun FragmentChannelBinding.updateToolbarColor(swatch: Swatch) {
@@ -321,6 +344,10 @@ class ChannelChatFragment :
                     R.id.info -> {
                         StreamInfoDialog.newInstance(userId = user.id)
                             .show(childFragmentManager, "closeOnPip")
+                        true
+                    }
+                    R.id.openInBubble -> {
+                        openInBubble?.invoke()
                         true
                     }
                     else -> false
@@ -374,5 +401,6 @@ class ChannelChatFragment :
     override fun onDestroyView() {
         super.onDestroyView()
         viewHolder = null
+        openInBubble = null
     }
 }

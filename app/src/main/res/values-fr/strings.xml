@@ -205,6 +205,7 @@
     <string name="login_problem_solution">Vous pouvez vous connecter à l\'aide d\'un navigateur externe. Après avoir appuyé sur "Autoriser", une page avec une erreur devrait apparaître. Copiez l\'url, revenez ici et cliquez sur le bouton "Enter url". Collez l\'url et cliquez sur "Connexion"</string>
     <string name="logout_msg">Connecté en tant que %s</string>
     <string name="logout_title">Se déconnecter ?</string>
+    <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
     <string name="message_limit">Limite de messages</string>
     <string name="no">Non</string>
     <string name="no_browser_found">Aucune application de navigateur trouvée</string>

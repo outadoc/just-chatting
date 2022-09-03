@@ -9,9 +9,9 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/follow"
-        android:icon="@drawable/ic_favorite_border"
-        android:title="@string/follow_button"
+        android:id="@+id/openInBubble"
+        android:icon="@drawable/ic_open_in_new"
+        android:title="@string/menu_item_openInBubble"
         android:visible="false"
         app:showAsAction="ifRoom" />
 

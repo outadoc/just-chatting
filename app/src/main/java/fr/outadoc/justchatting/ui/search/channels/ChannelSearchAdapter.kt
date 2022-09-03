@@ -27,12 +27,9 @@ class ChannelSearchAdapter(
 
     override fun bind(item: ChannelSearch, view: View) {
         view.setOnClickListener {
-            listener.viewChannel(
-                item.id,
-                item.broadcaster_login,
-                item.display_name,
-                item.channelLogo
-            )
+            item.broadcaster_login?.let { login ->
+                listener.viewChannel(login)
+            }
         }
 
         val binding = FragmentSearchChannelsListItemBinding.bind(view)

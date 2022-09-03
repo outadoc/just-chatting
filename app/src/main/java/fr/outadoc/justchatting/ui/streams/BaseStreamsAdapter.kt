@@ -25,12 +25,9 @@ abstract class BaseStreamsAdapter(
 
     override fun bind(item: Stream, view: View) {
         view.setOnClickListener {
-            clickListener.viewChannel(
-                id = item.user_id,
-                login = item.user_login,
-                name = item.user_name,
-                channelLogo = item.channelLogo
-            )
+            item.user_login?.let { login ->
+                clickListener.viewChannel(login)
+            }
         }
 
         val binding = FragmentStreamsListItemCompactBinding.bind(view)

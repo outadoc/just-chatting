@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import com.ncapdevi.fragnav.FragNavController
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.databinding.ActivityMainBinding
-import fr.outadoc.justchatting.ui.chat.ChatNotificationUtils
+import fr.outadoc.justchatting.ui.chat.ChatActivity
 import fr.outadoc.justchatting.ui.common.NavigationHandler
 import fr.outadoc.justchatting.ui.follow.FollowMediaFragment
 import fr.outadoc.justchatting.ui.login.LoginActivity
@@ -43,12 +43,11 @@ class MainActivity : BaseActivity(), NavigationHandler {
         viewModel.events.observeEvent(this) { destination ->
             when (destination) {
                 is MainViewModel.Destination.Channel -> {
-                    ChatNotificationUtils.openInBubbleOrStartActivity(
-                        context = this,
-                        channelId = destination.id,
-                        channelLogin = destination.login,
-                        channelName = destination.name,
-                        channelLogo = destination.channelLogo
+                    startActivity(
+                        ChatActivity.createIntent(
+                            context = this,
+                            channelLogin = destination.login
+                        )
                     )
                 }
                 is MainViewModel.Destination.Login -> {
@@ -99,8 +98,8 @@ class MainActivity : BaseActivity(), NavigationHandler {
             .takeIf { it.isNotBlank() }
     }
 
-    override fun viewChannel(id: String?, login: String?, name: String?, channelLogo: String?) {
-        viewModel.onViewChannelRequest(id, login, name, channelLogo)
+    override fun viewChannel(login: String) {
+        viewModel.onViewChannelRequest(login)
     }
 
     override fun openSearch() {

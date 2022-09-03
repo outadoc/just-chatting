@@ -36,7 +36,7 @@ object ChatNotificationUtils {
         if (channel != null && areBubblesAllowed(context, channel)) {
             openInBubble(context, channelId, channelLogin, channelName, channelLogo)
         } else {
-            startActivity(context, channelLogin)
+            //startActivity(context, channelLogin)
         }
     }
 
@@ -60,15 +60,6 @@ object ChatNotificationUtils {
             return true
 
         return false
-    }
-
-    private fun startActivity(context: Context, channelLogin: String) {
-        context.startActivity(
-            ChatActivity.createIntent(
-                context = context,
-                channelLogin = channelLogin
-            )
-        )
     }
 
     private fun openInBubble(

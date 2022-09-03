@@ -26,7 +26,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
     interface OnButtonClickListener {
         fun onReplyClicked(userName: String)
         fun onCopyMessageClicked(message: String)
-        fun onViewProfileClicked(id: String?, login: String?, name: String?, channelLogo: String?)
+        fun onViewProfileClicked(login: String)
     }
 
     companion object {
@@ -136,12 +136,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
             userImage.isVisible = true
             userImage.loadImage(user.channelLogo, circle = true)
             userImage.setOnClickListener {
-                listener.onViewProfileClicked(
-                    user.id,
-                    user.login,
-                    user.display_name,
-                    user.channelLogo
-                )
+                listener.onViewProfileClicked(user.login)
                 dismiss()
             }
         } else {
@@ -153,12 +148,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
             userName.isVisible = true
             userName.text = user.display_name
             userName.setOnClickListener {
-                listener.onViewProfileClicked(
-                    user.id,
-                    user.login,
-                    user.display_name,
-                    user.channelLogo
-                )
+                listener.onViewProfileClicked(user.login)
                 dismiss()
             }
 

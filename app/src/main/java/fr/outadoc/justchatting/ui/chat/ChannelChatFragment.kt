@@ -318,19 +318,13 @@ class ChannelChatFragment :
         viewHolder?.chatInputView?.setMessage(message)
     }
 
-    override fun onViewProfileClicked(
-        id: String?,
-        login: String?,
-        name: String?,
-        channelLogo: String?
-    ) {
-        if (id == null || login == null || name == null || channelLogo == null) return
-        ChatNotificationUtils.openInBubbleOrStartActivity(
-            context = requireContext(),
-            channelId = id,
-            channelLogin = login,
-            channelName = name,
-            channelLogo = channelLogo
+    override fun onViewProfileClicked(login: String) {
+        val context = context ?: return
+        context.startActivity(
+            ChatActivity.createIntent(
+                context = context,
+                channelLogin = login
+            )
         )
     }
 

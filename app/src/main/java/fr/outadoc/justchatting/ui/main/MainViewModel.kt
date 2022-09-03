@@ -37,12 +37,7 @@ class MainViewModel(
             val causedByTokenExpiration: Boolean = false
         ) : Destination()
 
-        data class Channel(
-            val id: String,
-            val login: String,
-            val name: String,
-            val channelLogo: String
-        ) : Destination()
+        data class Channel(val login: String) : Destination()
     }
 
     private val _forcedLoginDestination: Flow<Destination?> =
@@ -114,12 +109,7 @@ class MainViewModel(
         if (id == null || login == null || name == null || channelLogo == null) return
         _userRequestedDestination.tryEmit(
             Event(
-                Destination.Channel(
-                    id = id,
-                    login = login,
-                    name = name,
-                    channelLogo = channelLogo
-                )
+                Destination.Channel(login = login)
             )
         )
     }

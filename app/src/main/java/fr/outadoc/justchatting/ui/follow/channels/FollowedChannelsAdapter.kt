@@ -29,12 +29,9 @@ class FollowedChannelsAdapter(
         val binding = FragmentFollowedChannelsListItemBinding.bind(view)
         with(binding) {
             view.setOnClickListener {
-                listener.viewChannel(
-                    item.to_id,
-                    item.to_login,
-                    item.to_name,
-                    item.channelLogo
-                )
+                item.to_login?.let { login ->
+                    listener.viewChannel(login)
+                }
             }
 
             if (item.channelLogo != null) {

@@ -54,7 +54,6 @@
             android:name=".ui.chat.ChatActivity"
             android:allowEmbedded="true"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
-            android:documentLaunchMode="intoExisting"
             android:exported="true"
             android:resizeableActivity="true"
             android:theme="@style/ChatTheme" />

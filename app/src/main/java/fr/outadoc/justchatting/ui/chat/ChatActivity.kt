@@ -15,7 +15,7 @@ class ChatActivity : BaseActivity() {
             return Intent(context, ChatActivity::class.java).apply {
                 data = formatChannelUri(channelLogin)
                 action = Intent.ACTION_VIEW
-                flags = 0
+                flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
 
                 putExtra(CHANNEL_LOGIN, channelLogin)
             }
@@ -25,13 +25,13 @@ class ChatActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val channelLogin = intent.getStringExtra(CHANNEL_LOGIN)!!
+
         supportFragmentManager
             .beginTransaction()
             .replace(
                 android.R.id.content,
-                ChannelChatFragment.newInstance(
-                    login = intent.getStringExtra(CHANNEL_LOGIN)!!
-                )
+                ChannelChatFragment.newInstance(login = channelLogin)
             )
             .commit()
     }

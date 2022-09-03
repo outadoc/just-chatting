@@ -1,47 +1,51 @@
 package fr.outadoc.justchatting.ui.chat
 
-import fr.outadoc.justchatting.irc.ChatMessageParser
-import fr.outadoc.justchatting.model.AppUser
-import fr.outadoc.justchatting.util.chat.LiveChatThread
-import fr.outadoc.justchatting.util.chat.LoggedInChatThread
-import fr.outadoc.justchatting.util.chat.OnCommandReceivedListener
-import fr.outadoc.justchatting.util.chat.PubSubListenerImpl
+import fr.outadoc.justchatting.model.chat.ChatCommand
+import fr.outadoc.justchatting.util.chat.LiveChatWebSocket
+import fr.outadoc.justchatting.util.chat.LoggedInChatWebSocket
 import fr.outadoc.justchatting.util.chat.PubSubWebSocket
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.datetime.Clock
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.merge
 
 class LiveChatController(
-    appUser: AppUser.LoggedIn,
     channelId: String,
     channelLogin: String,
-    messageListener: OnCommandReceivedListener,
     coroutineScope: CoroutineScope,
-    clock: Clock,
-    chatMessageParser: ChatMessageParser
+    liveChatThreadFactory: LiveChatWebSocket.Factory,
+    loggedInChatThreadFactory: LoggedInChatWebSocket.Factory,
+    pubSubWebSockerFactory: PubSubWebSocket.Factory
 ) : ChatController {
 
-    private val liveChat = LiveChatThread(
-        scope = coroutineScope,
-        clock = clock,
-        channelLogin = channelLogin,
-        listener = messageListener,
-        parser = chatMessageParser
-    )
+    class Factory(
+        private val liveChatThreadFactory: LiveChatWebSocket.Factory,
+        private val loggedInChatThreadFactory: LoggedInChatWebSocket.Factory,
+        private val pubSubWebSockerFactory: PubSubWebSocket.Factory
+    ) {
+        fun create(
+            channelId: String,
+            channelLogin: String,
+            coroutineScope: CoroutineScope,
+        ): LiveChatController {
+            return LiveChatController(
+                channelId = channelId,
+                channelLogin = channelLogin,
+                coroutineScope = coroutineScope,
+                liveChatThreadFactory = liveChatThreadFactory,
+                loggedInChatThreadFactory = loggedInChatThreadFactory,
+                pubSubWebSockerFactory = pubSubWebSockerFactory
+            )
+        }
+    }
 
-    private val loggedInChat = LoggedInChatThread(
-        scope = coroutineScope,
-        clock = clock,
-        userLogin = appUser.login,
-        userToken = appUser.helixToken,
-        channelName = channelLogin,
-        listener = messageListener,
-        parser = chatMessageParser
-    )
+    private val liveChat = liveChatThreadFactory.create(coroutineScope, channelLogin)
+    private val loggedInChat = loggedInChatThreadFactory.create(coroutineScope, channelLogin)
+    private val pubSub = pubSubWebSockerFactory.create(coroutineScope, channelId)
 
-    private val pubSub = PubSubWebSocket(
-        scope = coroutineScope,
-        channelId = channelId,
-        listener = PubSubListenerImpl(callback = messageListener)
+    val flow: Flow<ChatCommand> = merge(
+        liveChat.flow,
+        loggedInChat.flow,
+        pubSub.flow
     )
 
     override fun send(message: CharSequence) {

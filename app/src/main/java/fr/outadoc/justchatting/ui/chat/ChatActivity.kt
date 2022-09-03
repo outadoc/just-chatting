@@ -1,11 +1,8 @@
 package fr.outadoc.justchatting.ui.chat
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.view.Display
 import fr.outadoc.justchatting.ui.main.BaseActivity
 import fr.outadoc.justchatting.util.formatChannelUri
 

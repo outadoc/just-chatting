@@ -4,11 +4,9 @@ import fr.outadoc.justchatting.model.chat.PubSubPointReward
 import kotlinx.datetime.Instant
 import org.json.JSONObject
 
-class PubSubListenerImpl(
-    private val callback: OnCommandReceivedListener
-) : PubSubWebSocket.OnMessageReceivedListener {
+class PubSubRewardParserImpl : PubSubRewardParser {
 
-    override fun onPointReward(text: String) {
+    override fun parse(text: String): PubSubPointReward {
         val data = if (text.isNotBlank()) JSONObject(text).optJSONObject("data") else null
         val message = data?.optString("message")
             ?.let { if (it.isNotBlank() && !data.isNull("message")) JSONObject(it) else null }
@@ -26,7 +24,7 @@ class PubSubListenerImpl(
             ?.let { if (it.isNotBlank() && !reward.isNull("default_image")) JSONObject(it) else null }
         val input = redemption?.optString("user_input")
 
-        val pointReward = PubSubPointReward(
+        return PubSubPointReward(
             id = reward?.optString("id"),
             userId = user?.optString("id"),
             userLogin = user?.optString("login"),
@@ -47,7 +45,5 @@ class PubSubListenerImpl(
             emotes = null,
             badges = null
         )
-
-        callback.onCommand(pointReward)
     }
 }

@@ -6,19 +6,19 @@
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
-        android:defaultValue="true"
+        android:defaultValue="@bool/pref_default_chatEnableAnimatedEmotes"
         android:key="animatedGifEmotes"
         android:title="@string/animated_emotes"
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
-        android:defaultValue="false"
+        android:defaultValue="@bool/pref_default_chatEnableTimestamps"
         android:key="chat_timestamps"
         android:title="@string/timestamps"
         app:iconSpaceReserved="false" />
 
     <SeekBarPreference
-        android:defaultValue="600"
+        android:defaultValue="@integer/pref_default_chatLimit"
         android:key="chat_limit"
         android:max="1000"
         android:title="@string/message_limit"
@@ -26,16 +26,10 @@
         app:min="10"
         app:showSeekBarValue="true" />
 
-    <SwitchPreferenceCompat
-        android:defaultValue="true"
-        android:key="chat_recent"
-        android:title="@string/recentMsg_enable"
-        app:iconSpaceReserved="false" />
-
     <SeekBarPreference
-        android:defaultValue="100"
+        android:defaultValue="@integer/pref_default_recentChatLimit"
         android:key="chat_recent_limit"
-        android:max="800"
+        android:max="@integer/pref_max_chatLimit"
         android:title="@string/recentMsg_limit"
         app:iconSpaceReserved="false"
         app:min="0"
@@ -46,7 +40,7 @@
         app:iconSpaceReserved="false" />
 
     <EditTextPreference
-        android:defaultValue="l9klwmh97qgn0s0me276ezsft5szp2"
+        android:defaultValue="@string/pref_default_apiToken"
         android:key="helix_client_id"
         android:maxLines="1"
         android:title="@string/api_helix"
@@ -54,7 +48,7 @@
         app:useSimpleSummaryProvider="true" />
 
     <EditTextPreference
-        android:defaultValue="https://localhost"
+        android:defaultValue="@string/pref_default_apiRedirect"
         android:key="helix_redirect"
         android:maxLines="1"
         android:title="@string/api_helix_redirect"

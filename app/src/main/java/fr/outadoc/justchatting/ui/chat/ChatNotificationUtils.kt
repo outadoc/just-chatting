@@ -86,9 +86,7 @@ object ChatNotificationUtils {
                 notificationIdFor(user.id),
                 NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                     .setContentTitle(user.display_name)
-                    .setContentIntent(
-                        intent.toPendingIntent(context, mutable = false)
-                    )
+                    .setContentIntent(intent.toPendingIntent(context))
                     .setSmallIcon(R.drawable.ic_stream)
                     .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)

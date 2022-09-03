@@ -4,20 +4,23 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.CheerEmote
+import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.LiveChatMessage
+import fr.outadoc.justchatting.model.chat.PingCommand
+import fr.outadoc.justchatting.model.chat.PubSubPointReward
 import fr.outadoc.justchatting.model.chat.RecentEmote
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.model.chat.TwitchEmote
 import fr.outadoc.justchatting.model.chat.UserState
 import fr.outadoc.justchatting.model.helix.user.User
+import fr.outadoc.justchatting.repository.ChatConnectionPool
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.repository.PlayerRepository
 import fr.outadoc.justchatting.repository.TwitchService
@@ -25,10 +28,6 @@ import fr.outadoc.justchatting.repository.UserPreferencesRepository
 import fr.outadoc.justchatting.ui.common.BaseViewModel
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
-import fr.outadoc.justchatting.util.chat.CommandListenerImpl
-import fr.outadoc.justchatting.util.chat.OnChatMessageReceivedListener
-import fr.outadoc.justchatting.util.chat.OnRoomStateReceivedListener
-import fr.outadoc.justchatting.util.chat.OnUserStateReceivedListener
 import fr.outadoc.justchatting.util.combineWith
 import fr.outadoc.justchatting.util.isOdd
 import kotlinx.coroutines.Dispatchers
@@ -38,6 +37,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -50,7 +51,7 @@ import kotlin.collections.component2
 class ChatViewModel(
     private val repository: TwitchService,
     private val playerRepository: PlayerRepository,
-    private val chatMessageParser: ChatMessageParser,
+    private val chatConnectionPool: ChatConnectionPool,
     private val chatEntryMapper: ChatEntryMapper,
     private val chatPreferencesRepository: ChatPreferencesRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
@@ -63,6 +64,7 @@ class ChatViewModel(
             val channelId: String,
             val channelLogin: String,
             val channelName: String,
+            val appUser: AppUser,
             val channelBadges: List<TwitchBadge> = emptyList(),
             val chatMessages: List<ChatEntry> = LinkedList(),
             val chatters: Set<Chatter> = emptySet(),
@@ -73,7 +75,9 @@ class ChatViewModel(
             val otherEmotes: Set<EmoteSetItem> = emptySet(),
             val recentEmotes: Set<EmoteSetItem> = emptySet(),
             val userState: UserState = UserState(),
-            val roomState: RoomState = RoomState()
+            val roomState: RoomState = RoomState(),
+            val recentMsgLimit: Int,
+            val maxAdapterCount: Int
         ) : State() {
 
             val allEmotes: Set<Emote> =
@@ -113,82 +117,28 @@ class ChatViewModel(
                 )
             }
 
-    private var chatController: ChatController? = null
+    fun startLive(channelId: String, channelLogin: String, channelName: String) {
+        if (_state.value is State.Chatting) return
 
-    fun startLive(
-        channelId: String,
-        channelLogin: String,
-        channelName: String
-    ) {
         viewModelScope.launch(Dispatchers.Default) {
-            val appUser =
-                userPreferencesRepository.appUser.first() as? AppUser.LoggedIn
-                    ?: return@launch
-
             _state.emit(
                 State.Chatting(
                     channelId = channelId,
                     channelLogin = channelLogin,
                     channelName = channelName,
-                    chatters = setOf(Chatter(channelLogin))
+                    appUser = userPreferencesRepository.appUser.first() as? AppUser.LoggedIn
+                        ?: return@launch,
+                    chatters = setOf(Chatter(channelLogin)),
+                    recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first(),
+                    maxAdapterCount = chatPreferencesRepository.messageLimit.first()
                 )
             )
 
-            if (chatController == null) {
-                chatController = LiveChatController(
-                    appUser = appUser,
-                    channelId = channelId,
-                    channelLogin = channelLogin,
-                    clock = clock,
-                    coroutineScope = viewModelScope,
-                    chatMessageParser = chatMessageParser,
-                    messageListener = ChatStateListener(
-                        appUser = appUser,
-                        channelId = channelId,
-                        maxAdapterCount = chatPreferencesRepository.messageLimit.first()
-                    ).messageListener
-                )
+            chatConnectionPool.start(channelId, channelLogin)
+                .onEach(::onCommand)
+                .launchIn(viewModelScope)
 
-                val enableRecentMsg = chatPreferencesRepository.enableRecentMsg.first()
-                val recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first()
-
-                launch {
-                    if (enableRecentMsg && recentMsgLimit > 0) {
-                        loadRecentMessages(
-                            appUser = appUser,
-                            maxAdapterCount = chatPreferencesRepository.messageLimit.first(),
-                            channelLogin = channelLogin,
-                            recentMsgLimit = recentMsgLimit
-                        )
-                    }
-                }
-
-                chatController?.start()
-                loadEmotes(channelId)
-            }
-        }
-    }
-
-    private suspend fun loadRecentMessages(
-        appUser: AppUser,
-        channelLogin: String,
-        recentMsgLimit: Int,
-        maxAdapterCount: Int
-    ) {
-        try {
-            playerRepository.loadRecentMessages(channelLogin, recentMsgLimit)
-                .body()
-                ?.messages
-                ?.let { messages ->
-                    onMessages(
-                        appUser = appUser,
-                        maxAdapterCount = maxAdapterCount,
-                        messages = messages,
-                        append = false
-                    )
-                }
-        } catch (e: Exception) {
-            Log.e(TAG, "Failed to load recent messages for channel $channelLogin", e)
+            loadEmotes(channelId)
         }
     }
 
@@ -299,30 +249,46 @@ class ChatViewModel(
         }
     }
 
-    private fun onMessages(
-        appUser: AppUser,
-        maxAdapterCount: Int,
-        messages: List<ChatCommand>,
-        append: Boolean = true
-    ) {
-        // Note that this is the last message we've sent
-        val lastSentMessageInstant: Instant? =
-            messages.filterIsInstance<LiveChatMessage>()
-                .lastOrNull { message ->
-                    message.userId != null && message.userId == appUser.id
-                }
-                ?.timestamp
+    private fun onCommand(command: ChatCommand) {
+        when (command) {
+            is PubSubPointReward,
+            is Command.Ban,
+            is Command.Timeout,
+            PingCommand -> Unit
+            is LiveChatMessage,
+            is Command.ClearChat,
+            is Command.ClearMessage,
+            is Command.UserNotice,
+            is Command.Notice,
+            is Command.Join,
+            is Command.Disconnect,
+            is Command.SendMessageError,
+            is Command.SocketError -> onMessages(listOf(command))
+            is RoomState -> onRoomState(command)
+            is UserState -> onUserState(command)
+        }
+    }
 
-        // Remember names of chatters
-        val newChatters =
-            messages.asSequence()
-                .filterIsInstance<ChatMessage>()
-                .mapNotNull { message -> message.userName }
-                .map { userName -> Chatter(userName) }
-                .toSet()
-
+    private fun onMessages(messages: List<ChatCommand>, append: Boolean = true) {
         _state.update { s ->
             val state = s as? State.Chatting ?: return@update s
+
+            // Note that this is the last message we've sent
+            val lastSentMessageInstant: Instant? =
+                messages.filterIsInstance<LiveChatMessage>()
+                    .lastOrNull { message ->
+                        message.userId != null && message.userId == state.appUser.id
+                    }
+                    ?.timestamp
+
+            // Remember names of chatters
+            val newChatters =
+                messages.asSequence()
+                    .filterIsInstance<ChatMessage>()
+                    .mapNotNull { message -> message.userName }
+                    .map { userName -> Chatter(userName) }
+                    .toSet()
+
             val newMessages = state.chatMessages
                 .toMutableList()
                 .apply {
@@ -337,7 +303,7 @@ class ChatViewModel(
             // We alternate the background of each chat row.
             // If we remove just one item, the backgrounds will shift, so we always need to remove
             // an even number of items.
-            val maxCount = maxAdapterCount + if (newMessages.size.isOdd) 1 else 0
+            val maxCount = state.maxAdapterCount + if (newMessages.size.isOdd) 1 else 0
 
             state.copy(
                 chatMessages = newMessages.takeLast(maxCount),
@@ -354,7 +320,9 @@ class ChatViewModel(
         isDarkTheme: Boolean
     ) {
         viewModelScope.launch(Dispatchers.Default) {
-            chatController?.send(message = message)
+            (_state.value as? State.Chatting)?.let { state ->
+                chatConnectionPool.sendMessage(state.channelId, message)
+            }
 
             val currentTime = clock.now().toEpochMilliseconds()
             val allEmotesMap = (state.value as? State.Chatting)?.allEmotesMap
@@ -377,101 +345,76 @@ class ChatViewModel(
         }
     }
 
-    inner class ChatStateListener(
-        private val appUser: AppUser,
-        private val channelId: String?,
-        private val maxAdapterCount: Int
-    ) : OnUserStateReceivedListener,
-        OnRoomStateReceivedListener,
-        OnChatMessageReceivedListener {
+    private fun onUserState(userState: UserState) {
+        val channelId = (_state.value as? State.Chatting)?.channelId ?: return
+        viewModelScope.launch(Dispatchers.Default) {
+            val emotes: List<TwitchEmote> =
+                userState.emoteSets.asReversed()
+                    .chunked(25)
+                    .map { setIds ->
+                        async {
+                            try {
+                                repository.loadEmotesFromSet(setIds = setIds)
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                                null
+                            }.orEmpty()
+                        }
+                    }
+                    .awaitAll()
+                    .flatten()
 
-        val messageListener = CommandListenerImpl(
-            callback = this,
-            callbackUserState = this,
-            callbackRoomState = this
-        )
-
-        override fun onMessage(message: ChatCommand) {
-            onMessages(
-                appUser = appUser,
-                maxAdapterCount = maxAdapterCount,
-                messages = listOf(message)
-            )
-        }
-
-        override fun onUserState(userState: UserState) {
-            viewModelScope.launch(Dispatchers.Default) {
-                val emotes: List<TwitchEmote> =
-                    userState.emoteSets.asReversed()
-                        .chunked(25)
-                        .map { setIds ->
-                            async {
-                                try {
-                                    repository.loadEmotesFromSet(setIds = setIds)
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                    null
-                                }.orEmpty()
+            val emoteOwners: Map<String, User> =
+                try {
+                    repository.loadUsersById(
+                        ids = emotes
+                            .mapNotNull { it.ownerId }
+                            .toSet()
+                            .mapNotNull {
+                                it.toLongOrNull()
+                                    ?.takeIf { id -> id > 0 }
+                                    ?.toString()
                             }
-                        }
-                        .awaitAll()
-                        .flatten()
-
-                val emoteOwners: Map<String, User> =
-                    try {
-                        repository.loadUsersById(
-                            ids = emotes
-                                .mapNotNull { it.ownerId }
-                                .toSet()
-                                .mapNotNull {
-                                    it.toLongOrNull()
-                                        ?.takeIf { id -> id > 0 }
-                                        ?.toString()
-                                }
-                        )
-                    } catch (e: Exception) {
-                        e.printStackTrace()
-                        null
-                    }
-                        .orEmpty()
-                        .associateBy { user -> user.id }
-
-                val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
-                    emotes.filter { emote -> emote.ownerId == channelId }
-                        .groupBy { emoteOwners[channelId]?.display_name }
-
-                val groupedEmotes: Map<String?, List<TwitchEmote>> =
-                    emotes.filter { emote -> emote.ownerId != channelId }
-                        .groupBy { emote -> emoteOwners[emote.ownerId]?.display_name }
-
-                val sortedEmotes: Set<EmoteSetItem> =
-                    (groupedChannelEmotes + groupedEmotes)
-                        .flatMap { (ownerName, emotes) ->
-                            listOf(EmoteSetItem.Header(title = ownerName))
-                                .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
-                        }
-                        .toSet()
-
-                if (emotes.isNotEmpty()) {
-                    _state.update { state ->
-                        (state as? State.Chatting)
-                            ?.copy(userState = userState, twitchEmotes = sortedEmotes)
-                            ?: state
-                    }
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    null
                 }
-            }
-        }
+                    .orEmpty()
+                    .associateBy { user -> user.id }
 
-        override fun onRoomState(roomState: RoomState) {
-            _state.update { state ->
-                (state as? State.Chatting)?.copy(roomState = roomState) ?: state
+            val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
+                emotes.filter { emote -> emote.ownerId == channelId }
+                    .groupBy { emoteOwners[channelId]?.display_name }
+
+            val groupedEmotes: Map<String?, List<TwitchEmote>> =
+                emotes.filter { emote -> emote.ownerId != channelId }
+                    .groupBy { emote -> emoteOwners[emote.ownerId]?.display_name }
+
+            val sortedEmotes: Set<EmoteSetItem> =
+                (groupedChannelEmotes + groupedEmotes)
+                    .flatMap { (ownerName, emotes) ->
+                        listOf(EmoteSetItem.Header(title = ownerName))
+                            .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
+                    }
+                    .toSet()
+
+            if (emotes.isNotEmpty()) {
+                _state.update { state ->
+                    (state as? State.Chatting)
+                        ?.copy(userState = userState, twitchEmotes = sortedEmotes)
+                        ?: state
+                }
             }
         }
     }
 
-    override fun onCleared() {
-        chatController?.stop()
-        super.onCleared()
+    private fun onRoomState(roomState: RoomState) {
+        _state.update { state ->
+            (state as? State.Chatting)
+                ?.copy(roomState = roomState)
+                ?: state
+        }
     }
 
     companion object {

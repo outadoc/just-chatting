@@ -1,12 +1,18 @@
 package fr.outadoc.justchatting.util.chat
 
+import android.content.Context
 import android.util.Log
-import fr.outadoc.justchatting.MainApplication
+import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.util.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
@@ -19,18 +25,21 @@ import kotlin.time.Duration.Companion.seconds
 
 const val TAG = "ChatThread"
 
-abstract class BaseChatThread(
+abstract class BaseChatWebSocket(
+    private val applicationContext: Context,
     private val scope: CoroutineScope,
-    private val listener: OnCommandReceivedListener,
     private val clock: Clock,
     channelName: String
 ) {
-    private val appContext = MainApplication.INSTANCE.applicationContext
-
     private var client: OkHttpClient = OkHttpClient()
     protected var socket: WebSocket? = null
 
     protected val hashChannelName: String = "#$channelName"
+
+    private val maxChatLimit = applicationContext.resources.getInteger(R.integer.pref_max_chatLimit)
+
+    private val _flow = MutableSharedFlow<ChatCommand>(replay = maxChatLimit)
+    val flow: Flow<ChatCommand> = _flow
 
     protected fun connect(socketListener: WebSocketListener) {
         Log.d(TAG, "Connecting to Twitch IRC")
@@ -49,7 +58,7 @@ abstract class BaseChatThread(
             client.dispatcher.cancelAll()
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketIn", e)
-            listener.onCommand(
+            emit(
                 Command.SocketError(
                     throwable = e,
                     timestamp = clock.now()
@@ -63,11 +72,23 @@ abstract class BaseChatThread(
         socket?.send("PONG :tmi.twitch.tv")
     }
 
+    protected fun emit(command: ChatCommand) {
+        scope.launch {
+            _flow.emit(command)
+        }
+    }
+
+    protected fun emitAll(commands: List<ChatCommand>) {
+        scope.launch {
+            _flow.emitAll(commands.asFlow())
+        }
+    }
+
     protected fun attemptReconnect(listener: WebSocketListener) {
         scope.launch(Dispatchers.IO) {
             disconnect()
 
-            while (isActive && !appContext.isNetworkAvailable) {
+            while (isActive && !applicationContext.isNetworkAvailable) {
                 delay(1.seconds)
             }
 

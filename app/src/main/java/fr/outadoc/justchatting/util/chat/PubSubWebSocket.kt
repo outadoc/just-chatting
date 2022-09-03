@@ -1,10 +1,14 @@
 package fr.outadoc.justchatting.util.chat
 
-import fr.outadoc.justchatting.MainApplication
+import android.content.Context
+import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.util.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
@@ -20,18 +24,36 @@ import org.json.JSONObject
 import kotlin.time.Duration.Companion.seconds
 
 class PubSubWebSocket(
+    private val applicationContext: Context,
+    private val pubSubRewardParser: PubSubRewardParser,
     private val scope: CoroutineScope,
-    channelId: String,
-    private val listener: OnMessageReceivedListener
+    channelId: String
 ) {
-    private val appContext = MainApplication.INSTANCE.applicationContext
+    class Factory(
+        private val applicationContext: Context,
+        private val pubSubRewardParser: PubSubRewardParser
+    ) {
+        fun create(scope: CoroutineScope, channelId: String): PubSubWebSocket {
+            return PubSubWebSocket(
+                applicationContext = applicationContext,
+                pubSubRewardParser = pubSubRewardParser,
+                scope = scope,
+                channelId = channelId
+            )
+        }
+    }
 
     private var client: OkHttpClient = OkHttpClient()
     private var socket: WebSocket? = null
 
-    private var pongReceived = false
+    private val maxChatLimit = applicationContext.resources.getInteger(R.integer.pref_max_chatLimit)
 
     private val topics = listOf("community-points-channel-v1.$channelId")
+
+    private var pongReceived = false
+
+    private val _flow = MutableSharedFlow<ChatCommand>(replay = maxChatLimit)
+    val flow: Flow<ChatCommand> = _flow
 
     fun start() {
         connect(listener = PubSubListener())
@@ -53,7 +75,7 @@ class PubSubWebSocket(
         scope.launch(Dispatchers.IO) {
             disconnect()
 
-            while (isActive && !appContext.isNetworkAvailable) {
+            while (isActive && !applicationContext.isNetworkAvailable) {
                 delay(1.seconds)
             }
 
@@ -133,8 +155,12 @@ class PubSubWebSocket(
 
                     when {
                         topic?.startsWith("community-points-channel") == true &&
-                            messageType?.startsWith("reward-redeemed") == true -> {
-                            listener.onPointReward(text)
+                                messageType?.startsWith("reward-redeemed") == true -> {
+                            scope.launch {
+                                _flow.emit(
+                                    pubSubRewardParser.parse(text)
+                                )
+                            }
                         }
                     }
                 }
@@ -142,9 +168,5 @@ class PubSubWebSocket(
                 "RECONNECT" -> attemptReconnect(this)
             }
         }
-    }
-
-    interface OnMessageReceivedListener {
-        fun onPointReward(text: String)
     }
 }

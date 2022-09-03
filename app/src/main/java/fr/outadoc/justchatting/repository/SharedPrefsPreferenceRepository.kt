@@ -5,48 +5,52 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.util.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class SharedPrefsPreferenceRepository(applicationContext: Context) : PreferenceRepository {
+class SharedPrefsPreferenceRepository(
+    private val applicationContext: Context
+) : PreferenceRepository {
 
     private val dataStore = applicationContext.dataStore
 
     override val helixClientId: Flow<String>
         get() = dataStore.data.map { prefs ->
-            prefs[HELIX_CLIENT_ID] ?: "l9klwmh97qgn0s0me276ezsft5szp2"
+            prefs[HELIX_CLIENT_ID]
+                ?: applicationContext.getString(R.string.pref_default_apiToken)
         }
 
     override val helixRedirect: Flow<String>
         get() = dataStore.data.map { prefs ->
-            prefs[HELIX_REDIRECT] ?: "https://localhost"
+            prefs[HELIX_REDIRECT]
+                ?: applicationContext.getString(R.string.pref_default_apiRedirect)
         }
 
     override val animateEmotes: Flow<Boolean>
         get() = dataStore.data.map { prefs ->
-            prefs[CHAT_ANIMATED_EMOTES] ?: true
+            prefs[CHAT_ANIMATED_EMOTES]
+                ?: applicationContext.resources.getBoolean(R.bool.pref_default_chatEnableAnimatedEmotes)
         }
 
     override val showTimestamps: Flow<Boolean>
         get() = dataStore.data.map { prefs ->
-            prefs[CHAT_TIMESTAMPS] ?: false
-        }
-
-    override val enableRecentMsg: Flow<Boolean>
-        get() = dataStore.data.map { prefs ->
-            prefs[CHAT_RECENT] ?: true
+            prefs[CHAT_TIMESTAMPS]
+                ?: applicationContext.resources.getBoolean(R.bool.pref_default_chatEnableTimestamps)
         }
 
     override val recentMsgLimit: Flow<Int>
         get() = dataStore.data.map { prefs ->
-            prefs[CHAT_RECENT_LIMIT] ?: 800
+            prefs[CHAT_RECENT_LIMIT]
+                ?: applicationContext.resources.getInteger(R.integer.pref_default_recentChatLimit)
         }
 
     override val messageLimit: Flow<Int>
         get() = dataStore.data.map { prefs ->
-            prefs[CHAT_LIMIT] ?: 1000
+            prefs[CHAT_LIMIT]
+                ?: applicationContext.resources.getInteger(R.integer.pref_default_chatLimit)
         }
 
     override val appUser: Flow<AppUser>
@@ -84,7 +88,6 @@ class SharedPrefsPreferenceRepository(applicationContext: Context) : PreferenceR
 
         val CHAT_ANIMATED_EMOTES = booleanPreferencesKey("animatedGifEmotes")
         val CHAT_TIMESTAMPS = booleanPreferencesKey("chat_timestamps")
-        val CHAT_RECENT = booleanPreferencesKey("chat_recent")
         val CHAT_LIMIT = intPreferencesKey("chat_limit")
         val CHAT_RECENT_LIMIT = intPreferencesKey("chat_recent_limit")
     }

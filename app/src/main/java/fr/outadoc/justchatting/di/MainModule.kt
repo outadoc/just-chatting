@@ -25,12 +25,19 @@ import fr.outadoc.justchatting.model.helix.emote.EmoteSetDeserializer
 import fr.outadoc.justchatting.model.helix.emote.EmoteSetResponse
 import fr.outadoc.justchatting.repository.ApiRepository
 import fr.outadoc.justchatting.repository.AuthPreferencesRepository
+import fr.outadoc.justchatting.repository.ChatConnectionPool
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.repository.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.repository.UserPreferencesRepository
+import fr.outadoc.justchatting.ui.chat.LiveChatController
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
+import fr.outadoc.justchatting.util.chat.LiveChatWebSocket
+import fr.outadoc.justchatting.util.chat.LoggedInChatWebSocket
+import fr.outadoc.justchatting.util.chat.PubSubRewardParser
+import fr.outadoc.justchatting.util.chat.PubSubRewardParserImpl
+import fr.outadoc.justchatting.util.chat.PubSubWebSocket
 import kotlinx.datetime.Clock
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -50,8 +57,16 @@ val mainModule = module {
     single<ChatPreferencesRepository> { get<PreferenceRepository>() }
     single<UserPreferencesRepository> { get<PreferenceRepository>() }
 
+    single { ChatConnectionPool(get(), get()) }
+
+    single { LiveChatController.Factory(get(), get(), get()) }
+    single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get()) }
+    single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
+    single { PubSubWebSocket.Factory(get(), get()) }
+
     single { ChatMessageParser() }
     single { ChatEntryMapper(get()) }
+    single<PubSubRewardParser> { PubSubRewardParserImpl() }
 
     single<HelixApi> {
         Retrofit.Builder()

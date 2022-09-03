@@ -7,7 +7,7 @@ import android.os.Build
 
 fun Intent.toPendingIntent(
     context: Context,
-    mutable: Boolean
+    mutable: Boolean = false
 ): PendingIntent {
     val mutableFlag =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && mutable) PendingIntent.FLAG_MUTABLE

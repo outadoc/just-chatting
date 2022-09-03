@@ -212,7 +212,7 @@
     <string name="no_browser_found">No browser app found</string>
     <string name="nothing_here">Nothing here</string>
     <string name="notification_channel_bubbles_message">Used to show the Twitch chat in notification bubbles.</string>
-    <string name="notification_channel_bubbles_openPrompt">Open this notification as a bubble.</string>
+    <string name="notification_channel_bubbles_openPrompt">Keep an eye on this chat by opening this notification in a bubble.</string>
     <string name="notification_channel_bubbles_title">Chat bubbles</string>
     <string name="now_following">You\'re now following %s</string>
     <string name="order">Order</string>

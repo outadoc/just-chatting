@@ -8,6 +8,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,6 +44,7 @@ import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.generateAsync
 import fr.outadoc.justchatting.util.hideKeyboard
 import fr.outadoc.justchatting.util.isDarkMode
+import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
 import fr.outadoc.justchatting.util.loadImageToBitmap
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
@@ -232,8 +234,8 @@ class ChannelChatFragment :
                     ActivityManager.TaskDescription(user.display_name, bitmap)
                 )
 
-                if (!activity.isLaunchedFromBubble) {
-                    setUpForBubbling(user, bitmap)
+                if (!activity.isLaunchedFromBubbleCompat) {
+                    configureChatBubbles(user, bitmap)
                 }
             }
         }
@@ -256,9 +258,14 @@ class ChannelChatFragment :
         )
     }
 
-    private fun setUpForBubbling(channel: User, channelLogo: Bitmap) {
+    private fun configureChatBubbles(channel: User, channelLogo: Bitmap) {
         val context = context ?: return
+
+        // Bubbles are only available on Android Q+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
+
         ChatNotificationUtils.createGenericBubbleChannelIfNeeded(context)
+            ?: return
 
         val icon = channelLogo.let { IconCompat.createWithBitmap(it) }
 
@@ -281,25 +288,17 @@ class ChannelChatFragment :
             icon = icon
         )
 
-        setOpenInBubbleMenuItem(channel, icon, person)
-    }
-
-    private fun setOpenInBubbleMenuItem(
-        channel: User,
-        icon: IconCompat,
-        person: Person
-    ) {
-        viewHolder?.toolbar?.menu?.findItem(R.id.openInBubble)?.isVisible = true
+        viewHolder?.toolbar?.menu
+            ?.findItem(R.id.openInBubble)
+            ?.isVisible = true
 
         openInBubble = {
-            context?.apply {
-                ChatNotificationUtils.createBubble(
-                    context = this,
-                    user = channel,
-                    icon = icon,
-                    person = person
-                )
-            }
+            ChatNotificationUtils.createBubble(
+                context = context,
+                user = channel,
+                icon = icon,
+                person = person
+            )
         }
     }
 
@@ -400,6 +399,11 @@ class ChannelChatFragment :
 
     override fun scrollToTop() {
         viewHolder?.appBar?.setExpanded(true, true)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        openInBubble?.invoke()
     }
 
     override fun onDestroyView() {

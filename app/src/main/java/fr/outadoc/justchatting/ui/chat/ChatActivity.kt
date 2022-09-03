@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.ui.chat
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Build
@@ -37,17 +38,4 @@ class ChatActivity : BaseActivity() {
             )
             .commit()
     }
-
-    private val isLaunchedFromBubbleCompat: Boolean
-        get() = if (Build.VERSION.SDK_INT >= 31) {
-            isLaunchedFromBubble
-        } else {
-            val displayId = if (Build.VERSION.SDK_INT >= 30) {
-                display?.displayId
-            } else {
-                @Suppress("DEPRECATION")
-                windowManager.defaultDisplay.displayId
-            }
-            displayId != Display.DEFAULT_DISPLAY
-        }
 }

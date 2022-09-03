@@ -1,15 +1,12 @@
 package fr.outadoc.justchatting.ui.chat
 
-import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.content.LocusIdCompat
-import androidx.core.content.getSystemService
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
@@ -20,28 +17,6 @@ import fr.outadoc.justchatting.util.toPendingIntent
 object ChatNotificationUtils {
 
     private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
-
-    fun areBubblesAllowed(
-        context: Context,
-        channel: NotificationChannelCompat
-    ): Boolean {
-        if (channel.canBubble()) return true
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return false
-
-        val nm = context.getSystemService<NotificationManager>() ?: return false
-
-        if (!nm.areNotificationsEnabled()) return false
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
-            nm.bubblePreference != NotificationManager.BUBBLE_PREFERENCE_NONE
-        ) return true
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && nm.areBubblesAllowed())
-            return true
-
-        return false
-    }
 
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 

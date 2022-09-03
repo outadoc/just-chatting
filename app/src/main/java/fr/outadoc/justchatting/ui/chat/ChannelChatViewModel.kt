@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.ui.chat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
@@ -24,7 +25,7 @@ class ChannelChatViewModel(
     sealed class State {
         object Loading : State()
         data class Loaded(
-            val user: fr.outadoc.justchatting.model.User,
+            val appUser: AppUser,
             val loadedUser: User?,
             val stream: Stream?,
             val showTimestamps: Boolean = false,
@@ -48,12 +49,12 @@ class ChannelChatViewModel(
         }
         .flatMapLatest { (stream, loadedUser) ->
             combine(
-                userPreferencesRepository.user,
+                userPreferencesRepository.appUser,
                 chatPreferencesRepository.showTimestamps,
                 chatPreferencesRepository.animateEmotes
             ) { user, showTimestamps, animateEmotes ->
                 State.Loaded(
-                    user = user,
+                    appUser = user,
                     loadedUser = loadedUser,
                     stream = stream,
                     showTimestamps = showTimestamps,

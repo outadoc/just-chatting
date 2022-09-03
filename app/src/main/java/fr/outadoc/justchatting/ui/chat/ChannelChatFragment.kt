@@ -129,7 +129,7 @@ class ChannelChatFragment :
                     )
                 }
 
-                state.user.login?.let { login ->
+                state.appUser.login?.let { login ->
                     chatView.setUsername(login)
                 }
 

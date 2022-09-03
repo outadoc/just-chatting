@@ -5,7 +5,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import fr.outadoc.justchatting.model.User
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.util.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -49,7 +49,7 @@ class SharedPrefsPreferenceRepository(applicationContext: Context) : PreferenceR
             prefs[CHAT_LIMIT] ?: 1000
         }
 
-    override val user: Flow<User>
+    override val appUser: Flow<AppUser>
         get() = dataStore.data.map { prefs ->
             val id = prefs[USER_ID]
             if (!id.isNullOrEmpty()) {
@@ -57,20 +57,20 @@ class SharedPrefsPreferenceRepository(applicationContext: Context) : PreferenceR
                 val helixToken = prefs[USER_TOKEN]
 
                 if (name.isNullOrEmpty() || helixToken.isNullOrEmpty()) {
-                    User.NotValidated(id, name, helixToken)
+                    AppUser.NotValidated(id, name, helixToken)
                 } else {
-                    User.LoggedIn(id, name, helixToken)
+                    AppUser.LoggedIn(id, name, helixToken)
                 }
             } else {
-                User.NotLoggedIn
+                AppUser.NotLoggedIn
             }
         }
 
-    override suspend fun updateUser(user: User?) {
+    override suspend fun updateUser(appUser: AppUser?) {
         dataStore.edit { prefs ->
-            prefs[USER_ID] = user?.id ?: ""
-            prefs[USER_LOGIN] = user?.login ?: ""
-            prefs[USER_TOKEN] = user?.helixToken ?: ""
+            prefs[USER_ID] = appUser?.id ?: ""
+            prefs[USER_LOGIN] = appUser?.login ?: ""
+            prefs[USER_TOKEN] = appUser?.helixToken ?: ""
         }
     }
 

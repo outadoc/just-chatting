@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import fr.outadoc.justchatting.model.User
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.asLoggedIn
 import fr.outadoc.justchatting.repository.AuthPreferencesRepository
 import fr.outadoc.justchatting.repository.AuthRepository
@@ -42,13 +42,13 @@ class MainViewModel(
 
     private val _forcedLoginDestination: Flow<Destination?> =
         combine(
-            userPreferencesRepository.user,
+            userPreferencesRepository.appUser,
             authPreferencesRepository.helixClientId
         ) { user, helixClientId ->
             when (user) {
-                is User.LoggedIn -> null
-                User.NotLoggedIn -> Destination.Login()
-                is User.NotValidated -> {
+                is AppUser.LoggedIn -> null
+                AppUser.NotLoggedIn -> Destination.Login()
+                is AppUser.NotValidated -> {
                     try {
                         val token = user.helixToken
                         if (token.isNullOrBlank()) null

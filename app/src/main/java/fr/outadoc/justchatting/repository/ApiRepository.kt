@@ -33,7 +33,7 @@ class ApiRepository(
         val factory = SearchChannelsDataSource.Factory(
             query = query,
             helixClientId = authPrefs.helixClientId.first(),
-            helixToken = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
+            helixToken = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),
             helixApi = helix,
             coroutineScope = coroutineScope
         )
@@ -51,9 +51,9 @@ class ApiRepository(
     override suspend fun loadFollowedStreams(coroutineScope: CoroutineScope): Listing<Stream> {
         val factory = FollowedStreamsDataSource.Factory(
             localFollowsChannel = localFollowsChannel,
-            userId = userPreferencesRepository.user.first().id,
+            userId = userPreferencesRepository.appUser.first().id,
             helixClientId = authPrefs.helixClientId.first(),
-            helixToken = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
+            helixToken = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),
             helixApi = helix,
             coroutineScope = coroutineScope
         )
@@ -75,9 +75,9 @@ class ApiRepository(
     ): Listing<Follow> {
         val factory = FollowedChannelsDataSource.Factory(
             localFollowsChannel = localFollowsChannel,
-            userId = userPreferencesRepository.user.first().id,
+            userId = userPreferencesRepository.appUser.first().id,
             helixClientId = authPrefs.helixClientId.first(),
-            helixToken = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
+            helixToken = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),
             helixApi = helix,
             sort = sort,
             order = order,
@@ -98,7 +98,7 @@ class ApiRepository(
         withContext(Dispatchers.IO) {
             helix.getStreams(
                 clientId = authPrefs.helixClientId.first(),
-                token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
+                token = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),
                 ids = listOf(channelId)
             ).data?.firstOrNull()
         }
@@ -107,7 +107,7 @@ class ApiRepository(
         withContext(Dispatchers.IO) {
             helix.getUsersById(
                 clientId = authPrefs.helixClientId.first(),
-                token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
+                token = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),
                 ids = ids
             ).data
         }
@@ -116,7 +116,7 @@ class ApiRepository(
         withContext(Dispatchers.IO) {
             helix.getUsersByLogin(
                 clientId = authPrefs.helixClientId.first(),
-                token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
+                token = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),
                 logins = logins
             ).data
         }
@@ -125,7 +125,7 @@ class ApiRepository(
         withContext(Dispatchers.IO) {
             helix.getCheerEmotes(
                 clientId = authPrefs.helixClientId.first(),
-                token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
+                token = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),
                 userId = userId
             ).emotes
         }
@@ -134,7 +134,7 @@ class ApiRepository(
         withContext(Dispatchers.IO) {
             helix.getEmotesFromSet(
                 clientId = authPrefs.helixClientId.first(),
-                token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
+                token = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),
                 setIds = setIds
             ).emotes
         }
@@ -146,7 +146,7 @@ class ApiRepository(
     ): Boolean = withContext(Dispatchers.IO) {
         helix.getUserFollows(
             clientId = authPrefs.helixClientId.first(),
-            token = userPreferencesRepository.user.first().helixToken?.withBearerPrefix(),
+            token = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),
             userId = userId,
             channelId = channelId
         ).total == 1

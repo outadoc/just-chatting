@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.irc.ChatMessageParser
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Chatter
@@ -31,7 +32,6 @@ import fr.outadoc.justchatting.util.chat.OnRoomStateReceivedListener
 import fr.outadoc.justchatting.util.chat.OnUserStateReceivedListener
 import fr.outadoc.justchatting.util.combineWith
 import fr.outadoc.justchatting.util.isOdd
-import fr.outadoc.justchatting.util.nullIfEmpty
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -112,20 +112,20 @@ class ChatViewModel(
         channelName: String
     ) {
         viewModelScope.launch(Dispatchers.Default) {
-            val user =
-                userPreferencesRepository.user.first() as? fr.outadoc.justchatting.model.User.LoggedIn
+            val appUser =
+                userPreferencesRepository.appUser.first() as? AppUser.LoggedIn
                     ?: return@launch
 
             if (chatController == null) {
                 chatController = LiveChatController(
-                    user = user,
+                    appUser = appUser,
                     channelId = channelId,
                     channelLogin = channelLogin,
                     clock = clock,
                     coroutineScope = viewModelScope,
                     chatMessageParser = chatMessageParser,
                     messageListener = ChatStateListener(
-                        user = user,
+                        appUser = appUser,
                         channelId = channelId,
                         displayName = channelName,
                         helixClientId = authPreferencesRepository.helixClientId.first(),
@@ -139,7 +139,7 @@ class ChatViewModel(
                 launch {
                     if (enableRecentMsg && recentMsgLimit > 0) {
                         loadRecentMessages(
-                            user = user,
+                            appUser = appUser,
                             maxAdapterCount = chatPreferencesRepository.messageLimit.first(),
                             channelLogin = channelLogin,
                             recentMsgLimit = recentMsgLimit
@@ -154,7 +154,7 @@ class ChatViewModel(
     }
 
     private suspend fun loadRecentMessages(
-        user: fr.outadoc.justchatting.model.User,
+        appUser: AppUser,
         channelLogin: String,
         recentMsgLimit: Int,
         maxAdapterCount: Int
@@ -165,7 +165,7 @@ class ChatViewModel(
                 ?.messages
                 ?.let { messages ->
                     onMessages(
-                        user = user,
+                        appUser = appUser,
                         maxAdapterCount = maxAdapterCount,
                         messages = messages,
                         append = false
@@ -283,7 +283,7 @@ class ChatViewModel(
     }
 
     private fun onMessages(
-        user: fr.outadoc.justchatting.model.User,
+        appUser: AppUser,
         maxAdapterCount: Int,
         messages: List<ChatCommand>,
         append: Boolean = true
@@ -293,7 +293,7 @@ class ChatViewModel(
             val lastSentMessageInstant: Instant? =
                 messages.filterIsInstance<LiveChatMessage>()
                     .lastOrNull { message ->
-                        message.userId != null && message.userId == user.id
+                        message.userId != null && message.userId == appUser.id
                     }
                     ?.timestamp
 
@@ -359,7 +359,7 @@ class ChatViewModel(
     }
 
     inner class ChatStateListener(
-        private val user: fr.outadoc.justchatting.model.User,
+        private val appUser: AppUser,
         private val helixClientId: String?,
         private val channelId: String?,
         private val maxAdapterCount: Int,
@@ -384,16 +384,14 @@ class ChatViewModel(
 
         override fun onMessage(message: ChatCommand) {
             onMessages(
-                user = user,
+                appUser = appUser,
                 maxAdapterCount = maxAdapterCount,
                 messages = listOf(message)
             )
         }
 
         override fun onUserState(userState: UserState) {
-            if (helixClientId == null || user.helixToken?.nullIfEmpty() == null) {
-                return
-            }
+            if (helixClientId == null || appUser.helixToken == null) return
 
             if (state.value?.userState != userState) {
                 viewModelScope.launch(Dispatchers.Default) {

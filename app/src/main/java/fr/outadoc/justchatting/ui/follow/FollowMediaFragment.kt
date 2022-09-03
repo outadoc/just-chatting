@@ -16,7 +16,7 @@ import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.databinding.FragmentMediaBinding
-import fr.outadoc.justchatting.model.User
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.repository.UserPreferencesRepository
 import fr.outadoc.justchatting.ui.common.NavigationHandler
 import fr.outadoc.justchatting.ui.common.Scrollable
@@ -66,7 +66,7 @@ class FollowMediaFragment : Fragment(), Scrollable {
                     R.id.login -> {
                         lifecycleScope.launch {
                             onLogout(
-                                user = userPreferencesRepository.user.first()
+                                appUser = userPreferencesRepository.appUser.first()
                             )
                         }
                         true
@@ -96,10 +96,10 @@ class FollowMediaFragment : Fragment(), Scrollable {
         }
     }
 
-    private fun onLogout(user: User) {
+    private fun onLogout(appUser: AppUser) {
         AlertDialog.Builder(requireContext()).apply {
             setTitle(getString(R.string.logout_title))
-            user.login?.let { user ->
+            appUser.login?.let { user ->
                 setMessage(
                     getString(
                         R.string.logout_msg,

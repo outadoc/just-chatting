@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.repository
 
-import fr.outadoc.justchatting.model.User
+import fr.outadoc.justchatting.model.AppUser
 import kotlinx.coroutines.flow.Flow
 
 interface UserPreferencesRepository {
-    val user: Flow<User>
-    suspend fun updateUser(user: User?)
+    val appUser: Flow<AppUser>
+    suspend fun updateUser(appUser: AppUser?)
 }

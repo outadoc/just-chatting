@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.ui.chat
 
 import fr.outadoc.justchatting.irc.ChatMessageParser
-import fr.outadoc.justchatting.model.User
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.util.chat.LiveChatThread
 import fr.outadoc.justchatting.util.chat.LoggedInChatThread
 import fr.outadoc.justchatting.util.chat.OnCommandReceivedListener
@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.datetime.Clock
 
 class LiveChatController(
-    user: User.LoggedIn,
+    appUser: AppUser.LoggedIn,
     channelId: String,
     channelLogin: String,
     messageListener: OnCommandReceivedListener,
@@ -31,8 +31,8 @@ class LiveChatController(
     private val loggedInChat = LoggedInChatThread(
         scope = coroutineScope,
         clock = clock,
-        userLogin = user.login,
-        userToken = user.helixToken,
+        userLogin = appUser.login,
+        userToken = appUser.helixToken,
         channelName = channelLogin,
         listener = messageListener,
         parser = chatMessageParser

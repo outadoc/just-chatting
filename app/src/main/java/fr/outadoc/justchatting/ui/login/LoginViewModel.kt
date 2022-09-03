@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import fr.outadoc.justchatting.model.User
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.repository.AuthPreferencesRepository
 import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.UserPreferencesRepository
@@ -37,8 +37,8 @@ class LoginViewModel(
 
     fun onStart() {
         viewModelScope.launch {
-            val user = userPreferencesRepository.user.first()
-            if (user !is User.NotLoggedIn) {
+            val user = userPreferencesRepository.appUser.first()
+            if (user !is AppUser.NotLoggedIn) {
                 userPreferencesRepository.updateUser(null)
 
                 try {
@@ -83,7 +83,7 @@ class LoginViewModel(
             try {
                 val response = authRepository.validate(token) ?: throw IOException()
                 userPreferencesRepository.updateUser(
-                    user = User.LoggedIn(
+                    appUser = AppUser.LoggedIn(
                         id = response.userId,
                         login = response.login,
                         helixToken = token

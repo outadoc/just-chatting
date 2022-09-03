@@ -21,7 +21,7 @@ class AuthRepository(
     suspend fun revokeToken() =
         withContext(Dispatchers.IO) {
             val clientId = authPreferencesRepository.helixClientId.first()
-            val token = userPreferencesRepository.user.first().helixToken ?: return@withContext
+            val token = userPreferencesRepository.appUser.first().helixToken ?: return@withContext
             api.revokeToken(clientId, token)
         }
 }

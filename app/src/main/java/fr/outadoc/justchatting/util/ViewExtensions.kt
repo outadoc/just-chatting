@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.util
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.drawable.Drawable
+import android.graphics.drawable.BitmapDrawable
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -11,15 +11,13 @@ import androidx.appcompat.widget.SearchView
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
+import kotlinx.coroutines.suspendCancellableCoroutine
 
 @SuppressLint("CheckResult")
 fun ImageView.loadImage(
     url: String?,
     circle: Boolean = false
 ) {
-    // not enough on some devices?
-    if (!context.isActivityResumed) return
-
     try {
         val request = ImageRequest.Builder(context)
             .data(url)
@@ -38,34 +36,39 @@ fun ImageView.loadImage(
     }
 }
 
-@SuppressLint("CheckResult")
-fun loadImage(
+suspend fun loadImageToBitmap(
     context: Context,
-    url: String?,
+    imageUrl: String,
     circle: Boolean = false,
     width: Int,
-    height: Int,
-    listener: (Drawable) -> Unit
-) {
-    // not enough on some devices?
-    if (!context.isActivityResumed) return
-
-    try {
+    height: Int
+): BitmapDrawable? {
+    return suspendCancellableCoroutine { cont ->
         val request = ImageRequest.Builder(context)
-            .data(url)
+            .data(imageUrl)
             .crossfade(true)
             .size(width, height)
             .apply {
-                if (circle) {
-                    transformations(CircleCropTransformation())
-                }
+                if (circle) transformations(CircleCropTransformation())
             }
-            .target(onSuccess = listener)
+            .target(
+                onSuccess = { drawable ->
+                    cont.resumeWith(
+                        Result.success(drawable as? BitmapDrawable)
+                    )
+                },
+                onError = { drawable ->
+                    cont.resumeWith(
+                        Result.success(drawable as? BitmapDrawable)
+                    )
+                }
+            )
             .build()
 
-        context.imageLoader.enqueue(request)
-    } catch (e: IllegalArgumentException) {
-        e.printStackTrace()
+        if (!cont.isCancelled) {
+            val disposable = context.imageLoader.enqueue(request)
+            cont.invokeOnCancellation { disposable.dispose() }
+        }
     }
 }
 

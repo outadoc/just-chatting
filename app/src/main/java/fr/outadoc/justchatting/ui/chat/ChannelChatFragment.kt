@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.ui.chat
 
 import android.app.Activity
+import android.app.ActivityManager
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
-import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +18,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Palette.Swatch
 import androidx.viewpager2.adapter.FragmentStateAdapter
@@ -37,7 +38,8 @@ import fr.outadoc.justchatting.ui.view.chat.StreamInfoDialog
 import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.hideKeyboard
 import fr.outadoc.justchatting.util.isDarkMode
-import fr.outadoc.justchatting.util.loadImage
+import fr.outadoc.justchatting.util.loadImageToBitmap
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -195,25 +197,33 @@ class ChannelChatFragment :
         }
     }
 
-    private fun FragmentChannelBinding.loadUserAvatar(channelLogo: String) {
+    private fun FragmentChannelBinding.loadUserAvatar(user: User) {
         val context = context ?: return
+        val logo = user.channelLogo ?: return
+
         val size = context.resources.getDimension(R.dimen.chat_streamPictureSize).toInt()
         val endMargin = context.resources.getDimension(R.dimen.chat_streamPictureMarginEnd).toInt()
 
-        loadImage(
-            context = context,
-            url = channelLogo,
-            circle = true,
-            width = size,
-            height = size
-        ) { drawable ->
+        lifecycleScope.launch {
+            val drawable = loadImageToBitmap(
+                context = context,
+                imageUrl = logo,
+                circle = true,
+                width = size,
+                height = size
+            )
+
             toolbar.logo = InsetDrawable(drawable, 0, 0, endMargin, 0)
 
-            (drawable as? BitmapDrawable)?.bitmap?.let { bitmap ->
+            drawable?.bitmap?.let { bitmap ->
                 Palette.Builder(bitmap).generate { palette ->
                     (palette?.dominantSwatch ?: palette?.dominantSwatch)
                         ?.let { swatch -> updateToolbarColor(swatch) }
                 }
+
+                activity?.setTaskDescription(
+                    ActivityManager.TaskDescription(user.display_name, bitmap)
+                )
             }
         }
     }
@@ -270,9 +280,7 @@ class ChannelChatFragment :
             }
         }
 
-        user.channelLogo?.let { channelLogo ->
-            loadUserAvatar(channelLogo)
-        }
+        loadUserAvatar(user)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

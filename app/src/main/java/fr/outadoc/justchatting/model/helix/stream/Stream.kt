@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.model.helix.stream
 import android.os.Parcelable
 import fr.outadoc.justchatting.model.helix.tag.Tag
 import fr.outadoc.justchatting.model.helix.user.User
-import fr.outadoc.justchatting.util.getTemplateUrl
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -22,8 +21,4 @@ data class Stream(
     val tags: List<Tag>? = null,
     val channelUser: User? = null,
     val lastBroadcast: String? = null
-) : Parcelable {
-
-    val channelLogo: String?
-        get() = getTemplateUrl(profileImageURL, "profileimage")
-}
+) : Parcelable

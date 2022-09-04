@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.model.helix.channel
 
 import android.os.Parcelable
-import fr.outadoc.justchatting.util.getTemplateUrl
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -18,8 +17,4 @@ data class ChannelSearch(
     val thumbnail_url: String? = null,
     val profileImageURL: String? = null,
     val followers_count: Int? = null
-) : Parcelable {
-
-    val channelLogo: String?
-        get() = getTemplateUrl(profileImageURL, "profileimage")
-}
+) : Parcelable

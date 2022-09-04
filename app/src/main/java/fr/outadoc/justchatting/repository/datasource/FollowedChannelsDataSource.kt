@@ -14,7 +14,6 @@ import fr.outadoc.justchatting.model.helix.follows.Sort
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.repository.LocalFollowChannelRepository
 import fr.outadoc.justchatting.util.DownloadUtils
-import fr.outadoc.justchatting.util.getTemplateUrl
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.io.path.Path
@@ -112,8 +111,8 @@ class FollowedChannelsDataSource(
         val results: List<User> =
             filter { follow ->
                 follow.profileImageURL == null ||
-                    follow.profileImageURL.contains("image_manager_disk_cache") ||
-                    follow.lastBroadcast == null
+                        follow.profileImageURL.contains("image_manager_disk_cache") ||
+                        follow.lastBroadcast == null
             }
                 .mapNotNull { follow -> follow.to_id }
                 .chunked(size = 100)
@@ -165,7 +164,7 @@ class FollowedChannelsDataSource(
                 try {
                     val loader = ImageLoader(context)
                     val request = ImageRequest.Builder(context)
-                        .data(getTemplateUrl(profileImageURL, "profileimage"))
+                        .data(profileImageURL)
                         .build()
 
                     val result = (loader.execute(request) as SuccessResult).drawable

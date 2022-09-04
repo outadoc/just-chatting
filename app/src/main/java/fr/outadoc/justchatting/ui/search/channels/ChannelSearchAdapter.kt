@@ -34,9 +34,9 @@ class ChannelSearchAdapter(
 
         val binding = FragmentSearchChannelsListItemBinding.bind(view)
         with(binding) {
-            if (item.channelLogo != null) {
+            if (item.profileImageURL != null) {
                 userImage.isVisible = true
-                userImage.loadImage(item.channelLogo, circle = true)
+                userImage.loadImage(item.profileImageURL, circle = true)
             } else {
                 userImage.isVisible = false
             }

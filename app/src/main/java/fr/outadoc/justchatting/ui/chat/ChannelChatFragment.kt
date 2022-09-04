@@ -215,7 +215,7 @@ class ChannelChatFragment :
         val context = context ?: return
         val activity = activity ?: return
 
-        val logo = user.channelLogo ?: return
+        val logo = user.profile_image_url ?: return
 
         lifecycleScope.launch {
             val bitmap = loadImageToBitmap(

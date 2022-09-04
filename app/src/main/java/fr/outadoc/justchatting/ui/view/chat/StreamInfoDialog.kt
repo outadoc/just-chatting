@@ -77,10 +77,10 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
             bannerImage.isVisible = false
         }
 
-        if (user.channelLogo != null) {
+        if (user.profile_image_url != null) {
             userLayout.isVisible = true
             userImage.isVisible = true
-            userImage.loadImage(user.channelLogo, circle = true)
+            userImage.loadImage(user.profile_image_url, circle = true)
         } else {
             userImage.isVisible = false
         }
@@ -138,7 +138,7 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
                 }
         }
 
-        val channelLogo = stream?.channelLogo
+        val channelLogo = stream?.profileImageURL
         if (!userImage.isVisible && channelLogo != null) {
             userImage.isVisible = true
             userImage.loadImage(channelLogo, circle = true)

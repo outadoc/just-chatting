@@ -34,10 +34,10 @@ class FollowedChannelsAdapter(
                 }
             }
 
-            if (item.channelLogo != null) {
+            if (item.profileImageURL != null) {
                 userImage.isVisible = true
                 userImage.loadImage(
-                    item.channelLogo,
+                    item.profileImageURL,
                     circle = true
                 )
             } else {

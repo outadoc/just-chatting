@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.model.helix.follows
 
 import android.os.Parcelable
-import fr.outadoc.justchatting.util.getTemplateUrl
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -17,8 +16,4 @@ data class Follow(
     val lastBroadcast: String? = null,
     val followTwitch: Boolean = false,
     val followLocal: Boolean = false
-) : Parcelable {
-
-    val channelLogo: String?
-        get() = getTemplateUrl(profileImageURL, "profileimage")
-}
+) : Parcelable

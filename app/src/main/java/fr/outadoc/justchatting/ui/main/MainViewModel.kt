@@ -96,7 +96,7 @@ class MainViewModel(
                             id = user.id,
                             login = user.login,
                             name = user.display_name,
-                            channelLogo = user.channelLogo
+                            channelLogo = user.profile_image_url
                         )
                     }
             } catch (e: Exception) {

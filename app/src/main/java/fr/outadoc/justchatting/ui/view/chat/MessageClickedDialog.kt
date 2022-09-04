@@ -131,10 +131,10 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
             bannerImage.isVisible = false
         }
 
-        if (user.channelLogo != null) {
+        if (user.profile_image_url != null) {
             userLayout.isVisible = true
             userImage.isVisible = true
-            userImage.loadImage(user.channelLogo, circle = true)
+            userImage.loadImage(user.profile_image_url, circle = true)
             userImage.setOnClickListener {
                 listener.onViewProfileClicked(user.login)
                 dismiss()

@@ -23,10 +23,10 @@
                 android:imeOptions="flagNoFullscreen"
                 android:inputType="textAutoComplete"
                 android:textDirection="locale"
+                app:iconifiedByDefault="false"
                 app:queryBackground="@android:color/transparent"
                 app:queryHint="@string/search"
-                app:searchIcon="@null"
-                app:iconifiedByDefault="false" />
+                app:searchIcon="@null" />
         </com.google.android.material.appbar.MaterialToolbar>
 
     </com.google.android.material.appbar.AppBarLayout>

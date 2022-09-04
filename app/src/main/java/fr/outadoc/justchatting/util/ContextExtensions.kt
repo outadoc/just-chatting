@@ -37,7 +37,7 @@ val Context.isNetworkAvailable: Boolean
         val activeNetworkInfo = manager.activeNetworkInfo
         var connected = activeNetworkInfo != null && activeNetworkInfo.isConnected
         if (!connected) {
-            connected = manager.allNetworkInfo.any { it.isConnected } ?: false
+            connected = manager.allNetworkInfo.any { it.isConnected }
         }
         return connected
     }

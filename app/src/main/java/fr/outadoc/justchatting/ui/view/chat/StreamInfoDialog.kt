@@ -85,16 +85,12 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
             userImage.isVisible = false
         }
 
-        if (user.display_name != null) {
-            userLayout.isVisible = true
-            userName.isVisible = true
-            userName.text = user.display_name
+        userLayout.isVisible = true
+        userName.isVisible = true
+        userName.text = user.display_name
 
-            if (user.bannerImageURL != null) {
-                userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
-            }
-        } else {
-            userName.isVisible = false
+        if (user.bannerImageURL != null) {
+            userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
         }
 
         if (user.followers_count != null) {

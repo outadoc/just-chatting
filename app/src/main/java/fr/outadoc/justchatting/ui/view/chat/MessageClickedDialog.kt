@@ -143,20 +143,16 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
             userImage.isVisible = false
         }
 
-        if (user.display_name != null) {
-            userLayout.isVisible = true
-            userName.isVisible = true
-            userName.text = user.display_name
-            userName.setOnClickListener {
-                listener.onViewProfileClicked(user.login)
-                dismiss()
-            }
+        userLayout.isVisible = true
+        userName.isVisible = true
+        userName.text = user.display_name
+        userName.setOnClickListener {
+            listener.onViewProfileClicked(user.login)
+            dismiss()
+        }
 
-            if (user.bannerImageURL != null) {
-                userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
-            }
-        } else {
-            userName.isVisible = false
+        if (user.bannerImageURL != null) {
+            userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
         }
 
         if (user.followers_count != null) {
@@ -191,14 +187,10 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
             userCreated.isVisible = false
         }
 
-        if (user.login != null) {
-            reply.isVisible = true
-            reply.setOnClickListener {
-                listener.onReplyClicked(user.login)
-                dismiss()
-            }
-        } else {
-            reply.isVisible = false
+        reply.isVisible = true
+        reply.setOnClickListener {
+            listener.onReplyClicked(user.login)
+            dismiss()
         }
 
         if (!userImage.isVisible && !userName.isVisible) {

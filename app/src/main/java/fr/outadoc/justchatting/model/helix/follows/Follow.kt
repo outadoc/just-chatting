@@ -14,6 +14,5 @@ data class Follow(
     val followed_at: String? = null,
     val profileImageURL: String? = null,
     val lastBroadcast: String? = null,
-    val followTwitch: Boolean = false,
-    val followLocal: Boolean = false
+    val followTwitch: Boolean = false
 ) : Parcelable

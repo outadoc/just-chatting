@@ -3,21 +3,17 @@ package fr.outadoc.justchatting.di
 import androidx.room.Room
 import fr.outadoc.justchatting.db.AppDatabase
 import fr.outadoc.justchatting.repository.AuthRepository
-import fr.outadoc.justchatting.repository.LocalFollowChannelRepository
 import fr.outadoc.justchatting.repository.PlayerRepository
 import fr.outadoc.justchatting.repository.SortChannelRepository
 import org.koin.dsl.module
 
 val databaseModule = module {
 
-    single { LocalFollowChannelRepository(get(), get(), get()) }
     single { SortChannelRepository(get()) }
     single { AuthRepository(get(), get(), get()) }
     single { PlayerRepository(get(), get()) }
 
     single { get<AppDatabase>().bookmarks() }
-    single { get<AppDatabase>().localFollowsChannel() }
-    single { get<AppDatabase>().localFollowsGame() }
     single { get<AppDatabase>().recentEmotes() }
     single { get<AppDatabase>().requests() }
     single { get<AppDatabase>().sortChannelDao() }

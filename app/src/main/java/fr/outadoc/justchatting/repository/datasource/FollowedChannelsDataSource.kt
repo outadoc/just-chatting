@@ -1,27 +1,14 @@
 package fr.outadoc.justchatting.repository.datasource
 
-import android.content.Context
-import android.graphics.drawable.BitmapDrawable
 import androidx.paging.DataSource
-import coil.ImageLoader
-import coil.request.ImageRequest
-import coil.request.SuccessResult
-import fr.outadoc.justchatting.MainApplication
 import fr.outadoc.justchatting.api.HelixApi
 import fr.outadoc.justchatting.model.helix.follows.Follow
 import fr.outadoc.justchatting.model.helix.follows.Order
 import fr.outadoc.justchatting.model.helix.follows.Sort
 import fr.outadoc.justchatting.model.helix.user.User
-import fr.outadoc.justchatting.repository.LocalFollowChannelRepository
-import fr.outadoc.justchatting.util.DownloadUtils
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlin.io.path.Path
-import kotlin.io.path.absolute
-import kotlin.io.path.pathString
 
 class FollowedChannelsDataSource(
-    private val localFollowsChannel: LocalFollowChannelRepository,
     private val userId: String?,
     private val helixClientId: String?,
     private val helixToken: String?,
@@ -37,21 +24,7 @@ class FollowedChannelsDataSource(
         if (helixToken.isNullOrBlank()) return
 
         loadInitial(params, callback) {
-            val localFollows: Map<String?, Follow> =
-                localFollowsChannel
-                    .loadFollows()
-                    .map { follow ->
-                        Follow(
-                            to_id = follow.user_id,
-                            to_login = follow.user_login,
-                            to_name = follow.user_name,
-                            profileImageURL = follow.channelLogo,
-                            followLocal = true
-                        )
-                    }
-                    .associateBy { it.to_id }
-
-            val helixFollows: Map<String?, Follow> =
+            val list: Collection<Follow> =
                 helixApi.getFollowedChannels(
                     clientId = helixClientId,
                     token = helixToken,
@@ -62,27 +35,9 @@ class FollowedChannelsDataSource(
                     .also { offset = it.pagination?.cursor }
                     .data
                     .orEmpty()
-                    .map { follow ->
-                        val localFollow = localFollows[follow.to_id]
-                        localFollow?.copy(
-                            followTwitch = true,
-                            followed_at = follow.followed_at,
-                            lastBroadcast = follow.lastBroadcast
-                        ) ?: follow.copy(
-                            followTwitch = true
-                        )
-                    }
                     .associateBy { it.to_id }
-
-            val list: Collection<Follow> =
-                localFollows
-                    .plus(helixFollows)
                     .values
                     .mapWithUserProfileImages()
-                    .also { follows ->
-                        follows.filter { follow -> follow.followLocal }
-                            .forEach(::updateLocalProfileImage)
-                    }
 
             when (order) {
                 Order.ASC -> when (sort) {
@@ -95,16 +50,6 @@ class FollowedChannelsDataSource(
                 }
             }
         }
-    }
-
-    private fun updateLocalProfileImage(follow: Follow) {
-        val id = follow.to_id ?: return
-        val profileImageUrl = follow.profileImageURL ?: return
-        updateLocalUser(
-            context = MainApplication.INSTANCE.applicationContext,
-            userId = id,
-            profileImageURL = profileImageUrl
-        )
     }
 
     private suspend fun Collection<Follow>.mapWithUserProfileImages(): Collection<Follow> {
@@ -151,55 +96,10 @@ class FollowedChannelsDataSource(
                 .orEmpty()
                 .mapWithUserProfileImages()
                 .toList()
-                .also { follows ->
-                    follows.filter { follow -> follow.followLocal }
-                        .forEach(::updateLocalProfileImage)
-                }
-        }
-    }
-
-    private fun updateLocalUser(context: Context, userId: String, profileImageURL: String) {
-        coroutineScope.launch {
-            try {
-                try {
-                    val loader = ImageLoader(context)
-                    val request = ImageRequest.Builder(context)
-                        .data(profileImageURL)
-                        .build()
-
-                    val result = (loader.execute(request) as SuccessResult).drawable
-                    val bitmap = (result as BitmapDrawable).bitmap
-
-                    DownloadUtils.savePng(
-                        context = context,
-                        folder = "profile_pics",
-                        fileName = userId,
-                        bitmap = bitmap
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-                val downloadedLogoPath: String =
-                    Path(context.filesDir.path, "profile_pics", "$userId.png")
-                        .absolute()
-                        .pathString
-
-                localFollowsChannel.getFollowById(userId)?.let { follow ->
-                    localFollowsChannel.updateFollow(
-                        follow.apply {
-                            channelLogo = downloadedLogoPath
-                        }
-                    )
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
         }
     }
 
     class Factory(
-        private val localFollowsChannel: LocalFollowChannelRepository,
         private val userId: String?,
         private val helixClientId: String?,
         private val helixToken: String?,
@@ -211,7 +111,6 @@ class FollowedChannelsDataSource(
 
         override fun create(): DataSource<Int, Follow> =
             FollowedChannelsDataSource(
-                localFollowsChannel = localFollowsChannel,
                 userId = userId,
                 helixClientId = helixClientId,
                 helixToken = helixToken,

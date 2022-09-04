@@ -86,15 +86,15 @@ class FollowedChannelsViewModel(
         viewModelScope.launch {
             val sortDefaults = sortChannelRepository.getById("followed_channels")
             (
-                sortDefaults?.apply {
-                    videoSort = sort.value
-                    videoType = order.value
-                } ?: SortChannel(
-                    id = "followed_channels",
-                    videoSort = sort.value,
-                    videoType = order.value
-                )
-                ).let { sortChannelRepository.save(it) }
+                    sortDefaults?.apply {
+                        videoSort = sort.value
+                        videoType = order.value
+                    } ?: SortChannel(
+                        id = "followed_channels",
+                        videoSort = sort.value,
+                        videoType = order.value
+                    )
+                    ).let { sortChannelRepository.save(it) }
         }
     }
 

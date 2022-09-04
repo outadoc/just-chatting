@@ -50,7 +50,7 @@ val mainModule = module {
 
     single<Clock> { Clock.System }
 
-    single<TwitchService> { ApiRepository(get(), get(), get(), get()) }
+    single<TwitchService> { ApiRepository(get(), get(), get()) }
 
     single<PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }
     single<AuthPreferencesRepository> { get<PreferenceRepository>() }

@@ -21,7 +21,6 @@ import kotlinx.coroutines.withContext
 
 class ApiRepository(
     private val helix: HelixApi,
-    private val localFollowsChannel: LocalFollowChannelRepository,
     private val authPrefs: AuthPreferencesRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
 ) : TwitchService {
@@ -50,7 +49,6 @@ class ApiRepository(
 
     override suspend fun loadFollowedStreams(coroutineScope: CoroutineScope): Listing<Stream> {
         val factory = FollowedStreamsDataSource.Factory(
-            localFollowsChannel = localFollowsChannel,
             userId = userPreferencesRepository.appUser.first().id,
             helixClientId = authPrefs.helixClientId.first(),
             helixToken = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),
@@ -74,7 +72,6 @@ class ApiRepository(
         coroutineScope: CoroutineScope
     ): Listing<Follow> {
         val factory = FollowedChannelsDataSource.Factory(
-            localFollowsChannel = localFollowsChannel,
             userId = userPreferencesRepository.appUser.first().id,
             helixClientId = authPrefs.helixClientId.first(),
             helixToken = userPreferencesRepository.appUser.first().helixToken?.withBearerPrefix(),

@@ -12,7 +12,6 @@ import coil.memory.MemoryCache
 import coil.transition.Transition
 import coil.util.DebugLogger
 import com.google.android.material.color.DynamicColors
-import fr.outadoc.justchatting.di.databaseModule
 import fr.outadoc.justchatting.di.mainModule
 import fr.outadoc.justchatting.di.viewModelModule
 import org.koin.android.ext.koin.androidContext
@@ -33,7 +32,7 @@ class MainApplication : Application(), ImageLoaderFactory {
         startKoin {
             androidLogger()
             androidContext(this@MainApplication)
-            modules(mainModule, viewModelModule, databaseModule)
+            modules(mainModule, viewModelModule)
         }
     }
 

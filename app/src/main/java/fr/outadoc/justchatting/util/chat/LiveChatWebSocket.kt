@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
-import fr.outadoc.justchatting.repository.PlayerRepository
+import fr.outadoc.justchatting.repository.RecentMessagesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -31,7 +31,7 @@ class LiveChatWebSocket private constructor(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: ChatMessageParser,
-    private val playerRepository: PlayerRepository,
+    private val recentMessagesRepository: RecentMessagesRepository,
     private val chatPreferencesRepository: ChatPreferencesRepository,
     private val channelLogin: String
 ) : BaseChatWebSocket(applicationContext, scope, clock, channelLogin) {
@@ -40,7 +40,7 @@ class LiveChatWebSocket private constructor(
         private val applicationContext: Context,
         private val clock: Clock,
         private val parser: ChatMessageParser,
-        private val playerRepository: PlayerRepository,
+        private val recentMessagesRepository: RecentMessagesRepository,
         private val chatPreferencesRepository: ChatPreferencesRepository
     ) {
         fun create(scope: CoroutineScope, channelLogin: String): LiveChatWebSocket {
@@ -48,7 +48,7 @@ class LiveChatWebSocket private constructor(
                 applicationContext = applicationContext,
                 clock = clock,
                 parser = parser,
-                playerRepository = playerRepository,
+                recentMessagesRepository = recentMessagesRepository,
                 chatPreferencesRepository = chatPreferencesRepository,
                 scope = scope,
                 channelLogin = channelLogin
@@ -143,7 +143,7 @@ class LiveChatWebSocket private constructor(
         if (recentMsgLimit < 1) return
 
         try {
-            playerRepository.loadRecentMessages(channelLogin, recentMsgLimit)
+            recentMessagesRepository.loadRecentMessages(channelLogin, recentMsgLimit)
                 .body()
                 ?.messages
                 ?.let { commands ->

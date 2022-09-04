@@ -12,7 +12,7 @@ import retrofit2.http.Query
 
 interface HelixApi {
 
-    @GET("streams/")
+    @GET("streams")
     suspend fun getStreams(
         @Header("Client-ID") clientId: String?,
         @Header("Authorization") token: String?,

@@ -43,20 +43,33 @@ class FollowedChannelsFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.sortText.observe(viewLifecycleOwner) {
-            viewHolder?.sortBar?.sortText?.text = it
+        viewModel.filter.observe(viewLifecycleOwner) { filter ->
+            val context = context ?: return@observe
+            viewHolder?.apply {
+                sortBar.sortText.text = context.getString(
+                    R.string.sort_and_period,
+                    when (filter.sort) {
+                        Sort.FOLLOWED_AT -> context.getString(R.string.time_followed)
+                        Sort.ALPHABETICALLY -> context.getString(R.string.alphabetically)
+                    },
+                    when (filter.order) {
+                        Order.ASC -> context.getString(R.string.ascending)
+                        Order.DESC -> context.getString(R.string.descending)
+                    }
+                )
+            }
         }
 
-        viewModel.setUser(context = requireContext())
-
         viewHolder?.sortBar?.root?.setOnClickListener {
-            FollowedChannelsSortDialog.newInstance(
-                sort = viewModel.sort,
-                order = viewModel.order
-            ).show(
-                childFragmentManager,
-                null
-            )
+            viewModel.filter.value?.let { filter ->
+                FollowedChannelsSortDialog.newInstance(
+                    sort = filter.sort,
+                    order = filter.order
+                ).show(
+                    childFragmentManager,
+                    null
+                )
+            }
         }
     }
 
@@ -69,8 +82,7 @@ class FollowedChannelsFragment :
         adapter.submitList(null)
         viewModel.filter(
             sort = sort,
-            order = order,
-            text = getString(R.string.sort_and_order, sortText, orderText)
+            order = order
         )
     }
 

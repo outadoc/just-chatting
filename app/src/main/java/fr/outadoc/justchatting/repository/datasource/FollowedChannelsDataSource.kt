@@ -56,8 +56,8 @@ class FollowedChannelsDataSource(
         val results: List<User> =
             filter { follow ->
                 follow.profileImageURL == null ||
-                        follow.profileImageURL.contains("image_manager_disk_cache") ||
-                        follow.lastBroadcast == null
+                    follow.profileImageURL.contains("image_manager_disk_cache") ||
+                    follow.lastBroadcast == null
             }
                 .mapNotNull { follow -> follow.to_id }
                 .chunked(size = 100)

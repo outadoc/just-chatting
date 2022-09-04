@@ -1,11 +1,16 @@
 package fr.outadoc.justchatting.di
 
+import androidx.room.Room
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.BuildConfig
+import fr.outadoc.justchatting.api.BttvEmotesApi
 import fr.outadoc.justchatting.api.HelixApi
 import fr.outadoc.justchatting.api.IdApi
-import fr.outadoc.justchatting.api.MiscApi
+import fr.outadoc.justchatting.api.RecentMessagesApi
+import fr.outadoc.justchatting.api.StvEmotesApi
+import fr.outadoc.justchatting.api.TwitchBadgesApi
+import fr.outadoc.justchatting.db.AppDatabase
 import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.model.chat.BttvChannelDeserializer
 import fr.outadoc.justchatting.model.chat.BttvChannelResponse
@@ -25,9 +30,12 @@ import fr.outadoc.justchatting.model.helix.emote.EmoteSetDeserializer
 import fr.outadoc.justchatting.model.helix.emote.EmoteSetResponse
 import fr.outadoc.justchatting.repository.ApiRepository
 import fr.outadoc.justchatting.repository.AuthPreferencesRepository
+import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.ChatConnectionPool
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
+import fr.outadoc.justchatting.repository.EmotesRepository
 import fr.outadoc.justchatting.repository.PreferenceRepository
+import fr.outadoc.justchatting.repository.RecentMessagesRepository
 import fr.outadoc.justchatting.repository.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.repository.UserPreferencesRepository
@@ -68,6 +76,14 @@ val mainModule = module {
     single { ChatEntryMapper(get()) }
     single<PubSubRewardParser> { PubSubRewardParserImpl() }
 
+    single { AuthRepository(get(), get(), get()) }
+    single { EmotesRepository(get(), get(), get(), get()) }
+    single { RecentMessagesRepository(get()) }
+
+    single { get<AppDatabase>().recentEmotes() }
+
+    single { Room.databaseBuilder(get(), AppDatabase::class.java, "database").build() }
+
     single<HelixApi> {
         Retrofit.Builder()
             .baseUrl("https://api.twitch.tv/helix/")
@@ -77,13 +93,40 @@ val mainModule = module {
             .create(HelixApi::class.java)
     }
 
-    single<MiscApi> {
+    single<TwitchBadgesApi> {
         Retrofit.Builder()
-            .baseUrl("https://api.twitch.tv/") // placeholder url
+            .baseUrl("https://badges.twitch.tv/")
             .client(get())
             .addConverterFactory(get<GsonConverterFactory>())
             .build()
-            .create(MiscApi::class.java)
+            .create(TwitchBadgesApi::class.java)
+    }
+
+    single<BttvEmotesApi> {
+        Retrofit.Builder()
+            .baseUrl("https://api.betterttv.net/")
+            .client(get())
+            .addConverterFactory(get<GsonConverterFactory>())
+            .build()
+            .create(BttvEmotesApi::class.java)
+    }
+
+    single<StvEmotesApi> {
+        Retrofit.Builder()
+            .baseUrl("https://api.7tv.app/")
+            .client(get())
+            .addConverterFactory(get<GsonConverterFactory>())
+            .build()
+            .create(StvEmotesApi::class.java)
+    }
+
+    single<RecentMessagesApi> {
+        Retrofit.Builder()
+            .baseUrl("https://recent-messages.robotty.de/api/")
+            .client(get())
+            .addConverterFactory(get<GsonConverterFactory>())
+            .build()
+            .create(RecentMessagesApi::class.java)
     }
 
     single<IdApi> {

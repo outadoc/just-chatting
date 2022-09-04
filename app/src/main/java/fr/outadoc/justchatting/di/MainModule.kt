@@ -44,11 +44,12 @@ import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.util.chat.LiveChatWebSocket
 import fr.outadoc.justchatting.util.chat.LoggedInChatWebSocket
 import fr.outadoc.justchatting.util.chat.PubSubRewardParser
-import fr.outadoc.justchatting.util.chat.PubSubRewardParserImpl
 import fr.outadoc.justchatting.util.chat.PubSubWebSocket
 import kotlinx.datetime.Clock
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.scope.Scope
+import org.koin.dsl.binds
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -60,10 +61,13 @@ val mainModule = module {
 
     single<TwitchService> { ApiRepository(get(), get(), get()) }
 
-    single<PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }
-    single<AuthPreferencesRepository> { get<PreferenceRepository>() }
-    single<ChatPreferencesRepository> { get<PreferenceRepository>() }
-    single<UserPreferencesRepository> { get<PreferenceRepository>() }
+    single<PreferenceRepository> {
+        SharedPrefsPreferenceRepository(get())
+    } binds arrayOf(
+        AuthPreferencesRepository::class,
+        ChatPreferencesRepository::class,
+        UserPreferencesRepository::class
+    )
 
     single { ChatConnectionPool(get(), get()) }
 
@@ -74,7 +78,7 @@ val mainModule = module {
 
     single { ChatMessageParser() }
     single { ChatEntryMapper(get()) }
-    single<PubSubRewardParser> { PubSubRewardParserImpl() }
+    single { PubSubRewardParser() }
 
     single { AuthRepository(get(), get(), get()) }
     single { EmotesRepository(get(), get(), get(), get()) }
@@ -84,59 +88,12 @@ val mainModule = module {
 
     single { Room.databaseBuilder(get(), AppDatabase::class.java, "database").build() }
 
-    single<HelixApi> {
-        Retrofit.Builder()
-            .baseUrl("https://api.twitch.tv/helix/")
-            .client(get())
-            .addConverterFactory(get<GsonConverterFactory>())
-            .build()
-            .create(HelixApi::class.java)
-    }
-
-    single<TwitchBadgesApi> {
-        Retrofit.Builder()
-            .baseUrl("https://badges.twitch.tv/")
-            .client(get())
-            .addConverterFactory(get<GsonConverterFactory>())
-            .build()
-            .create(TwitchBadgesApi::class.java)
-    }
-
-    single<BttvEmotesApi> {
-        Retrofit.Builder()
-            .baseUrl("https://api.betterttv.net/")
-            .client(get())
-            .addConverterFactory(get<GsonConverterFactory>())
-            .build()
-            .create(BttvEmotesApi::class.java)
-    }
-
-    single<StvEmotesApi> {
-        Retrofit.Builder()
-            .baseUrl("https://api.7tv.app/")
-            .client(get())
-            .addConverterFactory(get<GsonConverterFactory>())
-            .build()
-            .create(StvEmotesApi::class.java)
-    }
-
-    single<RecentMessagesApi> {
-        Retrofit.Builder()
-            .baseUrl("https://recent-messages.robotty.de/api/")
-            .client(get())
-            .addConverterFactory(get<GsonConverterFactory>())
-            .build()
-            .create(RecentMessagesApi::class.java)
-    }
-
-    single<IdApi> {
-        Retrofit.Builder()
-            .baseUrl("https://id.twitch.tv/oauth2/")
-            .client(get())
-            .addConverterFactory(get<GsonConverterFactory>())
-            .build()
-            .create(IdApi::class.java)
-    }
+    single<HelixApi> { createApi("https://api.twitch.tv/helix/") }
+    single<TwitchBadgesApi> { createApi("https://badges.twitch.tv/") }
+    single<BttvEmotesApi> { createApi("https://api.betterttv.net/") }
+    single<StvEmotesApi> { createApi("https://api.7tv.app/") }
+    single<RecentMessagesApi> { createApi("https://recent-messages.robotty.de/api/") }
+    single<IdApi> { createApi("https://id.twitch.tv/oauth2/") }
 
     single<GsonConverterFactory> {
         GsonConverterFactory.create(
@@ -177,3 +134,11 @@ val mainModule = module {
             .build()
     }
 }
+
+private inline fun <reified T> Scope.createApi(baseUrl: String): T =
+    Retrofit.Builder()
+        .baseUrl(baseUrl)
+        .client(get())
+        .addConverterFactory(get<GsonConverterFactory>())
+        .build()
+        .create(T::class.java)

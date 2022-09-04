@@ -4,9 +4,9 @@ import fr.outadoc.justchatting.model.chat.PubSubPointReward
 import kotlinx.datetime.Instant
 import org.json.JSONObject
 
-class PubSubRewardParserImpl : PubSubRewardParser {
+class PubSubRewardParser {
 
-    override fun parse(text: String): PubSubPointReward {
+    fun parse(text: String): PubSubPointReward {
         val data = if (text.isNotBlank()) JSONObject(text).optJSONObject("data") else null
         val message = data?.optString("message")
             ?.let { if (it.isNotBlank() && !data.isNull("message")) JSONObject(it) else null }

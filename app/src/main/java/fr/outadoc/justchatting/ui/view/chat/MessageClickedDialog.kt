@@ -18,7 +18,7 @@ import fr.outadoc.justchatting.ui.common.ExpandingBottomSheetDialogFragment
 import fr.outadoc.justchatting.util.formatNumber
 import fr.outadoc.justchatting.util.formatTime
 import fr.outadoc.justchatting.util.loadImage
-import kotlinx.datetime.Instant
+import kotlinx.datetime.toInstant
 import org.koin.android.ext.android.inject
 
 class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
@@ -176,7 +176,7 @@ class MessageClickedDialog : ExpandingBottomSheetDialogFragment() {
             userCreated.isVisible = true
             userCreated.text = requireContext().getString(
                 R.string.created_at,
-                Instant.parse(user.created_at).formatTime(requireContext())
+                user.created_at.toInstant().formatTime(requireContext())
             )
 
             if (user.bannerImageURL != null) {

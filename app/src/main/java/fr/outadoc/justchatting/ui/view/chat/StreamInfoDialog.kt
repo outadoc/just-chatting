@@ -16,7 +16,7 @@ import fr.outadoc.justchatting.util.formatNumber
 import fr.outadoc.justchatting.util.formatTime
 import fr.outadoc.justchatting.util.formatTimestamp
 import fr.outadoc.justchatting.util.loadImage
-import kotlinx.datetime.Instant
+import kotlinx.datetime.toInstant
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
@@ -113,7 +113,7 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
             userCreated.isVisible = true
             userCreated.text = requireContext().getString(
                 R.string.created_at,
-                Instant.parse(user.created_at).formatTime(requireContext())
+                user.created_at.toInstant().formatTime(requireContext())
             )
             if (user.bannerImageURL != null) {
                 userCreated.setTextColor(Color.LTGRAY)
@@ -126,7 +126,8 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
 
     private fun DialogChatStreamInfoBinding.updateStreamLayout(stream: Stream?) {
         if (stream?.viewer_count == null && stream?.lastBroadcast != null) {
-            Instant.parse(stream.lastBroadcast)
+            stream.lastBroadcast
+                .toInstant()
                 .formatTime(requireContext())
                 .let {
                     lastBroadcast.text = context?.getString(R.string.last_broadcast_date, it)
@@ -166,7 +167,7 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
         }
 
         stream?.started_at
-            ?.let { Instant.parse(it) }
+            ?.toInstant()
             ?.formatTimestamp(requireContext()).let {
                 if (it != null) {
                     uptime.isVisible = true

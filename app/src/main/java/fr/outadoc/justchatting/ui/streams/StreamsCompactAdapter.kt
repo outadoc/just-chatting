@@ -10,7 +10,7 @@ import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.ui.common.NavigationHandler
 import fr.outadoc.justchatting.util.formatNumber
 import fr.outadoc.justchatting.util.formatTimestamp
-import kotlinx.datetime.Instant
+import kotlinx.datetime.toInstant
 
 class StreamsCompactAdapter(
     clickListener: NavigationHandler
@@ -31,7 +31,7 @@ class StreamsCompactAdapter(
             }
 
             if (item.started_at != null) {
-                val text = Instant.parse(item.started_at).formatTimestamp(view.context)
+                val text = item.started_at.toInstant().formatTimestamp(view.context)
                 if (text != null) {
                     uptime.isVisible = true
                     uptime.text = text

@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.util.chat
 
 import fr.outadoc.justchatting.model.chat.PubSubPointReward
-import kotlinx.datetime.Instant
+import kotlinx.datetime.toInstant
 import org.json.JSONObject
 
 class PubSubRewardParser {
@@ -37,9 +37,7 @@ class PubSubRewardParser {
                 url2 = rewardImage?.optString("url_2x") ?: defaultImage?.optString("url_2x"),
                 url4 = rewardImage?.optString("url_4x") ?: defaultImage?.optString("url_4x")
             ),
-            timestamp = messageData?.optString("timestamp")?.let {
-                Instant.parse(it)
-            },
+            timestamp = messageData?.optString("timestamp")?.toInstant(),
             color = null,
             isAction = false,
             emotes = null,

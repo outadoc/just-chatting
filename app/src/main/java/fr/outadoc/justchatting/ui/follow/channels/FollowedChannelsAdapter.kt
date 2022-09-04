@@ -10,7 +10,7 @@ import fr.outadoc.justchatting.ui.common.BasePagedListAdapter
 import fr.outadoc.justchatting.ui.common.NavigationHandler
 import fr.outadoc.justchatting.util.formatTime
 import fr.outadoc.justchatting.util.loadImage
-import kotlinx.datetime.Instant
+import kotlinx.datetime.toInstant
 
 class FollowedChannelsAdapter(
     private val listener: NavigationHandler
@@ -56,7 +56,7 @@ class FollowedChannelsAdapter(
                 userStream.isVisible = true
                 userStream.text = view.context.getString(
                     R.string.last_broadcast_date,
-                    Instant.parse(lastBroadcast).formatTime(view.context)
+                    lastBroadcast.toInstant().formatTime(view.context)
                 )
             } else {
                 userStream.isVisible = false
@@ -67,7 +67,7 @@ class FollowedChannelsAdapter(
                 userFollowed.isVisible = true
                 userFollowed.text = view.context.getString(
                     R.string.followed_at,
-                    Instant.parse(followedAt).formatTime(view.context)
+                    followedAt.toInstant().formatTime(view.context)
                 )
             } else {
                 userFollowed.isVisible = false

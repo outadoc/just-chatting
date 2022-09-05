@@ -118,7 +118,13 @@ class ChatViewModel(
             }
 
     fun startLive(channelId: String, channelLogin: String, channelName: String) {
-        if (_state.value is State.Chatting) return
+        val state = _state.value
+
+        if (state is State.Chatting &&
+            state.channelId == channelId &&
+            state.channelLogin == channelLogin &&
+            state.channelName == channelName
+        ) return
 
         viewModelScope.launch(Dispatchers.Default) {
             _state.emit(
@@ -237,8 +243,8 @@ class ChatViewModel(
                 null
             }
 
-            _state.update { s ->
-                val state = s as? State.Chatting ?: return@update s
+            _state.update {
+                val state = it as? State.Chatting ?: return@update it
                 state.copy(
                     cheerEmotes = cheerEmotes ?: state.cheerEmotes,
                     otherEmotes = otherEmotes,
@@ -346,65 +352,66 @@ class ChatViewModel(
     }
 
     private fun onUserState(userState: UserState) {
-        val channelId = (_state.value as? State.Chatting)?.channelId ?: return
         viewModelScope.launch(Dispatchers.Default) {
-            val emotes: List<TwitchEmote> =
-                userState.emoteSets.asReversed()
-                    .chunked(25)
-                    .map { setIds ->
-                        async {
-                            try {
-                                repository.loadEmotesFromSet(setIds = setIds)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                null
-                            }.orEmpty()
-                        }
-                    }
-                    .awaitAll()
-                    .flatten()
+            _state.update {
+                val state = it as? State.Chatting ?: return@update it
+                if (userState == state.userState) return@update state
 
-            val emoteOwners: Map<String, User> =
-                try {
-                    repository.loadUsersById(
-                        ids = emotes
-                            .mapNotNull { it.ownerId }
-                            .toSet()
-                            .mapNotNull {
-                                it.toLongOrNull()
-                                    ?.takeIf { id -> id > 0 }
-                                    ?.toString()
+                val emotes: List<TwitchEmote> =
+                    userState.emoteSets.asReversed()
+                        .chunked(25)
+                        .map { setIds ->
+                            async {
+                                try {
+                                    repository.loadEmotesFromSet(setIds = setIds)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                    null
+                                }.orEmpty()
                             }
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    null
-                }
-                    .orEmpty()
-                    .associateBy { user -> user.id }
+                        }
+                        .awaitAll()
+                        .flatten()
 
-            val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
-                emotes.filter { emote -> emote.ownerId == channelId }
-                    .groupBy { emoteOwners[channelId]?.display_name }
-
-            val groupedEmotes: Map<String?, List<TwitchEmote>> =
-                emotes.filter { emote -> emote.ownerId != channelId }
-                    .groupBy { emote -> emoteOwners[emote.ownerId]?.display_name }
-
-            val sortedEmotes: Set<EmoteSetItem> =
-                (groupedChannelEmotes + groupedEmotes)
-                    .flatMap { (ownerName, emotes) ->
-                        listOf(EmoteSetItem.Header(title = ownerName))
-                            .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
+                val emoteOwners: Map<String, User> =
+                    try {
+                        repository.loadUsersById(
+                            ids = emotes
+                                .mapNotNull { emote -> emote.ownerId }
+                                .toSet()
+                                .mapNotNull { ownerId ->
+                                    ownerId.toLongOrNull()
+                                        ?.takeIf { id -> id > 0 }
+                                        ?.toString()
+                                }
+                        )
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        null
                     }
-                    .toSet()
+                        .orEmpty()
+                        .associateBy { user -> user.id }
 
-            if (emotes.isNotEmpty()) {
-                _state.update { state ->
-                    (state as? State.Chatting)
-                        ?.copy(userState = userState, twitchEmotes = sortedEmotes)
-                        ?: state
-                }
+                val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
+                    emotes.filter { emote -> emote.ownerId == state.channelId }
+                        .groupBy { emoteOwners[state.channelId]?.display_name }
+
+                val groupedEmotes: Map<String?, List<TwitchEmote>> =
+                    emotes.filter { emote -> emote.ownerId != state.channelId }
+                        .groupBy { emote -> emoteOwners[emote.ownerId]?.display_name }
+
+                val sortedEmotes: Set<EmoteSetItem> =
+                    (groupedChannelEmotes + groupedEmotes)
+                        .flatMap { (ownerName, emotes) ->
+                            listOf(EmoteSetItem.Header(title = ownerName))
+                                .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
+                        }
+                        .toSet()
+
+                state.copy(
+                    userState = userState,
+                    twitchEmotes = sortedEmotes
+                )
             }
         }
     }

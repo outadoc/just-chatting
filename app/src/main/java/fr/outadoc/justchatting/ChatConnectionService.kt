@@ -32,12 +32,13 @@ class ChatConnectionService : Service() {
         }
     }
 
-    private val multiplexer: ChatConnectionPool by inject()
+    private val connectionPool: ChatConnectionPool by inject()
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == ACTION_STOP) {
+            connectionPool.dispose()
             stopForeground(true)
             stopSelf()
             return super.onStartCommand(intent, flags, startId)
@@ -75,7 +76,7 @@ class ChatConnectionService : Service() {
 
     override fun onLowMemory() {
         super.onLowMemory()
-        multiplexer.dispose()
+        connectionPool.dispose()
     }
 
     private fun Intent.toPendingIntent(

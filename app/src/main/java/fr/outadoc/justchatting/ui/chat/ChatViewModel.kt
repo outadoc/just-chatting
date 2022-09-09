@@ -6,14 +6,13 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.ChatCommand
-import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.CheerEmote
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.Emote
-import fr.outadoc.justchatting.model.chat.LiveChatMessage
+import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.PingCommand
-import fr.outadoc.justchatting.model.chat.PubSubPointReward
+import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RecentEmote
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.TwitchBadge
@@ -264,8 +263,8 @@ class ChatViewModel(
 
     private fun onCommand(command: ChatCommand) {
         when (command) {
-            is LiveChatMessage,
-            is PubSubPointReward,
+            is ChatMessage,
+            is PointReward,
             is Command.Ban,
             is Command.Timeout,
             is Command.ClearChat,
@@ -288,7 +287,7 @@ class ChatViewModel(
 
             // Note that this is the last message we've sent
             val lastSentMessageInstant: Instant? =
-                messages.filterIsInstance<LiveChatMessage>()
+                messages.filterIsInstance<ChatMessage>()
                     .lastOrNull { message ->
                         message.userId != null && message.userId == state.appUser.id
                     }

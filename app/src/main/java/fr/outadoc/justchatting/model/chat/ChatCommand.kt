@@ -63,35 +63,23 @@ sealed class Command : ChatCommand {
     ) : Command()
 }
 
-sealed interface ChatMessage : ChatCommand {
-    val id: String?
-    val userId: String?
-    val userLogin: String?
-    val userName: String?
-    val message: String?
-    val color: String?
-    val isAction: Boolean
-    val emotes: List<TwitchChatEmote>?
-    val badges: List<Badge>?
-}
-
-data class LiveChatMessage(
-    override val id: String?,
-    override val userId: String?,
-    override val userLogin: String?,
-    override val userName: String?,
-    override val message: String?,
-    override val color: String?,
-    override val isAction: Boolean = false,
-    override val emotes: List<TwitchChatEmote>?,
-    override val badges: List<Badge>?,
+data class ChatMessage(
+    val id: String?,
+    val userId: String?,
+    val userLogin: String?,
+    val userName: String?,
+    val message: String?,
+    val color: String?,
+    val isAction: Boolean = false,
+    val emotes: List<TwitchChatEmote>?,
+    val badges: List<Badge>?,
     val isFirst: Boolean = false,
     val systemMsg: String?,
     val timestamp: Instant?,
     val rewardId: String?,
     val inReplyTo: InReplyTo?,
     val msgId: String?
-) : ChatMessage {
+) : ChatCommand {
     data class InReplyTo(
         val id: String,
         val userName: String,
@@ -103,21 +91,17 @@ data class LiveChatMessage(
 
 object PingCommand : ChatCommand
 
-data class PubSubPointReward(
-    override val id: String?,
-    override val userId: String?,
-    override val userLogin: String?,
-    override val userName: String?,
-    override val message: String?,
-    override val color: String?,
-    override val isAction: Boolean = false,
-    override val emotes: List<TwitchChatEmote>?,
-    override val badges: List<Badge>?,
+data class PointReward(
+    val id: String?,
+    val userId: String?,
+    val userLogin: String?,
+    val userName: String?,
+    val message: String?,
     val rewardTitle: String?,
     val rewardCost: Int?,
     val rewardImage: RewardImage?,
     val timestamp: Instant?
-) : ChatMessage {
+) : ChatCommand {
 
     data class RewardImage(
         val url1: String?,

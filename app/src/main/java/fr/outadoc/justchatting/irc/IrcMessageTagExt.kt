@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.irc
 
 import fr.outadoc.justchatting.model.chat.Badge
-import fr.outadoc.justchatting.model.chat.LiveChatMessage
+import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.TwitchChatEmote
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
@@ -41,8 +41,8 @@ fun Map<String, String?>.parseTimestamp(): Instant? {
     return prop?.toLong()?.let { Instant.fromEpochMilliseconds(it) }
 }
 
-fun Map<String, String?>.parseParentMessage(): LiveChatMessage.InReplyTo? {
-    return LiveChatMessage.InReplyTo(
+fun Map<String, String?>.parseParentMessage(): ChatMessage.InReplyTo? {
+    return ChatMessage.InReplyTo(
         id = this["reply-parent-msg-id"] ?: return null,
         message = this["reply-parent-msg-body"] ?: return null,
         userId = this["reply-parent-user-id"] ?: return null,

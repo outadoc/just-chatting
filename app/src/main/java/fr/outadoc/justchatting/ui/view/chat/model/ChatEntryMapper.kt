@@ -5,9 +5,9 @@ import androidx.annotation.DrawableRes
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.Command
-import fr.outadoc.justchatting.model.chat.LiveChatMessage
+import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.PingCommand
-import fr.outadoc.justchatting.model.chat.PubSubPointReward
+import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState
 
@@ -116,7 +116,7 @@ class ChatEntryMapper(private val context: Context) {
                     )
                 }
             }
-            is LiveChatMessage -> {
+            is ChatMessage -> {
                 val (header, icon) = when {
                     systemMsg != null -> {
                         systemMsg to msgId?.getMessageIdIcon()
@@ -169,7 +169,7 @@ class ChatEntryMapper(private val context: Context) {
                     )
                 }
             }
-            is PubSubPointReward -> {
+            is PointReward -> {
                 ChatEntry.Highlighted(
                     header = context.getString(
                         R.string.user_redeemed,

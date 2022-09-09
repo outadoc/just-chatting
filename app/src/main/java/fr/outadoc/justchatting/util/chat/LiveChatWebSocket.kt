@@ -3,9 +3,10 @@ package fr.outadoc.justchatting.util.chat
 import android.content.Context
 import android.util.Log
 import fr.outadoc.justchatting.irc.ChatMessageParser
-import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Command
+import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.PingCommand
+import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
@@ -129,6 +130,7 @@ class LiveChatWebSocket private constructor(
             is Command.SendMessageError,
             is Command.SocketError,
             is Command.Timeout,
+            is PointReward,
             is RoomState -> emit(command)
             PingCommand -> sendPong()
             is Command.Notice,

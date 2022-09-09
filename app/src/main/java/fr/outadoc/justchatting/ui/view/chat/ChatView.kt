@@ -18,8 +18,8 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.databinding.ViewChatBinding
 import fr.outadoc.justchatting.model.chat.CheerEmote
 import fr.outadoc.justchatting.model.chat.Emote
-import fr.outadoc.justchatting.model.chat.LiveChatMessage
-import fr.outadoc.justchatting.model.chat.PubSubPointReward
+import fr.outadoc.justchatting.model.chat.ChatMessage
+import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.ui.common.ChatAdapter
@@ -33,7 +33,7 @@ class ChatView : LinearLayout {
 
     private var messageClickListener: OnMessageClickListener? = null
 
-    private val rewardList = mutableListOf<Pair<LiveChatMessage?, PubSubPointReward?>>()
+    private val rewardList = mutableListOf<Pair<ChatMessage?, PointReward?>>()
 
     private lateinit var viewHolder: ViewChatBinding
 

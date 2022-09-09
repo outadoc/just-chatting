@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.ui.view.chat.model
 
 import fr.outadoc.justchatting.model.chat.Badge
-import fr.outadoc.justchatting.model.chat.LiveChatMessage
+import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.TwitchChatEmote
 import kotlinx.datetime.Instant
 
@@ -21,7 +21,7 @@ sealed class ChatEntry {
             val color: String?,
             val emotes: List<TwitchChatEmote>?,
             val badges: List<Badge>?,
-            val inReplyTo: LiveChatMessage.InReplyTo?
+            val inReplyTo: ChatMessage.InReplyTo?
         ) : Data
 
         class Plain(

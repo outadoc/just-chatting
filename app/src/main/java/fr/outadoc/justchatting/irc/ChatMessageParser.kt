@@ -8,7 +8,7 @@ import chat.willow.kale.irc.message.rfc1459.PingMessage
 import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.Command
-import fr.outadoc.justchatting.model.chat.LiveChatMessage
+import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState
@@ -36,7 +36,7 @@ class ChatMessageParser {
         return parsedMessage
     }
 
-    private fun parseMessage(ircMessage: IrcMessage): LiveChatMessage? {
+    private fun parseMessage(ircMessage: IrcMessage): ChatMessage? {
         val privateMessage = PrivMsgMessage.Message.Parser.parse(ircMessage)
             ?: return null
 
@@ -44,7 +44,7 @@ class ChatMessageParser {
         // to extract the actual message contained inside
         val actionGroups = actionRegex.find(privateMessage.message)
 
-        return LiveChatMessage(
+        return ChatMessage(
             id = ircMessage.tags.id,
             userId = ircMessage.tags.userId,
             userLogin = ircMessage.tags.login ?: privateMessage.source.nick,

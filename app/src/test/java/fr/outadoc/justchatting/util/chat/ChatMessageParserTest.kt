@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.model.chat.Badge
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.Command
-import fr.outadoc.justchatting.model.chat.LiveChatMessage
+import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.TwitchEmote
@@ -22,7 +22,7 @@ class ChatMessageParserTest {
     fun `Parse simple PRIVMSG`() = test {
         input { "@badge-info=;badges=turbo/1;color=#0D4200;display-name=ronni;emotes=25:0-4,12-16/1902:6-10;id=b34ccfc7-4977-403a-8a94-33c6bac34fb8;mod=0;room-id=1337;subscriber=0;tmi-sent-ts=1507246572675;turbo=1;user-id=1337;user-type=global_mod :ronni!ronni@ronni.tmi.twitch.tv PRIVMSG #ronni :Kappa Keepo Kappa" }
         expected {
-            LiveChatMessage(
+            ChatMessage(
                 id = "b34ccfc7-4977-403a-8a94-33c6bac34fb8",
                 userId = "1337",
                 userLogin = "ronni",
@@ -88,7 +88,7 @@ class ChatMessageParserTest {
     fun `Parse action PRIVMSG`() = test {
         input { "@badge-info=subscriber/11;badges=moderator/1,subscriber/3009;color=#8A2BE2;display-name=pepitipepibot;emotes=;first-msg=0;flags=;id=7485e9c7-962f-4fe9-af27-3b625699f7e1;mod=1;returning-chatter=0;room-id=402890635;subscriber=1;tmi-sent-ts=1657298849487;turbo=0;user-id=651859616;user-type=mod :pepitipepibot!pepitipepibot@pepitipepibot.tmi.twitch.tv PRIVMSG #pelerine :\u0001ACTION ⭐️ RE-SUB ⭐️ Amphirae (+4) ⭐️\u0001" }
         expected {
-            LiveChatMessage(
+            ChatMessage(
                 id = "7485e9c7-962f-4fe9-af27-3b625699f7e1",
                 userId = "651859616",
                 userLogin = "pepitipepibot",
@@ -119,7 +119,7 @@ class ChatMessageParserTest {
                 systemMsg = "Frfun subscribed with Prime. They've subscribed for 41 months, currently on a 40 month streak!",
                 timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
                 msgId = "resub",
-                userMessage = LiveChatMessage(
+                userMessage = ChatMessage(
                     id = "4c5a38ff-6bb3-4cad-a555-dc8a736cfc38",
                     userId = "99037844",
                     userLogin = "frfun",
@@ -181,7 +181,7 @@ class ChatMessageParserTest {
             Command.UserNotice(
                 timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
                 msgId = "announcement",
-                userMessage = LiveChatMessage(
+                userMessage = ChatMessage(
                     id = "54b4d931-8db5-47ad-b6e7-6687cdbbb8ec",
                     userId = "651859616",
                     userLogin = "pepitipepibot",
@@ -310,7 +310,7 @@ class ChatMessageParserTest {
     fun `Parse PRIVMSG replying to another`() = test {
         input { "@badge-info=;badges=;client-nonce=8ffba7725e1a778b62f355ec990599ce;color=#B22222;display-name=tpanax;emotes=;first-msg=0;flags=;id=99d64122-2006-4e46-a43f-2b43f0ff9341;mod=0;reply-parent-display-name=Brankhorst;reply-parent-msg-body=On\\sdirait\\sEVE\\son\\sline;reply-parent-msg-id=7ffcf399-8d69-495c-920c-ea15a96eeee4;reply-parent-user-id=108193474;reply-parent-user-login=brankhorst;returning-chatter=0;room-id=28575692;subscriber=0;tmi-sent-ts=1661281318667;turbo=0;user-id=732098026;user-type= :tpanax!tpanax@tpanax.tmi.twitch.tv PRIVMSG #mistermv :@Brankhorst eve s'est inspiré du homeworld 1" }
         expected {
-            LiveChatMessage(
+            ChatMessage(
                 id = "99d64122-2006-4e46-a43f-2b43f0ff9341",
                 userId = "732098026",
                 userLogin = "tpanax",
@@ -324,7 +324,7 @@ class ChatMessageParserTest {
                 systemMsg = null,
                 timestamp = Instant.parse("2022-08-23T19:01:58.667Z"),
                 rewardId = null,
-                inReplyTo = LiveChatMessage.InReplyTo(
+                inReplyTo = ChatMessage.InReplyTo(
                     userName = "Brankhorst",
                     message = "On dirait EVE on line",
                     id = "7ffcf399-8d69-495c-920c-ea15a96eeee4",
@@ -340,7 +340,7 @@ class ChatMessageParserTest {
     fun `Parse highlighted message`() = test {
         input { "@badge-info=subscriber/21;badges=subscriber/18,premium/1;color=#FF0000;display-name=FlorianPremier;emotes=;first-msg=0;flags=;id=68d0ad7e-7743-4b51-b8fd-3d995eb17fd5;mod=0;msg-id=highlighted-message;returning-chatter=0;room-id=135468063;subscriber=1;tmi-sent-ts=1661452379625;turbo=0;user-id=137824138;user-type= :florianpremier!florianpremier@florianpremier.tmi.twitch.tv PRIVMSG #antoinedaniel :vive l'argent" }
         expected {
-            LiveChatMessage(
+            ChatMessage(
                 id = "68d0ad7e-7743-4b51-b8fd-3d995eb17fd5",
                 userId = "137824138",
                 userLogin = "florianpremier",

@@ -264,11 +264,10 @@ class ChatViewModel(
 
     private fun onCommand(command: ChatCommand) {
         when (command) {
+            is LiveChatMessage,
             is PubSubPointReward,
             is Command.Ban,
             is Command.Timeout,
-            PingCommand -> Unit
-            is LiveChatMessage,
             is Command.ClearChat,
             is Command.ClearMessage,
             is Command.UserNotice,
@@ -279,6 +278,7 @@ class ChatViewModel(
             is Command.SocketError -> onMessages(listOf(command))
             is RoomState -> onRoomState(command)
             is UserState -> onUserState(command)
+            PingCommand -> Unit
         }
     }
 

@@ -31,10 +31,12 @@ import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.util.combineWith
 import fr.outadoc.justchatting.util.isOdd
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
@@ -47,6 +49,7 @@ import kotlinx.datetime.Instant
 import java.util.LinkedList
 import kotlin.collections.component1
 import kotlin.collections.component2
+import kotlin.time.Duration.Companion.milliseconds
 
 class ChatViewModel(
     private val repository: TwitchService,
@@ -104,10 +107,14 @@ class ChatViewModel(
     }
 
     private val _state = MutableStateFlow<State>(State.Initial)
+
+    @OptIn(FlowPreview::class)
     val state: LiveData<State> =
         emotesRepository.loadRecentEmotes()
             .combineWith(
-                _state.filterIsInstance<State.Chatting>().asLiveData()
+                _state.filterIsInstance<State.Chatting>()
+                    .debounce(100.milliseconds)
+                    .asLiveData()
             ) { recentEmotes, state ->
                 state.copy(
                     recentEmotes = recentEmotes

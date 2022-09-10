@@ -48,7 +48,7 @@ class ChatMessageParser {
             id = ircMessage.tags.id,
             userId = ircMessage.tags.userId,
             userLogin = ircMessage.tags.login ?: privateMessage.source.nick,
-            userName = ircMessage.tags.displayName,
+            userName = ircMessage.tags.displayName ?: privateMessage.source.nick,
             message = actionGroups?.groupValues?.get(1) ?: privateMessage.message,
             isAction = actionGroups != null,
             color = ircMessage.tags.color,

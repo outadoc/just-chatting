@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.ui.chat
 
+import androidx.annotation.ColorInt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +45,7 @@ import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.util.isLight
 import fr.outadoc.justchatting.util.isOdd
 import org.koin.androidx.compose.get
+import kotlin.random.Random
 
 @Composable
 fun ChatList(
@@ -55,6 +59,8 @@ fun ChatList(
             index = (entries.size - 1).coerceAtLeast(0)
         )
     }
+
+    val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
 
     LazyColumn(
         modifier = modifier,
@@ -75,13 +81,15 @@ fun ChatList(
                 ) {
                     ChatMessage(
                         modifier = Modifier.fillMaxWidth(),
-                        message = item
+                        message = item,
+                        animateEmotes = animateEmotes
                     )
                 }
             } else {
                 ChatMessage(
                     modifier = Modifier.fillMaxWidth(),
-                    message = item
+                    message = item,
+                    animateEmotes = animateEmotes
                 )
             }
         }
@@ -91,19 +99,22 @@ fun ChatList(
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,
-    message: ChatEntry
+    message: ChatEntry,
+    animateEmotes: Boolean
 ) {
     when (message) {
         is ChatEntry.Highlighted -> {
             HighlightedMessage(
                 modifier = modifier,
-                message = message
+                message = message,
+                animateEmotes = animateEmotes
             )
         }
         is ChatEntry.Simple -> {
             SimpleMessage(
                 modifier = modifier,
-                message = message
+                message = message,
+                animateEmotes = animateEmotes
             )
         }
     }
@@ -112,7 +123,8 @@ fun ChatMessage(
 @Composable
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
-    message: ChatEntry.Highlighted
+    message: ChatEntry.Highlighted,
+    animateEmotes: Boolean
 ) {
     Card(
         modifier = Modifier
@@ -175,7 +187,8 @@ fun HighlightedMessage(
 @Composable
 fun SimpleMessage(
     modifier: Modifier = Modifier,
-    message: ChatEntry.Simple
+    message: ChatEntry.Simple,
+    animateEmotes: Boolean
 ) {
     Row {
         Spacer(
@@ -210,8 +223,6 @@ private fun ChatEntry.Data.toAnnotatedString(
     val screenDensity = LocalDensity.current.density
     val isDarkMode = MaterialTheme.colorScheme.isLight
 
-    val randomChatColors = integerArrayResource(id = R.array.randomChatColors)
-
     val color = color
         ?.let { color ->
             ensureColorIsAccessible(
@@ -219,23 +230,28 @@ private fun ChatEntry.Data.toAnnotatedString(
                 background = MaterialTheme.colorScheme.surface.toArgb()
             )
         }
-        ?: randomChatColors.random()
+        ?: userName.getRandomChatColor()
 
     return buildAnnotatedString {
-        if (userName != null) {
-            withStyle(
-                SpanStyle(
-                    color = Color(color),
-                    fontWeight = FontWeight.Bold
-                )
-            ) {
-                append(userName)
-                append(if (isAction) " " else ": ")
-            }
+        withStyle(
+            SpanStyle(
+                color = Color(color),
+                fontWeight = FontWeight.Bold
+            )
+        ) {
+            append(userName)
+            append(if (isAction) " " else ": ")
         }
 
         if (message != null) {
             append(message)
         }
     }
+}
+
+@Composable
+@ColorInt
+fun String.getRandomChatColor(): Int {
+    val randomChatColors = integerArrayResource(id = R.array.randomChatColors)
+    return randomChatColors.random(Random(hashCode()))
 }

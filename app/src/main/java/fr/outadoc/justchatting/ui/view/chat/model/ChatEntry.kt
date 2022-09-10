@@ -12,8 +12,8 @@ sealed class ChatEntry {
 
     data class Data(
         val userId: String?,
-        val userName: String?,
-        val userLogin: String?,
+        val userName: String,
+        val userLogin: String,
         val isAction: Boolean,
         val message: String?,
         val color: String?,

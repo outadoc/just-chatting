@@ -20,6 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
@@ -37,6 +38,12 @@ fun ChatList(
     entries: List<ChatEntry>
 ) {
     val listState = rememberLazyListState()
+    LaunchedEffect(entries) {
+        listState.scrollToItem(
+            index = (entries.size - 1).coerceAtLeast(0)
+        )
+    }
+
     LazyColumn(
         modifier = modifier,
         state = listState

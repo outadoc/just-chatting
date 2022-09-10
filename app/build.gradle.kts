@@ -63,14 +63,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    sourceSets {
-        named("androidTest") {
-            assets {
-                srcDirs(files("$projectDir/schemas"))
-            }
-        }
-    }
-
     kotlinOptions {
         jvmTarget = "11"
     }

@@ -542,46 +542,44 @@ class ChannelChatFragment :
         }
     }
 
-    private fun setMessagePostConstraint(constraint: MessagePostConstraint?) {
-        viewHolder?.apply {
-            // No constraint, no need for an indicator
-            if (constraint == null) {
-                progressCannotSendUntil.isInvisible = true
-                return
-            }
-
-            // If the constraint is in the past, just ignore it
-            val now = Clock.System.now()
-            val canPostAt = constraint.lastMessageSentAt + constraint.slowModeDuration
-
-            if (canPostAt < now) {
-                progressCannotSendUntil.isInvisible = true
-                return
-            }
-
-            if (progressAnimator != null) {
-                progressAnimator?.cancel()
-                progressAnimator = null
-            }
-
-            progressAnimator = ValueAnimator.ofInt(0, Int.MAX_VALUE)
-                .apply {
-                    interpolator = null
-                    duration = constraint.slowModeDuration.inWholeMilliseconds
-
-                    addUpdateListener { animation ->
-                        with(progressCannotSendUntil) {
-                            max = Int.MAX_VALUE
-                            progress = animation.animatedValue as Int
-                            isInvisible = progress == 0
-                        }
-                    }
-
-                    reverse()
-
-                    currentPlayTime = (now - constraint.lastMessageSentAt).inWholeMilliseconds
-                }
+    private fun FragmentChannelBinding.setMessagePostConstraint(constraint: MessagePostConstraint?) {
+        // No constraint, no need for an indicator
+        if (constraint == null) {
+            progressCannotSendUntil.isInvisible = true
+            return
         }
+
+        // If the constraint is in the past, just ignore it
+        val now = Clock.System.now()
+        val canPostAt = constraint.lastMessageSentAt + constraint.slowModeDuration
+
+        if (canPostAt < now) {
+            progressCannotSendUntil.isInvisible = true
+            return
+        }
+
+        if (progressAnimator != null) {
+            progressAnimator?.cancel()
+            progressAnimator = null
+        }
+
+        progressAnimator = ValueAnimator.ofInt(0, Int.MAX_VALUE)
+            .apply {
+                interpolator = null
+                duration = constraint.slowModeDuration.inWholeMilliseconds
+
+                addUpdateListener { animation ->
+                    with(progressCannotSendUntil) {
+                        max = Int.MAX_VALUE
+                        progress = animation.animatedValue as Int
+                        isInvisible = progress == 0
+                    }
+                }
+
+                reverse()
+
+                currentPlayTime = (now - constraint.lastMessageSentAt).inWholeMilliseconds
+            }
     }
 
     private fun hideEmotesMenu(): Boolean {

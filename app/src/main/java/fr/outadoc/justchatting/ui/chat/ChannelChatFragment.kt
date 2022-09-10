@@ -44,10 +44,8 @@ import com.google.android.material.composethemeadapter3.Mdc3Theme
 import com.google.android.material.shape.MaterialShapeDrawable
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.databinding.FragmentChannelBinding
-import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.RoomState
-import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.common.ChatAdapter
 import fr.outadoc.justchatting.ui.common.Scrollable
@@ -55,7 +53,6 @@ import fr.outadoc.justchatting.ui.common.ensureMinimumAlpha
 import fr.outadoc.justchatting.ui.common.isLightColor
 import fr.outadoc.justchatting.ui.view.AlternatingBackgroundItemDecoration
 import fr.outadoc.justchatting.ui.view.chat.AutoCompleteAdapter
-import fr.outadoc.justchatting.ui.view.chat.AutoCompleteItem
 import fr.outadoc.justchatting.ui.view.chat.AutoCompleteSpaceTokenizer
 import fr.outadoc.justchatting.ui.view.chat.MessageClickedDialog
 import fr.outadoc.justchatting.ui.view.chat.StreamInfoDialog
@@ -181,7 +178,7 @@ class ChannelChatFragment :
 
         channelViewModel.state.observe(viewLifecycleOwner) { state ->
             viewHolder?.apply {
-                updateStreamLayout(state.stream)
+                toolbar.subtitle = state.stream?.title?.trim()
 
                 state.loadedUser?.let { user ->
                     updateUserLayout(user)
@@ -301,15 +298,17 @@ class ChannelChatFragment :
                 is ChatViewModel.State.Chatting -> {
                     viewHolder?.apply {
                         setMessagePostConstraint(state.messagePostConstraint)
-                        setAutocompleteItems(
+                        notifyRoomState(state.roomState)
+
+                        autoCompleteAdapter?.submitItems(
                             emotes = state.allEmotes,
                             chatters = state.chatters
                         )
 
                         chatAdapter?.apply {
-                            addEmotes(state.allEmotes)
                             submitList(state.chatMessages)
-                            notifyRoomState(state.roomState)
+
+                            addEmotes(state.allEmotes)
                             addGlobalBadges(state.globalBadges)
                             addChannelBadges(state.channelBadges)
                             addCheerEmotes(state.cheerEmotes)
@@ -317,14 +316,6 @@ class ChannelChatFragment :
                     }
                 }
             }
-        }
-    }
-
-    private fun FragmentChannelBinding.updateStreamLayout(stream: Stream?) {
-        if (stream?.title != null) {
-            toolbar.subtitle = stream.title.trim()
-        } else {
-            toolbar.subtitle = null
         }
     }
 
@@ -485,7 +476,7 @@ class ChannelChatFragment :
         loadUserAvatar(user)
     }
 
-    private fun notifyRoomState(roomState: RoomState) = viewHolder?.apply {
+    private fun FragmentChannelBinding.notifyRoomState(roomState: RoomState) {
         textEmote.isVisible = roomState.isEmoteOnly
 
         if (roomState.minFollowDuration != null) {
@@ -526,20 +517,6 @@ class ChannelChatFragment :
                     !textUnique.isGone ||
                     !textSlow.isGone ||
                     !textSubs.isGone
-    }
-
-    private fun setAutocompleteItems(emotes: Collection<Emote>, chatters: Collection<Chatter>) {
-        autoCompleteAdapter?.apply {
-            val allItems =
-                chatters.map { AutoCompleteItem.UserItem(it) } +
-                        emotes.distinctBy { emote -> emote.name }
-                            .map { AutoCompleteItem.EmoteItem(it) }
-
-            if (allItems.size != count) {
-                clear()
-                addAll(allItems)
-            }
-        }
     }
 
     private fun FragmentChannelBinding.setMessagePostConstraint(constraint: MessagePostConstraint?) {

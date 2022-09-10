@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import fr.outadoc.justchatting.databinding.AutoCompleteEmotesListItemBinding
+import fr.outadoc.justchatting.model.chat.Chatter
+import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.util.isDarkMode
 import fr.outadoc.justchatting.util.loadImage
 
@@ -68,6 +70,18 @@ class AutoCompleteAdapter(context: Context) : ArrayAdapter<AutoCompleteItem>(con
         }
 
     override fun getViewTypeCount(): Int = 2
+
+    fun submitItems(emotes: Collection<Emote>, chatters: Collection<Chatter>) {
+        val allItems =
+            chatters.map { AutoCompleteItem.UserItem(it) } +
+                    emotes.distinctBy { emote -> emote.name }
+                        .map { AutoCompleteItem.EmoteItem(it) }
+
+        if (allItems.size != count) {
+            clear()
+            addAll(allItems)
+        }
+    }
 
     sealed class ViewHolder {
         abstract val root: View

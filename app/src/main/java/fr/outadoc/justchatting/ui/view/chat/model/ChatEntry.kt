@@ -10,24 +10,17 @@ sealed class ChatEntry {
     abstract val data: Data?
     abstract val timestamp: Instant?
 
-    sealed interface Data {
-
-        class Rich(
-            val userId: String?,
-            val userName: String?,
-            val userLogin: String?,
-            val isAction: Boolean,
-            val message: String?,
-            val color: String?,
-            val emotes: List<TwitchChatEmote>?,
-            val badges: List<Badge>?,
-            val inReplyTo: ChatMessage.InReplyTo?
-        ) : Data
-
-        class Plain(
-            val message: String?
-        ) : Data
-    }
+    data class Data(
+        val userId: String?,
+        val userName: String?,
+        val userLogin: String?,
+        val isAction: Boolean,
+        val message: String?,
+        val color: String?,
+        val emotes: List<TwitchChatEmote>?,
+        val badges: List<Badge>?,
+        val inReplyTo: ChatMessage.InReplyTo?
+    )
 
     data class Simple(
         override val data: Data,

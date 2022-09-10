@@ -101,7 +101,7 @@ class ChatEntryMapper(private val context: Context) {
                     ChatEntry.Highlighted(
                         header = systemMsg ?: msgId?.getMessageIdString(context),
                         headerIconResId = msgId?.getMessageIdIcon(),
-                        data = ChatEntry.Data.Rich(
+                        data = ChatEntry.Data(
                             message = userMessage.message,
                             userId = userMessage.userId,
                             userName = userMessage.userName,
@@ -139,7 +139,7 @@ class ChatEntryMapper(private val context: Context) {
                     ChatEntry.Highlighted(
                         header = header,
                         headerIconResId = icon,
-                        data = ChatEntry.Data.Rich(
+                        data = ChatEntry.Data(
                             message = message,
                             userId = userId,
                             userName = userName,
@@ -154,7 +154,7 @@ class ChatEntryMapper(private val context: Context) {
                     )
                 } else {
                     ChatEntry.Simple(
-                        ChatEntry.Data.Rich(
+                        ChatEntry.Data(
                             message = message,
                             userId = userId,
                             userName = userName,

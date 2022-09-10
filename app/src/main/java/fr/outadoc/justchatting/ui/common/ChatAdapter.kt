@@ -25,7 +25,6 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.text.bold
 import androidx.core.text.buildSpannedString
 import androidx.core.text.getSpans
-import androidx.core.text.toSpannable
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.ListAdapter
@@ -118,19 +117,6 @@ class ChatAdapter(
 
         when (chatMessage) {
             is ChatEntry.Highlighted -> {
-                /*
-                if (headerImage != null) {
-                    pointReward?.getUrl(screenDensity)?.let { url ->
-                        builder.append("  ")
-                        images.add(Image(url, imageIndex++, imageIndex++, false))
-                        badgesCount++
-                    }
-
-                    builder.append("${pointReward?.rewardCost}\n")
-                    imageIndex += (pointReward?.rewardCost?.toString()?.length ?: 0) + 1
-                }
-                */
-
                 holder.noticeTitle?.apply {
                     text = chatMessage.header
                     setCompoundDrawablesRelative(
@@ -149,25 +135,15 @@ class ChatAdapter(
             is ChatEntry.Simple -> {}
         }
 
-        when (val data = chatMessage.data) {
-            is ChatEntry.Data.Rich -> {
-                bindMessage(holder, data)
-            }
-            is ChatEntry.Data.Plain -> {
-                data.message?.let {
-                    holder.bind(
-                        originalMessage = data.message,
-                        formattedMessage = data.message.toSpannable(),
-                        userId = null,
-                        inReplyTo = null
-                    )
-                }
-            }
-            null -> holder.clearMessage()
+        val data = chatMessage.data
+        if (data is ChatEntry.Data) {
+            holder.bindMessage(data)
+        } else {
+            holder.clearMessage()
         }
     }
 
-    private fun bindMessage(holder: ViewHolder, chatMessage: ChatEntry.Data.Rich) {
+    private fun ViewHolder.bindMessage(chatMessage: ChatEntry.Data) {
         val images: MutableList<Image> = mutableListOf()
         var imageIndex = 0
         var badgesCount = 0
@@ -417,7 +393,7 @@ class ChatAdapter(
             }
         }
 
-        holder.bind(
+        bind(
             originalMessage = originalMessage,
             formattedMessage = builder,
             userId = userId,
@@ -425,7 +401,6 @@ class ChatAdapter(
         )
 
         loadImages(
-            holder = holder,
             images = images,
             originalMessage = originalMessage,
             builder = builder,
@@ -433,8 +408,7 @@ class ChatAdapter(
         )
     }
 
-    private fun loadImages(
-        holder: ViewHolder,
+    private fun ViewHolder.loadImages(
         images: List<Image>,
         originalMessage: CharSequence,
         builder: SpannableStringBuilder,
@@ -442,7 +416,6 @@ class ChatAdapter(
     ) {
         images.forEach { image ->
             loadCoil(
-                holder = holder,
                 image = image,
                 originalMessage = originalMessage,
                 builder = builder,
@@ -451,8 +424,7 @@ class ChatAdapter(
         }
     }
 
-    private fun loadCoil(
-        holder: ViewHolder,
+    private fun ViewHolder.loadCoil(
         image: Image,
         originalMessage: CharSequence,
         builder: SpannableStringBuilder,
@@ -487,7 +459,7 @@ class ChatAdapter(
                         e.printStackTrace()
                     }
 
-                    holder.bind(
+                    bind(
                         originalMessage = originalMessage,
                         formattedMessage = builder,
                         userId = userId,

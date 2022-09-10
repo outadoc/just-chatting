@@ -105,6 +105,7 @@ dependencies {
     implementation(libs.androidx.paging)
     implementation(libs.androidx.palette)
     implementation(libs.androidx.preference)
+    implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.room.core)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.swiperefreshlayout)

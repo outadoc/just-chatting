@@ -34,6 +34,7 @@ androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmode
 androidx-paging = "androidx.paging:paging-runtime-ktx:2.1.2"
 androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-preference = "androidx.preference:preference-ktx:1.2.0"
+androidx-recyclerview = "androidx.recyclerview:recyclerview:1.2.1"
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-core = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }

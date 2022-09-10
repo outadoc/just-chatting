@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "fr.outadoc.justchatting"
-    compileSdkVersion = "android-32"
+    compileSdkVersion = "android-33"
 
     defaultConfig {
         applicationId = "fr.outadoc.justchatting"
@@ -38,7 +38,12 @@ android {
     }
 
     buildFeatures {
+        compose = true
         viewBinding = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.3.1"
     }
 
     signingConfigs {
@@ -90,6 +95,7 @@ spotless {
 dependencies {
     implementation(project(":lib-irc"))
 
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.core)
@@ -109,15 +115,23 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.webkit)
+    implementation(libs.coil.compose)
     implementation(libs.coil.core)
     implementation(libs.coil.gif)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material.core3)
+    implementation(libs.compose.runtime.livedata)
+    implementation(libs.compose.ui.core)
+    implementation(libs.compose.ui.tooling)
     implementation(libs.flexbox)
     implementation(libs.fragnav)
     implementation(libs.koin.android)
+    implementation(libs.koin.compose)
     implementation(libs.koin.core)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)
-    implementation(libs.material)
+    implementation(libs.material.core)
+    implementation(libs.material.themeadapter)
     implementation(libs.okhttp.logging)
     implementation(libs.okio)
     implementation(libs.retrofit.core)

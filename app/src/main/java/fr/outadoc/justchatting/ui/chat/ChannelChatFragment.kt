@@ -1,20 +1,27 @@
 package fr.outadoc.justchatting.ui.chat
 
+import android.animation.ValueAnimator
 import android.app.ActivityManager
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Bitmap
+import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Build
 import android.os.Bundle
+import android.util.TypedValue
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.app.Person
+import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.os.bundleOf
@@ -22,38 +29,53 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
+import androidx.core.view.isGone
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Palette.Swatch
-import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.composethemeadapter3.Mdc3Theme
 import com.google.android.material.shape.MaterialShapeDrawable
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.databinding.FragmentChannelBinding
+import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
+import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
+import fr.outadoc.justchatting.ui.common.ChatAdapter
 import fr.outadoc.justchatting.ui.common.Scrollable
 import fr.outadoc.justchatting.ui.common.ensureMinimumAlpha
 import fr.outadoc.justchatting.ui.common.isLightColor
-import fr.outadoc.justchatting.ui.view.chat.EmotesFragment
+import fr.outadoc.justchatting.ui.view.AlternatingBackgroundItemDecoration
+import fr.outadoc.justchatting.ui.view.chat.AutoCompleteAdapter
+import fr.outadoc.justchatting.ui.view.chat.AutoCompleteItem
+import fr.outadoc.justchatting.ui.view.chat.AutoCompleteSpaceTokenizer
 import fr.outadoc.justchatting.ui.view.chat.MessageClickedDialog
-import fr.outadoc.justchatting.ui.view.chat.OnEmoteClickedListener
 import fr.outadoc.justchatting.ui.view.chat.StreamInfoDialog
+import fr.outadoc.justchatting.ui.view.emotes.EmotePicker
 import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.generateAsync
 import fr.outadoc.justchatting.util.hideKeyboard
 import fr.outadoc.justchatting.util.isDarkMode
 import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
 import fr.outadoc.justchatting.util.loadImageToBitmap
+import fr.outadoc.justchatting.util.showKeyboard
 import kotlinx.coroutines.launch
+import kotlinx.datetime.Clock
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import kotlin.time.Duration
 
 class ChannelChatFragment :
     Fragment(),
     MessageClickedDialog.OnButtonClickListener,
-    OnEmoteClickedListener,
     Scrollable {
 
     companion object {
@@ -69,6 +91,11 @@ class ChannelChatFragment :
     private val chatViewModel: ChatViewModel by sharedViewModel()
 
     private var viewHolder: FragmentChannelBinding? = null
+
+    private var autoCompleteAdapter: AutoCompleteAdapter? = null
+    private var chatAdapter: ChatAdapter? = null
+
+    private var progressAnimator: ValueAnimator? = null
 
     private var openInBubble: (() -> Unit)? = null
 
@@ -86,6 +113,8 @@ class ChannelChatFragment :
         savedInstanceState: Bundle?
     ): View? {
         viewHolder = FragmentChannelBinding.inflate(inflater, container, false)
+        autoCompleteAdapter = AutoCompleteAdapter(requireContext())
+        chatAdapter = ChatAdapter(requireContext())
         return viewHolder?.root
     }
 
@@ -94,7 +123,7 @@ class ChannelChatFragment :
 
         activity?.onBackPressedDispatcher?.addCallback(this) {
             viewHolder?.apply {
-                if (!chatInputView.hideEmotesMenu()) {
+                if (!hideEmotesMenu()) {
                     isEnabled = false
                     activity?.onBackPressed()
                     isEnabled = true
@@ -103,16 +132,51 @@ class ChannelChatFragment :
         }
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
-            val insets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val statusBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
+            val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
+            val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
+
             viewHolder?.apply {
+                messageView.setPadding(
+                    messageView.paddingLeft,
+                    messageView.paddingTop,
+                    messageView.paddingRight,
+                    if (imeInsets.bottom > 0) imeInsets.bottom else navBarInsets.bottom
+                )
+
                 toolbar.setPadding(
                     toolbar.paddingLeft,
-                    insets.top,
+                    statusBarInsets.top,
                     toolbar.paddingRight,
                     toolbar.paddingBottom
                 )
+
+                btnDown.updateLayoutParams<ViewGroup.MarginLayoutParams> {
+                    bottomMargin = topMargin + navBarInsets.bottom
+                }
+
+                if (imeInsets.bottom > 0) {
+                    // Hide emote picker when keyboard is opened
+                    hideEmotesMenu()
+
+                    // Set emote picker height to keyboard height
+                    emotePicker.updateLayoutParams {
+                        height = imeInsets.bottom
+                    }
+                }
             }
+
             windowInsets
+        }
+
+        chatAdapter?.setOnClickListener { original, formatted, userId ->
+            hideKeyboard()
+
+            MessageClickedDialog.newInstance(
+                originalMessage = original,
+                formattedMessage = formatted,
+                userId = userId
+            ).show(childFragmentManager, "closeOnPip")
         }
 
         channelViewModel.state.observe(viewLifecycleOwner) { state ->
@@ -129,51 +193,106 @@ class ChannelChatFragment :
                     )
                 }
 
-                state.appUser.login?.let { login ->
-                    chatView.setUsername(login)
+                chatAdapter?.apply {
+                    state.appUser.login?.let { login ->
+                        setUsername(login)
+                    }
+
+                    showTimestamps = state.showTimestamps
+                    animateEmotes = state.animateEmotes
                 }
 
-                chatView.showTimestamps = state.showTimestamps
-                chatView.animateEmotes = state.animateEmotes
-                chatInputView.animateEmotes = state.animateEmotes
+                autoCompleteAdapter?.animateEmotes = state.animateEmotes
             }
         }
 
         viewHolder?.apply {
+            editText.setAdapter(autoCompleteAdapter)
+            editText.setTokenizer(AutoCompleteSpaceTokenizer())
 
-            chatView.setOnMessageClickListener { original, formatted, userId ->
-                hideKeyboard()
+            editText.addTextChangedListener(
+                afterTextChanged = { text -> send.isVisible = text?.isNotBlank() == true }
+            )
 
-                MessageClickedDialog.newInstance(
-                    originalMessage = original,
-                    formattedMessage = formatted,
-                    userId = userId
-                ).show(childFragmentManager, "closeOnPip")
-            }
-
-            chatInputView.setOnMessageSendListener { message ->
-                chatViewModel.send(
-                    message = message,
-                    screenDensity = requireContext().resources.displayMetrics.density,
-                    isDarkTheme = requireContext().isDarkMode
-                )
-
-                chatView.scrollToBottom()
-            }
-
-            chatInputView.emotePickerSelectedTab.observe(viewLifecycleOwner) { position ->
-                val fragment = childFragmentManager.findFragmentByTag("f$position")
-                (fragment as? Scrollable)?.scrollToTop()
-            }
-
-            chatInputView.emotePickerAdapter =
-                object : FragmentStateAdapter(this@ChannelChatFragment) {
-
-                    override fun createFragment(position: Int): Fragment =
-                        EmotesFragment.newInstance(position)
-
-                    override fun getItemCount(): Int = 3
+            editText.setOnKeyListener { _, keyCode, event ->
+                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    sendMessage()
+                    true
+                } else {
+                    false
                 }
+            }
+
+            textInputLayoutChat.setStartIconOnClickListener {
+                // TODO add animation
+                if (emotePicker.isGone) {
+                    editText.hideKeyboard()
+                    emotePicker.isVisible = true
+                } else {
+                    editText.showKeyboard()
+                    emotePicker.isVisible = false
+                }
+            }
+
+            send.setOnClickListener { sendMessage() }
+
+            messageView.isVisible = true
+
+            emotePicker.setContent {
+                Mdc3Theme {
+                    val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
+                    EmotePicker(
+                        onEmoteClick = ::appendEmote,
+                        state = state
+                    )
+                }
+            }
+
+            recyclerView.apply {
+                adapter = chatAdapter
+                itemAnimator = null
+                layoutManager = object : LinearLayoutManager(context) {
+
+                    init {
+                        stackFromEnd = true
+                    }
+
+                    private var isChatTouched = false
+
+                    override fun onScrollStateChanged(state: Int) {
+                        super.onScrollStateChanged(state)
+                        isChatTouched = state != RecyclerView.SCROLL_STATE_IDLE
+                        btnDown.isVisible = shouldShowButton()
+                    }
+
+                    override fun onLayoutCompleted(state: RecyclerView.State?) {
+                        super.onLayoutCompleted(state)
+                        state ?: return
+
+                        if (!isChatTouched && btnDown.isGone) {
+                            scrollToPosition(state.itemCount - 1)
+                        }
+                    }
+                }
+
+                val typedValue = TypedValue()
+                context.theme.resolveAttribute(R.attr.colorSurfaceVariant, typedValue, true)
+                val altBackground = ColorUtils.setAlphaComponent(typedValue.data, 40)
+
+                addItemDecoration(
+                    AlternatingBackgroundItemDecoration(
+                        oddBackground = Color.TRANSPARENT,
+                        evenBackground = altBackground
+                    )
+                )
+            }
+
+            btnDown.setOnClickListener {
+                btnDown.post {
+                    scrollToTop()
+                    it.isVisible = !it.isVisible
+                }
+            }
         }
 
         chatViewModel.state.observe(viewLifecycleOwner) { state ->
@@ -181,16 +300,14 @@ class ChannelChatFragment :
                 ChatViewModel.State.Initial -> {}
                 is ChatViewModel.State.Chatting -> {
                     viewHolder?.apply {
-                        with(chatInputView) {
-                            setMessagePostConstraint(state.messagePostConstraint)
-                            setAutocompleteItems(
-                                emotes = state.allEmotes,
-                                chatters = state.chatters
-                            )
-                        }
+                        setMessagePostConstraint(state.messagePostConstraint)
+                        setAutocompleteItems(
+                            emotes = state.allEmotes,
+                            chatters = state.chatters
+                        )
 
-                        with(chatView) {
-                            setEmotes(state.allEmotes)
+                        chatAdapter?.apply {
+                            addEmotes(state.allEmotes)
                             submitList(state.chatMessages)
                             notifyRoomState(state.roomState)
                             addGlobalBadges(state.globalBadges)
@@ -328,7 +445,9 @@ class ChannelChatFragment :
         toolbar.setTitleTextColor(textColor)
         toolbar.setSubtitleTextColor(textColor)
         toolbar.menu.forEach { item ->
-            DrawableCompat.setTint(item.icon, textColor)
+            item.icon?.let { icon ->
+                DrawableCompat.setTint(icon, textColor)
+            }
         }
 
         activity?.let { activity ->
@@ -366,6 +485,149 @@ class ChannelChatFragment :
         loadUserAvatar(user)
     }
 
+    private fun notifyRoomState(roomState: RoomState) = viewHolder?.apply {
+        textEmote.isVisible = roomState.isEmoteOnly
+
+        if (roomState.minFollowDuration != null) {
+            when (roomState.minFollowDuration) {
+                Duration.ZERO -> {
+                    textFollowers.text = getString(R.string.room_followers)
+                    textFollowers.isVisible = true
+                }
+                else -> {
+                    textFollowers.text = getString(
+                        R.string.room_followers_min,
+                        roomState.minFollowDuration.toString()
+                    )
+                    textFollowers.isVisible = true
+                }
+            }
+        } else {
+            textFollowers.isVisible = false
+        }
+
+        textUnique.isVisible = roomState.uniqueMessagesOnly
+
+        if (roomState.slowModeDuration != null) {
+            textSlow.text = getString(
+                R.string.room_slow,
+                roomState.slowModeDuration.toString()
+            )
+            textSlow.isVisible = true
+        } else {
+            textSlow.isVisible = false
+        }
+
+        textSubs.isVisible = roomState.isSubOnly
+
+        flexboxChatMode.isVisible =
+            !textEmote.isGone ||
+                    !textFollowers.isGone ||
+                    !textUnique.isGone ||
+                    !textSlow.isGone ||
+                    !textSubs.isGone
+    }
+
+    private fun setAutocompleteItems(emotes: Collection<Emote>, chatters: Collection<Chatter>) {
+        autoCompleteAdapter?.apply {
+            val allItems =
+                chatters.map { AutoCompleteItem.UserItem(it) } +
+                        emotes.distinctBy { emote -> emote.name }
+                            .map { AutoCompleteItem.EmoteItem(it) }
+
+            if (allItems.size != count) {
+                clear()
+                addAll(allItems)
+            }
+        }
+    }
+
+    private fun setMessagePostConstraint(constraint: MessagePostConstraint?) {
+        viewHolder?.apply {
+            // No constraint, no need for an indicator
+            if (constraint == null) {
+                progressCannotSendUntil.isInvisible = true
+                return
+            }
+
+            // If the constraint is in the past, just ignore it
+            val now = Clock.System.now()
+            val canPostAt = constraint.lastMessageSentAt + constraint.slowModeDuration
+
+            if (canPostAt < now) {
+                progressCannotSendUntil.isInvisible = true
+                return
+            }
+
+            if (progressAnimator != null) {
+                progressAnimator?.cancel()
+                progressAnimator = null
+            }
+
+            progressAnimator = ValueAnimator.ofInt(0, Int.MAX_VALUE)
+                .apply {
+                    interpolator = null
+                    duration = constraint.slowModeDuration.inWholeMilliseconds
+
+                    addUpdateListener { animation ->
+                        with(progressCannotSendUntil) {
+                            max = Int.MAX_VALUE
+                            progress = animation.animatedValue as Int
+                            isInvisible = progress == 0
+                        }
+                    }
+
+                    reverse()
+
+                    currentPlayTime = (now - constraint.lastMessageSentAt).inWholeMilliseconds
+                }
+        }
+    }
+
+    private fun hideEmotesMenu(): Boolean {
+        val viewHolder = viewHolder ?: return false
+        return if (viewHolder.emotePicker.isVisible) {
+            viewHolder.emotePicker.isVisible = false
+            true
+        } else {
+            false
+        }
+    }
+
+    private fun appendEmote(emote: Emote) {
+        viewHolder?.apply {
+            editText.text.append(emote.name).append(' ')
+        }
+    }
+
+    private fun FragmentChannelBinding.shouldShowButton(): Boolean {
+        val offset = recyclerView.computeVerticalScrollOffset()
+        if (offset < 0) return false
+
+        val extent = recyclerView.computeVerticalScrollExtent()
+        val range = recyclerView.computeVerticalScrollRange()
+        val ratio = offset / (range - extent)
+        return ratio < 1f
+    }
+
+    private fun FragmentChannelBinding.sendMessage() {
+        val text = editText.text.trim()
+
+        editText.hideKeyboard()
+        editText.setText("")
+        editText.clearFocus()
+
+        hideEmotesMenu()
+
+        chatViewModel.send(
+            message = text,
+            screenDensity = requireContext().resources.displayMetrics.density,
+            isDarkTheme = requireContext().isDarkMode
+        )
+
+        scrollToTop()
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
@@ -380,16 +642,17 @@ class ChannelChatFragment :
         }
     }
 
-    override fun onEmoteClicked(emote: Emote) {
-        viewHolder?.chatInputView?.appendEmote(emote)
-    }
-
     override fun onReplyClicked(userName: String) {
-        viewHolder?.chatInputView?.reply(userName)
+        val text = "@$userName "
+        viewHolder?.editText?.apply {
+            setText(text)
+            setSelection(text.length)
+            showKeyboard()
+        }
     }
 
     override fun onCopyMessageClicked(message: String) {
-        viewHolder?.chatInputView?.setMessage(message)
+        viewHolder?.editText?.setText(message)
     }
 
     override fun onViewProfileClicked(login: String) {
@@ -403,7 +666,12 @@ class ChannelChatFragment :
     }
 
     override fun scrollToTop() {
-        viewHolder?.appBar?.setExpanded(true, true)
+        viewHolder?.apply {
+            appBar.setExpanded(true, true)
+            chatAdapter?.apply {
+                recyclerView.scrollToPosition(itemCount - 1)
+            }
+        }
     }
 
     override fun onPause() {
@@ -415,5 +683,7 @@ class ChannelChatFragment :
         super.onDestroyView()
         viewHolder = null
         openInBubble = null
+        chatAdapter = null
+        autoCompleteAdapter = null
     }
 }

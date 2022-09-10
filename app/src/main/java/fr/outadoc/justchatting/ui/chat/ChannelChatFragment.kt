@@ -255,7 +255,8 @@ class ChannelChatFragment :
                         is ChatViewModel.State.Chatting -> {
                             ChatList(
                                 modifier = Modifier.fillMaxSize(),
-                                entries = currentState.chatMessages
+                                entries = currentState.chatMessages,
+                                emotes = currentState.allEmotesMap
                             )
                         }
                     }

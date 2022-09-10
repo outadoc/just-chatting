@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.text.InlineTextContent
+import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -24,25 +26,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.Placeholder
+import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
-import fr.outadoc.justchatting.util.isLight
+import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import fr.outadoc.justchatting.util.isOdd
 import org.koin.androidx.compose.get
 import kotlin.random.Random
@@ -51,7 +57,8 @@ import kotlin.random.Random
 fun ChatList(
     modifier: Modifier = Modifier,
     chatPreferencesRepository: ChatPreferencesRepository = get(),
-    entries: List<ChatEntry>
+    entries: List<ChatEntry>,
+    emotes: Map<String, Emote>
 ) {
     val listState = rememberLazyListState()
     LaunchedEffect(entries) {
@@ -61,6 +68,23 @@ fun ChatList(
     }
 
     val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
+
+    val inlineContent = remember(emotes) {
+        emotes.mapValues { (_, emote) ->
+            InlineTextContent(
+                Placeholder(
+                    width = 2.em,
+                    height = 2.em,
+                    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+                )
+            ) {
+                EmoteItem(
+                    emote = emote,
+                    animateEmotes = animateEmotes
+                )
+            }
+        }
+    }
 
     LazyColumn(
         modifier = modifier,
@@ -82,14 +106,14 @@ fun ChatList(
                     ChatMessage(
                         modifier = Modifier.fillMaxWidth(),
                         message = item,
-                        animateEmotes = animateEmotes
+                        inlineContent = inlineContent
                     )
                 }
             } else {
                 ChatMessage(
                     modifier = Modifier.fillMaxWidth(),
                     message = item,
-                    animateEmotes = animateEmotes
+                    inlineContent = inlineContent
                 )
             }
         }
@@ -100,21 +124,21 @@ fun ChatList(
 fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry,
-    animateEmotes: Boolean
+    inlineContent: Map<String, InlineTextContent>
 ) {
     when (message) {
         is ChatEntry.Highlighted -> {
             HighlightedMessage(
                 modifier = modifier,
                 message = message,
-                animateEmotes = animateEmotes
+                inlineContent = inlineContent
             )
         }
         is ChatEntry.Simple -> {
             SimpleMessage(
                 modifier = modifier,
                 message = message,
-                animateEmotes = animateEmotes
+                inlineContent = inlineContent
             )
         }
     }
@@ -124,7 +148,7 @@ fun ChatMessage(
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry.Highlighted,
-    animateEmotes: Boolean
+    inlineContent: Map<String, InlineTextContent>
 ) {
     Card(
         modifier = Modifier
@@ -172,7 +196,8 @@ fun HighlightedMessage(
                             end = 4.dp,
                             bottom = 4.dp
                         ),
-                        data = data
+                        data = data,
+                        inlineContent = inlineContent
                     )
                 }
 
@@ -188,7 +213,7 @@ fun HighlightedMessage(
 fun SimpleMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry.Simple,
-    animateEmotes: Boolean
+    inlineContent: Map<String, InlineTextContent>
 ) {
     Row {
         Spacer(
@@ -199,7 +224,8 @@ fun SimpleMessage(
 
         ChatMessageData(
             modifier = modifier.padding(4.dp),
-            data = message.data
+            data = message.data,
+            inlineContent = inlineContent
         )
     }
 }
@@ -207,22 +233,23 @@ fun SimpleMessage(
 @Composable
 fun ChatMessageData(
     modifier: Modifier = Modifier,
-    data: ChatEntry.Data
+    data: ChatEntry.Data,
+    inlineContent: Map<String, InlineTextContent>
 ) {
     Text(
         modifier = modifier,
-        text = data.toAnnotatedString(animateEmotes = true),
+        text = data.toAnnotatedString(
+            inlineContent = inlineContent
+        ),
+        inlineContent = inlineContent,
         style = MaterialTheme.typography.bodyMedium
     )
 }
 
 @Composable
 private fun ChatEntry.Data.toAnnotatedString(
-    animateEmotes: Boolean
+    inlineContent: Map<String, InlineTextContent>
 ): AnnotatedString {
-    val screenDensity = LocalDensity.current.density
-    val isDarkMode = MaterialTheme.colorScheme.isLight
-
     val color = color
         ?.let { color ->
             ensureColorIsAccessible(
@@ -243,8 +270,18 @@ private fun ChatEntry.Data.toAnnotatedString(
             append(if (isAction) " " else ": ")
         }
 
-        if (message != null) {
-            append(message)
+        message?.split(' ')?.forEach { word ->
+            val emote = inlineContent[word]
+            if (emote == null) {
+                append(word)
+            } else {
+                appendInlineContent(
+                    id = word,
+                    alternateText = word
+                )
+            }
+
+            append(' ')
         }
     }
 }

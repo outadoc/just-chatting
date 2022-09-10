@@ -23,11 +23,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
+import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
+import fr.outadoc.justchatting.util.isLight
 import fr.outadoc.justchatting.util.isOdd
 import org.koin.androidx.compose.get
 
@@ -184,11 +196,46 @@ fun ChatMessageData(
     modifier: Modifier = Modifier,
     data: ChatEntry.Data
 ) {
-    data.message?.let { text ->
-        Text(
-            modifier = modifier,
-            text = text,
-            style = MaterialTheme.typography.bodyMedium
-        )
+    Text(
+        modifier = modifier,
+        text = data.toAnnotatedString(animateEmotes = true),
+        style = MaterialTheme.typography.bodyMedium
+    )
+}
+
+@Composable
+private fun ChatEntry.Data.toAnnotatedString(
+    animateEmotes: Boolean
+): AnnotatedString {
+    val screenDensity = LocalDensity.current.density
+    val isDarkMode = MaterialTheme.colorScheme.isLight
+
+    val randomChatColors = integerArrayResource(id = R.array.randomChatColors)
+
+    val color = color
+        ?.let { color ->
+            ensureColorIsAccessible(
+                foreground = android.graphics.Color.parseColor(color),
+                background = MaterialTheme.colorScheme.surface.toArgb()
+            )
+        }
+        ?: randomChatColors.random()
+
+    return buildAnnotatedString {
+        if (userName != null) {
+            withStyle(
+                SpanStyle(
+                    color = Color(color),
+                    fontWeight = FontWeight.Bold
+                )
+            ) {
+                append(userName)
+                append(if (isAction) " " else ": ")
+            }
+        }
+
+        if (message != null) {
+            append(message)
+        }
     }
 }

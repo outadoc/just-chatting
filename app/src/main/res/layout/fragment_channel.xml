@@ -125,7 +125,13 @@
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
                     android:paddingVertical="4dp"
+                    android:visibility="gone"
                     tools:listitem="@layout/chat_list_item" />
+
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/composeView_chat"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
                 <Button
                     android:id="@+id/btnDown"

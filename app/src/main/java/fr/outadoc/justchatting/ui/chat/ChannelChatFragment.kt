@@ -18,8 +18,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
 import androidx.core.app.Person
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
@@ -242,6 +244,21 @@ class ChannelChatFragment :
                         onEmoteClick = ::appendEmote,
                         state = state
                     )
+                }
+            }
+
+            composeViewChat.setContent {
+                Mdc3Theme {
+                    val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
+                    when (val currentState = state) {
+                        ChatViewModel.State.Initial -> {}
+                        is ChatViewModel.State.Chatting -> {
+                            ChatList(
+                                modifier = Modifier.fillMaxSize(),
+                                entries = currentState.chatMessages
+                            )
+                        }
+                    }
                 }
             }
 

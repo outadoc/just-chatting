@@ -60,6 +60,7 @@ import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
+import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.isOdd
 import kotlinx.coroutines.coroutineScope
 import org.koin.androidx.compose.get
@@ -345,7 +346,13 @@ private fun ChatEntry.Data.toAnnotatedString(
                 fontWeight = FontWeight.Bold
             )
         ) {
-            append(userName)
+            withAnnotation(
+                tag = UrlAnnotationTag,
+                annotation = formatChannelUri(userName).toString()
+            ) {
+                append(userName)
+            }
+
             append(if (isAction) " " else ": ")
         }
 
@@ -361,7 +368,12 @@ private fun ChatEntry.Data.toAnnotatedString(
                 }
                 word.startsWith('@') -> {
                     withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append(word)
+                        withAnnotation(
+                            tag = UrlAnnotationTag,
+                            annotation = formatChannelUri(word.removePrefix("@")).toString()
+                        ) {
+                            append(word)
+                        }
                     }
                 }
                 word in inlineContent -> {

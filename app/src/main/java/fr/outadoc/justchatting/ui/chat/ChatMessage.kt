@@ -345,8 +345,8 @@ fun ChatMessageData(
                 LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
             ) {
                 Row(
-                    modifier = Modifier.padding(top = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    modifier = Modifier.padding(top = 8.dp, end = 8.dp),
+                    verticalAlignment = Alignment.Top
                 ) {
                     Icon(
                         modifier = Modifier
@@ -456,39 +456,45 @@ private fun ChatEntry.Data.toAnnotatedString(
             append(if (isAction) " " else ": ")
         }
 
-        message?.split(' ')?.forEach { word ->
-            when {
-                word.matches(urlRegex) -> {
-                    val url = if (word.startsWith("http")) word else "https://$word"
-                    withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                        withAnnotation(tag = UrlAnnotationTag, annotation = url) {
-                            append(word)
-                        }
-                    }
-                }
-                word.startsWith('@') -> {
-                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                        withAnnotation(
-                            tag = UrlAnnotationTag,
-                            annotation = formatChannelUri(word.removePrefix("@")).toString()
-                        ) {
-                            append(word)
-                        }
-                    }
-                }
-                word in inlineContent -> {
-                    appendInlineContent(
-                        id = word,
-                        alternateText = word
-                    )
-                }
-                else -> {
-                    append(word)
-                }
+        message
+            ?.let { message ->
+                if (inReplyTo != null) message.removePrefix("@${inReplyTo.userName} ")
+                else message
             }
+            ?.split(' ')
+            ?.forEach { word ->
+                when {
+                    word.matches(urlRegex) -> {
+                        val url = if (word.startsWith("http")) word else "https://$word"
+                        withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                            withAnnotation(tag = UrlAnnotationTag, annotation = url) {
+                                append(word)
+                            }
+                        }
+                    }
+                    word.startsWith('@') -> {
+                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                            withAnnotation(
+                                tag = UrlAnnotationTag,
+                                annotation = formatChannelUri(word.removePrefix("@")).toString()
+                            ) {
+                                append(word)
+                            }
+                        }
+                    }
+                    word in inlineContent -> {
+                        appendInlineContent(
+                            id = word,
+                            alternateText = word
+                        )
+                    }
+                    else -> {
+                        append(word)
+                    }
+                }
 
-            append(' ')
-        }
+                append(' ')
+            }
     }
 }
 

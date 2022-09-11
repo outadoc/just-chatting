@@ -44,17 +44,19 @@ class ChatMessageParser {
         // to extract the actual message contained inside
         val actionGroups = actionRegex.find(privateMessage.message)
 
+        val message = actionGroups?.groupValues?.get(1) ?: privateMessage.message
+
         return ChatMessage(
             id = ircMessage.tags.id,
             userId = ircMessage.tags.userId,
             userLogin = ircMessage.tags.login ?: privateMessage.source.nick,
             userName = ircMessage.tags.displayName ?: privateMessage.source.nick,
-            message = actionGroups?.groupValues?.get(1) ?: privateMessage.message,
+            message = message,
             isAction = actionGroups != null,
             color = ircMessage.tags.color,
             rewardId = ircMessage.tags.customRewardId,
             isFirst = ircMessage.tags.firstMsg,
-            emotes = ircMessage.tags.parseEmotes(),
+            emotes = ircMessage.tags.parseEmotes(message),
             badges = ircMessage.tags.parseBadges(),
             timestamp = ircMessage.tags.parseTimestamp(),
             inReplyTo = ircMessage.tags.parseParentMessage(),

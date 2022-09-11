@@ -6,11 +6,11 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.ChatCommand
+import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.CheerEmote
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.Emote
-import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RecentEmote
@@ -297,8 +297,7 @@ class ChatViewModel(
             val newChatters =
                 messages.asSequence()
                     .filterIsInstance<ChatMessage>()
-                    .mapNotNull { message -> message.userName }
-                    .map { userName -> Chatter(userName) }
+                    .map { message -> Chatter(message.userName) }
                     .toSet()
 
             val newMessages = state.chatMessages

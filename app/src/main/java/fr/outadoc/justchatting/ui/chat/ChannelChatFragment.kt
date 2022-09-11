@@ -241,6 +241,7 @@ class ChannelChatFragment :
                 Mdc3Theme {
                     val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
                     EmotePicker(
+                        modifier = Modifier.fillMaxSize(),
                         onEmoteClick = ::appendEmote,
                         state = state
                     )

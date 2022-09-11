@@ -53,6 +53,12 @@ import fr.outadoc.justchatting.util.isOdd
 import org.koin.androidx.compose.get
 import kotlin.random.Random
 
+private val emotePlaceholder = Placeholder(
+    width = 2.em,
+    height = 2.em,
+    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+)
+
 @Composable
 fun ChatList(
     modifier: Modifier = Modifier,
@@ -71,13 +77,7 @@ fun ChatList(
 
     val inlineContent = remember(emotes) {
         emotes.mapValues { (_, emote) ->
-            InlineTextContent(
-                Placeholder(
-                    width = 2.em,
-                    height = 2.em,
-                    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
-                )
-            ) {
+            InlineTextContent(emotePlaceholder) {
                 EmoteItem(
                     emote = emote,
                     animateEmotes = animateEmotes
@@ -106,14 +106,16 @@ fun ChatList(
                     ChatMessage(
                         modifier = Modifier.fillMaxWidth(),
                         message = item,
-                        inlineContent = inlineContent
+                        inlineContent = inlineContent,
+                        animateEmotes = animateEmotes
                     )
                 }
             } else {
                 ChatMessage(
                     modifier = Modifier.fillMaxWidth(),
                     message = item,
-                    inlineContent = inlineContent
+                    inlineContent = inlineContent,
+                    animateEmotes = animateEmotes
                 )
             }
         }
@@ -124,21 +126,24 @@ fun ChatList(
 fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry,
-    inlineContent: Map<String, InlineTextContent>
+    inlineContent: Map<String, InlineTextContent>,
+    animateEmotes: Boolean
 ) {
     when (message) {
         is ChatEntry.Highlighted -> {
             HighlightedMessage(
                 modifier = modifier,
                 message = message,
-                inlineContent = inlineContent
+                inlineContent = inlineContent,
+                animateEmotes = animateEmotes
             )
         }
         is ChatEntry.Simple -> {
             SimpleMessage(
                 modifier = modifier,
                 message = message,
-                inlineContent = inlineContent
+                inlineContent = inlineContent,
+                animateEmotes = animateEmotes
             )
         }
     }
@@ -148,7 +153,8 @@ fun ChatMessage(
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry.Highlighted,
-    inlineContent: Map<String, InlineTextContent>
+    inlineContent: Map<String, InlineTextContent>,
+    animateEmotes: Boolean
 ) {
     Card(
         modifier = Modifier
@@ -197,7 +203,8 @@ fun HighlightedMessage(
                             bottom = 4.dp
                         ),
                         data = data,
-                        inlineContent = inlineContent
+                        inlineContent = inlineContent,
+                        animateEmotes = animateEmotes
                     )
                 }
 
@@ -213,7 +220,8 @@ fun HighlightedMessage(
 fun SimpleMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry.Simple,
-    inlineContent: Map<String, InlineTextContent>
+    inlineContent: Map<String, InlineTextContent>,
+    animateEmotes: Boolean
 ) {
     Row {
         Spacer(
@@ -225,7 +233,8 @@ fun SimpleMessage(
         ChatMessageData(
             modifier = modifier.padding(4.dp),
             data = message.data,
-            inlineContent = inlineContent
+            inlineContent = inlineContent,
+            animateEmotes = animateEmotes
         )
     }
 }
@@ -234,13 +243,25 @@ fun SimpleMessage(
 fun ChatMessageData(
     modifier: Modifier = Modifier,
     data: ChatEntry.Data,
-    inlineContent: Map<String, InlineTextContent>
+    inlineContent: Map<String, InlineTextContent>,
+    animateEmotes: Boolean
 ) {
+    val inlineContent = inlineContent + data.emotes.orEmpty()
+        .associate { emote ->
+            Pair(
+                emote.name,
+                InlineTextContent(emotePlaceholder) {
+                    EmoteItem(
+                        emote = emote,
+                        animateEmotes = animateEmotes
+                    )
+                }
+            )
+        }
+
     Text(
         modifier = modifier,
-        text = data.toAnnotatedString(
-            inlineContent = inlineContent
-        ),
+        text = data.toAnnotatedString(inlineContent),
         inlineContent = inlineContent,
         style = MaterialTheme.typography.bodyMedium
     )

@@ -26,6 +26,7 @@ import org.koin.androidx.compose.get
 
 @Composable
 fun EmotePicker(
+    modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     chatPreferencesRepository: ChatPreferencesRepository = get(),
     onEmoteClick: (Emote) -> Unit
@@ -37,7 +38,7 @@ fun EmotePicker(
     when (state) {
         ChatViewModel.State.Initial -> {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier,
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

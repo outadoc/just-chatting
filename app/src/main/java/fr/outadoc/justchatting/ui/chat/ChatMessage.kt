@@ -199,7 +199,10 @@ fun ChatMessage(
         ?.formatTimestamp()
         ?.takeIf { showTimestamps }
 
-    Row(verticalAlignment = Alignment.CenterVertically) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         if (timestamp != null) {
             Text(
                 modifier = Modifier.padding(4.dp),
@@ -212,7 +215,6 @@ fun ChatMessage(
         when (message) {
             is ChatEntry.Highlighted -> {
                 HighlightedMessage(
-                    modifier = modifier,
                     message = message,
                     inlineContent = inlineContent,
                     animateEmotes = animateEmotes
@@ -220,7 +222,6 @@ fun ChatMessage(
             }
             is ChatEntry.Simple -> {
                 SimpleMessage(
-                    modifier = modifier,
                     message = message,
                     inlineContent = inlineContent,
                     animateEmotes = animateEmotes

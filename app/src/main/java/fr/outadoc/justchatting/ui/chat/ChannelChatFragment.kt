@@ -251,28 +251,21 @@ class ChannelChatFragment :
             composeViewChat.setContent {
                 Mdc3Theme {
                     val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
-                    when (val currentState = state) {
-                        ChatViewModel.State.Initial -> {}
-                        is ChatViewModel.State.Chatting -> {
-                            ChatList(
-                                modifier = Modifier.fillMaxSize(),
-                                entries = currentState.chatMessages,
-                                emotes = currentState.allEmotesMap,
-                                badges = currentState.globalBadges + currentState.channelBadges,
-                                onMessageClick = { _ ->
-                                    hideKeyboard()
+                    ChatList(
+                        modifier = Modifier.fillMaxSize(),
+                        state = state,
+                        onMessageClick = { _ ->
+                            hideKeyboard()
 
-                                    /*
-                                    MessageClickedDialog.newInstance(
-                                        originalMessage = original,
-                                        formattedMessage = formatted,
-                                        userId = userId
-                                    ).show(childFragmentManager, "closeOnPip")
-                                     */
-                                }
-                            )
+                            /*
+                            MessageClickedDialog.newInstance(
+                                originalMessage = original,
+                                formattedMessage = formatted,
+                                userId = userId
+                            ).show(childFragmentManager, "closeOnPip")
+                             */
                         }
-                    }
+                    )
                 }
             }
 

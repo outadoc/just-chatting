@@ -7,6 +7,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -23,6 +24,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -83,6 +85,33 @@ private val badgePlaceholder = Placeholder(
 
 private val urlRegex = Patterns.WEB_URL.toRegex()
 private const val UrlAnnotationTag = "URL"
+
+@Composable
+fun ChatList(
+    modifier: Modifier = Modifier,
+    state: ChatViewModel.State,
+    onMessageClick: (ChatEntry) -> Unit
+) {
+    when (state) {
+        ChatViewModel.State.Initial -> {
+            Column(
+                modifier = modifier,
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+        is ChatViewModel.State.Chatting -> {
+            ChatList(
+                entries = state.chatMessages,
+                emotes = state.allEmotesMap,
+                badges = state.globalBadges + state.channelBadges,
+                onMessageClick = onMessageClick
+            )
+        }
+    }
+}
 
 @Composable
 fun ChatList(

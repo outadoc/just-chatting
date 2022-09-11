@@ -211,8 +211,7 @@ fun ChatList(
 
     LazyColumn(
         modifier = modifier,
-        state = listState,
-        contentPadding = PaddingValues(vertical = 16.dp)
+        state = listState
     ) {
         itemsIndexed(
             items = entries,

@@ -317,23 +317,24 @@ fun ChatMessageData(
     inlineContent: Map<String, InlineTextContent>,
     animateEmotes: Boolean
 ) {
-    val inlineContent = inlineContent + data.emotes.orEmpty()
-        .associate { emote ->
-            Pair(
-                emote.name,
-                InlineTextContent(emotePlaceholder) {
-                    EmoteItem(
-                        emote = emote,
-                        animateEmotes = animateEmotes
-                    )
-                }
-            )
-        }
-
-    val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
-    val annotatedString = data.toAnnotatedString(inlineContent)
-
     val uriHandler = LocalUriHandler.current
+    val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
+
+    val fullInlineContent =
+        inlineContent + data.emotes.orEmpty()
+            .associate { emote ->
+                Pair(
+                    emote.name,
+                    InlineTextContent(emotePlaceholder) {
+                        EmoteItem(
+                            emote = emote,
+                            animateEmotes = animateEmotes
+                        )
+                    }
+                )
+            }
+
+    val annotatedString = data.toAnnotatedString(fullInlineContent)
 
     Text(
         modifier = modifier
@@ -370,7 +371,7 @@ fun ChatMessageData(
             },
         onTextLayout = { layoutResult.value = it },
         text = annotatedString,
-        inlineContent = inlineContent,
+        inlineContent = fullInlineContent,
         lineHeight = 1.7.em,
         style = MaterialTheme.typography.bodyMedium
     )

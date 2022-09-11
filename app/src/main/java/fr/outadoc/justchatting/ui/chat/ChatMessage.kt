@@ -20,14 +20,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.Reply
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -39,6 +42,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -74,6 +78,7 @@ import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.formatTimestamp
 import fr.outadoc.justchatting.util.isOdd
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
 import kotlin.random.Random
 
@@ -115,14 +120,44 @@ fun ChatScreen(
             }
         }
         is ChatViewModel.State.Chatting -> {
-            ChatList(
-                entries = state.chatMessages,
-                emotes = state.allEmotesMap,
-                badges = state.globalBadges + state.channelBadges,
-                animateEmotes = animateEmotes,
-                showTimestamps = showTimestamps,
-                onMessageClick = onMessageClick
-            )
+            val scope = rememberCoroutineScope()
+            val listState = rememberLazyListState()
+
+            /*
+            LaunchedEffect(state.chatMessages) {
+                listState.scrollToItem(
+                    index = (state.chatMessages.size - 1).coerceAtLeast(0)
+                )
+            }
+             */
+
+            Box(contentAlignment = Alignment.BottomCenter) {
+                ChatList(
+                    entries = state.chatMessages,
+                    emotes = state.allEmotesMap,
+                    badges = state.globalBadges + state.channelBadges,
+                    animateEmotes = animateEmotes,
+                    showTimestamps = showTimestamps,
+                    listState = listState,
+                    onMessageClick = onMessageClick
+                )
+
+                FloatingActionButton(
+                    modifier = Modifier.padding(16.dp),
+                    onClick = {
+                        scope.launch {
+                            listState.scrollToItem(
+                                index = (state.chatMessages.size - 1).coerceAtLeast(0)
+                            )
+                        }
+                    }
+                ) {
+                    Icon(
+                        Icons.Default.ArrowDownward,
+                        contentDescription = "Scroll to bottom"
+                    )
+                }
+            }
         }
     }
 }
@@ -135,15 +170,9 @@ fun ChatList(
     badges: List<TwitchBadge>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
+    listState: LazyListState,
     onMessageClick: (ChatEntry) -> Unit
 ) {
-    val listState = rememberLazyListState()
-    LaunchedEffect(entries) {
-        listState.scrollToItem(
-            index = (entries.size - 1).coerceAtLeast(0)
-        )
-    }
-
     val inlinesEmotes = remember(emotes) {
         emotes.mapValues { (_, emote) ->
             InlineTextContent(emotePlaceholder) {

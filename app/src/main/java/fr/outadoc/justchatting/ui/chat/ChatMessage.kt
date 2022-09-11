@@ -4,7 +4,9 @@ import android.util.Patterns
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.forEachGesture
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -59,6 +61,7 @@ import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import fr.outadoc.justchatting.util.isOdd
+import kotlinx.coroutines.coroutineScope
 import org.koin.androidx.compose.get
 import kotlin.random.Random
 
@@ -283,16 +286,34 @@ fun ChatMessageData(
 
     Text(
         modifier = modifier
-            .pointerInput(data) {
-                detectTapGestures { offset ->
-                    layoutResult.value?.let {
-                        val position = it.getOffsetForPosition(offset)
-                        annotatedString.getStringAnnotations(position, position).firstOrNull()
-                            ?.let { result ->
-                                if (result.tag == UrlAnnotationTag) {
-                                    uriHandler.openUri(result.item)
+            .pointerInput(annotatedString) {
+                forEachGesture {
+                    coroutineScope {
+                        awaitPointerEventScope {
+                            // Wait for tap
+                            awaitFirstDown().also { down ->
+                                // Check that text has been laid out (it should be)
+                                val layoutRes = layoutResult.value ?: return@also
+
+                                val position = layoutRes.getOffsetForPosition(down.position)
+                                val urlAnnotation =
+                                    annotatedString.getStringAnnotations(position, position)
+                                        .firstOrNull { it.tag == UrlAnnotationTag }
+
+                                if (urlAnnotation != null) {
+                                    // Prevent parent components from getting the event,
+                                    // we're dealing with it
+                                    down.consume()
+
+                                    // Wait for the user to stop clicking
+                                    waitForUpOrCancellation()?.also { up ->
+                                        // Tap on a link was successful, call onClick
+                                        up.consume()
+                                        uriHandler.openUri(urlAnnotation.item)
+                                    }
                                 }
                             }
+                        }
                     }
                 }
             },

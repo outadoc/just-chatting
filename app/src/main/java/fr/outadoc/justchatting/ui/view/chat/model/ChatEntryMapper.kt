@@ -135,36 +135,28 @@ class ChatEntryMapper(private val context: Context) {
                     }
                 }
 
-                if (header != null || isAction) {
+                val data = ChatEntry.Data(
+                    message = message,
+                    userId = userId,
+                    userName = userName,
+                    userLogin = userLogin,
+                    isAction = isAction,
+                    color = color,
+                    emotes = emotes,
+                    badges = badges,
+                    inReplyTo = inReplyTo
+                )
+
+                if (header != null) {
                     ChatEntry.Highlighted(
                         header = header,
                         headerIconResId = icon,
-                        data = ChatEntry.Data(
-                            message = message,
-                            userId = userId,
-                            userName = userName,
-                            userLogin = userLogin,
-                            isAction = isAction,
-                            color = color,
-                            emotes = emotes,
-                            badges = badges,
-                            inReplyTo = null
-                        ),
+                        data = data,
                         timestamp = timestamp
                     )
                 } else {
                     ChatEntry.Simple(
-                        ChatEntry.Data(
-                            message = message,
-                            userId = userId,
-                            userName = userName,
-                            userLogin = userLogin,
-                            isAction = false,
-                            color = color,
-                            emotes = emotes,
-                            badges = badges,
-                            inReplyTo = inReplyTo
-                        ),
+                        data = data,
                         timestamp = timestamp
                     )
                 }

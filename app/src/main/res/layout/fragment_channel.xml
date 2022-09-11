@@ -1,251 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/coordinatorLayout_channel"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/chatInputView"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.google.android.material.appbar.MaterialToolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                app:menu="@menu/menu_chat"
-                app:navigationIconTint="?colorOnSurface"
-                app:subtitleTextAppearance="?attr/textAppearanceTitleSmall"
-                app:titleTextAppearance="?attr/textAppearanceTitleLarge"
-                tools:navigationIcon="@drawable/ic_back"
-                tools:subtitle="Let's play some games! Something something long title !ad !justkidding"
-                tools:title="StreamerName" />
-
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <LinearLayout
-            android:id="@+id/chatView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:animateLayoutChanges="true">
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/flexboxChatMode"
-                    style="@style/Widget.Material3.CardView.Elevated"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:visibility="gone"
-                    app:cardBackgroundColor="?attr/colorSecondaryContainer"
-                    tools:visibility="visible">
-
-                    <com.google.android.flexbox.FlexboxLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingVertical="4dp"
-                        app:flexWrap="wrap"
-                        app:justifyContent="space_evenly">
-
-                        <TextView
-                            android:id="@+id/textEmote"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLines="1"
-                            android:text="@string/room_emote"
-                            android:textAppearance="?attr/textAppearanceLabelMedium"
-                            android:textColor="?attr/colorOnSecondaryContainer"
-                            android:visibility="gone"
-                            tools:visibility="visible" />
-
-                        <TextView
-                            android:id="@+id/textFollowers"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLines="1"
-                            android:textAppearance="?attr/textAppearanceLabelMedium"
-                            android:textColor="?attr/colorOnSecondaryContainer"
-                            android:visibility="gone"
-                            tools:text="@string/room_followers_min"
-                            tools:visibility="visible" />
-
-                        <TextView
-                            android:id="@+id/textUnique"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLines="1"
-                            android:text="@string/room_unique"
-                            android:textAppearance="?attr/textAppearanceLabelMedium"
-                            android:textColor="?attr/colorOnSecondaryContainer"
-                            android:visibility="gone"
-                            tools:visibility="visible" />
-
-                        <TextView
-                            android:id="@+id/textSlow"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLines="1"
-                            android:textAppearance="?attr/textAppearanceLabelMedium"
-                            android:textColor="?attr/colorOnSecondaryContainer"
-                            android:visibility="gone"
-                            tools:text="@string/room_slow"
-                            tools:visibility="visible" />
-
-                        <TextView
-                            android:id="@+id/textSubs"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:maxLines="1"
-                            android:text="@string/room_subs"
-                            android:textAppearance="?attr/textAppearanceLabelMedium"
-                            android:textColor="?attr/colorOnSecondaryContainer"
-                            android:visibility="gone"
-                            tools:visibility="visible" />
-
-                    </com.google.android.flexbox.FlexboxLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:paddingVertical="4dp"
-                    android:visibility="gone"
-                    tools:listitem="@layout/chat_list_item" />
-
-                <androidx.compose.ui.platform.ComposeView
-                    android:id="@+id/composeView_chat"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <Button
-                    android:id="@+id/btnDown"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_margin="16dp"
-                    android:text="@string/scroll_down"
-                    android:visibility="gone"
-                    tools:visibility="visible" />
-
-            </FrameLayout>
-        </LinearLayout>
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <LinearLayout
-        android:id="@+id/chatInputView"
-        android:layout_width="match_parent"
-        android:visibility="gone"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/coordinatorLayout_channel">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/messageView"
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:orientation="horizontal"
+            android:background="@android:color/transparent"
+            app:menu="@menu/menu_chat"
+            app:navigationIconTint="?colorOnSurface"
+            app:subtitleTextAppearance="?attr/textAppearanceTitleSmall"
+            app:titleTextAppearance="?attr/textAppearanceTitleLarge"
+            tools:navigationIcon="@drawable/ic_back"
+            tools:subtitle="Let's play some games! Something something long title !ad !justkidding"
+            tools:title="StreamerName" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:animateLayoutChanges="true">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/flexboxChatMode"
+            style="@style/Widget.Material3.CardView.Elevated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@id/emotePicker"
+            app:cardBackgroundColor="?attr/colorSecondaryContainer"
             tools:visibility="visible">
 
-            <com.google.android.material.progressindicator.LinearProgressIndicator
-                android:id="@+id/progressCannotSendUntil"
+            <com.google.android.flexbox.FlexboxLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="invisible"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:paddingVertical="4dp"
+                app:flexWrap="wrap"
+                app:justifyContent="space_evenly">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/textInputLayoutChat"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                app:boxBackgroundColor="?colorSurfaceVariant"
-                app:boxStrokeWidth="0dp"
-                app:boxStrokeWidthFocused="0dp"
-                app:endIconMode="clear_text"
-                app:hintEnabled="false"
-                app:hintTextColor="?colorOnSurfaceVariant"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/send"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/progressCannotSendUntil"
-                app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
-                app:startIconContentDescription="@string/chat_input_emote_cd"
-                app:startIconDrawable="@drawable/ic_mood"
-                app:startIconTint="?colorOnSurfaceVariant">
-
-                <MultiAutoCompleteTextView
-                    android:id="@+id/editText"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:completionThreshold="1"
-                    android:hint="@string/chat_input_hint"
-                    android:imeOptions="actionSend|flagNoFullscreen"
-                    android:importantForAutofill="no"
-                    android:inputType="textCapSentences|textAutoCorrect"
-                    android:textAppearance="?textAppearanceBodyLarge"
-                    android:textColor="?colorOnSurfaceVariant"
-                    tools:ignore="LabelFor"
+                <TextView
+                    android:id="@+id/textEmote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/room_emote"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    android:visibility="gone"
                     tools:visibility="visible" />
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:id="@+id/textFollowers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    android:visibility="gone"
+                    tools:text="@string/room_followers_min"
+                    tools:visibility="visible" />
 
-            <Button
-                android:id="@+id/send"
-                style="@style/Widget.Material3.Button.Icon"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="8dp"
-                android:insetLeft="0dp"
-                android:insetTop="0dp"
-                android:insetRight="0dp"
-                android:insetBottom="0dp"
-                android:padding="0dp"
-                android:visibility="gone"
-                app:icon="@drawable/ic_send"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutChat"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/textInputLayoutChat"
-                app:tint="?attr/colorOnSurfaceVariant"
-                tools:visibility="visible" />
+                <TextView
+                    android:id="@+id/textUnique"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/room_unique"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:id="@+id/textSlow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    android:visibility="gone"
+                    tools:text="@string/room_slow"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textSubs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="@string/room_subs"
+                    android:textAppearance="?attr/textAppearanceLabelMedium"
+                    android:textColor="?attr/colorOnSecondaryContainer"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </com.google.android.flexbox.FlexboxLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <androidx.compose.ui.platform.ComposeView
-            android:id="@+id/emotePicker"
+            android:id="@+id/composeView_chat"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
-            android:visibility="gone" />
+            android:layout_height="match_parent" />
 
-    </LinearLayout>
+    </FrameLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/messageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/emotePicker"
+        tools:visibility="visible">
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progressCannotSendUntil"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutChat"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:layout_weight="1"
+            app:boxBackgroundColor="?colorSurfaceVariant"
+            app:boxStrokeWidth="0dp"
+            app:boxStrokeWidthFocused="0dp"
+            app:endIconMode="clear_text"
+            app:hintEnabled="false"
+            app:hintTextColor="?colorOnSurfaceVariant"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/send"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/progressCannotSendUntil"
+            app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+            app:startIconContentDescription="@string/chat_input_emote_cd"
+            app:startIconDrawable="@drawable/ic_mood"
+            app:startIconTint="?colorOnSurfaceVariant">
+
+            <MultiAutoCompleteTextView
+                android:id="@+id/editText"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:completionThreshold="1"
+                android:hint="@string/chat_input_hint"
+                android:imeOptions="actionSend|flagNoFullscreen"
+                android:importantForAutofill="no"
+                android:inputType="textCapSentences|textAutoCorrect"
+                android:textAppearance="?textAppearanceBodyLarge"
+                android:textColor="?colorOnSurfaceVariant"
+                tools:ignore="LabelFor"
+                tools:visibility="visible" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/send"
+            style="@style/Widget.Material3.Button.Icon"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:insetLeft="0dp"
+            android:insetTop="0dp"
+            android:insetRight="0dp"
+            android:insetBottom="0dp"
+            android:padding="0dp"
+            android:visibility="gone"
+            app:icon="@drawable/ic_send"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/textInputLayoutChat"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textInputLayoutChat"
+            app:tint="?attr/colorOnSurfaceVariant"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.compose.ui.platform.ComposeView
+        android:id="@+id/emotePicker"
+        android:layout_width="match_parent"
+        android:layout_height="350dp"
+        android:visibility="gone" />
+
+
+</LinearLayout>

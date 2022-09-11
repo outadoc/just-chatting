@@ -54,6 +54,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.Placeholder
@@ -99,7 +100,7 @@ private val badgePlaceholder = Placeholder(
 private val urlRegex = Patterns.WEB_URL.toRegex()
 private const val UrlAnnotationTag = "URL"
 
-private val latinScriptUserName = "^\\w+$".toRegex()
+private val latinScriptUserName = """^\w+$""".toRegex()
 
 @Composable
 fun ChatScreen(
@@ -158,7 +159,7 @@ fun ChatScreen(
                     ) {
                         Icon(
                             Icons.Default.ArrowDownward,
-                            contentDescription = "Scroll to bottom"
+                            contentDescription = stringResource(R.string.scroll_down)
                         )
                     }
                 }

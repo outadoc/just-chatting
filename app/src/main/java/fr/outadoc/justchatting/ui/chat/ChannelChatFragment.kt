@@ -6,22 +6,22 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.Color
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Build
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.Person
-import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.os.bundleOf
@@ -38,8 +38,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Palette.Swatch
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.composethemeadapter3.Mdc3Theme
 import com.google.android.material.shape.MaterialShapeDrawable
 import fr.outadoc.justchatting.R
@@ -47,11 +45,8 @@ import fr.outadoc.justchatting.databinding.FragmentChannelBinding
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.helix.user.User
-import fr.outadoc.justchatting.ui.common.ChatAdapter
-import fr.outadoc.justchatting.ui.common.Scrollable
 import fr.outadoc.justchatting.ui.common.ensureMinimumAlpha
 import fr.outadoc.justchatting.ui.common.isLightColor
-import fr.outadoc.justchatting.ui.view.AlternatingBackgroundItemDecoration
 import fr.outadoc.justchatting.ui.view.chat.AutoCompleteAdapter
 import fr.outadoc.justchatting.ui.view.chat.AutoCompleteSpaceTokenizer
 import fr.outadoc.justchatting.ui.view.chat.MessageClickedDialog
@@ -70,10 +65,7 @@ import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.time.Duration
 
-class ChannelChatFragment :
-    Fragment(),
-    MessageClickedDialog.OnButtonClickListener,
-    Scrollable {
+class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListener {
 
     companion object {
         private const val CHANNEL_LOGIN = "channel_login"
@@ -90,7 +82,6 @@ class ChannelChatFragment :
     private var viewHolder: FragmentChannelBinding? = null
 
     private var autoCompleteAdapter: AutoCompleteAdapter? = null
-    private var chatAdapter: ChatAdapter? = null
 
     private var progressAnimator: ValueAnimator? = null
 
@@ -111,7 +102,6 @@ class ChannelChatFragment :
     ): View? {
         viewHolder = FragmentChannelBinding.inflate(inflater, container, false)
         autoCompleteAdapter = AutoCompleteAdapter(requireContext())
-        chatAdapter = ChatAdapter(requireContext())
         return viewHolder?.root
     }
 
@@ -148,10 +138,6 @@ class ChannelChatFragment :
                     toolbar.paddingBottom
                 )
 
-                btnDown.updateLayoutParams<ViewGroup.MarginLayoutParams> {
-                    bottomMargin = topMargin + navBarInsets.bottom
-                }
-
                 if (imeInsets.bottom > 0) {
                     // Hide emote picker when keyboard is opened
                     hideEmotesMenu()
@@ -166,16 +152,6 @@ class ChannelChatFragment :
             windowInsets
         }
 
-        chatAdapter?.setOnClickListener { original, formatted, userId ->
-            hideKeyboard()
-
-            MessageClickedDialog.newInstance(
-                originalMessage = original,
-                formattedMessage = formatted,
-                userId = userId
-            ).show(childFragmentManager, "closeOnPip")
-        }
-
         channelViewModel.state.observe(viewLifecycleOwner) { state ->
             viewHolder?.apply {
                 toolbar.subtitle = state.stream?.title?.trim()
@@ -188,15 +164,6 @@ class ChannelChatFragment :
                         channelLogin = user.login,
                         channelName = user.display_name
                     )
-                }
-
-                chatAdapter?.apply {
-                    state.appUser.login?.let { login ->
-                        setUsername(login)
-                    }
-
-                    showTimestamps = state.showTimestamps
-                    animateEmotes = state.animateEmotes
                 }
 
                 autoCompleteAdapter?.animateEmotes = state.animateEmotes
@@ -235,59 +202,41 @@ class ChannelChatFragment :
 
             messageView.isVisible = true
 
-            emotePicker.setContent {
-                Mdc3Theme {
-                    val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
-                    EmotePicker(
-                        onEmoteClick = ::appendEmote,
-                        state = state
-                    )
+            emotePicker.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    Mdc3Theme {
+                        val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
+                        EmotePicker(
+                            modifier = Modifier.fillMaxSize(),
+                            onEmoteClick = ::appendEmote,
+                            state = state
+                        )
+                    }
                 }
             }
 
-            recyclerView.apply {
-                adapter = chatAdapter
-                itemAnimator = null
-                layoutManager = object : LinearLayoutManager(context) {
+            composeViewChat.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    Mdc3Theme {
+                        val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
+                        ChatScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            state = state,
+                            onMessageClick = { _ ->
+                                hideKeyboard()
 
-                    init {
-                        stackFromEnd = true
+                                /*
+                            MessageClickedDialog.newInstance(
+                                originalMessage = original,
+                                formattedMessage = formatted,
+                                userId = userId
+                            ).show(childFragmentManager, "closeOnPip")
+                             */
+                            }
+                        )
                     }
-
-                    private var isChatTouched = false
-
-                    override fun onScrollStateChanged(state: Int) {
-                        super.onScrollStateChanged(state)
-                        isChatTouched = state != RecyclerView.SCROLL_STATE_IDLE
-                        btnDown.isVisible = shouldShowButton()
-                    }
-
-                    override fun onLayoutCompleted(state: RecyclerView.State?) {
-                        super.onLayoutCompleted(state)
-                        state ?: return
-
-                        if (!isChatTouched && btnDown.isGone) {
-                            scrollToPosition(state.itemCount - 1)
-                        }
-                    }
-                }
-
-                val typedValue = TypedValue()
-                context.theme.resolveAttribute(R.attr.colorSurfaceVariant, typedValue, true)
-                val altBackground = ColorUtils.setAlphaComponent(typedValue.data, 40)
-
-                addItemDecoration(
-                    AlternatingBackgroundItemDecoration(
-                        oddBackground = Color.TRANSPARENT,
-                        evenBackground = altBackground
-                    )
-                )
-            }
-
-            btnDown.setOnClickListener {
-                btnDown.post {
-                    scrollToTop()
-                    it.isVisible = !it.isVisible
                 }
             }
         }
@@ -304,15 +253,6 @@ class ChannelChatFragment :
                             emotes = state.allEmotes,
                             chatters = state.chatters
                         )
-
-                        chatAdapter?.apply {
-                            submitList(state.chatMessages)
-
-                            addEmotes(state.allEmotes)
-                            addGlobalBadges(state.globalBadges)
-                            addChannelBadges(state.channelBadges)
-                            addCheerEmotes(state.cheerEmotes)
-                        }
                     }
                 }
             }
@@ -575,16 +515,6 @@ class ChannelChatFragment :
         }
     }
 
-    private fun FragmentChannelBinding.shouldShowButton(): Boolean {
-        val offset = recyclerView.computeVerticalScrollOffset()
-        if (offset < 0) return false
-
-        val extent = recyclerView.computeVerticalScrollExtent()
-        val range = recyclerView.computeVerticalScrollRange()
-        val ratio = offset / (range - extent)
-        return ratio < 1f
-    }
-
     private fun FragmentChannelBinding.sendMessage() {
         val text = editText.text.trim()
 
@@ -599,8 +529,6 @@ class ChannelChatFragment :
             screenDensity = requireContext().resources.displayMetrics.density,
             isDarkTheme = requireContext().isDarkMode
         )
-
-        scrollToTop()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -612,8 +540,8 @@ class ChannelChatFragment :
 
     private fun hideKeyboard() {
         viewHolder?.apply {
-            chatInputView.hideKeyboard()
-            chatInputView.clearFocus()
+            editText.hideKeyboard()
+            editText.clearFocus()
         }
     }
 
@@ -640,15 +568,6 @@ class ChannelChatFragment :
         )
     }
 
-    override fun scrollToTop() {
-        viewHolder?.apply {
-            appBar.setExpanded(true, true)
-            chatAdapter?.apply {
-                recyclerView.scrollToPosition(itemCount - 1)
-            }
-        }
-    }
-
     override fun onPause() {
         super.onPause()
         openInBubble?.invoke()
@@ -658,7 +577,6 @@ class ChannelChatFragment :
         super.onDestroyView()
         viewHolder = null
         openInBubble = null
-        chatAdapter = null
         autoCompleteAdapter = null
     }
 }

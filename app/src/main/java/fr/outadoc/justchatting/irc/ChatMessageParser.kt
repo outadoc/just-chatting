@@ -7,8 +7,8 @@ import chat.willow.kale.irc.message.rfc1459.NoticeMessage
 import chat.willow.kale.irc.message.rfc1459.PingMessage
 import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
 import fr.outadoc.justchatting.model.chat.ChatCommand
-import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.ChatMessage
+import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState
@@ -44,17 +44,19 @@ class ChatMessageParser {
         // to extract the actual message contained inside
         val actionGroups = actionRegex.find(privateMessage.message)
 
+        val message = actionGroups?.groupValues?.get(1) ?: privateMessage.message
+
         return ChatMessage(
             id = ircMessage.tags.id,
             userId = ircMessage.tags.userId,
             userLogin = ircMessage.tags.login ?: privateMessage.source.nick,
-            userName = ircMessage.tags.displayName,
-            message = actionGroups?.groupValues?.get(1) ?: privateMessage.message,
+            userName = ircMessage.tags.displayName ?: privateMessage.source.nick,
+            message = message,
             isAction = actionGroups != null,
             color = ircMessage.tags.color,
             rewardId = ircMessage.tags.customRewardId,
             isFirst = ircMessage.tags.firstMsg,
-            emotes = ircMessage.tags.parseEmotes(),
+            emotes = ircMessage.tags.parseEmotes(message),
             badges = ircMessage.tags.parseBadges(),
             timestamp = ircMessage.tags.parseTimestamp(),
             inReplyTo = ircMessage.tags.parseParentMessage(),

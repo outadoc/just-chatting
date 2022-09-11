@@ -11,25 +11,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import coil.compose.SubcomposeAsyncImage
-import fr.outadoc.justchatting.model.chat.Emote
-import fr.outadoc.justchatting.util.isDark
+import fr.outadoc.justchatting.model.chat.TwitchBadge
 
 @Composable
-fun EmoteItem(
+fun BadgeItem(
     modifier: Modifier = Modifier,
-    emote: Emote,
-    animateEmotes: Boolean
+    badge: TwitchBadge
 ) {
     val density = LocalDensity.current.density
     SubcomposeAsyncImage(
         modifier = modifier.fillMaxSize(),
         contentScale = ContentScale.Fit,
-        model = emote.getUrl(
-            animate = animateEmotes,
-            screenDensity = density,
-            isDarkTheme = MaterialTheme.colorScheme.isDark
-        ),
-        contentDescription = emote.name,
+        model = badge.getUrl(screenDensity = density),
+        contentDescription = badge.title,
         loading = {
             Box(
                 modifier = Modifier

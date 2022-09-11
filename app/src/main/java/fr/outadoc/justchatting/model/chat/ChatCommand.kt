@@ -66,8 +66,8 @@ sealed class Command : ChatCommand {
 data class ChatMessage(
     val id: String?,
     val userId: String?,
-    val userLogin: String?,
-    val userName: String?,
+    val userLogin: String,
+    val userName: String,
     val message: String?,
     val color: String?,
     val isAction: Boolean = false,

@@ -8,7 +8,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-fun Map<String, String?>.parseEmotes(): List<TwitchChatEmote>? {
+fun Map<String, String?>.parseEmotes(message: String): List<TwitchChatEmote>? {
     return this["emotes"]
         ?.splitAndMakeMap(split = "/", map = ":")
         ?.entries
@@ -17,11 +17,17 @@ fun Map<String, String?>.parseEmotes(): List<TwitchChatEmote>? {
                 ?.split(",")
                 ?.map { indexes ->
                     val index = indexes.split("-")
+                    val begin = index[0].toInt()
+                    val end = index[1].toInt()
+
+                    val realBegin = message.offsetByCodePoints(0, begin)
+                    val realEnd = if (begin == realBegin) end else end + realBegin - begin
+
                     TwitchChatEmote(
-                        name = emote.key,
+                        name = message.slice(realBegin..realEnd),
                         id = emote.key,
-                        begin = index[0].toInt(),
-                        end = index[1].toInt()
+                        begin = begin,
+                        end = end
                     )
                 }
                 .orEmpty()

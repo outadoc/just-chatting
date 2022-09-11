@@ -244,11 +244,7 @@ fun HighlightedMessage(
             Column {
                 message.header?.let { header ->
                     Row(
-                        modifier = Modifier.padding(
-                            start = 4.dp,
-                            end = 4.dp,
-                            top = 4.dp
-                        ),
+                        modifier = Modifier.padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         message.headerIconResId?.let { resId ->
@@ -268,19 +264,11 @@ fun HighlightedMessage(
 
                 message.data?.let { data ->
                     ChatMessageData(
-                        modifier = modifier.padding(
-                            start = 4.dp,
-                            end = 4.dp,
-                            bottom = 4.dp
-                        ),
+                        modifier = modifier.padding(4.dp),
                         data = data,
                         inlineContent = inlineContent,
                         animateEmotes = animateEmotes
                     )
-                }
-
-                if (message.header != null && message.data == null) {
-                    Spacer(modifier = Modifier.height(4.dp))
                 }
             }
         }

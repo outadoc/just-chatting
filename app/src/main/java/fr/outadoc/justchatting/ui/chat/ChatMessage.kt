@@ -125,15 +125,14 @@ fun ChatScreen(
             val scope = rememberCoroutineScope()
             val listState = rememberLazyListState()
 
-            val isListAtBottom: Boolean = remember(state.chatMessages) {
-                val lastVisibleItemIndex = listState.layoutInfo
-                    .visibleItemsInfo
-                    .lastOrNull()
-                    ?.index
+            val lastVisibleItemIndex = listState.layoutInfo
+                .visibleItemsInfo
+                .lastOrNull()
+                ?.index
 
-                val lastItemIndex = listState.layoutInfo.totalItemsCount - 1
+            val lastItemIndex = listState.layoutInfo.totalItemsCount - 1
+            val isListAtBottom =
                 lastVisibleItemIndex == null || lastVisibleItemIndex > lastItemIndex - 1
-            }
 
             Box(contentAlignment = Alignment.BottomCenter) {
                 ChatList(

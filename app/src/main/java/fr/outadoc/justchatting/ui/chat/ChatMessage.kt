@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.ui.chat
 
 import android.util.Patterns
 import androidx.annotation.ColorInt
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -123,13 +125,15 @@ fun ChatScreen(
             val scope = rememberCoroutineScope()
             val listState = rememberLazyListState()
 
-            /*
-            LaunchedEffect(state.chatMessages) {
-                listState.scrollToItem(
-                    index = (state.chatMessages.size - 1).coerceAtLeast(0)
-                )
+            val isListAtBottom: Boolean = remember(state.chatMessages) {
+                val lastVisibleItemIndex = listState.layoutInfo
+                    .visibleItemsInfo
+                    .lastOrNull()
+                    ?.index
+
+                val lastItemIndex = listState.layoutInfo.totalItemsCount - 1
+                lastVisibleItemIndex != null && lastVisibleItemIndex > lastItemIndex - 1
             }
-             */
 
             Box(contentAlignment = Alignment.BottomCenter) {
                 ChatList(
@@ -142,19 +146,29 @@ fun ChatScreen(
                     onMessageClick = onMessageClick
                 )
 
-                FloatingActionButton(
-                    modifier = Modifier.padding(16.dp),
-                    onClick = {
-                        scope.launch {
-                            listState.scrollToItem(
-                                index = (state.chatMessages.size - 1).coerceAtLeast(0)
-                            )
+                AnimatedVisibility(visible = !isListAtBottom) {
+                    FloatingActionButton(
+                        modifier = Modifier.padding(16.dp),
+                        onClick = {
+                            scope.launch {
+                                listState.scrollToItem(
+                                    index = (state.chatMessages.size - 1).coerceAtLeast(0)
+                                )
+                            }
                         }
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowDownward,
+                            contentDescription = "Scroll to bottom"
+                        )
                     }
-                ) {
-                    Icon(
-                        Icons.Default.ArrowDownward,
-                        contentDescription = "Scroll to bottom"
+                }
+            }
+
+            LaunchedEffect(state.chatMessages, isListAtBottom) {
+                if (isListAtBottom) {
+                    listState.scrollToItem(
+                        index = (state.chatMessages.size - 1).coerceAtLeast(0)
                     )
                 }
             }
@@ -197,7 +211,8 @@ fun ChatList(
 
     LazyColumn(
         modifier = modifier,
-        state = listState
+        state = listState,
+        contentPadding = PaddingValues(vertical = 16.dp)
     ) {
         itemsIndexed(
             items = entries,

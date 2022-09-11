@@ -1,8 +1,10 @@
 package fr.outadoc.justchatting.ui.chat
 
+import android.util.Patterns
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -27,20 +29,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
@@ -59,6 +67,9 @@ private val emotePlaceholder = Placeholder(
     height = 2.em,
     placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
 )
+
+private val urlRegex = Patterns.WEB_URL.toRegex()
+private const val UrlAnnotationTag = "URL"
 
 @Composable
 fun ChatList(
@@ -265,14 +276,34 @@ fun ChatMessageData(
             )
         }
 
+    val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
+    val annotatedString = data.toAnnotatedString(inlineContent)
+
+    val uriHandler = LocalUriHandler.current
+
     Text(
-        modifier = modifier,
-        text = data.toAnnotatedString(inlineContent),
+        modifier = modifier
+            .pointerInput(data) {
+                detectTapGestures { offset ->
+                    layoutResult.value?.let {
+                        val position = it.getOffsetForPosition(offset)
+                        annotatedString.getStringAnnotations(position, position).firstOrNull()
+                            ?.let { result ->
+                                if (result.tag == UrlAnnotationTag) {
+                                    uriHandler.openUri(result.item)
+                                }
+                            }
+                    }
+                }
+            },
+        onTextLayout = { layoutResult.value = it },
+        text = annotatedString,
         inlineContent = inlineContent,
         style = MaterialTheme.typography.bodyMedium
     )
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 private fun ChatEntry.Data.toAnnotatedString(
     inlineContent: Map<String, InlineTextContent>
@@ -298,14 +329,29 @@ private fun ChatEntry.Data.toAnnotatedString(
         }
 
         message?.split(' ')?.forEach { word ->
-            val emote = inlineContent[word]
-            if (emote == null) {
-                append(word)
-            } else {
-                appendInlineContent(
-                    id = word,
-                    alternateText = word
-                )
+            when {
+                word.matches(urlRegex) -> {
+                    val url = if (word.startsWith("http")) word else "https://$word"
+                    withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                        withAnnotation(tag = UrlAnnotationTag, annotation = url) {
+                            append(word)
+                        }
+                    }
+                }
+                word.startsWith('@') -> {
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append(word)
+                    }
+                }
+                word in inlineContent -> {
+                    appendInlineContent(
+                        id = word,
+                        alternateText = word
+                    )
+                }
+                else -> {
+                    append(word)
+                }
             }
 
             append(' ')

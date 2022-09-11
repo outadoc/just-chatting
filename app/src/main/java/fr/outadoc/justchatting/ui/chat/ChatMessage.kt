@@ -305,7 +305,7 @@ fun SimpleMessage(
         )
 
         ChatMessageData(
-            modifier = modifier.padding(horizontal = 4.dp, vertical = 8.dp),
+            modifier = modifier.padding(horizontal = 4.dp, vertical = 6.dp),
             data = message.data,
             inlineContent = inlineContent,
             animateEmotes = animateEmotes
@@ -506,7 +506,7 @@ fun String.getRandomChatColor(): Int {
 }
 
 private val Badge.inlineContentId: String
-    get() = "badge_${id}_${version}"
+    get() = "badge_${id}_$version"
 
 private val TwitchBadge.inlineContentId: String
-    get() = "badge_${id}_${version}"
+    get() = "badge_${id}_$version"

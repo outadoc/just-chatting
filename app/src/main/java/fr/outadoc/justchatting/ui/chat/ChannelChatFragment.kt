@@ -537,10 +537,10 @@ class ChannelChatFragment :
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-                    !textFollowers.isGone ||
-                    !textUnique.isGone ||
-                    !textSlow.isGone ||
-                    !textSubs.isGone
+            !textFollowers.isGone ||
+            !textUnique.isGone ||
+            !textSlow.isGone ||
+            !textSubs.isGone
     }
 
     private fun FragmentChannelBinding.setMessagePostConstraint(constraint: MessagePostConstraint?) {

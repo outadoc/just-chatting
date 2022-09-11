@@ -74,8 +74,8 @@ class AutoCompleteAdapter(context: Context) : ArrayAdapter<AutoCompleteItem>(con
     fun submitItems(emotes: Collection<Emote>, chatters: Collection<Chatter>) {
         val allItems =
             chatters.map { AutoCompleteItem.UserItem(it) } +
-                    emotes.distinctBy { emote -> emote.name }
-                        .map { AutoCompleteItem.EmoteItem(it) }
+                emotes.distinctBy { emote -> emote.name }
+                    .map { AutoCompleteItem.EmoteItem(it) }
 
         if (allItems.size != count) {
             clear()

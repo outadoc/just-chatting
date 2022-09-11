@@ -7,8 +7,8 @@ import chat.willow.kale.irc.message.rfc1459.NoticeMessage
 import chat.willow.kale.irc.message.rfc1459.PingMessage
 import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
 import fr.outadoc.justchatting.model.chat.ChatCommand
-import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.ChatMessage
+import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState

@@ -3,8 +3,8 @@ package fr.outadoc.justchatting.util.chat
 import android.content.Context
 import android.util.Log
 import fr.outadoc.justchatting.irc.ChatMessageParser
-import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.ChatMessage
+import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RoomState

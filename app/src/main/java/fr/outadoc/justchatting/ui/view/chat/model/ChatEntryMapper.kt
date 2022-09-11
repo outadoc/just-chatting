@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.chat.ChatCommand
-import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.ChatMessage
+import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RoomState

@@ -257,7 +257,18 @@ class ChannelChatFragment :
                             ChatList(
                                 modifier = Modifier.fillMaxSize(),
                                 entries = currentState.chatMessages,
-                                emotes = currentState.allEmotesMap
+                                emotes = currentState.allEmotesMap,
+                                onMessageClick = { _ ->
+                                    hideKeyboard()
+
+                                    /*
+                                    MessageClickedDialog.newInstance(
+                                        originalMessage = original,
+                                        formattedMessage = formatted,
+                                        userId = userId
+                                    ).show(childFragmentManager, "closeOnPip")
+                                     */
+                                }
                             )
                         }
                     }

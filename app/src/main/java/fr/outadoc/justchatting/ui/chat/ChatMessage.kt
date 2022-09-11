@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.ui.chat
 
 import androidx.annotation.ColorInt
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -64,7 +65,8 @@ fun ChatList(
     modifier: Modifier = Modifier,
     chatPreferencesRepository: ChatPreferencesRepository = get(),
     entries: List<ChatEntry>,
-    emotes: Map<String, Emote>
+    emotes: Map<String, Emote>,
+    onMessageClick: (ChatEntry) -> Unit
 ) {
     val listState = rememberLazyListState()
     LaunchedEffect(entries) {
@@ -104,7 +106,9 @@ fun ChatList(
                     color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
                 ) {
                     ChatMessage(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable { onMessageClick(item) },
                         message = item,
                         inlineContent = inlineContent,
                         animateEmotes = animateEmotes
@@ -112,7 +116,9 @@ fun ChatList(
                 }
             } else {
                 ChatMessage(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { onMessageClick(item) },
                     message = item,
                     inlineContent = inlineContent,
                     animateEmotes = animateEmotes

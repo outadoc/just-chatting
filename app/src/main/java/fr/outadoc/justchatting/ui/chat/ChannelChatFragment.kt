@@ -45,7 +45,6 @@ import fr.outadoc.justchatting.databinding.FragmentChannelBinding
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.helix.user.User
-import fr.outadoc.justchatting.ui.common.ChatAdapter
 import fr.outadoc.justchatting.ui.common.ensureMinimumAlpha
 import fr.outadoc.justchatting.ui.common.isLightColor
 import fr.outadoc.justchatting.ui.view.chat.AutoCompleteAdapter
@@ -83,7 +82,6 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
     private var viewHolder: FragmentChannelBinding? = null
 
     private var autoCompleteAdapter: AutoCompleteAdapter? = null
-    private var chatAdapter: ChatAdapter? = null
 
     private var progressAnimator: ValueAnimator? = null
 
@@ -104,7 +102,6 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
     ): View? {
         viewHolder = FragmentChannelBinding.inflate(inflater, container, false)
         autoCompleteAdapter = AutoCompleteAdapter(requireContext())
-        chatAdapter = ChatAdapter(requireContext())
         return viewHolder?.root
     }
 
@@ -155,16 +152,6 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
             windowInsets
         }
 
-        chatAdapter?.setOnClickListener { original, formatted, userId ->
-            hideKeyboard()
-
-            MessageClickedDialog.newInstance(
-                originalMessage = original,
-                formattedMessage = formatted,
-                userId = userId
-            ).show(childFragmentManager, "closeOnPip")
-        }
-
         channelViewModel.state.observe(viewLifecycleOwner) { state ->
             viewHolder?.apply {
                 toolbar.subtitle = state.stream?.title?.trim()
@@ -177,15 +164,6 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
                         channelLogin = user.login,
                         channelName = user.display_name
                     )
-                }
-
-                chatAdapter?.apply {
-                    state.appUser.login?.let { login ->
-                        setUsername(login)
-                    }
-
-                    showTimestamps = state.showTimestamps
-                    animateEmotes = state.animateEmotes
                 }
 
                 autoCompleteAdapter?.animateEmotes = state.animateEmotes
@@ -275,15 +253,6 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
                             emotes = state.allEmotes,
                             chatters = state.chatters
                         )
-
-                        chatAdapter?.apply {
-                            submitList(state.chatMessages)
-
-                            addEmotes(state.allEmotes)
-                            addGlobalBadges(state.globalBadges)
-                            addChannelBadges(state.channelBadges)
-                            addCheerEmotes(state.cheerEmotes)
-                        }
                     }
                 }
             }
@@ -484,10 +453,10 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
 
         flexboxChatMode.isVisible =
             !textEmote.isGone ||
-            !textFollowers.isGone ||
-            !textUnique.isGone ||
-            !textSlow.isGone ||
-            !textSubs.isGone
+                    !textFollowers.isGone ||
+                    !textUnique.isGone ||
+                    !textSlow.isGone ||
+                    !textSubs.isGone
     }
 
     private fun FragmentChannelBinding.setMessagePostConstraint(constraint: MessagePostConstraint?) {
@@ -608,7 +577,6 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
         super.onDestroyView()
         viewHolder = null
         openInBubble = null
-        chatAdapter = null
         autoCompleteAdapter = null
     }
 }

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.core.app.Person
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
@@ -237,35 +238,41 @@ class ChannelChatFragment :
 
             messageView.isVisible = true
 
-            emotePicker.setContent {
-                Mdc3Theme {
-                    val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
-                    EmotePicker(
-                        modifier = Modifier.fillMaxSize(),
-                        onEmoteClick = ::appendEmote,
-                        state = state
-                    )
+            emotePicker.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    Mdc3Theme {
+                        val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
+                        EmotePicker(
+                            modifier = Modifier.fillMaxSize(),
+                            onEmoteClick = ::appendEmote,
+                            state = state
+                        )
+                    }
                 }
             }
 
-            composeViewChat.setContent {
-                Mdc3Theme {
-                    val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
-                    ChatScreen(
-                        modifier = Modifier.fillMaxSize(),
-                        state = state,
-                        onMessageClick = { _ ->
-                            hideKeyboard()
+            composeViewChat.apply {
+                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+                setContent {
+                    Mdc3Theme {
+                        val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
+                        ChatScreen(
+                            modifier = Modifier.fillMaxSize(),
+                            state = state,
+                            onMessageClick = { _ ->
+                                hideKeyboard()
 
-                            /*
+                                /*
                             MessageClickedDialog.newInstance(
                                 originalMessage = original,
                                 formattedMessage = formatted,
                                 userId = userId
                             ).show(childFragmentManager, "closeOnPip")
                              */
-                        }
-                    )
+                            }
+                        )
+                    }
                 }
             }
 

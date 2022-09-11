@@ -17,12 +17,15 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Reply
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
@@ -30,6 +33,7 @@ import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -301,7 +305,7 @@ fun SimpleMessage(
         )
 
         ChatMessageData(
-            modifier = modifier.padding(4.dp),
+            modifier = modifier.padding(horizontal = 4.dp, vertical = 8.dp),
             data = message.data,
             inlineContent = inlineContent,
             animateEmotes = animateEmotes
@@ -335,45 +339,77 @@ fun ChatMessageData(
 
     val annotatedString = data.toAnnotatedString(fullInlineContent)
 
-    Text(
-        modifier = modifier
-            .pointerInput(annotatedString) {
-                forEachGesture {
-                    coroutineScope {
-                        awaitPointerEventScope {
-                            // Wait for tap
-                            awaitFirstDown().also { down ->
-                                // Check that text has been laid out (it should be)
-                                val layoutRes = layoutResult.value ?: return@also
+    Column {
+        if (data.inReplyTo != null) {
+            CompositionLocalProvider(
+                LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
+            ) {
+                Row(
+                    modifier = Modifier.padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(16.dp)
+                            .padding(end = 4.dp),
+                        imageVector = Icons.Default.Reply,
+                        contentDescription = "In reply to"
+                    )
 
-                                val position = layoutRes.getOffsetForPosition(down.position)
-                                val urlAnnotation =
-                                    annotatedString.getStringAnnotations(position, position)
-                                        .firstOrNull { it.tag == UrlAnnotationTag }
+                    Text(
+                        text = buildAnnotatedString {
+                            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("@${data.inReplyTo.userName}")
+                            }
 
-                                if (urlAnnotation != null) {
-                                    // Prevent parent components from getting the event,
-                                    // we're dealing with it
-                                    down.consume()
+                            append(": ${data.inReplyTo.message}")
+                        },
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            }
+        }
 
-                                    // Wait for the user to stop clicking
-                                    waitForUpOrCancellation()?.also { up ->
-                                        // Tap on a link was successful, call onClick
-                                        up.consume()
-                                        uriHandler.openUri(urlAnnotation.item)
+        Text(
+            modifier = modifier
+                .pointerInput(annotatedString) {
+                    forEachGesture {
+                        coroutineScope {
+                            awaitPointerEventScope {
+                                // Wait for tap
+                                awaitFirstDown().also { down ->
+                                    // Check that text has been laid out (it should be)
+                                    val layoutRes = layoutResult.value ?: return@also
+
+                                    val position = layoutRes.getOffsetForPosition(down.position)
+                                    val urlAnnotation =
+                                        annotatedString.getStringAnnotations(position, position)
+                                            .firstOrNull { it.tag == UrlAnnotationTag }
+
+                                    if (urlAnnotation != null) {
+                                        // Prevent parent components from getting the event,
+                                        // we're dealing with it
+                                        down.consume()
+
+                                        // Wait for the user to stop clicking
+                                        waitForUpOrCancellation()?.also { up ->
+                                            // Tap on a link was successful, call onClick
+                                            up.consume()
+                                            uriHandler.openUri(urlAnnotation.item)
+                                        }
                                     }
                                 }
                             }
                         }
                     }
-                }
-            },
-        onTextLayout = { layoutResult.value = it },
-        text = annotatedString,
-        inlineContent = fullInlineContent,
-        lineHeight = 1.7.em,
-        style = MaterialTheme.typography.bodyMedium
-    )
+                },
+            onTextLayout = { layoutResult.value = it },
+            text = annotatedString,
+            inlineContent = fullInlineContent,
+            lineHeight = 1.7.em,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
 }
 
 @OptIn(ExperimentalTextApi::class)

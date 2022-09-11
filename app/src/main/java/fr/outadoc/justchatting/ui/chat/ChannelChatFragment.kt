@@ -258,6 +258,7 @@ class ChannelChatFragment :
                                 modifier = Modifier.fillMaxSize(),
                                 entries = currentState.chatMessages,
                                 emotes = currentState.allEmotesMap,
+                                badges = currentState.globalBadges + currentState.channelBadges,
                                 onMessageClick = { _ ->
                                     hideKeyboard()
 

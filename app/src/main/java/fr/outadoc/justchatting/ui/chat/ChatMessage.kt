@@ -55,10 +55,13 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.model.chat.Badge
 import fr.outadoc.justchatting.model.chat.Emote
+import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
+import fr.outadoc.justchatting.ui.view.emotes.BadgeItem
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.isOdd
@@ -72,6 +75,12 @@ private val emotePlaceholder = Placeholder(
     placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
 )
 
+private val badgePlaceholder = Placeholder(
+    width = 1.4.em,
+    height = 1.4.em,
+    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+)
+
 private val urlRegex = Patterns.WEB_URL.toRegex()
 private const val UrlAnnotationTag = "URL"
 
@@ -81,6 +90,7 @@ fun ChatList(
     chatPreferencesRepository: ChatPreferencesRepository = get(),
     entries: List<ChatEntry>,
     emotes: Map<String, Emote>,
+    badges: List<TwitchBadge>,
     onMessageClick: (ChatEntry) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -92,7 +102,7 @@ fun ChatList(
 
     val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
 
-    val inlineContent = remember(emotes) {
+    val inlinesEmotes = remember(emotes) {
         emotes.mapValues { (_, emote) ->
             InlineTextContent(emotePlaceholder) {
                 EmoteItem(
@@ -100,6 +110,17 @@ fun ChatList(
                     animateEmotes = animateEmotes
                 )
             }
+        }
+    }
+
+    val inlineBadges = remember(badges) {
+        badges.associate { badge ->
+            Pair(
+                badge.inlineContentId,
+                InlineTextContent(badgePlaceholder) {
+                    BadgeItem(badge = badge)
+                }
+            )
         }
     }
 
@@ -125,7 +146,7 @@ fun ChatList(
                             .fillMaxWidth()
                             .clickable { onMessageClick(item) },
                         message = item,
-                        inlineContent = inlineContent,
+                        inlineContent = inlinesEmotes + inlineBadges,
                         animateEmotes = animateEmotes
                     )
                 }
@@ -135,7 +156,7 @@ fun ChatList(
                         .fillMaxWidth()
                         .clickable { onMessageClick(item) },
                     message = item,
-                    inlineContent = inlineContent,
+                    inlineContent = inlinesEmotes + inlineBadges,
                     animateEmotes = animateEmotes
                 )
             }
@@ -340,6 +361,15 @@ private fun ChatEntry.Data.toAnnotatedString(
         ?: userName.getRandomChatColor()
 
     return buildAnnotatedString {
+        badges?.forEach { badge ->
+            appendInlineContent(
+                id = badge.inlineContentId,
+                alternateText = " "
+            )
+
+            append(' ')
+        }
+
         withStyle(
             SpanStyle(
                 color = Color(color),
@@ -398,3 +428,9 @@ fun String.getRandomChatColor(): Int {
     val randomChatColors = integerArrayResource(id = R.array.randomChatColors)
     return randomChatColors.random(Random(hashCode()))
 }
+
+private val Badge.inlineContentId: String
+    get() = "badge_${id}_${version}"
+
+private val TwitchBadge.inlineContentId: String
+    get() = "badge_${id}_${version}"

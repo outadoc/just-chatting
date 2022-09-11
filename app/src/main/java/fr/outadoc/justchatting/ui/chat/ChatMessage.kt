@@ -26,8 +26,8 @@ import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -66,6 +66,7 @@ import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.BadgeItem
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import fr.outadoc.justchatting.util.formatChannelUri
+import fr.outadoc.justchatting.util.formatTimestamp
 import fr.outadoc.justchatting.util.isOdd
 import kotlinx.coroutines.coroutineScope
 import org.koin.androidx.compose.get
@@ -132,6 +133,7 @@ fun ChatList(
     }
 
     val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
+    val showTimestamps by chatPreferencesRepository.showTimestamps.collectAsState(initial = false)
 
     val inlinesEmotes = remember(emotes) {
         emotes.mapValues { (_, emote) ->
@@ -168,29 +170,19 @@ fun ChatList(
                 }
             }
         ) { index, item ->
-            if (index.isOdd) {
-                Surface(
-                    color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-                ) {
-                    ChatMessage(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { onMessageClick(item) },
-                        message = item,
-                        inlineContent = inlinesEmotes + inlineBadges,
-                        animateEmotes = animateEmotes
+            ChatMessage(
+                modifier = Modifier
+                    .background(
+                        if (index.isOdd) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                        else Color.Transparent
                     )
-                }
-            } else {
-                ChatMessage(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { onMessageClick(item) },
-                    message = item,
-                    inlineContent = inlinesEmotes + inlineBadges,
-                    animateEmotes = animateEmotes
-                )
-            }
+                    .fillMaxWidth()
+                    .clickable { onMessageClick(item) },
+                message = item,
+                inlineContent = inlinesEmotes + inlineBadges,
+                animateEmotes = animateEmotes,
+                showTimestamps = showTimestamps
+            )
         }
     }
 }
@@ -200,24 +192,40 @@ fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry,
     inlineContent: Map<String, InlineTextContent>,
-    animateEmotes: Boolean
+    animateEmotes: Boolean,
+    showTimestamps: Boolean
 ) {
-    when (message) {
-        is ChatEntry.Highlighted -> {
-            HighlightedMessage(
-                modifier = modifier,
-                message = message,
-                inlineContent = inlineContent,
-                animateEmotes = animateEmotes
+    val timestamp = message.timestamp
+        ?.formatTimestamp()
+        ?.takeIf { showTimestamps }
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        if (timestamp != null) {
+            Text(
+                modifier = Modifier.padding(4.dp),
+                text = timestamp,
+                color = LocalContentColor.current.copy(alpha = 0.8f),
+                style = MaterialTheme.typography.bodySmall
             )
         }
-        is ChatEntry.Simple -> {
-            SimpleMessage(
-                modifier = modifier,
-                message = message,
-                inlineContent = inlineContent,
-                animateEmotes = animateEmotes
-            )
+
+        when (message) {
+            is ChatEntry.Highlighted -> {
+                HighlightedMessage(
+                    modifier = modifier,
+                    message = message,
+                    inlineContent = inlineContent,
+                    animateEmotes = animateEmotes
+                )
+            }
+            is ChatEntry.Simple -> {
+                SimpleMessage(
+                    modifier = modifier,
+                    message = message,
+                    inlineContent = inlineContent,
+                    animateEmotes = animateEmotes
+                )
+            }
         }
     }
 }

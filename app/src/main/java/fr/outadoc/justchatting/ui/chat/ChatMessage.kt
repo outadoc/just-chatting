@@ -132,7 +132,7 @@ fun ChatScreen(
                     ?.index
 
                 val lastItemIndex = listState.layoutInfo.totalItemsCount - 1
-                lastVisibleItemIndex != null && lastVisibleItemIndex > lastItemIndex - 1
+                lastVisibleItemIndex == null || lastVisibleItemIndex > lastItemIndex - 1
             }
 
             Box(contentAlignment = Alignment.BottomCenter) {

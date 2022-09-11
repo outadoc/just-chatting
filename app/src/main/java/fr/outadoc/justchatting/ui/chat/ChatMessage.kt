@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -290,21 +289,22 @@ fun HighlightedMessage(
     inlineContent: Map<String, InlineTextContent>,
     animateEmotes: Boolean
 ) {
-    Card(
-        modifier = Modifier
-            .padding(vertical = 4.dp)
-            .fillMaxWidth(),
-        shape = RectangleShape
-    ) {
-        Row(modifier = Modifier.height(IntrinsicSize.Min)) {
-            Box(
-                modifier = Modifier
-                    .background(MaterialTheme.colorScheme.primary)
-                    .width(4.dp)
-                    .fillMaxHeight()
-            )
+    Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+        Box(
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                .background(MaterialTheme.colorScheme.primary)
+                .width(4.dp)
+                .fillMaxHeight()
+        )
 
-            Column {
+        Column {
+            Card(
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .fillMaxWidth(),
+                shape = RectangleShape
+            ) {
                 message.header?.let { header ->
                     Row(
                         modifier = Modifier.padding(4.dp),
@@ -324,15 +324,15 @@ fun HighlightedMessage(
                         )
                     }
                 }
+            }
 
-                message.data?.let { data ->
-                    ChatMessageData(
-                        modifier = modifier.padding(4.dp),
-                        data = data,
-                        inlineContent = inlineContent,
-                        animateEmotes = animateEmotes
-                    )
-                }
+            message.data?.let { data ->
+                ChatMessageData(
+                    modifier = modifier.padding(4.dp),
+                    data = data,
+                    inlineContent = inlineContent,
+                    animateEmotes = animateEmotes
+                )
             }
         }
     }

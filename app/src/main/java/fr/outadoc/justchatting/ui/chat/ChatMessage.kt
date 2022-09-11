@@ -86,6 +86,8 @@ private val badgePlaceholder = Placeholder(
 private val urlRegex = Patterns.WEB_URL.toRegex()
 private const val UrlAnnotationTag = "URL"
 
+private val latinScriptUserName = "^\\w+$".toRegex()
+
 @Composable
 fun ChatList(
     modifier: Modifier = Modifier,
@@ -400,6 +402,10 @@ private fun ChatEntry.Data.toAnnotatedString(
                 annotation = formatChannelUri(userName).toString()
             ) {
                 append(userName)
+            }
+
+            if (!userName.matches(latinScriptUserName)) {
+                append(" ($userLogin)")
             }
 
             append(if (isAction) " " else ": ")

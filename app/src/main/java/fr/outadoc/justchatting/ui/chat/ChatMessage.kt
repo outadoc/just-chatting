@@ -95,11 +95,15 @@ private const val UrlAnnotationTag = "URL"
 private val latinScriptUserName = "^\\w+$".toRegex()
 
 @Composable
-fun ChatList(
+fun ChatScreen(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
+    chatPreferencesRepository: ChatPreferencesRepository = get(),
     onMessageClick: (ChatEntry) -> Unit
 ) {
+    val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
+    val showTimestamps by chatPreferencesRepository.showTimestamps.collectAsState(initial = false)
+
     when (state) {
         ChatViewModel.State.Initial -> {
             Column(
@@ -115,6 +119,8 @@ fun ChatList(
                 entries = state.chatMessages,
                 emotes = state.allEmotesMap,
                 badges = state.globalBadges + state.channelBadges,
+                animateEmotes = animateEmotes,
+                showTimestamps = showTimestamps,
                 onMessageClick = onMessageClick
             )
         }
@@ -124,10 +130,11 @@ fun ChatList(
 @Composable
 fun ChatList(
     modifier: Modifier = Modifier,
-    chatPreferencesRepository: ChatPreferencesRepository = get(),
     entries: List<ChatEntry>,
     emotes: Map<String, Emote>,
     badges: List<TwitchBadge>,
+    animateEmotes: Boolean,
+    showTimestamps: Boolean,
     onMessageClick: (ChatEntry) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -136,9 +143,6 @@ fun ChatList(
             index = (entries.size - 1).coerceAtLeast(0)
         )
     }
-
-    val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
-    val showTimestamps by chatPreferencesRepository.showTimestamps.collectAsState(initial = false)
 
     val inlinesEmotes = remember(emotes) {
         emotes.mapValues { (_, emote) ->

@@ -251,7 +251,7 @@ class ChannelChatFragment :
             composeViewChat.setContent {
                 Mdc3Theme {
                     val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
-                    ChatList(
+                    ChatScreen(
                         modifier = Modifier.fillMaxSize(),
                         state = state,
                         onMessageClick = { _ ->

@@ -1,11 +1,17 @@
 package fr.outadoc.justchatting.model.chat
 
-class TwitchBadge(
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.Stable
+import kotlinx.collections.immutable.ImmutableMap
+
+@Immutable
+data class TwitchBadge(
     val id: String,
     val version: String,
-    private val urls: Map<Float, String>,
+    private val urls: ImmutableMap<Float, String>,
     val title: String? = null
 ) {
+    @Stable
     fun getUrl(screenDensity: Float): String {
         return urls
             .toList()

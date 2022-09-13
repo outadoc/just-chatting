@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.model.chat
 
+import androidx.compose.runtime.Immutable
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
@@ -80,6 +81,8 @@ data class ChatMessage(
     val inReplyTo: InReplyTo?,
     val msgId: String?
 ) : ChatCommand {
+
+    @Immutable
     data class InReplyTo(
         val id: String,
         val userName: String,

@@ -10,6 +10,7 @@ import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState
+import kotlinx.collections.immutable.toImmutableList
 
 class ChatEntryMapper(private val context: Context) {
 
@@ -108,8 +109,8 @@ class ChatEntryMapper(private val context: Context) {
                             userLogin = userMessage.userLogin,
                             isAction = userMessage.isAction,
                             color = userMessage.color,
-                            emotes = userMessage.emotes,
-                            badges = userMessage.badges,
+                            emotes = userMessage.emotes?.toImmutableList(),
+                            badges = userMessage.badges?.toImmutableList(),
                             inReplyTo = null
                         ),
                         timestamp = timestamp
@@ -142,8 +143,8 @@ class ChatEntryMapper(private val context: Context) {
                     userLogin = userLogin,
                     isAction = isAction,
                     color = color,
-                    emotes = emotes,
-                    badges = badges,
+                    emotes = emotes?.toImmutableList(),
+                    badges = badges?.toImmutableList(),
                     inReplyTo = inReplyTo
                 )
 

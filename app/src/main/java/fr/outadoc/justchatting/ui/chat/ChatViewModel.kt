@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.ui.chat
 
 import android.util.Log
+import androidx.compose.runtime.Immutable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -29,6 +30,17 @@ import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.util.combineWith
 import fr.outadoc.justchatting.util.isOdd
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.toImmutableSet
+import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
@@ -45,7 +57,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
-import java.util.LinkedList
 import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Duration.Companion.milliseconds
@@ -62,34 +73,37 @@ class ChatViewModel(
 
     sealed class State {
         object Initial : State()
+
+        @Immutable
         data class Chatting(
             val channelId: String,
             val channelLogin: String,
             val channelName: String,
             val appUser: AppUser,
-            val channelBadges: List<TwitchBadge> = emptyList(),
-            val chatMessages: List<ChatEntry> = LinkedList(),
-            val chatters: Set<Chatter> = emptySet(),
-            val cheerEmotes: List<CheerEmote> = emptyList(),
-            val globalBadges: List<TwitchBadge> = emptyList(),
+            val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
+            val chatMessages: PersistentList<ChatEntry> = persistentListOf(),
+            val chatters: PersistentSet<Chatter> = persistentSetOf(),
+            val cheerEmotes: ImmutableList<CheerEmote> = persistentListOf(),
+            val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,
-            val twitchEmotes: Set<EmoteSetItem> = emptySet(),
-            val otherEmotes: Set<EmoteSetItem> = emptySet(),
-            val recentEmotes: Set<EmoteSetItem> = emptySet(),
+            val twitchEmotes: ImmutableSet<EmoteSetItem> = persistentSetOf(),
+            val otherEmotes: ImmutableSet<EmoteSetItem> = persistentSetOf(),
+            val recentEmotes: ImmutableSet<EmoteSetItem> = persistentSetOf(),
             val userState: UserState = UserState(),
             val roomState: RoomState = RoomState(),
             val recentMsgLimit: Int,
             val maxAdapterCount: Int
         ) : State() {
 
-            val allEmotes: Set<Emote> =
+            val allEmotes: ImmutableSet<Emote> =
                 (twitchEmotes + recentEmotes + otherEmotes)
                     .filterIsInstance<EmoteSetItem.Emote>()
                     .map { it.emote }
-                    .toSet()
+                    .toImmutableSet()
 
-            val allEmotesMap: Map<String, Emote> =
+            val allEmotesMap: ImmutableMap<String, Emote> =
                 allEmotes.associateBy { emote -> emote.name }
+                    .toImmutableMap()
 
             val messagePostConstraint: MessagePostConstraint? =
                 lastSentMessageInstant?.let {
@@ -119,7 +133,7 @@ class ChatViewModel(
                     recentEmotes = recentEmotes
                         .filter { recentEmote -> state.allEmotesMap.containsKey(recentEmote.name) }
                         .map { emote -> EmoteSetItem.Emote(emote) }
-                        .toSet()
+                        .toImmutableSet()
                 )
             }
 
@@ -140,7 +154,7 @@ class ChatViewModel(
                     channelName = channelName,
                     appUser = userPreferencesRepository.appUser.first() as? AppUser.LoggedIn
                         ?: return@launch,
-                    chatters = setOf(Chatter(channelLogin)),
+                    chatters = persistentSetOf(Chatter(channelLogin)),
                     recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first(),
                     maxAdapterCount = chatPreferencesRepository.messageLimit.first()
                 )
@@ -159,6 +173,7 @@ class ChatViewModel(
             val globalBadges = async {
                 try {
                     emotesRepository.loadGlobalBadges().body()?.badges
+                        ?.toPersistentList()
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load global badges", e)
                     null
@@ -168,6 +183,7 @@ class ChatViewModel(
             val channelBadges = async {
                 try {
                     emotesRepository.loadChannelBadges(channelId).body()?.badges
+                        ?.toPersistentList()
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to load badges for channel $channelId", e)
                     null
@@ -236,14 +252,15 @@ class ChatViewModel(
                 emotes.isNotEmpty()
             }
 
-            val otherEmotes: Set<EmoteSetItem> =
-                groups.flatMap { (group, emotes) ->
-                    listOf(EmoteSetItem.Header(group))
-                        .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
-                }.toSet()
+            val otherEmotes = groups
+                .flatMap { (group, emotes) ->
+                    listOf(EmoteSetItem.Header(group)) +
+                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                }
+                .toPersistentSet()
 
             val cheerEmotes = try {
-                repository.loadCheerEmotes(userId = channelId)
+                repository.loadCheerEmotes(userId = channelId).toPersistentList()
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to load cheermotes for channel $channelId", e)
                 null
@@ -281,7 +298,7 @@ class ChatViewModel(
         }
     }
 
-    private fun onMessages(messages: List<ChatCommand>, append: Boolean = true) {
+    private fun onMessages(messages: List<ChatCommand>) {
         _state.update { s ->
             val state = s as? State.Chatting ?: return@update s
 
@@ -294,22 +311,14 @@ class ChatViewModel(
                     ?.timestamp
 
             // Remember names of chatters
-            val newChatters =
+            val newChatters: PersistentSet<Chatter> =
                 messages.asSequence()
                     .filterIsInstance<ChatMessage>()
                     .map { message -> Chatter(message.userName) }
-                    .toSet()
+                    .toPersistentSet()
 
-            val newMessages = state.chatMessages
-                .toMutableList()
-                .apply {
-                    val messagesToAdd = messages.mapNotNull { chatEntryMapper.map(it) }
-                    if (append) {
-                        addAll(messagesToAdd)
-                    } else {
-                        addAll(0, messagesToAdd)
-                    }
-                }
+            val newMessages: PersistentList<ChatEntry> =
+                state.chatMessages.addAll(messages.mapNotNull(chatEntryMapper::map))
 
             // We alternate the background of each chat row.
             // If we remove just one item, the backgrounds will shift, so we always need to remove
@@ -317,10 +326,10 @@ class ChatViewModel(
             val maxCount = state.maxAdapterCount + if (newMessages.size.isOdd) 1 else 0
 
             state.copy(
-                chatMessages = newMessages.takeLast(maxCount),
+                chatMessages = newMessages.takeLast(maxCount).toPersistentList(),
                 lastSentMessageInstant = lastSentMessageInstant
                     ?: state.lastSentMessageInstant,
-                chatters = state.chatters + newChatters
+                chatters = state.chatters.addAll(newChatters)
             )
         }
     }
@@ -405,13 +414,13 @@ class ChatViewModel(
                     emotes.filter { emote -> emote.ownerId != state.channelId }
                         .groupBy { emote -> emoteOwners[emote.ownerId]?.display_name }
 
-                val sortedEmotes: Set<EmoteSetItem> =
+                val sortedEmotes: PersistentSet<EmoteSetItem> =
                     (groupedChannelEmotes + groupedEmotes)
                         .flatMap { (ownerName, emotes) ->
                             listOf(EmoteSetItem.Header(title = ownerName))
                                 .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
                         }
-                        .toSet()
+                        .toPersistentSet()
 
                 state.copy(
                     userState = userState,

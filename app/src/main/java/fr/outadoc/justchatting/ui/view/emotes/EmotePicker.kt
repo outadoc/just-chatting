@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.chat.ChatViewModel
+import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.get
 
 @Composable
@@ -76,7 +77,7 @@ fun EmotePicker(
                         EmoteGrid(
                             modifier = Modifier.fillMaxSize(),
                             contentPadding = PaddingValues(16.dp),
-                            emotes = emotes.toList(),
+                            emotes = emotes.toImmutableList(),
                             animateEmotes = animateEmotes,
                             onEmoteClick = onEmoteClick
                         )

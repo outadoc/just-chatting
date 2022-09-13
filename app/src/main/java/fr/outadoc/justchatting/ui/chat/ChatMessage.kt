@@ -39,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -79,6 +80,11 @@ import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.formatTimestamp
 import fr.outadoc.justchatting.util.isOdd
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
@@ -101,6 +107,7 @@ private const val UrlAnnotationTag = "URL"
 
 private val latinScriptUserName = """^\w+$""".toRegex()
 
+@Stable
 @Composable
 fun ChatScreen(
     modifier: Modifier = Modifier,
@@ -138,7 +145,7 @@ fun ChatScreen(
                 ChatList(
                     entries = state.chatMessages,
                     emotes = state.allEmotesMap,
-                    badges = state.globalBadges + state.channelBadges,
+                    badges = state.globalBadges.addAll(state.channelBadges),
                     animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
                     listState = listState,
@@ -175,12 +182,13 @@ fun ChatScreen(
     }
 }
 
+@Stable
 @Composable
 fun ChatList(
     modifier: Modifier = Modifier,
-    entries: List<ChatEntry>,
-    emotes: Map<String, Emote>,
-    badges: List<TwitchBadge>,
+    entries: ImmutableList<ChatEntry>,
+    emotes: ImmutableMap<String, Emote>,
+    badges: ImmutableList<TwitchBadge>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     listState: LazyListState,
@@ -194,7 +202,7 @@ fun ChatList(
                     animateEmotes = animateEmotes
                 )
             }
-        }
+        }.toPersistentHashMap()
     }
 
     val inlineBadges = remember(badges) {
@@ -205,7 +213,7 @@ fun ChatList(
                     BadgeItem(badge = badge)
                 }
             )
-        }
+        }.toPersistentHashMap()
     }
 
     LazyColumn(
@@ -230,7 +238,7 @@ fun ChatList(
                     .fillMaxWidth()
                     .clickable { onMessageClick(item) },
                 message = item,
-                inlineContent = inlinesEmotes + inlineBadges,
+                inlineContent = inlinesEmotes.putAll(inlineBadges),
                 animateEmotes = animateEmotes,
                 showTimestamps = showTimestamps
             )
@@ -238,11 +246,12 @@ fun ChatList(
     }
 }
 
+@Stable
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry,
-    inlineContent: Map<String, InlineTextContent>,
+    inlineContent: PersistentMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     showTimestamps: Boolean
 ) {
@@ -282,11 +291,12 @@ fun ChatMessage(
     }
 }
 
+@Stable
 @Composable
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry.Highlighted,
-    inlineContent: Map<String, InlineTextContent>,
+    inlineContent: PersistentMap<String, InlineTextContent>,
     animateEmotes: Boolean
 ) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
@@ -338,11 +348,12 @@ fun HighlightedMessage(
     }
 }
 
+@Stable
 @Composable
 fun SimpleMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry.Simple,
-    inlineContent: Map<String, InlineTextContent>,
+    inlineContent: PersistentMap<String, InlineTextContent>,
     animateEmotes: Boolean
 ) {
     Row {
@@ -361,29 +372,33 @@ fun SimpleMessage(
     }
 }
 
+@Stable
 @Composable
 fun ChatMessageData(
     modifier: Modifier = Modifier,
     data: ChatEntry.Data,
-    inlineContent: Map<String, InlineTextContent>,
+    inlineContent: PersistentMap<String, InlineTextContent>,
     animateEmotes: Boolean
 ) {
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
 
     val fullInlineContent =
-        inlineContent + data.emotes.orEmpty()
-            .associate { emote ->
-                Pair(
-                    emote.name,
-                    InlineTextContent(emotePlaceholder) {
-                        EmoteItem(
-                            emote = emote,
-                            animateEmotes = animateEmotes
-                        )
-                    }
-                )
-            }
+        inlineContent.putAll(
+            data.emotes.orEmpty()
+                .associate { emote ->
+                    Pair(
+                        emote.name,
+                        InlineTextContent(emotePlaceholder) {
+                            EmoteItem(
+                                emote = emote,
+                                animateEmotes = animateEmotes
+                            )
+                        }
+                    )
+                }
+                .toImmutableMap()
+        )
 
     val annotatedString = data.toAnnotatedString(fullInlineContent)
 
@@ -462,10 +477,11 @@ fun ChatMessageData(
     }
 }
 
-@OptIn(ExperimentalTextApi::class)
+@Stable
 @Composable
+@OptIn(ExperimentalTextApi::class)
 private fun ChatEntry.Data.toAnnotatedString(
-    inlineContent: Map<String, InlineTextContent>
+    inlineContent: ImmutableMap<String, InlineTextContent>
 ): AnnotatedString {
     val color = color
         ?.let { color ->
@@ -548,6 +564,7 @@ private fun ChatEntry.Data.toAnnotatedString(
     }
 }
 
+@Stable
 @Composable
 @ColorInt
 fun String.getRandomChatColor(): Int {
@@ -555,8 +572,10 @@ fun String.getRandomChatColor(): Int {
     return randomChatColors.random(Random(hashCode()))
 }
 
+@Stable
 private val Badge.inlineContentId: String
     get() = "badge_${id}_$version"
 
+@Stable
 private val TwitchBadge.inlineContentId: String
     get() = "badge_${id}_$version"

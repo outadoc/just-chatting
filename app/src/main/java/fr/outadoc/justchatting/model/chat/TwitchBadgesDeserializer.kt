@@ -5,6 +5,7 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
 import fr.outadoc.justchatting.util.asStringOrNull
+import kotlinx.collections.immutable.toImmutableMap
 import java.lang.reflect.Type
 
 class TwitchBadgesDeserializer : JsonDeserializer<TwitchBadgesResponse> {
@@ -30,9 +31,12 @@ class TwitchBadgesDeserializer : JsonDeserializer<TwitchBadgesResponse> {
                                 1f to urls.get("image_url_1x").asStringOrNull,
                                 2f to urls.get("image_url_2x").asStringOrNull,
                                 4f to urls.get("image_url_4x").asStringOrNull
-                            ).mapNotNull { (density, url) ->
-                                if (url != null) density to url else null
-                            }.toMap()
+                            )
+                                .mapNotNull { (density, url) ->
+                                    if (url != null) density to url else null
+                                }
+                                .toMap()
+                                .toImmutableMap()
                         )
                     }
             }

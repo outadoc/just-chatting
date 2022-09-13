@@ -1,5 +1,8 @@
 package fr.outadoc.justchatting.model.chat
 
+import androidx.compose.runtime.Immutable
+
+@Immutable
 abstract class Emote {
 
     abstract val name: String

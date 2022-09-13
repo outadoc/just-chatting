@@ -7,6 +7,7 @@ import fr.outadoc.justchatting.model.chat.TwitchChatEmote
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.datetime.Instant
 
+@Immutable
 sealed class ChatEntry {
 
     abstract val data: Data?

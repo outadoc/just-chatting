@@ -80,9 +80,9 @@ import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.formatTimestamp
 import fr.outadoc.justchatting.util.isOdd
+import fr.outadoc.justchatting.util.recomposeHighlighter
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.coroutines.coroutineScope
@@ -107,14 +107,14 @@ private const val UrlAnnotationTag = "URL"
 
 private val latinScriptUserName = """^\w+$""".toRegex()
 
-@Stable
 @Composable
 fun ChatScreen(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
-    chatPreferencesRepository: ChatPreferencesRepository = get(),
     onMessageClick: (ChatEntry) -> Unit
 ) {
+    val chatPreferencesRepository: ChatPreferencesRepository = get()
+
     val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
     val showTimestamps by chatPreferencesRepository.showTimestamps.collectAsState(initial = false)
 
@@ -171,7 +171,7 @@ fun ChatScreen(
                 }
             }
 
-            LaunchedEffect(state.chatMessages, isListAtBottom) {
+            LaunchedEffect(state.chatMessages.size, isListAtBottom) {
                 if (isListAtBottom) {
                     listState.scrollToItem(
                         index = (state.chatMessages.size - 1).coerceAtLeast(0)
@@ -182,7 +182,6 @@ fun ChatScreen(
     }
 }
 
-@Stable
 @Composable
 fun ChatList(
     modifier: Modifier = Modifier,
@@ -246,12 +245,11 @@ fun ChatList(
     }
 }
 
-@Stable
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry,
-    inlineContent: PersistentMap<String, InlineTextContent>,
+    inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     showTimestamps: Boolean
 ) {
@@ -291,12 +289,11 @@ fun ChatMessage(
     }
 }
 
-@Stable
 @Composable
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry.Highlighted,
-    inlineContent: PersistentMap<String, InlineTextContent>,
+    inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean
 ) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
@@ -348,12 +345,11 @@ fun HighlightedMessage(
     }
 }
 
-@Stable
 @Composable
 fun SimpleMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry.Simple,
-    inlineContent: PersistentMap<String, InlineTextContent>,
+    inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean
 ) {
     Row {
@@ -372,33 +368,33 @@ fun SimpleMessage(
     }
 }
 
-@Stable
 @Composable
 fun ChatMessageData(
     modifier: Modifier = Modifier,
     data: ChatEntry.Data,
-    inlineContent: PersistentMap<String, InlineTextContent>,
+    inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean
 ) {
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
 
     val fullInlineContent =
-        inlineContent.putAll(
-            data.emotes.orEmpty()
-                .associate { emote ->
-                    Pair(
-                        emote.name,
-                        InlineTextContent(emotePlaceholder) {
-                            EmoteItem(
-                                emote = emote,
-                                animateEmotes = animateEmotes
-                            )
-                        }
-                    )
-                }
-                .toImmutableMap()
-        )
+        inlineContent.toPersistentHashMap()
+            .putAll(
+                data.emotes.orEmpty()
+                    .associate { emote ->
+                        Pair(
+                            emote.name,
+                            InlineTextContent(emotePlaceholder) {
+                                EmoteItem(
+                                    emote = emote,
+                                    animateEmotes = animateEmotes
+                                )
+                            }
+                        )
+                    }
+                    .toImmutableMap()
+            )
 
     val annotatedString = data.toAnnotatedString(fullInlineContent)
 
@@ -572,10 +568,8 @@ fun String.getRandomChatColor(): Int {
     return randomChatColors.random(Random(hashCode()))
 }
 
-@Stable
 private val Badge.inlineContentId: String
     get() = "badge_${id}_$version"
 
-@Stable
 private val TwitchBadge.inlineContentId: String
     get() = "badge_${id}_$version"

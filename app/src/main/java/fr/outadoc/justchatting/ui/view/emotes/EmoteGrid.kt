@@ -18,7 +18,6 @@ import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.ui.chat.EmoteSetItem
 import kotlinx.collections.immutable.ImmutableList
 
-@Stable
 @Composable
 fun EmoteGrid(
     modifier: Modifier = Modifier,

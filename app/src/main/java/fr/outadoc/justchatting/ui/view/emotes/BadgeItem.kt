@@ -14,7 +14,6 @@ import androidx.compose.ui.platform.LocalDensity
 import coil.compose.SubcomposeAsyncImage
 import fr.outadoc.justchatting.model.chat.TwitchBadge
 
-@Stable
 @Composable
 fun BadgeItem(
     modifier: Modifier = Modifier,

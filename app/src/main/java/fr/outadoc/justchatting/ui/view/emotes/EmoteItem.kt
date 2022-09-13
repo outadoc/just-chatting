@@ -15,7 +15,6 @@ import coil.compose.SubcomposeAsyncImage
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.util.isDark
 
-@Stable
 @Composable
 fun EmoteItem(
     modifier: Modifier = Modifier,

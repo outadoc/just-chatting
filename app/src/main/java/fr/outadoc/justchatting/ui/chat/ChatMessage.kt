@@ -222,7 +222,7 @@ fun ChatList(
     ) {
         itemsIndexed(
             items = entries,
-            key = { _, item -> Pair(item.timestamp, item.data?.message) },
+            key = { _, item -> item.hashCode() },
             contentType = { _, item ->
                 when (item) {
                     is ChatEntry.Highlighted -> 1

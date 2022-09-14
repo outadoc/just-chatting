@@ -30,8 +30,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.lerp
 import androidx.compose.ui.platform.debugInspectorInfo
 import androidx.compose.ui.unit.dp
-import kotlin.math.min
 import kotlinx.coroutines.delay
+import kotlin.math.min
 
 /**
  * A [Modifier] that draws a border around elements that are recomposing. The border increases in

@@ -41,10 +41,12 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.structuralEqualityPolicy
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -80,7 +82,6 @@ import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.formatTimestamp
 import fr.outadoc.justchatting.util.isOdd
-import fr.outadoc.justchatting.util.recomposeHighlighter
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableMap
@@ -132,14 +133,14 @@ fun ChatScreen(
             val scope = rememberCoroutineScope()
             val listState = rememberLazyListState()
 
-            val lastVisibleItemIndex = listState.layoutInfo
-                .visibleItemsInfo
-                .lastOrNull()
-                ?.index
-
-            val lastItemIndex = listState.layoutInfo.totalItemsCount - 1
-            val isListAtBottom =
+            val isListAtBottom by derivedStateOf(structuralEqualityPolicy()) {
+                val lastVisibleItemIndex = listState.layoutInfo
+                    .visibleItemsInfo
+                    .lastOrNull()
+                    ?.index
+                val lastItemIndex = listState.layoutInfo.totalItemsCount - 1
                 lastVisibleItemIndex == null || lastVisibleItemIndex > lastItemIndex - 1
+            }
 
             Box(contentAlignment = Alignment.BottomCenter) {
                 ChatList(
@@ -361,7 +362,10 @@ fun SimpleMessage(
         )
 
         ChatMessageData(
-            modifier = modifier.padding(horizontal = 4.dp, vertical = 6.dp),
+            modifier = modifier.padding(
+                horizontal = 4.dp,
+                vertical = 6.dp
+            ),
             data = message.data,
             inlineContent = inlineContent,
             animateEmotes = animateEmotes
@@ -399,7 +403,7 @@ fun ChatMessageData(
 
     val annotatedString = data.toAnnotatedString(fullInlineContent)
 
-    Column {
+    Column(modifier = modifier) {
         if (data.inReplyTo != null) {
             CompositionLocalProvider(
                 LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
@@ -433,7 +437,7 @@ fun ChatMessageData(
         }
 
         Text(
-            modifier = modifier
+            modifier = Modifier
                 .pointerInput(annotatedString) {
                     forEachGesture {
                         coroutineScope {

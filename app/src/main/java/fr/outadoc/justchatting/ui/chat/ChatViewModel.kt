@@ -255,7 +255,7 @@ class ChatViewModel(
             val otherEmotes = groups
                 .flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 .toPersistentSet()
 

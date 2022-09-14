@@ -7,8 +7,9 @@ import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.RoomState
-import fr.outadoc.justchatting.model.chat.TwitchEmote
+import fr.outadoc.justchatting.model.chat.TwitchChatEmote
 import fr.outadoc.justchatting.model.chat.UserState
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.Assert
 import org.junit.Before
@@ -31,45 +32,9 @@ class ChatMessageParserTest {
                 color = "#0D4200",
                 isAction = false,
                 emotes = listOf(
-                    TwitchEmote(
-                        name = "25",
-                        id = "25",
-                        begin = 0,
-                        end = 4,
-                        setId = null,
-                        ownerId = null,
-                        supportedFormats = listOf(
-                            "default"
-                        ),
-                        supportedScales = mapOf(1.0f to "1.0", 2.0f to "2.0", 3.0f to "3.0"),
-                        supportedThemes = listOf("dark")
-                    ),
-                    TwitchEmote(
-                        name = "25",
-                        id = "25",
-                        begin = 12,
-                        end = 16,
-                        setId = null,
-                        ownerId = null,
-                        supportedFormats = listOf(
-                            "default"
-                        ),
-                        supportedScales = mapOf(1.0f to "1.0", 2.0f to "2.0", 3.0f to "3.0"),
-                        supportedThemes = listOf("dark")
-                    ),
-                    TwitchEmote(
-                        name = "1902",
-                        id = "1902",
-                        begin = 6,
-                        end = 10,
-                        setId = null,
-                        ownerId = null,
-                        supportedFormats = listOf(
-                            "default"
-                        ),
-                        supportedScales = mapOf(1.0f to "1.0", 2.0f to "2.0", 3.0f to "3.0"),
-                        supportedThemes = listOf("dark")
-                    )
+                    TwitchChatEmote(id = "25", name = "Kappa"),
+                    TwitchChatEmote(id = "25", name = "Kappa"),
+                    TwitchChatEmote(id = "1902", name = "Keepo")
                 ),
                 badges = listOf(
                     Badge(id = "turbo", version = "1")
@@ -129,35 +94,13 @@ class ChatMessageParserTest {
                     systemMsg = "Frfun subscribed with Prime. They've subscribed for 41 months, currently on a 40 month streak!",
                     isAction = false,
                     emotes = listOf(
-                        TwitchEmote(
-                            name = "emotesv2_53f30305e78246aea4bc24d299dd09e7",
+                        TwitchChatEmote(
                             id = "emotesv2_53f30305e78246aea4bc24d299dd09e7",
-                            begin = 0,
-                            end = 5,
-                            setId = null,
-                            ownerId = null,
-                            supportedFormats = listOf(
-                                "default"
-                            ),
-                            supportedScales = mapOf(1.0f to "1.0", 2.0f to "2.0", 3.0f to "3.0"),
-                            supportedThemes = listOf("dark")
+                            name = "coxPet"
                         ),
-                        TwitchEmote(
-                            name = "emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8",
+                        TwitchChatEmote(
                             id = "emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8",
-                            begin = 25,
-                            end = 38,
-                            setId = null,
-                            ownerId = null,
-                            supportedFormats = listOf(
-                                "default"
-                            ),
-                            supportedScales = mapOf(
-                                1.0f to "1.0",
-                                2.0f to "2.0",
-                                3.0f to "3.0"
-                            ),
-                            supportedThemes = listOf("dark")
+                            name = "moumou4Content"
                         )
                     ),
                     badges = listOf(
@@ -367,7 +310,7 @@ class ChatMessageParserTest {
 
     @Before
     fun before() {
-        parser = ChatMessageParser()
+        parser = ChatMessageParser(Clock.System)
     }
 
     data class Assertion(val input: String, val expected: ChatCommand) {

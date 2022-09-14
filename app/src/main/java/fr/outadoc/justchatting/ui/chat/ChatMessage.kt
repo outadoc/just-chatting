@@ -255,7 +255,7 @@ fun ChatMessage(
     showTimestamps: Boolean
 ) {
     val timestamp = message.timestamp
-        ?.formatTimestamp()
+        .formatTimestamp()
         ?.takeIf { showTimestamps }
 
     Row(

@@ -4,9 +4,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 
 data class TwitchChatEmote(
     val id: String,
-    override val name: String,
-    var begin: Int,
-    var end: Int
+    override val name: String
 ) : Emote() {
 
     companion object {

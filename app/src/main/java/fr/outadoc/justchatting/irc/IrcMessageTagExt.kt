@@ -24,10 +24,8 @@ fun Map<String, String?>.parseEmotes(message: String): List<TwitchChatEmote>? {
                     val realEnd = if (begin == realBegin) end else end + realBegin - begin
 
                     TwitchChatEmote(
-                        name = message.slice(realBegin..realEnd),
                         id = emote.key,
-                        begin = begin,
-                        end = end
+                        name = message.slice(realBegin..realEnd)
                     )
                 }
                 .orEmpty()

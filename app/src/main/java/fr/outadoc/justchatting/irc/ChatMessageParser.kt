@@ -12,8 +12,9 @@ import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.UserState
+import kotlinx.datetime.Clock
 
-class ChatMessageParser {
+class ChatMessageParser(private val clock: Clock) {
 
     fun parse(message: String): ChatCommand? {
         val ircMessage = IrcMessageParser.parse(message)
@@ -58,7 +59,7 @@ class ChatMessageParser {
             isFirst = ircMessage.tags.firstMsg,
             emotes = ircMessage.tags.parseEmotes(message),
             badges = ircMessage.tags.parseBadges(),
-            timestamp = ircMessage.tags.parseTimestamp(),
+            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             inReplyTo = ircMessage.tags.parseParentMessage(),
             msgId = ircMessage.tags.messageId,
             systemMsg = ircMessage.tags.systemMsg
@@ -68,7 +69,7 @@ class ChatMessageParser {
     private fun parseUserNotice(ircMessage: IrcMessage): Command.UserNotice {
         return Command.UserNotice(
             systemMsg = ircMessage.tags.systemMsg,
-            timestamp = ircMessage.tags.parseTimestamp(),
+            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             userMessage = parseMessage(ircMessage),
             msgId = ircMessage.tags.messageId
         )
@@ -78,7 +79,7 @@ class ChatMessageParser {
         return Command.ClearMessage(
             message = ircMessage.parameters.getOrNull(1),
             userLogin = ircMessage.tags.login,
-            timestamp = ircMessage.tags.parseTimestamp()
+            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
         )
     }
 
@@ -89,17 +90,17 @@ class ChatMessageParser {
         return when {
             user == null ->
                 Command.ClearChat(
-                    timestamp = ircMessage.tags.parseTimestamp()
+                    timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
                 )
             duration != null ->
                 Command.Timeout(
                     userLogin = user,
                     duration = duration,
-                    timestamp = ircMessage.tags.parseTimestamp()
+                    timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
                 )
             else -> Command.Ban(
                 userLogin = user,
-                timestamp = ircMessage.tags.parseTimestamp()
+                timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
             )
         }
     }
@@ -111,7 +112,7 @@ class ChatMessageParser {
         return Command.Notice(
             message = notice.message,
             messageId = ircMessage.tags.messageId,
-            timestamp = ircMessage.tags.parseTimestamp()
+            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
         )
     }
 

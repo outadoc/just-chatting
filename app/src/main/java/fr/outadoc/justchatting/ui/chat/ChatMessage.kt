@@ -221,6 +221,7 @@ fun ChatList(
     ) {
         itemsIndexed(
             items = entries,
+            key = { _, item -> Pair(item.timestamp, item.data?.message) },
             contentType = { _, item ->
                 when (item) {
                     is ChatEntry.Highlighted -> 1
@@ -444,7 +445,8 @@ fun ChatMessageData(
 
                                     val position = layoutRes.getOffsetForPosition(down.position)
                                     val urlAnnotation =
-                                        annotatedString.getStringAnnotations(position, position)
+                                        annotatedString
+                                            .getStringAnnotations(position, position)
                                             .firstOrNull { it.tag == UrlAnnotationTag }
 
                                     if (urlAnnotation != null) {

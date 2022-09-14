@@ -11,7 +11,7 @@ import kotlinx.datetime.Instant
 sealed class ChatEntry {
 
     abstract val data: Data?
-    abstract val timestamp: Instant?
+    abstract val timestamp: Instant
 
     @Immutable
     data class Data(
@@ -29,7 +29,7 @@ sealed class ChatEntry {
     @Immutable
     data class Simple(
         override val data: Data,
-        override val timestamp: Instant?
+        override val timestamp: Instant
     ) : ChatEntry()
 
     @Immutable
@@ -37,6 +37,6 @@ sealed class ChatEntry {
         val header: String?,
         val headerIconResId: Int? = null,
         override val data: Data?,
-        override val timestamp: Instant?
+        override val timestamp: Instant
     ) : ChatEntry()
 }

@@ -10,56 +10,56 @@ sealed class Command : ChatCommand {
 
     data class UserNotice(
         val systemMsg: String?,
-        val timestamp: Instant?,
+        val timestamp: Instant,
         val userMessage: ChatMessage?,
         val msgId: String?
     ) : Command()
 
     data class Notice(
         val message: String?,
-        val timestamp: Instant?,
+        val timestamp: Instant,
         val messageId: String?
     ) : Command()
 
     data class ClearChat(
-        val timestamp: Instant?
+        val timestamp: Instant
     ) : Command()
 
     data class Timeout(
         val duration: Duration?,
-        val timestamp: Instant?,
+        val timestamp: Instant,
         val userLogin: String?
     ) : Command()
 
     data class Ban(
-        val timestamp: Instant?,
+        val timestamp: Instant,
         val userLogin: String?
     ) : Command()
 
     data class ClearMessage(
         val message: String?,
-        val timestamp: Instant?,
+        val timestamp: Instant,
         val userLogin: String?
     ) : Command()
 
     data class Join(
         val channelLogin: String?,
-        val timestamp: Instant?
+        val timestamp: Instant
     ) : Command()
 
     data class Disconnect(
         val channelLogin: String?,
-        val timestamp: Instant?,
+        val timestamp: Instant,
         val throwable: Throwable?
     ) : Command()
 
     data class SendMessageError(
-        val timestamp: Instant?,
+        val timestamp: Instant,
         val throwable: Throwable?
     ) : Command()
 
     data class SocketError(
-        val timestamp: Instant?,
+        val timestamp: Instant,
         val throwable: Throwable?
     ) : Command()
 }
@@ -76,7 +76,7 @@ data class ChatMessage(
     val badges: List<Badge>?,
     val isFirst: Boolean = false,
     val systemMsg: String?,
-    val timestamp: Instant?,
+    val timestamp: Instant,
     val rewardId: String?,
     val inReplyTo: InReplyTo?,
     val msgId: String?
@@ -103,7 +103,7 @@ data class PointReward(
     val rewardTitle: String?,
     val rewardCost: Int?,
     val rewardImage: RewardImage?,
-    val timestamp: Instant?
+    val timestamp: Instant
 ) : ChatCommand {
 
     data class RewardImage(

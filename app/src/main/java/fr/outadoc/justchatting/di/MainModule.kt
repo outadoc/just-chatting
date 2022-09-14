@@ -76,9 +76,9 @@ val mainModule = module {
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
     single { PubSubWebSocket.Factory(get(), get()) }
 
-    single { ChatMessageParser() }
+    single { ChatMessageParser(get()) }
     single { ChatEntryMapper(get()) }
-    single { PubSubRewardParser() }
+    single { PubSubRewardParser(get()) }
 
     single { AuthRepository(get(), get(), get()) }
     single { EmotesRepository(get(), get(), get(), get()) }
@@ -106,7 +106,7 @@ val mainModule = module {
                 )
                 .registerTypeAdapter(
                     RecentMessagesResponse::class.java,
-                    RecentMessagesDeserializer()
+                    RecentMessagesDeserializer(get())
                 )
                 .registerTypeAdapter(StvEmotesResponse::class.java, StvEmotesDeserializer())
                 .registerTypeAdapter(BttvGlobalResponse::class.java, BttvGlobalDeserializer())

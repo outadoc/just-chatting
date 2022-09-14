@@ -8,9 +8,9 @@ import com.google.gson.JsonParseException
 import fr.outadoc.justchatting.irc.ChatMessageParser
 import java.lang.reflect.Type
 
-class RecentMessagesDeserializer : JsonDeserializer<RecentMessagesResponse> {
-
-    private val parser = ChatMessageParser()
+class RecentMessagesDeserializer(
+    private val parser: ChatMessageParser
+) : JsonDeserializer<RecentMessagesResponse> {
 
     @Throws(JsonParseException::class)
     override fun deserialize(

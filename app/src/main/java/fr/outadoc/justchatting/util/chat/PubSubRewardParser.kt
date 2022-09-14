@@ -1,10 +1,11 @@
 package fr.outadoc.justchatting.util.chat
 
 import fr.outadoc.justchatting.model.chat.PointReward
+import kotlinx.datetime.Clock
 import kotlinx.datetime.toInstant
 import org.json.JSONObject
 
-class PubSubRewardParser {
+class PubSubRewardParser(private val clock: Clock) {
 
     fun parse(text: String): PointReward {
         val data = if (text.isNotBlank()) JSONObject(text).optJSONObject("data") else null
@@ -37,7 +38,7 @@ class PubSubRewardParser {
                 url2 = rewardImage?.optString("url_2x") ?: defaultImage?.optString("url_2x"),
                 url4 = rewardImage?.optString("url_4x") ?: defaultImage?.optString("url_4x")
             ),
-            timestamp = messageData?.optString("timestamp")?.toInstant()
+            timestamp = messageData?.optString("timestamp")?.toInstant() ?: clock.now()
         )
     }
 }

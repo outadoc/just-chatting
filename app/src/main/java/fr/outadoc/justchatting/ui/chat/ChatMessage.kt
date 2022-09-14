@@ -409,7 +409,7 @@ fun ChatMessageData(
                 LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
             ) {
                 Row(
-                    modifier = Modifier.padding(top = 8.dp, end = 8.dp),
+                    modifier = Modifier.padding(bottom = 8.dp),
                     verticalAlignment = Alignment.Top
                 ) {
                     Icon(

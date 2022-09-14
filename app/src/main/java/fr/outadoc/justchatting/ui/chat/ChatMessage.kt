@@ -46,7 +46,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.structuralEqualityPolicy
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -133,13 +133,18 @@ fun ChatScreen(
             val scope = rememberCoroutineScope()
             val listState = rememberLazyListState()
 
-            val isListAtBottom by derivedStateOf(structuralEqualityPolicy()) {
-                val lastVisibleItemIndex = listState.layoutInfo
-                    .visibleItemsInfo
-                    .lastOrNull()
-                    ?.index
-                val lastItemIndex = listState.layoutInfo.totalItemsCount - 1
-                lastVisibleItemIndex == null || lastVisibleItemIndex > lastItemIndex - 1
+            var wasListScrolledByUser by remember { mutableStateOf(false) }
+
+            if (listState.isScrollInProgress) {
+                wasListScrolledByUser = true
+            }
+
+            LaunchedEffect(state.chatMessages.size, wasListScrolledByUser) {
+                if (!wasListScrolledByUser) {
+                    listState.scrollToItem(
+                        index = (state.chatMessages.size - 1).coerceAtLeast(0)
+                    )
+                }
             }
 
             Box(contentAlignment = Alignment.BottomCenter) {
@@ -153,11 +158,12 @@ fun ChatScreen(
                     onMessageClick = onMessageClick
                 )
 
-                AnimatedVisibility(visible = !isListAtBottom) {
+                AnimatedVisibility(visible = wasListScrolledByUser) {
                     FloatingActionButton(
                         modifier = Modifier.padding(16.dp),
                         onClick = {
                             scope.launch {
+                                wasListScrolledByUser = false
                                 listState.scrollToItem(
                                     index = (state.chatMessages.size - 1).coerceAtLeast(0)
                                 )
@@ -169,14 +175,6 @@ fun ChatScreen(
                             contentDescription = stringResource(R.string.scroll_down)
                         )
                     }
-                }
-            }
-
-            LaunchedEffect(state.chatMessages.size, isListAtBottom) {
-                if (isListAtBottom) {
-                    listState.scrollToItem(
-                        index = (state.chatMessages.size - 1).coerceAtLeast(0)
-                    )
                 }
             }
         }

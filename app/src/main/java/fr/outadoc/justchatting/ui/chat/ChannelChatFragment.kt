@@ -247,7 +247,6 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
                 is ChatViewModel.State.Chatting -> {
                     viewHolder?.apply {
                         setMessagePostConstraint(state.messagePostConstraint)
-                        notifyRoomState(state.roomState)
 
                         autoCompleteAdapter?.submitItems(
                             emotes = state.allEmotes,
@@ -414,49 +413,6 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
         }
 
         loadUserAvatar(user)
-    }
-
-    private fun FragmentChannelBinding.notifyRoomState(roomState: RoomState) {
-        textEmote.isVisible = roomState.isEmoteOnly
-
-        if (roomState.minFollowDuration != null) {
-            when (roomState.minFollowDuration) {
-                Duration.ZERO -> {
-                    textFollowers.text = getString(R.string.room_followers)
-                    textFollowers.isVisible = true
-                }
-                else -> {
-                    textFollowers.text = getString(
-                        R.string.room_followers_min,
-                        roomState.minFollowDuration.toString()
-                    )
-                    textFollowers.isVisible = true
-                }
-            }
-        } else {
-            textFollowers.isVisible = false
-        }
-
-        textUnique.isVisible = roomState.uniqueMessagesOnly
-
-        if (roomState.slowModeDuration != null) {
-            textSlow.text = getString(
-                R.string.room_slow,
-                roomState.slowModeDuration.toString()
-            )
-            textSlow.isVisible = true
-        } else {
-            textSlow.isVisible = false
-        }
-
-        textSubs.isVisible = roomState.isSubOnly
-
-        flexboxChatMode.isVisible =
-            !textEmote.isGone ||
-            !textFollowers.isGone ||
-            !textUnique.isGone ||
-            !textSlow.isGone ||
-            !textSubs.isGone
     }
 
     private fun FragmentChannelBinding.setMessagePostConstraint(constraint: MessagePostConstraint?) {

@@ -3,6 +3,11 @@ package fr.outadoc.justchatting.ui.chat
 import android.util.Patterns
 import androidx.annotation.ColorInt
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -24,6 +29,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.icons.Icons
@@ -34,14 +40,15 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,6 +80,7 @@ import androidx.compose.ui.unit.em
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.chat.Badge
 import fr.outadoc.justchatting.model.chat.Emote
+import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
@@ -90,6 +98,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.get
 import kotlin.random.Random
+import kotlin.time.Duration
 
 private val emotePlaceholder = Placeholder(
     width = 2.em,
@@ -147,18 +156,22 @@ fun ChatScreen(
                 }
             }
 
-            Box(contentAlignment = Alignment.BottomCenter) {
+            Box {
                 ChatList(
                     entries = state.chatMessages,
                     emotes = state.allEmotesMap,
                     badges = state.globalBadges.addAll(state.channelBadges),
+                    roomState = state.roomState,
                     animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
                     listState = listState,
                     onMessageClick = onMessageClick
                 )
 
-                AnimatedVisibility(visible = wasListScrolledByUser) {
+                AnimatedVisibility(
+                    modifier = Modifier.align(Alignment.BottomCenter),
+                    visible = wasListScrolledByUser
+                ) {
                     FloatingActionButton(
                         modifier = Modifier.padding(16.dp),
                         onClick = {
@@ -182,6 +195,59 @@ fun ChatScreen(
 }
 
 @Composable
+fun RoomStateBanner(modifier: Modifier = Modifier, roomState: RoomState) = with(roomState) {
+    Surface(
+        modifier = modifier,
+        shape = RoundedCornerShape(percent = 50),
+        color = MaterialTheme.colorScheme.secondaryContainer,
+        shadowElevation = 4.dp
+    ) {
+        Row(
+            modifier = Modifier.padding(4.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.labelMedium
+            ) {
+                if (isEmoteOnly) {
+                    Text(text = stringResource(R.string.room_emote))
+                }
+
+                if (minFollowDuration != null) {
+                    Text(
+                        text = when (minFollowDuration) {
+                            Duration.ZERO -> stringResource(R.string.room_followers)
+                            else -> stringResource(
+                                R.string.room_followers_min,
+                                minFollowDuration.toString()
+                            )
+                        }
+                    )
+                }
+
+                if (uniqueMessagesOnly) {
+                    Text(text = stringResource(R.string.room_unique))
+                }
+
+                if (slowModeDuration != null) {
+                    Text(
+                        text = stringResource(
+                            R.string.room_slow,
+                            slowModeDuration.toString()
+                        )
+                    )
+                }
+
+                if (isSubOnly) {
+                    Text(text = stringResource(R.string.room_subs))
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
 fun ChatList(
     modifier: Modifier = Modifier,
     entries: ImmutableList<ChatEntry>,
@@ -190,7 +256,8 @@ fun ChatList(
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     listState: LazyListState,
-    onMessageClick: (ChatEntry) -> Unit
+    onMessageClick: (ChatEntry) -> Unit,
+    roomState: RoomState
 ) {
     val inlinesEmotes = remember(emotes) {
         emotes.mapValues { (_, emote) ->
@@ -218,6 +285,21 @@ fun ChatList(
         modifier = modifier,
         state = listState
     ) {
+        stickyHeader {
+            AnimatedVisibility(
+                visible = !roomState.isDefault,
+                enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut()
+            ) {
+                RoomStateBanner(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    roomState = roomState
+                )
+            }
+        }
+
         itemsIndexed(
             items = entries,
             key = { _, item -> item.hashCode() },

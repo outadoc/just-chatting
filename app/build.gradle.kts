@@ -125,7 +125,6 @@ dependencies {
     implementation(libs.compose.runtime.livedata)
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.tooling)
-    implementation(libs.flexbox)
     implementation(libs.fragnav)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)

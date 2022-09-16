@@ -20,9 +20,6 @@ fun Context.convertDpToPixels(dp: Float) =
 val Context.isDarkMode: Boolean
     get() = resources.configuration.uiMode.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 
-val Context.isActivityResumed
-    get() = this !is Activity || !((isDestroyed) || isFinishing)
-
 fun Context.toast(@StringRes resId: Int) {
     Toast.makeText(this, resId, Toast.LENGTH_LONG).show()
 }

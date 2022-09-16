@@ -1,7 +1,8 @@
 package fr.outadoc.justchatting.ui.chat
 
-import android.animation.ValueAnimator
 import android.app.ActivityManager
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.content.res.Configuration
@@ -11,17 +12,40 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.InsetDrawable
 import android.os.Build
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.addCallback
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.unit.dp
 import androidx.core.app.Person
+import androidx.core.content.getSystemService
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.os.bundleOf
@@ -29,11 +53,6 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.forEach
-import androidx.core.view.isGone
-import androidx.core.view.isInvisible
-import androidx.core.view.isVisible
-import androidx.core.view.updateLayoutParams
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.palette.graphics.Palette
@@ -43,29 +62,27 @@ import com.google.android.material.shape.MaterialShapeDrawable
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.databinding.FragmentChannelBinding
 import fr.outadoc.justchatting.model.chat.Emote
-import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.common.ensureMinimumAlpha
 import fr.outadoc.justchatting.ui.common.isLightColor
-import fr.outadoc.justchatting.ui.view.chat.AutoCompleteAdapter
-import fr.outadoc.justchatting.ui.view.chat.AutoCompleteSpaceTokenizer
-import fr.outadoc.justchatting.ui.view.chat.MessageClickedDialog
 import fr.outadoc.justchatting.ui.view.chat.StreamInfoDialog
+import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmotePicker
 import fr.outadoc.justchatting.util.formatChannelUri
 import fr.outadoc.justchatting.util.generateAsync
-import fr.outadoc.justchatting.util.hideKeyboard
-import fr.outadoc.justchatting.util.isDarkMode
+import fr.outadoc.justchatting.util.isDark
 import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
 import fr.outadoc.justchatting.util.loadImageToBitmap
-import fr.outadoc.justchatting.util.showKeyboard
+import fr.outadoc.justchatting.util.shortToast
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import kotlin.time.Duration
 
-class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListener {
+object EmojiPickerDefaults {
+    val DefaultHeight = 350.dp
+}
+
+class ChannelChatFragment : Fragment() {
 
     companion object {
         private const val CHANNEL_LOGIN = "channel_login"
@@ -80,10 +97,6 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
     private val chatViewModel: ChatViewModel by sharedViewModel()
 
     private var viewHolder: FragmentChannelBinding? = null
-
-    private var autoCompleteAdapter: AutoCompleteAdapter? = null
-
-    private var progressAnimator: ValueAnimator? = null
 
     private var openInBubble: (() -> Unit)? = null
 
@@ -101,52 +114,22 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
         savedInstanceState: Bundle?
     ): View? {
         viewHolder = FragmentChannelBinding.inflate(inflater, container, false)
-        autoCompleteAdapter = AutoCompleteAdapter(requireContext())
         return viewHolder?.root
     }
 
+    @OptIn(ExperimentalComposeUiApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.onBackPressedDispatcher?.addCallback(this) {
-            viewHolder?.apply {
-                if (!hideEmotesMenu()) {
-                    isEnabled = false
-                    activity?.onBackPressed()
-                    isEnabled = true
-                }
-            }
-        }
-
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
             val statusBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-            val navBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
-            val imeInsets = windowInsets.getInsets(WindowInsetsCompat.Type.ime())
-
             viewHolder?.apply {
-                messageView.setPadding(
-                    messageView.paddingLeft,
-                    messageView.paddingTop,
-                    messageView.paddingRight,
-                    if (imeInsets.bottom > 0) imeInsets.bottom else navBarInsets.bottom
-                )
-
                 toolbar.setPadding(
                     toolbar.paddingLeft,
                     statusBarInsets.top,
                     toolbar.paddingRight,
                     toolbar.paddingBottom
                 )
-
-                if (imeInsets.bottom > 0) {
-                    // Hide emote picker when keyboard is opened
-                    hideEmotesMenu()
-
-                    // Set emote picker height to keyboard height
-                    emotePicker.updateLayoutParams {
-                        height = imeInsets.bottom
-                    }
-                }
             }
 
             windowInsets
@@ -165,93 +148,103 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
                         channelName = user.display_name
                     )
                 }
-
-                autoCompleteAdapter?.animateEmotes = state.animateEmotes
             }
         }
 
-        viewHolder?.apply {
-            editText.setAdapter(autoCompleteAdapter)
-            editText.setTokenizer(AutoCompleteSpaceTokenizer())
+        viewHolder?.composeViewChat?.apply {
+            setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
+            setContent {
+                Mdc3Theme {
+                    val keyboardController = LocalSoftwareKeyboardController.current
+                    val clipboard = LocalClipboardManager.current
+                    val haptic = LocalHapticFeedback.current
+                    val context = LocalContext.current
 
-            editText.addTextChangedListener(
-                afterTextChanged = { text -> send.isVisible = text?.isNotBlank() == true }
-            )
+                    val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
 
-            editText.setOnKeyListener { _, keyCode, event ->
-                if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                    sendMessage()
-                    true
-                } else {
-                    false
-                }
-            }
+                    var isEmotePickerOpen by remember { mutableStateOf(false) }
 
-            textInputLayoutChat.setStartIconOnClickListener {
-                // TODO add animation
-                if (emotePicker.isGone) {
-                    editText.hideKeyboard()
-                    emotePicker.isVisible = true
-                } else {
-                    editText.showKeyboard()
-                    emotePicker.isVisible = false
-                }
-            }
-
-            send.setOnClickListener { sendMessage() }
-
-            messageView.isVisible = true
-
-            emotePicker.apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    Mdc3Theme {
-                        val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
-                        EmotePicker(
-                            modifier = Modifier.fillMaxSize(),
-                            onEmoteClick = ::appendEmote,
-                            state = state
-                        )
+                    BackHandler(isEmotePickerOpen) {
+                        isEmotePickerOpen = false
                     }
-                }
-            }
 
-            composeViewChat.apply {
-                setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
-                setContent {
-                    Mdc3Theme {
-                        val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
+                    LaunchedEffect(isEmotePickerOpen) {
+                        if (isEmotePickerOpen) {
+                            keyboardController?.hide()
+                        }
+                    }
+
+                    Column(verticalArrangement = Arrangement.SpaceEvenly) {
                         ChatScreen(
-                            modifier = Modifier.fillMaxSize(),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
                             state = state,
-                            onMessageClick = { _ ->
-                                hideKeyboard()
-
-                                /*
-                            MessageClickedDialog.newInstance(
-                                originalMessage = original,
-                                formattedMessage = formatted,
-                                userId = userId
-                            ).show(childFragmentManager, "closeOnPip")
-                             */
+                            onMessageLongClick = { item ->
+                                item.data?.message?.let { rawMessage ->
+                                    clipboard.setText(AnnotatedString(rawMessage))
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    context.shortToast(R.string.chat_copiedToClipboard)
+                                }
                             }
                         )
-                    }
-                }
-            }
-        }
 
-        chatViewModel.state.observe(viewLifecycleOwner) { state ->
-            when (state) {
-                ChatViewModel.State.Initial -> {}
-                is ChatViewModel.State.Chatting -> {
-                    viewHolder?.apply {
-                        setMessagePostConstraint(state.messagePostConstraint)
-
-                        autoCompleteAdapter?.submitItems(
-                            emotes = state.allEmotes,
-                            chatters = state.chatters
+                        ChatSlowModeProgress(
+                            modifier = Modifier.fillMaxWidth(),
+                            state = state
                         )
+
+                        val density = LocalDensity.current.density
+                        val isDarkTheme = MaterialTheme.colorScheme.isDark
+
+                        ChatInput(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .then(
+                                    if (!isEmotePickerOpen) Modifier.navigationBarsPadding()
+                                    else Modifier
+                                )
+                                .fillMaxWidth(),
+                            state = state,
+                            onMessageChange = chatViewModel::onMessageInputChanged,
+                            onToggleEmotePicker = {
+                                isEmotePickerOpen = !isEmotePickerOpen
+                            },
+                            onEmoteClick = { emote ->
+                                chatViewModel.appendEmote(emote, autocomplete = true)
+                            },
+                            onChatterClick = { chatter ->
+                                chatViewModel.appendChatter(chatter, autocomplete = true)
+                            },
+                            onSubmit = {
+                                chatViewModel.submit(
+                                    screenDensity = density,
+                                    isDarkTheme = isDarkTheme
+                                )
+                            }
+                        )
+
+                        var imeHeight by remember { mutableStateOf(EmojiPickerDefaults.DefaultHeight) }
+
+                        val currentImeHeight = WindowInsets.ime
+                            .asPaddingValues()
+                            .calculateBottomPadding()
+
+                        LaunchedEffect(currentImeHeight) {
+                            if (currentImeHeight > imeHeight) {
+                                imeHeight = currentImeHeight
+                            }
+                        }
+
+                        AnimatedVisibility(visible = isEmotePickerOpen) {
+                            EmotePicker(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(imeHeight),
+                                onEmoteClick = ::appendEmote,
+                                state = state
+                            )
+                        }
                     }
                 }
             }
@@ -415,76 +408,17 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
         loadUserAvatar(user)
     }
 
-    private fun FragmentChannelBinding.setMessagePostConstraint(constraint: MessagePostConstraint?) {
-        // No constraint, no need for an indicator
-        if (constraint == null) {
-            progressCannotSendUntil.isInvisible = true
-            return
-        }
-
-        // If the constraint is in the past, just ignore it
-        val now = Clock.System.now()
-        val canPostAt = constraint.lastMessageSentAt + constraint.slowModeDuration
-
-        if (canPostAt < now) {
-            progressCannotSendUntil.isInvisible = true
-            return
-        }
-
-        if (progressAnimator != null) {
-            progressAnimator?.cancel()
-            progressAnimator = null
-        }
-
-        progressAnimator = ValueAnimator.ofInt(0, Int.MAX_VALUE)
-            .apply {
-                interpolator = null
-                duration = constraint.slowModeDuration.inWholeMilliseconds
-
-                addUpdateListener { animation ->
-                    with(progressCannotSendUntil) {
-                        max = Int.MAX_VALUE
-                        progress = animation.animatedValue as Int
-                        isInvisible = progress == 0
-                    }
-                }
-
-                reverse()
-
-                currentPlayTime = (now - constraint.lastMessageSentAt).inWholeMilliseconds
-            }
-    }
-
-    private fun hideEmotesMenu(): Boolean {
-        val viewHolder = viewHolder ?: return false
-        return if (viewHolder.emotePicker.isVisible) {
-            viewHolder.emotePicker.isVisible = false
-            true
-        } else {
-            false
-        }
-    }
-
     private fun appendEmote(emote: Emote) {
-        viewHolder?.apply {
-            editText.text.append(emote.name).append(' ')
-        }
+        chatViewModel.appendEmote(emote, autocomplete = false)
     }
 
-    private fun FragmentChannelBinding.sendMessage() {
-        val text = editText.text.trim()
-
-        editText.hideKeyboard()
-        editText.setText("")
-        editText.clearFocus()
-
-        hideEmotesMenu()
-
-        chatViewModel.send(
-            message = text,
-            screenDensity = requireContext().resources.displayMetrics.density,
-            isDarkTheme = requireContext().isDarkMode
-        )
+    private fun copyToClipboard(chatEntry: ChatEntry) {
+        val message = chatEntry.data?.message ?: return
+        requireContext()
+            .getSystemService<ClipboardManager>()
+            ?.setPrimaryClip(
+                ClipData.newPlainText("label", message)
+            )
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
@@ -492,36 +426,6 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             viewHolder?.appBar?.setExpanded(false, false)
         }
-    }
-
-    private fun hideKeyboard() {
-        viewHolder?.apply {
-            editText.hideKeyboard()
-            editText.clearFocus()
-        }
-    }
-
-    override fun onReplyClicked(userName: String) {
-        val text = "@$userName "
-        viewHolder?.editText?.apply {
-            setText(text)
-            setSelection(text.length)
-            showKeyboard()
-        }
-    }
-
-    override fun onCopyMessageClicked(message: String) {
-        viewHolder?.editText?.setText(message)
-    }
-
-    override fun onViewProfileClicked(login: String) {
-        val context = context ?: return
-        context.startActivity(
-            ChatActivity.createIntent(
-                context = context,
-                channelLogin = login
-            )
-        )
     }
 
     override fun onPause() {
@@ -533,6 +437,5 @@ class ChannelChatFragment : Fragment(), MessageClickedDialog.OnButtonClickListen
         super.onDestroyView()
         viewHolder = null
         openInBubble = null
-        autoCompleteAdapter = null
     }
 }

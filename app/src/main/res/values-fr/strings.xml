@@ -13,6 +13,7 @@
     <string name="chat_ban">%s a été banni·e définitivement</string>
     <string name="chat_clear">Le tchat a été effacé par un·e modérateur·rice</string>
     <string name="chat_clearmsg">Message supprimé de %1$s\: %2$s</string>
+    <string name="chat_copiedToClipboard">Message copié dans le presse-papier</string>
     <string name="chat_disconnect">Déconnexion de %1$s - %2$s</string>
     <string name="chat_first">Premier message</string>
     <string name="chat_input_emote_cd">Ouvrir le sélecteur d\'émote</string>

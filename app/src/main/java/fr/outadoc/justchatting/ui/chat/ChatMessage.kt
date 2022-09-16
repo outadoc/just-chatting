@@ -9,7 +9,7 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
@@ -121,7 +121,7 @@ private val latinScriptUserName = """^\w+$""".toRegex()
 fun ChatScreen(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
-    onMessageClick: (ChatEntry) -> Unit
+    onMessageLongClick: (ChatEntry) -> Unit
 ) {
     val chatPreferencesRepository: ChatPreferencesRepository = get()
 
@@ -156,7 +156,7 @@ fun ChatScreen(
                 }
             }
 
-            Box {
+            Box(modifier = modifier) {
                 ChatList(
                     entries = state.chatMessages,
                     emotes = state.allEmotesMap,
@@ -165,7 +165,7 @@ fun ChatScreen(
                     animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
                     listState = listState,
-                    onMessageClick = onMessageClick
+                    onMessageLongClick = onMessageLongClick
                 )
 
                 AnimatedVisibility(
@@ -256,7 +256,7 @@ fun ChatList(
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     listState: LazyListState,
-    onMessageClick: (ChatEntry) -> Unit,
+    onMessageLongClick: (ChatEntry) -> Unit,
     roomState: RoomState
 ) {
     val inlinesEmotes = remember(emotes) {
@@ -317,7 +317,10 @@ fun ChatList(
                         else Color.Transparent
                     )
                     .fillMaxWidth()
-                    .clickable { onMessageClick(item) },
+                    .combinedClickable(
+                        onClick = {},
+                        onLongClick = { onMessageLongClick(item) }
+                    ),
                 message = item,
                 inlineContent = inlinesEmotes.putAll(inlineBadges),
                 animateEmotes = animateEmotes,
@@ -562,7 +565,7 @@ fun ChatMessageData(
 @Stable
 @Composable
 @OptIn(ExperimentalTextApi::class)
-private fun ChatEntry.Data.toAnnotatedString(
+fun ChatEntry.Data.toAnnotatedString(
     inlineContent: ImmutableMap<String, InlineTextContent>
 ): AnnotatedString {
     val color = color

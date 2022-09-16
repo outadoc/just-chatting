@@ -47,7 +47,7 @@ fun EmotePicker(
             }
         }
         is ChatViewModel.State.Chatting -> {
-            Column {
+            Column(modifier = modifier) {
                 TabRow(selectedTabIndex = selectedTab.ordinal) {
                     EmoteTab.values().forEach { tab ->
                         Tab(

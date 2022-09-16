@@ -14,6 +14,7 @@
     <string name="chat_ban">%s has been permanently banned</string>
     <string name="chat_clear">Chat has been cleared by a moderator</string>
     <string name="chat_clearmsg">Message deleted from %1$s\: %2$s</string>
+    <string name="chat_copiedToClipboard">Message copied to clipboard</string>
     <string name="chat_disconnect">Disconnecting from %1$s - %2$s</string>
     <string name="chat_first">First time chat</string>
     <string name="chat_input_emote_cd">Open emote picker</string>

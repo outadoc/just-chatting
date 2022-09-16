@@ -2,6 +2,10 @@ package fr.outadoc.justchatting.ui.chat
 
 import android.util.Log
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.getTextAfterSelection
+import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
@@ -42,12 +46,10 @@ import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
@@ -59,7 +61,6 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.collections.component1
 import kotlin.collections.component2
-import kotlin.time.Duration.Companion.milliseconds
 
 class ChatViewModel(
     private val repository: TwitchService,
@@ -92,13 +93,15 @@ class ChatViewModel(
             val userState: UserState = UserState(),
             val roomState: RoomState = RoomState(),
             val recentMsgLimit: Int,
-            val maxAdapterCount: Int
+            val maxAdapterCount: Int,
+            val inputMessage: TextFieldValue = TextFieldValue()
         ) : State() {
 
             val allEmotes: ImmutableSet<Emote> =
                 (twitchEmotes + recentEmotes + otherEmotes)
                     .filterIsInstance<EmoteSetItem.Emote>()
                     .map { it.emote }
+                    .distinctBy { it.name }
                     .toImmutableSet()
 
             val allEmotesMap: ImmutableMap<String, Emote> =
@@ -116,18 +119,18 @@ class ChatViewModel(
                         )
                     }
                 }
+
+            val previousWord = inputMessage
+                .getTextBeforeSelection(inputMessage.text.length)
+                .takeLastWhile { it != ' ' }
         }
     }
 
     private val _state = MutableStateFlow<State>(State.Initial)
-
-    @OptIn(FlowPreview::class)
     val state: LiveData<State> =
         emotesRepository.loadRecentEmotes()
             .combineWith(
-                _state.filterIsInstance<State.Chatting>()
-                    .debounce(100.milliseconds)
-                    .asLiveData()
+                _state.filterIsInstance<State.Chatting>().asLiveData()
             ) { recentEmotes, state ->
                 state.copy(
                     recentEmotes = recentEmotes
@@ -255,7 +258,7 @@ class ChatViewModel(
             val otherEmotes = groups
                 .flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 .toPersistentSet()
 
@@ -334,34 +337,80 @@ class ChatViewModel(
         }
     }
 
-    fun send(
-        message: CharSequence,
-        screenDensity: Float,
-        isDarkTheme: Boolean
-    ) {
+    fun submit(screenDensity: Float, isDarkTheme: Boolean) {
         viewModelScope.launch(Dispatchers.Default) {
-            (_state.value as? State.Chatting)?.let { state ->
-                chatConnectionPool.sendMessage(state.channelId, message)
+            _state.update { s ->
+                (s as? State.Chatting)
+                    ?.takeUnless { state -> state.inputMessage.text.isEmpty() }
+                    ?.let { state ->
+                        val currentTime = clock.now().toEpochMilliseconds()
+                        chatConnectionPool.sendMessage(state.channelId, state.inputMessage.text)
+
+                        val allEmotesMap = state.allEmotesMap
+                        val usedEmotes: List<RecentEmote> =
+                            state.inputMessage
+                                .text
+                                .split(' ')
+                                .mapNotNull { word ->
+                                    allEmotesMap[word]?.let { emote ->
+                                        RecentEmote(
+                                            name = word,
+                                            url = emote.getUrl(
+                                                animate = chatPreferencesRepository.animateEmotes.first(),
+                                                screenDensity = screenDensity,
+                                                isDarkTheme = isDarkTheme
+                                            ),
+                                            usedAt = currentTime
+                                        )
+                                    }
+                                }
+
+                        emotesRepository.insertRecentEmotes(usedEmotes)
+
+                        state.copy(inputMessage = TextFieldValue(""))
+                    } ?: s
             }
+        }
+    }
 
-            val currentTime = clock.now().toEpochMilliseconds()
-            val allEmotesMap = (state.value as? State.Chatting)?.allEmotesMap
-            val usedEmotes: List<RecentEmote> =
-                message.split(' ').mapNotNull { word ->
-                    allEmotesMap?.get(word)?.let { emote ->
-                        RecentEmote(
-                            name = word,
-                            url = emote.getUrl(
-                                animate = chatPreferencesRepository.animateEmotes.first(),
-                                screenDensity = screenDensity,
-                                isDarkTheme = isDarkTheme
-                            ),
-                            usedAt = currentTime
+    fun onMessageInputChanged(message: TextFieldValue) {
+        _state.update { state ->
+            (state as? State.Chatting)
+                ?.copy(inputMessage = message)
+                ?: state
+        }
+    }
+
+    fun appendEmote(emote: Emote, autocomplete: Boolean) {
+        appendTextToInput(emote.name, replaceLastWord = autocomplete)
+    }
+
+    fun appendChatter(chatter: Chatter, autocomplete: Boolean) {
+        appendTextToInput(chatter.name, replaceLastWord = autocomplete)
+    }
+
+    private fun appendTextToInput(text: String, replaceLastWord: Boolean) {
+        _state.update { s ->
+            (s as? State.Chatting)
+                ?.let { state ->
+                    val textBefore = state.inputMessage
+                        .getTextBeforeSelection(state.inputMessage.text.length)
+                        .removeSuffix(
+                            if (replaceLastWord) state.previousWord else ""
                         )
-                    }
-                }
 
-            emotesRepository.insertRecentEmotes(usedEmotes)
+                    val textAfter = state.inputMessage
+                        .getTextAfterSelection(state.inputMessage.text.length)
+
+                    state.copy(
+                        inputMessage = state.inputMessage.copy(
+                            text = "${textBefore}${text} $textAfter",
+                            selection = TextRange(
+                                index = textBefore.length + text.length + 1
+                            )
+                        )
+                    )
+                } ?: s
         }
     }
 

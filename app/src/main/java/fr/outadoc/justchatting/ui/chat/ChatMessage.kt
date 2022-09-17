@@ -127,7 +127,7 @@ private val badgePlaceholder = Placeholder(
 private val urlRegex = Patterns.WEB_URL.toRegex()
 private const val UrlAnnotationTag = "URL"
 
-private val latinScriptUserName = """^\w+$""".toRegex()
+private val asciiEncoder = Charsets.US_ASCII.newEncoder()
 
 @Composable
 fun ChatScreen(
@@ -692,7 +692,7 @@ fun ChatEntry.Data.toAnnotatedString(
                 append(userName)
             }
 
-            if (!userName.matches(latinScriptUserName)) {
+            if (!asciiEncoder.canEncode(userName)) {
                 append(" ($userLogin)")
             }
 

@@ -4,8 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -122,7 +120,7 @@ fun ChatInput(
             FloatingActionButton(onClick = onSubmit) {
                 Icon(
                     Icons.Default.Send,
-                    contentDescription = "Send"
+                    contentDescription = stringResource(R.string.chat_input_send_cd)
                 )
             }
         }
@@ -173,7 +171,7 @@ fun ChatTextField(
                 ) {
                     Icon(
                         Icons.Default.Clear,
-                        contentDescription = "Clear input"
+                        contentDescription = stringResource(R.string.chat_input_clear_cd)
                     )
                 }
             }

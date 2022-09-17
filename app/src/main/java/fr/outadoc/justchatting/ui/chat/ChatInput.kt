@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
@@ -144,7 +145,8 @@ fun ChatTextField(
         onValueChange = onMessageChange,
         shape = FloatingActionButtonDefaults.shape,
         keyboardOptions = KeyboardOptions(
-            imeAction = ImeAction.Send
+            imeAction = ImeAction.Send,
+            capitalization = KeyboardCapitalization.Sentences
         ),
         keyboardActions = KeyboardActions(
             onSend = { onSubmit() }

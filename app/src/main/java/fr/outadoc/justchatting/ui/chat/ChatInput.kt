@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.ui.chat
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
@@ -18,6 +19,7 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -40,6 +42,7 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
+import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +58,7 @@ fun ChatInput(
     onChatterClick: (Chatter) -> Unit,
     onMessageChange: (TextFieldValue) -> Unit,
     onToggleEmotePicker: () -> Unit,
+    onClearReplyingTo: () -> Unit,
     onSubmit: () -> Unit
 ) {
     val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
@@ -62,19 +66,26 @@ fun ChatInput(
     when (state) {
         ChatViewModel.State.Initial -> {}
         is ChatViewModel.State.Chatting -> {
-            ChatInput(
-                modifier = modifier,
-                message = state.inputMessage,
-                previousWord = state.previousWord,
-                emotes = state.allEmotes,
-                chatters = state.chatters,
-                animateEmotes = animateEmotes,
-                onEmoteClick = onEmoteClick,
-                onChatterClick = onChatterClick,
-                onMessageChange = onMessageChange,
-                onToggleEmotePicker = onToggleEmotePicker,
-                onSubmit = onSubmit
-            )
+            Surface(
+                shadowElevation = 2.dp,
+                tonalElevation = 1.dp
+            ) {
+                ChatInput(
+                    modifier = modifier,
+                    message = state.inputMessage,
+                    previousWord = state.previousWord,
+                    emotes = state.allEmotes,
+                    chatters = state.chatters,
+                    replyingTo = state.replyingTo,
+                    animateEmotes = animateEmotes,
+                    onEmoteClick = onEmoteClick,
+                    onChatterClick = onChatterClick,
+                    onMessageChange = onMessageChange,
+                    onToggleEmotePicker = onToggleEmotePicker,
+                    onClearReplyingTo = onClearReplyingTo,
+                    onSubmit = onSubmit
+                )
+            }
         }
     }
 }
@@ -87,41 +98,64 @@ fun ChatInput(
     emotes: ImmutableSet<Emote>,
     chatters: ImmutableSet<Chatter>,
     animateEmotes: Boolean,
+    replyingTo: ChatEntry?,
     onEmoteClick: (Emote) -> Unit,
     onChatterClick: (Chatter) -> Unit,
     onMessageChange: (TextFieldValue) -> Unit,
     onToggleEmotePicker: () -> Unit,
+    onClearReplyingTo: () -> Unit,
     onSubmit: () -> Unit
 ) {
-    Row(
-        modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Start),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        ChatInputAutoComplete(
-            modifier = Modifier.weight(1f, fill = true),
-            previousWord = previousWord,
-            emotes = emotes,
-            chatters = chatters,
-            animateEmotes = animateEmotes,
-            onEmoteClick = onEmoteClick,
-            onChatterClick = onChatterClick
-        ) {
-            ChatTextField(
-                modifier = Modifier.fillMaxWidth(),
-                message = message,
-                onMessageChange = onMessageChange,
-                onToggleEmotePicker = onToggleEmotePicker,
-                onSubmit = onSubmit
-            )
+    Column(modifier = modifier) {
+        AnimatedVisibility(visible = replyingTo?.data != null) {
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                InReplyToMessage(
+                    modifier = Modifier.weight(1f),
+                    userName = replyingTo?.data?.userName.orEmpty(),
+                    message = replyingTo?.data?.message.orEmpty()
+                )
+
+                IconButton(onClick = onClearReplyingTo) {
+                    Icon(
+                        Icons.Default.Clear,
+                        contentDescription = "Stop replying to this message"
+                    )
+                }
+            }
         }
 
-        AnimatedVisibility(visible = message.text.isNotEmpty()) {
-            FloatingActionButton(onClick = onSubmit) {
-                Icon(
-                    Icons.Default.Send,
-                    contentDescription = stringResource(R.string.chat_input_send_cd)
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Start),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            ChatInputAutoComplete(
+                modifier = Modifier.weight(1f, fill = true),
+                previousWord = previousWord,
+                emotes = emotes,
+                chatters = chatters,
+                animateEmotes = animateEmotes,
+                onEmoteClick = onEmoteClick,
+                onChatterClick = onChatterClick
+            ) {
+                ChatTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    message = message,
+                    onMessageChange = onMessageChange,
+                    onToggleEmotePicker = onToggleEmotePicker,
+                    onSubmit = onSubmit
                 )
+            }
+
+            AnimatedVisibility(visible = message.text.isNotEmpty()) {
+                FloatingActionButton(onClick = onSubmit) {
+                    Icon(
+                        Icons.Default.Send,
+                        contentDescription = stringResource(R.string.chat_input_send_cd)
+                    )
+                }
             }
         }
     }

@@ -104,6 +104,7 @@ class ChatEntryMapper(private val context: Context) {
                         headerIconResId = msgId?.getMessageIdIcon(),
                         data = ChatEntry.Data(
                             message = userMessage.message,
+                            messageId = userMessage.id,
                             userId = userMessage.userId,
                             userName = userMessage.userName,
                             userLogin = userMessage.userLogin,
@@ -138,6 +139,7 @@ class ChatEntryMapper(private val context: Context) {
 
                 val data = ChatEntry.Data(
                     message = message,
+                    messageId = id,
                     userId = userId,
                     userName = userName,
                     userLogin = userLogin,

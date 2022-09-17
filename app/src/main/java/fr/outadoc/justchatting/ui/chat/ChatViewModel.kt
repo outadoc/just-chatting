@@ -94,7 +94,8 @@ class ChatViewModel(
             val roomState: RoomState = RoomState(),
             val recentMsgLimit: Int,
             val maxAdapterCount: Int,
-            val inputMessage: TextFieldValue = TextFieldValue()
+            val inputMessage: TextFieldValue = TextFieldValue(),
+            val replyingTo: ChatEntry? = null
         ) : State() {
 
             val allEmotes: ImmutableSet<Emote> =
@@ -344,7 +345,12 @@ class ChatViewModel(
                     ?.takeUnless { state -> state.inputMessage.text.isEmpty() }
                     ?.let { state ->
                         val currentTime = clock.now().toEpochMilliseconds()
-                        chatConnectionPool.sendMessage(state.channelId, state.inputMessage.text)
+
+                        chatConnectionPool.sendMessage(
+                            channelId = state.channelId,
+                            message = state.inputMessage.text,
+                            inReplyToId = state.replyingTo?.data?.messageId
+                        )
 
                         val allEmotesMap = state.allEmotesMap
                         val usedEmotes: List<RecentEmote> =
@@ -367,7 +373,10 @@ class ChatViewModel(
 
                         emotesRepository.insertRecentEmotes(usedEmotes)
 
-                        state.copy(inputMessage = TextFieldValue(""))
+                        state.copy(
+                            inputMessage = TextFieldValue(""),
+                            replyingTo = null
+                        )
                     } ?: s
             }
         }
@@ -387,6 +396,12 @@ class ChatViewModel(
 
     fun appendChatter(chatter: Chatter, autocomplete: Boolean) {
         appendTextToInput(chatter.name, replaceLastWord = autocomplete)
+    }
+
+    fun onReplyToMessage(entry: ChatEntry?) {
+        _state.update { state ->
+            (state as? State.Chatting)?.copy(replyingTo = entry) ?: state
+        }
     }
 
     private fun appendTextToInput(text: String, replaceLastWord: Boolean) {

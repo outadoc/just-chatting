@@ -186,7 +186,8 @@ class ChannelChatFragment : Fragment() {
                                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                                     context.shortToast(R.string.chat_copiedToClipboard)
                                 }
-                            }
+                            },
+                            onReplyToMessage = chatViewModel::onReplyToMessage
                         )
 
                         ChatSlowModeProgress(
@@ -215,6 +216,9 @@ class ChannelChatFragment : Fragment() {
                             },
                             onChatterClick = { chatter ->
                                 chatViewModel.appendChatter(chatter, autocomplete = true)
+                            },
+                            onClearReplyingTo = {
+                                chatViewModel.onReplyToMessage(null)
                             },
                             onSubmit = {
                                 chatViewModel.submit(

@@ -48,8 +48,8 @@ class LiveChatController(
         pubSub.flow
     )
 
-    override fun send(message: CharSequence) {
-        loggedInChat.send(message)
+    override fun send(message: CharSequence, inReplyToId: String?) {
+        loggedInChat.send(message, inReplyToId)
     }
 
     override suspend fun start() {

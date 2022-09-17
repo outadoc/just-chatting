@@ -133,7 +133,8 @@ private val latinScriptUserName = """^\w+$""".toRegex()
 fun ChatScreen(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
-    onMessageLongClick: (ChatEntry) -> Unit
+    onMessageLongClick: (ChatEntry) -> Unit,
+    onReplyToMessage: (ChatEntry) -> Unit
 ) {
     val chatPreferencesRepository: ChatPreferencesRepository = get()
 
@@ -177,7 +178,8 @@ fun ChatScreen(
                     animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
                     listState = listState,
-                    onMessageLongClick = onMessageLongClick
+                    onMessageLongClick = onMessageLongClick,
+                    onReplyToMessage = onReplyToMessage
                 )
 
                 AnimatedVisibility(
@@ -269,6 +271,7 @@ fun ChatList(
     showTimestamps: Boolean,
     listState: LazyListState,
     onMessageLongClick: (ChatEntry) -> Unit,
+    onReplyToMessage: (ChatEntry) -> Unit,
     roomState: RoomState
 ) {
     val inlinesEmotes = remember(emotes) {
@@ -327,8 +330,8 @@ fun ChatList(
                 else MaterialTheme.colorScheme.surface
 
             SwipeToReply(
-                onDismiss = {},
-                enabled = false
+                onDismiss = { onReplyToMessage(item) },
+                enabled = item.data?.messageId != null
             ) {
                 ChatMessage(
                     modifier = Modifier
@@ -565,35 +568,10 @@ fun ChatMessageData(
 
     Column(modifier = modifier) {
         if (data.inReplyTo != null) {
-            CompositionLocalProvider(
-                LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
-            ) {
-                Row(
-                    modifier = Modifier.padding(bottom = 8.dp),
-                    verticalAlignment = Alignment.Top
-                ) {
-                    Icon(
-                        modifier = Modifier
-                            .size(16.dp)
-                            .padding(end = 4.dp),
-                        imageVector = Icons.Default.Reply,
-                        contentDescription = "In reply to"
-                    )
-
-                    Text(
-                        text = buildAnnotatedString {
-                            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                                append("@${data.inReplyTo.userName}")
-                            }
-
-                            append(": ${data.inReplyTo.message}")
-                        },
-                        style = MaterialTheme.typography.bodySmall,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
+            InReplyToMessage(
+                userName = data.inReplyTo.userName,
+                message = data.inReplyTo.message
+            )
         }
 
         Text(
@@ -636,6 +614,43 @@ fun ChatMessageData(
             lineHeight = 1.7.em,
             style = MaterialTheme.typography.bodyMedium
         )
+    }
+}
+
+@Composable
+fun InReplyToMessage(
+    modifier: Modifier = Modifier,
+    userName: String,
+    message: String
+) {
+    CompositionLocalProvider(
+        LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
+    ) {
+        Row(
+            modifier = modifier.padding(bottom = 8.dp),
+            verticalAlignment = Alignment.Top
+        ) {
+            Icon(
+                modifier = Modifier
+                    .size(16.dp)
+                    .padding(end = 4.dp),
+                imageVector = Icons.Default.Reply,
+                contentDescription = "In reply to"
+            )
+
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                        append("@$userName")
+                    }
+
+                    append(": $message")
+                },
+                style = MaterialTheme.typography.bodySmall,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
     }
 }
 

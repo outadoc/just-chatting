@@ -91,10 +91,14 @@ class LoggedInChatWebSocket(
         }
     }
 
-    fun send(message: CharSequence) {
+    fun send(message: CharSequence, inReplyToId: String?) {
         try {
-            socket?.send("PRIVMSG $hashChannelName :$message")
-            Log.d(TAG, "Sent message to $hashChannelName: $message")
+            val inReplyToPrefix = inReplyToId?.let { id -> "@reply-parent-msg-id=$id " } ?: ""
+            val privMsg = "${inReplyToPrefix}PRIVMSG $hashChannelName :$message"
+
+            socket?.send(privMsg)
+
+            Log.d(TAG, "Sent message to $hashChannelName, in reply to $inReplyToId: $message")
         } catch (e: IOException) {
             Log.e(TAG, "Error sending message", e)
             emit(

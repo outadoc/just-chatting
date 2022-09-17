@@ -20,6 +20,7 @@ sealed class ChatEntry {
         val userLogin: String,
         val isAction: Boolean,
         val message: String?,
+        val messageId: String?,
         val color: String?,
         val emotes: ImmutableList<TwitchChatEmote>?,
         val badges: ImmutableList<Badge>?,

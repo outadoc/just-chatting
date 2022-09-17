@@ -3,6 +3,8 @@ package fr.outadoc.justchatting.ui.chat
 import android.util.Patterns
 import androidx.annotation.ColorInt
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -20,6 +22,7 @@ import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -32,9 +35,15 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.Reply
+import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
@@ -56,10 +65,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.res.painterResource
@@ -310,22 +322,84 @@ fun ChatList(
                 }
             }
         ) { index, item ->
-            ChatMessage(
-                modifier = Modifier
-                    .background(
-                        if (index.isOdd) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-                        else Color.Transparent
-                    )
-                    .fillMaxWidth()
-                    .combinedClickable(
-                        onClick = {},
-                        onLongClick = { onMessageLongClick(item) }
-                    ),
-                message = item,
-                inlineContent = inlinesEmotes.putAll(inlineBadges),
-                animateEmotes = animateEmotes,
-                showTimestamps = showTimestamps
+            val background =
+                if (index.isOdd) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                else MaterialTheme.colorScheme.surface
+
+            SwipeToReply(
+                onDismiss = {},
+                enabled = false
+            ) {
+                ChatMessage(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .combinedClickable(
+                            onClick = {},
+                            onLongClick = { onMessageLongClick(item) }
+                        ),
+                    message = item,
+                    inlineContent = inlinesEmotes.putAll(inlineBadges),
+                    animateEmotes = animateEmotes,
+                    showTimestamps = showTimestamps,
+                    background = background
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SwipeToReply(
+    modifier: Modifier = Modifier,
+    enabled: Boolean,
+    onDismiss: () -> Unit,
+    content: @Composable () -> Unit
+) {
+    val dismissState = rememberDismissState(
+        confirmStateChange = {
+            if (it == DismissValue.DismissedToEnd) onDismiss()
+            it != DismissValue.DismissedToEnd
+        }
+    )
+
+    SwipeToDismiss(
+        modifier = modifier,
+        state = dismissState,
+        directions = if (enabled) setOf(DismissDirection.StartToEnd) else emptySet(),
+        dismissThresholds = { FractionalThreshold(0.15f) },
+        background = {
+            val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
+            if (direction != DismissDirection.StartToEnd) return@SwipeToDismiss
+
+            val scale by animateFloatAsState(
+                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
             )
+
+            val haptic = LocalHapticFeedback.current
+            LaunchedEffect(dismissState.targetValue) {
+                if (dismissState.targetValue == DismissValue.DismissedToEnd) {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                }
+            }
+
+            Box(
+                Modifier
+                    .fillMaxSize()
+                    .padding(start = 8.dp),
+                contentAlignment = Alignment.CenterStart
+            ) {
+                Icon(
+                    Icons.Default.Reply,
+                    contentDescription = "Reply",
+                    modifier = Modifier.scale(scale)
+                )
+            }
+        }
+    ) {
+        val elevation = animateDpAsState(if (dismissState.dismissDirection != null) 4.dp else 0.dp)
+        Surface(shadowElevation = elevation.value) {
+            content()
         }
     }
 }
@@ -336,14 +410,17 @@ fun ChatMessage(
     message: ChatEntry,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
-    showTimestamps: Boolean
+    showTimestamps: Boolean,
+    background: Color
 ) {
     val timestamp = message.timestamp
         .formatTimestamp()
         ?.takeIf { showTimestamps }
 
     Row(
-        modifier = modifier,
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .background(background),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (timestamp != null) {

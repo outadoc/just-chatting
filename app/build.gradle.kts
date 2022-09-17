@@ -120,6 +120,7 @@ dependencies {
     implementation(libs.coil.core)
     implementation(libs.coil.gif)
     implementation(libs.compose.foundation)
+    implementation(libs.compose.material.core2)
     implementation(libs.compose.material.core3)
     implementation(libs.compose.material.icons)
     implementation(libs.compose.runtime.livedata)

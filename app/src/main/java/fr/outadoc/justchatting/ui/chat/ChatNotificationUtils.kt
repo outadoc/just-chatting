@@ -98,7 +98,7 @@ object ChatNotificationUtils {
                             intent.toPendingIntent(context, mutable = true),
                             icon
                         )
-                            .setAutoExpandBubble(true)
+                            .setAutoExpandBubble(false)
                             .setSuppressNotification(true)
                             .build()
                     )

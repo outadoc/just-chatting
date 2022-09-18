@@ -611,7 +611,7 @@ fun ChatMessageData(
             onTextLayout = { layoutResult.value = it },
             text = annotatedString,
             inlineContent = fullInlineContent,
-            lineHeight = 1.7.em,
+            lineHeight = 2.0.em,
             style = MaterialTheme.typography.bodyMedium
         )
     }

@@ -150,7 +150,7 @@ fun ChannelChatScreen(
             onSubmit = onSubmit
         )
 
-        var imeHeight by remember { mutableStateOf(EmojiPickerDefaults.DefaultHeight) }
+        var imeHeight by remember { mutableStateOf(350.dp) }
 
         val currentImeHeight = WindowInsets.ime
             .asPaddingValues()

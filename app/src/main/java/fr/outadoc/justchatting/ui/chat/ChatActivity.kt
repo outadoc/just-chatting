@@ -1,10 +1,32 @@
 package fr.outadoc.justchatting.ui.chat
 
+import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.compose.BackHandler
+import androidx.activity.compose.setContent
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalDensity
+import androidx.core.app.Person
+import androidx.core.graphics.drawable.IconCompat
+import androidx.core.view.WindowCompat
+import com.google.android.material.composethemeadapter3.Mdc3Theme
+import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.main.BaseActivity
+import fr.outadoc.justchatting.ui.view.chat.StreamInfoDialog
 import fr.outadoc.justchatting.util.formatChannelUri
+import fr.outadoc.justchatting.util.isDark
+import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChatActivity : BaseActivity() {
 
@@ -22,17 +44,157 @@ class ChatActivity : BaseActivity() {
         }
     }
 
+    private val channelViewModel: ChannelChatViewModel by viewModel()
+    private val chatViewModel: ChatViewModel by viewModel()
+
+    private var openInBubble: (() -> Unit)? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val channelLogin = intent.getStringExtra(CHANNEL_LOGIN)!!
 
-        supportFragmentManager
-            .beginTransaction()
-            .replace(
-                android.R.id.content,
-                ChannelChatFragment.newInstance(login = channelLogin)
+        setContent {
+            Mdc3Theme {
+                ChannelChatScreen(channelLogin = channelLogin)
+            }
+        }
+
+        channelViewModel.state.observe(this) { state ->
+            state.loadedUser?.let { user ->
+                chatViewModel.startLive(
+                    channelId = user.id,
+                    channelLogin = user.login,
+                    channelName = user.display_name
+                )
+            }
+        }
+
+        channelViewModel.loadStream(channelLogin)
+    }
+
+    @Composable
+    fun ChannelChatScreen(channelLogin: String) {
+        val chatState by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
+        val channelState by channelViewModel.state.observeAsState(
+            ChannelChatViewModel.State.Loading
+        )
+
+        val density = LocalDensity.current.density
+        val isDarkTheme = MaterialTheme.colorScheme.isDark
+
+        var isEmotePickerOpen by remember { mutableStateOf(false) }
+
+        BackHandler(isEmotePickerOpen) {
+            isEmotePickerOpen = false
+        }
+
+        ChannelChatScreen(
+            chatState = chatState,
+            channelState = channelState,
+            channelLogin = channelLogin,
+            isEmotePickerOpen = isEmotePickerOpen,
+            onChannelLogoLoaded = ::onChannelLogoLoaded,
+            onWatchLiveClicked = ::onWatchLiveClicked,
+            onOpenBubbleClicked = ::onOpenBubbleClicked,
+            onStreamInfoClicked = ::onStreamInfoClicked,
+            onColorContrastChanged = { isLight ->
+                WindowCompat.getInsetsController(window, window.decorView)
+                    .isAppearanceLightStatusBars = !isLight
+            },
+            onMessageChange = chatViewModel::onMessageInputChanged,
+            onToggleEmotePicker = {
+                isEmotePickerOpen = !isEmotePickerOpen
+            },
+            onEmoteClick = { emote ->
+                chatViewModel.appendEmote(emote, autocomplete = true)
+            },
+            onChatterClick = { chatter ->
+                chatViewModel.appendChatter(chatter, autocomplete = true)
+            },
+            onClearReplyingTo = {
+                chatViewModel.onReplyToMessage(null)
+            },
+            onReplyToMessage = chatViewModel::onReplyToMessage,
+            onSubmit = {
+                chatViewModel.submit(
+                    screenDensity = density,
+                    isDarkTheme = isDarkTheme
+                )
+            }
+        )
+    }
+
+    private fun onChannelLogoLoaded(user: User, bitmap: Bitmap) {
+        setTaskDescription(
+            ActivityManager.TaskDescription(user.display_name, bitmap)
+        )
+
+        if (!isLaunchedFromBubbleCompat) {
+            configureChatBubbles(user, bitmap)
+        }
+    }
+
+    private fun onWatchLiveClicked(user: User) {
+        startActivity(
+            Intent(Intent.ACTION_VIEW, formatChannelUri(user.login))
+        )
+    }
+
+    private fun onOpenBubbleClicked() {
+        openInBubble?.invoke()
+    }
+
+    private fun onStreamInfoClicked(user: User) {
+        StreamInfoDialog.newInstance(userId = user.id)
+            .show(supportFragmentManager, "closeOnPip")
+    }
+
+    private fun configureChatBubbles(channel: User, channelLogo: Bitmap) {
+        // Bubbles are only available on Android Q+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
+
+        ChatNotificationUtils.createGenericBubbleChannelIfNeeded(this)
+            ?: return
+
+        val icon = channelLogo.let { IconCompat.createWithBitmap(it) }
+
+        val person: Person =
+            Person.Builder()
+                .setKey(channel.id)
+                .setName(channel.display_name)
+                .setIcon(icon)
+                .build()
+
+        ChatNotificationUtils.createShortcutForChannel(
+            context = this,
+            intent = createIntent(
+                context = this,
+                channelLogin = channel.login
+            ),
+            channelId = channel.id,
+            channelName = channel.display_name,
+            person = person,
+            icon = icon
+        )
+
+        openInBubble = {
+            ChatNotificationUtils.createBubble(
+                context = this,
+                user = channel,
+                icon = icon,
+                person = person
             )
-            .commit()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        openInBubble?.invoke()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        openInBubble = null
     }
 }

@@ -213,7 +213,8 @@ class ChatViewModel(
 
         val stream = repository.loadStreamWithUser(channelId = user.id)
 
-        chatConnectionPool.start(user.id, channelLogin)
+        chatConnectionPool
+            .start(user.id, channelLogin)
             .onEach { command ->
                 val action = when (command) {
                     is PingCommand -> null
@@ -240,11 +241,15 @@ class ChatViewModel(
 
         emotesRepository.loadRecentEmotes()
             .onEach { recentEmotes ->
-                actions.emit(Action.ChangeRecentEmotes(recentEmotes))
+                viewModelScope.launch {
+                    actions.emit(Action.ChangeRecentEmotes(recentEmotes))
+                }
             }
             .launchIn(viewModelScope)
 
-        actions.emit(Action.LoadEmotes(user.id))
+        viewModelScope.launch {
+            actions.emit(Action.LoadEmotes(user.id))
+        }
 
         return State.Chatting(
             user = user,

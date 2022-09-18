@@ -10,6 +10,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -47,7 +48,7 @@ class ChatActivity : BaseActivity() {
     private val channelViewModel: ChannelChatViewModel by viewModel()
     private val chatViewModel: ChatViewModel by viewModel()
 
-    private var openInBubble: (() -> Unit)? = null
+    private val openInBubble: MutableState<(() -> Unit)?> = mutableStateOf(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,6 +95,7 @@ class ChatActivity : BaseActivity() {
             channelState = channelState,
             channelLogin = channelLogin,
             isEmotePickerOpen = isEmotePickerOpen,
+            canBubble = openInBubble.value != null,
             onChannelLogoLoaded = ::onChannelLogoLoaded,
             onWatchLiveClicked = ::onWatchLiveClicked,
             onOpenBubbleClicked = ::onOpenBubbleClicked,
@@ -142,7 +144,7 @@ class ChatActivity : BaseActivity() {
     }
 
     private fun onOpenBubbleClicked() {
-        openInBubble?.invoke()
+        openInBubble.value?.invoke()
     }
 
     private fun onStreamInfoClicked(user: User) {
@@ -178,7 +180,7 @@ class ChatActivity : BaseActivity() {
             icon = icon
         )
 
-        openInBubble = {
+        openInBubble.value = {
             ChatNotificationUtils.createBubble(
                 context = this,
                 user = channel,
@@ -190,11 +192,11 @@ class ChatActivity : BaseActivity() {
 
     override fun onPause() {
         super.onPause()
-        openInBubble?.invoke()
+        openInBubble.value?.invoke()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        openInBubble = null
+        openInBubble.value = null
     }
 }

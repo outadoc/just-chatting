@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.ui.chat
 
 import android.graphics.Bitmap
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -41,6 +42,7 @@ fun ChatTopAppBar(
     stream: Stream?,
     swatch: Swatch?,
     logo: Bitmap?,
+    canBubble: Boolean,
     onWatchLiveClicked: (User) -> Unit,
     onOpenBubbleClicked: () -> Unit,
     onStreamInfoClicked: (User) -> Unit,
@@ -86,11 +88,13 @@ fun ChatTopAppBar(
                     )
                 }
 
-                IconButton(onClick = { onOpenBubbleClicked() }) {
-                    Icon(
-                        Icons.Default.OpenInNew,
-                        contentDescription = stringResource(R.string.menu_item_openInBubble)
-                    )
+                AnimatedVisibility(visible = canBubble) {
+                    IconButton(onClick = { onOpenBubbleClicked() }) {
+                        Icon(
+                            Icons.Default.OpenInNew,
+                            contentDescription = stringResource(R.string.menu_item_openInBubble)
+                        )
+                    }
                 }
 
                 IconButton(onClick = { onStreamInfoClicked(user) }) {

@@ -8,8 +8,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.activity.compose.BackHandler
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.compose.ui.unit.dp
 import androidx.core.app.Person
@@ -19,10 +25,10 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.databinding.FragmentChannelBinding
-import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.view.chat.StreamInfoDialog
 import fr.outadoc.justchatting.util.formatChannelUri
+import fr.outadoc.justchatting.util.isDark
 import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -67,10 +73,25 @@ class ChannelChatFragment : Fragment() {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
                 setContent {
                     Mdc3Theme {
+                        val chatState by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
+                        val channelState by channelViewModel.state.observeAsState(
+                            ChannelChatViewModel.State.Loading
+                        )
+
+                        val density = LocalDensity.current.density
+                        val isDarkTheme = MaterialTheme.colorScheme.isDark
+
+                        var isEmotePickerOpen by remember { mutableStateOf(false) }
+
+                        BackHandler(isEmotePickerOpen) {
+                            isEmotePickerOpen = false
+                        }
+
                         ChannelChatScreen(
-                            chatViewModel = chatViewModel,
-                            channelChatViewModel = channelViewModel,
+                            chatState = chatState,
+                            channelState = channelState,
                             channelLogin = argLogin,
+                            isEmotePickerOpen = isEmotePickerOpen,
                             onChannelLogoLoaded = ::onChannelLogoLoaded,
                             onWatchLiveClicked = ::onWatchLiveClicked,
                             onOpenBubbleClicked = ::onOpenBubbleClicked,
@@ -82,6 +103,26 @@ class ChannelChatFragment : Fragment() {
                                         activity.window.decorView
                                     ).isAppearanceLightStatusBars = !isLight
                                 }
+                            },
+                            onMessageChange = chatViewModel::onMessageInputChanged,
+                            onToggleEmotePicker = {
+                                isEmotePickerOpen = !isEmotePickerOpen
+                            },
+                            onEmoteClick = { emote ->
+                                chatViewModel.appendEmote(emote, autocomplete = true)
+                            },
+                            onChatterClick = { chatter ->
+                                chatViewModel.appendChatter(chatter, autocomplete = true)
+                            },
+                            onClearReplyingTo = {
+                                chatViewModel.onReplyToMessage(null)
+                            },
+                            onReplyToMessage = chatViewModel::onReplyToMessage,
+                            onSubmit = {
+                                chatViewModel.submit(
+                                    screenDensity = density,
+                                    isDarkTheme = isDarkTheme
+                                )
                             }
                         )
                     }

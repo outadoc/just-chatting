@@ -72,11 +72,11 @@ fun ChannelChatScreen(
     var swatch: Palette.Swatch? by remember { mutableStateOf(null) }
 
     LaunchedEffect(user) {
-        user?.profile_image_url ?: return@LaunchedEffect
+        user?.profileImageUrl ?: return@LaunchedEffect
 
         logo = loadImageToBitmap(
             context = context,
-            imageUrl = user.profile_image_url,
+            imageUrl = user.profileImageUrl,
             circle = true,
             width = 256,
             height = 256

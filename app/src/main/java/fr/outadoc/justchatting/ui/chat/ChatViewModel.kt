@@ -509,11 +509,11 @@ class ChatViewModel(
 
             val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
                 emotes.filter { emote -> emote.ownerId == state.user.id }
-                    .groupBy { emoteOwners[state.user.id]?.display_name }
+                    .groupBy { emoteOwners[state.user.id]?.displayName }
 
             val groupedEmotes: Map<String?, List<TwitchEmote>> =
                 emotes.filter { emote -> emote.ownerId != state.user.id }
-                    .groupBy { emote -> emoteOwners[emote.ownerId]?.display_name }
+                    .groupBy { emote -> emoteOwners[emote.ownerId]?.displayName }
 
             val sortedEmotes: PersistentSet<EmoteSetItem> =
                 (groupedChannelEmotes + groupedEmotes)

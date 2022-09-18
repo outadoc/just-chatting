@@ -1,24 +1,31 @@
 package fr.outadoc.justchatting.model.helix.stream
 
 import android.os.Parcelable
-import fr.outadoc.justchatting.model.helix.tag.Tag
-import fr.outadoc.justchatting.model.helix.user.User
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Stream(
+    @SerializedName("id")
     val id: String? = null,
-    val user_id: String? = null,
-    val user_login: String? = null,
-    val user_name: String? = null,
-    val game_id: String? = null,
-    val game_name: String? = null,
+    @SerializedName("user_id")
+    val userId: String? = null,
+    @SerializedName("user_login")
+    val userLogin: String? = null,
+    @SerializedName("user_name")
+    val userName: String? = null,
+    @SerializedName("game_id")
+    val gameId: String? = null,
+    @SerializedName("game_name")
+    val gameName: String? = null,
+    @SerializedName("type")
     val type: String? = null,
+    @SerializedName("title")
     val title: String? = null,
-    val viewer_count: Int? = null,
-    val started_at: String? = null,
-    val profileImageURL: String? = null,
-    val tags: List<Tag>? = null,
-    val channelUser: User? = null,
-    val lastBroadcast: String? = null
+    @SerializedName("viewer_count")
+    val viewerCount: Int? = null,
+    @SerializedName("started_at")
+    val startedAt: String? = null,
+
+    val profileImageURL: String? = null
 ) : Parcelable

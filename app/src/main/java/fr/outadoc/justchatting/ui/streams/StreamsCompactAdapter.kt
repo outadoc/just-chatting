@@ -1,8 +1,6 @@
 package fr.outadoc.justchatting.ui.streams
 
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
 import androidx.core.view.isVisible
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.databinding.FragmentStreamsListItemCompactBinding
@@ -23,15 +21,15 @@ class StreamsCompactAdapter(
 
         val binding = FragmentStreamsListItemCompactBinding.bind(view)
         with(binding) {
-            if (item.viewer_count != null) {
+            if (item.viewerCount != null) {
                 viewers.isVisible = true
-                viewers.text = item.viewer_count.formatNumber()
+                viewers.text = item.viewerCount.formatNumber()
             } else {
                 viewers.isVisible = false
             }
 
-            if (item.started_at != null) {
-                val text = item.started_at.toInstant().formatTimestamp(view.context)
+            if (item.startedAt != null) {
+                val text = item.startedAt.toInstant().formatTimestamp(view.context)
                 if (text != null) {
                     uptime.isVisible = true
                     uptime.text = text
@@ -40,20 +38,6 @@ class StreamsCompactAdapter(
                 }
             } else {
                 uptime.isVisible = false
-            }
-
-            if (item.tags != null) {
-                val inflater = LayoutInflater.from(view.context)
-                chipGroupTagsContainer.removeAllViews()
-                for (tag in item.tags) {
-                    val chip = inflater.inflate(R.layout.item_single_tag, null)
-                    val chipTag = chip.findViewById<TextView>(R.id.chipTag)
-                    chipTag.text = tag.name
-                    chipGroupTagsContainer.addView(chip)
-                }
-                scrollViewTagsContainer.isVisible = true
-            } else {
-                scrollViewTagsContainer.isVisible = false
             }
         }
     }

@@ -76,7 +76,7 @@ class SearchChannelsDataSource private constructor(
                 map { searchResult ->
                     searchResult.copy(
                         profileImageURL = users.firstOrNull { user -> user.id == searchResult.id }
-                            ?.profile_image_url
+                            ?.profileImageUrl
                     )
                 }
             }

@@ -115,7 +115,7 @@ class ChatActivity : BaseActivity() {
 
     private fun onChannelLogoLoaded(user: User, bitmap: Bitmap) {
         setTaskDescription(
-            ActivityManager.TaskDescription(user.display_name, bitmap)
+            ActivityManager.TaskDescription(user.displayName, bitmap)
         )
 
         if (!isLaunchedFromBubbleCompat) {
@@ -150,7 +150,7 @@ class ChatActivity : BaseActivity() {
         val person: Person =
             Person.Builder()
                 .setKey(channel.id)
-                .setName(channel.display_name)
+                .setName(channel.displayName)
                 .setIcon(icon)
                 .build()
 
@@ -161,7 +161,7 @@ class ChatActivity : BaseActivity() {
                 channelLogin = channel.login
             ),
             channelId = channel.id,
-            channelName = channel.display_name,
+            channelName = channel.displayName,
             person = person,
             icon = icon
         )

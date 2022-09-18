@@ -28,11 +28,11 @@ class FollowedStreamsDataSource(
             ).also { offset = it.pagination?.cursor }
                 .data
                 .orEmpty()
-                .associateBy { stream -> stream.user_id }
+                .associateBy { stream -> stream.userId }
                 .values
                 .mapWithUserProfileImages()
                 .sortedByDescending { stream ->
-                    stream.viewer_count
+                    stream.viewerCount
                 }
         }
     }
@@ -55,7 +55,7 @@ class FollowedStreamsDataSource(
     }
 
     private suspend fun Collection<Stream>.mapWithUserProfileImages(): List<Stream> {
-        val users = mapNotNull { it.user_id }
+        val users = mapNotNull { it.userId }
             .chunked(100)
             .flatMap { ids ->
                 helixApi.getUsersById(
@@ -68,9 +68,9 @@ class FollowedStreamsDataSource(
             }
 
         return map { stream ->
-            val user = users.firstOrNull { user -> stream.user_id == user.id }
+            val user = users.firstOrNull { user -> stream.userId == user.id }
             stream.copy(
-                profileImageURL = user?.profile_image_url
+                profileImageURL = user?.profileImageUrl
             )
         }
     }

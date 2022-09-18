@@ -53,7 +53,7 @@ fun ChatTopAppBar(
         title = {
             Column {
                 Text(
-                    text = user?.display_name ?: channelLogin,
+                    text = user?.displayName ?: channelLogin,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )

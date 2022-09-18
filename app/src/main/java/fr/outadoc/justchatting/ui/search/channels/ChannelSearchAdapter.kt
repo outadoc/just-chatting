@@ -8,7 +8,6 @@ import fr.outadoc.justchatting.databinding.FragmentSearchChannelsListItemBinding
 import fr.outadoc.justchatting.model.helix.channel.ChannelSearch
 import fr.outadoc.justchatting.ui.common.BasePagedListAdapter
 import fr.outadoc.justchatting.ui.common.NavigationHandler
-import fr.outadoc.justchatting.util.formatNumber
 import fr.outadoc.justchatting.util.loadImage
 
 class ChannelSearchAdapter(
@@ -27,7 +26,7 @@ class ChannelSearchAdapter(
 
     override fun bind(item: ChannelSearch, view: View) {
         view.setOnClickListener {
-            item.broadcaster_login?.let { login ->
+            item.broadcasterLogin?.let { login ->
                 listener.viewChannel(login)
             }
         }
@@ -41,21 +40,11 @@ class ChannelSearchAdapter(
                 userImage.isVisible = false
             }
 
-            if (item.display_name != null) {
+            if (item.broadcasterDisplayName != null) {
                 userName.isVisible = true
-                userName.text = item.display_name
+                userName.text = item.broadcasterDisplayName
             } else {
                 userName.isVisible = false
-            }
-
-            if (item.followers_count != null) {
-                userFollowers.isVisible = true
-                userFollowers.text = view.context.getString(
-                    R.string.followers,
-                    item.followers_count.formatNumber()
-                )
-            } else {
-                userFollowers.isVisible = false
             }
         }
     }

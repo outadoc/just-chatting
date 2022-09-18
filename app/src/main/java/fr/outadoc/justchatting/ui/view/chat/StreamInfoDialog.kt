@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.ui.view.chat
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -69,104 +68,68 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
     }
 
     private fun DialogChatStreamInfoBinding.updateUserLayout(user: User) {
-        if (user.bannerImageURL != null) {
-            userLayout.isVisible = true
-            bannerImage.isVisible = true
-            bannerImage.loadImage(user.bannerImageURL)
-        } else {
-            bannerImage.isVisible = false
-        }
-
-        if (user.profile_image_url != null) {
+        if (user.profileImageUrl != null) {
             userLayout.isVisible = true
             userImage.isVisible = true
-            userImage.loadImage(user.profile_image_url, circle = true)
+            userImage.loadImage(user.profileImageUrl, circle = true)
         } else {
             userImage.isVisible = false
         }
 
         userLayout.isVisible = true
         userName.isVisible = true
-        userName.text = user.display_name
+        userName.text = user.displayName
 
-        if (user.bannerImageURL != null) {
-            userName.setShadowLayer(4f, 0f, 0f, Color.BLACK)
-        }
-
-        if (user.followers_count != null) {
+        if (user.followersCount != null) {
             userLayout.isVisible = true
             userFollowers.isVisible = true
             userFollowers.text = requireContext().getString(
                 R.string.followers,
-                user.followers_count.formatNumber()
+                user.followersCount.formatNumber()
             )
-            if (user.bannerImageURL != null) {
-                userFollowers.setTextColor(Color.LTGRAY)
-                userFollowers.setShadowLayer(4f, 0f, 0f, Color.BLACK)
-            }
         } else {
             userFollowers.isVisible = false
         }
 
-        if (user.created_at != null) {
+        if (user.createdAt != null) {
             userLayout.isVisible = true
             userCreated.isVisible = true
             userCreated.text = requireContext().getString(
                 R.string.created_at,
-                user.created_at.toInstant().formatTime(requireContext())
+                user.createdAt.toInstant().formatTime(requireContext())
             )
-            if (user.bannerImageURL != null) {
-                userCreated.setTextColor(Color.LTGRAY)
-                userCreated.setShadowLayer(4f, 0f, 0f, Color.BLACK)
-            }
         } else {
             userCreated.isVisible = false
         }
     }
 
     private fun DialogChatStreamInfoBinding.updateStreamLayout(stream: Stream?) {
-        if (stream?.viewer_count == null && stream?.lastBroadcast != null) {
-            stream.lastBroadcast
-                .toInstant()
-                .formatTime(requireContext())
-                .let {
-                    lastBroadcast.text = context?.getString(R.string.last_broadcast_date, it)
-                    lastBroadcast.isVisible = true
-                }
-        }
-
-        val channelLogo = stream?.profileImageURL
-        if (!userImage.isVisible && channelLogo != null) {
-            userImage.isVisible = true
-            userImage.loadImage(channelLogo, circle = true)
-        }
-
-        if (stream?.user_name != null) {
+        if (stream?.userName != null) {
             userName.isVisible = true
-            userName.text = stream.user_name
+            userName.text = stream.userName
         } else {
             userName.isVisible = false
         }
 
-        if (stream?.game_name != null) {
+        if (stream?.gameName != null) {
             gameName.isVisible = true
-            gameName.text = stream.game_name
+            gameName.text = stream.gameName
         } else {
             gameName.isVisible = false
         }
 
-        if (stream?.viewer_count != null) {
+        if (stream?.viewerCount != null) {
             viewers.isVisible = true
             viewers.text = context?.resources?.getQuantityString(
                 R.plurals.viewers,
-                stream.viewer_count,
-                stream.viewer_count.formatNumber()
+                stream.viewerCount,
+                stream.viewerCount.formatNumber()
             )
         } else {
             viewers.isVisible = false
         }
 
-        stream?.started_at
+        stream?.startedAt
             ?.toInstant()
             ?.formatTimestamp(requireContext()).let {
                 if (it != null) {

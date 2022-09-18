@@ -18,14 +18,14 @@ abstract class BaseStreamsAdapter(
             oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: Stream, newItem: Stream): Boolean =
-            oldItem.viewer_count == newItem.viewer_count &&
-                oldItem.game_name == newItem.game_name &&
+            oldItem.viewerCount == newItem.viewerCount &&
+                oldItem.gameName == newItem.gameName &&
                 oldItem.title == newItem.title
     }) {
 
     override fun bind(item: Stream, view: View) {
         view.setOnClickListener {
-            item.user_login?.let { login ->
+            item.userLogin?.let { login ->
                 clickListener.viewChannel(login)
             }
         }
@@ -39,9 +39,9 @@ abstract class BaseStreamsAdapter(
                 userImage.isVisible = false
             }
 
-            if (item.user_name != null) {
+            if (item.userName != null) {
                 username.isVisible = true
-                username.text = item.user_name
+                username.text = item.userName
             } else {
                 username.isVisible = false
             }
@@ -53,9 +53,9 @@ abstract class BaseStreamsAdapter(
                 title.isVisible = false
             }
 
-            if (item.game_name != null) {
+            if (item.gameName != null) {
                 gameName.isVisible = true
-                gameName.text = item.game_name
+                gameName.text = item.gameName
             } else {
                 gameName.isVisible = false
             }

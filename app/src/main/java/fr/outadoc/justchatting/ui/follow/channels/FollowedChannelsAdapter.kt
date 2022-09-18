@@ -18,7 +18,7 @@ class FollowedChannelsAdapter(
 
     object : DiffUtil.ItemCallback<Follow>() {
         override fun areItemsTheSame(oldItem: Follow, newItem: Follow): Boolean =
-            oldItem.to_id == newItem.to_id
+            oldItem.toId == newItem.toId
 
         override fun areContentsTheSame(oldItem: Follow, newItem: Follow): Boolean = true
     }) {
@@ -29,7 +29,7 @@ class FollowedChannelsAdapter(
         val binding = FragmentFollowedChannelsListItemBinding.bind(view)
         with(binding) {
             view.setOnClickListener {
-                item.to_login?.let { login ->
+                item.toLogin?.let { login ->
                     listener.viewChannel(login)
                 }
             }
@@ -44,25 +44,14 @@ class FollowedChannelsAdapter(
                 userImage.isVisible = false
             }
 
-            if (item.to_name != null) {
+            if (item.toName != null) {
                 username.isVisible = true
-                username.text = item.to_name
+                username.text = item.toName
             } else {
                 username.isVisible = false
             }
 
-            val lastBroadcast = item.lastBroadcast
-            if (lastBroadcast != null) {
-                userStream.isVisible = true
-                userStream.text = view.context.getString(
-                    R.string.last_broadcast_date,
-                    lastBroadcast.toInstant().formatTime(view.context)
-                )
-            } else {
-                userStream.isVisible = false
-            }
-
-            val followedAt = item.followed_at
+            val followedAt = item.followedAt
             if (followedAt != null) {
                 userFollowed.isVisible = true
                 userFollowed.text = view.context.getString(

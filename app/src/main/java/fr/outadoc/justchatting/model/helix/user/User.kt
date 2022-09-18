@@ -1,17 +1,25 @@
 package fr.outadoc.justchatting.model.helix.user
 
 import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class User(
+    @SerializedName("id")
     val id: String,
+    @SerializedName("login")
     val login: String,
-    val display_name: String,
+    @SerializedName("display_name")
+    val displayName: String,
+    @SerializedName("description")
     val description: String? = null,
-    val profile_image_url: String? = null,
-    val offline_image_url: String? = null,
-    val created_at: String? = null,
-    val followers_count: Int? = null,
-    val bannerImageURL: String? = null
+    @SerializedName("profile_image_url")
+    val profileImageUrl: String? = null,
+    @SerializedName("offline_image_url")
+    val offlineImageUrl: String? = null,
+    @SerializedName("created_at")
+    val createdAt: String? = null,
+    @SerializedName("followers_count")
+    val followersCount: Int? = null
 ) : Parcelable

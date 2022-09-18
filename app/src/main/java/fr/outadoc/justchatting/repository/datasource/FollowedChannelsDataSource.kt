@@ -35,18 +35,18 @@ class FollowedChannelsDataSource(
                     .also { offset = it.pagination?.cursor }
                     .data
                     .orEmpty()
-                    .associateBy { it.to_id }
+                    .associateBy { it.toId }
                     .values
                     .mapWithUserProfileImages()
 
             when (order) {
                 Order.ASC -> when (sort) {
-                    Sort.FOLLOWED_AT -> list.sortedBy { it.followed_at }
-                    else -> list.sortedBy { it.to_login }
+                    Sort.FOLLOWED_AT -> list.sortedBy { it.followedAt }
+                    else -> list.sortedBy { it.toLogin }
                 }
                 Order.DESC -> when (sort) {
-                    Sort.FOLLOWED_AT -> list.sortedByDescending { it.followed_at }
-                    else -> list.sortedByDescending { it.to_login }
+                    Sort.FOLLOWED_AT -> list.sortedByDescending { it.followedAt }
+                    else -> list.sortedByDescending { it.toLogin }
                 }
             }
         }
@@ -54,12 +54,8 @@ class FollowedChannelsDataSource(
 
     private suspend fun Collection<Follow>.mapWithUserProfileImages(): Collection<Follow> {
         val results: List<User> =
-            filter { follow ->
-                follow.profileImageURL == null ||
-                    follow.profileImageURL.contains("image_manager_disk_cache") ||
-                    follow.lastBroadcast == null
-            }
-                .mapNotNull { follow -> follow.to_id }
+            filter { follow -> follow.profileImageURL == null }
+                .mapNotNull { follow -> follow.toId }
                 .chunked(size = 100)
                 .flatMap { idsToUpdate ->
                     helixApi.getUsersById(
@@ -72,9 +68,9 @@ class FollowedChannelsDataSource(
                 }
 
         return map { follow ->
-            val userInfo = results.firstOrNull { user -> user.id == follow.to_id }
+            val userInfo = results.firstOrNull { user -> user.id == follow.toId }
             follow.copy(
-                profileImageURL = userInfo?.profile_image_url
+                profileImageURL = userInfo?.profileImageUrl
             )
         }
     }

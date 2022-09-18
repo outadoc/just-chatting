@@ -95,8 +95,8 @@ class MainViewModel(
                         onViewChannelRequest(
                             id = user.id,
                             login = user.login,
-                            name = user.display_name,
-                            channelLogo = user.profile_image_url
+                            name = user.displayName,
+                            channelLogo = user.profileImageUrl
                         )
                     }
             } catch (e: Exception) {

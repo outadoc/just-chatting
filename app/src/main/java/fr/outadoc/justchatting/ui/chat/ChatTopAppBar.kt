@@ -47,6 +47,7 @@ fun ChatTopAppBar(
     onColorContrastChanged: (isLight: Boolean) -> Unit
 ) {
     TopAppBar(
+        modifier = modifier,
         colors = swatch.toolbarColors(onColorContrastChanged),
         title = {
             Column {

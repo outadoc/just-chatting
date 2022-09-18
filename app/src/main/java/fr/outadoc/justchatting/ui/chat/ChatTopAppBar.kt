@@ -42,9 +42,8 @@ fun ChatTopAppBar(
     stream: Stream?,
     swatch: Swatch?,
     logo: Bitmap?,
-    canBubble: Boolean,
     onWatchLiveClicked: (User) -> Unit,
-    onOpenBubbleClicked: () -> Unit,
+    onOpenBubbleClicked: (() -> Unit)?,
     onStreamInfoClicked: (User) -> Unit,
     onColorContrastChanged: (isLight: Boolean) -> Unit
 ) {
@@ -81,8 +80,8 @@ fun ChatTopAppBar(
         },
         actions = {
             user?.let { user ->
-                AnimatedVisibility(visible = canBubble) {
-                    IconButton(onClick = onOpenBubbleClicked) {
+                AnimatedVisibility(visible = onOpenBubbleClicked != null) {
+                    IconButton(onClick = onOpenBubbleClicked ?: {}) {
                         Icon(
                             Icons.Outlined.OpenInNew,
                             contentDescription = stringResource(R.string.menu_item_openInBubble)

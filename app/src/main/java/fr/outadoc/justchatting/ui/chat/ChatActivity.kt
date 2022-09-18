@@ -82,7 +82,6 @@ class ChatActivity : BaseActivity() {
             state = state,
             channelLogin = channelLogin,
             isEmotePickerOpen = isEmotePickerOpen,
-            canBubble = openInBubble.value != null,
             onChannelLogoLoaded = ::onChannelLogoLoaded,
             onWatchLiveClicked = ::onWatchLiveClicked,
             onOpenBubbleClicked = ::onOpenBubbleClicked,

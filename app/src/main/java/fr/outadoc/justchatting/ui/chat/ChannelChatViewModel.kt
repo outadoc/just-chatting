@@ -6,19 +6,16 @@ import androidx.lifecycle.asLiveData
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
-import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.repository.UserPreferencesRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 
 class ChannelChatViewModel(
     private val repository: TwitchService,
-    chatPreferencesRepository: ChatPreferencesRepository,
     userPreferencesRepository: UserPreferencesRepository,
 ) : ViewModel() {
 
@@ -27,9 +24,7 @@ class ChannelChatViewModel(
         data class Loaded(
             val appUser: AppUser,
             val loadedUser: User?,
-            val stream: Stream?,
-            val showTimestamps: Boolean = false,
-            val animateEmotes: Boolean = true
+            val stream: Stream?
         ) : State()
     }
 
@@ -48,17 +43,11 @@ class ChannelChatViewModel(
             }
         }
         .flatMapLatest { (stream, loadedUser) ->
-            combine(
-                userPreferencesRepository.appUser,
-                chatPreferencesRepository.showTimestamps,
-                chatPreferencesRepository.animateEmotes
-            ) { user, showTimestamps, animateEmotes ->
+            userPreferencesRepository.appUser.map { user ->
                 State.Loaded(
                     appUser = user,
                     loadedUser = loadedUser,
-                    stream = stream,
-                    showTimestamps = showTimestamps,
-                    animateEmotes = animateEmotes
+                    stream = stream
                 )
             }
         }

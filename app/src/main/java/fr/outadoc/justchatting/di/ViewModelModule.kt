@@ -14,7 +14,7 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
 
-    viewModel { ChannelChatViewModel(get(), get(), get()) }
+    viewModel { ChannelChatViewModel(get(), get()) }
     viewModel { ChannelSearchViewModel(get()) }
     viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { FollowedChannelsViewModel(get()) }

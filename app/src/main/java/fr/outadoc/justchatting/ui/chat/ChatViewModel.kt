@@ -6,8 +6,6 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.ChatCommand
@@ -50,11 +48,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -141,13 +142,16 @@ class ChatViewModel(
 
     private val actions = MutableSharedFlow<Action>(extraBufferCapacity = 16)
 
-    val state: LiveData<State> =
+    val state: StateFlow<State> =
         actions
             .onEach { Log.w("ChatVM", "action: $it") }
             .scan(State.Initial) { state: State, action -> action.reduce(state) }
             .onEach { Log.w("ChatVM", "state: $it") }
-            .flowOn(Dispatchers.Default)
-            .asLiveData()
+            .stateIn(
+                viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = State.Initial
+            )
 
     fun loadChat(channelLogin: String) {
         Log.w("ChatVM", "loadChat($channelLogin)")

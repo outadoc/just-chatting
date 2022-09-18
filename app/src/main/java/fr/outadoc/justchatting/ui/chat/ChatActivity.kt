@@ -12,8 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -63,7 +63,7 @@ class ChatActivity : BaseActivity() {
     @Composable
     fun ChannelChatScreen(channelLogin: String) {
         val viewModel: ChatViewModel by viewModel()
-        val state by viewModel.state.observeAsState(ChatViewModel.State.Initial)
+        val state by viewModel.state.collectAsState()
 
         val density = LocalDensity.current.density
         val isDarkTheme = MaterialTheme.colorScheme.isDark

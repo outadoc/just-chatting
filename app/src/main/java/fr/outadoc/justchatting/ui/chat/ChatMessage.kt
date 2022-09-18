@@ -679,17 +679,14 @@ fun ChatEntry.Data.toAnnotatedString(
             append(' ')
         }
 
-        withStyle(
-            SpanStyle(
-                color = Color(color),
-                fontWeight = FontWeight.Bold
-            )
-        ) {
-            withAnnotation(
-                tag = UrlAnnotationTag,
-                annotation = formatChannelUri(userName).toString()
-            ) {
-                append(userName)
+        withStyle(SpanStyle(color = Color(color))) {
+            withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                withAnnotation(
+                    tag = UrlAnnotationTag,
+                    annotation = formatChannelUri(userName).toString()
+                ) {
+                    append(userName)
+                }
             }
 
             if (!asciiEncoder.canEncode(userName)) {

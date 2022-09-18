@@ -2,12 +2,7 @@ package fr.outadoc.justchatting.ui.chat
 
 import android.app.ActivityManager
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.content.res.Configuration
 import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.InsetDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -24,7 +20,20 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.LiveTv
+import androidx.compose.material.icons.filled.OpenInNew
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -33,6 +42,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -40,22 +51,18 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.app.Person
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.palette.graphics.Palette
 import androidx.palette.graphics.Palette.Swatch
 import com.google.android.material.composethemeadapter3.Mdc3Theme
-import com.google.android.material.shape.MaterialShapeDrawable
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.databinding.FragmentChannelBinding
 import fr.outadoc.justchatting.model.chat.Emote
@@ -70,7 +77,6 @@ import fr.outadoc.justchatting.util.isDark
 import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
 import fr.outadoc.justchatting.util.loadImageToBitmap
 import fr.outadoc.justchatting.util.shortToast
-import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -99,17 +105,17 @@ class ChannelChatFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        channelViewModel.loadStream(
-            channelLogin = requireArguments().getString(CHANNEL_LOGIN)!!
-        )
+        channelViewModel.loadStream(channelLogin = requireArguments().getString(CHANNEL_LOGIN)!!)
     }
 
-    @OptIn(ExperimentalComposeUiApi::class)
+    @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        val argLogin = requireArguments().getString(CHANNEL_LOGIN)!!
+
         viewHolder = FragmentChannelBinding.inflate(inflater, container, false).apply {
             composeViewChat.apply {
                 setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
@@ -121,8 +127,38 @@ class ChannelChatFragment : Fragment() {
                         val context = LocalContext.current
 
                         val state by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
+                        val channelState by channelViewModel.state.observeAsState(
+                            ChannelChatViewModel.State.Loading
+                        )
 
                         var isEmotePickerOpen by remember { mutableStateOf(false) }
+
+                        val stream = (channelState as? ChannelChatViewModel.State.Loaded)?.stream
+                        val user = (channelState as? ChannelChatViewModel.State.Loaded)?.loadedUser
+
+                        var logo: Bitmap? by remember { mutableStateOf(null) }
+                        var swatch: Swatch? by remember { mutableStateOf(null) }
+
+                        LaunchedEffect(user) {
+                            user?.profile_image_url ?: return@LaunchedEffect
+
+                            logo = loadImageToBitmap(
+                                context = context,
+                                imageUrl = user.profile_image_url,
+                                circle = true,
+                                width = 256,
+                                height = 256
+                            )
+
+                            swatch = logo?.let {
+                                val palette = Palette.Builder(it).generateAsync()
+                                (palette?.dominantSwatch ?: palette?.dominantSwatch)
+                            }
+
+                            logo?.let { logo ->
+                                onChannelLogoLoaded(user, logo)
+                            }
+                        }
 
                         BackHandler(isEmotePickerOpen) {
                             isEmotePickerOpen = false
@@ -135,6 +171,62 @@ class ChannelChatFragment : Fragment() {
                         }
 
                         Column(verticalArrangement = Arrangement.SpaceEvenly) {
+                            TopAppBar(
+                                colors = swatch.toolbarColors(),
+                                title = {
+                                    Column {
+                                        Text(
+                                            text = user?.display_name ?: argLogin,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                        if (stream?.title != null) {
+                                            Text(
+                                                text = stream.title,
+                                                style = MaterialTheme.typography.titleSmall,
+                                                maxLines = 1,
+                                                overflow = TextOverflow.Ellipsis
+                                            )
+                                        }
+                                    }
+                                },
+                                navigationIcon = {
+                                    logo?.let { logo ->
+                                        Image(
+                                            modifier = Modifier
+                                                .size(56.dp)
+                                                .padding(horizontal = 8.dp),
+                                            bitmap = logo.asImageBitmap(),
+                                            contentDescription = null
+                                        )
+                                    }
+                                },
+                                actions = {
+                                    user?.let { user ->
+                                        IconButton(onClick = { onWatchLiveClicked(user) }) {
+                                            Icon(
+                                                Icons.Default.LiveTv,
+                                                contentDescription = stringResource(R.string.watch_live)
+                                            )
+                                        }
+
+                                        IconButton(onClick = { onOpenBubbleClicked() }) {
+                                            Icon(
+                                                Icons.Default.OpenInNew,
+                                                contentDescription = stringResource(R.string.menu_item_openInBubble)
+                                            )
+                                        }
+
+                                        IconButton(onClick = { onStreamInfoClicked(user) }) {
+                                            Icon(
+                                                Icons.Default.Info,
+                                                contentDescription = stringResource(R.string.stream_info)
+                                            )
+                                        }
+                                    }
+                                }
+                            )
+
                             ChatScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -217,90 +309,70 @@ class ChannelChatFragment : Fragment() {
         return viewHolder?.root
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun Swatch?.toolbarColors(): TopAppBarColors {
+        if (this == null) return TopAppBarDefaults.smallTopAppBarColors()
+
+        val backgroundColor = rgb
+        val textColor = ensureMinimumAlpha(
+            foreground = titleTextColor,
+            background = backgroundColor
+        )
+
+        LaunchedEffect(textColor) {
+            activity?.let { activity ->
+                WindowCompat.getInsetsController(activity.window, activity.window.decorView)
+                    .isAppearanceLightStatusBars = !textColor.isLightColor
+            }
+        }
+
+        return TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = Color(backgroundColor),
+            titleContentColor = Color(textColor),
+            actionIconContentColor = Color(textColor)
+        )
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
-            val statusBarInsets = windowInsets.getInsets(WindowInsetsCompat.Type.statusBars())
-            viewHolder?.apply {
-                toolbar.setPadding(
-                    toolbar.paddingLeft,
-                    statusBarInsets.top,
-                    toolbar.paddingRight,
-                    toolbar.paddingBottom
-                )
-            }
-
-            windowInsets
-        }
-
         channelViewModel.state.observe(viewLifecycleOwner) { state ->
-            viewHolder?.apply {
-                toolbar.subtitle = state.stream?.title?.trim()
-
-                state.loadedUser?.let { user ->
-                    updateUserLayout(user)
-
-                    chatViewModel.startLive(
-                        channelId = user.id,
-                        channelLogin = user.login,
-                        channelName = user.display_name
-                    )
-                }
+            state.loadedUser?.let { user ->
+                chatViewModel.startLive(
+                    channelId = user.id,
+                    channelLogin = user.login,
+                    channelName = user.display_name
+                )
             }
         }
     }
 
-    private fun FragmentChannelBinding.loadUserAvatar(user: User) {
-        val context = context ?: return
-        val activity = activity ?: return
-
-        val logo = user.profile_image_url ?: return
-
-        lifecycleScope.launch {
-            val bitmap = loadImageToBitmap(
-                context = context,
-                imageUrl = logo,
-                circle = true,
-                width = 256,
-                height = 256
+    private fun onChannelLogoLoaded(user: User, bitmap: Bitmap) {
+        activity?.apply {
+            setTaskDescription(
+                ActivityManager.TaskDescription(user.display_name, bitmap)
             )
 
-            if (bitmap != null) {
-                toolbar.logo = bitmap.createToolbarLogoDrawable()
-
-                val palette = Palette.Builder(bitmap).generateAsync()
-                (palette?.dominantSwatch ?: palette?.dominantSwatch)
-                    ?.let { swatch ->
-                        updateToolbarColor(swatch)
-                    }
-
-                activity.setTaskDescription(
-                    ActivityManager.TaskDescription(user.display_name, bitmap)
-                )
-
-                if (!activity.isLaunchedFromBubbleCompat) {
-                    configureChatBubbles(user, bitmap)
-                }
+            if (!isLaunchedFromBubbleCompat) {
+                configureChatBubbles(user, bitmap)
             }
         }
     }
 
-    private fun Bitmap.createToolbarLogoDrawable(): Drawable? {
-        val context = context ?: return null
-
-        val size = context.resources.getDimension(R.dimen.chat_streamPictureSize).toInt()
-        val endMargin = context.resources.getDimension(R.dimen.chat_streamPictureMarginEnd).toInt()
-
-        val bmp = Bitmap.createScaledBitmap(this, size, size, true)
-
-        return InsetDrawable(
-            BitmapDrawable(context.resources, bmp),
-            /* insetLeft = */ 0,
-            /* insetTop = */ 0,
-            /* insetRight = */ endMargin,
-            /* insetBottom = */ 0
+    private fun onWatchLiveClicked(user: User) {
+        startActivity(
+            Intent(Intent.ACTION_VIEW, formatChannelUri(user.login))
         )
+    }
+
+    private fun onOpenBubbleClicked() {
+        openInBubble?.invoke()
+    }
+
+    private fun onStreamInfoClicked(user: User) {
+        StreamInfoDialog.newInstance(userId = user.id)
+            .show(childFragmentManager, "closeOnPip")
     }
 
     private fun configureChatBubbles(channel: User, channelLogo: Bitmap) {
@@ -333,10 +405,6 @@ class ChannelChatFragment : Fragment() {
             icon = icon
         )
 
-        viewHolder?.toolbar?.menu
-            ?.findItem(R.id.openInBubble)
-            ?.isVisible = true
-
         openInBubble = {
             ChatNotificationUtils.createBubble(
                 context = context,
@@ -347,76 +415,8 @@ class ChannelChatFragment : Fragment() {
         }
     }
 
-    private fun FragmentChannelBinding.updateToolbarColor(swatch: Swatch) {
-        val backgroundColor = swatch.rgb
-        val textColor = ensureMinimumAlpha(
-            foreground = swatch.titleTextColor,
-            background = backgroundColor
-        )
-
-        ViewCompat.setBackground(
-            toolbar,
-            MaterialShapeDrawable.createWithElevationOverlay(
-                toolbar.context,
-                ViewCompat.getElevation(toolbar)
-            ).apply {
-                fillColor = ColorStateList.valueOf(backgroundColor)
-            }
-        )
-
-        toolbar.setNavigationIconTint(textColor)
-        toolbar.setTitleTextColor(textColor)
-        toolbar.setSubtitleTextColor(textColor)
-        toolbar.menu.forEach { item ->
-            item.icon?.let { icon ->
-                DrawableCompat.setTint(icon, textColor)
-            }
-        }
-
-        activity?.let { activity ->
-            WindowCompat.getInsetsController(activity.window, activity.window.decorView)
-                .isAppearanceLightStatusBars = !textColor.isLightColor
-        }
-    }
-
-    private fun FragmentChannelBinding.updateUserLayout(user: User) {
-        toolbar.apply {
-            title = user.display_name
-
-            setOnMenuItemClickListener { item ->
-                when (item.itemId) {
-                    R.id.watchLive -> {
-                        startActivity(
-                            Intent(Intent.ACTION_VIEW, formatChannelUri(user.login))
-                        )
-                        true
-                    }
-                    R.id.info -> {
-                        StreamInfoDialog.newInstance(userId = user.id)
-                            .show(childFragmentManager, "closeOnPip")
-                        true
-                    }
-                    R.id.openInBubble -> {
-                        openInBubble?.invoke()
-                        true
-                    }
-                    else -> false
-                }
-            }
-        }
-
-        loadUserAvatar(user)
-    }
-
     private fun appendEmote(emote: Emote) {
         chatViewModel.appendEmote(emote, autocomplete = false)
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            viewHolder?.appBar?.setExpanded(false, false)
-        }
     }
 
     override fun onPause() {

@@ -1,35 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.compose.ui.platform.ComposeView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/composeView_chat"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            app:menu="@menu/menu_chat"
-            app:navigationIconTint="?colorOnSurface"
-            app:subtitleTextAppearance="?attr/textAppearanceTitleSmall"
-            app:titleTextAppearance="?attr/textAppearanceTitleLarge"
-            tools:navigationIcon="@drawable/ic_back"
-            tools:subtitle="Let's play some games! Something something long title !ad !justkidding"
-            tools:title="StreamerName" />
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.compose.ui.platform.ComposeView
-        android:id="@+id/composeView_chat"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
-
-</LinearLayout>
+    android:layout_height="match_parent" />

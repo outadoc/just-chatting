@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="divider_margin">8dp</dimen>
-    <dimen name="chat_streamPictureSize">40dp</dimen>
-    <dimen name="chat_streamPictureMarginEnd">8dp</dimen>
 </resources>

@@ -28,7 +28,7 @@ fun EmoteGrid(
     contentPadding: PaddingValues = PaddingValues()
 ) {
     LazyVerticalGrid(
-        modifier = modifier.navigationBarsPadding(),
+        modifier = modifier,
         contentPadding = contentPadding,
         columns = GridCells.Adaptive(minSize = emoteSize),
         horizontalArrangement = Arrangement.spacedBy(4.dp)

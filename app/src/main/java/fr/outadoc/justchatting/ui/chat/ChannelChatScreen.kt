@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,7 +38,7 @@ import fr.outadoc.justchatting.util.generateAsync
 import fr.outadoc.justchatting.util.loadImageToBitmap
 import fr.outadoc.justchatting.util.shortToast
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChannelChatScreen(
     modifier: Modifier = Modifier,
@@ -98,84 +96,79 @@ fun ChannelChatScreen(
         }
     }
 
-    Scaffold(
+    Column(
         modifier = modifier,
-        topBar = {
-            ChatTopAppBar(
-                channelLogin = channelLogin,
-                user = user,
-                stream = stream,
-                swatch = swatch,
-                logo = logo,
-                onWatchLiveClicked = onWatchLiveClicked,
-                onOpenBubbleClicked = onOpenBubbleClicked,
-                onStreamInfoClicked = onStreamInfoClicked,
-                onColorContrastChanged = onColorContrastChanged
-            )
+        verticalArrangement = Arrangement.SpaceEvenly
+    ) {
+        ChatTopAppBar(
+            channelLogin = channelLogin,
+            user = user,
+            stream = stream,
+            swatch = swatch,
+            logo = logo,
+            onWatchLiveClicked = onWatchLiveClicked,
+            onOpenBubbleClicked = onOpenBubbleClicked,
+            onStreamInfoClicked = onStreamInfoClicked,
+            onColorContrastChanged = onColorContrastChanged
+        )
+
+        ChatScreen(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            state = state,
+            onMessageLongClick = { item ->
+                item.data?.message?.let { rawMessage ->
+                    clipboard.setText(AnnotatedString(rawMessage))
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    context.shortToast(R.string.chat_copiedToClipboard)
+                }
+            },
+            onReplyToMessage = onReplyToMessage
+        )
+
+        ChatSlowModeProgress(
+            modifier = Modifier.fillMaxWidth(),
+            state = state
+        )
+
+        ChatInput(
+            modifier = Modifier
+                .padding(8.dp)
+                .then(
+                    if (!isEmotePickerOpen) Modifier.navigationBarsPadding()
+                    else Modifier
+                )
+                .fillMaxWidth(),
+            state = state,
+            onMessageChange = onMessageChange,
+            onToggleEmotePicker = onToggleEmotePicker,
+            onEmoteClick = onEmoteClick,
+            onChatterClick = onChatterClick,
+            onClearReplyingTo = onClearReplyingTo,
+            onSubmit = onSubmit
+        )
+
+        var imeHeight by remember { mutableStateOf(350.dp) }
+
+        val currentImeHeight = WindowInsets.ime
+            .asPaddingValues()
+            .calculateBottomPadding()
+
+        LaunchedEffect(currentImeHeight) {
+            if (currentImeHeight > imeHeight) {
+                imeHeight = currentImeHeight
+            }
         }
-    ) { insets ->
-        Column(
-            modifier = Modifier.padding(insets),
-            verticalArrangement = Arrangement.SpaceEvenly
-        ) {
-            ChatScreen(
+
+        AnimatedVisibility(visible = isEmotePickerOpen) {
+            EmotePicker(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(1f),
-                state = state,
-                onMessageLongClick = { item ->
-                    item.data?.message?.let { rawMessage ->
-                        clipboard.setText(AnnotatedString(rawMessage))
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        context.shortToast(R.string.chat_copiedToClipboard)
-                    }
-                },
-                onReplyToMessage = onReplyToMessage
-            )
-
-            ChatSlowModeProgress(
-                modifier = Modifier.fillMaxWidth(),
+                    .height(imeHeight),
+                onEmoteClick = onEmoteClick,
                 state = state
             )
-
-            ChatInput(
-                modifier = Modifier
-                    .padding(8.dp)
-                    .then(
-                        if (!isEmotePickerOpen) Modifier.navigationBarsPadding()
-                        else Modifier
-                    )
-                    .fillMaxWidth(),
-                state = state,
-                onMessageChange = onMessageChange,
-                onToggleEmotePicker = onToggleEmotePicker,
-                onEmoteClick = onEmoteClick,
-                onChatterClick = onChatterClick,
-                onClearReplyingTo = onClearReplyingTo,
-                onSubmit = onSubmit
-            )
-
-            var imeHeight by remember { mutableStateOf(350.dp) }
-
-            val currentImeHeight = WindowInsets.ime
-                .asPaddingValues()
-                .calculateBottomPadding()
-
-            LaunchedEffect(currentImeHeight) {
-                if (currentImeHeight > imeHeight) {
-                    imeHeight = currentImeHeight
-                }
-            }
-
-            AnimatedVisibility(visible = isEmotePickerOpen) {
-                EmotePicker(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(imeHeight),
-                    onEmoteClick = onEmoteClick,
-                    state = state
-                )
-            }
         }
     }
 }

@@ -43,7 +43,6 @@ import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -51,7 +50,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.scan
@@ -144,19 +142,15 @@ class ChatViewModel(
 
     val state: StateFlow<State> =
         actions
-            .onEach { Log.w("ChatVM", "action: $it") }
             .scan(State.Initial) { state: State, action -> action.reduce(state) }
-            .onEach { Log.w("ChatVM", "state: $it") }
             .stateIn(
                 viewModelScope,
-                started = SharingStarted.Eagerly,
+                started = SharingStarted.WhileSubscribed(),
                 initialValue = State.Initial
             )
 
     fun loadChat(channelLogin: String) {
-        Log.w("ChatVM", "loadChat($channelLogin)")
         viewModelScope.launch {
-            Log.w("ChatVM", "actions.emit")
             actions.emit(Action.LoadChat(channelLogin))
         }
     }

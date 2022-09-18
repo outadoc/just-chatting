@@ -10,6 +10,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -45,9 +46,6 @@ class ChatActivity : BaseActivity() {
         }
     }
 
-    private val channelViewModel: ChannelChatViewModel by viewModel()
-    private val chatViewModel: ChatViewModel by viewModel()
-
     private val openInBubble: MutableState<(() -> Unit)?> = mutableStateOf(null)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,39 +58,28 @@ class ChatActivity : BaseActivity() {
                 ChannelChatScreen(channelLogin = channelLogin)
             }
         }
-
-        channelViewModel.state.observe(this) { state ->
-            state.loadedUser?.let { user ->
-                chatViewModel.startLive(
-                    channelId = user.id,
-                    channelLogin = user.login,
-                    channelName = user.display_name
-                )
-            }
-        }
-
-        channelViewModel.loadStream(channelLogin)
     }
 
     @Composable
     fun ChannelChatScreen(channelLogin: String) {
-        val chatState by chatViewModel.state.observeAsState(ChatViewModel.State.Initial)
-        val channelState by channelViewModel.state.observeAsState(
-            ChannelChatViewModel.State.Loading
-        )
+        val viewModel: ChatViewModel by viewModel()
+        val state by viewModel.state.observeAsState(ChatViewModel.State.Initial)
 
         val density = LocalDensity.current.density
         val isDarkTheme = MaterialTheme.colorScheme.isDark
 
         var isEmotePickerOpen by remember { mutableStateOf(false) }
 
+        LaunchedEffect(channelLogin) {
+            viewModel.loadChat(channelLogin)
+        }
+
         BackHandler(isEmotePickerOpen) {
             isEmotePickerOpen = false
         }
 
         ChannelChatScreen(
-            chatState = chatState,
-            channelState = channelState,
+            state = state,
             channelLogin = channelLogin,
             isEmotePickerOpen = isEmotePickerOpen,
             canBubble = openInBubble.value != null,
@@ -104,22 +91,22 @@ class ChatActivity : BaseActivity() {
                 WindowCompat.getInsetsController(window, window.decorView)
                     .isAppearanceLightStatusBars = !isLight
             },
-            onMessageChange = chatViewModel::onMessageInputChanged,
+            onMessageChange = viewModel::onMessageInputChanged,
             onToggleEmotePicker = {
                 isEmotePickerOpen = !isEmotePickerOpen
             },
             onEmoteClick = { emote ->
-                chatViewModel.appendEmote(emote, autocomplete = true)
+                viewModel.appendEmote(emote, autocomplete = true)
             },
             onChatterClick = { chatter ->
-                chatViewModel.appendChatter(chatter, autocomplete = true)
+                viewModel.appendChatter(chatter, autocomplete = true)
             },
             onClearReplyingTo = {
-                chatViewModel.onReplyToMessage(null)
+                viewModel.onReplyToMessage(null)
             },
-            onReplyToMessage = chatViewModel::onReplyToMessage,
+            onReplyToMessage = viewModel::onReplyToMessage,
             onSubmit = {
-                chatViewModel.submit(
+                viewModel.submit(
                     screenDensity = density,
                     isDarkTheme = isDarkTheme
                 )

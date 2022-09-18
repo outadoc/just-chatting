@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.ui.chat.ChannelChatViewModel
 import fr.outadoc.justchatting.ui.chat.ChatViewModel
 import fr.outadoc.justchatting.ui.follow.channels.FollowedChannelsViewModel
 import fr.outadoc.justchatting.ui.login.LoginViewModel
@@ -14,7 +13,6 @@ import org.koin.dsl.module
 
 val viewModelModule = module {
 
-    viewModel { ChannelChatViewModel(get(), get()) }
     viewModel { ChannelSearchViewModel(get()) }
     viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get()) }
     viewModel { FollowedChannelsViewModel(get()) }

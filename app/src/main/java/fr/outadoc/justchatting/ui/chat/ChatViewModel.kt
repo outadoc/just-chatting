@@ -23,6 +23,7 @@ import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.model.chat.TwitchEmote
 import fr.outadoc.justchatting.model.chat.UserState
+import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.repository.ChatConnectionPool
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
@@ -79,12 +80,7 @@ class ChatViewModel(
         data class ChangeRoomState(val roomState: RoomState) : Action()
         data class ChangeUserState(val userState: UserState) : Action()
         data class LoadEmotes(val channelId: String) : Action()
-        data class LoadChannel(
-            val channelId: String,
-            val channelLogin: String,
-            val channelName: String
-        ) : Action()
-
+        data class LoadChat(val channelLogin: String) : Action()
         data class ReplyToMessage(val chatEntry: ChatEntry? = null) : Action()
         data class Submit(val screenDensity: Float, val isDarkTheme: Boolean) : Action()
     }
@@ -94,9 +90,8 @@ class ChatViewModel(
 
         @Immutable
         data class Chatting(
-            val channelId: String,
-            val channelLogin: String,
-            val channelName: String,
+            val user: User,
+            val stream: Stream?,
             val appUser: AppUser,
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val chatMessages: PersistentList<ChatEntry> = persistentListOf(),
@@ -148,19 +143,17 @@ class ChatViewModel(
 
     val state: LiveData<State> =
         actions
+            .onEach { Log.w("ChatVM", "action: $it") }
             .scan(State.Initial) { state: State, action -> action.reduce(state) }
+            .onEach { Log.w("ChatVM", "state: $it") }
             .flowOn(Dispatchers.Default)
             .asLiveData()
 
-    fun startLive(channelId: String, channelLogin: String, channelName: String) {
+    fun loadChat(channelLogin: String) {
+        Log.w("ChatVM", "loadChat($channelLogin)")
         viewModelScope.launch {
-            actions.emit(
-                Action.LoadChannel(
-                    channelId = channelId,
-                    channelLogin = channelLogin,
-                    channelName = channelName
-                )
-            )
+            Log.w("ChatVM", "actions.emit")
+            actions.emit(Action.LoadChat(channelLogin))
         }
     }
 
@@ -202,7 +195,7 @@ class ChatViewModel(
             is Action.ChangeMessageInput -> reduce(state)
             is Action.ChangeRoomState -> reduce(state)
             is Action.ChangeUserState -> reduce(state)
-            is Action.LoadChannel -> reduce(state)
+            is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
             is Action.ReplyToMessage -> reduce(state)
             is Action.Submit -> reduce(state)
@@ -210,19 +203,19 @@ class ChatViewModel(
         }
     }
 
-    private suspend fun Action.LoadChannel.reduce(state: State): State {
-        if (state is State.Chatting &&
-            state.channelId == channelId &&
-            state.channelLogin == channelLogin &&
-            state.channelName == channelName
-        ) {
-            return state
-        }
+    private suspend fun Action.LoadChat.reduce(state: State): State {
+        if (state is State.Chatting && state.user.login == channelLogin) return state
 
         val appUser = userPreferencesRepository.appUser.first() as? AppUser.LoggedIn
             ?: return state
 
-        chatConnectionPool.start(channelId, channelLogin)
+        val user = repository.loadUsersByLogin(logins = listOf(channelLogin))
+            ?.firstOrNull()
+            ?: error("User not loaded")
+
+        val stream = repository.loadStreamWithUser(channelId = user.id)
+
+        chatConnectionPool.start(user.id, channelLogin)
             .onEach { command ->
                 val action = when (command) {
                     is PingCommand -> null
@@ -248,15 +241,16 @@ class ChatViewModel(
             .launchIn(viewModelScope)
 
         emotesRepository.loadRecentEmotes()
-            .onEach { recentEmotes -> actions.emit(Action.ChangeRecentEmotes(recentEmotes)) }
+            .onEach { recentEmotes ->
+                actions.emit(Action.ChangeRecentEmotes(recentEmotes))
+            }
             .launchIn(viewModelScope)
 
-        actions.emit(Action.LoadEmotes(channelId))
+        actions.emit(Action.LoadEmotes(user.id))
 
         return State.Chatting(
-            channelId = channelId,
-            channelLogin = channelLogin,
-            channelName = channelName,
+            user = user,
+            stream = stream,
             appUser = appUser,
             chatters = persistentSetOf(Chatter(channelLogin)),
             recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first(),
@@ -414,7 +408,7 @@ class ChatViewModel(
         val currentTime = clock.now().toEpochMilliseconds()
 
         chatConnectionPool.sendMessage(
-            channelId = state.channelId,
+            channelId = state.user.id,
             message = state.inputMessage.text,
             inReplyToId = state.replyingTo?.data?.messageId
         )
@@ -514,11 +508,11 @@ class ChatViewModel(
                     .associateBy { user -> user.id }
 
             val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
-                emotes.filter { emote -> emote.ownerId == state.channelId }
-                    .groupBy { emoteOwners[state.channelId]?.display_name }
+                emotes.filter { emote -> emote.ownerId == state.user.id }
+                    .groupBy { emoteOwners[state.user.id]?.display_name }
 
             val groupedEmotes: Map<String?, List<TwitchEmote>> =
-                emotes.filter { emote -> emote.ownerId != state.channelId }
+                emotes.filter { emote -> emote.ownerId != state.user.id }
                     .groupBy { emote -> emoteOwners[emote.ownerId]?.display_name }
 
             val sortedEmotes: PersistentSet<EmoteSetItem> =

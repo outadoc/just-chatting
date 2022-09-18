@@ -44,8 +44,7 @@ import fr.outadoc.justchatting.util.shortToast
 @Composable
 fun ChannelChatScreen(
     modifier: Modifier = Modifier,
-    chatState: ChatViewModel.State,
-    channelState: ChannelChatViewModel.State,
+    state: ChatViewModel.State,
     channelLogin: String,
     isEmotePickerOpen: Boolean,
     canBubble: Boolean,
@@ -67,8 +66,8 @@ fun ChannelChatScreen(
     val haptic = LocalHapticFeedback.current
     val context = LocalContext.current
 
-    val stream = (channelState as? ChannelChatViewModel.State.Loaded)?.stream
-    val user = (channelState as? ChannelChatViewModel.State.Loaded)?.loadedUser
+    val stream = (state as? ChatViewModel.State.Chatting)?.stream
+    val user = (state as? ChatViewModel.State.Chatting)?.user
 
     var logo: Bitmap? by remember { mutableStateOf(null) }
     var swatch: Palette.Swatch? by remember { mutableStateOf(null) }
@@ -125,7 +124,7 @@ fun ChannelChatScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f),
-                state = chatState,
+                state = state,
                 onMessageLongClick = { item ->
                     item.data?.message?.let { rawMessage ->
                         clipboard.setText(AnnotatedString(rawMessage))
@@ -138,7 +137,7 @@ fun ChannelChatScreen(
 
             ChatSlowModeProgress(
                 modifier = Modifier.fillMaxWidth(),
-                state = chatState
+                state = state
             )
 
             ChatInput(
@@ -149,7 +148,7 @@ fun ChannelChatScreen(
                         else Modifier
                     )
                     .fillMaxWidth(),
-                state = chatState,
+                state = state,
                 onMessageChange = onMessageChange,
                 onToggleEmotePicker = onToggleEmotePicker,
                 onEmoteClick = onEmoteClick,
@@ -176,7 +175,7 @@ fun ChannelChatScreen(
                         .fillMaxWidth()
                         .height(imeHeight),
                     onEmoteClick = onEmoteClick,
-                    state = chatState
+                    state = state
                 )
             }
         }

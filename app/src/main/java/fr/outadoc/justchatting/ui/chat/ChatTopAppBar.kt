@@ -7,9 +7,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.LiveTv
-import androidx.compose.material.icons.filled.OpenInNew
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.LiveTv
+import androidx.compose.material.icons.outlined.OpenInNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -81,25 +81,25 @@ fun ChatTopAppBar(
         },
         actions = {
             user?.let { user ->
-                IconButton(onClick = { onWatchLiveClicked(user) }) {
-                    Icon(
-                        Icons.Default.LiveTv,
-                        contentDescription = stringResource(R.string.watch_live)
-                    )
-                }
-
                 AnimatedVisibility(visible = canBubble) {
-                    IconButton(onClick = { onOpenBubbleClicked() }) {
+                    IconButton(onClick = onOpenBubbleClicked) {
                         Icon(
-                            Icons.Default.OpenInNew,
+                            Icons.Outlined.OpenInNew,
                             contentDescription = stringResource(R.string.menu_item_openInBubble)
                         )
                     }
                 }
 
+                IconButton(onClick = { onWatchLiveClicked(user) }) {
+                    Icon(
+                        Icons.Outlined.LiveTv,
+                        contentDescription = stringResource(R.string.watch_live)
+                    )
+                }
+
                 IconButton(onClick = { onStreamInfoClicked(user) }) {
                     Icon(
-                        Icons.Default.Info,
+                        Icons.Outlined.Info,
                         contentDescription = stringResource(R.string.stream_info)
                     )
                 }

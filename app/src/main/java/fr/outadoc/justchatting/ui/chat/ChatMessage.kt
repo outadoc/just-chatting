@@ -423,7 +423,8 @@ fun ChatMessage(
     Row(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface)
-            .background(background),
+            .background(background)
+            .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (timestamp != null) {

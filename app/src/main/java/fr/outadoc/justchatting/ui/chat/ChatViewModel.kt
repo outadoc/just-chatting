@@ -43,6 +43,7 @@ import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -408,34 +409,36 @@ class ChatViewModel(
         if (state !is State.Chatting) return state
         if (state.inputMessage.text.isEmpty()) return state
 
-        val currentTime = clock.now().toEpochMilliseconds()
+        viewModelScope.launch(Dispatchers.Default) {
+            val currentTime = clock.now().toEpochMilliseconds()
 
-        chatConnectionPool.sendMessage(
-            channelId = state.user.id,
-            message = state.inputMessage.text,
-            inReplyToId = state.replyingTo?.data?.messageId
-        )
+            chatConnectionPool.sendMessage(
+                channelId = state.user.id,
+                message = state.inputMessage.text,
+                inReplyToId = state.replyingTo?.data?.messageId
+            )
 
-        val allEmotesMap = state.allEmotesMap
-        val usedEmotes: List<RecentEmote> =
-            state.inputMessage
-                .text
-                .split(' ')
-                .mapNotNull { word ->
-                    allEmotesMap[word]?.let { emote ->
-                        RecentEmote(
-                            name = word,
-                            url = emote.getUrl(
-                                animate = chatPreferencesRepository.animateEmotes.first(),
-                                screenDensity = screenDensity,
-                                isDarkTheme = isDarkTheme
-                            ),
-                            usedAt = currentTime
-                        )
+            val allEmotesMap = state.allEmotesMap
+            val usedEmotes: List<RecentEmote> =
+                state.inputMessage
+                    .text
+                    .split(' ')
+                    .mapNotNull { word ->
+                        allEmotesMap[word]?.let { emote ->
+                            RecentEmote(
+                                name = word,
+                                url = emote.getUrl(
+                                    animate = chatPreferencesRepository.animateEmotes.first(),
+                                    screenDensity = screenDensity,
+                                    isDarkTheme = isDarkTheme
+                                ),
+                                usedAt = currentTime
+                            )
+                        }
                     }
-                }
 
-        emotesRepository.insertRecentEmotes(usedEmotes)
+            emotesRepository.insertRecentEmotes(usedEmotes)
+        }
 
         return state.copy(
             inputMessage = TextFieldValue(""),

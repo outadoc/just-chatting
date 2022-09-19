@@ -25,7 +25,8 @@ import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.main.BaseActivity
 import fr.outadoc.justchatting.ui.view.chat.StreamInfoDialog
-import fr.outadoc.justchatting.util.formatChannelUri
+import fr.outadoc.justchatting.util.createChannelDeeplink
+import fr.outadoc.justchatting.util.createChannelExternalLink
 import fr.outadoc.justchatting.util.isDark
 import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -37,7 +38,7 @@ class ChatActivity : BaseActivity() {
 
         fun createIntent(context: Context, channelLogin: String): Intent {
             return Intent(context, ChatActivity::class.java).apply {
-                data = formatChannelUri(channelLogin)
+                data = channelLogin.createChannelDeeplink()
                 action = Intent.ACTION_VIEW
                 flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
 
@@ -125,7 +126,7 @@ class ChatActivity : BaseActivity() {
 
     private fun onWatchLiveClicked(user: User) {
         startActivity(
-            Intent(Intent.ACTION_VIEW, formatChannelUri(user.login))
+            Intent(Intent.ACTION_VIEW, user.login.createChannelExternalLink())
         )
     }
 

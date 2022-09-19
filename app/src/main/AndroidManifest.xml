@@ -36,9 +36,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="https" />
-                <data android:host="*.twitch.tv" />
-                <data android:host="twitch.tv" />
+                <data android:scheme="justchatting" />
+                <data android:host="channel" />
 
             </intent-filter>
         </activity>
@@ -73,5 +72,6 @@
         <service
             android:name=".ChatConnectionService"
             android:foregroundServiceType="" />
+
     </application>
 </manifest>

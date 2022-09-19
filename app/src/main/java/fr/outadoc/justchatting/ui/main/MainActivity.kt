@@ -14,6 +14,7 @@ import fr.outadoc.justchatting.ui.login.LoginActivity
 import fr.outadoc.justchatting.ui.search.SearchFragment
 import fr.outadoc.justchatting.ui.settings.SettingsActivity
 import fr.outadoc.justchatting.util.observeEvent
+import fr.outadoc.justchatting.util.parseChannelLogin
 import fr.outadoc.justchatting.util.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -84,16 +85,14 @@ class MainActivity : BaseActivity(), NavigationHandler {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent.parseChannelFromIntent()
+        intent?.parseChannelFromIntent()?.let { login ->
+            viewModel.onViewChannelRequest(login)
+        }
     }
 
-    private fun Intent?.parseChannelFromIntent(): String? {
-        if (this?.action != Intent.ACTION_VIEW || data == null) return null
-
-        val url = data.toString()
-        return url.substringAfter("twitch.tv/")
-            .substringBefore("/")
-            .takeIf { it.isNotBlank() }
+    private fun Intent.parseChannelFromIntent(): String? {
+        if (action != Intent.ACTION_VIEW) return null
+        return data?.parseChannelLogin()
     }
 
     override fun viewChannel(login: String) {

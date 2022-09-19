@@ -99,7 +99,7 @@ import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.BadgeItem
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
-import fr.outadoc.justchatting.util.formatChannelUri
+import fr.outadoc.justchatting.util.createChannelDeeplink
 import fr.outadoc.justchatting.util.formatTimestamp
 import fr.outadoc.justchatting.util.isOdd
 import kotlinx.collections.immutable.ImmutableList
@@ -684,7 +684,7 @@ fun ChatEntry.Data.toAnnotatedString(
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 withAnnotation(
                     tag = UrlAnnotationTag,
-                    annotation = formatChannelUri(userName).toString()
+                    annotation = userName.createChannelDeeplink().toString()
                 ) {
                     append(userName)
                 }
@@ -717,7 +717,7 @@ fun ChatEntry.Data.toAnnotatedString(
                         withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                             withAnnotation(
                                 tag = UrlAnnotationTag,
-                                annotation = formatChannelUri(word.removePrefix("@")).toString()
+                                annotation = word.removePrefix("@").createChannelDeeplink().toString()
                             ) {
                                 append(word)
                             }

@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.util
 
-import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.net.ConnectivityManager

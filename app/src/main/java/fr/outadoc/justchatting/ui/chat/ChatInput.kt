@@ -257,7 +257,6 @@ fun ChatInputAutoComplete(
                 else chatters.filter { chatter ->
                     chatter.name.startsWith(chatterFilter, ignoreCase = true)
                 }
-
         }
     }
 

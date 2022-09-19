@@ -52,8 +52,8 @@ fun ChatSlowModeProgress(
             val remainingSlowModeDuration = slowModeDuration - durationSinceLastMessage
 
             progress.snapTo(
-                targetValue = remainingSlowModeDuration.inWholeMilliseconds.toFloat()
-                        / slowModeDuration.inWholeMilliseconds.toFloat()
+                targetValue = remainingSlowModeDuration.inWholeMilliseconds.toFloat() /
+                    slowModeDuration.inWholeMilliseconds.toFloat()
             )
 
             progress.animateTo(

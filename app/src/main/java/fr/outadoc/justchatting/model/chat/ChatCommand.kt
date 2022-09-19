@@ -138,11 +138,11 @@ data class RoomState(
 ) : ChatCommand {
 
     val isDefault: Boolean =
-        !isEmoteOnly
-                && !uniqueMessagesOnly
-                && !isSubOnly
-                && minFollowDuration == null
-                && slowModeDuration == null
+        !isEmoteOnly &&
+            !uniqueMessagesOnly &&
+            !isSubOnly &&
+            minFollowDuration == null &&
+            slowModeDuration == null
 }
 
 data class UserState(

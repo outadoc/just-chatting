@@ -352,7 +352,7 @@ class ChatViewModel(
             val otherEmotes = groups
                 .flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 .toPersistentSet()
 
@@ -473,7 +473,6 @@ class ChatViewModel(
         return state.copy(replyingTo = chatEntry)
     }
 
-
     private suspend fun Action.ChangeUserState.reduce(state: State): State {
         if (state !is State.Chatting) return state
         if (userState == state.userState) return state
@@ -566,7 +565,7 @@ class ChatViewModel(
 
         return state.copy(
             inputMessage = state.inputMessage.copy(
-                text = "${textBefore}${text} $textAfter",
+                text = "${textBefore}$text $textAfter",
                 selection = TextRange(
                     index = textBefore.length + text.length + 1
                 )

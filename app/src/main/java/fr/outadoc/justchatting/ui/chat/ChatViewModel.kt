@@ -119,6 +119,7 @@ class ChatViewModel(
 
             val allEmotesMap: ImmutableMap<String, Emote> =
                 allEmotes.associateBy { emote -> emote.name }
+                    .plus(cheerEmotes.associateBy { emote -> emote.name })
                     .toImmutableMap()
 
             val messagePostConstraint: MessagePostConstraint? =

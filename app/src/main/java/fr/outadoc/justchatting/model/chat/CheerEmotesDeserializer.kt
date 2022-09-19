@@ -19,7 +19,7 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
             .asJsonArray
             .map { it.asJsonObject }
             .flatMap { emote ->
-                val name = emote.get("prefix")
+                val name = emote.get("prefix").asString
                 emote.get("tiers").asJsonArray
                     .map { tier ->
                         val minBits = tier.asJsonObject.get("min_bits")
@@ -37,7 +37,7 @@ class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {
                             ?.asJsonObject
 
                         CheerEmote(
-                            name = name.asString,
+                            name = name + minBits.asInt,
                             minBits = minBits.asInt,
                             color = color.asString,
                             images = darkImages?.getImages("dark").orEmpty() +

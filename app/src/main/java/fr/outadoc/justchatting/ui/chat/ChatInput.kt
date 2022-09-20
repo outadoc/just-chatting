@@ -18,6 +18,7 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -185,6 +186,7 @@ fun ChatTextField(
         singleLine = true,
         onValueChange = onMessageChange,
         shape = FloatingActionButtonDefaults.shape,
+        textStyle = MaterialTheme.typography.bodyMedium,
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Send,
             capitalization = KeyboardCapitalization.Sentences

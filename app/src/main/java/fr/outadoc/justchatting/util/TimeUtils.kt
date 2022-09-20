@@ -4,6 +4,7 @@ import android.content.Context
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -23,11 +24,14 @@ fun Instant.formatTimestamp(context: Context): String? {
 
 @Composable
 fun Instant.formatTimestamp(): String? {
-    val format = DateFormat.getTimeFormat(LocalContext.current)
-    return try {
-        format.format(Date.from(toJavaInstant()))
-    } catch (e: Exception) {
-        null
+    val context = LocalContext.current
+    val format = remember { DateFormat.getTimeFormat(context) }
+    return remember(this) {
+        try {
+            format.format(Date.from(toJavaInstant()))
+        } catch (e: Exception) {
+            null
+        }
     }
 }
 

@@ -155,6 +155,8 @@ fun ChatScreen(
             val scope = rememberCoroutineScope()
             val listState = rememberLazyListState()
 
+            val haptic = LocalHapticFeedback.current
+
             var wasListScrolledByUser by remember { mutableStateOf(false) }
 
             if (listState.isScrollInProgress) {
@@ -189,6 +191,7 @@ fun ChatScreen(
                     FloatingActionButton(
                         modifier = Modifier.padding(16.dp),
                         onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             scope.launch {
                                 wasListScrolledByUser = false
                                 listState.scrollToItem(
@@ -717,7 +720,8 @@ fun ChatEntry.Data.toAnnotatedString(
                         withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                             withAnnotation(
                                 tag = UrlAnnotationTag,
-                                annotation = word.removePrefix("@").createChannelDeeplink().toString()
+                                annotation = word.removePrefix("@").createChannelDeeplink()
+                                    .toString()
                             ) {
                                 append(word)
                             }

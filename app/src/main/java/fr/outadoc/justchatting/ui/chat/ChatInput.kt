@@ -18,7 +18,6 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,6 +32,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
@@ -42,6 +43,7 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
+import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import kotlinx.collections.immutable.ImmutableSet
@@ -106,6 +108,8 @@ fun ChatInput(
     onClearReplyingTo: () -> Unit,
     onSubmit: () -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
+
     Column(modifier = modifier) {
         AnimatedVisibility(visible = replyingTo?.data != null) {
             Row(
@@ -118,7 +122,7 @@ fun ChatInput(
                     message = replyingTo?.data?.message.orEmpty()
                 )
 
-                IconButton(onClick = onClearReplyingTo) {
+                HapticIconButton(onClick = onClearReplyingTo) {
                     Icon(
                         Icons.Default.Clear,
                         contentDescription = "Stop replying to this message"
@@ -150,7 +154,12 @@ fun ChatInput(
             }
 
             AnimatedVisibility(visible = message.text.isNotEmpty()) {
-                FloatingActionButton(onClick = onSubmit) {
+                FloatingActionButton(
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onSubmit()
+                    }
+                ) {
                     Icon(
                         Icons.Default.Send,
                         contentDescription = stringResource(R.string.chat_input_send_cd)
@@ -191,7 +200,7 @@ fun ChatTextField(
             unfocusedIndicatorColor = Color.Transparent
         ),
         leadingIcon = {
-            IconButton(onClick = onToggleEmotePicker) {
+            HapticIconButton(onClick = onToggleEmotePicker) {
                 Icon(
                     Icons.Default.Mood,
                     contentDescription = stringResource(R.string.chat_input_emote_cd)
@@ -200,7 +209,7 @@ fun ChatTextField(
         },
         trailingIcon = {
             if (message.text.isNotEmpty()) {
-                IconButton(
+                HapticIconButton(
                     onClick = { onMessageChange(TextFieldValue("")) }
                 ) {
                     Icon(
@@ -225,8 +234,9 @@ fun ChatInputAutoComplete(
     onChatterClick: (Chatter) -> Unit,
     block: @Composable () -> Unit
 ) {
-    var hiddenByUser by remember(previousWord) { mutableStateOf(false) }
+    val haptic = LocalHapticFeedback.current
 
+    var hiddenByUser by remember(previousWord) { mutableStateOf(false) }
     var matchingEmotes by remember { mutableStateOf(emptyList<Emote>()) }
     var matchingChatters by remember { mutableStateOf(emptyList<Chatter>()) }
 
@@ -283,7 +293,10 @@ fun ChatInputAutoComplete(
                         )
                     },
                     text = { Text(text = emote.name) },
-                    onClick = { onEmoteClick(emote) }
+                    onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onEmoteClick(emote)
+                    }
                 )
             }
 

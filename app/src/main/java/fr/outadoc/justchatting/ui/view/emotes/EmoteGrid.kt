@@ -8,12 +8,12 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.model.chat.Emote
+import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.chat.EmoteSetItem
 import kotlinx.collections.immutable.ImmutableList
 
@@ -57,9 +57,7 @@ fun EmoteGrid(
                     }
                 }
                 is EmoteSetItem.Emote -> {
-                    IconButton(
-                        onClick = { onEmoteClick(item.emote) }
-                    ) {
+                    HapticIconButton(onClick = { onEmoteClick(item.emote) }) {
                         EmoteItem(
                             modifier = Modifier.size(emoteSize),
                             emote = item.emote,

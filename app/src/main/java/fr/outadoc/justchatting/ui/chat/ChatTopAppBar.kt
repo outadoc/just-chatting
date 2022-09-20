@@ -12,7 +12,6 @@ import androidx.compose.material.icons.outlined.LiveTv
 import androidx.compose.material.icons.outlined.OpenInNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -30,6 +29,7 @@ import androidx.palette.graphics.Palette.Swatch
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
+import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.common.ensureMinimumAlpha
 import fr.outadoc.justchatting.ui.common.isLightColor
 
@@ -81,7 +81,7 @@ fun ChatTopAppBar(
         actions = {
             user?.let { user ->
                 AnimatedVisibility(visible = onOpenBubbleClicked != null) {
-                    IconButton(onClick = onOpenBubbleClicked ?: {}) {
+                    HapticIconButton(onClick = onOpenBubbleClicked ?: {}) {
                         Icon(
                             Icons.Outlined.OpenInNew,
                             contentDescription = stringResource(R.string.menu_item_openInBubble)
@@ -89,14 +89,14 @@ fun ChatTopAppBar(
                     }
                 }
 
-                IconButton(onClick = { onWatchLiveClicked(user) }) {
+                HapticIconButton(onClick = { onWatchLiveClicked(user) }) {
                     Icon(
                         Icons.Outlined.LiveTv,
                         contentDescription = stringResource(R.string.watch_live)
                     )
                 }
 
-                IconButton(onClick = { onStreamInfoClicked(user) }) {
+                HapticIconButton(onClick = { onStreamInfoClicked(user) }) {
                     Icon(
                         Icons.Outlined.Info,
                         contentDescription = stringResource(R.string.stream_info)

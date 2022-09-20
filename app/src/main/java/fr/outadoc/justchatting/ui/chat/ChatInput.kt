@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material.icons.filled.Send
@@ -215,7 +216,7 @@ fun ChatTextField(
                     onClick = { onMessageChange(TextFieldValue("")) }
                 ) {
                     Icon(
-                        Icons.Default.Clear,
+                        Icons.Filled.Cancel,
                         contentDescription = stringResource(R.string.chat_input_clear_cd)
                     )
                 }

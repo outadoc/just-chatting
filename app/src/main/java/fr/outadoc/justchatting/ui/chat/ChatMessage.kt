@@ -77,6 +77,9 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.Placeholder
@@ -363,17 +366,31 @@ fun ChatList(
                 if (index.isOdd) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
                 else MaterialTheme.colorScheme.surface
 
+            val canBeRepliedTo = item.data?.messageId != null
+            val replyToActionCd = stringResource(R.string.chat_replyTo)
+
             SwipeToReply(
                 onDismiss = { onReplyToMessage(item) },
-                enabled = item.data?.messageId != null
+                enabled = canBeRepliedTo
             ) {
                 ChatMessage(
                     modifier = Modifier
                         .fillMaxWidth()
                         .combinedClickable(
                             onClick = {},
-                            onLongClick = { onMessageLongClick(item) }
-                        ),
+                            onLongClick = { onMessageLongClick(item) },
+                            onLongClickLabel = stringResource(R.string.chat_copyToClipboard)
+                        )
+                        .semantics {
+                            if (canBeRepliedTo) {
+                                customActions = listOf(
+                                    CustomAccessibilityAction(replyToActionCd) {
+                                        onReplyToMessage(item)
+                                        true
+                                    }
+                                )
+                            }
+                        },
                     message = item,
                     inlineContent = inlinesEmotes.putAll(inlineBadges),
                     animateEmotes = animateEmotes,

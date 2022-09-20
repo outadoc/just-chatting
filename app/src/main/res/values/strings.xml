@@ -15,6 +15,7 @@
     <string name="chat_clear">Chat has been cleared by a moderator</string>
     <string name="chat_clearmsg">Message deleted from %1$s\: %2$s</string>
     <string name="chat_copiedToClipboard">Message copied to clipboard</string>
+    <string name="chat_copyToClipboard">Copy to clipboard</string>
     <string name="chat_disconnect">Disconnecting from %1$s - %2$s</string>
     <string name="chat_first">First time chat</string>
     <string name="chat_input_clear_cd">Clear input</string>
@@ -24,6 +25,7 @@
     <string name="chat_input_replyClear">Stop replying to this message</string>
     <string name="chat_join">Connected to %s</string>
     <string name="chat_replyingTo">In reply to</string>
+    <string name="chat_replyTo">Reply to this message</string>
     <string name="chat_reward">Channel point redemption</string>
     <string name="chat_send_msg_error">Error sending message - %s</string>
     <string name="chat_socket_error">Error while closing socket - %s</string>

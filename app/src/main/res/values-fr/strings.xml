@@ -14,6 +14,7 @@
     <string name="chat_clear">Le tchat a été effacé par un·e modérateur·rice</string>
     <string name="chat_clearmsg">Message supprimé de %1$s\: %2$s</string>
     <string name="chat_copiedToClipboard">Message copié dans le presse-papier</string>
+    <string name="chat_copyToClipboard">Copier dans le presse-papier</string>
     <string name="chat_disconnect">Déconnexion de %1$s - %2$s</string>
     <string name="chat_first">Premier message</string>
     <string name="chat_input_clear_cd">Effacer</string>
@@ -23,6 +24,7 @@
     <string name="chat_input_replyClear">Ne plus répondre à ce message</string>
     <string name="chat_join">Connecté·e à %s</string>
     <string name="chat_replyingTo">En réponse à</string>
+    <string name="chat_replyTo">Répondre à ce message</string>
     <string name="chat_reward">Échange de points de chaîne</string>
     <string name="chat_send_msg_error">Erreur lors de l\'envoi du message - %s</string>
     <string name="chat_socket_error">Erreur lors de la fermeture du socket - %s</string>

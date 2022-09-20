@@ -133,7 +133,7 @@ fun ChatInput(
                 HapticIconButton(onClick = onClearReplyingTo) {
                     Icon(
                         Icons.Default.Clear,
-                        contentDescription = "Stop replying to this message"
+                        contentDescription = stringResource(R.string.chat_input_replyClear)
                     )
                 }
             }

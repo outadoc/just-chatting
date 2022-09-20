@@ -672,7 +672,7 @@ fun InReplyToMessage(
                     .alignByBaseline()
                     .padding(end = 4.dp, top = 1.dp),
                 imageVector = Icons.Default.Reply,
-                contentDescription = "In reply to"
+                contentDescription = stringResource(R.string.chat_replyingTo)
             )
 
             Text(

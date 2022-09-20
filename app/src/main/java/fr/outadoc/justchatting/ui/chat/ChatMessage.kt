@@ -153,60 +153,89 @@ fun ChatScreen(
             }
         }
         is ChatViewModel.State.Chatting -> {
-            val scope = rememberCoroutineScope()
-            val listState = rememberLazyListState()
-
-            val haptic = LocalHapticFeedback.current
-
-            var wasListScrolledByUser by remember { mutableStateOf(false) }
-
-            if (listState.isScrollInProgress) {
-                wasListScrolledByUser = true
-            }
-
-            LaunchedEffect(state.chatMessages.size, wasListScrolledByUser) {
-                if (!wasListScrolledByUser) {
-                    listState.scrollToItem(
-                        index = (state.chatMessages.size - 1).coerceAtLeast(0)
-                    )
+            if (state.chatMessages.isEmpty()) {
+                Column(
+                    modifier = modifier,
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator()
                 }
-            }
-
-            Box(modifier = modifier) {
+            } else {
                 ChatList(
-                    entries = state.chatMessages,
-                    emotes = state.allEmotesMap,
-                    badges = state.globalBadges.addAll(state.channelBadges),
-                    roomState = state.roomState,
+                    modifier = modifier,
+                    state = state,
                     animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
-                    listState = listState,
                     onMessageLongClick = onMessageLongClick,
                     onReplyToMessage = onReplyToMessage
                 )
+            }
+        }
+    }
+}
 
-                AnimatedVisibility(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    visible = wasListScrolledByUser
-                ) {
-                    FloatingActionButton(
-                        modifier = Modifier.padding(16.dp),
-                        onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            scope.launch {
-                                wasListScrolledByUser = false
-                                listState.scrollToItem(
-                                    index = (state.chatMessages.size - 1).coerceAtLeast(0)
-                                )
-                            }
-                        }
-                    ) {
-                        Icon(
-                            Icons.Default.ArrowDownward,
-                            contentDescription = stringResource(R.string.scroll_down)
+@Composable
+fun ChatList(
+    modifier: Modifier = Modifier,
+    state: ChatViewModel.State.Chatting,
+    animateEmotes: Boolean,
+    showTimestamps: Boolean,
+    onMessageLongClick: (ChatEntry) -> Unit,
+    onReplyToMessage: (ChatEntry) -> Unit
+) {
+    val scope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
+
+    val haptic = LocalHapticFeedback.current
+
+    var wasListScrolledByUser by remember { mutableStateOf(false) }
+
+    if (listState.isScrollInProgress) {
+        wasListScrolledByUser = true
+    }
+
+    LaunchedEffect(state.chatMessages.size, wasListScrolledByUser) {
+        if (!wasListScrolledByUser) {
+            listState.scrollToItem(
+                index = (state.chatMessages.size - 1).coerceAtLeast(0)
+            )
+        }
+    }
+
+    Box(modifier = modifier) {
+        ChatList(
+            entries = state.chatMessages,
+            emotes = state.allEmotesMap,
+            badges = state.globalBadges.addAll(state.channelBadges),
+            roomState = state.roomState,
+            animateEmotes = animateEmotes,
+            showTimestamps = showTimestamps,
+            listState = listState,
+            onMessageLongClick = onMessageLongClick,
+            onReplyToMessage = onReplyToMessage
+        )
+
+        AnimatedVisibility(
+            modifier = Modifier.align(Alignment.BottomCenter),
+            visible = wasListScrolledByUser
+        ) {
+            FloatingActionButton(
+                modifier = Modifier.padding(16.dp),
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    scope.launch {
+                        wasListScrolledByUser = false
+                        listState.scrollToItem(
+                            index = (state.chatMessages.size - 1).coerceAtLeast(0)
                         )
                     }
                 }
+            ) {
+                Icon(
+                    Icons.Default.ArrowDownward,
+                    contentDescription = stringResource(R.string.scroll_down)
+                )
             }
         }
     }

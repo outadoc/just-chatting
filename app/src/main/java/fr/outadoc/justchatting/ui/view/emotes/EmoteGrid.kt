@@ -10,6 +10,8 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.model.chat.Emote
@@ -51,7 +53,9 @@ fun EmoteGrid(
                 is EmoteSetItem.Header -> {
                     item.title?.let { title ->
                         EmoteHeader(
-                            modifier = Modifier.padding(top = if (index > 0) 8.dp else 0.dp),
+                            modifier = Modifier
+                                .padding(top = if (index > 0) 8.dp else 0.dp)
+                                .semantics { heading() },
                             title = title
                         )
                     }

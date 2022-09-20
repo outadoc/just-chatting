@@ -247,7 +247,7 @@ fun ChatList(
 @Composable
 fun RoomStateBanner(modifier: Modifier = Modifier, roomState: RoomState) = with(roomState) {
     Surface(
-        modifier = modifier,
+        modifier = modifier.semantics(mergeDescendants = true) {},
         shape = RoundedCornerShape(percent = 50),
         color = MaterialTheme.colorScheme.secondaryContainer,
         shadowElevation = 4.dp

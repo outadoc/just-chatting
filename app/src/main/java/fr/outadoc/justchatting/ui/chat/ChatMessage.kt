@@ -604,6 +604,7 @@ fun ChatMessageData(
     Column(modifier = modifier) {
         if (data.inReplyTo != null) {
             InReplyToMessage(
+                modifier = Modifier.padding(bottom = 8.dp),
                 userName = data.inReplyTo.userName,
                 message = data.inReplyTo.message
             )
@@ -662,13 +663,14 @@ fun InReplyToMessage(
         LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
     ) {
         Row(
-            modifier = modifier.padding(bottom = 8.dp),
-            verticalAlignment = Alignment.Top
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 modifier = Modifier
                     .size(16.dp)
-                    .padding(end = 4.dp),
+                    .alignByBaseline()
+                    .padding(end = 4.dp, top = 1.dp),
                 imageVector = Icons.Default.Reply,
                 contentDescription = "In reply to"
             )

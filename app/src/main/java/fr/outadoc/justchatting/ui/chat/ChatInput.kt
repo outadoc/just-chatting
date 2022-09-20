@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -112,9 +113,14 @@ fun ChatInput(
 ) {
     val haptic = LocalHapticFeedback.current
 
-    Column(modifier = modifier) {
+    Column {
         AnimatedVisibility(visible = replyingTo?.data != null) {
             Row(
+                modifier = Modifier.padding(
+                    top = 2.dp,
+                    start = 8.dp,
+                    end = 8.dp
+                ),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -134,6 +140,7 @@ fun ChatInput(
         }
 
         Row(
+            modifier = modifier,
             horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Start),
             verticalAlignment = Alignment.CenterVertically
         ) {

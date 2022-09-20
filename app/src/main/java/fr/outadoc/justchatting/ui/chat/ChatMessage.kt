@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -301,7 +302,8 @@ fun ChatList(
 
     LazyColumn(
         modifier = modifier,
-        state = listState
+        state = listState,
+        contentPadding = PaddingValues(bottom = 4.dp)
     ) {
         stickyHeader {
             AnimatedVisibility(

@@ -55,7 +55,8 @@
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:exported="true"
             android:resizeableActivity="true"
-            android:theme="@style/ChatTheme" />
+            android:theme="@style/ChatTheme"
+            android:windowSoftInputMode="adjustResize" />
 
         <provider
             android:name="androidx.startup.InitializationProvider"

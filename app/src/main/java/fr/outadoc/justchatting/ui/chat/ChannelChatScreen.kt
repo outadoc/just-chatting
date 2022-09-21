@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -19,6 +20,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -90,6 +93,8 @@ fun ChannelChatScreen(
         }
     }
 
+    val inputFocusRequester = remember { FocusRequester() }
+
     LaunchedEffect(isEmotePickerOpen) {
         if (isEmotePickerOpen) {
             keyboardController?.hide()
@@ -97,7 +102,10 @@ fun ChannelChatScreen(
     }
 
     Column(
-        modifier = modifier,
+        modifier = modifier.then(
+            if (!isEmotePickerOpen) Modifier.imePadding()
+            else Modifier
+        ),
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         ChatTopAppBar(
@@ -134,6 +142,7 @@ fun ChannelChatScreen(
 
         ChatInput(
             modifier = Modifier
+                .focusRequester(inputFocusRequester)
                 .padding(8.dp)
                 .then(
                     if (!isEmotePickerOpen) Modifier.navigationBarsPadding()
@@ -142,7 +151,13 @@ fun ChannelChatScreen(
                 .fillMaxWidth(),
             state = state,
             onMessageChange = onMessageChange,
-            onToggleEmotePicker = onToggleEmotePicker,
+            onToggleEmotePicker = {
+                if (isEmotePickerOpen) {
+                    inputFocusRequester.requestFocus()
+                    keyboardController?.show()
+                }
+                onToggleEmotePicker()
+            },
             onEmoteClick = onEmoteClick,
             onChatterClick = onChatterClick,
             onClearReplyingTo = onClearReplyingTo,

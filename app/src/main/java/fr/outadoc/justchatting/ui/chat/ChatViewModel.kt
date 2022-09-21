@@ -47,6 +47,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -55,11 +56,13 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.collections.component1
 import kotlin.collections.component2
+import kotlin.time.Duration.Companion.minutes
 
 class ChatViewModel(
     private val repository: TwitchService,
@@ -81,6 +84,7 @@ class ChatViewModel(
         data class ChangeUserState(val userState: UserState) : Action()
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
+        object LoadStreamDetails : Action()
         data class ReplyToMessage(val chatEntry: ChatEntry? = null) : Action()
         data class Submit(val screenDensity: Float, val isDarkTheme: Boolean) : Action()
     }
@@ -91,8 +95,8 @@ class ChatViewModel(
         @Immutable
         data class Chatting(
             val user: User,
-            val stream: Stream?,
             val appUser: AppUser,
+            val stream: Stream? = null,
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val chatMessages: PersistentList<ChatEntry> = persistentListOf(),
             val chatters: PersistentSet<Chatter> = persistentSetOf(),
@@ -151,6 +155,15 @@ class ChatViewModel(
                 initialValue = State.Initial
             )
 
+    init {
+        viewModelScope.launch {
+            while (isActive) {
+                delay(5.minutes)
+                actions.emit(Action.LoadStreamDetails)
+            }
+        }
+    }
+
     fun loadChat(channelLogin: String) {
         viewModelScope.launch {
             actions.emit(Action.LoadChat(channelLogin))
@@ -197,6 +210,7 @@ class ChatViewModel(
             is Action.ChangeUserState -> reduce(state)
             is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
+            is Action.LoadStreamDetails -> reduce(state)
             is Action.ReplyToMessage -> reduce(state)
             is Action.Submit -> reduce(state)
             is Action.ChangeRecentEmotes -> reduce(state)
@@ -212,8 +226,6 @@ class ChatViewModel(
         val user = repository.loadUsersByLogin(logins = listOf(channelLogin))
             ?.firstOrNull()
             ?: error("User not loaded")
-
-        val stream = repository.loadStreamWithUser(channelId = user.id)
 
         chatConnectionPool
             .start(user.id, channelLogin)
@@ -251,15 +263,23 @@ class ChatViewModel(
 
         viewModelScope.launch {
             actions.emit(Action.LoadEmotes(user.id))
+            actions.emit(Action.LoadStreamDetails)
         }
 
         return State.Chatting(
             user = user,
-            stream = stream,
             appUser = appUser,
             chatters = persistentSetOf(Chatter(channelLogin)),
             recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first(),
             maxAdapterCount = chatPreferencesRepository.messageLimit.first()
+        )
+    }
+
+    @Suppress("unused")
+    private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(
+            stream = repository.loadStreamWithUser(channelId = state.user.id)
         )
     }
 
@@ -352,7 +372,7 @@ class ChatViewModel(
             val otherEmotes = groups
                 .flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 .toPersistentSet()
 

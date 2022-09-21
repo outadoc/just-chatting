@@ -10,7 +10,7 @@ import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
-import fr.outadoc.justchatting.model.chat.RoomState
+import fr.outadoc.justchatting.model.chat.RoomStateDelta
 import fr.outadoc.justchatting.model.chat.UserState
 import kotlinx.datetime.Clock
 
@@ -116,8 +116,8 @@ class ChatMessageParser(private val clock: Clock) {
         )
     }
 
-    private fun parseRoomState(ircMessage: IrcMessage): RoomState {
-        return RoomState(
+    private fun parseRoomState(ircMessage: IrcMessage): RoomStateDelta {
+        return RoomStateDelta(
             isEmoteOnly = ircMessage.tags.isEmoteOnly,
             minFollowDuration = ircMessage.tags.minFollowDuration,
             uniqueMessagesOnly = ircMessage.tags.uniqueMessagesOnly,

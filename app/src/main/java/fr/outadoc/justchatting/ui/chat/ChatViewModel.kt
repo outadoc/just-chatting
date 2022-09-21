@@ -17,7 +17,7 @@ import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RecentEmote
-import fr.outadoc.justchatting.model.chat.RoomState
+import fr.outadoc.justchatting.model.chat.RoomStateDelta
 import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.model.chat.TwitchEmote
 import fr.outadoc.justchatting.model.chat.UserState
@@ -77,7 +77,7 @@ class ChatViewModel(
         data class AppendEmote(val emote: Emote, val autocomplete: Boolean) : Action()
         data class ChangeMessageInput(val message: TextFieldValue) : Action()
         data class ChangeRecentEmotes(val recentEmotes: List<RecentEmote>) : Action()
-        data class ChangeRoomState(val roomState: RoomState) : Action()
+        data class ChangeRoomState(val delta: RoomStateDelta) : Action()
         data class ChangeUserState(val userState: UserState) : Action()
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
@@ -225,7 +225,7 @@ class ChatViewModel(
                     is Command -> {
                         Action.AddMessages(listOf(command))
                     }
-                    is RoomState -> {
+                    is RoomStateDelta -> {
                         Action.ChangeRoomState(command)
                     }
                     is UserState -> {
@@ -543,7 +543,15 @@ class ChatViewModel(
 
     private fun Action.ChangeRoomState.reduce(state: State): State {
         if (state !is State.Chatting) return state
-        return state.copy(roomState = roomState)
+        return state.copy(
+            roomState = RoomState(
+                isEmoteOnly = delta.isEmoteOnly ?: state.roomState.isEmoteOnly,
+                isSubOnly = delta.isSubOnly ?: state.roomState.isSubOnly,
+                minFollowDuration = delta.minFollowDuration ?: state.roomState.minFollowDuration,
+                uniqueMessagesOnly = delta.uniqueMessagesOnly ?: state.roomState.uniqueMessagesOnly,
+                slowModeDuration = delta.slowModeDuration ?: state.roomState.slowModeDuration
+            )
+        )
     }
 
     private fun Action.ChangeRecentEmotes.reduce(state: State): State {

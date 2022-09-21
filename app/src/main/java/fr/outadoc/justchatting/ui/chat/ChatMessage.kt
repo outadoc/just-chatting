@@ -96,7 +96,6 @@ import androidx.compose.ui.unit.em
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.chat.Badge
 import fr.outadoc.justchatting.model.chat.Emote
-import fr.outadoc.justchatting.model.chat.RoomState
 import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible

@@ -128,22 +128,13 @@ data class PointReward(
     }
 }
 
-@Immutable
-data class RoomState(
-    val isEmoteOnly: Boolean = false,
+data class RoomStateDelta(
+    val isEmoteOnly: Boolean? = null,
     val minFollowDuration: Duration? = null,
-    val uniqueMessagesOnly: Boolean = false,
+    val uniqueMessagesOnly: Boolean? = null,
     val slowModeDuration: Duration? = null,
-    val isSubOnly: Boolean = false
-) : ChatCommand {
-
-    val isDefault: Boolean =
-        !isEmoteOnly &&
-            !uniqueMessagesOnly &&
-            !isSubOnly &&
-            minFollowDuration == null &&
-            slowModeDuration == null
-}
+    val isSubOnly: Boolean? = null
+) : ChatCommand
 
 data class UserState(
     val emoteSets: List<String> = emptyList()

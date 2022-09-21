@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PointReward
-import fr.outadoc.justchatting.model.chat.RoomState
+import fr.outadoc.justchatting.model.chat.RoomStateDelta
 import fr.outadoc.justchatting.model.chat.UserState
 import kotlinx.collections.immutable.toImmutableList
 
@@ -178,7 +178,7 @@ class ChatEntryMapper(private val context: Context) {
                 )
             }
             PingCommand,
-            is RoomState,
+            is RoomStateDelta,
             is UserState,
             -> null
         }

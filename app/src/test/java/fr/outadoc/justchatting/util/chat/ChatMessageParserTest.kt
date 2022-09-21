@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
-import fr.outadoc.justchatting.model.chat.RoomState
+import fr.outadoc.justchatting.model.chat.RoomStateDelta
 import fr.outadoc.justchatting.model.chat.TwitchChatEmote
 import fr.outadoc.justchatting.model.chat.UserState
 import kotlinx.datetime.Clock
@@ -170,7 +170,7 @@ class ChatMessageParserTest {
     fun `Parse simple ROOMSTATE`() = test {
         input { "@emote-only=0;followers-only=-1;r9k=0;room-id=402890635;slow=0;subs-only=0 :tmi.twitch.tv ROOMSTATE #pelerine" }
         expected {
-            RoomState(
+            RoomStateDelta(
                 isEmoteOnly = false,
                 minFollowDuration = null,
                 slowModeDuration = null,
@@ -184,7 +184,7 @@ class ChatMessageParserTest {
     fun `Parse custom ROOMSTATE`() = test {
         input { "@emote-only=1;followers-only=15;r9k=1;room-id=402890635;slow=120;subs-only=1 :tmi.twitch.tv ROOMSTATE #pelerine" }
         expected {
-            RoomState(
+            RoomStateDelta(
                 isEmoteOnly = true,
                 minFollowDuration = 15.minutes,
                 slowModeDuration = 2.minutes,

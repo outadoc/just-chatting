@@ -391,7 +391,12 @@ class ChatViewModel(
                 .toPersistentSet()
 
         val newMessages: PersistentList<ChatEntry> =
-            state.chatMessages.addAll(messages.mapNotNull(chatEntryMapper::map))
+            state.chatMessages
+                .addAll(
+                    messages
+                        .mapNotNull(chatEntryMapper::map)
+                        .distinct()
+                )
 
         // We alternate the background of each chat row.
         // If we remove just one item, the backgrounds will shift, so we always need to remove

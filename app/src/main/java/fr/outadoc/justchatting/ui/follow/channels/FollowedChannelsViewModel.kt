@@ -37,9 +37,13 @@ class FollowedChannelsViewModel(
             }
             .asLiveData()
 
-    fun filter(sort: Sort, order: Order) {
+    fun updateFilter(sort: Sort, order: Order) {
         _filter.update { filter ->
             filter.copy(sort = sort, order = order)
         }
+    }
+
+    fun reload() {
+        _filter.tryEmit(_filter.value)
     }
 }

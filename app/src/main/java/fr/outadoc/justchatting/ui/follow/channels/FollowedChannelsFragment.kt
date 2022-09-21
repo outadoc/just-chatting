@@ -73,6 +73,11 @@ class FollowedChannelsFragment :
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.reload()
+    }
+
     override fun onChange(
         sort: Sort,
         sortText: CharSequence,
@@ -80,7 +85,7 @@ class FollowedChannelsFragment :
         orderText: CharSequence
     ) {
         adapter.submitList(null)
-        viewModel.filter(
+        viewModel.updateFilter(
             sort = sort,
             order = order
         )

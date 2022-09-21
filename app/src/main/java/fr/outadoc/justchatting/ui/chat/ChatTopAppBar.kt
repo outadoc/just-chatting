@@ -83,7 +83,7 @@ fun ChatTopAppBar(
                 AnimatedVisibility(visible = onOpenBubbleClicked != null) {
                     HapticIconButton(onClick = onOpenBubbleClicked ?: {}) {
                         Icon(
-                            Icons.Outlined.OpenInNew,
+                            imageVector = Icons.Outlined.OpenInNew,
                             contentDescription = stringResource(R.string.menu_item_openInBubble)
                         )
                     }
@@ -91,14 +91,15 @@ fun ChatTopAppBar(
 
                 HapticIconButton(onClick = { onWatchLiveClicked(user) }) {
                     Icon(
-                        Icons.Outlined.LiveTv,
+                        modifier = Modifier.padding(bottom = 3.dp),
+                        imageVector = Icons.Outlined.LiveTv,
                         contentDescription = stringResource(R.string.watch_live)
                     )
                 }
 
                 HapticIconButton(onClick = { onStreamInfoClicked(user) }) {
                     Icon(
-                        Icons.Outlined.Info,
+                        imageVector = Icons.Outlined.Info,
                         contentDescription = stringResource(R.string.stream_info)
                     )
                 }

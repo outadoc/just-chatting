@@ -108,7 +108,7 @@ class ChatViewModel(
             val lastSentMessageInstant: Instant? = null,
             val twitchEmotes: ImmutableSet<EmoteSetItem> = persistentSetOf(),
             val otherEmotes: ImmutableSet<EmoteSetItem> = persistentSetOf(),
-            val recentEmotes: ImmutableSet<EmoteSetItem> = persistentSetOf(),
+            val recentEmotes: List<RecentEmote> = emptyList(),
             val userState: UserState = UserState(),
             val roomState: RoomState = RoomState(),
             val hostModeState: HostModeState? = null,
@@ -119,7 +119,7 @@ class ChatViewModel(
         ) : State() {
 
             val allEmotes: ImmutableSet<Emote> =
-                (twitchEmotes + recentEmotes + otherEmotes)
+                (twitchEmotes + otherEmotes)
                     .filterIsInstance<EmoteSetItem.Emote>()
                     .map { it.emote }
                     .distinctBy { it.name }
@@ -129,6 +129,11 @@ class ChatViewModel(
                 allEmotes.associateBy { emote -> emote.name }
                     .plus(cheerEmotes.associateBy { emote -> emote.name })
                     .toImmutableMap()
+
+            val availableRecentEmotes: ImmutableSet<EmoteSetItem> =
+                recentEmotes.filter { recentEmote -> recentEmote.name in allEmotesMap }
+                    .map { recentEmote -> EmoteSetItem.Emote(recentEmote) }
+                    .toImmutableSet()
 
             val messagePostConstraint: MessagePostConstraint? =
                 lastSentMessageInstant?.let {
@@ -583,12 +588,7 @@ class ChatViewModel(
 
     private fun Action.ChangeRecentEmotes.reduce(state: State): State {
         if (state !is State.Chatting) return state
-        return state.copy(
-            recentEmotes = recentEmotes
-                .filter { recentEmote -> state.allEmotesMap.containsKey(recentEmote.name) }
-                .map { emote -> EmoteSetItem.Emote(emote) }
-                .toImmutableSet()
-        )
+        return state.copy(recentEmotes = recentEmotes)
     }
 
     private fun Action.ChangeHostModeState.reduce(state: State): State {

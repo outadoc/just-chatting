@@ -63,7 +63,7 @@ fun EmotePicker(
 
                 Crossfade(targetState = selectedTab) { tab ->
                     val emotes = when (tab) {
-                        EmoteTab.RECENT -> state.recentEmotes
+                        EmoteTab.RECENT -> state.availableRecentEmotes
                         EmoteTab.TWITCH -> state.twitchEmotes
                         EmoteTab.OTHERS -> state.otherEmotes
                     }

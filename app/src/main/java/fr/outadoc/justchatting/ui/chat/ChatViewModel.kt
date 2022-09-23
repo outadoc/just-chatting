@@ -112,7 +112,6 @@ class ChatViewModel(
             val userState: UserState = UserState(),
             val roomState: RoomState = RoomState(),
             val hostModeState: HostModeState? = null,
-            val recentMsgLimit: Int,
             val maxAdapterCount: Int,
             val inputMessage: TextFieldValue = TextFieldValue(),
             val replyingTo: ChatEntry? = null
@@ -283,7 +282,6 @@ class ChatViewModel(
             user = user,
             appUser = appUser,
             chatters = persistentSetOf(Chatter(channelLogin)),
-            recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first(),
             maxAdapterCount = chatPreferencesRepository.messageLimit.first()
         )
     }
@@ -385,7 +383,7 @@ class ChatViewModel(
             val otherEmotes = groups
                 .flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 .toPersistentSet()
 
@@ -436,7 +434,9 @@ class ChatViewModel(
             state.maxAdapterCount.roundUpOddToEven() + if (newMessages.size.isOdd) 1 else 0
 
         return state.copy(
-            chatMessages = newMessages.takeLast(maxCount).toPersistentList(),
+            chatMessages = newMessages
+                .takeLast(maxCount)
+                .toPersistentList(),
             lastSentMessageInstant = lastSentMessageInstant
                 ?: state.lastSentMessageInstant,
             chatters = state.chatters.addAll(newChatters)

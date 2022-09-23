@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Command
+import fr.outadoc.justchatting.model.chat.HostModeState
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RoomStateDelta
@@ -180,6 +181,7 @@ class ChatEntryMapper(private val context: Context) {
             PingCommand,
             is RoomStateDelta,
             is UserState,
+            is HostModeState
             -> null
         }
     }

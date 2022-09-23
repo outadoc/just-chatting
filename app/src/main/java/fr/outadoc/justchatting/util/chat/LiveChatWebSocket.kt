@@ -5,6 +5,7 @@ import android.util.Log
 import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Command
+import fr.outadoc.justchatting.model.chat.HostModeState
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RoomStateDelta
@@ -130,6 +131,7 @@ class LiveChatWebSocket private constructor(
             is Command.SendMessageError,
             is Command.SocketError,
             is Command.Timeout,
+            is HostModeState,
             is PointReward,
             is RoomStateDelta -> emit(command)
             PingCommand -> sendPong()

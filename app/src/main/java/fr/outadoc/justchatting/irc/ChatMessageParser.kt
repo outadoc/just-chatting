@@ -9,6 +9,7 @@ import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Command
+import fr.outadoc.justchatting.model.chat.HostModeState
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.RoomStateDelta
 import fr.outadoc.justchatting.model.chat.UserState
@@ -27,6 +28,7 @@ class ChatMessageParser(private val clock: Clock) {
             "CLEARMSG" -> parseClearMessage(ircMessage)
             "CLEARCHAT" -> parseClearChat(ircMessage)
             "ROOMSTATE" -> parseRoomState(ircMessage)
+            "HOSTTARGET" -> parseHostTarget(ircMessage)
             else -> null
         }
 
@@ -123,6 +125,17 @@ class ChatMessageParser(private val clock: Clock) {
             uniqueMessagesOnly = ircMessage.tags.uniqueMessagesOnly,
             slowModeDuration = ircMessage.tags.slowModeDuration,
             isSubOnly = ircMessage.tags.isSubOnly
+        )
+    }
+
+    private fun parseHostTarget(ircMessage: IrcMessage): HostModeState? {
+        val params = ircMessage.parameters.getOrNull(1)?.split(' ')
+        if (params?.size != 2) return null
+
+        val (targetLogin, viewerCount) = params
+        return HostModeState(
+            targetChannelLogin = targetLogin.takeIf { login -> login != "-" },
+            viewerCount = viewerCount.toIntOrNull()
         )
     }
 

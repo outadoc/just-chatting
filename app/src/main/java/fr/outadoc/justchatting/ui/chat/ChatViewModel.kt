@@ -14,6 +14,7 @@ import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.CheerEmote
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.Emote
+import fr.outadoc.justchatting.model.chat.HostModeState
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RecentEmote
@@ -81,6 +82,7 @@ class ChatViewModel(
         data class ChangeMessageInput(val message: TextFieldValue) : Action()
         data class ChangeRecentEmotes(val recentEmotes: List<RecentEmote>) : Action()
         data class ChangeRoomState(val delta: RoomStateDelta) : Action()
+        data class ChangeHostModeState(val hostModeState: HostModeState) : Action()
         data class ChangeUserState(val userState: UserState) : Action()
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
@@ -108,6 +110,7 @@ class ChatViewModel(
             val recentEmotes: ImmutableSet<EmoteSetItem> = persistentSetOf(),
             val userState: UserState = UserState(),
             val roomState: RoomState = RoomState(),
+            val hostModeState: HostModeState? = null,
             val recentMsgLimit: Int,
             val maxAdapterCount: Int,
             val inputMessage: TextFieldValue = TextFieldValue(),
@@ -205,7 +208,9 @@ class ChatViewModel(
             is Action.AddMessages -> reduce(state)
             is Action.AppendChatter -> reduce(state)
             is Action.AppendEmote -> reduce(state)
+            is Action.ChangeHostModeState -> reduce(state)
             is Action.ChangeMessageInput -> reduce(state)
+            is Action.ChangeRecentEmotes -> reduce(state)
             is Action.ChangeRoomState -> reduce(state)
             is Action.ChangeUserState -> reduce(state)
             is Action.LoadChat -> reduce(state)
@@ -213,7 +218,6 @@ class ChatViewModel(
             is Action.LoadStreamDetails -> reduce(state)
             is Action.ReplyToMessage -> reduce(state)
             is Action.Submit -> reduce(state)
-            is Action.ChangeRecentEmotes -> reduce(state)
         }
     }
 
@@ -236,6 +240,9 @@ class ChatViewModel(
                     is PointReward,
                     is Command -> {
                         Action.AddMessages(listOf(command))
+                    }
+                    is HostModeState -> {
+                        Action.ChangeHostModeState(command)
                     }
                     is RoomStateDelta -> {
                         Action.ChangeRoomState(command)
@@ -582,6 +589,11 @@ class ChatViewModel(
                 .map { emote -> EmoteSetItem.Emote(emote) }
                 .toImmutableSet()
         )
+    }
+
+    private fun Action.ChangeHostModeState.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(hostModeState = hostModeState)
     }
 
     private fun appendTextToInput(state: State, text: String, replaceLastWord: Boolean): State {

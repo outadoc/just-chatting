@@ -18,6 +18,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
 import androidx.core.view.WindowCompat
@@ -67,7 +68,20 @@ class ChatActivity : BaseActivity() {
         val state by viewModel.state.collectAsState()
 
         val density = LocalDensity.current.density
+        val uriHandler = LocalUriHandler.current
+
         val isDarkTheme = MaterialTheme.colorScheme.isDark
+
+        val hostModeState = (state as? ChatViewModel.State.Chatting)?.hostModeState
+
+        LaunchedEffect(hostModeState) {
+            val targetUri = hostModeState?.targetChannelLogin?.createChannelDeeplink()
+            if (targetUri != null && hostModeState.viewerCount != null) {
+                // The broadcaster just launched a raid to another channel,
+                // so let's go there as well!
+                uriHandler.openUri(targetUri.toString())
+            }
+        }
 
         var isEmotePickerOpen by remember { mutableStateOf(false) }
 

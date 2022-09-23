@@ -33,6 +33,7 @@ import fr.outadoc.justchatting.ui.common.BaseViewModel
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.util.isOdd
+import fr.outadoc.justchatting.util.roundUpOddToEven
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.ImmutableSet
@@ -419,16 +420,15 @@ class ChatViewModel(
 
         val newMessages: PersistentList<ChatEntry> =
             state.chatMessages
-                .addAll(
-                    messages
-                        .mapNotNull(chatEntryMapper::map)
-                        .distinct()
-                )
+                .addAll(messages.mapNotNull(chatEntryMapper::map))
+                .distinct()
+                .toPersistentList()
 
         // We alternate the background of each chat row.
         // If we remove just one item, the backgrounds will shift, so we always need to remove
         // an even number of items.
-        val maxCount = state.maxAdapterCount + if (newMessages.size.isOdd) 1 else 0
+        val maxCount =
+            state.maxAdapterCount.roundUpOddToEven() + if (newMessages.size.isOdd) 1 else 0
 
         return state.copy(
             chatMessages = newMessages.takeLast(maxCount).toPersistentList(),

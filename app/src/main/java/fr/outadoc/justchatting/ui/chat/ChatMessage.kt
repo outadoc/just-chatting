@@ -197,7 +197,7 @@ fun ChatList(
         wasListScrolledByUser = true
     }
 
-    LaunchedEffect(state.chatMessages.size, wasListScrolledByUser) {
+    LaunchedEffect(state.chatMessages, wasListScrolledByUser) {
         if (!wasListScrolledByUser) {
             listState.scrollToItem(
                 index = (state.chatMessages.size - 1).coerceAtLeast(0)

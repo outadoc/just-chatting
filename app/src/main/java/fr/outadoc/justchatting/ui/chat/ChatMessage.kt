@@ -115,15 +115,18 @@ import org.koin.androidx.compose.get
 import kotlin.random.Random
 import kotlin.time.Duration
 
+private val emoteSize = 1.8.em
+private val badgeSize = 1.4.em
+
 private val emotePlaceholder = Placeholder(
-    width = 2.em,
-    height = 2.em,
+    width = emoteSize,
+    height = emoteSize,
     placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
 )
 
 private val badgePlaceholder = Placeholder(
-    width = 1.4.em,
-    height = 1.4.em,
+    width = badgeSize,
+    height = badgeSize,
     placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
 )
 
@@ -663,7 +666,7 @@ fun ChatMessageData(
             onTextLayout = { layoutResult.value = it },
             text = annotatedString,
             inlineContent = fullInlineContent,
-            lineHeight = 2.0.em,
+            lineHeight = emoteSize,
             style = MaterialTheme.typography.bodyMedium
         )
     }

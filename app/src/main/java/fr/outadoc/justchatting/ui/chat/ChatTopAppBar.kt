@@ -8,6 +8,8 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -19,10 +21,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,6 +35,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -59,9 +63,20 @@ fun ChatTopAppBar(
 ) {
     var showOverflow by remember { mutableStateOf(false) }
 
-    TopAppBar(
+    val defaultColors = ExpandedTopAppBarPalette(
+        backgroundColor = MaterialTheme.colorScheme.surface,
+        contentColor = MaterialTheme.colorScheme.onSurface
+    )
+
+    val colors = remember(swatch) { swatch?.toolbarColors() ?: defaultColors }
+
+    LaunchedEffect(colors.contentColor) {
+        onColorContrastChanged(colors.contentColor.toArgb().isLightColor)
+    }
+
+    ExpandedTopAppBar(
         modifier = modifier,
-        colors = swatch.toolbarColors(onColorContrastChanged),
+        colors = colors,
         title = {
             Column {
                 Text(
@@ -134,30 +149,57 @@ fun ChatTopAppBar(
                     }
                 )
             }
-        }
+        },
+        secondRow = {}
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Swatch?.toolbarColors(
-    onColorContrastChanged: (isLight: Boolean) -> Unit
-): TopAppBarColors {
-    if (this == null) return TopAppBarDefaults.smallTopAppBarColors()
+fun ExpandedTopAppBar(
+    title: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    navigationIcon: @Composable () -> Unit = {},
+    actions: @Composable RowScope.() -> Unit = {},
+    secondRow: @Composable () -> Unit = {},
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
+    colors: ExpandedTopAppBarPalette,
+    scrollBehavior: TopAppBarScrollBehavior? = null
+) {
+    Surface(
+        color = colors.backgroundColor,
+        contentColor = colors.contentColor
+    ) {
+        Column {
+            TopAppBar(
+                title = title,
+                modifier = modifier,
+                navigationIcon = navigationIcon,
+                actions = actions,
+                windowInsets = windowInsets,
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = colors.backgroundColor,
+                    titleContentColor = colors.contentColor,
+                    actionIconContentColor = colors.contentColor
+                ),
+                scrollBehavior = scrollBehavior
+            )
 
-    val backgroundColor = rgb
-    val textColor = ensureMinimumAlpha(
-        foreground = titleTextColor,
-        background = backgroundColor
-    )
-
-    LaunchedEffect(textColor) {
-        onColorContrastChanged(textColor.isLightColor)
+            secondRow()
+        }
     }
+}
 
-    return TopAppBarDefaults.smallTopAppBarColors(
-        containerColor = Color(backgroundColor),
-        titleContentColor = Color(textColor),
-        actionIconContentColor = Color(textColor)
+data class ExpandedTopAppBarPalette(val backgroundColor: Color, val contentColor: Color)
+
+fun Swatch.toolbarColors(): ExpandedTopAppBarPalette {
+    return ExpandedTopAppBarPalette(
+        backgroundColor = Color(rgb),
+        contentColor = Color(
+            ensureMinimumAlpha(
+                foreground = titleTextColor,
+                background = rgb
+            )
+        )
     )
 }

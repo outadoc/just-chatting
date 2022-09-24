@@ -200,7 +200,6 @@
     <string name="irc_notice_whisper_limit_per_sec">Vous envoyez des chuchotements trop rapidement. Réessayez dans une seconde.</string>
     <string name="irc_notice_whisper_restricted">Vos paramètres vous empêchent d\'envoyer ce chuchotement.</string>
     <string name="irc_notice_whisper_restricted_recipient">Les paramètres de cet·te utilisateur·rice l\'empêchent de recevoir ce chuchotement.</string>
-    <string name="last_broadcast_date">Dernière diffusion %s</string>
     <string name="live">En direct</string>
     <string name="log_in">Se connecter</string>
     <string name="log_out">Se déconnecter</string>

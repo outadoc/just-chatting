@@ -53,12 +53,14 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
                 is StreamInfoViewModel.State.Error -> {
                     state.error.printStackTrace()
                 }
+
                 is StreamInfoViewModel.State.Loaded -> {
                     viewHolder?.apply {
                         updateUserLayout(state.user)
                         updateStreamLayout(state.stream)
                     }
                 }
+
                 StreamInfoViewModel.State.Loading -> {
                 }
             }
@@ -109,6 +111,13 @@ class StreamInfoDialog : ExpandingBottomSheetDialogFragment() {
             userName.text = stream.userName
         } else {
             userName.isVisible = false
+        }
+
+        if (stream?.title != null) {
+            streamTitle.isVisible = true
+            streamTitle.text = stream.title
+        } else {
+            streamTitle.isVisible = false
         }
 
         if (stream?.gameName != null) {

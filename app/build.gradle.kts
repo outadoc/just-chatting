@@ -95,6 +95,7 @@ spotless {
 dependencies {
     implementation(project(":lib-irc"))
 
+    implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)

@@ -1,6 +1,8 @@
 package fr.outadoc.justchatting.ui.common
 
 import androidx.annotation.ColorInt
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.core.graphics.ColorUtils
 import kotlin.math.max
 import kotlin.math.min
@@ -97,3 +99,6 @@ fun Int.colorToHex(): String = "#%06X".format(0xFFFFFF and this)
 
 val Int.isLightColor: Boolean
     get() = ColorUtils.calculateLuminance(this) > 0.5
+
+val Color.isLight: Boolean
+    get() = luminance() > 0.5

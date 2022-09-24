@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.ui.chat
 
-import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
@@ -40,7 +39,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,18 +48,14 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.palette.graphics.Palette.Swatch
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.HapticIconButton
-import fr.outadoc.justchatting.ui.common.ensureMinimumAlpha
-import fr.outadoc.justchatting.ui.common.isLightColor
 import fr.outadoc.justchatting.util.formatNumber
 import fr.outadoc.justchatting.util.formatTime
 import fr.outadoc.justchatting.util.formatTimestamp
@@ -74,29 +68,17 @@ fun ChatTopAppBar(
     channelLogin: String,
     user: User?,
     stream: Stream?,
-    swatch: Swatch?,
-    logo: Bitmap?,
+    channelBranding: ChannelBranding,
     onWatchLiveClicked: (User) -> Unit,
-    onOpenBubbleClicked: (() -> Unit)?,
-    onColorContrastChanged: (isLight: Boolean) -> Unit
+    onOpenBubbleClicked: (() -> Unit)?
 ) {
     var showOverflow by remember { mutableStateOf(false) }
     var showStreamInfo by remember { mutableStateOf(false) }
 
-    val defaultColors = ExpandedTopAppBarPalette(
-        backgroundColor = MaterialTheme.colorScheme.surface,
-        contentColor = MaterialTheme.colorScheme.onSurface
-    )
-
-    val colors = remember(swatch) { swatch?.toolbarColors() ?: defaultColors }
-
-    LaunchedEffect(colors.contentColor) {
-        onColorContrastChanged(colors.contentColor.toArgb().isLightColor)
-    }
-
     ExpandedTopAppBar(
         modifier = modifier,
-        colors = colors,
+        contentColor = channelBranding.contentColor,
+        backgroundColor = channelBranding.backgroundColor,
         title = {
             Column {
                 Text(
@@ -119,11 +101,11 @@ fun ChatTopAppBar(
         },
         navigationIcon = {
             AnimatedVisibility(
-                visible = logo != null,
+                visible = channelBranding.logo != null,
                 enter = fadeIn() + slideInHorizontally(),
                 exit = slideOutHorizontally() + fadeOut()
             ) {
-                logo?.let { logo ->
+                channelBranding.logo?.let { logo ->
                     IconButton(
                         modifier = Modifier
                             .size(56.dp)
@@ -281,17 +263,18 @@ fun ExpandedTopAppBar(
     actions: @Composable RowScope.() -> Unit = {},
     secondRow: @Composable () -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    colors: ExpandedTopAppBarPalette,
+    backgroundColor: Color,
+    contentColor: Color,
     scrollBehavior: TopAppBarScrollBehavior? = null
 ) {
     val appBarContainerColor by animateColorAsState(
-        targetValue = colors.backgroundColor,
+        targetValue = backgroundColor,
         animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
     )
 
     Surface(
         color = appBarContainerColor,
-        contentColor = colors.contentColor
+        contentColor = contentColor
     ) {
         Column {
             TopAppBar(
@@ -301,9 +284,9 @@ fun ExpandedTopAppBar(
                 actions = actions,
                 windowInsets = windowInsets,
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = colors.backgroundColor,
-                    titleContentColor = colors.contentColor,
-                    actionIconContentColor = colors.contentColor
+                    containerColor = backgroundColor,
+                    titleContentColor = contentColor,
+                    actionIconContentColor = contentColor
                 ),
                 scrollBehavior = scrollBehavior
             )
@@ -315,16 +298,3 @@ fun ExpandedTopAppBar(
     }
 }
 
-data class ExpandedTopAppBarPalette(val backgroundColor: Color, val contentColor: Color)
-
-fun Swatch.toolbarColors(): ExpandedTopAppBarPalette {
-    return ExpandedTopAppBarPalette(
-        backgroundColor = Color(rgb),
-        contentColor = Color(
-            ensureMinimumAlpha(
-                foreground = titleTextColor,
-                background = rgb
-            )
-        )
-    )
-}

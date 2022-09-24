@@ -19,6 +19,7 @@ ksp = { id = "com.google.devtools.ksp", version = "1.7.10-1.0.6" }
 spotless = { id = "com.diffplug.spotless", version = "6.6.1" }
 
 [libraries]
+accompanist-systemuicontroller = "com.google.accompanist:accompanist-systemuicontroller:0.25.1"
 androidx-activity-compose = "androidx.activity:activity-compose:1.5.1"
 androidx-appcompat = "androidx.appcompat:appcompat:1.4.2"
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"

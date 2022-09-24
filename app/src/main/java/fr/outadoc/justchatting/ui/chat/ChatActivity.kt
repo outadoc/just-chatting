@@ -21,7 +21,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.core.app.Person
 import androidx.core.graphics.drawable.IconCompat
-import androidx.core.view.WindowCompat
 import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.main.BaseActivity
@@ -96,12 +95,9 @@ class ChatActivity : BaseActivity() {
             state = state,
             channelLogin = channelLogin,
             isEmotePickerOpen = isEmotePickerOpen,
-            onChannelLogoLoaded = ::onChannelLogoLoaded,
             onWatchLiveClicked = ::onWatchLiveClicked,
-            onOpenBubbleClicked = ::onOpenBubbleClicked,
-            onColorContrastChanged = { isLight ->
-                WindowCompat.getInsetsController(window, window.decorView)
-                    .isAppearanceLightStatusBars = !isLight
+            onOpenBubbleClicked = {
+                openInBubble.value?.invoke()
             },
             onMessageChange = viewModel::onMessageInputChanged,
             onToggleEmotePicker = {
@@ -116,13 +112,13 @@ class ChatActivity : BaseActivity() {
             onClearReplyingTo = {
                 viewModel.onReplyToMessage(null)
             },
-            onReplyToMessage = viewModel::onReplyToMessage,
             onSubmit = {
                 viewModel.submit(
                     screenDensity = density,
                     isDarkTheme = isDarkTheme
                 )
-            }
+            },
+            onReplyToMessage = viewModel::onReplyToMessage
         )
     }
 
@@ -140,10 +136,6 @@ class ChatActivity : BaseActivity() {
         startActivity(
             Intent(Intent.ACTION_VIEW, user.login.createChannelExternalLink())
         )
-    }
-
-    private fun onOpenBubbleClicked() {
-        openInBubble.value?.invoke()
     }
 
     private fun configureChatBubbles(channel: User, channelLogo: Bitmap) {

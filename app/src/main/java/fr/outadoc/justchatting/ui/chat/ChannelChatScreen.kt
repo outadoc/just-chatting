@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.ui.chat
 
-import android.graphics.Bitmap
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,8 +11,10 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,6 +23,7 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +37,7 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.helix.user.User
+import fr.outadoc.justchatting.ui.common.ensureMinimumAlpha
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmotePicker
 import fr.outadoc.justchatting.util.generateAsync
@@ -48,10 +51,8 @@ fun ChannelChatScreen(
     state: ChatViewModel.State,
     channelLogin: String,
     isEmotePickerOpen: Boolean,
-    onChannelLogoLoaded: (User, Bitmap) -> Unit,
     onWatchLiveClicked: (User) -> Unit,
     onOpenBubbleClicked: (() -> Unit)?,
-    onColorContrastChanged: (isLight: Boolean) -> Unit,
     onMessageChange: (TextFieldValue) -> Unit,
     onToggleEmotePicker: () -> Unit,
     onEmoteClick: (Emote) -> Unit,
@@ -68,29 +69,7 @@ fun ChannelChatScreen(
     val stream = (state as? ChatViewModel.State.Chatting)?.stream
     val user = (state as? ChatViewModel.State.Chatting)?.user
 
-    var logo: Bitmap? by remember { mutableStateOf(null) }
-    var swatch: Palette.Swatch? by remember { mutableStateOf(null) }
-
-    LaunchedEffect(user) {
-        user?.profileImageUrl ?: return@LaunchedEffect
-
-        logo = loadImageToBitmap(
-            context = context,
-            imageUrl = user.profileImageUrl,
-            circle = true,
-            width = 256,
-            height = 256
-        )
-
-        swatch = logo?.let {
-            val palette = Palette.Builder(it).generateAsync()
-            (palette?.dominantSwatch ?: palette?.dominantSwatch)
-        }
-
-        logo?.let { logo ->
-            onChannelLogoLoaded(user, logo)
-        }
-    }
+    val branding: ChannelBranding = rememberChannelBranding(user)
 
     val inputFocusRequester = remember { FocusRequester() }
 
@@ -111,11 +90,9 @@ fun ChannelChatScreen(
             channelLogin = channelLogin,
             user = user,
             stream = stream,
-            swatch = swatch,
-            logo = logo,
+            channelBranding = branding,
             onWatchLiveClicked = onWatchLiveClicked,
-            onOpenBubbleClicked = onOpenBubbleClicked,
-            onColorContrastChanged = onColorContrastChanged
+            onOpenBubbleClicked = onOpenBubbleClicked
         )
 
         ChatScreen(

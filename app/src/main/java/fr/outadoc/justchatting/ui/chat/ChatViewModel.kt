@@ -66,6 +66,7 @@ import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.collections.component1
@@ -292,7 +293,7 @@ class ChatViewModel(
     private suspend fun Action.LoadEmotes.reduce(state: State): State {
         if (state !is State.Chatting) return state
 
-        return coroutineScope {
+        return withContext(Dispatchers.IO) {
             val globalBadges = async {
                 try {
                     emotesRepository.loadGlobalBadges().body()?.badges

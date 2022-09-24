@@ -2,6 +2,8 @@ package fr.outadoc.justchatting.ui.chat
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Bitmap
+import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -20,7 +22,42 @@ object ChatNotificationUtils {
 
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 
-    fun createShortcutForChannel(
+    fun configureChatBubbles(context: Context, channel: User, channelLogo: Bitmap) {
+        // Bubbles are only available on Android Q+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
+
+        createGenericBubbleChannelIfNeeded(context) ?: return
+
+        val icon = channelLogo.let { IconCompat.createWithBitmap(it) }
+
+        val person: Person =
+            Person.Builder()
+                .setKey(channel.id)
+                .setName(channel.displayName)
+                .setIcon(icon)
+                .build()
+
+        createShortcutForChannel(
+            context = context,
+            intent = ChatActivity.createIntent(
+                context = context,
+                channelLogin = channel.login
+            ),
+            channelId = channel.id,
+            channelName = channel.displayName,
+            person = person,
+            icon = icon
+        )
+
+        createBubble(
+            context = context,
+            user = channel,
+            icon = icon,
+            person = person
+        )
+    }
+
+    private fun createShortcutForChannel(
         context: Context,
         intent: Intent,
         channelId: String,
@@ -57,7 +94,7 @@ object ChatNotificationUtils {
         )
     }
 
-    fun createGenericBubbleChannelIfNeeded(context: Context): NotificationChannelCompat? {
+    private fun createGenericBubbleChannelIfNeeded(context: Context): NotificationChannelCompat? {
         with(NotificationManagerCompat.from(context)) {
             createNotificationChannel(
                 NotificationChannelCompat.Builder(
@@ -73,7 +110,7 @@ object ChatNotificationUtils {
         }
     }
 
-    fun createBubble(
+    private fun createBubble(
         context: Context,
         user: User,
         icon: IconCompat,

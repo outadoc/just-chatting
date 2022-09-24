@@ -97,8 +97,5 @@ private fun xyzToColor(x: Double, y: Double, z: Double): Int = ColorUtils.XYZToC
 
 fun Int.colorToHex(): String = "#%06X".format(0xFFFFFF and this)
 
-val Int.isLightColor: Boolean
-    get() = ColorUtils.calculateLuminance(this) > 0.5
-
 val Color.isLight: Boolean
     get() = luminance() > 0.5

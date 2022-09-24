@@ -1,33 +1,26 @@
 package fr.outadoc.justchatting.ui.chat
 
-import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.core.app.Person
-import androidx.core.graphics.drawable.IconCompat
 import com.google.android.material.composethemeadapter3.Mdc3Theme
-import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.main.BaseActivity
 import fr.outadoc.justchatting.util.createChannelDeeplink
 import fr.outadoc.justchatting.util.createChannelExternalLink
 import fr.outadoc.justchatting.util.isDark
-import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChatActivity : BaseActivity() {
@@ -46,16 +39,14 @@ class ChatActivity : BaseActivity() {
         }
     }
 
-    private val openInBubble: MutableState<(() -> Unit)?> = mutableStateOf(null)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val channelLogin = intent.getStringExtra(CHANNEL_LOGIN)!!
-
         setContent {
             Mdc3Theme {
-                ChannelChatScreen(channelLogin = channelLogin)
+                ChannelChatScreen(
+                    channelLogin = intent.getStringExtra(CHANNEL_LOGIN)!!
+                )
             }
         }
     }
@@ -65,12 +56,16 @@ class ChatActivity : BaseActivity() {
         val viewModel: ChatViewModel by viewModel()
         val state by viewModel.state.collectAsState()
 
+        val context = LocalContext.current
         val density = LocalDensity.current.density
         val uriHandler = LocalUriHandler.current
 
         val isDarkTheme = MaterialTheme.colorScheme.isDark
 
         val hostModeState = (state as? ChatViewModel.State.Chatting)?.hostModeState
+        val user = (state as? ChatViewModel.State.Chatting)?.user
+
+        val channelBranding: ChannelBranding = rememberChannelBranding(user)
 
         LaunchedEffect(hostModeState) {
             val targetUri = hostModeState?.targetChannelLogin?.createChannelDeeplink()
@@ -91,13 +86,25 @@ class ChatActivity : BaseActivity() {
             isEmotePickerOpen = false
         }
 
+        OnLifecycleEvent(
+            onPause = {
+                if (user != null && channelBranding.logo != null) {
+                    ChatNotificationUtils.configureChatBubbles(
+                        context = context,
+                        channel = user,
+                        channelLogo = channelBranding.logo
+                    )
+                }
+            }
+        )
+
         ChannelChatScreen(
             state = state,
             channelLogin = channelLogin,
+            channelBranding = channelBranding,
             isEmotePickerOpen = isEmotePickerOpen,
-            onWatchLiveClicked = ::onWatchLiveClicked,
-            onOpenBubbleClicked = {
-                openInBubble.value?.invoke()
+            onWatchLiveClicked = {
+                uriHandler.openUri(channelLogin.createChannelExternalLink().toString())
             },
             onMessageChange = viewModel::onMessageInputChanged,
             onToggleEmotePicker = {
@@ -112,6 +119,15 @@ class ChatActivity : BaseActivity() {
             onClearReplyingTo = {
                 viewModel.onReplyToMessage(null)
             },
+            onOpenBubbleClicked = {
+                if (user != null && channelBranding.logo != null) {
+                    ChatNotificationUtils.configureChatBubbles(
+                        context = context,
+                        channel = user,
+                        channelLogo = channelBranding.logo
+                    )
+                }
+            },
             onSubmit = {
                 viewModel.submit(
                     screenDensity = density,
@@ -120,69 +136,5 @@ class ChatActivity : BaseActivity() {
             },
             onReplyToMessage = viewModel::onReplyToMessage
         )
-    }
-
-    private fun onChannelLogoLoaded(user: User, bitmap: Bitmap) {
-        setTaskDescription(
-            ActivityManager.TaskDescription(user.displayName, bitmap)
-        )
-
-        if (!isLaunchedFromBubbleCompat) {
-            configureChatBubbles(user, bitmap)
-        }
-    }
-
-    private fun onWatchLiveClicked(user: User) {
-        startActivity(
-            Intent(Intent.ACTION_VIEW, user.login.createChannelExternalLink())
-        )
-    }
-
-    private fun configureChatBubbles(channel: User, channelLogo: Bitmap) {
-        // Bubbles are only available on Android Q+
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
-
-        ChatNotificationUtils.createGenericBubbleChannelIfNeeded(this)
-            ?: return
-
-        val icon = channelLogo.let { IconCompat.createWithBitmap(it) }
-
-        val person: Person =
-            Person.Builder()
-                .setKey(channel.id)
-                .setName(channel.displayName)
-                .setIcon(icon)
-                .build()
-
-        ChatNotificationUtils.createShortcutForChannel(
-            context = this,
-            intent = createIntent(
-                context = this,
-                channelLogin = channel.login
-            ),
-            channelId = channel.id,
-            channelName = channel.displayName,
-            person = person,
-            icon = icon
-        )
-
-        openInBubble.value = {
-            ChatNotificationUtils.createBubble(
-                context = this,
-                user = channel,
-                icon = icon,
-                person = person
-            )
-        }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        openInBubble.value?.invoke()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        openInBubble.value = null
     }
 }

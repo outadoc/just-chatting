@@ -69,7 +69,7 @@ fun ChatTopAppBar(
     user: User?,
     stream: Stream?,
     channelBranding: ChannelBranding,
-    onWatchLiveClicked: (User) -> Unit,
+    onWatchLiveClicked: () -> Unit,
     onOpenBubbleClicked: (() -> Unit)?
 ) {
     var showOverflow by remember { mutableStateOf(false) }
@@ -121,21 +121,19 @@ fun ChatTopAppBar(
             }
         },
         actions = {
-            user?.let { user ->
-                HapticIconButton(onClick = { onWatchLiveClicked(user) }) {
-                    Icon(
-                        modifier = Modifier.padding(bottom = 3.dp),
-                        imageVector = Icons.Outlined.LiveTv,
-                        contentDescription = stringResource(R.string.watch_live)
-                    )
-                }
+            HapticIconButton(onClick = { onWatchLiveClicked() }) {
+                Icon(
+                    modifier = Modifier.padding(bottom = 3.dp),
+                    imageVector = Icons.Outlined.LiveTv,
+                    contentDescription = stringResource(R.string.watch_live)
+                )
+            }
 
-                IconButton(onClick = { showOverflow = true }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = stringResource(R.string.menu_item_showOverflow)
-                    )
-                }
+            IconButton(onClick = { showOverflow = true }) {
+                Icon(
+                    imageVector = Icons.Default.MoreVert,
+                    contentDescription = stringResource(R.string.menu_item_showOverflow)
+                )
             }
 
             DropdownMenu(
@@ -297,4 +295,3 @@ fun ExpandedTopAppBar(
         }
     }
 }
-

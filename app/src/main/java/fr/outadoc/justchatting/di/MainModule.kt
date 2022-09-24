@@ -126,7 +126,7 @@ val mainModule = module {
                         }
                     )
                 }
-                addInterceptor(ChuckerInterceptor.Builder(get()).build())
+                // addInterceptor(ChuckerInterceptor.Builder(get()).build())
                 connectTimeout(5, TimeUnit.MINUTES)
                 writeTimeout(5, TimeUnit.MINUTES)
                 readTimeout(5, TimeUnit.MINUTES)

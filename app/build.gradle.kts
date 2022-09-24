@@ -143,7 +143,7 @@ dependencies {
 
     ksp(libs.androidx.room.compiler)
 
-    debugImplementation(libs.leakcanary)
+    // debugImplementation(libs.leakcanary)
     debugImplementation(libs.chucker.runtime)
     releaseImplementation(libs.chucker.noop)
 

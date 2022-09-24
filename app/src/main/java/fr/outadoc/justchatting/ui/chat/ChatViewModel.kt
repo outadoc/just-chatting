@@ -125,25 +125,25 @@ class ChatViewModel(
             val replyingTo: ChatEntry? = null
         ) : State() {
 
-            val allEmotes: ImmutableSet<Emote> =
-                (twitchEmotes + otherEmotes)
+            val allEmotes: ImmutableSet<Emote>
+                get() = (twitchEmotes + otherEmotes)
                     .filterIsInstance<EmoteSetItem.Emote>()
                     .map { it.emote }
                     .distinctBy { it.name }
                     .toImmutableSet()
 
-            val allEmotesMap: ImmutableMap<String, Emote> =
-                allEmotes.associateBy { emote -> emote.name }
+            val allEmotesMap: ImmutableMap<String, Emote>
+                get() = allEmotes.associateBy { emote -> emote.name }
                     .plus(cheerEmotes.associateBy { emote -> emote.name })
                     .toImmutableMap()
 
-            val availableRecentEmotes: ImmutableSet<EmoteSetItem> =
-                recentEmotes.filter { recentEmote -> recentEmote.name in allEmotesMap }
+            val availableRecentEmotes: ImmutableSet<EmoteSetItem>
+                get() = recentEmotes.filter { recentEmote -> recentEmote.name in allEmotesMap }
                     .map { recentEmote -> EmoteSetItem.Emote(recentEmote) }
                     .toImmutableSet()
 
-            val messagePostConstraint: MessagePostConstraint? =
-                lastSentMessageInstant?.let {
+            val messagePostConstraint: MessagePostConstraint?
+                get() = lastSentMessageInstant?.let {
                     if (roomState.slowModeDuration?.isPositive() != true) {
                         null
                     } else {
@@ -154,9 +154,10 @@ class ChatViewModel(
                     }
                 }
 
-            val previousWord = inputMessage
-                .getTextBeforeSelection(inputMessage.text.length)
-                .takeLastWhile { it != ' ' }
+            val previousWord: CharSequence
+                get() = inputMessage
+                    .getTextBeforeSelection(inputMessage.text.length)
+                    .takeLastWhile { it != ' ' }
         }
     }
 

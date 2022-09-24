@@ -208,6 +208,7 @@
     <string name="logout_msg">Connecté·e en tant que %s</string>
     <string name="logout_title">Se déconnecter ?</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
+    <string name="menu_item_showOverflow">Plus d\'actions…</string>
     <string name="message_limit">Limite de messages</string>
     <string name="no">Non</string>
     <string name="no_browser_found">Aucune application de navigateur trouvée</string>

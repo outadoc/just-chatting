@@ -209,6 +209,7 @@
     <string name="logout_msg">Logged in as %s</string>
     <string name="logout_title">Log out?</string>
     <string name="menu_item_openInBubble">Open in bubble</string>
+    <string name="menu_item_showOverflow">More actions…</string>
     <string name="message_limit">Message limit</string>
     <string name="no">No</string>
     <string name="no_browser_found">No browser app found</string>

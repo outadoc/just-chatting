@@ -46,6 +46,7 @@ import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -53,8 +54,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filterIsInstance
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.scan
 import kotlinx.coroutines.flow.stateIn
@@ -66,6 +72,7 @@ import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Duration.Companion.minutes
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class ChatViewModel(
     private val repository: TwitchService,
     private val emotesRepository: EmotesRepository,
@@ -170,6 +177,41 @@ class ChatViewModel(
                 actions.emit(Action.LoadStreamDetails)
             }
         }
+
+        state.filterIsInstance<State.Chatting>()
+            .map { state -> state.user }
+            .distinctUntilChanged()
+            .onEach { user ->
+                actions.emit(Action.LoadEmotes(user.id))
+                actions.emit(Action.LoadStreamDetails)
+            }
+            .launchIn(viewModelScope)
+
+        state.filterIsInstance<State.Chatting>()
+            .map { state -> state.user }
+            .distinctUntilChanged()
+            .flatMapLatest { user -> chatConnectionPool.start(user.id, user.login) }
+            .map { command ->
+                when (command) {
+                    is PingCommand -> null
+                    is ChatMessage,
+                    is PointReward,
+                    is Command -> Action.AddMessages(listOf(command))
+
+                    is HostModeState -> Action.ChangeHostModeState(command)
+                    is RoomStateDelta -> Action.ChangeRoomState(command)
+                    is UserState -> Action.ChangeUserState(command)
+                }
+            }
+            .filterNotNull()
+            .onEach { action -> actions.emit(action) }
+            .launchIn(viewModelScope)
+
+        state.filterIsInstance<State.Chatting>()
+            .distinctUntilChanged { _, _ -> true }
+            .flatMapLatest { emotesRepository.loadRecentEmotes() }
+            .onEach { recentEmotes -> actions.emit(Action.ChangeRecentEmotes(recentEmotes)) }
+            .launchIn(viewModelScope)
     }
 
     fun loadChat(channelLogin: String) {
@@ -229,64 +271,17 @@ class ChatViewModel(
     private suspend fun Action.LoadChat.reduce(state: State): State {
         if (state is State.Chatting && state.user.login == channelLogin) return state
 
-        val appUser = userPreferencesRepository.appUser.first() as? AppUser.LoggedIn
-            ?: return state
-
-        val user = repository.loadUsersByLogin(logins = listOf(channelLogin))
-            ?.firstOrNull()
-            ?: error("User not loaded")
-
-        chatConnectionPool
-            .start(user.id, channelLogin)
-            .onEach { command ->
-                val action = when (command) {
-                    is PingCommand -> null
-                    is ChatMessage,
-                    is PointReward,
-                    is Command -> {
-                        Action.AddMessages(listOf(command))
-                    }
-                    is HostModeState -> {
-                        Action.ChangeHostModeState(command)
-                    }
-                    is RoomStateDelta -> {
-                        Action.ChangeRoomState(command)
-                    }
-                    is UserState -> {
-                        Action.ChangeUserState(command)
-                    }
-                }
-
-                if (action != null) {
-                    viewModelScope.launch {
-                        actions.emit(action)
-                    }
-                }
-            }
-            .launchIn(viewModelScope)
-
-        emotesRepository.loadRecentEmotes()
-            .onEach { recentEmotes ->
-                viewModelScope.launch {
-                    actions.emit(Action.ChangeRecentEmotes(recentEmotes))
-                }
-            }
-            .launchIn(viewModelScope)
-
-        viewModelScope.launch {
-            actions.emit(Action.LoadEmotes(user.id))
-            actions.emit(Action.LoadStreamDetails)
-        }
-
         return State.Chatting(
-            user = user,
-            appUser = appUser,
+            user = repository.loadUsersByLogin(logins = listOf(channelLogin))
+                ?.firstOrNull()
+                ?: error("User not loaded"),
+            appUser = userPreferencesRepository.appUser.first() as AppUser.LoggedIn,
             chatters = persistentSetOf(Chatter(channelLogin)),
             maxAdapterCount = chatPreferencesRepository.messageLimit.first()
         )
     }
 
-    @Suppress("unused")
+    @Suppress("UnusedReceiverParameter")
     private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return state.copy(
@@ -381,11 +376,12 @@ class ChatViewModel(
             }
 
             val otherEmotes = groups
-                .flatMap { (group, emotes) ->
+                .takeIf { it.isNotEmpty() }
+                ?.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
                         emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
-                .toPersistentSet()
+                ?.toPersistentSet()
 
             val cheerEmotes = try {
                 repository.loadCheerEmotes(userId = channelId).toPersistentList()
@@ -396,7 +392,7 @@ class ChatViewModel(
 
             state.copy(
                 cheerEmotes = cheerEmotes ?: state.cheerEmotes,
-                otherEmotes = otherEmotes,
+                otherEmotes = otherEmotes ?: state.otherEmotes,
                 channelBadges = channelBadges.await() ?: state.channelBadges,
                 globalBadges = globalBadges.await() ?: state.globalBadges
             )
@@ -456,13 +452,12 @@ class ChatViewModel(
                 inReplyToId = state.replyingTo?.data?.messageId
             )
 
-            val allEmotesMap = state.allEmotesMap
             val usedEmotes: List<RecentEmote> =
                 state.inputMessage
                     .text
                     .split(' ')
                     .mapNotNull { word ->
-                        allEmotesMap[word]?.let { emote ->
+                        state.allEmotesMap[word]?.let { emote ->
                             RecentEmote(
                                 name = word,
                                 url = emote.getUrl(

@@ -51,7 +51,6 @@ fun ChannelChatScreen(
     onChannelLogoLoaded: (User, Bitmap) -> Unit,
     onWatchLiveClicked: (User) -> Unit,
     onOpenBubbleClicked: (() -> Unit)?,
-    onStreamInfoClicked: (User) -> Unit,
     onColorContrastChanged: (isLight: Boolean) -> Unit,
     onMessageChange: (TextFieldValue) -> Unit,
     onToggleEmotePicker: () -> Unit,
@@ -116,7 +115,6 @@ fun ChannelChatScreen(
             logo = logo,
             onWatchLiveClicked = onWatchLiveClicked,
             onOpenBubbleClicked = onOpenBubbleClicked,
-            onStreamInfoClicked = onStreamInfoClicked,
             onColorContrastChanged = onColorContrastChanged
         )
 

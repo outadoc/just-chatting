@@ -52,3 +52,23 @@ fun Instant.formatTime(
         }
     )
 }
+
+@Composable
+fun Instant.formatTime(
+    tz: TimeZone = TimeZone.currentSystemDefault(),
+    clock: Clock = Clock.System
+): String? {
+    val context = LocalContext.current
+    return remember(this, tz, clock) {
+        val isCurrentYear = toLocalDateTime(tz).year == clock.now().toLocalDateTime(tz).year
+        DateUtils.formatDateTime(
+            context,
+            toEpochMilliseconds(),
+            if (isCurrentYear) {
+                DateUtils.FORMAT_NO_YEAR
+            } else {
+                DateUtils.FORMAT_SHOW_DATE
+            }
+        )
+    }
+}

@@ -25,7 +25,6 @@ import androidx.core.view.WindowCompat
 import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.main.BaseActivity
-import fr.outadoc.justchatting.ui.view.chat.StreamInfoDialog
 import fr.outadoc.justchatting.util.createChannelDeeplink
 import fr.outadoc.justchatting.util.createChannelExternalLink
 import fr.outadoc.justchatting.util.isDark
@@ -100,7 +99,6 @@ class ChatActivity : BaseActivity() {
             onChannelLogoLoaded = ::onChannelLogoLoaded,
             onWatchLiveClicked = ::onWatchLiveClicked,
             onOpenBubbleClicked = ::onOpenBubbleClicked,
-            onStreamInfoClicked = ::onStreamInfoClicked,
             onColorContrastChanged = { isLight ->
                 WindowCompat.getInsetsController(window, window.decorView)
                     .isAppearanceLightStatusBars = !isLight
@@ -146,11 +144,6 @@ class ChatActivity : BaseActivity() {
 
     private fun onOpenBubbleClicked() {
         openInBubble.value?.invoke()
-    }
-
-    private fun onStreamInfoClicked(user: User) {
-        StreamInfoDialog.newInstance(userId = user.id)
-            .show(supportFragmentManager, "closeOnPip")
     }
 
     private fun configureChatBubbles(channel: User, channelLogo: Bitmap) {

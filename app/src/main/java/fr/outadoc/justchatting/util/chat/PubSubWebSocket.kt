@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.util.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -52,7 +53,10 @@ class PubSubWebSocket(
 
     private var pongReceived = false
 
-    private val _flow = MutableSharedFlow<ChatCommand>(replay = maxChatLimit)
+    private val _flow = MutableSharedFlow<ChatCommand>(
+        replay = maxChatLimit,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     val flow: Flow<ChatCommand> = _flow
 
     fun start() {
@@ -155,7 +159,7 @@ class PubSubWebSocket(
 
                     when {
                         topic?.startsWith("community-points-channel") == true &&
-                            messageType?.startsWith("reward-redeemed") == true -> {
+                                messageType?.startsWith("reward-redeemed") == true -> {
                             scope.launch {
                                 _flow.emit(
                                     pubSubRewardParser.parse(text)
@@ -164,6 +168,7 @@ class PubSubWebSocket(
                         }
                     }
                 }
+
                 "PONG" -> pongReceived = true
                 "RECONNECT" -> attemptReconnect(this)
             }

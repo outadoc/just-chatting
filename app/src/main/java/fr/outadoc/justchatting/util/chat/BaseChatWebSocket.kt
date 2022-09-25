@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.util.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -38,7 +39,10 @@ abstract class BaseChatWebSocket(
 
     private val maxChatLimit = applicationContext.resources.getInteger(R.integer.pref_max_chatLimit)
 
-    private val _flow = MutableSharedFlow<ChatCommand>(replay = maxChatLimit)
+    private val _flow = MutableSharedFlow<ChatCommand>(
+        replay = maxChatLimit,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST
+    )
     val flow: Flow<ChatCommand> = _flow
 
     protected fun connect(socketListener: WebSocketListener) {

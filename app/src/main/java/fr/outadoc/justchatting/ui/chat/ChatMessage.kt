@@ -94,6 +94,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.Badge
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.TwitchBadge
@@ -157,6 +158,7 @@ fun ChatScreen(
                 CircularProgressIndicator()
             }
         }
+
         is ChatViewModel.State.Chatting -> {
             if (state.chatMessages.isEmpty()) {
                 Column(
@@ -218,7 +220,8 @@ fun ChatList(
             showTimestamps = showTimestamps,
             listState = listState,
             onMessageLongClick = onMessageLongClick,
-            onReplyToMessage = onReplyToMessage
+            onReplyToMessage = onReplyToMessage,
+            appUser = state.appUser
         )
 
         AnimatedVisibility(
@@ -310,7 +313,8 @@ fun ChatList(
     listState: LazyListState,
     onMessageLongClick: (ChatEntry) -> Unit,
     onReplyToMessage: (ChatEntry) -> Unit,
-    roomState: RoomState
+    roomState: RoomState,
+    appUser: AppUser
 ) {
     val inlinesEmotes = remember(emotes) {
         emotes.mapValues { (_, emote) ->
@@ -397,7 +401,8 @@ fun ChatList(
                     inlineContent = inlinesEmotes.putAll(inlineBadges),
                     animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
-                    background = background
+                    background = background,
+                    appUser = appUser
                 )
             }
         }
@@ -467,7 +472,8 @@ fun ChatMessage(
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
-    background: Color
+    background: Color,
+    appUser: AppUser
 ) {
     val timestamp = message.timestamp
         .formatTimestamp()
@@ -494,14 +500,19 @@ fun ChatMessage(
                 HighlightedMessage(
                     message = message,
                     inlineContent = inlineContent,
-                    animateEmotes = animateEmotes
+                    animateEmotes = animateEmotes,
+                    appUser = appUser,
+                    backgroundHint = background
                 )
             }
+
             is ChatEntry.Simple -> {
                 SimpleMessage(
                     message = message,
                     inlineContent = inlineContent,
-                    animateEmotes = animateEmotes
+                    animateEmotes = animateEmotes,
+                    appUser = appUser,
+                    backgroundHint = background
                 )
             }
         }
@@ -513,7 +524,9 @@ fun HighlightedMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry.Highlighted,
     inlineContent: ImmutableMap<String, InlineTextContent>,
-    animateEmotes: Boolean
+    animateEmotes: Boolean,
+    appUser: AppUser,
+    backgroundHint: Color
 ) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
         Box(
@@ -557,7 +570,9 @@ fun HighlightedMessage(
                     modifier = modifier.padding(4.dp),
                     data = data,
                     inlineContent = inlineContent,
-                    animateEmotes = animateEmotes
+                    animateEmotes = animateEmotes,
+                    appUser = appUser,
+                    backgroundHint = backgroundHint
                 )
             }
         }
@@ -569,7 +584,9 @@ fun SimpleMessage(
     modifier: Modifier = Modifier,
     message: ChatEntry.Simple,
     inlineContent: ImmutableMap<String, InlineTextContent>,
-    animateEmotes: Boolean
+    animateEmotes: Boolean,
+    appUser: AppUser,
+    backgroundHint: Color
 ) {
     Row {
         Spacer(
@@ -585,7 +602,9 @@ fun SimpleMessage(
             ),
             data = message.data,
             inlineContent = inlineContent,
-            animateEmotes = animateEmotes
+            animateEmotes = animateEmotes,
+            appUser = appUser,
+            backgroundHint = backgroundHint
         )
     }
 }
@@ -595,7 +614,9 @@ fun ChatMessageData(
     modifier: Modifier = Modifier,
     data: ChatEntry.Data,
     inlineContent: ImmutableMap<String, InlineTextContent>,
-    animateEmotes: Boolean
+    animateEmotes: Boolean,
+    appUser: AppUser,
+    backgroundHint: Color
 ) {
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
@@ -618,7 +639,11 @@ fun ChatMessageData(
                     .toImmutableMap()
             )
 
-    val annotatedString = data.toAnnotatedString(fullInlineContent)
+    val annotatedString = data.toAnnotatedString(
+        appUser = appUser,
+        inlineContent = fullInlineContent,
+        backgroundHint = backgroundHint
+    )
 
     Column(modifier = modifier) {
         if (data.inReplyTo != null) {
@@ -714,13 +739,18 @@ fun InReplyToMessage(
 @Composable
 @OptIn(ExperimentalTextApi::class)
 fun ChatEntry.Data.toAnnotatedString(
-    inlineContent: ImmutableMap<String, InlineTextContent>
+    appUser: AppUser,
+    inlineContent: ImmutableMap<String, InlineTextContent>,
+    urlColor: Color = MaterialTheme.colorScheme.primary,
+    backgroundHint: Color = MaterialTheme.colorScheme.surface,
+    mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
+    mentionColor: Color = MaterialTheme.colorScheme.background
 ): AnnotatedString {
     val color = color
         ?.let { color ->
             ensureColorIsAccessible(
                 foreground = android.graphics.Color.parseColor(color),
-                background = MaterialTheme.colorScheme.surface.toArgb()
+                background = backgroundHint.toArgb()
             )
         }
         ?: userName.getRandomChatColor()
@@ -762,29 +792,43 @@ fun ChatEntry.Data.toAnnotatedString(
                 when {
                     word.matches(urlRegex) -> {
                         val url = if (word.startsWith("http")) word else "https://$word"
-                        withStyle(SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                        withStyle(SpanStyle(color = urlColor)) {
                             withAnnotation(tag = UrlAnnotationTag, annotation = url) {
                                 append(word)
                             }
                         }
                     }
+
                     word.startsWith('@') -> {
+                        val username = word.removePrefix("@")
                         withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                             withAnnotation(
                                 tag = UrlAnnotationTag,
-                                annotation = word.removePrefix("@").createChannelDeeplink()
-                                    .toString()
+                                annotation = username.createChannelDeeplink().toString()
                             ) {
-                                append(word)
+                                if (username == appUser.login) {
+                                    withStyle(
+                                        SpanStyle(
+                                            background = mentionBackground,
+                                            color = mentionColor
+                                        )
+                                    ) {
+                                        append(word)
+                                    }
+                                } else {
+                                    append(word)
+                                }
                             }
                         }
                     }
+
                     word in inlineContent -> {
                         appendInlineContent(
                             id = word,
                             alternateText = word
                         )
                     }
+
                     else -> {
                         append(word)
                     }

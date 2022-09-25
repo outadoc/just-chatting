@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.ui.common
 import androidx.annotation.ColorInt
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.luminance
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.graphics.ColorUtils
 import kotlin.math.max
 import kotlin.math.min
@@ -10,12 +11,11 @@ import kotlin.math.min
 private const val MIN_LUMINANCE_SEARCH_MAX_ITERATIONS = 10
 private const val MIN_LUMINANCE_SEARCH_PRECISION = 1
 
-@ColorInt
 fun ensureColorIsAccessible(
-    @ColorInt foreground: Int,
-    @ColorInt background: Int,
+    foreground: Color,
+    background: Color,
     minimumContrast: Double = 4.5
-): Int? {
+): Color? {
     // Get X, Y, Z components of foreground and background colors
     val (_, backgroundY, _) = colorToXyz(background)
     val (foregroundX, foregroundY, foregroundZ) = colorToXyz(foreground)
@@ -86,16 +86,16 @@ fun ensureMinimumAlpha(
     )
 }
 
-private fun colorToXyz(@ColorInt color: Int): DoubleArray {
+private fun colorToXyz(color: Color): DoubleArray {
     return DoubleArray(3).apply {
-        ColorUtils.colorToXYZ(color, this)
+        ColorUtils.colorToXYZ(color.toArgb(), this)
     }
 }
 
-@ColorInt
-private fun xyzToColor(x: Double, y: Double, z: Double): Int = ColorUtils.XYZToColor(x, y, z)
-
-fun Int.colorToHex(): String = "#%06X".format(0xFFFFFF and this)
+private fun xyzToColor(x: Double, y: Double, z: Double) = Color(ColorUtils.XYZToColor(x, y, z))
 
 val Color.isLight: Boolean
     get() = luminance() > 0.5
+
+fun String.parseHexColor(): Color =
+    Color(android.graphics.Color.parseColor(this))

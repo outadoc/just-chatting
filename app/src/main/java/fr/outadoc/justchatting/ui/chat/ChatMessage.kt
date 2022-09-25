@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.ui.chat
 
 import android.util.Patterns
-import androidx.annotation.ColorInt
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -69,7 +68,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -100,6 +98,7 @@ import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
+import fr.outadoc.justchatting.ui.common.parseHexColor
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.BadgeItem
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
@@ -746,14 +745,18 @@ fun ChatEntry.Data.toAnnotatedString(
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
     mentionColor: Color = MaterialTheme.colorScheme.background
 ): AnnotatedString {
-    val color = color
-        ?.let { color ->
+    val randomChatColors = integerArrayResource(R.array.randomChatColors).map { Color(it) }
+
+    val color = remember(color) {
+        color?.let { color ->
             ensureColorIsAccessible(
-                foreground = android.graphics.Color.parseColor(color),
-                background = backgroundHint.toArgb()
+                foreground = color.parseHexColor(),
+                background = backgroundHint
             )
-        }
-        ?: userName.getRandomChatColor()
+        } ?: randomChatColors.random(
+            Random(userName.hashCode())
+        )
+    }
 
     return buildAnnotatedString {
         badges?.forEach { badge ->
@@ -765,7 +768,7 @@ fun ChatEntry.Data.toAnnotatedString(
             append(' ')
         }
 
-        withStyle(SpanStyle(color = Color(color))) {
+        withStyle(SpanStyle(color = color)) {
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 withAnnotation(
                     tag = UrlAnnotationTag,
@@ -837,14 +840,6 @@ fun ChatEntry.Data.toAnnotatedString(
                 append(' ')
             }
     }
-}
-
-@Stable
-@Composable
-@ColorInt
-fun String.getRandomChatColor(): Int {
-    val randomChatColors = integerArrayResource(id = R.array.randomChatColors)
-    return randomChatColors.random(Random(hashCode()))
 }
 
 private val Badge.inlineContentId: String

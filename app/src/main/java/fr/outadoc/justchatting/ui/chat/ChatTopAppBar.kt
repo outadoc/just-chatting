@@ -70,7 +70,7 @@ fun ChatTopAppBar(
     stream: Stream?,
     channelBranding: ChannelBranding,
     onWatchLiveClicked: () -> Unit,
-    onOpenBubbleClicked: (() -> Unit)?
+    onOpenBubbleClicked: () -> Unit
 ) {
     var showOverflow by remember { mutableStateOf(false) }
     var showStreamInfo by remember { mutableStateOf(false) }
@@ -129,7 +129,7 @@ fun ChatTopAppBar(
                 )
             }
 
-            IconButton(onClick = { showOverflow = true }) {
+            IconButton(onClick = { showOverflow = !showOverflow }) {
                 Icon(
                     imageVector = Icons.Default.MoreVert,
                     contentDescription = stringResource(R.string.menu_item_showOverflow)
@@ -141,10 +141,10 @@ fun ChatTopAppBar(
                 onDismissRequest = { showOverflow = false }
             ) {
                 DropdownMenuItem(
-                    enabled = onOpenBubbleClicked != null,
+                    enabled = canOpenInBubble(),
                     text = { Text(text = stringResource(R.string.menu_item_openInBubble)) },
                     onClick = {
-                        onOpenBubbleClicked?.invoke()
+                        onOpenBubbleClicked()
                         showOverflow = false
                     }
                 )

@@ -98,6 +98,8 @@ class ChatActivity : BaseActivity() {
             }
         )
 
+        val canOpenInBubble = canOpenInBubble()
+
         ChannelChatScreen(
             state = state,
             channelLogin = channelLogin,
@@ -120,7 +122,7 @@ class ChatActivity : BaseActivity() {
                 viewModel.onReplyToMessage(null)
             },
             onOpenBubbleClicked = {
-                if (user != null && channelBranding.logo != null) {
+                if (canOpenInBubble && user != null && channelBranding.logo != null) {
                     ChatNotificationUtils.configureChatBubbles(
                         context = context,
                         channel = user,

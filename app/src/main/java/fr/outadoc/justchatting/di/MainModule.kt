@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.di
 
 import androidx.room.Room
-import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.api.BttvEmotesApi

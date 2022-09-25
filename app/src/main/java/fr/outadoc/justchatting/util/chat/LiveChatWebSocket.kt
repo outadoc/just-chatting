@@ -86,7 +86,7 @@ class LiveChatWebSocket private constructor(
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
-            text.lines()
+            text.lineSequence()
                 .filter { message -> message.isNotBlank() }
                 .forEach(::notifyMessage)
         }

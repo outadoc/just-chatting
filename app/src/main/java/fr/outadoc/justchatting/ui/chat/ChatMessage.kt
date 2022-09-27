@@ -500,8 +500,7 @@ fun ChatMessage(
                     message = message,
                     inlineContent = inlineContent,
                     animateEmotes = animateEmotes,
-                    appUser = appUser,
-                    backgroundHint = background
+                    appUser = appUser
                 )
             }
 
@@ -510,8 +509,7 @@ fun ChatMessage(
                     message = message,
                     inlineContent = inlineContent,
                     animateEmotes = animateEmotes,
-                    appUser = appUser,
-                    backgroundHint = background
+                    appUser = appUser
                 )
             }
         }
@@ -525,7 +523,7 @@ fun HighlightedMessage(
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
-    backgroundHint: Color
+    backgroundHint: Color = MaterialTheme.colorScheme.surface
 ) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
         Box(
@@ -585,7 +583,7 @@ fun SimpleMessage(
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
-    backgroundHint: Color
+    backgroundHint: Color = MaterialTheme.colorScheme.surface
 ) {
     Row {
         Spacer(

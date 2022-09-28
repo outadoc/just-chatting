@@ -43,6 +43,7 @@ import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.Reply
+import androidx.compose.material.icons.filled.Token
 import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -89,9 +90,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
+import fr.outadoc.justchatting.composepreview.ChatPreviews
+import fr.outadoc.justchatting.composepreview.previewBadges
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.Badge
 import fr.outadoc.justchatting.model.chat.Emote
@@ -464,6 +470,34 @@ fun SwipeToReply(
     }
 }
 
+@ChatPreviews
+@Composable
+fun ChatMessagePreview(
+    @PreviewParameter(ChatEntryPreviewProvider::class) chatEntry: ChatEntry
+) {
+    val inlineBadges = previewBadges
+        .associateWith {
+            InlineTextContent(badgePlaceholder) {
+                Icon(Icons.Default.Token, contentDescription = null)
+            }
+        }
+        .toPersistentHashMap()
+
+    Mdc3Theme {
+        ChatMessage(
+            message = chatEntry,
+            inlineContent = inlineBadges,
+            animateEmotes = true,
+            showTimestamps = true,
+            appUser = AppUser.LoggedIn(
+                id = "123",
+                login = "outadoc",
+                helixToken = ""
+            )
+        )
+    }
+}
+
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,
@@ -471,7 +505,7 @@ fun ChatMessage(
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
-    background: Color,
+    background: Color = Color.Transparent,
     appUser: AppUser
 ) {
     val timestamp = message.timestamp
@@ -586,11 +620,7 @@ fun SimpleMessage(
     backgroundHint: Color = MaterialTheme.colorScheme.surface
 ) {
     Row {
-        Spacer(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(4.dp)
-        )
+        Spacer(modifier = Modifier.width(4.dp))
 
         ChatMessageData(
             modifier = modifier.padding(

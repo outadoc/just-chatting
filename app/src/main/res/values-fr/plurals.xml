@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="viewers">
+        <item quantity="one">%s spectateur</item>
+        <item quantity="other">%s spectateur·rice·s</item>
+        <item quantity="many">%s de spectateur·rice·s</item>
+    </plurals>
+</resources>

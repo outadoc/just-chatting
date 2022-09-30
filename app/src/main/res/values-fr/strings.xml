@@ -242,7 +242,6 @@
     <string name="trouble_logging_in">Vous avez des problèmes pour vous connecter ?</string>
     <string name="uptime">En direct depuis %s</string>
     <string name="user_redeemed">%1$s a obtenu %2$s pour %3$,d points</string>
-    <string name="viewers_count">%s spectateur·rice·s</string>
     <string name="watch_live">Regarder en direct</string>
     <string name="yes">Oui</string>
 </resources>

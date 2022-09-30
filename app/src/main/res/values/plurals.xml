@@ -2,6 +2,6 @@
 <resources>
     <plurals name="viewers">
         <item quantity="one">%s viewer</item>
-        <item quantity="other">@string/viewers_count</item>
+        <item quantity="other">%s viewers</item>
     </plurals>
 </resources>

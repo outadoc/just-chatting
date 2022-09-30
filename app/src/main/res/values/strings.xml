@@ -243,7 +243,6 @@
     <string name="trouble_logging_in">Having trouble logging in?</string>
     <string name="uptime">%s uptime</string>
     <string name="user_redeemed">%1$s redeemed %2$s for %3$,d points</string>
-    <string name="viewers_count">%s viewers</string>
     <string name="watch_live">Watch live</string>
     <string name="yes">Yes</string>
 </resources>

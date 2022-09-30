@@ -10,8 +10,8 @@ import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 
-@Preview(group = "themes", uiMode = Configuration.UI_MODE_NIGHT_YES)
-@Preview(group = "themes", uiMode = Configuration.UI_MODE_NIGHT_NO)
+@Preview(group = "themes", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
+@Preview(group = "themes", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
 annotation class ThemePreviews
 
 val previewBadges = listOf(

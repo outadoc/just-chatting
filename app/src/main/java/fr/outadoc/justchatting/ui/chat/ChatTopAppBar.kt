@@ -53,7 +53,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.HapticIconButton
@@ -169,39 +171,43 @@ fun ChatTopAppBar(
     )
 }
 
-@Preview(name = "Full stream info")
+@ThemePreviews
 @Composable
 fun StreamInfoPreviewFull() {
-    StreamInfo(
-        user = User(
-            id = "",
-            login = "",
-            displayName = "",
-            followersCount = 50,
-            createdAt = "2022-01-01T00:00:00.00Z"
-        ),
-        stream = Stream(
-            title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
-            gameName = "",
-            startedAt = "2022-09-01T00:00:00.00Z",
-            viewerCount = 10_000
+    Mdc3Theme {
+        StreamInfo(
+            user = User(
+                id = "",
+                login = "",
+                displayName = "",
+                followersCount = 50,
+                createdAt = "2022-01-01T00:00:00.00Z"
+            ),
+            stream = Stream(
+                title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+                gameName = "",
+                startedAt = "2022-09-01T00:00:00.00Z",
+                viewerCount = 10_000
+            )
         )
-    )
+    }
 }
 
-@Preview(name = "Offline stream")
+@ThemePreviews
 @Composable
 fun StreamInfoPreviewOffline() {
-    StreamInfo(
-        user = User(
-            id = "",
-            login = "",
-            displayName = "",
-            followersCount = 50,
-            createdAt = "2022-01-01T00:00:00.00Z"
-        ),
-        stream = null
-    )
+    Mdc3Theme {
+        StreamInfo(
+            user = User(
+                id = "",
+                login = "",
+                displayName = "",
+                followersCount = 50,
+                createdAt = "2022-01-01T00:00:00.00Z"
+            ),
+            stream = null
+        )
+    }
 }
 
 @OptIn(ExperimentalComposeUiApi::class)

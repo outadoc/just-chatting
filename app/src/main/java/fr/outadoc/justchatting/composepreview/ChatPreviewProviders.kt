@@ -14,9 +14,6 @@ import kotlinx.datetime.Instant
 @Preview(group = "themes", uiMode = Configuration.UI_MODE_NIGHT_NO)
 annotation class ThemePreviews
 
-@ThemePreviews
-annotation class ChatPreviews
-
 val previewBadges = listOf(
     "badge_subscriber_48",
     "badge_sub-gifter_100"

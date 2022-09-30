@@ -96,7 +96,7 @@ import androidx.compose.ui.unit.em
 import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
-import fr.outadoc.justchatting.composepreview.ChatPreviews
+import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.composepreview.previewBadges
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.Badge
@@ -470,7 +470,7 @@ fun SwipeToReply(
     }
 }
 
-@ChatPreviews
+@ThemePreviews
 @Composable
 fun ChatMessagePreview(
     @PreviewParameter(ChatEntryPreviewProvider::class) chatEntry: ChatEntry

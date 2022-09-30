@@ -42,7 +42,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.repository.ChatPreferencesRepository
@@ -50,8 +52,10 @@ import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Instant
 import org.koin.androidx.compose.get
 
 @Composable
@@ -95,21 +99,63 @@ fun ChatInput(
     }
 }
 
+@ThemePreviews
+@Composable
+fun ChatInputPreviewBasic() {
+    Mdc3Theme {
+        ChatInput(
+            message = TextFieldValue("Lorem ipsum KEKW")
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+fun ChatInputPreviewEmpty() {
+    Mdc3Theme {
+        ChatInput()
+    }
+}
+
+@ThemePreviews
+@Composable
+fun ChatInputPreviewReplying() {
+    Mdc3Theme {
+        ChatInput(
+            replyingTo = ChatEntry.Simple(
+                data = ChatEntry.Data(
+                    message = "Lorem ipsum dolor sit amet?",
+                    messageId = "",
+                    userId = "",
+                    userName = "AntoineDaniel",
+                    userLogin = "",
+                    isAction = false,
+                    color = null,
+                    emotes = null,
+                    badges = null,
+                    inReplyTo = null
+                ),
+                timestamp = Instant.parse("2022-01-01T00:00:00.00Z")
+            )
+        )
+    }
+}
+
 @Composable
 fun ChatInput(
     modifier: Modifier = Modifier,
-    message: TextFieldValue,
-    previousWord: CharSequence,
-    emotes: ImmutableSet<Emote>,
-    chatters: ImmutableSet<Chatter>,
-    animateEmotes: Boolean,
-    replyingTo: ChatEntry?,
-    onEmoteClick: (Emote) -> Unit,
-    onChatterClick: (Chatter) -> Unit,
-    onMessageChange: (TextFieldValue) -> Unit,
-    onToggleEmotePicker: () -> Unit,
-    onClearReplyingTo: () -> Unit,
-    onSubmit: () -> Unit
+    message: TextFieldValue = TextFieldValue(),
+    previousWord: CharSequence = "",
+    emotes: ImmutableSet<Emote> = persistentSetOf(),
+    chatters: ImmutableSet<Chatter> = persistentSetOf(),
+    animateEmotes: Boolean = true,
+    replyingTo: ChatEntry? = null,
+    onEmoteClick: (Emote) -> Unit = {},
+    onChatterClick: (Chatter) -> Unit = {},
+    onMessageChange: (TextFieldValue) -> Unit = {},
+    onToggleEmotePicker: () -> Unit = {},
+    onClearReplyingTo: () -> Unit = {},
+    onSubmit: () -> Unit = {}
 ) {
     val haptic = LocalHapticFeedback.current
 

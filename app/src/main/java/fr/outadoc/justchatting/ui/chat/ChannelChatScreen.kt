@@ -29,12 +29,29 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.composepreview.ScreenPreviews
+import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmotePicker
 import fr.outadoc.justchatting.util.shortToast
+
+@ScreenPreviews
+@Composable
+fun ChannelChatScreenLoadingPreview() {
+    Mdc3Theme {
+        ChannelChatScreen(
+            state = ChatViewModel.State.Initial,
+            channelLogin = "outadoc",
+            channelBranding = rememberChannelBranding(user = null),
+            animateEmotes = false,
+            showTimestamps = true
+        )
+    }
+}
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -43,16 +60,18 @@ fun ChannelChatScreen(
     state: ChatViewModel.State,
     channelLogin: String,
     channelBranding: ChannelBranding,
-    isEmotePickerOpen: Boolean,
-    onWatchLiveClicked: () -> Unit,
-    onMessageChange: (TextFieldValue) -> Unit,
-    onToggleEmotePicker: () -> Unit,
-    onEmoteClick: (Emote) -> Unit,
-    onChatterClick: (Chatter) -> Unit,
-    onClearReplyingTo: () -> Unit,
-    onOpenBubbleClicked: () -> Unit,
-    onSubmit: () -> Unit,
-    onReplyToMessage: (ChatEntry) -> Unit
+    isEmotePickerOpen: Boolean = false,
+    animateEmotes: Boolean,
+    showTimestamps: Boolean,
+    onWatchLiveClicked: () -> Unit = {},
+    onMessageChange: (TextFieldValue) -> Unit = {},
+    onToggleEmotePicker: () -> Unit = {},
+    onEmoteClick: (Emote) -> Unit = {},
+    onChatterClick: (Chatter) -> Unit = {},
+    onClearReplyingTo: () -> Unit = {},
+    onOpenBubbleClicked: () -> Unit = {},
+    onSubmit: () -> Unit = {},
+    onReplyToMessage: (ChatEntry) -> Unit = {}
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val clipboard = LocalClipboardManager.current
@@ -91,6 +110,8 @@ fun ChannelChatScreen(
                 .fillMaxWidth()
                 .weight(1f),
             state = state,
+            animateEmotes = animateEmotes,
+            showTimestamps = showTimestamps,
             onMessageLongClick = { item ->
                 item.data?.message?.let { rawMessage ->
                     clipboard.setText(AnnotatedString(rawMessage))
@@ -116,6 +137,7 @@ fun ChannelChatScreen(
                 )
                 .fillMaxWidth(),
             state = state,
+            animateEmotes = animateEmotes,
             onMessageChange = onMessageChange,
             onToggleEmotePicker = {
                 if (isEmotePickerOpen) {

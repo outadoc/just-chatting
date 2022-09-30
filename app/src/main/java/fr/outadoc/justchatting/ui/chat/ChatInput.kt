@@ -27,7 +27,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,7 +46,6 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
-import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
@@ -56,13 +54,12 @@ import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
-import org.koin.androidx.compose.get
 
 @Composable
 fun ChatInput(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
-    chatPreferencesRepository: ChatPreferencesRepository = get(),
+    animateEmotes: Boolean,
     onEmoteClick: (Emote) -> Unit,
     onChatterClick: (Chatter) -> Unit,
     onMessageChange: (TextFieldValue) -> Unit,
@@ -70,8 +67,6 @@ fun ChatInput(
     onClearReplyingTo: () -> Unit,
     onSubmit: () -> Unit
 ) {
-    val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
-
     when (state) {
         ChatViewModel.State.Initial -> {}
         is ChatViewModel.State.Chatting -> {

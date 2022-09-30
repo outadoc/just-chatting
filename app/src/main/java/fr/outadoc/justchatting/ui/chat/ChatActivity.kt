@@ -17,10 +17,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import com.google.android.material.composethemeadapter3.Mdc3Theme
+import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.main.BaseActivity
 import fr.outadoc.justchatting.util.createChannelDeeplink
 import fr.outadoc.justchatting.util.createChannelExternalLink
 import fr.outadoc.justchatting.util.isDark
+import org.koin.androidx.compose.get
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChatActivity : BaseActivity() {
@@ -55,6 +57,11 @@ class ChatActivity : BaseActivity() {
     fun ChannelChatScreen(channelLogin: String) {
         val viewModel: ChatViewModel by viewModel()
         val state by viewModel.state.collectAsState()
+
+        val chatPreferencesRepository: ChatPreferencesRepository = get()
+
+        val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
+        val showTimestamps by chatPreferencesRepository.showTimestamps.collectAsState(initial = false)
 
         val context = LocalContext.current
         val density = LocalDensity.current.density
@@ -105,6 +112,8 @@ class ChatActivity : BaseActivity() {
             channelLogin = channelLogin,
             channelBranding = channelBranding,
             isEmotePickerOpen = isEmotePickerOpen,
+            animateEmotes = animateEmotes,
+            showTimestamps = showTimestamps,
             onWatchLiveClicked = {
                 uriHandler.openUri(channelLogin.createChannelExternalLink().toString())
             },

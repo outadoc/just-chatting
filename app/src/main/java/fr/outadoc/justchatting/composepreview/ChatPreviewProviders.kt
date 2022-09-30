@@ -1,7 +1,5 @@
 package fr.outadoc.justchatting.composepreview
 
-import android.content.res.Configuration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.chat.Badge
@@ -9,10 +7,6 @@ import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
-
-@Preview(group = "themes", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Preview(group = "themes", uiMode = Configuration.UI_MODE_NIGHT_NO, showBackground = true)
-annotation class ThemePreviews
 
 val previewBadges = listOf(
     "badge_subscriber_48",

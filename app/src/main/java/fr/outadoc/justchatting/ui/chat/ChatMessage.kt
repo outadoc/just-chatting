@@ -58,7 +58,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -102,7 +101,6 @@ import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.Badge
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.TwitchBadge
-import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.common.parseHexColor
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
@@ -117,7 +115,6 @@ import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import org.koin.androidx.compose.get
 import kotlin.random.Random
 import kotlin.time.Duration
 
@@ -145,14 +142,11 @@ private val asciiEncoder = Charsets.US_ASCII.newEncoder()
 fun ChatScreen(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
+    animateEmotes: Boolean,
+    showTimestamps: Boolean,
     onMessageLongClick: (ChatEntry) -> Unit,
     onReplyToMessage: (ChatEntry) -> Unit
 ) {
-    val chatPreferencesRepository: ChatPreferencesRepository = get()
-
-    val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
-    val showTimestamps by chatPreferencesRepository.showTimestamps.collectAsState(initial = false)
-
     when (state) {
         ChatViewModel.State.Initial -> {
             Column(

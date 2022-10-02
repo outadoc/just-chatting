@@ -3,27 +3,10 @@ package fr.outadoc.justchatting.ui.chat
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalUriHandler
 import com.google.android.material.composethemeadapter3.Mdc3Theme
-import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.ui.main.BaseActivity
 import fr.outadoc.justchatting.util.createChannelDeeplink
-import fr.outadoc.justchatting.util.createChannelExternalLink
-import fr.outadoc.justchatting.util.isDark
-import org.koin.androidx.compose.get
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChatActivity : BaseActivity() {
 
@@ -51,101 +34,5 @@ class ChatActivity : BaseActivity() {
                 )
             }
         }
-    }
-
-    @Composable
-    fun ChannelChatScreen(channelLogin: String) {
-        val viewModel: ChatViewModel by viewModel()
-        val state by viewModel.state.collectAsState()
-
-        val chatPreferencesRepository: ChatPreferencesRepository = get()
-
-        val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
-        val showTimestamps by chatPreferencesRepository.showTimestamps.collectAsState(initial = false)
-
-        val context = LocalContext.current
-        val density = LocalDensity.current.density
-        val uriHandler = LocalUriHandler.current
-
-        val isDarkTheme = MaterialTheme.colorScheme.isDark
-
-        val hostModeState = (state as? ChatViewModel.State.Chatting)?.hostModeState
-        val user = (state as? ChatViewModel.State.Chatting)?.user
-
-        val channelBranding: ChannelBranding = rememberChannelBranding(user)
-
-        LaunchedEffect(hostModeState) {
-            val targetUri = hostModeState?.targetChannelLogin?.createChannelDeeplink()
-            if (targetUri != null && hostModeState.viewerCount != null) {
-                // The broadcaster just launched a raid to another channel,
-                // so let's go there as well!
-                uriHandler.openUri(targetUri.toString())
-            }
-        }
-
-        var isEmotePickerOpen by remember { mutableStateOf(false) }
-
-        LaunchedEffect(channelLogin) {
-            viewModel.loadChat(channelLogin)
-        }
-
-        BackHandler(isEmotePickerOpen) {
-            isEmotePickerOpen = false
-        }
-
-        OnLifecycleEvent(
-            onPause = {
-                if (user != null && channelBranding.logo != null) {
-                    ChatNotificationUtils.configureChatBubbles(
-                        context = context,
-                        channel = user,
-                        channelLogo = channelBranding.logo
-                    )
-                }
-            }
-        )
-
-        val canOpenInBubble = canOpenInBubble()
-
-        ChannelChatScreen(
-            state = state,
-            channelLogin = channelLogin,
-            channelBranding = channelBranding,
-            isEmotePickerOpen = isEmotePickerOpen,
-            animateEmotes = animateEmotes,
-            showTimestamps = showTimestamps,
-            onWatchLiveClicked = {
-                uriHandler.openUri(channelLogin.createChannelExternalLink().toString())
-            },
-            onMessageChange = viewModel::onMessageInputChanged,
-            onToggleEmotePicker = {
-                isEmotePickerOpen = !isEmotePickerOpen
-            },
-            onEmoteClick = { emote ->
-                viewModel.appendEmote(emote, autocomplete = true)
-            },
-            onChatterClick = { chatter ->
-                viewModel.appendChatter(chatter, autocomplete = true)
-            },
-            onClearReplyingTo = {
-                viewModel.onReplyToMessage(null)
-            },
-            onOpenBubbleClicked = {
-                if (canOpenInBubble && user != null && channelBranding.logo != null) {
-                    ChatNotificationUtils.configureChatBubbles(
-                        context = context,
-                        channel = user,
-                        channelLogo = channelBranding.logo
-                    )
-                }
-            },
-            onSubmit = {
-                viewModel.submit(
-                    screenDensity = density,
-                    isDarkTheme = isDarkTheme
-                )
-            },
-            onReplyToMessage = viewModel::onReplyToMessage
-        )
     }
 }

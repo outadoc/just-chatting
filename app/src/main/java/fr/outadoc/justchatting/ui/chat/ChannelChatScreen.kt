@@ -47,11 +47,11 @@ import fr.outadoc.justchatting.util.createChannelExternalLink
 import fr.outadoc.justchatting.util.isDark
 import fr.outadoc.justchatting.util.shortToast
 import org.koin.androidx.compose.get
-import org.koin.androidx.compose.viewModel
+import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ChannelChatScreen(channelLogin: String) {
-    val viewModel: ChatViewModel by viewModel()
+    val viewModel: ChatViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
 
     val chatPreferencesRepository: ChatPreferencesRepository = get()

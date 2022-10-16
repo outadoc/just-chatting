@@ -53,6 +53,7 @@ import org.koin.androidx.compose.getViewModel
 fun ChannelChatScreen(channelLogin: String) {
     val viewModel: ChatViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
+    val inputState by viewModel.inputState.collectAsState()
 
     val chatPreferencesRepository: ChatPreferencesRepository = get()
 
@@ -105,6 +106,7 @@ fun ChannelChatScreen(channelLogin: String) {
 
     ChannelChatScreen(
         state = state,
+        inputState = inputState,
         channelLogin = channelLogin,
         channelBranding = channelBranding,
         isEmotePickerOpen = isEmotePickerOpen,
@@ -151,6 +153,7 @@ fun ChannelChatScreenLoadingPreview() {
     Mdc3Theme {
         ChannelChatScreen(
             state = ChatViewModel.State.Initial,
+            inputState = ChatViewModel.InputState(),
             channelLogin = "outadoc",
             channelBranding = rememberChannelBranding(user = null),
             animateEmotes = false,
@@ -164,6 +167,7 @@ fun ChannelChatScreenLoadingPreview() {
 fun ChannelChatScreen(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
+    inputState: ChatViewModel.InputState,
     channelLogin: String,
     channelBranding: ChannelBranding,
     isEmotePickerOpen: Boolean = false,
@@ -243,6 +247,7 @@ fun ChannelChatScreen(
                 )
                 .fillMaxWidth(),
             state = state,
+            inputState = inputState,
             animateEmotes = animateEmotes,
             onMessageChange = onMessageChange,
             onToggleEmotePicker = {

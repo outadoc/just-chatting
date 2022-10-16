@@ -59,6 +59,7 @@ import kotlinx.datetime.Instant
 fun ChatInput(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
+    inputState: ChatViewModel.InputState,
     animateEmotes: Boolean,
     onEmoteClick: (Emote) -> Unit,
     onChatterClick: (Chatter) -> Unit,
@@ -76,11 +77,11 @@ fun ChatInput(
             ) {
                 ChatInput(
                     modifier = modifier,
-                    message = state.inputMessage,
-                    previousWord = state.previousWord,
+                    message = inputState.inputMessage,
+                    previousWord = inputState.previousWord,
                     emotes = state.allEmotes,
                     chatters = state.chatters,
-                    replyingTo = state.replyingTo,
+                    replyingTo = inputState.replyingTo,
                     animateEmotes = animateEmotes,
                     onEmoteClick = onEmoteClick,
                     onChatterClick = onChatterClick,

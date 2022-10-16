@@ -86,9 +86,6 @@ class ChatViewModel(
 
     sealed class Action {
         data class AddMessages(val messages: List<ChatCommand>) : Action()
-        data class AppendChatter(val chatter: Chatter, val autocomplete: Boolean) : Action()
-        data class AppendEmote(val emote: Emote, val autocomplete: Boolean) : Action()
-        data class ChangeMessageInput(val message: TextFieldValue) : Action()
         data class ChangeRecentEmotes(val recentEmotes: List<RecentEmote>) : Action()
         data class ChangeRoomState(val delta: RoomStateDelta) : Action()
         data class ChangeHostModeState(val hostModeState: HostModeState) : Action()
@@ -96,8 +93,6 @@ class ChatViewModel(
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
         object LoadStreamDetails : Action()
-        data class ReplyToMessage(val chatEntry: ChatEntry? = null) : Action()
-        data class Submit(val screenDensity: Float, val isDarkTheme: Boolean) : Action()
     }
 
     sealed class State {
@@ -120,9 +115,7 @@ class ChatViewModel(
             val userState: UserState = UserState(),
             val roomState: RoomState = RoomState(),
             val hostModeState: HostModeState? = null,
-            val maxAdapterCount: Int,
-            val inputMessage: TextFieldValue = TextFieldValue(),
-            val replyingTo: ChatEntry? = null
+            val maxAdapterCount: Int
         ) : State() {
 
             val allEmotes: ImmutableSet<Emote>
@@ -153,16 +146,28 @@ class ChatViewModel(
                         )
                     }
                 }
-
-            val previousWord: CharSequence
-                get() = inputMessage
-                    .getTextBeforeSelection(inputMessage.text.length)
-                    .takeLastWhile { it != ' ' }
         }
     }
 
-    private val actions = MutableSharedFlow<Action>(extraBufferCapacity = 16)
+    sealed class InputAction {
+        data class AppendChatter(val chatter: Chatter, val autocomplete: Boolean) : InputAction()
+        data class AppendEmote(val emote: Emote, val autocomplete: Boolean) : InputAction()
+        data class ChangeMessageInput(val message: TextFieldValue) : InputAction()
+        data class ReplyToMessage(val chatEntry: ChatEntry? = null) : InputAction()
+        data class Submit(val screenDensity: Float, val isDarkTheme: Boolean) : InputAction()
+    }
 
+    data class InputState(
+        val inputMessage: TextFieldValue = TextFieldValue(),
+        val replyingTo: ChatEntry? = null
+    ) {
+        val previousWord: CharSequence
+            get() = inputMessage
+                .getTextBeforeSelection(inputMessage.text.length)
+                .takeLastWhile { it != ' ' }
+    }
+
+    private val actions = MutableSharedFlow<Action>(extraBufferCapacity = 16)
     val state: StateFlow<State> =
         actions
             .scan(State.Initial) { state: State, action -> action.reduce(state) }
@@ -170,6 +175,16 @@ class ChatViewModel(
                 viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = State.Initial
+            )
+
+    private val inputActions = MutableSharedFlow<InputAction>(extraBufferCapacity = 16)
+    val inputState: StateFlow<InputState> =
+        inputActions
+            .scan(InputState()) { state: InputState, action -> action.reduce(state) }
+            .stateIn(
+                viewModelScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = InputState()
             )
 
     init {
@@ -224,49 +239,44 @@ class ChatViewModel(
 
     fun onReplyToMessage(entry: ChatEntry?) {
         viewModelScope.launch {
-            actions.emit(Action.ReplyToMessage(entry))
+            inputActions.emit(InputAction.ReplyToMessage(entry))
         }
     }
 
     fun onMessageInputChanged(message: TextFieldValue) {
         viewModelScope.launch {
-            actions.emit(Action.ChangeMessageInput(message))
+            inputActions.emit(InputAction.ChangeMessageInput(message))
         }
     }
 
     fun appendEmote(emote: Emote, autocomplete: Boolean) {
         viewModelScope.launch {
-            actions.emit(Action.AppendEmote(emote, autocomplete))
+            inputActions.emit(InputAction.AppendEmote(emote, autocomplete))
         }
     }
 
     fun appendChatter(chatter: Chatter, autocomplete: Boolean) {
         viewModelScope.launch {
-            actions.emit(Action.AppendChatter(chatter, autocomplete))
+            inputActions.emit(InputAction.AppendChatter(chatter, autocomplete))
         }
     }
 
     fun submit(screenDensity: Float, isDarkTheme: Boolean) {
         viewModelScope.launch {
-            actions.emit(Action.Submit(screenDensity, isDarkTheme))
+            inputActions.emit(InputAction.Submit(screenDensity, isDarkTheme))
         }
     }
 
     private suspend fun Action.reduce(state: State): State {
         return when (this) {
             is Action.AddMessages -> reduce(state)
-            is Action.AppendChatter -> reduce(state)
-            is Action.AppendEmote -> reduce(state)
             is Action.ChangeHostModeState -> reduce(state)
-            is Action.ChangeMessageInput -> reduce(state)
             is Action.ChangeRecentEmotes -> reduce(state)
             is Action.ChangeRoomState -> reduce(state)
             is Action.ChangeUserState -> reduce(state)
             is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
             is Action.LoadStreamDetails -> reduce(state)
-            is Action.ReplyToMessage -> reduce(state)
-            is Action.Submit -> reduce(state)
         }
     }
 
@@ -381,7 +391,7 @@ class ChatViewModel(
                 .takeIf { it.isNotEmpty() }
                 ?.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 ?.toPersistentSet()
 
@@ -439,72 +449,6 @@ class ChatViewModel(
                 ?: state.lastSentMessageInstant,
             chatters = state.chatters.addAll(newChatters)
         )
-    }
-
-    private suspend fun Action.Submit.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        if (state.inputMessage.text.isEmpty()) return state
-
-        viewModelScope.launch(Dispatchers.Default) {
-            val currentTime = clock.now().toEpochMilliseconds()
-
-            chatConnectionPool.sendMessage(
-                channelId = state.user.id,
-                message = state.inputMessage.text,
-                inReplyToId = state.replyingTo?.data?.messageId
-            )
-
-            val usedEmotes: List<RecentEmote> =
-                state.inputMessage
-                    .text
-                    .split(' ')
-                    .mapNotNull { word ->
-                        state.allEmotesMap[word]?.let { emote ->
-                            RecentEmote(
-                                name = word,
-                                url = emote.getUrl(
-                                    animate = chatPreferencesRepository.animateEmotes.first(),
-                                    screenDensity = screenDensity,
-                                    isDarkTheme = isDarkTheme
-                                ),
-                                usedAt = currentTime
-                            )
-                        }
-                    }
-
-            emotesRepository.insertRecentEmotes(usedEmotes)
-        }
-
-        return state.copy(
-            inputMessage = TextFieldValue(""),
-            replyingTo = null
-        )
-    }
-
-    private fun Action.ChangeMessageInput.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(inputMessage = message)
-    }
-
-    private fun Action.AppendEmote.reduce(state: State): State {
-        return appendTextToInput(
-            state = state,
-            text = emote.name,
-            replaceLastWord = autocomplete
-        )
-    }
-
-    private fun Action.AppendChatter.reduce(state: State): State {
-        return appendTextToInput(
-            state = state,
-            text = chatter.name,
-            replaceLastWord = autocomplete
-        )
-    }
-
-    private fun Action.ReplyToMessage.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(replyingTo = chatEntry)
     }
 
     private suspend fun Action.ChangeUserState.reduce(state: State): State {
@@ -593,20 +537,97 @@ class ChatViewModel(
         return state.copy(hostModeState = hostModeState)
     }
 
-    private fun appendTextToInput(state: State, text: String, replaceLastWord: Boolean): State {
-        if (state !is State.Chatting) return state
 
-        val textBefore = state.inputMessage
-            .getTextBeforeSelection(state.inputMessage.text.length)
-            .removeSuffix(
-                if (replaceLastWord) state.previousWord else ""
+    private suspend fun InputAction.reduce(state: InputState): InputState {
+        return when (this) {
+            is InputAction.AppendChatter -> reduce(state)
+            is InputAction.AppendEmote -> reduce(state)
+            is InputAction.ChangeMessageInput -> reduce(state)
+            is InputAction.ReplyToMessage -> reduce(state)
+            is InputAction.Submit -> reduce(state)
+        }
+    }
+
+    private suspend fun InputAction.Submit.reduce(inputState: InputState): InputState {
+        if (inputState.inputMessage.text.isEmpty()) return inputState
+        val state = state.value as? State.Chatting ?: return inputState
+
+        viewModelScope.launch(Dispatchers.Default) {
+            val currentTime = clock.now().toEpochMilliseconds()
+
+            chatConnectionPool.sendMessage(
+                channelId = state.user.id,
+                message = inputState.inputMessage.text,
+                inReplyToId = inputState.replyingTo?.data?.messageId
             )
 
-        val textAfter = state.inputMessage
-            .getTextAfterSelection(state.inputMessage.text.length)
+            val usedEmotes: List<RecentEmote> =
+                inputState.inputMessage
+                    .text
+                    .split(' ')
+                    .mapNotNull { word ->
+                        state.allEmotesMap[word]?.let { emote ->
+                            RecentEmote(
+                                name = word,
+                                url = emote.getUrl(
+                                    animate = chatPreferencesRepository.animateEmotes.first(),
+                                    screenDensity = screenDensity,
+                                    isDarkTheme = isDarkTheme
+                                ),
+                                usedAt = currentTime
+                            )
+                        }
+                    }
 
-        return state.copy(
-            inputMessage = state.inputMessage.copy(
+            emotesRepository.insertRecentEmotes(usedEmotes)
+        }
+
+        return inputState.copy(
+            inputMessage = TextFieldValue(""),
+            replyingTo = null
+        )
+    }
+
+    private fun InputAction.ChangeMessageInput.reduce(inputState: InputState): InputState {
+        return inputState.copy(inputMessage = message)
+    }
+
+    private fun InputAction.AppendEmote.reduce(inputState: InputState): InputState {
+        return appendTextToInput(
+            inputState = inputState,
+            text = emote.name,
+            replaceLastWord = autocomplete
+        )
+    }
+
+    private fun InputAction.AppendChatter.reduce(inputState: InputState): InputState {
+        return appendTextToInput(
+            inputState = inputState,
+            text = chatter.name,
+            replaceLastWord = autocomplete
+        )
+    }
+
+    private fun InputAction.ReplyToMessage.reduce(inputState: InputState): InputState {
+        return inputState.copy(replyingTo = chatEntry)
+    }
+
+    private fun appendTextToInput(
+        inputState: InputState,
+        text: String,
+        replaceLastWord: Boolean
+    ): InputState {
+        val textBefore = inputState.inputMessage
+            .getTextBeforeSelection(inputState.inputMessage.text.length)
+            .removeSuffix(
+                if (replaceLastWord) inputState.previousWord else ""
+            )
+
+        val textAfter = inputState.inputMessage
+            .getTextAfterSelection(inputState.inputMessage.text.length)
+
+        return inputState.copy(
+            inputMessage = inputState.inputMessage.copy(
                 text = "${textBefore}$text $textAfter",
                 selection = TextRange(
                     index = textBefore.length + text.length + 1

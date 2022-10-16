@@ -88,8 +88,8 @@ class ChatViewModel(
     private val clock: Clock
 ) : BaseViewModel() {
 
-    private val defaultScope = viewModelScope + Dispatchers.Default + CoroutineName("defaultScope")
-    private val inputScope = viewModelScope + Dispatchers.Main + CoroutineName("inputScope")
+    private val defaultScope = viewModelScope + CoroutineName("defaultScope")
+    private val inputScope = viewModelScope + CoroutineName("inputScope")
 
     sealed class Action {
         data class AddMessages(val messages: List<ChatCommand>) : Action()

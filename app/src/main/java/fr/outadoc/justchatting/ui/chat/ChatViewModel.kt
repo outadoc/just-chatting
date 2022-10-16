@@ -399,7 +399,7 @@ class ChatViewModel(
                 .takeIf { it.isNotEmpty() }
                 ?.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 ?.toPersistentSet()
 
@@ -544,7 +544,6 @@ class ChatViewModel(
         if (state !is State.Chatting) return state
         return state.copy(hostModeState = hostModeState)
     }
-
 
     private suspend fun InputAction.reduce(state: InputState): InputState {
         return when (this) {

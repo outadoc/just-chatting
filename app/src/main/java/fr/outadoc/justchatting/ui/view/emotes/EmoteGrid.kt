@@ -24,14 +24,16 @@ fun EmoteGrid(
     modifier: Modifier = Modifier,
     emotes: ImmutableList<EmoteSetItem>,
     animateEmotes: Boolean,
-    emoteSize: Dp = 32.dp,
+    emoteSize: Dp = 36.dp,
     onEmoteClick: (Emote) -> Unit,
     contentPadding: PaddingValues = PaddingValues()
 ) {
     LazyVerticalGrid(
         modifier = modifier,
         contentPadding = contentPadding,
-        columns = GridCells.Adaptive(minSize = emoteSize),
+        columns = GridCells.Adaptive(
+            minSize = emoteSize + 8.dp
+        ),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         itemsIndexed(
@@ -60,6 +62,7 @@ fun EmoteGrid(
                         )
                     }
                 }
+
                 is EmoteSetItem.Emote -> {
                     HapticIconButton(onClick = { onEmoteClick(item.emote) }) {
                         EmoteItem(

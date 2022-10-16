@@ -159,7 +159,7 @@ class PubSubWebSocket(
 
                     when {
                         topic?.startsWith("community-points-channel") == true &&
-                                messageType?.startsWith("reward-redeemed") == true -> {
+                            messageType?.startsWith("reward-redeemed") == true -> {
                             scope.launch {
                                 _flow.emit(
                                     pubSubRewardParser.parse(text)

@@ -12,6 +12,6 @@ fun canOpenInBubble(): Boolean {
     val context = LocalContext.current
     return remember {
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q &&
-                (context as? Activity)?.isLaunchedFromBubbleCompat != true
+            (context as? Activity)?.isLaunchedFromBubbleCompat != true
     }
 }

@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import fr.outadoc.justchatting.databinding.CommonRecyclerViewLayoutBinding
 import fr.outadoc.justchatting.repository.LoadingState
 
-abstract class PagedListFragment<T, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> :
+abstract class PagedListFragment<T : Any, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> :
     Fragment() {
 
     protected abstract val viewModel: VM

@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.repository.LoadingState
 
-abstract class BasePagedListAdapter<T>(diffCallback: DiffUtil.ItemCallback<T>) :
+abstract class BasePagedListAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) :
     PagedListAdapter<T, DefaultViewHolder>(diffCallback) {
 
     protected abstract val layoutId: Int

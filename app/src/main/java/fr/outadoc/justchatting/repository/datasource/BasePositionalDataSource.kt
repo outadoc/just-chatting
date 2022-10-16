@@ -9,7 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
-abstract class BasePositionalDataSource<T>(
+abstract class BasePositionalDataSource<T : Any>(
     private val coroutineScope: CoroutineScope,
 ) : PositionalDataSource<T>(), PagingDataSource {
 

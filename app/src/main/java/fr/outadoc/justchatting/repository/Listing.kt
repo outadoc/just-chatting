@@ -8,7 +8,7 @@ import androidx.paging.PagedList
 import fr.outadoc.justchatting.repository.datasource.BaseDataSourceFactory
 import fr.outadoc.justchatting.repository.datasource.PagingDataSource
 
-class Listing<T> internal constructor(
+class Listing<T : Any> internal constructor(
     val pagedList: LiveData<PagedList<T>>,
     val loadingState: LiveData<LoadingState>,
     val pagingState: LiveData<LoadingState>,
@@ -18,7 +18,7 @@ class Listing<T> internal constructor(
 
     companion object {
 
-        fun <ListValue, DS> create(
+        fun <ListValue : Any, DS> create(
             factory: BaseDataSourceFactory<*, ListValue, DS>,
             config: PagedList.Config
         ): Listing<ListValue> where DS : DataSource<*, ListValue>, DS : PagingDataSource {

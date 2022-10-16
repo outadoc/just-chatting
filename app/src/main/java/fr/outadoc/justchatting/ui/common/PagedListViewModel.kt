@@ -6,7 +6,7 @@ import androidx.paging.PagedList
 import fr.outadoc.justchatting.repository.Listing
 import fr.outadoc.justchatting.repository.LoadingState
 
-abstract class PagedListViewModel<T> : BaseViewModel() {
+abstract class PagedListViewModel<T : Any> : BaseViewModel() {
 
     protected abstract val result: LiveData<Listing<T>>
 

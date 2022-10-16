@@ -32,7 +32,7 @@ androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common-java
 androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
-androidx-paging = "androidx.paging:paging-runtime-ktx:2.1.2"
+androidx-paging = "androidx.paging:paging-runtime-ktx:3.1.1"
 androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-preference = "androidx.preference:preference-ktx:1.2.0"
 androidx-recyclerview = "androidx.recyclerview:recyclerview:1.2.1"

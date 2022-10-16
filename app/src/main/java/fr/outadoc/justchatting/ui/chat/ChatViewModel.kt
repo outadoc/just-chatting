@@ -45,6 +45,7 @@ import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
+import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
@@ -54,6 +55,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
@@ -62,15 +64,17 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.scan
+import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.collections.component1
 import kotlin.collections.component2
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -83,6 +87,9 @@ class ChatViewModel(
     private val userPreferencesRepository: UserPreferencesRepository,
     private val clock: Clock
 ) : BaseViewModel() {
+
+    private val defaultScope = viewModelScope + Dispatchers.Default + CoroutineName("defaultScope")
+    private val inputScope = viewModelScope + Dispatchers.Main + CoroutineName("inputScope")
 
     sealed class Action {
         data class AddMessages(val messages: List<ChatCommand>) : Action()
@@ -170,25 +177,26 @@ class ChatViewModel(
     private val actions = MutableSharedFlow<Action>(extraBufferCapacity = 16)
     val state: StateFlow<State> =
         actions
-            .scan(State.Initial) { state: State, action -> action.reduce(state) }
+            .runningFold(State.Initial) { state: State, action -> action.reduce(state) }
+            .debounce(100.milliseconds)
             .stateIn(
-                viewModelScope,
+                scope = defaultScope,
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = State.Initial
             )
 
-    private val inputActions = MutableSharedFlow<InputAction>(extraBufferCapacity = 16)
+    private val inputActions = MutableSharedFlow<InputAction>()
     val inputState: StateFlow<InputState> =
         inputActions
-            .scan(InputState()) { state: InputState, action -> action.reduce(state) }
+            .runningFold(InputState()) { state: InputState, action -> action.reduce(state) }
             .stateIn(
-                viewModelScope,
+                scope = inputScope,
                 started = SharingStarted.WhileSubscribed(),
                 initialValue = InputState()
             )
 
     init {
-        viewModelScope.launch {
+        defaultScope.launch {
             while (isActive) {
                 delay(5.minutes)
                 actions.emit(Action.LoadStreamDetails)
@@ -202,7 +210,7 @@ class ChatViewModel(
                 actions.emit(Action.LoadEmotes(user.id))
                 actions.emit(Action.LoadStreamDetails)
             }
-            .launchIn(viewModelScope)
+            .launchIn(defaultScope)
 
         state.filterIsInstance<State.Chatting>()
             .map { state -> state.user }
@@ -222,47 +230,47 @@ class ChatViewModel(
             }
             .filterNotNull()
             .onEach { action -> actions.emit(action) }
-            .launchIn(viewModelScope)
+            .launchIn(defaultScope)
 
         state.filterIsInstance<State.Chatting>()
             .distinctUntilChanged { _, _ -> true }
             .flatMapLatest { emotesRepository.loadRecentEmotes() }
             .onEach { recentEmotes -> actions.emit(Action.ChangeRecentEmotes(recentEmotes)) }
-            .launchIn(viewModelScope)
+            .launchIn(defaultScope)
     }
 
     fun loadChat(channelLogin: String) {
-        viewModelScope.launch {
+        defaultScope.launch {
             actions.emit(Action.LoadChat(channelLogin))
         }
     }
 
     fun onReplyToMessage(entry: ChatEntry?) {
-        viewModelScope.launch {
+        inputScope.launch {
             inputActions.emit(InputAction.ReplyToMessage(entry))
         }
     }
 
     fun onMessageInputChanged(message: TextFieldValue) {
-        viewModelScope.launch {
+        inputScope.launch {
             inputActions.emit(InputAction.ChangeMessageInput(message))
         }
     }
 
     fun appendEmote(emote: Emote, autocomplete: Boolean) {
-        viewModelScope.launch {
+        defaultScope.launch {
             inputActions.emit(InputAction.AppendEmote(emote, autocomplete))
         }
     }
 
     fun appendChatter(chatter: Chatter, autocomplete: Boolean) {
-        viewModelScope.launch {
+        inputScope.launch {
             inputActions.emit(InputAction.AppendChatter(chatter, autocomplete))
         }
     }
 
     fun submit(screenDensity: Float, isDarkTheme: Boolean) {
-        viewModelScope.launch {
+        inputScope.launch {
             inputActions.emit(InputAction.Submit(screenDensity, isDarkTheme))
         }
     }
@@ -552,7 +560,7 @@ class ChatViewModel(
         if (inputState.inputMessage.text.isEmpty()) return inputState
         val state = state.value as? State.Chatting ?: return inputState
 
-        viewModelScope.launch(Dispatchers.Default) {
+        defaultScope.launch {
             val currentTime = clock.now().toEpochMilliseconds()
 
             chatConnectionPool.sendMessage(

@@ -312,13 +312,13 @@ fun ExpandedTopAppBar(
     )
 
     Surface(
+        modifier = modifier,
         color = appBarContainerColor,
         contentColor = contentColor
     ) {
         Column {
             TopAppBar(
                 title = title,
-                modifier = modifier,
                 navigationIcon = navigationIcon,
                 actions = actions,
                 windowInsets = windowInsets,

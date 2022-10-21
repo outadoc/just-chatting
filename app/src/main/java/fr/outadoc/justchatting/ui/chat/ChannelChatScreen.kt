@@ -2,17 +2,24 @@ package fr.outadoc.justchatting.ui.chat
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -20,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -162,7 +170,7 @@ fun ChannelChatScreenLoadingPreview() {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelChatScreen(
     modifier: Modifier = Modifier,
@@ -199,90 +207,100 @@ fun ChannelChatScreen(
         }
     }
 
-    Column(
+    Scaffold(
         modifier = modifier.then(
             if (!isEmotePickerOpen) Modifier.imePadding()
             else Modifier
         ),
-        verticalArrangement = Arrangement.SpaceEvenly
-    ) {
-        ChatTopAppBar(
-            channelLogin = channelLogin,
-            user = user,
-            stream = stream,
-            channelBranding = channelBranding,
-            onWatchLiveClicked = onWatchLiveClicked,
-            onOpenBubbleClicked = onOpenBubbleClicked
-        )
-
-        ChatScreen(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f),
-            state = state,
-            animateEmotes = animateEmotes,
-            showTimestamps = showTimestamps,
-            onMessageLongClick = { item ->
-                item.data?.message?.let { rawMessage ->
-                    clipboard.setText(AnnotatedString(rawMessage))
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    context.shortToast(R.string.chat_copiedToClipboard)
-                }
-            },
-            onReplyToMessage = onReplyToMessage
-        )
-
-        ChatSlowModeProgress(
-            modifier = Modifier.fillMaxWidth(),
-            state = state
-        )
-
-        ChatInput(
-            modifier = Modifier
-                .focusRequester(inputFocusRequester)
-                .padding(8.dp)
-                .then(
-                    if (!isEmotePickerOpen) Modifier.navigationBarsPadding()
-                    else Modifier
+        topBar = {
+            ChatTopAppBar(
+                channelLogin = channelLogin,
+                user = user,
+                stream = stream,
+                channelBranding = channelBranding,
+                onWatchLiveClicked = onWatchLiveClicked,
+                onOpenBubbleClicked = onOpenBubbleClicked
+            )
+        },
+        content = { insets ->
+            ChatScreen(
+                modifier = Modifier.fillMaxSize(),
+                state = state,
+                animateEmotes = animateEmotes,
+                showTimestamps = showTimestamps,
+                onMessageLongClick = { item ->
+                    item.data?.message?.let { rawMessage ->
+                        clipboard.setText(AnnotatedString(rawMessage))
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        context.shortToast(R.string.chat_copiedToClipboard)
+                    }
+                },
+                onReplyToMessage = onReplyToMessage,
+                insets = insets
+            )
+        },
+        bottomBar = {
+            Column {
+                ChatSlowModeProgress(
+                    modifier = Modifier.fillMaxWidth(),
+                    state = state
                 )
-                .fillMaxWidth(),
-            state = state,
-            inputState = inputState,
-            animateEmotes = animateEmotes,
-            onMessageChange = onMessageChange,
-            onToggleEmotePicker = {
-                if (isEmotePickerOpen) {
-                    inputFocusRequester.requestFocus()
-                    keyboardController?.show()
+
+                ChatInput(
+                    modifier = Modifier
+                        .focusRequester(inputFocusRequester)
+                        .padding(8.dp)
+                        .then(
+                            if (!isEmotePickerOpen) Modifier.navigationBarsPadding()
+                            else Modifier
+                        )
+                        .fillMaxWidth(),
+                    state = state,
+                    inputState = inputState,
+                    animateEmotes = animateEmotes,
+                    onMessageChange = onMessageChange,
+                    onToggleEmotePicker = {
+                        if (isEmotePickerOpen) {
+                            inputFocusRequester.requestFocus()
+                            keyboardController?.show()
+                        }
+                        onToggleEmotePicker()
+                    },
+                    onEmoteClick = onEmoteClick,
+                    onChatterClick = onChatterClick,
+                    onClearReplyingTo = onClearReplyingTo,
+                    onSubmit = onSubmit
+                )
+
+                var imeHeight by remember { mutableStateOf(350.dp) }
+
+                val currentImeHeight = WindowInsets.ime
+                    .asPaddingValues()
+                    .calculateBottomPadding()
+
+                LaunchedEffect(currentImeHeight) {
+                    if (currentImeHeight > imeHeight) {
+                        imeHeight = currentImeHeight
+                    }
                 }
-                onToggleEmotePicker()
-            },
-            onEmoteClick = onEmoteClick,
-            onChatterClick = onChatterClick,
-            onClearReplyingTo = onClearReplyingTo,
-            onSubmit = onSubmit
-        )
 
-        var imeHeight by remember { mutableStateOf(350.dp) }
-
-        val currentImeHeight = WindowInsets.ime
-            .asPaddingValues()
-            .calculateBottomPadding()
-
-        LaunchedEffect(currentImeHeight) {
-            if (currentImeHeight > imeHeight) {
-                imeHeight = currentImeHeight
+                AnimatedVisibility(
+                    visible = isEmotePickerOpen,
+                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut()
+                ) {
+                    Surface(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(imeHeight)
+                    ) {
+                        EmotePicker(
+                            onEmoteClick = onEmoteClick,
+                            state = state
+                        )
+                    }
+                }
             }
         }
-
-        AnimatedVisibility(visible = isEmotePickerOpen) {
-            EmotePicker(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(imeHeight),
-                onEmoteClick = onEmoteClick,
-                state = state
-            )
-        }
-    }
+    )
 }

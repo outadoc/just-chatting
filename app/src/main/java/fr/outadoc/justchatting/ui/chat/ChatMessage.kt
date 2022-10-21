@@ -145,7 +145,8 @@ fun ChatScreen(
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     onMessageLongClick: (ChatEntry) -> Unit,
-    onReplyToMessage: (ChatEntry) -> Unit
+    onReplyToMessage: (ChatEntry) -> Unit,
+    insets: PaddingValues
 ) {
     when (state) {
         ChatViewModel.State.Initial -> {
@@ -174,7 +175,8 @@ fun ChatScreen(
                     animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
                     onMessageLongClick = onMessageLongClick,
-                    onReplyToMessage = onReplyToMessage
+                    onReplyToMessage = onReplyToMessage,
+                    insets = insets
                 )
             }
         }
@@ -188,7 +190,8 @@ fun ChatList(
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     onMessageLongClick: (ChatEntry) -> Unit,
-    onReplyToMessage: (ChatEntry) -> Unit
+    onReplyToMessage: (ChatEntry) -> Unit,
+    insets: PaddingValues
 ) {
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
@@ -220,7 +223,8 @@ fun ChatList(
             listState = listState,
             onMessageLongClick = onMessageLongClick,
             onReplyToMessage = onReplyToMessage,
-            appUser = state.appUser
+            appUser = state.appUser,
+            insets = insets
         )
 
         AnimatedVisibility(
@@ -228,7 +232,9 @@ fun ChatList(
             visible = wasListScrolledByUser
         ) {
             FloatingActionButton(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .padding(insets),
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     scope.launch {
@@ -313,7 +319,8 @@ fun ChatList(
     onMessageLongClick: (ChatEntry) -> Unit,
     onReplyToMessage: (ChatEntry) -> Unit,
     roomState: RoomState,
-    appUser: AppUser
+    appUser: AppUser,
+    insets: PaddingValues
 ) {
     val inlinesEmotes = remember(emotes) {
         emotes.mapValues { (_, emote) ->
@@ -340,20 +347,29 @@ fun ChatList(
     LazyColumn(
         modifier = modifier,
         state = listState,
-        contentPadding = PaddingValues(bottom = 4.dp)
+        contentPadding = PaddingValues(
+            bottom = insets.calculateBottomPadding()
+        )
     ) {
         stickyHeader {
-            AnimatedVisibility(
-                visible = !roomState.isDefault,
-                enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut()
-            ) {
-                RoomStateBanner(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp),
-                    roomState = roomState
+            Column {
+                Spacer(
+                    modifier = Modifier.padding(
+                        top = insets.calculateTopPadding()
+                    )
                 )
+                AnimatedVisibility(
+                    visible = !roomState.isDefault,
+                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut()
+                ) {
+                    RoomStateBanner(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        roomState = roomState
+                    )
+                }
             }
         }
 

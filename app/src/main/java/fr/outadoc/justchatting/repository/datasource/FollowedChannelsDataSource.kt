@@ -1,119 +1,42 @@
 package fr.outadoc.justchatting.repository.datasource
 
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import fr.outadoc.justchatting.api.HelixApi
-import fr.outadoc.justchatting.model.helix.follows.Follow
-import fr.outadoc.justchatting.model.helix.follows.Order
-import fr.outadoc.justchatting.model.helix.follows.Sort
-import fr.outadoc.justchatting.model.helix.user.User
-import kotlinx.coroutines.CoroutineScope
+import fr.outadoc.justchatting.model.helix.follows.FollowResponse
 
 class FollowedChannelsDataSource(
     private val userId: String?,
     private val helixClientId: String?,
     private val helixToken: String?,
-    private val helixApi: HelixApi,
-    private val sort: Sort,
-    private val order: Order,
-    private val coroutineScope: CoroutineScope
-) : BasePositionalDataSource<Follow>(coroutineScope) {
+    private val helixApi: HelixApi
+) : PagingSource<String, FollowResponse>() {
 
-    private var offset: String? = null
-
-    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Follow>) {
-        if (helixToken.isNullOrBlank()) return
-
-        loadInitial(params, callback) {
-            val list: Collection<Follow> =
-                helixApi.getFollowedChannels(
-                    clientId = helixClientId,
-                    token = helixToken,
-                    userId = userId,
-                    limit = 100,
-                    offset = offset
-                )
-                    .also { offset = it.pagination?.cursor }
-                    .data
-                    .orEmpty()
-                    .associateBy { it.toId }
-                    .values
-                    .mapWithUserProfileImages()
-
-            when (order) {
-                Order.ASC -> when (sort) {
-                    Sort.FOLLOWED_AT -> list.sortedBy { it.followedAt }
-                    else -> list.sortedBy { it.toLogin }
-                }
-                Order.DESC -> when (sort) {
-                    Sort.FOLLOWED_AT -> list.sortedByDescending { it.followedAt }
-                    else -> list.sortedByDescending { it.toLogin }
-                }
-            }
+    override fun getRefreshKey(state: PagingState<String, FollowResponse>): String? {
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestItemToPosition(anchorPosition)?.pagination?.cursor
         }
     }
 
-    private suspend fun Collection<Follow>.mapWithUserProfileImages(): Collection<Follow> {
-        val results: List<User> =
-            filter { follow -> follow.profileImageURL == null }
-                .mapNotNull { follow -> follow.toId }
-                .chunked(size = 100)
-                .flatMap { idsToUpdate ->
-                    helixApi.getUsersById(
-                        clientId = helixClientId,
-                        token = helixToken,
-                        ids = idsToUpdate
-                    )
-                        .data
-                        .orEmpty()
-                }
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, FollowResponse> {
+        try {
+            if (helixToken.isNullOrBlank()) error("Helix token is null")
 
-        return map { follow ->
-            val userInfo = results.firstOrNull { user -> user.id == follow.toId }
-            follow.copy(
-                profileImageURL = userInfo?.profileImageUrl
-            )
-        }
-    }
-
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Follow>) {
-        check(!helixToken.isNullOrBlank())
-        if (offset.isNullOrBlank()) return
-
-        loadRange(params, callback) {
-            helixApi.getFollowedChannels(
+            val response = helixApi.getFollowedChannels(
                 clientId = helixClientId,
                 token = helixToken,
                 userId = userId,
-                limit = 100,
-                offset = offset
+                limit = params.loadSize,
+                offset = params.key
             )
-                .also { offset = it.pagination?.cursor }
-                .data
-                .orEmpty()
-                .mapWithUserProfileImages()
-                .toList()
+
+            return LoadResult.Page(
+                data = listOf(response),
+                nextKey = response.pagination?.cursor,
+                prevKey = null
+            )
+        } catch (e: Exception) {
+            return LoadResult.Error(e)
         }
-    }
-
-    class Factory(
-        private val userId: String?,
-        private val helixClientId: String?,
-        private val helixToken: String?,
-        private val helixApi: HelixApi,
-        private val sort: Sort,
-        private val order: Order,
-        private val coroutineScope: CoroutineScope
-    ) : DataSource.Factory<Int, Follow>() {
-
-        override fun create(): DataSource<Int, Follow> =
-            FollowedChannelsDataSource(
-                userId = userId,
-                helixClientId = helixClientId,
-                helixToken = helixToken,
-                helixApi = helixApi,
-                sort = sort,
-                order = order,
-                coroutineScope = coroutineScope
-            )
     }
 }

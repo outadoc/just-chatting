@@ -1,95 +1,42 @@
 package fr.outadoc.justchatting.repository.datasource
 
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import fr.outadoc.justchatting.api.HelixApi
-import fr.outadoc.justchatting.model.helix.stream.Stream
-import kotlinx.coroutines.CoroutineScope
+import fr.outadoc.justchatting.model.helix.stream.StreamsResponse
 
 class FollowedStreamsDataSource(
     private val userId: String?,
     private val helixClientId: String?,
     private val helixToken: String?,
-    private val helixApi: HelixApi,
-    coroutineScope: CoroutineScope
-) : BasePositionalDataSource<Stream>(coroutineScope) {
+    private val helixApi: HelixApi
+) : PagingSource<String, StreamsResponse>() {
 
-    private var offset: String? = null
+    override fun getRefreshKey(state: PagingState<String, StreamsResponse>): String? {
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestItemToPosition(anchorPosition)?.pagination?.cursor
+        }
+    }
 
-    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Stream>) {
-        if (helixToken.isNullOrBlank()) return
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, StreamsResponse> {
+        try {
+            if (helixToken.isNullOrBlank()) error("Helix token is null")
 
-        loadInitial(params, callback) {
-            helixApi.getFollowedStreams(
+            val response = helixApi.getFollowedStreams(
                 clientId = helixClientId,
                 token = helixToken,
                 userId = userId,
-                limit = 100,
-                offset = offset
-            ).also { offset = it.pagination?.cursor }
-                .data
-                .orEmpty()
-                .associateBy { stream -> stream.userId }
-                .values
-                .mapWithUserProfileImages()
-                .sortedByDescending { stream ->
-                    stream.viewerCount
-                }
-        }
-    }
-
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Stream>) {
-        if (offset.isNullOrBlank()) return
-
-        loadRange(params, callback) {
-            helixApi.getFollowedStreams(
-                clientId = helixClientId,
-                token = helixToken,
-                userId = userId,
-                limit = 100,
-                offset = offset
+                limit = params.loadSize,
+                offset = params.key
             )
-                .data
-                .orEmpty()
-                .mapWithUserProfileImages()
-        }
-    }
 
-    private suspend fun Collection<Stream>.mapWithUserProfileImages(): List<Stream> {
-        val users = mapNotNull { it.userId }
-            .chunked(100)
-            .flatMap { ids ->
-                helixApi.getUsersById(
-                    clientId = helixClientId,
-                    token = helixToken,
-                    ids = ids
-                )
-                    .data
-                    .orEmpty()
-            }
-
-        return map { stream ->
-            val user = users.firstOrNull { user -> stream.userId == user.id }
-            stream.copy(
-                profileImageURL = user?.profileImageUrl
+            return LoadResult.Page(
+                data = listOf(response),
+                nextKey = response.pagination?.cursor,
+                prevKey = null
             )
+        } catch (e: Exception) {
+            return LoadResult.Error(e)
         }
-    }
-
-    class Factory(
-        private val userId: String?,
-        private val helixClientId: String?,
-        private val helixToken: String?,
-        private val helixApi: HelixApi,
-        private val coroutineScope: CoroutineScope
-    ) : DataSource.Factory<Int, Stream>() {
-
-        override fun create(): DataSource<Int, Stream> =
-            FollowedStreamsDataSource(
-                userId = userId,
-                helixClientId = helixClientId,
-                helixToken = helixToken,
-                helixApi = helixApi,
-                coroutineScope = coroutineScope
-            )
     }
 }

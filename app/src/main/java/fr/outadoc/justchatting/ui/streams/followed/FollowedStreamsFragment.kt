@@ -44,6 +44,6 @@ class FollowedStreamsFragment :
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadStreams()
+        adapter.refresh()
     }
 }

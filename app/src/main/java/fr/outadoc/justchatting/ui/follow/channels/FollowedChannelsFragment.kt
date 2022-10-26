@@ -75,7 +75,7 @@ class FollowedChannelsFragment :
 
     override fun onResume() {
         super.onResume()
-        viewModel.reload()
+        adapter.refresh()
     }
 
     override fun onChange(

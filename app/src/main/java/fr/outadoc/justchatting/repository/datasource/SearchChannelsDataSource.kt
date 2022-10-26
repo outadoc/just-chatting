@@ -1,102 +1,42 @@
 package fr.outadoc.justchatting.repository.datasource
 
-import androidx.paging.DataSource
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import fr.outadoc.justchatting.api.HelixApi
-import fr.outadoc.justchatting.model.helix.channel.ChannelSearch
-import kotlinx.coroutines.CoroutineScope
+import fr.outadoc.justchatting.model.helix.channel.ChannelSearchResponse
 
-class SearchChannelsDataSource private constructor(
+class SearchChannelsDataSource(
     private val query: String,
     private val helixClientId: String?,
     private val helixToken: String?,
-    private val helixApi: HelixApi,
-    coroutineScope: CoroutineScope
-) : BasePositionalDataSource<ChannelSearch>(coroutineScope) {
+    private val helixApi: HelixApi
+) : PagingSource<String, ChannelSearchResponse>() {
 
-    private var offset: String? = null
-
-    override fun loadInitial(
-        params: LoadInitialParams,
-        callback: LoadInitialCallback<ChannelSearch>
-    ) {
-        loadInitial(params, callback) {
-            if (!helixToken.isNullOrBlank()) helixInitial(params)
-            else throw Exception()
+    override fun getRefreshKey(state: PagingState<String, ChannelSearchResponse>): String? {
+        return state.anchorPosition?.let { anchorPosition ->
+            state.closestItemToPosition(anchorPosition)?.pagination?.cursor
         }
     }
 
-    private suspend fun helixInitial(params: LoadInitialParams): List<ChannelSearch> {
-        val result = helixApi.getChannels(
-            clientId = helixClientId,
-            token = helixToken,
-            query = query,
-            limit = params.requestedLoadSize,
-            offset = offset
-        )
+    override suspend fun load(params: LoadParams<String>): LoadResult<String, ChannelSearchResponse> {
+        try {
+            if (helixToken.isNullOrBlank()) error("Helix token is null")
 
-        offset = result.pagination?.cursor
-
-        return result.data
-            .orEmpty()
-            .mapWithUserProfileImages()
-    }
-
-    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<ChannelSearch>) {
-        if (offset.isNullOrBlank()) return
-
-        loadRange(params, callback) {
-            val result = helixApi.getChannels(
+            val response = helixApi.getChannels(
                 clientId = helixClientId,
                 token = helixToken,
                 query = query,
                 limit = params.loadSize,
-                offset = offset
+                offset = params.key
             )
 
-            offset = result.pagination?.cursor
-
-            result.data
-                .orEmpty()
-                .mapWithUserProfileImages()
+            return LoadResult.Page(
+                data = listOf(response),
+                nextKey = response.pagination?.cursor,
+                prevKey = null
+            )
+        } catch (e: Exception) {
+            return LoadResult.Error(e)
         }
-    }
-
-    private suspend fun List<ChannelSearch>.mapWithUserProfileImages(): List<ChannelSearch> {
-        return mapNotNull { result -> result.id }
-            .chunked(size = 100)
-            .flatMap { idsToUpdate ->
-                val users = helixApi.getUsersById(
-                    clientId = helixClientId,
-                    token = helixToken,
-                    ids = idsToUpdate
-                )
-                    .data
-                    .orEmpty()
-
-                map { searchResult ->
-                    searchResult.copy(
-                        profileImageURL = users.firstOrNull { user -> user.id == searchResult.id }
-                            ?.profileImageUrl
-                    )
-                }
-            }
-    }
-
-    class Factory(
-        private val query: String,
-        private val helixClientId: String?,
-        private val helixToken: String?,
-        private val helixApi: HelixApi,
-        private val coroutineScope: CoroutineScope
-    ) : DataSource.Factory<Int, ChannelSearch>() {
-
-        override fun create(): DataSource<Int, ChannelSearch> =
-            SearchChannelsDataSource(
-                query = query,
-                helixClientId = helixClientId,
-                helixToken = helixToken,
-                helixApi = helixApi,
-                coroutineScope = coroutineScope
-            )
     }
 }

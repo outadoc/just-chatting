@@ -14,7 +14,7 @@ class StreamsCompactAdapter(
     clickListener: NavigationHandler
 ) : BaseStreamsAdapter(clickListener) {
 
-    override val layoutId: Int = R.layout.fragment_streams_list_item_compact
+    override fun getItemViewType(position: Int): Int = R.layout.fragment_streams_list_item_compact
 
     override fun bind(item: Stream, view: View) {
         super.bind(item, view)

@@ -23,7 +23,7 @@ class FollowedChannelsAdapter(
         override fun areContentsTheSame(oldItem: Follow, newItem: Follow): Boolean = true
     }) {
 
-    override val layoutId: Int = R.layout.fragment_followed_channels_list_item
+    override fun getItemViewType(position: Int): Int = R.layout.fragment_followed_channels_list_item
 
     override fun bind(item: Follow, view: View) {
         val binding = FragmentFollowedChannelsListItemBinding.bind(view)

@@ -22,7 +22,7 @@ class ChannelSearchAdapter(
             true
     }) {
 
-    override val layoutId: Int = R.layout.fragment_search_channels_list_item
+    override fun getItemViewType(position: Int): Int = R.layout.fragment_search_channels_list_item
 
     override fun bind(item: ChannelSearch, view: View) {
         view.setOnClickListener {

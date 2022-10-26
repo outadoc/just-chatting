@@ -39,7 +39,7 @@ class ChatConnectionService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent?.action == ACTION_STOP) {
             connectionPool.dispose()
-            stopForeground(true)
+            stopForeground(STOP_FOREGROUND_REMOVE)
             stopSelf()
             return super.onStartCommand(intent, flags, startId)
         }

@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="all_time">All time</string>
-    <string name="alphabetically">Alphabetically</string>
     <string name="animated_emotes">Animated emotes</string>
     <string name="api_helix">Helix client id</string>
     <string name="api_helix_redirect">Helix redirect url</string>
     <string name="api_settings">API settings</string>
     <string name="app_name" translatable="false">Just Chatting</string>
     <string name="apply">Apply</string>
-    <string name="ascending">Ascending</string>
     <string name="browser_workaround">Your system browser is no longer supported. Please click the button below for a workaround</string>
     <string name="channels">Channels</string>
     <string name="chat_ban">%s has been permanently banned</string>
@@ -32,7 +29,6 @@
     <string name="chat_timeout">%1$s has been timed out for %2$s</string>
     <string name="connection_error">Error connecting to the server. Please try again</string>
     <string name="created_at">Created at %s</string>
-    <string name="descending">Descending</string>
     <string name="emote_tab_others">Others</string>
     <string name="emote_tab_recent">Recent</string>
     <string name="emote_tab_twitch">Twitch</string>
@@ -233,10 +229,7 @@
     <string name="search">Search</string>
     <string name="settings">Settings</string>
     <string name="settings_chat">Chat</string>
-    <string name="sort">Sort</string>
-    <string name="sort_and_period">Sort by: %1$s. Period: %2$s</string>
     <string name="stream_info">Stream Info</string>
-    <string name="time_followed">Time followed</string>
     <string name="timestamps">Show timestamps</string>
     <string name="to_enter_url">Enter url</string>
     <string name="token_expired">Your session has expired. Please log in again</string>

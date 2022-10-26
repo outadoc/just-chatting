@@ -5,10 +5,6 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/sortBar"
-        layout="@layout/sort_bar" />
-
-    <include
         android:id="@+id/layout_recyclerView"
         layout="@layout/common_recycler_view_layout" />
 

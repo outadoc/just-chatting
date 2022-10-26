@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="all_time">Depuis toujours</string>
-    <string name="alphabetically">Alphabétiquement</string>
     <string name="animated_emotes">Émotes animées</string>
     <string name="api_helix">Identifiant client Helix</string>
     <string name="api_helix_redirect">URL de redirection Helix</string>
     <string name="api_settings">Paramètres API</string>
     <string name="apply">Appliquer</string>
-    <string name="ascending">Ascendant</string>
     <string name="browser_workaround">Le navigateur de votre système n\'est plus pris en charge. Veuillez cliquer sur le bouton ci-dessous pour une solution de contournement</string>
     <string name="channels">Chaînes</string>
     <string name="chat_ban">%s a été banni·e définitivement</string>
@@ -31,7 +28,6 @@
     <string name="chat_timeout">%1$s a été mis·e au silence pendant %2$s</string>
     <string name="connection_error">Erreur de connexion au serveur. Veuillez réessayer</string>
     <string name="created_at">Créé le %s</string>
-    <string name="descending">Descendant</string>
     <string name="emote_tab_others">Autres</string>
     <string name="emote_tab_recent">Récentes</string>
     <string name="emote_tab_twitch">Twitch</string>
@@ -232,10 +228,7 @@
     <string name="search">Chercher</string>
     <string name="settings">Réglages</string>
     <string name="settings_chat">TCHAT</string>
-    <string name="sort">Trier</string>
-    <string name="sort_and_period">Trier par: %1$s. Période: %2$s</string>
     <string name="stream_info">Infos du stream</string>
-    <string name="time_followed">Temps suivi</string>
     <string name="timestamps">Afficher les horodatages</string>
     <string name="to_enter_url">Entrer l\'URL</string>
     <string name="token_expired">Votre session a expiré. Veuillez vous reconnecter.</string>

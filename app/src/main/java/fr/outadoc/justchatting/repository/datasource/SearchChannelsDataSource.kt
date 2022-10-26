@@ -88,7 +88,7 @@ class SearchChannelsDataSource private constructor(
         private val helixToken: String?,
         private val helixApi: HelixApi,
         private val coroutineScope: CoroutineScope
-    ) : BaseDataSourceFactory<Int, ChannelSearch, SearchChannelsDataSource>() {
+    ) : DataSource.Factory<Int, ChannelSearch>() {
 
         override fun create(): DataSource<Int, ChannelSearch> =
             SearchChannelsDataSource(

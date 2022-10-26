@@ -81,7 +81,7 @@ class FollowedStreamsDataSource(
         private val helixToken: String?,
         private val helixApi: HelixApi,
         private val coroutineScope: CoroutineScope
-    ) : BaseDataSourceFactory<Int, Stream, FollowedStreamsDataSource>() {
+    ) : DataSource.Factory<Int, Stream>() {
 
         override fun create(): DataSource<Int, Stream> =
             FollowedStreamsDataSource(

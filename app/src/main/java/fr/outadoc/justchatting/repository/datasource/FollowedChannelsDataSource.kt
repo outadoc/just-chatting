@@ -103,7 +103,7 @@ class FollowedChannelsDataSource(
         private val sort: Sort,
         private val order: Order,
         private val coroutineScope: CoroutineScope
-    ) : BaseDataSourceFactory<Int, Follow, FollowedChannelsDataSource>() {
+    ) : DataSource.Factory<Int, Follow>() {
 
         override fun create(): DataSource<Int, Follow> =
             FollowedChannelsDataSource(

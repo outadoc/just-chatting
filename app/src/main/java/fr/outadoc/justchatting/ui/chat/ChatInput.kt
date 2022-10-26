@@ -107,6 +107,18 @@ fun ChatInputPreviewBasic() {
 
 @ThemePreviews
 @Composable
+fun ChatInputPreviewLongMessage() {
+    Mdc3Theme {
+        ChatInput(
+            message = TextFieldValue(
+                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+            )
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
 fun ChatInputPreviewEmpty() {
     Mdc3Theme {
         ChatInput()
@@ -233,7 +245,7 @@ fun ChatTextField(
     TextField(
         modifier = modifier,
         value = message,
-        singleLine = true,
+        singleLine = false,
         onValueChange = onMessageChange,
         shape = FloatingActionButtonDefaults.shape,
         textStyle = MaterialTheme.typography.bodyMedium,

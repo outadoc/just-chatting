@@ -86,15 +86,4 @@ abstract class PagedListFragment<T : Any, VM : PagedListViewModel<T>, Adapter : 
             }
         }
     }
-
-    private fun CommonRecyclerViewLayoutBinding.shouldShowButton(): Boolean {
-        val offset = recyclerView.computeVerticalScrollOffset()
-        if (offset < 0) {
-            return false
-        }
-        val extent = recyclerView.computeVerticalScrollExtent()
-        val range = recyclerView.computeVerticalScrollRange()
-        val percentage = (100f * offset / (range - extent).toFloat())
-        return percentage > 3f
-    }
 }

@@ -2,11 +2,12 @@ package fr.outadoc.justchatting.ui.common
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations.switchMap
+import androidx.lifecycle.ViewModel
 import androidx.paging.PagedList
 import fr.outadoc.justchatting.repository.Listing
 import fr.outadoc.justchatting.repository.LoadingState
 
-abstract class PagedListViewModel<T : Any> : BaseViewModel() {
+abstract class PagedListViewModel<T : Any> : ViewModel() {
 
     protected abstract val result: LiveData<Listing<T>>
 

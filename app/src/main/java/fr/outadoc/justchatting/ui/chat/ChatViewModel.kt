@@ -6,6 +6,7 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.ChatCommand
@@ -29,7 +30,6 @@ import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.repository.EmotesRepository
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.repository.UserPreferencesRepository
-import fr.outadoc.justchatting.ui.common.BaseViewModel
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.util.isOdd
@@ -86,7 +86,7 @@ class ChatViewModel(
     private val chatPreferencesRepository: ChatPreferencesRepository,
     private val userPreferencesRepository: UserPreferencesRepository,
     private val clock: Clock
-) : BaseViewModel() {
+) : ViewModel() {
 
     private val defaultScope = viewModelScope + CoroutineName("defaultScope")
     private val inputScope = viewModelScope + CoroutineName("inputScope")

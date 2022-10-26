@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.repository
 
-import androidx.paging.PagedList
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
 import fr.outadoc.justchatting.api.HelixApi
 import fr.outadoc.justchatting.model.chat.CheerEmote
 import fr.outadoc.justchatting.model.chat.TwitchEmote
@@ -28,7 +29,7 @@ class ApiRepository(
     override suspend fun loadSearchChannels(
         query: String,
         coroutineScope: CoroutineScope
-    ): Listing<ChannelSearch> {
+    ): Pager<Int, ChannelSearch> {
         val factory = SearchChannelsDataSource.Factory(
             query = query,
             helixClientId = authPrefs.helixClientId.first(),
@@ -37,17 +38,18 @@ class ApiRepository(
             coroutineScope = coroutineScope
         )
 
-        val config = PagedList.Config.Builder()
-            .setPageSize(15)
-            .setInitialLoadSizeHint(15)
-            .setPrefetchDistance(5)
-            .setEnablePlaceholders(false)
-            .build()
-
-        return createListing(factory, config)
+        return Pager(
+            config = PagingConfig(
+                pageSize = 15,
+                initialLoadSize = 15,
+                prefetchDistance = 5,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = factory.asPagingSourceFactory()
+        )
     }
 
-    override suspend fun loadFollowedStreams(coroutineScope: CoroutineScope): Listing<Stream> {
+    override suspend fun loadFollowedStreams(coroutineScope: CoroutineScope): Pager<Int, Stream> {
         val factory = FollowedStreamsDataSource.Factory(
             userId = userPreferencesRepository.appUser.first().id,
             helixClientId = authPrefs.helixClientId.first(),
@@ -56,21 +58,22 @@ class ApiRepository(
             coroutineScope = coroutineScope
         )
 
-        val config = PagedList.Config.Builder()
-            .setEnablePlaceholders(false)
-            .setPageSize(30)
-            .setInitialLoadSizeHint(30)
-            .setPrefetchDistance(10)
-            .build()
-
-        return createListing(factory, config)
+        return Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                initialLoadSize = 30,
+                prefetchDistance = 10,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = factory.asPagingSourceFactory()
+        )
     }
 
     override suspend fun loadFollowedChannels(
         sort: Sort,
         order: Order,
         coroutineScope: CoroutineScope
-    ): Listing<Follow> {
+    ): Pager<Int, Follow> {
         val factory = FollowedChannelsDataSource.Factory(
             userId = userPreferencesRepository.appUser.first().id,
             helixClientId = authPrefs.helixClientId.first(),
@@ -81,14 +84,15 @@ class ApiRepository(
             coroutineScope = coroutineScope
         )
 
-        val config = PagedList.Config.Builder()
-            .setPageSize(40)
-            .setInitialLoadSizeHint(40)
-            .setPrefetchDistance(10)
-            .setEnablePlaceholders(false)
-            .build()
-
-        return createListing(factory, config)
+        return Pager(
+            config = PagingConfig(
+                pageSize = 40,
+                initialLoadSize = 40,
+                prefetchDistance = 10,
+                enablePlaceholders = false
+            ),
+            pagingSourceFactory = factory.asPagingSourceFactory()
+        )
     }
 
     override suspend fun loadStreamWithUser(channelId: String): Stream? =

@@ -3,13 +3,13 @@ package fr.outadoc.justchatting.ui.common
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagedListAdapter
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.repository.LoadingState
 
 abstract class BasePagedListAdapter<T : Any>(diffCallback: DiffUtil.ItemCallback<T>) :
-    PagedListAdapter<T, DefaultViewHolder>(diffCallback) {
+    PagingDataAdapter<T, DefaultViewHolder>(diffCallback) {
 
     protected abstract val layoutId: Int
     private var pagingState: LoadingState? = null

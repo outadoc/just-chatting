@@ -1,14 +1,14 @@
 package fr.outadoc.justchatting.ui.follow.channels
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
 import fr.outadoc.justchatting.model.helix.follows.Follow
 import fr.outadoc.justchatting.model.helix.follows.Order
 import fr.outadoc.justchatting.model.helix.follows.Sort
-import fr.outadoc.justchatting.repository.Listing
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.ui.common.PagedListViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
@@ -26,7 +26,7 @@ class FollowedChannelsViewModel(
     private val _filter = MutableStateFlow(Filter())
     val filter = _filter.asLiveData()
 
-    override val result: LiveData<Listing<Follow>> =
+    override val result: Flow<Pager<*, Follow>> =
         _filter.filterNotNull()
             .map { filter ->
                 repository.loadFollowedChannels(
@@ -35,7 +35,6 @@ class FollowedChannelsViewModel(
                     coroutineScope = viewModelScope
                 )
             }
-            .asLiveData()
 
     fun updateFilter(sort: Sort, order: Order) {
         _filter.update { filter ->

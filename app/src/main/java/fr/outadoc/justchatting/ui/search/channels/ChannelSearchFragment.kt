@@ -48,7 +48,6 @@ class ChannelSearchFragment :
         if (query.isNotEmpty()) {
             viewModel.setQuery(query = query)
         } else {
-            adapter.submitList(null)
             viewHolder?.nothingHere?.isVisible = false
         }
     }

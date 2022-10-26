@@ -114,6 +114,6 @@ class FollowedChannelsDataSource(
                 sort = sort,
                 order = order,
                 coroutineScope = coroutineScope
-            ).also(sourceLiveData::postValue)
+            )
     }
 }

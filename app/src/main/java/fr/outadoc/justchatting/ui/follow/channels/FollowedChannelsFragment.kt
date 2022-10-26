@@ -84,7 +84,6 @@ class FollowedChannelsFragment :
         order: Order,
         orderText: CharSequence
     ) {
-        adapter.submitList(null)
         viewModel.updateFilter(
             sort = sort,
             order = order

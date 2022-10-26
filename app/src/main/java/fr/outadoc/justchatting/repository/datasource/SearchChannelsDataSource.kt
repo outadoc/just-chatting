@@ -97,6 +97,6 @@ class SearchChannelsDataSource private constructor(
                 helixToken = helixToken,
                 helixApi = helixApi,
                 coroutineScope = coroutineScope
-            ).also(sourceLiveData::postValue)
+            )
     }
 }

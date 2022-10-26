@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.repository
 
+import androidx.paging.Pager
 import fr.outadoc.justchatting.model.chat.CheerEmote
 import fr.outadoc.justchatting.model.chat.TwitchEmote
 import fr.outadoc.justchatting.model.helix.channel.ChannelSearch
@@ -15,14 +16,14 @@ interface TwitchService {
     suspend fun loadSearchChannels(
         query: String,
         coroutineScope: CoroutineScope
-    ): Listing<ChannelSearch>
+    ): Pager<Int, ChannelSearch>
 
-    suspend fun loadFollowedStreams(coroutineScope: CoroutineScope): Listing<Stream>
+    suspend fun loadFollowedStreams(coroutineScope: CoroutineScope): Pager<Int, Stream>
     suspend fun loadFollowedChannels(
         sort: Sort,
         order: Order,
         coroutineScope: CoroutineScope
-    ): Listing<Follow>
+    ): Pager<Int, Follow>
 
     suspend fun loadStreamWithUser(channelId: String): Stream?
     suspend fun loadUsersById(ids: List<String>): List<User>?

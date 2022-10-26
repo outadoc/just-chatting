@@ -1,10 +1,8 @@
 package fr.outadoc.justchatting.ui.search.channels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
 import fr.outadoc.justchatting.model.helix.channel.ChannelSearch
-import fr.outadoc.justchatting.repository.Listing
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.ui.common.PagedListViewModel
 import kotlinx.coroutines.flow.Flow
@@ -19,14 +17,14 @@ class ChannelSearchViewModel(
 
     private val query = MutableStateFlow<String?>(null)
 
-    private val _result: Flow<Listing<ChannelSearch>> =
+    private val _result: Flow<Pager<*, ChannelSearch>> =
         query.filterNotNull()
             .distinctUntilChanged()
             .map { query ->
                 repository.loadSearchChannels(query, viewModelScope)
             }
 
-    override val result: LiveData<Listing<ChannelSearch>> = _result.asLiveData()
+    override val result: Flow<Pager<*, ChannelSearch>> = _result
 
     fun setQuery(query: String) {
         this.query.value = query

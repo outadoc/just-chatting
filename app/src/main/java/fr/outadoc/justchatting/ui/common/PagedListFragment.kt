@@ -6,10 +6,12 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.RecyclerView
 import fr.outadoc.justchatting.databinding.CommonRecyclerViewLayoutBinding
-import fr.outadoc.justchatting.repository.LoadingState
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 abstract class PagedListFragment<T : Any, VM : PagedListViewModel<T>, Adapter : BasePagedListAdapter<T>> :
     Fragment() {
@@ -33,13 +35,17 @@ abstract class PagedListFragment<T : Any, VM : PagedListViewModel<T>, Adapter : 
                                 commonViewHolder?.recyclerView?.scrollToPosition(0)
                             }
                         } catch (e: Exception) {
+                            e.printStackTrace()
                         }
                     }
                 })
             }
         })
 
-        commonViewHolder?.recyclerView?.adapter = adapter
+        commonViewHolder?.apply {
+            recyclerView.adapter = adapter
+            swipeRefresh.setOnRefreshListener { adapter.refresh() }
+        }
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { _, windowInsets ->
             val insets = windowInsets.getInsets(WindowInsetsCompat.Type.navigationBars())
@@ -56,33 +62,18 @@ abstract class PagedListFragment<T : Any, VM : PagedListViewModel<T>, Adapter : 
             windowInsets
         }
 
-        viewModel.list.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-            commonViewHolder?.nothingHere?.isVisible = it.isEmpty()
-        }
-
-        viewModel.loadingState.observe(viewLifecycleOwner) {
-            commonViewHolder?.apply {
-                val isLoading = it == LoadingState.LOADING
-                val isListEmpty = adapter.currentList.isNullOrEmpty()
-
-                if (isLoading) {
-                    nothingHere.isVisible = false
-                }
-
-                progressBar.isVisible = isLoading && isListEmpty
-
-                if (swipeRefresh.isEnabled) {
-                    swipeRefresh.isRefreshing = isLoading && !isListEmpty
-                }
+        lifecycleScope.launch {
+            viewModel.pagingData.collectLatest { data ->
+                adapter.submitData(data)
+                commonViewHolder?.nothingHere?.isVisible = adapter.itemCount == 0
             }
         }
 
-        viewModel.pagingState.observe(viewLifecycleOwner, Observer(adapter::setPagingState))
-
-        commonViewHolder?.apply {
-            if (swipeRefresh.isEnabled) {
-                swipeRefresh.setOnRefreshListener { viewModel.refresh() }
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadStates ->
+                commonViewHolder?.apply {
+                    swipeRefresh.isRefreshing = loadStates.refresh is LoadState.Loading
+                }
             }
         }
     }

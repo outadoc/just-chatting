@@ -1,25 +1,18 @@
 package fr.outadoc.justchatting.ui.common
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations.switchMap
 import androidx.lifecycle.ViewModel
-import androidx.paging.PagedList
-import fr.outadoc.justchatting.repository.Listing
-import fr.outadoc.justchatting.repository.LoadingState
+import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flatMapLatest
 
 abstract class PagedListViewModel<T : Any> : ViewModel() {
 
-    protected abstract val result: LiveData<Listing<T>>
+    protected abstract val result: Flow<Pager<*, T>>
 
-    val list: LiveData<PagedList<T>> by lazy { switchMap(result) { it.pagedList } }
-    val loadingState: LiveData<LoadingState> by lazy { switchMap(result) { it.loadingState } }
-    val pagingState: LiveData<LoadingState> by lazy { switchMap(result) { it.pagingState } }
-
-    fun refresh() {
-        result.value?.refresh?.invoke()
-    }
-
-    fun retry() {
-        result.value?.retry?.invoke()
-    }
+    val pagingData: Flow<PagingData<T>>
+        get() = result.flatMapLatest { pager -> pager.flow }
+            .cachedIn(viewModelScope)
 }

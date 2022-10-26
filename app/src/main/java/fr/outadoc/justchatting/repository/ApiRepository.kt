@@ -44,7 +44,7 @@ class ApiRepository(
             .setEnablePlaceholders(false)
             .build()
 
-        return Listing.create(factory, config)
+        return createListing(factory, config)
     }
 
     override suspend fun loadFollowedStreams(coroutineScope: CoroutineScope): Listing<Stream> {
@@ -63,7 +63,7 @@ class ApiRepository(
             .setPrefetchDistance(10)
             .build()
 
-        return Listing.create(factory, config)
+        return createListing(factory, config)
     }
 
     override suspend fun loadFollowedChannels(
@@ -88,7 +88,7 @@ class ApiRepository(
             .setEnablePlaceholders(false)
             .build()
 
-        return Listing.create(factory, config)
+        return createListing(factory, config)
     }
 
     override suspend fun loadStreamWithUser(channelId: String): Stream? =

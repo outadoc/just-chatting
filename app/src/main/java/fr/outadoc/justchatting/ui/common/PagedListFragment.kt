@@ -65,7 +65,6 @@ abstract class PagedListFragment<T : Any, VM : PagedListViewModel<T>, Adapter : 
         lifecycleScope.launch {
             viewModel.pagingData.collectLatest { data ->
                 adapter.submitData(data)
-                commonViewHolder?.nothingHere?.isVisible = adapter.itemCount == 0
             }
         }
 

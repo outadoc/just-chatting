@@ -143,7 +143,7 @@ object ChatNotificationUtils {
                     .setAutoCancel(false)
                     .setOngoing(true)
                     .addAction(
-                        R.drawable.ic_mood,
+                        R.drawable.ic_close,
                         context.getString(R.string.notification_action_disconnect),
                         ChatConnectionService
                             .createStopIntent(context, channelId = user.id)
@@ -151,7 +151,7 @@ object ChatNotificationUtils {
                     )
                     .addAction(
                         NotificationCompat.Action.Builder(
-                            R.drawable.ic_mood,
+                            R.drawable.ic_reply,
                             context.getString(R.string.notification_action_reply),
                             ChatConnectionService
                                 .createReplyIntent(context, channelId = user.id)

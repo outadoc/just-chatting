@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting
 
 import android.app.Application
-import android.content.Context
 import android.os.Build
 import coil.ImageLoader
 import coil.ImageLoaderFactory
@@ -12,32 +11,12 @@ import coil.memory.MemoryCache
 import coil.transition.Transition
 import coil.util.DebugLogger
 import com.google.android.material.color.DynamicColors
-import fr.outadoc.justchatting.di.mainModule
-import fr.outadoc.justchatting.di.viewModelModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.startKoin
 
 class MainApplication : Application(), ImageLoaderFactory {
 
-    companion object {
-        lateinit var INSTANCE: Application
-    }
-
     override fun onCreate() {
         super.onCreate()
-        INSTANCE = this
         DynamicColors.applyToActivitiesIfAvailable(this)
-
-        startKoin {
-            androidLogger()
-            androidContext(this@MainApplication)
-            modules(mainModule, viewModelModule)
-        }
-    }
-
-    override fun attachBaseContext(base: Context?) {
-        super.attachBaseContext(base)
     }
 
     override fun newImageLoader(): ImageLoader =

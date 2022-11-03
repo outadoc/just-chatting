@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.ui.chat
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -16,6 +15,7 @@ import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
 import fr.outadoc.justchatting.ChatConnectionService
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.contentprovider.UserProfileImageContentProvider
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
 import fr.outadoc.justchatting.util.toPendingActivityIntent
@@ -29,7 +29,7 @@ object ChatNotificationUtils {
 
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 
-    fun configureChatBubbles(context: Context, channel: User, channelLogo: Bitmap) {
+    fun configureChatBubbles(context: Context, channel: User) {
         // Don't post a new notification if already in a bubble
         if ((context as? Activity)?.isLaunchedFromBubbleCompat == true) return
 
@@ -38,13 +38,15 @@ object ChatNotificationUtils {
 
         createGenericBubbleChannelIfNeeded(context) ?: return
 
-        val icon = channelLogo.let { IconCompat.createWithBitmap(it) }
-
         val person: Person =
             Person.Builder()
                 .setKey(channel.id)
                 .setName(channel.displayName)
-                .setIcon(icon)
+                .setIcon(
+                    IconCompat.createWithContentUri(
+                        UserProfileImageContentProvider.createForUser(channel.login)
+                    )
+                )
                 .build()
 
         createShortcutForChannel(
@@ -54,15 +56,14 @@ object ChatNotificationUtils {
                 channelLogin = channel.login
             ),
             channelId = channel.id,
+            channelLogin = channel.login,
             channelName = channel.displayName,
-            person = person,
-            icon = icon
+            person = person
         )
 
         createBubble(
             context = context,
             user = channel,
-            icon = icon,
             person = person
         )
     }
@@ -71,9 +72,9 @@ object ChatNotificationUtils {
         context: Context,
         intent: Intent,
         channelId: String,
+        channelLogin: String,
         channelName: String,
-        person: Person,
-        icon: IconCompat
+        person: Person
     ) {
         val maxShortcutCount = ShortcutManagerCompat.getMaxShortcutCountPerActivity(context)
         val currentShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context)
@@ -95,7 +96,11 @@ object ChatNotificationUtils {
                 ShortcutInfoCompat.Builder(context, channelId)
                     .setIntent(intent)
                     .setLongLived(true)
-                    .setIcon(icon)
+                    .setIcon(
+                        IconCompat.createWithContentUri(
+                            UserProfileImageContentProvider.createForUser(channelLogin)
+                        )
+                    )
                     .setShortLabel(channelName)
                     .setPerson(person)
                     .setIsConversation()
@@ -123,7 +128,6 @@ object ChatNotificationUtils {
     private fun createBubble(
         context: Context,
         user: User,
-        icon: IconCompat,
         person: Person
     ): NotificationManagerCompat {
         return NotificationManagerCompat.from(context).apply {
@@ -167,7 +171,9 @@ object ChatNotificationUtils {
                     .setBubbleMetadata(
                         NotificationCompat.BubbleMetadata.Builder(
                             intent.toPendingActivityIntent(context, mutable = true),
-                            icon
+                            IconCompat.createWithContentUri(
+                                UserProfileImageContentProvider.createForUser(user.login)
+                            )
                         )
                             .setAutoExpandBubble(false)
                             .setSuppressNotification(false)

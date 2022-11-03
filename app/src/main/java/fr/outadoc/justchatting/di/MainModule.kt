@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.di
 
+import android.content.Context
 import androidx.room.Room
 import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.BuildConfig
@@ -45,6 +46,7 @@ import fr.outadoc.justchatting.util.chat.LoggedInChatWebSocket
 import fr.outadoc.justchatting.util.chat.PubSubRewardParser
 import fr.outadoc.justchatting.util.chat.PubSubWebSocket
 import kotlinx.datetime.Clock
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.scope.Scope
@@ -52,6 +54,7 @@ import org.koin.dsl.binds
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 val mainModule = module {
@@ -130,6 +133,12 @@ val mainModule = module {
                 writeTimeout(5, TimeUnit.MINUTES)
                 readTimeout(5, TimeUnit.MINUTES)
             }
+            .cache(
+                Cache(
+                    directory = File(get<Context>().cacheDir, "http_cache"),
+                    maxSize = 50L * 1024L * 1024L // 50 MiB
+                )
+            )
             .build()
     }
 }

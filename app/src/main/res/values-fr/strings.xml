@@ -213,7 +213,7 @@
     <string name="notification_channel_bubbles_title">Bulles de tchat</string>
     <string name="notification_foreground_channel_message">Permet à l\'application de garder ouverte une connexion au tchat Twitch.</string>
     <string name="notification_foreground_channel_title">Connexion persistente</string>
-    <string name="notification_foreground_action">Stop</string>
+    <string name="notification_foreground_action">Déconnecter</string>
     <string name="notification_foreground_message">Nous gardons ouverte une connexion pour vous permettre de revenir rapidement sur le tchat.</string>
     <string name="notification_foreground_title">Connecté au tchat Twitch</string>
     <string name="order">Ordre</string>

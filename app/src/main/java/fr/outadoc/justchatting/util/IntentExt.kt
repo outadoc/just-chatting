@@ -5,9 +5,28 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 
-fun Intent.toPendingIntent(
+private enum class IntentComponent {
+    Activity, ForegroundService
+}
+
+fun Intent.toPendingActivityIntent(
     context: Context,
     mutable: Boolean = false
+): PendingIntent {
+    return toPendingIntent(context, mutable, IntentComponent.Activity)
+}
+
+fun Intent.toPendingForegroundServiceIntent(
+    context: Context,
+    mutable: Boolean = false
+): PendingIntent {
+    return toPendingIntent(context, mutable, IntentComponent.ForegroundService)
+}
+
+private fun Intent.toPendingIntent(
+    context: Context,
+    mutable: Boolean,
+    intentComponent: IntentComponent
 ): PendingIntent {
     val mutableFlag =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && mutable) PendingIntent.FLAG_MUTABLE
@@ -17,10 +36,21 @@ fun Intent.toPendingIntent(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && !mutable) PendingIntent.FLAG_IMMUTABLE
         else 0
 
-    return PendingIntent.getActivity(
-        context,
-        0,
-        this,
-        PendingIntent.FLAG_UPDATE_CURRENT or mutableFlag or immutableFlag
-    )
+    val flags = PendingIntent.FLAG_UPDATE_CURRENT or mutableFlag or immutableFlag
+
+    return when (intentComponent) {
+        IntentComponent.Activity -> PendingIntent.getActivity(
+            /* context = */ context,
+            /* requestCode = */ 0,
+            /* intent = */ this,
+            /* flags = */ flags
+        )
+
+        IntentComponent.ForegroundService -> PendingIntent.getForegroundService(
+            /* context = */ context,
+            /* requestCode = */ 0,
+            /* intent = */ this,
+            /* flags = */ flags
+        )
+    }
 }

@@ -16,6 +16,9 @@ class ChatConnectionPool(
 
     private val _chatControllers: MutableMap<String, LiveChatController> = mutableMapOf()
 
+    val hasActiveThreads: Boolean
+        get() = _chatControllers.isNotEmpty()
+
     suspend fun start(channelId: String, channelLogin: String): Flow<ChatCommand> {
         applicationContext.startForegroundService(
             ChatConnectionService.createStartIntent(applicationContext)

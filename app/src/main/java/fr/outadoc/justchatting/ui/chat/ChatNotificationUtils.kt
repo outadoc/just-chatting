@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.ui.chat
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -12,9 +13,12 @@ import androidx.core.content.LocusIdCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import androidx.core.graphics.drawable.IconCompat
+import fr.outadoc.justchatting.ChatConnectionService
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.helix.user.User
-import fr.outadoc.justchatting.util.toPendingIntent
+import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
+import fr.outadoc.justchatting.util.toPendingActivityIntent
+import fr.outadoc.justchatting.util.toPendingForegroundServiceIntent
 
 object ChatNotificationUtils {
 
@@ -23,6 +27,9 @@ object ChatNotificationUtils {
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 
     fun configureChatBubbles(context: Context, channel: User, channelLogo: Bitmap) {
+        // Don't post a new notification if already in a bubble
+        if ((context as? Activity)?.isLaunchedFromBubbleCompat == true) return
+
         // Bubbles are only available on Android Q+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
 
@@ -99,7 +106,7 @@ object ChatNotificationUtils {
             createNotificationChannel(
                 NotificationChannelCompat.Builder(
                     NOTIFICATION_CHANNEL_ID,
-                    NotificationManagerCompat.IMPORTANCE_HIGH
+                    NotificationManagerCompat.IMPORTANCE_MIN
                 )
                     .setName(context.getString(R.string.notification_channel_bubbles_title))
                     .setDescription(context.getString(R.string.notification_channel_bubbles_message))
@@ -123,20 +130,34 @@ object ChatNotificationUtils {
                 notificationIdFor(user.id),
                 NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                     .setContentTitle(user.displayName)
-                    .setContentIntent(intent.toPendingIntent(context))
+                    .setContentIntent(intent.toPendingActivityIntent(context))
                     .setSmallIcon(R.drawable.ic_stream)
                     .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                     .setPriority(NotificationCompat.PRIORITY_HIGH)
                     .setLocusId(LocusIdCompat(user.id))
                     .setShortcutId(user.id)
                     .addPerson(person)
+                    .setAutoCancel(false)
+                    .setOngoing(true)
+                    .addAction(
+                        R.drawable.ic_mood,
+                        context.getString(R.string.notification_foreground_action),
+                        ChatConnectionService
+                            .createStopIntent(context, channelId = user.id)
+                            .toPendingForegroundServiceIntent(context)
+                    )
                     .setBubbleMetadata(
                         NotificationCompat.BubbleMetadata.Builder(
-                            intent.toPendingIntent(context, mutable = true),
+                            intent.toPendingActivityIntent(context, mutable = true),
                             icon
                         )
                             .setAutoExpandBubble(false)
-                            .setSuppressNotification(true)
+                            .setSuppressNotification(false)
+                            .setDeleteIntent(
+                                ChatConnectionService
+                                    .createStopIntent(context, channelId = user.id)
+                                    .toPendingForegroundServiceIntent(context)
+                            )
                             .build()
                     )
                     .setStyle(
@@ -150,5 +171,10 @@ object ChatNotificationUtils {
                     .build()
             )
         }
+    }
+
+    fun dismissNotification(context: Context, channelId: String) {
+        NotificationManagerCompat.from(context)
+            .cancel(notificationIdFor(channelId))
     }
 }

@@ -209,12 +209,14 @@
     <string name="no">No</string>
     <string name="no_browser_found">No browser app found</string>
     <string name="nothing_here">Nothing here</string>
+    <string name="notification_action_disconnect">Disconnect</string>
+    <string name="notification_action_reply">Reply</string>
+    <string name="notification_action_reply_hint">Reply in chat…</string>
     <string name="notification_channel_bubbles_message">Used to show the Twitch chat in notification bubbles.</string>
     <string name="notification_channel_bubbles_openPrompt">Keep an eye on this chat by opening this notification in a bubble.</string>
     <string name="notification_channel_bubbles_title">Chat bubbles</string>
     <string name="notification_foreground_channel_message">Allows the app to keep a connection to the Twitch chat in the background.</string>
     <string name="notification_foreground_channel_title">Persistent connection</string>
-    <string name="notification_foreground_action">Disconnect</string>
     <string name="notification_foreground_message">We\'re keeping open the connection to Twitch so you can come back and see all the messages you\'ve missed.</string>
     <string name="notification_foreground_title">Connected to Twitch chat</string>
     <string name="order">Order</string>

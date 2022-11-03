@@ -37,7 +37,7 @@ class ChatConnectionPool(
         _chatControllers.remove(channelId)
     }
 
-    fun sendMessage(channelId: String, message: CharSequence, inReplyToId: String?) {
+    fun sendMessage(channelId: String, message: CharSequence, inReplyToId: String? = null) {
         _chatControllers[channelId]?.send(message, inReplyToId)
     }
 

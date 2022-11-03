@@ -9,6 +9,7 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
+import androidx.core.app.RemoteInput
 import androidx.core.content.LocusIdCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
@@ -20,9 +21,11 @@ import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
 import fr.outadoc.justchatting.util.toPendingActivityIntent
 import fr.outadoc.justchatting.util.toPendingForegroundServiceIntent
 
+
 object ChatNotificationUtils {
 
     private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
+    private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
 
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 
@@ -141,10 +144,25 @@ object ChatNotificationUtils {
                     .setOngoing(true)
                     .addAction(
                         R.drawable.ic_mood,
-                        context.getString(R.string.notification_foreground_action),
+                        context.getString(R.string.notification_action_disconnect),
                         ChatConnectionService
                             .createStopIntent(context, channelId = user.id)
                             .toPendingForegroundServiceIntent(context)
+                    )
+                    .addAction(
+                        NotificationCompat.Action.Builder(
+                            R.drawable.ic_mood,
+                            context.getString(R.string.notification_action_reply),
+                            ChatConnectionService
+                                .createReplyIntent(context, channelId = user.id)
+                                .toPendingForegroundServiceIntent(context, mutable = true)
+                        )
+                            .addRemoteInput(
+                                RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
+                                    .setLabel(context.getString(R.string.notification_action_reply_hint))
+                                    .build()
+                            )
+                            .build()
                     )
                     .setBubbleMetadata(
                         NotificationCompat.BubbleMetadata.Builder(

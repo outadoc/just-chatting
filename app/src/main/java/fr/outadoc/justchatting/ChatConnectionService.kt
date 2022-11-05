@@ -53,6 +53,26 @@ class ChatConnectionService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.i(TAG, "Received intent $intent")
 
+        NotificationManagerCompat.from(this)
+            .createNotificationChannel(
+                NotificationChannelCompat.Builder(
+                    ONGOING_NOTIFICATION_CHANNEL_ID,
+                    NotificationManagerCompat.IMPORTANCE_LOW
+                )
+                    .setName(getString(R.string.notification_foreground_channel_title))
+                    .setDescription(getString(R.string.notification_foreground_channel_message))
+                    .build()
+            )
+
+        val notification = NotificationCompat.Builder(this, ONGOING_NOTIFICATION_CHANNEL_ID)
+            .setContentTitle(getString(R.string.notification_foreground_title))
+            .setContentText(getString(R.string.notification_foreground_message))
+            .setSmallIcon(R.drawable.ic_campaign)
+            .setOngoing(true)
+            .build()
+
+        startForeground(ONGOING_NOTIFICATION_ID, notification)
+
         val channelId = intent?.getStringExtra(EXTRA_CHANNEL_ID)
         when (intent?.action) {
             ACTION_REPLY -> {
@@ -85,28 +105,6 @@ class ChatConnectionService : Service() {
                 } else {
                     Log.i(TAG, "Pool still has active threads left, service will keep running")
                 }
-            }
-
-            else -> {
-                NotificationManagerCompat.from(this)
-                    .createNotificationChannel(
-                        NotificationChannelCompat.Builder(
-                            ONGOING_NOTIFICATION_CHANNEL_ID,
-                            NotificationManagerCompat.IMPORTANCE_LOW
-                        )
-                            .setName(getString(R.string.notification_foreground_channel_title))
-                            .setDescription(getString(R.string.notification_foreground_channel_message))
-                            .build()
-                    )
-
-                val notification = NotificationCompat.Builder(this, ONGOING_NOTIFICATION_CHANNEL_ID)
-                    .setContentTitle(getString(R.string.notification_foreground_title))
-                    .setContentText(getString(R.string.notification_foreground_message))
-                    .setSmallIcon(R.drawable.ic_campaign)
-                    .setOngoing(true)
-                    .build()
-
-                startForeground(ONGOING_NOTIFICATION_ID, notification)
             }
         }
 

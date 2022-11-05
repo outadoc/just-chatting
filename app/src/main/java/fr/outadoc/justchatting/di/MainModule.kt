@@ -71,7 +71,7 @@ val mainModule = module {
         UserPreferencesRepository::class
     )
 
-    single { ChatConnectionPool(get(), get()) }
+    single { ChatConnectionPool(get()) }
 
     single { LiveChatController.Factory(get(), get(), get()) }
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get()) }

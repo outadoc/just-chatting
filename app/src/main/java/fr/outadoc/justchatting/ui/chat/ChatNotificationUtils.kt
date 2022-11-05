@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.ui.chat
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -27,12 +26,9 @@ object ChatNotificationUtils {
 
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 
-    fun configureChatBubbles(context: Context, user: User) {
+    fun notify(context: Context, user: User) {
         // Don't post a new notification if already in a bubble
         if ((context as? Activity)?.isLaunchedFromBubbleCompat == true) return
-
-        // Bubbles are only available on Android Q+
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) return
 
         createGenericBubbleChannelIfNeeded(context) ?: return
 
@@ -53,7 +49,11 @@ object ChatNotificationUtils {
             person = person
         )
 
-        createBubble(
+        context.startForegroundService(
+            ChatConnectionService.createStartIntent(context)
+        )
+
+        createNotificationForUser(
             context = context,
             user = user,
             person = person
@@ -96,89 +96,83 @@ object ChatNotificationUtils {
     }
 
     private fun createGenericBubbleChannelIfNeeded(context: Context): NotificationChannelCompat? {
-        with(NotificationManagerCompat.from(context)) {
-            createNotificationChannel(
-                NotificationChannelCompat.Builder(
-                    NOTIFICATION_CHANNEL_ID,
-                    NotificationManagerCompat.IMPORTANCE_MIN
-                )
-                    .setName(context.getString(R.string.notification_channel_bubbles_title))
-                    .setDescription(context.getString(R.string.notification_channel_bubbles_message))
-                    .build()
+        val nm = NotificationManagerCompat.from(context)
+        nm.createNotificationChannel(
+            NotificationChannelCompat.Builder(
+                NOTIFICATION_CHANNEL_ID,
+                NotificationManagerCompat.IMPORTANCE_MIN
             )
+                .setName(context.getString(R.string.notification_channel_bubbles_title))
+                .setDescription(context.getString(R.string.notification_channel_bubbles_message))
+                .build()
+        )
 
-            return getNotificationChannelCompat(NOTIFICATION_CHANNEL_ID)
-        }
+        return nm.getNotificationChannelCompat(NOTIFICATION_CHANNEL_ID)
     }
 
-    private fun createBubble(
-        context: Context,
-        user: User,
-        person: Person
-    ): NotificationManagerCompat {
-        return NotificationManagerCompat.from(context).apply {
-            val intent = ChatActivity.createIntent(context, user.login)
+    private fun createNotificationForUser(context: Context, user: User, person: Person) {
+        val nm = NotificationManagerCompat.from(context)
+        val intent = ChatActivity.createIntent(context, user.login)
 
-            notify(
-                notificationIdFor(user.id),
-                NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-                    .setContentTitle(user.displayName)
-                    .setContentIntent(intent.toPendingActivityIntent(context))
-                    .setSmallIcon(R.drawable.ic_stream)
-                    .setCategory(NotificationCompat.CATEGORY_MESSAGE)
-                    .setPriority(NotificationCompat.PRIORITY_HIGH)
-                    .setLocusId(LocusIdCompat(user.id))
-                    .setShortcutId(user.id)
-                    .addPerson(person)
-                    .setAutoCancel(false)
-                    .setOngoing(true)
-                    .addAction(
-                        R.drawable.ic_close,
-                        context.getString(R.string.notification_action_disconnect),
+        nm.notify(
+            notificationIdFor(user.id),
+            NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
+                .setContentTitle(user.displayName)
+                .setContentIntent(intent.toPendingActivityIntent(context))
+                .setSmallIcon(R.drawable.ic_stream)
+                .setCategory(NotificationCompat.CATEGORY_MESSAGE)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setLocusId(LocusIdCompat(user.id))
+                .setShortcutId(user.id)
+                .addPerson(person)
+                .setAutoCancel(false)
+                .setOngoing(true)
+                .addAction(
+                    R.drawable.ic_close,
+                    context.getString(R.string.notification_action_disconnect),
+                    ChatConnectionService
+                        .createStopIntent(context, channelId = user.id)
+                        .toPendingForegroundServiceIntent(context)
+                )
+                .addAction(
+                    NotificationCompat.Action.Builder(
+                        R.drawable.ic_reply,
+                        context.getString(R.string.notification_action_reply),
                         ChatConnectionService
-                            .createStopIntent(context, channelId = user.id)
-                            .toPendingForegroundServiceIntent(context)
+                            .createReplyIntent(context, channelId = user.id)
+                            .toPendingForegroundServiceIntent(context, mutable = true)
                     )
-                    .addAction(
-                        NotificationCompat.Action.Builder(
-                            R.drawable.ic_reply,
-                            context.getString(R.string.notification_action_reply),
+                        .addRemoteInput(
+                            RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
+                                .setLabel(context.getString(R.string.notification_action_reply_hint))
+                                .build()
+                        )
+                        .build()
+                )
+                .setBubbleMetadata(
+                    NotificationCompat.BubbleMetadata.Builder(
+                        intent.toPendingActivityIntent(context, mutable = true),
+                        user.profileImageIcon
+                    )
+                        .setAutoExpandBubble(false)
+                        .setSuppressNotification(false)
+                        .setDeleteIntent(
                             ChatConnectionService
-                                .createReplyIntent(context, channelId = user.id)
-                                .toPendingForegroundServiceIntent(context, mutable = true)
+                                .createStopIntent(context, channelId = user.id)
+                                .toPendingForegroundServiceIntent(context)
                         )
-                            .addRemoteInput(
-                                RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
-                                    .setLabel(context.getString(R.string.notification_action_reply_hint))
-                                    .build()
-                            )
-                            .build()
-                    )
-                    .setBubbleMetadata(
-                        NotificationCompat.BubbleMetadata.Builder(
-                            intent.toPendingActivityIntent(context, mutable = true),
-                            user.profileImageIcon
+                        .build()
+                )
+                .setStyle(
+                    NotificationCompat.MessagingStyle(person)
+                        .addMessage(
+                            context.getString(R.string.notification_channel_bubbles_openPrompt),
+                            System.currentTimeMillis(),
+                            person
                         )
-                            .setAutoExpandBubble(false)
-                            .setSuppressNotification(false)
-                            .setDeleteIntent(
-                                ChatConnectionService
-                                    .createStopIntent(context, channelId = user.id)
-                                    .toPendingForegroundServiceIntent(context)
-                            )
-                            .build()
-                    )
-                    .setStyle(
-                        NotificationCompat.MessagingStyle(person)
-                            .addMessage(
-                                context.getString(R.string.notification_channel_bubbles_openPrompt),
-                                System.currentTimeMillis(),
-                                person
-                            )
-                    )
-                    .build()
-            )
-        }
+                )
+                .build()
+        )
     }
 
     fun dismissNotification(context: Context, channelId: String) {

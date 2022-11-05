@@ -100,8 +100,8 @@ fun ChannelChatScreen(channelLogin: String) {
 
     OnLifecycleEvent(
         onPause = {
-            if (user != null && channelBranding.logo != null) {
-                ChatNotificationUtils.configureChatBubbles(
+            if (user != null) {
+                ChatNotificationUtils.notify(
                     context = context,
                     user = user
                 )
@@ -136,8 +136,8 @@ fun ChannelChatScreen(channelLogin: String) {
             viewModel.onReplyToMessage(null)
         },
         onOpenBubbleClicked = {
-            if (canOpenInBubble && user != null && channelBranding.logo != null) {
-                ChatNotificationUtils.configureChatBubbles(
+            if (canOpenInBubble && user != null) {
+                ChatNotificationUtils.notify(
                     context = context,
                     user = user
                 )

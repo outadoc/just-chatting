@@ -55,8 +55,8 @@ abstract class PagedListFragment<T : Any, VM : PagedListViewModel<T>, Adapter : 
                     swipeRefresh.isRefreshing = loadStates.refresh is LoadState.Loading
                     nothingHere.isVisible =
                         loadStates.source.refresh is LoadState.NotLoading &&
-                                loadStates.append.endOfPaginationReached &&
-                                adapter.itemCount < 1
+                        loadStates.append.endOfPaginationReached &&
+                        adapter.itemCount < 1
                 }
             }
         }

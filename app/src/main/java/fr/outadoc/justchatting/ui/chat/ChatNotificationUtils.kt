@@ -12,15 +12,13 @@ import androidx.core.app.RemoteInput
 import androidx.core.content.LocusIdCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
-import androidx.core.graphics.drawable.IconCompat
 import fr.outadoc.justchatting.ChatConnectionService
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.contentprovider.UserProfileImageContentProvider
+import fr.outadoc.justchatting.contentprovider.profileImageIcon
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
 import fr.outadoc.justchatting.util.toPendingActivityIntent
 import fr.outadoc.justchatting.util.toPendingForegroundServiceIntent
-
 
 object ChatNotificationUtils {
 
@@ -29,7 +27,7 @@ object ChatNotificationUtils {
 
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 
-    fun configureChatBubbles(context: Context, channel: User) {
+    fun configureChatBubbles(context: Context, user: User) {
         // Don't post a new notification if already in a bubble
         if ((context as? Activity)?.isLaunchedFromBubbleCompat == true) return
 
@@ -40,30 +38,24 @@ object ChatNotificationUtils {
 
         val person: Person =
             Person.Builder()
-                .setKey(channel.id)
-                .setName(channel.displayName)
-                .setIcon(
-                    IconCompat.createWithContentUri(
-                        UserProfileImageContentProvider.createForUser(channel.login)
-                    )
-                )
+                .setKey(user.id)
+                .setName(user.displayName)
+                .setIcon(user.profileImageIcon)
                 .build()
 
         createShortcutForChannel(
             context = context,
             intent = ChatActivity.createIntent(
                 context = context,
-                channelLogin = channel.login
+                channelLogin = user.login
             ),
-            channelId = channel.id,
-            channelLogin = channel.login,
-            channelName = channel.displayName,
+            user = user,
             person = person
         )
 
         createBubble(
             context = context,
-            user = channel,
+            user = user,
             person = person
         )
     }
@@ -71,18 +63,16 @@ object ChatNotificationUtils {
     private fun createShortcutForChannel(
         context: Context,
         intent: Intent,
-        channelId: String,
-        channelLogin: String,
-        channelName: String,
+        user: User,
         person: Person
     ) {
         val maxShortcutCount = ShortcutManagerCompat.getMaxShortcutCountPerActivity(context)
         val currentShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context)
-        val alreadyPublished = currentShortcuts.any { it.id == channelId }
+        val alreadyPublished = currentShortcuts.any { it.id == user.id }
 
         if (currentShortcuts.size >= maxShortcutCount && !alreadyPublished) {
             val oldest = currentShortcuts
-                .filterNot { it.id == channelId }
+                .filterNot { it.id == user.id }
                 .minByOrNull { shortcut -> shortcut.lastChangedTimestamp }
 
             oldest?.let { shortcut ->
@@ -93,15 +83,11 @@ object ChatNotificationUtils {
         ShortcutManagerCompat.addDynamicShortcuts(
             context,
             listOf(
-                ShortcutInfoCompat.Builder(context, channelId)
+                ShortcutInfoCompat.Builder(context, user.id)
                     .setIntent(intent)
                     .setLongLived(true)
-                    .setIcon(
-                        IconCompat.createWithContentUri(
-                            UserProfileImageContentProvider.createForUser(channelLogin)
-                        )
-                    )
-                    .setShortLabel(channelName)
+                    .setIcon(user.profileImageIcon)
+                    .setShortLabel(user.displayName)
                     .setPerson(person)
                     .setIsConversation()
                     .build()
@@ -171,9 +157,7 @@ object ChatNotificationUtils {
                     .setBubbleMetadata(
                         NotificationCompat.BubbleMetadata.Builder(
                             intent.toPendingActivityIntent(context, mutable = true),
-                            IconCompat.createWithContentUri(
-                                UserProfileImageContentProvider.createForUser(user.login)
-                            )
+                            user.profileImageIcon
                         )
                             .setAutoExpandBubble(false)
                             .setSuppressNotification(false)

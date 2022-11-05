@@ -103,7 +103,7 @@ fun ChannelChatScreen(channelLogin: String) {
             if (user != null && channelBranding.logo != null) {
                 ChatNotificationUtils.configureChatBubbles(
                     context = context,
-                    channel = user
+                    user = user
                 )
             }
         }
@@ -139,7 +139,7 @@ fun ChannelChatScreen(channelLogin: String) {
             if (canOpenInBubble && user != null && channelBranding.logo != null) {
                 ChatNotificationUtils.configureChatBubbles(
                     context = context,
-                    channel = user
+                    user = user
                 )
             }
         },

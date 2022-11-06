@@ -227,7 +227,7 @@
     <string name="scroll_down">Défiler vers le bas</string>
     <string name="search">Chercher</string>
     <string name="settings">Réglages</string>
-    <string name="settings_chat">TCHAT</string>
+    <string name="settings_chat">Tchat</string>
     <string name="stream_info">Infos du stream</string>
     <string name="timestamps">Afficher les horodatages</string>
     <string name="to_enter_url">Entrer l\'URL</string>

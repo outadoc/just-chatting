@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.util.chat
 
 import android.content.Context
-import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.chat.ChatCommand
+import fr.outadoc.justchatting.repository.AppPreferences
 import fr.outadoc.justchatting.util.isNetworkAvailable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,14 +47,12 @@ class PubSubWebSocket(
     private var client: OkHttpClient = OkHttpClient()
     private var socket: WebSocket? = null
 
-    private val maxChatLimit = applicationContext.resources.getInteger(R.integer.pref_max_chatLimit)
-
     private val topics = listOf("community-points-channel-v1.$channelId")
 
     private var pongReceived = false
 
     private val _flow = MutableSharedFlow<ChatCommand>(
-        replay = maxChatLimit,
+        replay = AppPreferences.Defaults.MAX_CHAT_LIMIT,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val flow: Flow<ChatCommand> = _flow
@@ -159,7 +157,7 @@ class PubSubWebSocket(
 
                     when {
                         topic?.startsWith("community-points-channel") == true &&
-                            messageType?.startsWith("reward-redeemed") == true -> {
+                                messageType?.startsWith("reward-redeemed") == true -> {
                             scope.launch {
                                 _flow.emit(
                                     pubSubRewardParser.parse(text)

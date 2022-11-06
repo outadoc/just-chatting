@@ -71,7 +71,8 @@ fun SettingsList(
             onValueChange = { value ->
                 onAppPreferencesChange(appPreferences.copy(messageLimit = value.toInt()))
             },
-            valueRange = 10f..1000f,
+            valueRange = AppPreferences.Defaults.MIN_CHAT_LIMIT.toFloat()
+                .rangeTo(AppPreferences.Defaults.MAX_CHAT_LIMIT.toFloat()),
             steps = 10,
             valueContent = { value ->
                 Text(
@@ -93,7 +94,8 @@ fun SettingsList(
             onValueChange = { value ->
                 onAppPreferencesChange(appPreferences.copy(recentMsgLimit = value.toInt()))
             },
-            valueRange = 0f..500f,
+            valueRange = AppPreferences.Defaults.MIN_RECENT_CHAT_LIMIT.toFloat()
+                .rangeTo(AppPreferences.Defaults.MAX_RECENT_CHAT_LIMIT.toFloat()),
             steps = 10,
             valueContent = { value ->
                 if (value == 0f) {

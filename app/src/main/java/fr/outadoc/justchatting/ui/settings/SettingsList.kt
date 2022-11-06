@@ -101,7 +101,7 @@ fun SettingsList(
             steps = 10,
             valueContent = { value ->
                 if (value == 0) {
-                    Text(text = "Disabled")
+                    Text(text = stringResource(R.string.recentMsg_limit_disabled))
                 } else {
                     Text(
                         modifier = Modifier.width(48.dp),
@@ -120,23 +120,23 @@ fun SettingsList(
                 .padding(top = 8.dp)
                 .padding(horizontal = 8.dp)
         ) {
-            Text("Notifications")
+            Text(stringResource(R.string.settings_notifications_header))
         }
 
         SettingsLink(
             modifier = Modifier.padding(horizontal = 8.dp),
             onClick = onOpenNotificationPreferences,
-            onClickLabel = "Open notification settings"
+            onClickLabel = stringResource(R.string.settings_notifications_openNotificationsSettings)
         ) {
-            Text(text = "Open notification settings")
+            Text(text = stringResource(R.string.settings_notifications_openNotificationsSettings))
         }
 
         SettingsLink(
             modifier = Modifier.padding(horizontal = 8.dp),
             onClick = onOpenBubblePreferences,
-            onClickLabel = "Open bubble settings"
+            onClickLabel = stringResource(R.string.settings_notifications_openBubbleSettings)
         ) {
-            Text(text = "Open bubble settings")
+            Text(text = stringResource(R.string.settings_notifications_openBubbleSettings))
         }
 
         Divider(modifier = Modifier.padding(vertical = 4.dp))
@@ -155,7 +155,7 @@ fun SettingsList(
                 .padding(horizontal = 8.dp),
             value = appPreferences.helixClientId,
             placeholder = {
-                Text(text = "your-client-id-here")
+                Text(text = "aaaa-bbbb-cccc-dddd-eeee-ffff")
             },
             onValueChange = { value ->
                 onAppPreferencesChange(appPreferences.copy(helixClientId = value))
@@ -170,7 +170,7 @@ fun SettingsList(
                 .padding(horizontal = 8.dp),
             value = appPreferences.helixRedirect,
             placeholder = {
-                Text(text = "https://localhost")
+                Text(text = "https://example.com")
             },
             onValueChange = { value ->
                 onAppPreferencesChange(appPreferences.copy(helixRedirect = value))

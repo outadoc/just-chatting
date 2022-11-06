@@ -218,6 +218,7 @@
     <string name="notification_foreground_message">Nous gardons ouverte une connexion pour vous permettre de revenir rapidement sur le tchat.</string>
     <string name="notification_foreground_title">Connecté au tchat Twitch</string>
     <string name="recentMsg_limit">Limite de messages récents</string>
+    <string name="recentMsg_limit_disabled">Désactivé</string>
     <string name="room_emote">Émote</string>
     <string name="room_followers">Followers</string>
     <string name="room_followers_min">Followers %s</string>
@@ -228,6 +229,9 @@
     <string name="search">Chercher</string>
     <string name="settings">Réglages</string>
     <string name="settings_chat">Tchat</string>
+    <string name="settings_notifications_header">Notifications</string>
+    <string name="settings_notifications_openNotificationsSettings">Ouvrir les préferences de notification</string>
+    <string name="settings_notifications_openBubbleSettings">Ouvrir les préférences des bulles</string>
     <string name="stream_info">Infos du stream</string>
     <string name="timestamps">Afficher les horodatages</string>
     <string name="to_enter_url">Entrer l\'URL</string>

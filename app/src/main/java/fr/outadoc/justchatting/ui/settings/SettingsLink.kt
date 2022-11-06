@@ -37,7 +37,7 @@ fun SettingsLinksPreview() {
 fun SettingsLink(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    onClickLabel: String,
+    onClickLabel: String?,
     title: @Composable () -> Unit
 ) {
     CompositionLocalProvider(

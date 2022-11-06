@@ -229,10 +229,12 @@
     <string name="scroll_down">Scroll down</string>
     <string name="search">Search</string>
     <string name="settings">Settings</string>
+    <string name="settings_about_header">About</string>
+    <string name="settings_about_version">%1$s v%2$s</string>
     <string name="settings_chat">Chat</string>
     <string name="settings_notifications_header">Notifications</string>
-    <string name="settings_notifications_openNotificationsSettings">Open notification settings</string>
-    <string name="settings_notifications_openBubbleSettings">Open bubble settings</string>
+    <string name="settings_notifications_openNotificationsSettings">Notification settings</string>
+    <string name="settings_notifications_openBubbleSettings">Bubble settings</string>
     <string name="stream_info">Stream Info</string>
     <string name="timestamps">Show timestamps</string>
     <string name="to_enter_url">Enter url</string>

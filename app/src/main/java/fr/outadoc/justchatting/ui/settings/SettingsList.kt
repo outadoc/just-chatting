@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.material.composethemeadapter3.Mdc3Theme
+import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.repository.AppPreferences
 
@@ -38,7 +39,11 @@ fun SettingsList(
     onOpenBubblePreferences: () -> Unit
 ) {
     val scrollState = rememberScrollState()
-    Column(modifier = modifier.verticalScroll(scrollState)) {
+    Column(
+        modifier = modifier
+            .padding(bottom = 16.dp)
+            .verticalScroll(scrollState)
+    ) {
         SettingsHeader(modifier = Modifier.padding(8.dp)) {
             Text(stringResource(R.string.settings_chat))
         }
@@ -177,6 +182,30 @@ fun SettingsList(
             }
         ) {
             Text(stringResource(R.string.api_helix_redirect))
+        }
+
+        Divider(modifier = Modifier.padding(vertical = 4.dp))
+
+        SettingsHeader(
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .padding(horizontal = 8.dp)
+        ) {
+            Text(stringResource(R.string.settings_about_header))
+        }
+
+        SettingsLink(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            onClick = {},
+            onClickLabel = null
+        ) {
+            Text(
+                text = stringResource(
+                    id = R.string.settings_about_version,
+                    stringResource(R.string.app_name),
+                    BuildConfig.VERSION_NAME
+                )
+            )
         }
     }
 }

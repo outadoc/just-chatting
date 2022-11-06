@@ -228,10 +228,12 @@
     <string name="scroll_down">Défiler vers le bas</string>
     <string name="search">Chercher</string>
     <string name="settings">Réglages</string>
+    <string name="settings_about_header">À propos</string>
+    <string name="settings_about_version">%1$s v%2$s</string>
     <string name="settings_chat">Tchat</string>
     <string name="settings_notifications_header">Notifications</string>
-    <string name="settings_notifications_openNotificationsSettings">Ouvrir les préferences de notification</string>
-    <string name="settings_notifications_openBubbleSettings">Ouvrir les préférences des bulles</string>
+    <string name="settings_notifications_openNotificationsSettings">Préferences de notification</string>
+    <string name="settings_notifications_openBubbleSettings">Préférences des bulles</string>
     <string name="stream_info">Infos du stream</string>
     <string name="timestamps">Afficher les horodatages</string>
     <string name="to_enter_url">Entrer l\'URL</string>

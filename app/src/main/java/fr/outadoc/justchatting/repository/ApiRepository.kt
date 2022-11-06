@@ -15,7 +15,6 @@ import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.repository.datasource.FollowedChannelsDataSource
 import fr.outadoc.justchatting.repository.datasource.FollowedStreamsDataSource
 import fr.outadoc.justchatting.repository.datasource.SearchChannelsDataSource
-import fr.outadoc.justchatting.util.withBearerPrefix
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -26,7 +25,6 @@ class ApiRepository(
 ) : TwitchService {
 
     override suspend fun loadSearchChannels(query: String): Pager<String, ChannelSearchResponse> {
-        val prefs = preferencesRepository.currentPreferences.first()
         return Pager(
             config = PagingConfig(
                 pageSize = 15,
@@ -37,8 +35,6 @@ class ApiRepository(
             pagingSourceFactory = {
                 SearchChannelsDataSource(
                     query = query,
-                    helixClientId = prefs.helixClientId,
-                    helixToken = prefs.appUser.helixToken?.withBearerPrefix(),
                     helixApi = helix
                 )
             }
@@ -47,15 +43,10 @@ class ApiRepository(
 
     override suspend fun mapSearchWithUserProfileImages(searchResults: List<ChannelSearch>): List<ChannelSearch> =
         with(searchResults) {
-            val prefs = preferencesRepository.currentPreferences.first()
             return mapNotNull { result -> result.id }
                 .chunked(size = 100)
                 .flatMap { idsToUpdate ->
-                    val users = helix.getUsersById(
-                        clientId = prefs.helixClientId,
-                        token = prefs.appUser.helixToken?.withBearerPrefix(),
-                        ids = idsToUpdate
-                    )
+                    val users = helix.getUsersById(ids = idsToUpdate)
                         .data
                         .orEmpty()
 
@@ -80,8 +71,6 @@ class ApiRepository(
             pagingSourceFactory = {
                 FollowedStreamsDataSource(
                     userId = prefs.appUser.id,
-                    helixClientId = prefs.helixClientId,
-                    helixToken = prefs.appUser.helixToken?.withBearerPrefix(),
                     helixApi = helix
                 )
             }
@@ -90,15 +79,10 @@ class ApiRepository(
 
     override suspend fun mapStreamsWithUserProfileImages(streams: Collection<Stream>): List<Stream> =
         with(streams) {
-            val prefs = preferencesRepository.currentPreferences.first()
             val users = mapNotNull { it.userId }
                 .chunked(100)
                 .flatMap { ids ->
-                    helix.getUsersById(
-                        clientId = prefs.helixClientId,
-                        token = prefs.appUser.helixToken?.withBearerPrefix(),
-                        ids = ids
-                    )
+                    helix.getUsersById(ids = ids)
                         .data
                         .orEmpty()
                 }
@@ -123,8 +107,6 @@ class ApiRepository(
             pagingSourceFactory = {
                 FollowedChannelsDataSource(
                     userId = prefs.appUser.id,
-                    helixClientId = prefs.helixClientId,
-                    helixToken = prefs.appUser.helixToken?.withBearerPrefix(),
                     helixApi = helix
                 )
             }
@@ -133,17 +115,12 @@ class ApiRepository(
 
     override suspend fun mapFollowsWithUserProfileImages(follows: Collection<Follow>): Collection<Follow> =
         with(follows) {
-            val prefs = preferencesRepository.currentPreferences.first()
             val results: List<User> =
                 filter { follow -> follow.profileImageURL == null }
                     .mapNotNull { follow -> follow.toId }
                     .chunked(size = 100)
                     .flatMap { idsToUpdate ->
-                        helix.getUsersById(
-                            clientId = prefs.helixClientId,
-                            token = prefs.appUser.helixToken?.withBearerPrefix(),
-                            ids = idsToUpdate
-                        )
+                        helix.getUsersById(ids = idsToUpdate)
                             .data
                             .orEmpty()
                     }
@@ -158,52 +135,29 @@ class ApiRepository(
 
     override suspend fun loadStreamWithUser(channelId: String): Stream? =
         withContext(Dispatchers.IO) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            helix.getStreams(
-                clientId = prefs.helixClientId,
-                token = prefs.appUser.helixToken?.withBearerPrefix(),
-                ids = listOf(channelId)
-            ).data?.firstOrNull()
+            helix.getStreams(ids = listOf(channelId))
+                .data
+                ?.firstOrNull()
         }
 
     override suspend fun loadUsersById(ids: List<String>): List<User>? =
         withContext(Dispatchers.IO) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            helix.getUsersById(
-                clientId = prefs.helixClientId,
-                token = prefs.appUser.helixToken?.withBearerPrefix(),
-                ids = ids
-            ).data
+            helix.getUsersById(ids = ids).data
         }
 
     override suspend fun loadUsersByLogin(logins: List<String>): List<User>? =
         withContext(Dispatchers.IO) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            helix.getUsersByLogin(
-                clientId = prefs.helixClientId,
-                token = prefs.appUser.helixToken?.withBearerPrefix(),
-                logins = logins
-            ).data
+            helix.getUsersByLogin(logins = logins).data
         }
 
     override suspend fun loadCheerEmotes(userId: String): List<CheerEmote> =
         withContext(Dispatchers.IO) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            helix.getCheerEmotes(
-                clientId = prefs.helixClientId,
-                token = prefs.appUser.helixToken?.withBearerPrefix(),
-                userId = userId
-            ).emotes
+            helix.getCheerEmotes(userId = userId).emotes
         }
 
     override suspend fun loadEmotesFromSet(setIds: List<String>): List<TwitchEmote>? =
         withContext(Dispatchers.IO) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            helix.getEmotesFromSet(
-                clientId = prefs.helixClientId,
-                token = prefs.appUser.helixToken?.withBearerPrefix(),
-                setIds = setIds
-            ).emotes
+            helix.getEmotesFromSet(setIds = setIds).emotes
         }
 
     override suspend fun loadUserFollowing(
@@ -211,10 +165,7 @@ class ApiRepository(
         channelId: String?,
         userLogin: String?
     ): Boolean = withContext(Dispatchers.IO) {
-        val prefs = preferencesRepository.currentPreferences.first()
         helix.getUserFollows(
-            clientId = prefs.helixClientId,
-            token = prefs.appUser.helixToken?.withBearerPrefix(),
             userId = userId,
             channelId = channelId
         ).total == 1

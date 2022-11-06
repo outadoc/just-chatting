@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.di
 
 import android.content.Context
 import androidx.room.Room
+import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.api.BttvEmotesApi
@@ -10,6 +11,7 @@ import fr.outadoc.justchatting.api.IdApi
 import fr.outadoc.justchatting.api.RecentMessagesApi
 import fr.outadoc.justchatting.api.StvEmotesApi
 import fr.outadoc.justchatting.api.TwitchBadgesApi
+import fr.outadoc.justchatting.auth.AuthenticationInterceptor
 import fr.outadoc.justchatting.db.AppDatabase
 import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.model.chat.BttvChannelDeserializer
@@ -87,6 +89,8 @@ val mainModule = module {
     single<RecentMessagesApi> { createApi("https://recent-messages.robotty.de/api/") }
     single<IdApi> { createApi("https://id.twitch.tv/oauth2/") }
 
+    single { AuthenticationInterceptor(get()) }
+
     single<GsonConverterFactory> {
         GsonConverterFactory.create(
             GsonBuilder()
@@ -110,6 +114,8 @@ val mainModule = module {
 
     single {
         OkHttpClient.Builder()
+            .addInterceptor(get<AuthenticationInterceptor>())
+            .addInterceptor(ChuckerInterceptor.Builder(get()).build())
             .apply {
                 if (BuildConfig.DEBUG) {
                     addInterceptor(
@@ -118,11 +124,10 @@ val mainModule = module {
                         }
                     )
                 }
-                // addInterceptor(ChuckerInterceptor.Builder(get()).build())
-                connectTimeout(5, TimeUnit.MINUTES)
-                writeTimeout(5, TimeUnit.MINUTES)
-                readTimeout(5, TimeUnit.MINUTES)
             }
+            .connectTimeout(5, TimeUnit.MINUTES)
+            .writeTimeout(5, TimeUnit.MINUTES)
+            .readTimeout(5, TimeUnit.MINUTES)
             .cache(
                 Cache(
                     directory = File(get<Context>().cacheDir, "http_cache"),

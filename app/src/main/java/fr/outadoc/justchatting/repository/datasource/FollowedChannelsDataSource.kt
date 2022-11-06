@@ -7,8 +7,6 @@ import fr.outadoc.justchatting.model.helix.follows.FollowResponse
 
 class FollowedChannelsDataSource(
     private val userId: String?,
-    private val helixClientId: String?,
-    private val helixToken: String?,
     private val helixApi: HelixApi
 ) : PagingSource<String, FollowResponse>() {
 
@@ -19,24 +17,20 @@ class FollowedChannelsDataSource(
     }
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, FollowResponse> {
-        try {
-            if (helixToken.isNullOrBlank()) error("Helix token is null")
-
+        return try {
             val response = helixApi.getFollowedChannels(
-                clientId = helixClientId,
-                token = helixToken,
                 userId = userId,
                 limit = params.loadSize,
                 offset = params.key
             )
 
-            return LoadResult.Page(
+            LoadResult.Page(
                 data = listOf(response),
                 nextKey = response.pagination?.cursor,
                 prevKey = null
             )
         } catch (e: Exception) {
-            return LoadResult.Error(e)
+            LoadResult.Error(e)
         }
     }
 }

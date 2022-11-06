@@ -80,7 +80,7 @@ class LoginViewModel(
     fun onTokenReceived(token: String) {
         viewModelScope.launch {
             try {
-                val response = authRepository.validate(token) ?: throw IOException()
+                val response = authRepository.validate() ?: throw IOException()
                 val prefs = preferencesRepository.currentPreferences.first()
                 preferencesRepository.updatePreferences(
                     prefs.copy(

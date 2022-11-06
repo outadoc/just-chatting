@@ -48,7 +48,7 @@ class MainViewModel(
                         val token = prefs.appUser.helixToken
                         if (token.isNullOrBlank()) null
                         else {
-                            val response = authRepository.validate(token)
+                            val response = authRepository.validate()
                             val validatedUser = prefs.appUser.asLoggedIn()
                             if (response?.clientId == prefs.helixClientId && validatedUser != null) {
                                 preferencesRepository.updatePreferences(

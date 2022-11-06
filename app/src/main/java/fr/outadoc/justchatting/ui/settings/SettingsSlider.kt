@@ -72,7 +72,7 @@ fun SettingsSlider(
                     value = value,
                     onValueChange = onValueChange,
                     valueRange = valueRange,
-                    steps = steps
+                    steps = valueRange.endInclusive.toInt() / steps
                 )
 
                 valueContent(value)

@@ -13,27 +13,23 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.composepreview.ScreenPreviews
+import org.koin.androidx.compose.getViewModel
 
 class NewSettingsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            SettingsList()
+            Mdc3Theme {
+                SettingsScreen(onBackPress = ::finish)
+            }
         }
-    }
-}
-
-@ScreenPreviews
-@Composable
-fun SettingsScreenPreview() {
-    Mdc3Theme {
-        SettingsScreen()
     }
 }
 
@@ -43,6 +39,9 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     onBackPress: () -> Unit = {}
 ) {
+    val viewModel: SettingsViewModel = getViewModel()
+    val appPreferences by viewModel.appPreferences.collectAsState()
+
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -62,7 +61,11 @@ fun SettingsScreen(
         }
     ) { insets ->
         SettingsList(
-            modifier = Modifier.padding(insets)
+            modifier = Modifier.padding(insets),
+            appPreferences = appPreferences,
+            onAppPreferencesChange = { appPreferences ->
+                viewModel.updatePreferences(appPreferences)
+            }
         )
     }
 }

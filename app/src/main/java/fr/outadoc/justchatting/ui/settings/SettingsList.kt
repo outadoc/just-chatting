@@ -14,17 +14,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.repository.AppPreferences
 
 @Preview
 @Composable
 fun SettingsListPreview() {
     Mdc3Theme {
-        SettingsList()
+        SettingsList(
+            appPreferences = AppPreferences(),
+            onAppPreferencesChange = {}
+        )
     }
 }
 
 @Composable
-fun SettingsList(modifier: Modifier = Modifier) {
+fun SettingsList(
+    modifier: Modifier = Modifier,
+    appPreferences: AppPreferences,
+    onAppPreferencesChange: (AppPreferences) -> Unit
+) {
     val scrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
         SettingsHeader(modifier = Modifier.padding(8.dp)) {
@@ -33,8 +41,10 @@ fun SettingsList(modifier: Modifier = Modifier) {
 
         SettingsSwitch(
             modifier = Modifier.padding(horizontal = 8.dp),
-            checked = true,
-            onCheckedChange = {}
+            checked = appPreferences.animateEmotes,
+            onCheckedChange = { checked ->
+                onAppPreferencesChange(appPreferences.copy(animateEmotes = checked))
+            }
         ) {
             Text(stringResource(R.string.animated_emotes))
         }
@@ -43,8 +53,10 @@ fun SettingsList(modifier: Modifier = Modifier) {
 
         SettingsSwitch(
             modifier = Modifier.padding(horizontal = 8.dp),
-            checked = true,
-            onCheckedChange = {}
+            checked = appPreferences.showTimestamps,
+            onCheckedChange = { checked ->
+                onAppPreferencesChange(appPreferences.copy(showTimestamps = checked))
+            }
         ) {
             Text(stringResource(R.string.timestamps))
         }
@@ -55,13 +67,15 @@ fun SettingsList(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 8.dp),
-            value = 1f,
-            onValueChange = {},
+            value = appPreferences.messageLimit.toFloat(),
+            onValueChange = { value ->
+                onAppPreferencesChange(appPreferences.copy(messageLimit = value.toInt()))
+            },
             valueRange = 10f..1000f,
             steps = 10,
             valueContent = { value ->
                 Text(
-                    modifier = Modifier.width(32.dp),
+                    modifier = Modifier.width(48.dp),
                     text = "%,d".format(value.toInt())
                 )
             }
@@ -75,16 +89,18 @@ fun SettingsList(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 8.dp),
-            value = 0f,
-            onValueChange = {},
-            valueRange = 0f..1000f,
+            value = appPreferences.recentMsgLimit.toFloat(),
+            onValueChange = { value ->
+                onAppPreferencesChange(appPreferences.copy(recentMsgLimit = value.toInt()))
+            },
+            valueRange = 0f..500f,
             steps = 10,
             valueContent = { value ->
                 if (value == 0f) {
                     Text(text = "Disabled")
                 } else {
                     Text(
-                        modifier = Modifier.width(32.dp),
+                        modifier = Modifier.width(48.dp),
                         text = "%,d".format(value.toInt())
                     )
                 }
@@ -133,11 +149,13 @@ fun SettingsList(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 8.dp),
-            value = "",
+            value = appPreferences.helixClientId,
             placeholder = {
-                Text(text = "your-api-token-here")
+                Text(text = "your-client-id-here")
             },
-            onValueChange = {}
+            onValueChange = { value ->
+                onAppPreferencesChange(appPreferences.copy(helixClientId = value))
+            }
         ) {
             Text(stringResource(R.string.api_helix))
         }
@@ -146,11 +164,13 @@ fun SettingsList(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 8.dp),
-            value = "",
+            value = appPreferences.helixRedirect,
             placeholder = {
                 Text(text = "https://localhost")
             },
-            onValueChange = {}
+            onValueChange = { value ->
+                onAppPreferencesChange(appPreferences.copy(helixRedirect = value))
+            }
         ) {
             Text(stringResource(R.string.api_helix_redirect))
         }

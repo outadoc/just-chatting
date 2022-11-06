@@ -6,7 +6,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.util.dataStore
 import kotlinx.coroutines.flow.Flow
@@ -17,22 +16,17 @@ class SharedPrefsPreferenceRepository(
 ) : PreferenceRepository {
 
     private val dataStore = applicationContext.dataStore
+    private val defaultPreferences = AppPreferences()
 
     override val currentPreferences: Flow<AppPreferences>
         get() = dataStore.data.map { prefs ->
             AppPreferences(
-                helixClientId = prefs[HELIX_CLIENT_ID]
-                    ?: applicationContext.getString(R.string.pref_default_apiToken),
-                helixRedirect = prefs[HELIX_REDIRECT]
-                    ?: applicationContext.getString(R.string.pref_default_apiRedirect),
-                animateEmotes = prefs[CHAT_ANIMATED_EMOTES]
-                    ?: applicationContext.resources.getBoolean(R.bool.pref_default_chatEnableAnimatedEmotes),
-                showTimestamps = prefs[CHAT_TIMESTAMPS]
-                    ?: applicationContext.resources.getBoolean(R.bool.pref_default_chatEnableTimestamps),
-                recentMsgLimit = prefs[CHAT_RECENT_LIMIT]
-                    ?: applicationContext.resources.getInteger(R.integer.pref_default_recentChatLimit),
-                messageLimit = prefs[CHAT_LIMIT]
-                    ?: applicationContext.resources.getInteger(R.integer.pref_default_chatLimit),
+                helixClientId = prefs[HELIX_CLIENT_ID] ?: defaultPreferences.helixClientId,
+                helixRedirect = prefs[HELIX_REDIRECT] ?: defaultPreferences.helixRedirect,
+                animateEmotes = prefs[CHAT_ANIMATED_EMOTES] ?: defaultPreferences.animateEmotes,
+                showTimestamps = prefs[CHAT_TIMESTAMPS] ?: defaultPreferences.showTimestamps,
+                recentMsgLimit = prefs[CHAT_RECENT_LIMIT] ?: defaultPreferences.recentMsgLimit,
+                messageLimit = prefs[CHAT_LIMIT] ?: defaultPreferences.messageLimit,
                 appUser = prefs.parseUser()
             )
         }

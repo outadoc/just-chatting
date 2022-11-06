@@ -72,7 +72,7 @@ fun SettingsSlider(
                     value = value.toFloat(),
                     onValueChange = { value -> onValueChange(value.toInt()) },
                     valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
-                    steps = valueRange.last / steps
+                    steps = if (steps == 0) 0 else valueRange.last / steps
                 )
 
                 valueContent(value)

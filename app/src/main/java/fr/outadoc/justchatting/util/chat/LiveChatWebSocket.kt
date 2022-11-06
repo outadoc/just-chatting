@@ -19,7 +19,6 @@ import kotlinx.datetime.Clock
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
-import java.io.IOException
 import kotlin.random.Random
 
 /**
@@ -94,27 +93,16 @@ class LiveChatWebSocket private constructor(
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             t.printStackTrace()
 
-            if (t is IOException && !t.isSocketError) {
-                emit(
-                    Command.Disconnect(
-                        channelLogin = channelLogin,
-                        throwable = t,
-                        timestamp = clock.now()
-                    )
+            emit(
+                Command.Disconnect(
+                    channelLogin = channelLogin,
+                    throwable = t,
+                    timestamp = clock.now()
                 )
-            }
+            )
 
             attemptReconnect(listener = this@LiveChatThreadListener)
         }
-
-        private val Throwable.isSocketError: Boolean
-            get() = when (message) {
-                "Socket closed",
-                "socket is closed",
-                "Connection reset",
-                "recvfrom failed: ECONNRESET (Connection reset by peer)" -> true
-                else -> false
-            }
     }
 
     private fun notifyMessage(message: String) {
@@ -134,7 +122,8 @@ class LiveChatWebSocket private constructor(
             is HostModeState,
             is PointReward,
             is RoomStateDelta -> emit(command)
-            PingCommand -> sendPong()
+
+            is PingCommand -> sendPong()
             is Command.Notice,
             is UserState,
             null -> {

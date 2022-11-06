@@ -32,6 +32,10 @@ abstract class BaseChatWebSocket(
     private val clock: Clock,
     channelName: String
 ) {
+    private companion object {
+        const val SOCKET_ERROR_NORMAL_CLOSURE = 1_000
+    }
+
     private var client: OkHttpClient = OkHttpClient()
     protected var socket: WebSocket? = null
 
@@ -58,8 +62,10 @@ abstract class BaseChatWebSocket(
     fun disconnect() {
         try {
             Log.d(TAG, "Disconnecting from $hashChannelName")
-            socket?.close(code = 1000, reason = null)
-            client.dispatcher.cancelAll()
+            socket?.close(
+                code = SOCKET_ERROR_NORMAL_CLOSURE,
+                reason = null
+            )
         } catch (e: IOException) {
             Log.e(TAG, "Error while closing socketIn", e)
             emit(

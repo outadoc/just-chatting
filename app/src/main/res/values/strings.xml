@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="animated_emotes">Animated emotes</string>
-    <string name="api_helix">Helix client id</string>
-    <string name="api_helix_redirect">Helix redirect url</string>
-    <string name="api_settings">API settings</string>
+    <string name="api_helix">Helix client ID</string>
+    <string name="api_helix_redirect">Helix redirect URL</string>
+    <string name="api_settings">API</string>
     <string name="app_name" translatable="false">Just Chatting</string>
     <string name="browser_workaround">Your system browser is no longer supported. Please click the button below for a workaround</string>
     <string name="channels">Channels</string>

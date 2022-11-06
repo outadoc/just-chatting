@@ -67,7 +67,7 @@ class ChatConnectionService : Service() {
         val notification = NotificationCompat.Builder(this, ONGOING_NOTIFICATION_CHANNEL_ID)
             .setContentTitle(getString(R.string.notification_foreground_title))
             .setContentText(getString(R.string.notification_foreground_message))
-            .setSmallIcon(R.drawable.ic_campaign)
+            .setSmallIcon(R.drawable.ic_notif)
             .setOngoing(true)
             .build()
 

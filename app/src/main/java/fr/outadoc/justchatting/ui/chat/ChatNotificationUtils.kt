@@ -119,7 +119,7 @@ object ChatNotificationUtils {
             NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(user.displayName)
                 .setContentIntent(intent.toPendingActivityIntent(context))
-                .setSmallIcon(R.drawable.ic_stream)
+                .setSmallIcon(R.drawable.ic_notif)
                 .setCategory(NotificationCompat.CATEGORY_MESSAGE)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setLocusId(LocusIdCompat(user.id))

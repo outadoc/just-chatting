@@ -4,7 +4,6 @@
     <string name="api_helix">Identifiant client Helix</string>
     <string name="api_helix_redirect">URL de redirection Helix</string>
     <string name="api_settings">Paramètres API</string>
-    <string name="apply">Appliquer</string>
     <string name="browser_workaround">Le navigateur de votre système n\'est plus pris en charge. Veuillez cliquer sur le bouton ci-dessous pour une solution de contournement</string>
     <string name="channels">Chaînes</string>
     <string name="chat_ban">%s a été banni·e définitivement</string>
@@ -218,7 +217,6 @@
     <string name="notification_foreground_channel_title">Connexion persistente</string>
     <string name="notification_foreground_message">Nous gardons ouverte une connexion pour vous permettre de revenir rapidement sur le tchat.</string>
     <string name="notification_foreground_title">Connecté au tchat Twitch</string>
-    <string name="order">Ordre</string>
     <string name="recentMsg_limit">Limite de messages récents</string>
     <string name="room_emote">Émote</string>
     <string name="room_followers">Followers</string>

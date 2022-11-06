@@ -5,7 +5,6 @@
     <string name="api_helix_redirect">Helix redirect url</string>
     <string name="api_settings">API settings</string>
     <string name="app_name" translatable="false">Just Chatting</string>
-    <string name="apply">Apply</string>
     <string name="browser_workaround">Your system browser is no longer supported. Please click the button below for a workaround</string>
     <string name="channels">Channels</string>
     <string name="chat_ban">%s has been permanently banned</string>
@@ -219,7 +218,6 @@
     <string name="notification_foreground_channel_title">Persistent connection</string>
     <string name="notification_foreground_message">We\'re keeping open the connection to Twitch so you can come back and see all the messages you\'ve missed.</string>
     <string name="notification_foreground_title">Connected to Twitch chat</string>
-    <string name="order">Order</string>
     <string name="recentMsg_limit">Recent message limit</string>
     <string name="room_emote">Emote</string>
     <string name="room_followers">Followers</string>

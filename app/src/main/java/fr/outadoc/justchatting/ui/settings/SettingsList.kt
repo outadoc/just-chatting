@@ -22,7 +22,9 @@ fun SettingsListPreview() {
     Mdc3Theme {
         SettingsList(
             appPreferences = AppPreferences(),
-            onAppPreferencesChange = {}
+            onAppPreferencesChange = {},
+            onOpenNotificationPreferences = {},
+            onOpenBubblePreferences = {}
         )
     }
 }
@@ -31,7 +33,9 @@ fun SettingsListPreview() {
 fun SettingsList(
     modifier: Modifier = Modifier,
     appPreferences: AppPreferences,
-    onAppPreferencesChange: (AppPreferences) -> Unit
+    onAppPreferencesChange: (AppPreferences) -> Unit,
+    onOpenNotificationPreferences: () -> Unit,
+    onOpenBubblePreferences: () -> Unit
 ) {
     val scrollState = rememberScrollState()
     Column(modifier = modifier.verticalScroll(scrollState)) {
@@ -121,7 +125,7 @@ fun SettingsList(
 
         SettingsLink(
             modifier = Modifier.padding(horizontal = 8.dp),
-            onClick = {},
+            onClick = onOpenNotificationPreferences,
             onClickLabel = "Open notification settings"
         ) {
             Text(text = "Open notification settings")
@@ -129,7 +133,7 @@ fun SettingsList(
 
         SettingsLink(
             modifier = Modifier.padding(horizontal = 8.dp),
-            onClick = {},
+            onClick = onOpenBubblePreferences,
             onClickLabel = "Open bubble settings"
         ) {
             Text(text = "Open bubble settings")

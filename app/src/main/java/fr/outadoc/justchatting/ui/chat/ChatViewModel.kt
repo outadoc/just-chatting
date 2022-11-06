@@ -26,10 +26,9 @@ import fr.outadoc.justchatting.model.chat.UserState
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.repository.ChatConnectionPool
-import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.repository.EmotesRepository
+import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.repository.TwitchService
-import fr.outadoc.justchatting.repository.UserPreferencesRepository
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.util.isOdd
@@ -83,8 +82,7 @@ class ChatViewModel(
     private val emotesRepository: EmotesRepository,
     private val chatConnectionPool: ChatConnectionPool,
     private val chatEntryMapper: ChatEntryMapper,
-    private val chatPreferencesRepository: ChatPreferencesRepository,
-    private val userPreferencesRepository: UserPreferencesRepository,
+    private val preferencesRepository: PreferenceRepository,
     private val clock: Clock
 ) : ViewModel() {
 
@@ -291,13 +289,14 @@ class ChatViewModel(
     private suspend fun Action.LoadChat.reduce(state: State): State {
         if (state is State.Chatting && state.user.login == channelLogin) return state
 
+        val prefs = preferencesRepository.currentPreferences.first()
         return State.Chatting(
             user = repository.loadUsersByLogin(logins = listOf(channelLogin))
                 ?.firstOrNull()
                 ?: error("User not loaded"),
-            appUser = userPreferencesRepository.appUser.first() as AppUser.LoggedIn,
+            appUser = prefs.appUser as AppUser.LoggedIn,
             chatters = persistentSetOf(Chatter(channelLogin)),
-            maxAdapterCount = chatPreferencesRepository.messageLimit.first()
+            maxAdapterCount = prefs.messageLimit
         )
     }
 
@@ -399,7 +398,7 @@ class ChatViewModel(
                 .takeIf { it.isNotEmpty() }
                 ?.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 ?.toPersistentSet()
 
@@ -568,6 +567,7 @@ class ChatViewModel(
                 inReplyToId = inputState.replyingTo?.data?.messageId
             )
 
+            val prefs = preferencesRepository.currentPreferences.first()
             val usedEmotes: List<RecentEmote> =
                 inputState.inputMessage
                     .text
@@ -577,7 +577,7 @@ class ChatViewModel(
                             RecentEmote(
                                 name = word,
                                 url = emote.getUrl(
-                                    animate = chatPreferencesRepository.animateEmotes.first(),
+                                    animate = prefs.animateEmotes,
                                     screenDensity = screenDensity,
                                     isDarkTheme = isDarkTheme
                                 ),

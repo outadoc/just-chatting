@@ -6,25 +6,23 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.asLoggedIn
-import fr.outadoc.justchatting.repository.AuthPreferencesRepository
 import fr.outadoc.justchatting.repository.AuthRepository
+import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.repository.TwitchService
-import fr.outadoc.justchatting.repository.UserPreferencesRepository
 import fr.outadoc.justchatting.util.Event
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class MainViewModel(
     private val repository: TwitchService,
     private val authRepository: AuthRepository,
-    private val authPreferencesRepository: AuthPreferencesRepository,
-    private val userPreferencesRepository: UserPreferencesRepository
+    private val preferencesRepository: PreferenceRepository
 ) : ViewModel() {
 
     sealed class Destination {
@@ -41,22 +39,21 @@ class MainViewModel(
     }
 
     private val _forcedLoginDestination: Flow<Destination?> =
-        combine(
-            userPreferencesRepository.appUser,
-            authPreferencesRepository.helixClientId
-        ) { user, helixClientId ->
-            when (user) {
+        preferencesRepository.currentPreferences.map { prefs ->
+            when (prefs.appUser) {
                 is AppUser.LoggedIn -> null
                 AppUser.NotLoggedIn -> Destination.Login()
                 is AppUser.NotValidated -> {
                     try {
-                        val token = user.helixToken
+                        val token = prefs.appUser.helixToken
                         if (token.isNullOrBlank()) null
                         else {
                             val response = authRepository.validate(token)
-                            val validatedUser = user.asLoggedIn()
-                            if (response?.clientId == helixClientId && validatedUser != null) {
-                                userPreferencesRepository.updateUser(validatedUser)
+                            val validatedUser = prefs.appUser.asLoggedIn()
+                            if (response?.clientId == prefs.helixClientId && validatedUser != null) {
+                                preferencesRepository.updatePreferences(
+                                    prefs.copy(appUser = validatedUser)
+                                )
                                 null
                             } else {
                                 throw IllegalStateException("401")
@@ -64,7 +61,9 @@ class MainViewModel(
                         }
                     } catch (e: Exception) {
                         if ((e is IllegalStateException && e.message == "401") || (e is HttpException && e.code() == 401)) {
-                            userPreferencesRepository.updateUser(null)
+                            preferencesRepository.updatePreferences(
+                                prefs.copy(appUser = AppUser.NotLoggedIn)
+                            )
                             Destination.Login(causedByTokenExpiration = true)
                         } else {
                             null

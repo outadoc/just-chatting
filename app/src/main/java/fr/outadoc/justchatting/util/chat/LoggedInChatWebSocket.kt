@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.UserState
-import fr.outadoc.justchatting.repository.UserPreferencesRepository
+import fr.outadoc.justchatting.repository.PreferenceRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -29,7 +29,7 @@ class LoggedInChatWebSocket(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: ChatMessageParser,
-    private val userPreferencesRepository: UserPreferencesRepository,
+    private val preferencesRepository: PreferenceRepository,
     channelLogin: String
 ) : BaseChatWebSocket(applicationContext, scope, clock, channelLogin) {
 
@@ -37,7 +37,7 @@ class LoggedInChatWebSocket(
         private val applicationContext: Context,
         private val clock: Clock,
         private val parser: ChatMessageParser,
-        private val userPreferencesRepository: UserPreferencesRepository
+        private val preferencesRepository: PreferenceRepository,
     ) {
         fun create(scope: CoroutineScope, channelLogin: String): LoggedInChatWebSocket {
             return LoggedInChatWebSocket(
@@ -46,7 +46,7 @@ class LoggedInChatWebSocket(
                 parser = parser,
                 scope = scope,
                 channelLogin = channelLogin,
-                userPreferencesRepository = userPreferencesRepository
+                preferencesRepository = preferencesRepository
             )
         }
     }
@@ -59,10 +59,10 @@ class LoggedInChatWebSocket(
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
             scope.launch {
-                val user = userPreferencesRepository.appUser.first()
+                val prefs = preferencesRepository.currentPreferences.first()
                 with(webSocket) {
-                    send("PASS oauth:${user.helixToken}")
-                    send("NICK ${user.login}")
+                    send("PASS oauth:${prefs.appUser.helixToken}")
+                    send("NICK ${prefs.appUser.login}")
                     send("CAP REQ :twitch.tv/tags twitch.tv/commands")
                     send("JOIN $hashChannelName")
                 }

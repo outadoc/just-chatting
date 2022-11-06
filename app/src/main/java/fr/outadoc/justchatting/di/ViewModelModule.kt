@@ -13,10 +13,10 @@ import org.koin.dsl.module
 val viewModelModule = module {
 
     viewModel { ChannelSearchViewModel(get()) }
-    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get()) }
     viewModel { FollowedChannelsViewModel(get()) }
     viewModel { FollowedStreamsViewModel(get()) }
-    viewModel { LoginViewModel(get(), get(), get()) }
-    viewModel { MainViewModel(get(), get(), get(), get()) }
+    viewModel { LoginViewModel(get(), get()) }
+    viewModel { MainViewModel(get(), get(), get()) }
     viewModel { SettingsViewModel(get()) }
 }

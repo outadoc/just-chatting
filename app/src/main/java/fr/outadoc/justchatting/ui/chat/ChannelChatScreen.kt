@@ -47,7 +47,8 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ScreenPreviews
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
-import fr.outadoc.justchatting.repository.ChatPreferencesRepository
+import fr.outadoc.justchatting.repository.AppPreferences
+import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmotePicker
 import fr.outadoc.justchatting.util.createChannelDeeplink
@@ -63,10 +64,8 @@ fun ChannelChatScreen(channelLogin: String) {
     val state by viewModel.state.collectAsState()
     val inputState by viewModel.inputState.collectAsState()
 
-    val chatPreferencesRepository: ChatPreferencesRepository = get()
-
-    val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
-    val showTimestamps by chatPreferencesRepository.showTimestamps.collectAsState(initial = false)
+    val preferencesRepository: PreferenceRepository = get()
+    val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
     val context = LocalContext.current
     val density = LocalDensity.current.density
@@ -117,8 +116,8 @@ fun ChannelChatScreen(channelLogin: String) {
         channelLogin = channelLogin,
         channelBranding = channelBranding,
         isEmotePickerOpen = isEmotePickerOpen,
-        animateEmotes = animateEmotes,
-        showTimestamps = showTimestamps,
+        animateEmotes = prefs.animateEmotes,
+        showTimestamps = prefs.showTimestamps,
         onWatchLiveClicked = {
             uriHandler.openUri(channelLogin.createChannelExternalLink().toString())
         },

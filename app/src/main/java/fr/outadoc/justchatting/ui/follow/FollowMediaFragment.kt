@@ -17,7 +17,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.databinding.FragmentMediaBinding
 import fr.outadoc.justchatting.model.AppUser
-import fr.outadoc.justchatting.repository.UserPreferencesRepository
+import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.ui.common.NavigationHandler
 import fr.outadoc.justchatting.ui.common.Scrollable
 import fr.outadoc.justchatting.ui.follow.channels.FollowedChannelsFragment
@@ -29,7 +29,7 @@ import org.koin.android.ext.android.inject
 
 class FollowMediaFragment : Fragment(), Scrollable {
 
-    private val userPreferencesRepository: UserPreferencesRepository by inject()
+    private val preferencesRepository: PreferenceRepository by inject()
 
     companion object {
         fun newInstance() = FollowMediaFragment()
@@ -59,18 +59,21 @@ class FollowMediaFragment : Fragment(), Scrollable {
                         (activity as? NavigationHandler)?.openSearch()
                         true
                     }
+
                     R.id.settings -> {
                         (activity as? NavigationHandler)?.openSettings()
                         true
                     }
+
                     R.id.login -> {
                         lifecycleScope.launch {
                             onLogout(
-                                appUser = userPreferencesRepository.appUser.first()
+                                appUser = preferencesRepository.currentPreferences.first().appUser
                             )
                         }
                         true
                     }
+
                     else -> false
                 }
             }

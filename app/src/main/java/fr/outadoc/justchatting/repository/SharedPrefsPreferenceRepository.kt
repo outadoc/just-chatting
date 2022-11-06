@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class SharedPrefsPreferenceRepository(
-    private val applicationContext: Context
+    applicationContext: Context
 ) : PreferenceRepository {
 
     private val dataStore = applicationContext.dataStore
@@ -45,27 +45,6 @@ class SharedPrefsPreferenceRepository(
         }
     }
 
-    override val helixClientId: Flow<String>
-        get() = currentPreferences.map { prefs -> prefs.helixClientId }
-
-    override val helixRedirect: Flow<String>
-        get() = currentPreferences.map { prefs -> prefs.helixRedirect }
-
-    override val animateEmotes: Flow<Boolean>
-        get() = currentPreferences.map { prefs -> prefs.animateEmotes }
-
-    override val showTimestamps: Flow<Boolean>
-        get() = currentPreferences.map { prefs -> prefs.showTimestamps }
-
-    override val recentMsgLimit: Flow<Int>
-        get() = currentPreferences.map { prefs -> prefs.recentMsgLimit }
-
-    override val messageLimit: Flow<Int>
-        get() = currentPreferences.map { prefs -> prefs.messageLimit }
-
-    override val appUser: Flow<AppUser>
-        get() = currentPreferences.map { prefs -> prefs.appUser }
-
     private fun Preferences.parseUser(): AppUser {
         val id = this[USER_ID]
         return if (!id.isNullOrEmpty()) {
@@ -79,14 +58,6 @@ class SharedPrefsPreferenceRepository(
             }
         } else {
             AppUser.NotLoggedIn
-        }
-    }
-
-    override suspend fun updateUser(appUser: AppUser?) {
-        dataStore.edit { prefs ->
-            prefs[USER_ID] = appUser?.id ?: ""
-            prefs[USER_LOGIN] = appUser?.login ?: ""
-            prefs[USER_TOKEN] = appUser?.helixToken ?: ""
         }
     }
 

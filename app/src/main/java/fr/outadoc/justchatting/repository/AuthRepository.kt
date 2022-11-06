@@ -9,8 +9,7 @@ import kotlinx.coroutines.withContext
 
 class AuthRepository(
     private val api: IdApi,
-    private val authPreferencesRepository: AuthPreferencesRepository,
-    private val userPreferencesRepository: UserPreferencesRepository,
+    private val preferencesRepository: PreferenceRepository
 ) {
 
     suspend fun validate(token: String): ValidationResponse? =
@@ -20,8 +19,10 @@ class AuthRepository(
 
     suspend fun revokeToken() =
         withContext(Dispatchers.IO) {
-            val clientId = authPreferencesRepository.helixClientId.first()
-            val token = userPreferencesRepository.appUser.first().helixToken ?: return@withContext
-            api.revokeToken(clientId, token)
+            val prefs = preferencesRepository.currentPreferences.first()
+            api.revokeToken(
+                clientId = prefs.helixClientId,
+                token = prefs.appUser.helixToken ?: return@withContext
+            )
         }
 }

@@ -23,7 +23,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.model.chat.Emote
-import fr.outadoc.justchatting.repository.ChatPreferencesRepository
+import fr.outadoc.justchatting.repository.AppPreferences
+import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.ui.chat.ChatViewModel
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.get
@@ -32,10 +33,10 @@ import org.koin.androidx.compose.get
 fun EmotePicker(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
-    chatPreferencesRepository: ChatPreferencesRepository = get(),
+    preferencesRepository: PreferenceRepository = get(),
     onEmoteClick: (Emote) -> Unit
 ) {
-    val animateEmotes by chatPreferencesRepository.animateEmotes.collectAsState(initial = true)
+    val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
     var selectedTab by remember { mutableStateOf(EmoteTab.RECENT) }
 
@@ -49,6 +50,7 @@ fun EmotePicker(
                 CircularProgressIndicator()
             }
         }
+
         is ChatViewModel.State.Chatting -> {
             Column(modifier = modifier) {
                 TabRow(selectedTabIndex = selectedTab.ordinal) {
@@ -88,7 +90,7 @@ fun EmotePicker(
                                     .calculateBottomPadding()
                             ),
                             emotes = emotes.toImmutableList(),
-                            animateEmotes = animateEmotes,
+                            animateEmotes = prefs.animateEmotes,
                             onEmoteClick = onEmoteClick
                         )
                     }

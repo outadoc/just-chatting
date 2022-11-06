@@ -5,9 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.model.AppUser
-import fr.outadoc.justchatting.repository.AuthPreferencesRepository
 import fr.outadoc.justchatting.repository.AuthRepository
-import fr.outadoc.justchatting.repository.UserPreferencesRepository
+import fr.outadoc.justchatting.repository.PreferenceRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
@@ -17,9 +16,8 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import java.io.IOException
 
 class LoginViewModel(
-    private val userPreferencesRepository: UserPreferencesRepository,
-    private val authPreferencesRepository: AuthPreferencesRepository,
-    private val authRepository: AuthRepository,
+    private val preferencesRepository: PreferenceRepository,
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
     sealed class State {
@@ -37,9 +35,13 @@ class LoginViewModel(
 
     fun onStart() {
         viewModelScope.launch {
-            val user = userPreferencesRepository.appUser.first()
+            val prefs = preferencesRepository.currentPreferences.first()
+
+            val user = prefs.appUser
             if (user !is AppUser.NotLoggedIn) {
-                userPreferencesRepository.updateUser(null)
+                preferencesRepository.updatePreferences(
+                    prefs.copy(appUser = AppUser.NotLoggedIn)
+                )
 
                 try {
                     val token = user.helixToken
@@ -60,15 +62,12 @@ class LoginViewModel(
                 "user:read:follows"
             )
 
-            val clientId = authPreferencesRepository.helixClientId.first()
-            val redirectUri = authPreferencesRepository.helixRedirect.first()
-
             val helixAuthUrl: HttpUrl =
                 "https://id.twitch.tv/oauth2/authorize".toHttpUrl()
                     .newBuilder()
                     .addQueryParameter("response_type", "token")
-                    .addQueryParameter("client_id", clientId)
-                    .addQueryParameter("redirect_uri", redirectUri)
+                    .addQueryParameter("client_id", prefs.helixClientId)
+                    .addQueryParameter("redirect_uri", prefs.helixRedirect)
                     .addQueryParameter("scope", helixScopes.joinToString(" "))
                     .build()
 
@@ -82,11 +81,14 @@ class LoginViewModel(
         viewModelScope.launch {
             try {
                 val response = authRepository.validate(token) ?: throw IOException()
-                userPreferencesRepository.updateUser(
-                    appUser = AppUser.LoggedIn(
-                        id = response.userId,
-                        login = response.login,
-                        helixToken = token
+                val prefs = preferencesRepository.currentPreferences.first()
+                preferencesRepository.updatePreferences(
+                    prefs.copy(
+                        appUser = AppUser.LoggedIn(
+                            id = response.userId,
+                            login = response.login,
+                            helixToken = token
+                        )
                     )
                 )
                 _state.update { State.Done }

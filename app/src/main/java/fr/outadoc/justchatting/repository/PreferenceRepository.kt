@@ -2,10 +2,7 @@ package fr.outadoc.justchatting.repository
 
 import kotlinx.coroutines.flow.Flow
 
-interface PreferenceRepository :
-    AuthPreferencesRepository,
-    ChatPreferencesRepository,
-    UserPreferencesRepository {
+interface PreferenceRepository {
 
     val currentPreferences: Flow<AppPreferences>
     suspend fun updatePreferences(appPreferences: AppPreferences)

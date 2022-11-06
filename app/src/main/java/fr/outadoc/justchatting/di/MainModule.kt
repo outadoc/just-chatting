@@ -29,16 +29,13 @@ import fr.outadoc.justchatting.model.chat.TwitchBadgesResponse
 import fr.outadoc.justchatting.model.helix.emote.EmoteSetDeserializer
 import fr.outadoc.justchatting.model.helix.emote.EmoteSetResponse
 import fr.outadoc.justchatting.repository.ApiRepository
-import fr.outadoc.justchatting.repository.AuthPreferencesRepository
 import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.ChatConnectionPool
-import fr.outadoc.justchatting.repository.ChatPreferencesRepository
 import fr.outadoc.justchatting.repository.EmotesRepository
 import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.repository.RecentMessagesRepository
 import fr.outadoc.justchatting.repository.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.repository.TwitchService
-import fr.outadoc.justchatting.repository.UserPreferencesRepository
 import fr.outadoc.justchatting.ui.chat.LiveChatController
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.util.chat.LiveChatWebSocket
@@ -50,7 +47,6 @@ import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.scope.Scope
-import org.koin.dsl.binds
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -61,15 +57,9 @@ val mainModule = module {
 
     single<Clock> { Clock.System }
 
-    single<TwitchService> { ApiRepository(get(), get(), get()) }
+    single<TwitchService> { ApiRepository(get(), get()) }
 
-    single<PreferenceRepository> {
-        SharedPrefsPreferenceRepository(get())
-    } binds arrayOf(
-        AuthPreferencesRepository::class,
-        ChatPreferencesRepository::class,
-        UserPreferencesRepository::class
-    )
+    single<PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }
 
     single { ChatConnectionPool(get()) }
 
@@ -82,7 +72,7 @@ val mainModule = module {
     single { ChatEntryMapper(get()) }
     single { PubSubRewardParser(get()) }
 
-    single { AuthRepository(get(), get(), get()) }
+    single { AuthRepository(get(), get()) }
     single { EmotesRepository(get(), get(), get(), get()) }
     single { RecentMessagesRepository(get()) }
 

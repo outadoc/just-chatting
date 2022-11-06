@@ -10,7 +10,7 @@ import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.PointReward
 import fr.outadoc.justchatting.model.chat.RoomStateDelta
 import fr.outadoc.justchatting.model.chat.UserState
-import fr.outadoc.justchatting.repository.ChatPreferencesRepository
+import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.repository.RecentMessagesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
@@ -33,7 +33,7 @@ class LiveChatWebSocket private constructor(
     private val clock: Clock,
     private val parser: ChatMessageParser,
     private val recentMessagesRepository: RecentMessagesRepository,
-    private val chatPreferencesRepository: ChatPreferencesRepository,
+    private val preferencesRepository: PreferenceRepository,
     private val channelLogin: String
 ) : BaseChatWebSocket(applicationContext, scope, clock, channelLogin) {
 
@@ -42,7 +42,7 @@ class LiveChatWebSocket private constructor(
         private val clock: Clock,
         private val parser: ChatMessageParser,
         private val recentMessagesRepository: RecentMessagesRepository,
-        private val chatPreferencesRepository: ChatPreferencesRepository
+        private val preferencesRepository: PreferenceRepository
     ) {
         fun create(scope: CoroutineScope, channelLogin: String): LiveChatWebSocket {
             return LiveChatWebSocket(
@@ -50,7 +50,7 @@ class LiveChatWebSocket private constructor(
                 clock = clock,
                 parser = parser,
                 recentMessagesRepository = recentMessagesRepository,
-                chatPreferencesRepository = chatPreferencesRepository,
+                preferencesRepository = preferencesRepository,
                 scope = scope,
                 channelLogin = channelLogin
             )
@@ -132,7 +132,8 @@ class LiveChatWebSocket private constructor(
     }
 
     private suspend fun loadRecentMessages() {
-        val recentMsgLimit = chatPreferencesRepository.recentMsgLimit.first()
+        val prefs = preferencesRepository.currentPreferences.first()
+        val recentMsgLimit = prefs.recentMsgLimit
         if (recentMsgLimit < 1) return
 
         try {

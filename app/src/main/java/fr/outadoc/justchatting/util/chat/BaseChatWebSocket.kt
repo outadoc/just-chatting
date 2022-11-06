@@ -42,7 +42,7 @@ abstract class BaseChatWebSocket(
     protected val hashChannelName: String = "#$channelName"
 
     private val _flow = MutableSharedFlow<ChatCommand>(
-        replay = AppPreferences.Defaults.MAX_CHAT_LIMIT,
+        replay = AppPreferences.Defaults.ChatLimitRange.last,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val flow: Flow<ChatCommand> = _flow

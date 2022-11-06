@@ -12,9 +12,7 @@ data class AppPreferences(
     val appUser: AppUser = AppUser.NotLoggedIn
 ) {
     object Defaults {
-        const val MIN_CHAT_LIMIT = 10
-        const val MAX_CHAT_LIMIT = 1_000
-        const val MIN_RECENT_CHAT_LIMIT = 0
-        const val MAX_RECENT_CHAT_LIMIT = 500
+        val ChatLimitRange = 10..1_000
+        val RecentChatLimitRange = 0..500
     }
 }

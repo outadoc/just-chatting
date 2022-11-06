@@ -67,17 +67,16 @@ fun SettingsList(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 8.dp),
-            value = appPreferences.messageLimit.toFloat(),
+            value = appPreferences.messageLimit,
             onValueChange = { value ->
-                onAppPreferencesChange(appPreferences.copy(messageLimit = value.toInt()))
+                onAppPreferencesChange(appPreferences.copy(messageLimit = value))
             },
-            valueRange = AppPreferences.Defaults.MIN_CHAT_LIMIT.toFloat()
-                .rangeTo(AppPreferences.Defaults.MAX_CHAT_LIMIT.toFloat()),
+            valueRange = AppPreferences.Defaults.ChatLimitRange,
             steps = 10,
             valueContent = { value ->
                 Text(
                     modifier = Modifier.width(48.dp),
-                    text = "%,d".format(value.toInt())
+                    text = "%,d".format(value)
                 )
             }
         ) {
@@ -90,20 +89,19 @@ fun SettingsList(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .padding(horizontal = 8.dp),
-            value = appPreferences.recentMsgLimit.toFloat(),
+            value = appPreferences.recentMsgLimit,
             onValueChange = { value ->
-                onAppPreferencesChange(appPreferences.copy(recentMsgLimit = value.toInt()))
+                onAppPreferencesChange(appPreferences.copy(recentMsgLimit = value))
             },
-            valueRange = AppPreferences.Defaults.MIN_RECENT_CHAT_LIMIT.toFloat()
-                .rangeTo(AppPreferences.Defaults.MAX_RECENT_CHAT_LIMIT.toFloat()),
+            valueRange = AppPreferences.Defaults.RecentChatLimitRange,
             steps = 10,
             valueContent = { value ->
-                if (value == 0f) {
+                if (value == 0) {
                     Text(text = "Disabled")
                 } else {
                     Text(
                         modifier = Modifier.width(48.dp),
-                        text = "%,d".format(value.toInt())
+                        text = "%,d".format(value)
                     )
                 }
             }

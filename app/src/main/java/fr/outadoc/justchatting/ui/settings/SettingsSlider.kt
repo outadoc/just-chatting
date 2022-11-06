@@ -23,7 +23,7 @@ fun SettingsSliderPreview() {
         Column(modifier = Modifier.width(256.dp)) {
             SettingsSlider(
                 modifier = Modifier.fillMaxWidth(),
-                value = 0.3f,
+                value = 30,
                 onValueChange = {}
             ) {
                 Text("Lorem ipsum")
@@ -31,8 +31,8 @@ fun SettingsSliderPreview() {
 
             SettingsSlider(
                 modifier = Modifier.fillMaxWidth(),
-                value = 300f,
-                valueRange = 10f..1000f,
+                value = 300,
+                valueRange = 10..1000,
                 steps = 10,
                 onValueChange = {}
             ) {
@@ -41,7 +41,7 @@ fun SettingsSliderPreview() {
 
             SettingsSlider(
                 modifier = Modifier.fillMaxWidth(),
-                value = 1f,
+                value = 1,
                 onValueChange = {}
             ) {
                 Text("Lorem ipsum")
@@ -53,11 +53,11 @@ fun SettingsSliderPreview() {
 @Composable
 fun SettingsSlider(
     modifier: Modifier = Modifier,
-    value: Float,
-    onValueChange: (Float) -> Unit,
-    valueRange: ClosedFloatingPointRange<Float> = 0f..1f,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    valueRange: IntRange = 0..100,
     steps: Int = 0,
-    valueContent: @Composable (Float) -> Unit = {},
+    valueContent: @Composable (Int) -> Unit = {},
     title: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
@@ -69,10 +69,10 @@ fun SettingsSlider(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Slider(
                     modifier = Modifier.weight(1f, fill = true),
-                    value = value,
-                    onValueChange = onValueChange,
-                    valueRange = valueRange,
-                    steps = valueRange.endInclusive.toInt() / steps
+                    value = value.toFloat(),
+                    onValueChange = { value -> onValueChange(value.toInt()) },
+                    valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
+                    steps = valueRange.last / steps
                 )
 
                 valueContent(value)

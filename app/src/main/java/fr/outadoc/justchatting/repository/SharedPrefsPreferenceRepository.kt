@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.repository
 
 import android.content.Context
+import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
@@ -17,58 +18,75 @@ class SharedPrefsPreferenceRepository(
 
     private val dataStore = applicationContext.dataStore
 
-    override val helixClientId: Flow<String>
+    override val currentPreferences: Flow<AppPreferences>
         get() = dataStore.data.map { prefs ->
-            prefs[HELIX_CLIENT_ID]
-                ?: applicationContext.getString(R.string.pref_default_apiToken)
+            AppPreferences(
+                helixClientId = prefs[HELIX_CLIENT_ID]
+                    ?: applicationContext.getString(R.string.pref_default_apiToken),
+                helixRedirect = prefs[HELIX_REDIRECT]
+                    ?: applicationContext.getString(R.string.pref_default_apiRedirect),
+                animateEmotes = prefs[CHAT_ANIMATED_EMOTES]
+                    ?: applicationContext.resources.getBoolean(R.bool.pref_default_chatEnableAnimatedEmotes),
+                showTimestamps = prefs[CHAT_TIMESTAMPS]
+                    ?: applicationContext.resources.getBoolean(R.bool.pref_default_chatEnableTimestamps),
+                recentMsgLimit = prefs[CHAT_RECENT_LIMIT]
+                    ?: applicationContext.resources.getInteger(R.integer.pref_default_recentChatLimit),
+                messageLimit = prefs[CHAT_LIMIT]
+                    ?: applicationContext.resources.getInteger(R.integer.pref_default_chatLimit),
+                appUser = prefs.parseUser()
+            )
         }
+
+    override suspend fun updatePreferences(appPreferences: AppPreferences) {
+        dataStore.edit { prefs ->
+            prefs[HELIX_CLIENT_ID] = appPreferences.helixClientId
+            prefs[HELIX_REDIRECT] = appPreferences.helixRedirect
+            prefs[USER_ID] = appPreferences.appUser.id ?: ""
+            prefs[USER_LOGIN] = appPreferences.appUser.login ?: ""
+            prefs[USER_TOKEN] = appPreferences.appUser.helixToken ?: ""
+            prefs[CHAT_ANIMATED_EMOTES] = appPreferences.animateEmotes
+            prefs[CHAT_TIMESTAMPS] = appPreferences.showTimestamps
+            prefs[CHAT_RECENT_LIMIT] = appPreferences.recentMsgLimit
+            prefs[CHAT_LIMIT] = appPreferences.messageLimit
+        }
+    }
+
+    override val helixClientId: Flow<String>
+        get() = currentPreferences.map { prefs -> prefs.helixClientId }
 
     override val helixRedirect: Flow<String>
-        get() = dataStore.data.map { prefs ->
-            prefs[HELIX_REDIRECT]
-                ?: applicationContext.getString(R.string.pref_default_apiRedirect)
-        }
+        get() = currentPreferences.map { prefs -> prefs.helixRedirect }
 
     override val animateEmotes: Flow<Boolean>
-        get() = dataStore.data.map { prefs ->
-            prefs[CHAT_ANIMATED_EMOTES]
-                ?: applicationContext.resources.getBoolean(R.bool.pref_default_chatEnableAnimatedEmotes)
-        }
+        get() = currentPreferences.map { prefs -> prefs.animateEmotes }
 
     override val showTimestamps: Flow<Boolean>
-        get() = dataStore.data.map { prefs ->
-            prefs[CHAT_TIMESTAMPS]
-                ?: applicationContext.resources.getBoolean(R.bool.pref_default_chatEnableTimestamps)
-        }
+        get() = currentPreferences.map { prefs -> prefs.showTimestamps }
 
     override val recentMsgLimit: Flow<Int>
-        get() = dataStore.data.map { prefs ->
-            prefs[CHAT_RECENT_LIMIT]
-                ?: applicationContext.resources.getInteger(R.integer.pref_default_recentChatLimit)
-        }
+        get() = currentPreferences.map { prefs -> prefs.recentMsgLimit }
 
     override val messageLimit: Flow<Int>
-        get() = dataStore.data.map { prefs ->
-            prefs[CHAT_LIMIT]
-                ?: applicationContext.resources.getInteger(R.integer.pref_default_chatLimit)
-        }
+        get() = currentPreferences.map { prefs -> prefs.messageLimit }
 
     override val appUser: Flow<AppUser>
-        get() = dataStore.data.map { prefs ->
-            val id = prefs[USER_ID]
-            if (!id.isNullOrEmpty()) {
-                val name = prefs[USER_LOGIN]
-                val helixToken = prefs[USER_TOKEN]
+        get() = currentPreferences.map { prefs -> prefs.appUser }
 
-                if (name.isNullOrEmpty() || helixToken.isNullOrEmpty()) {
-                    AppUser.NotValidated(id, name, helixToken)
-                } else {
-                    AppUser.LoggedIn(id, name, helixToken)
-                }
+    private fun Preferences.parseUser(): AppUser {
+        val id = this[USER_ID]
+        return if (!id.isNullOrEmpty()) {
+            val name = this[USER_LOGIN]
+            val helixToken = this[USER_TOKEN]
+
+            if (name.isNullOrEmpty() || helixToken.isNullOrEmpty()) {
+                AppUser.NotValidated(id, name, helixToken)
             } else {
-                AppUser.NotLoggedIn
+                AppUser.LoggedIn(id, name, helixToken)
             }
+        } else {
+            AppUser.NotLoggedIn
         }
+    }
 
     override suspend fun updateUser(appUser: AppUser?) {
         dataStore.edit { prefs ->

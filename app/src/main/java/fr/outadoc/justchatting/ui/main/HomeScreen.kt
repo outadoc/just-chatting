@@ -9,6 +9,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import fr.outadoc.justchatting.model.helix.follows.Follow
 import fr.outadoc.justchatting.model.helix.stream.Stream
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -18,7 +19,8 @@ fun HomeScreen(
     onSearchClick: () -> Unit,
     onSettingsClick: () -> Unit,
     onLogoutClick: () -> Unit,
-    onStreamClick: (Stream) -> Unit
+    onStreamClick: (Stream) -> Unit,
+    onFollowClick: (Follow) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
@@ -34,7 +36,8 @@ fun HomeScreen(
         HomeContent(
             modifier = Modifier.padding(insets),
             insets = WindowInsets.navigationBars.asPaddingValues(),
-            onStreamClick = onStreamClick
+            onStreamClick = onStreamClick,
+            onFollowClick = onFollowClick
         )
     }
 }

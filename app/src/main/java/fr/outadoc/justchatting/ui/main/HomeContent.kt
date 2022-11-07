@@ -13,13 +13,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.model.helix.follows.Follow
 import fr.outadoc.justchatting.model.helix.stream.Stream
 
 @Composable
 fun HomeContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    onStreamClick: (Stream) -> Unit
+    onStreamClick: (Stream) -> Unit,
+    onFollowClick: (Follow) -> Unit
 ) {
     var selectedTabIndex by remember { mutableStateOf(0) }
     Column(modifier) {
@@ -41,6 +43,7 @@ fun HomeContent(
 
         when (selectedTabIndex) {
             0 -> LiveChannelsList(insets = insets, onItemClick = onStreamClick)
+            1 -> FollowedChannelsList(insets = insets, onItemClick = onFollowClick)
             else -> {}
         }
     }

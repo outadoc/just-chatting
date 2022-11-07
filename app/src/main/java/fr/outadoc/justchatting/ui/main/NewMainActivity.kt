@@ -30,9 +30,16 @@ class NewMainActivity : BaseActivity(), NavigationHandler {
                     onSettingsClick = {
                         viewModel.onOpenSettingsRequested()
                     },
-                    onLogoutClick = {},
+                    onLogoutClick = {
+                        onLogout()
+                    },
                     onStreamClick = { stream ->
                         stream.userLogin?.let { login ->
+                            viewChannel(login)
+                        }
+                    },
+                    onFollowClick = { follow ->
+                        follow.toLogin?.let { login ->
                             viewChannel(login)
                         }
                     }
@@ -98,5 +105,11 @@ class NewMainActivity : BaseActivity(), NavigationHandler {
 
     override fun openSettings() {
         viewModel.onOpenSettingsRequested()
+    }
+
+    private fun onLogout() {
+        startActivity(
+            Intent(this@NewMainActivity, LoginActivity::class.java)
+        )
     }
 }

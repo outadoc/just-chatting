@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.repository
 
 import android.content.Context
+import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -19,30 +20,36 @@ class SharedPrefsPreferenceRepository(
     private val defaultPreferences = AppPreferences()
 
     override val currentPreferences: Flow<AppPreferences>
-        get() = dataStore.data.map { prefs ->
-            AppPreferences(
-                helixClientId = prefs[HELIX_CLIENT_ID] ?: defaultPreferences.helixClientId,
-                helixRedirect = prefs[HELIX_REDIRECT] ?: defaultPreferences.helixRedirect,
-                animateEmotes = prefs[CHAT_ANIMATED_EMOTES] ?: defaultPreferences.animateEmotes,
-                showTimestamps = prefs[CHAT_TIMESTAMPS] ?: defaultPreferences.showTimestamps,
-                recentMsgLimit = prefs[CHAT_RECENT_LIMIT] ?: defaultPreferences.recentMsgLimit,
-                messageLimit = prefs[CHAT_LIMIT] ?: defaultPreferences.messageLimit,
-                appUser = prefs.parseUser()
-            )
-        }
+        get() = dataStore.data.map { prefs -> prefs.read() }
 
-    override suspend fun updatePreferences(appPreferences: AppPreferences) {
-        dataStore.edit { prefs ->
-            prefs[HELIX_CLIENT_ID] = appPreferences.helixClientId
-            prefs[HELIX_REDIRECT] = appPreferences.helixRedirect
-            prefs[USER_ID] = appPreferences.appUser.id ?: ""
-            prefs[USER_LOGIN] = appPreferences.appUser.login ?: ""
-            prefs[USER_TOKEN] = appPreferences.appUser.helixToken ?: ""
-            prefs[CHAT_ANIMATED_EMOTES] = appPreferences.animateEmotes
-            prefs[CHAT_TIMESTAMPS] = appPreferences.showTimestamps
-            prefs[CHAT_RECENT_LIMIT] = appPreferences.recentMsgLimit
-            prefs[CHAT_LIMIT] = appPreferences.messageLimit
+    override suspend fun updatePreferences(update: (AppPreferences) -> AppPreferences) {
+        dataStore.edit { currentPreferences ->
+            update(currentPreferences.read()).writeTo(currentPreferences)
         }
+    }
+
+    private fun Preferences.read(): AppPreferences {
+        return AppPreferences(
+            helixClientId = this[HELIX_CLIENT_ID] ?: defaultPreferences.helixClientId,
+            helixRedirect = this[HELIX_REDIRECT] ?: defaultPreferences.helixRedirect,
+            animateEmotes = this[CHAT_ANIMATED_EMOTES] ?: defaultPreferences.animateEmotes,
+            showTimestamps = this[CHAT_TIMESTAMPS] ?: defaultPreferences.showTimestamps,
+            recentMsgLimit = this[CHAT_RECENT_LIMIT] ?: defaultPreferences.recentMsgLimit,
+            messageLimit = this[CHAT_LIMIT] ?: defaultPreferences.messageLimit,
+            appUser = this.parseUser()
+        )
+    }
+
+    private fun AppPreferences.writeTo(prefs: MutablePreferences) {
+        prefs[HELIX_CLIENT_ID] = helixClientId
+        prefs[HELIX_REDIRECT] = helixRedirect
+        prefs[USER_ID] = appUser.id ?: ""
+        prefs[USER_LOGIN] = appUser.login ?: ""
+        prefs[USER_TOKEN] = appUser.helixToken ?: ""
+        prefs[CHAT_ANIMATED_EMOTES] = animateEmotes
+        prefs[CHAT_TIMESTAMPS] = showTimestamps
+        prefs[CHAT_RECENT_LIMIT] = recentMsgLimit
+        prefs[CHAT_LIMIT] = messageLimit
     }
 
     private fun Preferences.parseUser(): AppUser {

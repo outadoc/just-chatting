@@ -39,9 +39,9 @@ class LoginViewModel(
 
             val user = prefs.appUser
             if (user !is AppUser.NotLoggedIn) {
-                preferencesRepository.updatePreferences(
-                    prefs.copy(appUser = AppUser.NotLoggedIn)
-                )
+                preferencesRepository.updatePreferences { current ->
+                    current.copy(appUser = AppUser.NotLoggedIn)
+                }
 
                 try {
                     val token = user.helixToken
@@ -81,8 +81,7 @@ class LoginViewModel(
         viewModelScope.launch {
             try {
                 val response = authRepository.validate() ?: throw IOException()
-                val prefs = preferencesRepository.currentPreferences.first()
-                preferencesRepository.updatePreferences(
+                preferencesRepository.updatePreferences { prefs ->
                     prefs.copy(
                         appUser = AppUser.LoggedIn(
                             id = response.userId,
@@ -90,7 +89,7 @@ class LoginViewModel(
                             helixToken = token
                         )
                     )
-                )
+                }
                 _state.update { State.Done }
             } catch (e: Exception) {
                 val state = _state.value as? State.LoadWebView ?: return@launch

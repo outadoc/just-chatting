@@ -51,9 +51,9 @@ class MainViewModel(
                             val response = authRepository.validate()
                             val validatedUser = prefs.appUser.asLoggedIn()
                             if (response?.clientId == prefs.helixClientId && validatedUser != null) {
-                                preferencesRepository.updatePreferences(
-                                    prefs.copy(appUser = validatedUser)
-                                )
+                                preferencesRepository.updatePreferences { current ->
+                                    current.copy(appUser = validatedUser)
+                                }
                                 null
                             } else {
                                 throw IllegalStateException("401")
@@ -61,9 +61,9 @@ class MainViewModel(
                         }
                     } catch (e: Exception) {
                         if ((e is IllegalStateException && e.message == "401") || (e is HttpException && e.code() == 401)) {
-                            preferencesRepository.updatePreferences(
-                                prefs.copy(appUser = AppUser.NotLoggedIn)
-                            )
+                            preferencesRepository.updatePreferences { current ->
+                                current.copy(appUser = AppUser.NotLoggedIn)
+                            }
                             Destination.Login(causedByTokenExpiration = true)
                         } else {
                             null

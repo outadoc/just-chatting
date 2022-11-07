@@ -22,7 +22,7 @@ class SettingsViewModel(
 
     fun updatePreferences(appPreferences: AppPreferences) {
         viewModelScope.launch {
-            preferenceRepository.updatePreferences(appPreferences)
+            preferenceRepository.updatePreferences { appPreferences }
         }
     }
 }

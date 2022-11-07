@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.ui.settings
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -36,7 +37,8 @@ fun SettingsList(
     appPreferences: AppPreferences,
     onAppPreferencesChange: (AppPreferences) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
-    onOpenBubblePreferences: () -> Unit
+    onOpenBubblePreferences: () -> Unit,
+    insets: PaddingValues = PaddingValues()
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -44,12 +46,16 @@ fun SettingsList(
             .padding(bottom = 16.dp)
             .verticalScroll(scrollState)
     ) {
-        SettingsHeader(modifier = Modifier.padding(8.dp)) {
+        SettingsHeader(
+            modifier = Modifier
+                .padding(insets)
+                .padding(top = 8.dp)
+        ) {
             Text(stringResource(R.string.settings_chat))
         }
 
         SettingsSwitch(
-            modifier = Modifier.padding(horizontal = 8.dp),
+            modifier = Modifier.padding(insets),
             checked = appPreferences.animateEmotes,
             onCheckedChange = { checked ->
                 onAppPreferencesChange(appPreferences.copy(animateEmotes = checked))
@@ -61,7 +67,7 @@ fun SettingsList(
         Divider(modifier = Modifier.padding(vertical = 4.dp))
 
         SettingsSwitch(
-            modifier = Modifier.padding(horizontal = 8.dp),
+            modifier = Modifier.padding(insets),
             checked = appPreferences.showTimestamps,
             onCheckedChange = { checked ->
                 onAppPreferencesChange(appPreferences.copy(showTimestamps = checked))
@@ -75,7 +81,7 @@ fun SettingsList(
         SettingsSlider(
             modifier = Modifier
                 .padding(top = 8.dp)
-                .padding(horizontal = 8.dp),
+                .padding(insets),
             value = appPreferences.messageLimit,
             onValueChange = { value ->
                 onAppPreferencesChange(appPreferences.copy(messageLimit = value))
@@ -97,7 +103,7 @@ fun SettingsList(
         SettingsSlider(
             modifier = Modifier
                 .padding(top = 8.dp)
-                .padding(horizontal = 8.dp),
+                .padding(insets),
             value = appPreferences.recentMsgLimit,
             onValueChange = { value ->
                 onAppPreferencesChange(appPreferences.copy(recentMsgLimit = value))
@@ -123,13 +129,13 @@ fun SettingsList(
         SettingsHeader(
             modifier = Modifier
                 .padding(top = 8.dp)
-                .padding(horizontal = 8.dp)
+                .padding(insets)
         ) {
             Text(stringResource(R.string.settings_notifications_header))
         }
 
         SettingsLink(
-            modifier = Modifier.padding(horizontal = 8.dp),
+            modifier = Modifier.padding(insets),
             onClick = onOpenNotificationPreferences,
             onClickLabel = stringResource(R.string.settings_notifications_openNotificationsSettings)
         ) {
@@ -137,7 +143,7 @@ fun SettingsList(
         }
 
         SettingsLink(
-            modifier = Modifier.padding(horizontal = 8.dp),
+            modifier = Modifier.padding(insets),
             onClick = onOpenBubblePreferences,
             onClickLabel = stringResource(R.string.settings_notifications_openBubbleSettings)
         ) {
@@ -149,7 +155,7 @@ fun SettingsList(
         SettingsHeader(
             modifier = Modifier
                 .padding(top = 8.dp)
-                .padding(horizontal = 8.dp)
+                .padding(insets)
         ) {
             Text(stringResource(R.string.api_settings))
         }
@@ -157,7 +163,7 @@ fun SettingsList(
         SettingsEdit(
             modifier = Modifier
                 .padding(top = 8.dp)
-                .padding(horizontal = 8.dp),
+                .padding(insets),
             value = appPreferences.helixClientId,
             placeholder = {
                 Text(text = "aaaa-bbbb-cccc-dddd-eeee-ffff")
@@ -172,7 +178,7 @@ fun SettingsList(
         SettingsEdit(
             modifier = Modifier
                 .padding(top = 8.dp)
-                .padding(horizontal = 8.dp),
+                .padding(insets),
             value = appPreferences.helixRedirect,
             placeholder = {
                 Text(text = "https://example.com")
@@ -189,13 +195,13 @@ fun SettingsList(
         SettingsHeader(
             modifier = Modifier
                 .padding(top = 8.dp)
-                .padding(horizontal = 8.dp)
+                .padding(insets)
         ) {
             Text(stringResource(R.string.settings_about_header))
         }
 
         SettingsLink(
-            modifier = Modifier.padding(horizontal = 8.dp),
+            modifier = Modifier.padding(insets),
             onClick = {},
             onClickLabel = null
         ) {

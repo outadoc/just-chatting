@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -19,6 +20,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
 import org.koin.androidx.compose.getViewModel
@@ -78,7 +80,7 @@ fun SettingsScreen(
                     IconButton(onClick = onBackPress) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Go back"
+                            contentDescription = stringResource(R.string.all_goBack)
                         )
                     }
                 },
@@ -95,7 +97,8 @@ fun SettingsScreen(
                 viewModel.updatePreferences(appPreferences)
             },
             onOpenNotificationPreferences = onOpenNotificationPreferences,
-            onOpenBubblePreferences = onOpenBubblePreferences
+            onOpenBubblePreferences = onOpenBubblePreferences,
+            insets = PaddingValues(horizontal = 16.dp)
         )
     }
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="all_goBack">Go back</string>
     <string name="animated_emotes">Animated emotes</string>
     <string name="api_helix">Helix client ID</string>
     <string name="api_helix_redirect">Helix redirect URL</string>

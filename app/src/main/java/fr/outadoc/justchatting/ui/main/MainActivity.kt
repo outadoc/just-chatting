@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.ui.main
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -19,14 +18,6 @@ import fr.outadoc.justchatting.util.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity(), NavigationHandler {
-
-    companion object {
-        fun createIntent(context: Context): Intent {
-            return Intent(context, MainActivity::class.java).apply {
-                action = Intent.ACTION_VIEW
-            }
-        }
-    }
 
     private val viewModel: MainViewModel by viewModel()
     private lateinit var viewHolder: ActivityMainBinding
@@ -55,6 +46,7 @@ class MainActivity : BaseActivity(), NavigationHandler {
                         )
                     )
                 }
+
                 is MainViewModel.Destination.Login -> {
                     if (destination.causedByTokenExpiration) {
                         toast(R.string.token_expired)
@@ -62,9 +54,11 @@ class MainActivity : BaseActivity(), NavigationHandler {
 
                     startActivity(Intent(this, LoginActivity::class.java))
                 }
+
                 MainViewModel.Destination.Settings -> {
                     startActivity(Intent(this, SettingsActivity::class.java))
                 }
+
                 MainViewModel.Destination.Search -> {
                     fragNavController.pushFragment(SearchFragment())
                 }

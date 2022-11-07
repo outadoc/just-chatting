@@ -12,6 +12,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,12 +45,12 @@ fun LiveStreamPreview() {
 @Composable
 fun LiveStreamCard(
     modifier: Modifier = Modifier,
-    title: String?,
-    userName: String?,
-    viewerCount: Int?,
-    gameName: String?,
-    startedAt: Instant?,
-    profileImageURL: String?,
+    title: String? = null,
+    userName: String? = null,
+    viewerCount: Int? = null,
+    gameName: String? = null,
+    startedAt: Instant? = null,
+    profileImageURL: String? = null,
     onClick: () -> Unit = {}
 ) {
     Card(
@@ -78,11 +79,15 @@ fun LiveStream(
     startedAt: Instant?,
     profileImageURL: String?
 ) {
-    Row(modifier = modifier) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         profileImageURL?.let { url ->
             AsyncImage(
                 modifier = Modifier
-                    .size(64.dp)
+                    .padding(end = 8.dp)
+                    .size(56.dp)
                     .clip(CircleShape),
                 model = url,
                 contentDescription = null

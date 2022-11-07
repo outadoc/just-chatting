@@ -17,6 +17,7 @@ import okhttp3.Request
 import okio.buffer
 import okio.sink
 import org.koin.android.ext.android.inject
+import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
 class UserProfileImageContentProvider : ContentProvider() {
@@ -41,53 +42,54 @@ class UserProfileImageContentProvider : ContentProvider() {
     private val apiRepository by inject<TwitchService>()
     private val okHttpClient by inject<OkHttpClient>()
 
-    override fun onCreate(): Boolean = true
+    override fun onCreate(): Boolean {
+        return true
+    }
 
-    override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor =
-        runBlocking(Dispatchers.IO) {
-            Log.d(TAG, "Called openFile($uri, $mode)")
+    override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
+        Log.d(TAG, "Called openFile($uri, $mode)")
 
-            if (mode != "r") {
-                error("Wrong file mode, only read-only ('r') is supported, got $mode.")
-            }
+        if (mode != "r") {
+            throw FileNotFoundException("Wrong file mode, only read-only ('r') is supported, got $mode.")
+        }
 
-            val segments = uri.pathSegments.toList()
-            when (segments.getOrNull(0)) {
-                PATH_LOGIN -> {
-                    val userLogin: String = segments.getOrNull(1)
-                        ?: error("User login was null.")
+        val segments = uri.pathSegments.toList()
+        return when (segments.getOrNull(0)) {
+            PATH_LOGIN -> {
+                val userLogin: String = segments.getOrNull(1)
+                    ?: throw FileNotFoundException("User login was null.")
 
+                runBlocking(Dispatchers.IO) {
                     val profileImageUrl: String =
                         apiRepository.loadUsersByLogin(listOf(userLogin))
                             ?.firstOrNull()
                             ?.profileImageUrl
-                            ?: error("Could not retrieve user info from Twitch API.")
+                            ?: throw FileNotFoundException("Could not retrieve user info from Twitch API.")
 
                     val request = okHttpClient.newCall(
                         Request(url = profileImageUrl.toHttpUrl())
                     )
 
-                    val call = request.execute()
-
                     val (inSocket, outSocket) = ParcelFileDescriptor.createSocketPair()
 
-                    FileOutputStream(outSocket.fileDescriptor)
-                        .sink()
-                        .buffer()
-                        .use { sink ->
-                            call.body.source().use { source ->
+                    request.execute().body.source().use { source ->
+                        FileOutputStream(outSocket.fileDescriptor)
+                            .sink()
+                            .buffer()
+                            .use { sink ->
                                 sink.writeAll(source)
                             }
-                        }
+                    }
 
                     ParcelFileDescriptor.fromFd(inSocket.fd)
                 }
+            }
 
-                else -> {
-                    error("Unsupported URI: $uri")
-                }
+            else -> {
+                throw FileNotFoundException("Unsupported URI: $uri")
             }
         }
+    }
 
     override fun getType(uri: Uri): String = "image/png"
 

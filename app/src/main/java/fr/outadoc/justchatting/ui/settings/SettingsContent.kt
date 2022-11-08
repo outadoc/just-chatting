@@ -12,8 +12,7 @@ import org.koin.androidx.compose.getViewModel
 fun SettingsContent(
     modifier: Modifier = Modifier,
     onOpenNotificationPreferences: () -> Unit,
-    onOpenBubblePreferences: () -> Unit,
-    onLogoutClick: () -> Unit
+    onOpenBubblePreferences: () -> Unit
 ) {
     val viewModel: SettingsViewModel = getViewModel()
     val appPreferences by viewModel.appPreferences.collectAsState()
@@ -26,7 +25,6 @@ fun SettingsContent(
         },
         onOpenNotificationPreferences = onOpenNotificationPreferences,
         onOpenBubblePreferences = onOpenBubblePreferences,
-        onLogoutClick = onLogoutClick,
         itemInsets = PaddingValues(horizontal = 16.dp)
     )
 }

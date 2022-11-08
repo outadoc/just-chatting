@@ -17,6 +17,6 @@ val viewModelModule = module {
     viewModel { FollowedChannelsViewModel(get()) }
     viewModel { FollowedStreamsViewModel(get()) }
     viewModel { LoginViewModel(get(), get()) }
-    viewModel { MainViewModel(get(), get(), get()) }
+    viewModel { MainViewModel(get(), get()) }
     viewModel { SettingsViewModel(get()) }
 }

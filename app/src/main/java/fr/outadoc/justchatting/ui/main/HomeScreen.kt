@@ -38,7 +38,6 @@ private val DefaultTab = Tabs.Live
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onLogoutClick: () -> Unit,
     onChannelClick: (login: String) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit
@@ -167,8 +166,7 @@ fun HomeScreen(
                 Tabs.Settings -> {
                     SettingsContent(
                         onOpenNotificationPreferences = onOpenNotificationPreferences,
-                        onOpenBubblePreferences = onOpenBubblePreferences,
-                        onLogoutClick = onLogoutClick
+                        onOpenBubblePreferences = onOpenBubblePreferences
                     )
                 }
             }

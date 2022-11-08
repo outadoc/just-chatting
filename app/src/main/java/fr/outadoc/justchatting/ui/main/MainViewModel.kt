@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.ui.main
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
@@ -8,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.id.ValidationResponse
 import fr.outadoc.justchatting.repository.AuthRepository
+import fr.outadoc.justchatting.repository.InvalidClientIdException
 import fr.outadoc.justchatting.repository.PreferenceRepository
-import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.util.Event
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -19,13 +18,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class MainViewModel(
-    private val repository: TwitchService,
     private val authRepository: AuthRepository,
     private val preferencesRepository: PreferenceRepository
 ) : ViewModel() {
@@ -54,15 +51,14 @@ class MainViewModel(
 
     val state: StateFlow<State> =
         preferencesRepository.currentPreferences
-            .onEach { Log.d("MainViewModel", it.toString()) }
             .map { prefs ->
                 when (prefs.appUser) {
                     is AppUser.LoggedIn -> State.LoggedIn(appUser = prefs.appUser)
-                    AppUser.NotLoggedIn -> State.LoggedOut()
+                    is AppUser.NotLoggedIn -> State.LoggedOut()
                     is AppUser.NotValidated -> {
                         try {
                             val userInfo: ValidationResponse = authRepository.validate()
-                                ?: throw IllegalStateException("401")
+                                ?: throw InvalidClientIdException()
 
                             val validatedUser = AppUser.LoggedIn(
                                 id = userInfo.userId,
@@ -71,7 +67,7 @@ class MainViewModel(
                             )
 
                             if (userInfo.clientId != prefs.helixClientId) {
-                                throw IllegalStateException("401")
+                                throw InvalidClientIdException()
                             }
 
                             preferencesRepository.updatePreferences { current ->
@@ -81,7 +77,7 @@ class MainViewModel(
                             State.LoggedIn(appUser = validatedUser)
 
                         } catch (e: Exception) {
-                            if ((e is IllegalStateException && e.message == "401") || (e is HttpException && e.code() == 401)) {
+                            if (e is InvalidClientIdException || (e as? HttpException)?.code() == 401) {
                                 preferencesRepository.updatePreferences { current ->
                                     current.copy(appUser = AppUser.NotLoggedIn)
                                 }
@@ -103,11 +99,11 @@ class MainViewModel(
         preferencesRepository.currentPreferences.map { prefs ->
             when (prefs.appUser) {
                 is AppUser.LoggedIn -> null
-                AppUser.NotLoggedIn -> Destination.Login()
+                is AppUser.NotLoggedIn -> Destination.Login()
                 is AppUser.NotValidated -> {
                     try {
                         val userInfo: ValidationResponse = authRepository.validate()
-                            ?: throw IllegalStateException("401")
+                            ?: throw InvalidClientIdException()
 
                         val validatedUser = AppUser.LoggedIn(
                             id = userInfo.userId,
@@ -116,7 +112,7 @@ class MainViewModel(
                         )
 
                         if (userInfo.clientId != prefs.helixClientId) {
-                            throw IllegalStateException("401")
+                            throw InvalidClientIdException()
                         }
 
                         preferencesRepository.updatePreferences { current ->
@@ -126,7 +122,7 @@ class MainViewModel(
                         null
 
                     } catch (e: Exception) {
-                        if ((e is IllegalStateException && e.message == "401") || (e is HttpException && e.code() == 401)) {
+                        if (e is InvalidClientIdException || (e as? HttpException)?.code() == 401) {
                             preferencesRepository.updatePreferences { current ->
                                 current.copy(appUser = AppUser.NotLoggedIn)
                             }
@@ -154,29 +150,15 @@ class MainViewModel(
     fun onViewChannelRequest(login: String) {
         viewModelScope.launch {
             try {
-                repository.loadUsersByLogin(listOf(login))
-                    ?.firstOrNull()
-                    ?.let { user ->
-                        onViewChannelRequest(
-                            id = user.id,
-                            login = user.login,
-                            name = user.displayName,
-                            channelLogo = user.profileImageUrl
-                        )
-                    }
+                _userRequestedDestination.tryEmit(
+                    Event(
+                        Destination.Channel(login = login)
+                    )
+                )
             } catch (e: Exception) {
                 e.printStackTrace()
             }
         }
-    }
-
-    fun onViewChannelRequest(id: String?, login: String?, name: String?, channelLogo: String?) {
-        if (id == null || login == null || name == null || channelLogo == null) return
-        _userRequestedDestination.tryEmit(
-            Event(
-                Destination.Channel(login = login)
-            )
-        )
     }
 
     fun onOpenSearchRequested() {

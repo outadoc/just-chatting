@@ -64,7 +64,7 @@ fun FollowedChannelsList(
                         onClick = { onItemClick(item) }
                     )
                 } else {
-                    LiveStreamCard(modifier = Modifier.height(64.dp))
+                    UserItemCard(modifier = Modifier.height(64.dp))
                 }
             }
         }

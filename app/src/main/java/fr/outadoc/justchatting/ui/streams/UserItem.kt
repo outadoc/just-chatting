@@ -44,9 +44,9 @@ fun UserItemPreview() {
 @Composable
 fun UserItemCard(
     modifier: Modifier = Modifier,
-    displayName: String?,
-    followedAt: Instant?,
-    profileImageURL: String?,
+    displayName: String? = null,
+    followedAt: Instant? = null,
+    profileImageURL: String? = null,
     onClick: () -> Unit = {}
 ) {
     Card(

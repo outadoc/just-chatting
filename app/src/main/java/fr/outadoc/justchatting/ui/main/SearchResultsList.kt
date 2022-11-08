@@ -48,7 +48,10 @@ fun SearchResultsList(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = insets + PaddingValues(8.dp),
+            contentPadding = insets + PaddingValues(
+                vertical = 8.dp,
+                horizontal = 16.dp
+            ),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (items.itemCount == 0) {

@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.ui.main
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -30,6 +31,8 @@ private enum class Tabs {
     Live, Followed, Search, Settings
 }
 
+private val DefaultTab = Tabs.Live
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -39,9 +42,16 @@ fun HomeScreen(
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit
 ) {
-    var selectedTab by remember { mutableStateOf(Tabs.Live) }
+    var selectedTab by remember { mutableStateOf(DefaultTab) }
     val searchViewModel = getViewModel<ChannelSearchViewModel>()
     val searchState by searchViewModel.state.collectAsState()
+
+    BackHandler(
+        enabled = selectedTab != DefaultTab,
+        onBack = {
+            selectedTab = DefaultTab
+        }
+    )
 
     Scaffold(
         modifier = modifier,

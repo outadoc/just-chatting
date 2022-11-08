@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.ui.main
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Tab
@@ -41,10 +42,12 @@ fun HomeContent(
             )
         }
 
-        when (selectedTabIndex) {
-            0 -> LiveChannelsList(insets = insets, onItemClick = onStreamClick)
-            1 -> FollowedChannelsList(insets = insets, onItemClick = onFollowClick)
-            else -> {}
+        Crossfade(targetState = selectedTabIndex) {
+            when (selectedTabIndex) {
+                0 -> LiveChannelsList(insets = insets, onItemClick = onStreamClick)
+                1 -> FollowedChannelsList(insets = insets, onItemClick = onFollowClick)
+                else -> {}
+            }
         }
     }
 }

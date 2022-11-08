@@ -26,7 +26,8 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     onBackPress: () -> Unit = {},
     onOpenNotificationPreferences: () -> Unit,
-    onOpenBubblePreferences: () -> Unit
+    onOpenBubblePreferences: () -> Unit,
+    onLogoutClick: () -> Unit
 ) {
     val viewModel: SettingsViewModel = getViewModel()
     val appPreferences by viewModel.appPreferences.collectAsState()
@@ -58,7 +59,8 @@ fun SettingsScreen(
             onOpenNotificationPreferences = onOpenNotificationPreferences,
             onOpenBubblePreferences = onOpenBubblePreferences,
             itemInsets = PaddingValues(horizontal = 16.dp),
-            insets = insets
+            insets = insets,
+            onLogoutClick = onLogoutClick
         )
     }
 }

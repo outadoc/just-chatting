@@ -14,6 +14,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -58,16 +59,20 @@ fun HomeScreen(
         topBar = {
             Crossfade(targetState = selectedTab) {
                 when (selectedTab) {
-                    Tabs.Search -> SearchTopAppBar(
-                        query = searchState.query,
-                        onQueryChange = { newQuery ->
-                            searchViewModel.onQueryChange(newQuery)
-                        }
-                    )
+                    Tabs.Search -> {
+                        SearchTopAppBar(
+                            query = searchState.query,
+                            onQueryChange = { newQuery ->
+                                searchViewModel.onQueryChange(newQuery)
+                            }
+                        )
+                    }
 
-                    else -> HomeTopAppBar(
-                        onLogoutClick = onLogoutClick
-                    )
+                    else -> {
+                        TopAppBar(
+                            title = { Text(stringResource(R.string.app_name)) }
+                        )
+                    }
                 }
             }
         },
@@ -128,35 +133,44 @@ fun HomeScreen(
             targetState = selectedTab
         ) {
             when (selectedTab) {
-                Tabs.Live -> LiveChannelsList(
-                    onItemClick = { stream ->
-                        stream.userLogin?.let { login ->
-                            onChannelClick(login)
+                Tabs.Live -> {
+                    LiveChannelsList(
+                        onItemClick = { stream ->
+                            stream.userLogin?.let { login ->
+                                onChannelClick(login)
+                            }
                         }
-                    }
-                )
+                    )
+                }
 
-                Tabs.Followed -> FollowedChannelsList(
-                    onItemClick = { stream ->
-                        stream.toLogin?.let { login ->
-                            onChannelClick(login)
+                Tabs.Followed -> {
+                    FollowedChannelsList(
+                        onItemClick = { stream ->
+                            stream.toLogin?.let { login ->
+                                onChannelClick(login)
+                            }
                         }
-                    }
-                )
+                    )
+                }
 
-                Tabs.Search -> SearchResultsList(
-                    onItemClick = { stream ->
-                        stream.broadcasterLogin?.let { login ->
-                            onChannelClick(login)
-                        }
-                    },
-                    viewModel = searchViewModel
-                )
+                Tabs.Search -> {
+                    SearchResultsList(
+                        onItemClick = { stream ->
+                            stream.broadcasterLogin?.let { login ->
+                                onChannelClick(login)
+                            }
+                        },
+                        viewModel = searchViewModel
+                    )
+                }
 
-                Tabs.Settings -> SettingsContent(
-                    onOpenNotificationPreferences = onOpenNotificationPreferences,
-                    onOpenBubblePreferences = onOpenBubblePreferences
-                )
+                Tabs.Settings -> {
+                    SettingsContent(
+                        onOpenNotificationPreferences = onOpenNotificationPreferences,
+                        onOpenBubblePreferences = onOpenBubblePreferences,
+                        onLogoutClick = onLogoutClick
+                    )
+                }
             }
         }
     }

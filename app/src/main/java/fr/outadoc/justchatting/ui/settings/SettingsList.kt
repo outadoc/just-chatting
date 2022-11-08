@@ -25,7 +25,8 @@ fun SettingsListPreview() {
             appPreferences = AppPreferences(),
             onAppPreferencesChange = {},
             onOpenNotificationPreferences = {},
-            onOpenBubblePreferences = {}
+            onOpenBubblePreferences = {},
+            onLogoutClick = {}
         )
     }
 }
@@ -37,6 +38,7 @@ fun SettingsList(
     onAppPreferencesChange: (AppPreferences) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
+    onLogoutClick: () -> Unit,
     itemInsets: PaddingValues = PaddingValues(),
     insets: PaddingValues = PaddingValues()
 ) {
@@ -169,6 +171,30 @@ fun SettingsList(
                 onClickLabel = stringResource(R.string.settings_notifications_openBubbleSettings)
             ) {
                 Text(text = stringResource(R.string.settings_notifications_openBubbleSettings))
+            }
+        }
+
+        item {
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
+        }
+
+        item {
+            SettingsHeader(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(itemInsets)
+            ) {
+                Text(stringResource(R.string.settings_account_header))
+            }
+        }
+
+        item {
+            SettingsLink(
+                modifier = Modifier.padding(itemInsets),
+                onClick = onLogoutClick,
+                onClickLabel = null
+            ) {
+                Text(text = stringResource(R.string.settings_account_logout_action))
             }
         }
 

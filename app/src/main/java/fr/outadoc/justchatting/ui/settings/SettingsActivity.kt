@@ -20,7 +20,8 @@ class SettingsActivity : BaseActivity() {
                     },
                     onOpenBubblePreferences = {
                         openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
-                    }
+                    },
+                    onLogoutClick = {}
                 )
             }
         }

@@ -15,7 +15,7 @@
 
     <item
         android:id="@+id/login"
-        android:title="@string/log_out"
+        android:title="@string/settings_account_logout_action"
         app:showAsAction="never" />
 
 </menu>

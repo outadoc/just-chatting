@@ -15,7 +15,6 @@ import fr.outadoc.justchatting.ui.common.Scrollable
 import fr.outadoc.justchatting.ui.search.channels.ChannelSearchFragment
 import fr.outadoc.justchatting.util.showKeyboard
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 
 class SearchFragment : Fragment(), Scrollable {
 
@@ -73,13 +72,8 @@ class SearchFragment : Fragment(), Scrollable {
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     job?.cancel()
-                    if (newText.isNotEmpty()) {
-                        job = lifecycleScope.launchWhenResumed {
-                            delay(750)
-                            searchFragment?.search(newText)
-                        }
-                    } else {
-                        searchFragment?.search(newText) // might be null on rotation, so as?
+                    job = lifecycleScope.launchWhenResumed {
+                        searchFragment?.search(newText)
                     }
                     return false
                 }

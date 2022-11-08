@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import fr.outadoc.justchatting.databinding.CommonRecyclerViewLayoutBinding
 import fr.outadoc.justchatting.model.helix.channel.ChannelSearch
 import fr.outadoc.justchatting.ui.common.BasePagedListAdapter
@@ -12,6 +14,8 @@ import fr.outadoc.justchatting.ui.common.NavigationHandler
 import fr.outadoc.justchatting.ui.common.PagedListFragment
 import fr.outadoc.justchatting.ui.common.Scrollable
 import fr.outadoc.justchatting.ui.search.Searchable
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ChannelSearchFragment :
@@ -41,15 +45,22 @@ class ChannelSearchFragment :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewHolder?.swipeRefresh?.isEnabled = false
+
+        lifecycleScope.launch {
+            adapter.loadStateFlow.collectLatest { loadStates ->
+                commonViewHolder?.apply {
+                    swipeRefresh.isRefreshing = loadStates.refresh is LoadState.Loading
+                    nothingHere.isVisible =
+                        loadStates.source.refresh is LoadState.NotLoading &&
+                                loadStates.append.endOfPaginationReached &&
+                                adapter.itemCount < 1
+                }
+            }
+        }
     }
 
     override fun search(query: String) {
-        if (query.isNotEmpty()) {
-            viewModel.setQuery(query = query)
-        } else {
-            viewHolder?.nothingHere?.isVisible = false
-        }
+        viewModel.onQueryChange(query = query)
     }
 
     override fun scrollToTop() {

@@ -1,13 +1,12 @@
 package fr.outadoc.justchatting.ui.login
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.model.AppUser
-import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.PreferenceRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -16,8 +15,7 @@ import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 class LoginViewModel(
-    private val preferencesRepository: PreferenceRepository,
-    private val authRepository: AuthRepository
+    private val preferencesRepository: PreferenceRepository
 ) : ViewModel() {
 
     sealed class State {
@@ -31,28 +29,15 @@ class LoginViewModel(
     }
 
     private val _state = MutableStateFlow<State>(State.Initial)
-    val state: LiveData<State> = _state.asLiveData()
+    val state: StateFlow<State> = _state.asStateFlow()
 
-    fun onStart() {
+    init {
+        init()
+    }
+
+    private fun init() {
         viewModelScope.launch {
             val prefs = preferencesRepository.currentPreferences.first()
-
-            val user = prefs.appUser
-            if (user !is AppUser.NotLoggedIn) {
-                preferencesRepository.updatePreferences { current ->
-                    current.copy(appUser = AppUser.NotLoggedIn)
-                }
-
-                try {
-                    val token = user.helixToken
-                    if (!token.isNullOrBlank()) {
-                        authRepository.revokeToken()
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
             val helixScopes = listOf(
                 "chat:read",
                 "chat:edit",
@@ -102,6 +87,10 @@ class LoginViewModel(
         }
 
         return true
+    }
+
+    fun onCloseClick() {
+        _state.update { State.Done }
     }
 
     private fun HttpUrl.parseToken(): String? {

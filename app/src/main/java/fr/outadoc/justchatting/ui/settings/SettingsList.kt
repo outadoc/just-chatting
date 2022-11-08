@@ -20,7 +20,6 @@ import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ThemePreviews
-import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.repository.AppPreferences
 import plus
 
@@ -32,7 +31,8 @@ fun SettingsListPreview() {
             appPreferences = AppPreferences(),
             onAppPreferencesChange = {},
             onOpenNotificationPreferences = {},
-            onOpenBubblePreferences = {}
+            onOpenBubblePreferences = {},
+            onLogoutClick = {}
         )
     }
 }
@@ -44,6 +44,7 @@ fun SettingsList(
     onAppPreferencesChange: (AppPreferences) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
+    onLogoutClick: () -> Unit,
     itemInsets: PaddingValues = PaddingValues(),
     insets: PaddingValues = PaddingValues()
 ) {
@@ -225,9 +226,7 @@ fun SettingsList(
                     confirmButton = {
                         TextButton(
                             onClick = {
-                                onAppPreferencesChange(
-                                    appPreferences.copy(appUser = AppUser.NotLoggedIn)
-                                )
+                                onLogoutClick()
                                 showLogoutDialog = false
                             }
                         ) {

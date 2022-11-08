@@ -25,6 +25,9 @@ fun SettingsContent(
         },
         onOpenNotificationPreferences = onOpenNotificationPreferences,
         onOpenBubblePreferences = onOpenBubblePreferences,
+        onLogoutClick = {
+            viewModel.logout()
+        },
         itemInsets = PaddingValues(horizontal = 16.dp)
     )
 }

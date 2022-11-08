@@ -58,6 +58,7 @@ fun SettingsScreen(
             },
             onOpenNotificationPreferences = onOpenNotificationPreferences,
             onOpenBubblePreferences = onOpenBubblePreferences,
+            onLogoutClick = onLogoutClick,
             itemInsets = PaddingValues(horizontal = 16.dp),
             insets = insets
         )

@@ -51,9 +51,9 @@ android {
     signingConfigs {
         named("debug") {
             keyAlias = "debug"
-            keyPassword = "123456"
-            storeFile = file("debug-keystore.jks")
-            storePassword = "123456"
+            keyPassword = ""
+            storeFile = rootProject.file("keystores/debug.p12")
+            storePassword = "android"
         }
     }
 

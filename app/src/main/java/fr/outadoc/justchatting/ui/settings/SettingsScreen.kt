@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.ui.settings
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -52,14 +51,14 @@ fun SettingsScreen(
         }
     ) { insets ->
         SettingsList(
-            modifier = Modifier.padding(insets),
             appPreferences = appPreferences,
             onAppPreferencesChange = { appPreferences ->
                 viewModel.updatePreferences(appPreferences)
             },
             onOpenNotificationPreferences = onOpenNotificationPreferences,
             onOpenBubblePreferences = onOpenBubblePreferences,
-            itemInsets = PaddingValues(horizontal = 16.dp)
+            itemInsets = PaddingValues(horizontal = 16.dp),
+            insets = insets
         )
     }
 }

@@ -196,7 +196,6 @@
     <string name="irc_notice_whisper_restricted">Your settings prevent you from sending this whisper.</string>
     <string name="irc_notice_whisper_restricted_recipient">That user’s settings prevent them from receiving this whisper.</string>
     <string name="live">Live</string>
-    <string name="log_in">Continue with Twitch</string>
     <string name="logout_msg">You are currently logged in as %s.</string>
     <string name="logout_title">Log out?</string>
     <string name="menu_item_openInBubble">Open in bubble</string>
@@ -214,6 +213,9 @@
     <string name="notification_foreground_channel_title">Persistent connection</string>
     <string name="notification_foreground_message">We\'re keeping open the connection to Twitch so you can come back and see all the messages you\'ve missed.</string>
     <string name="notification_foreground_title">Connected to Twitch chat</string>
+    <string name="onboarding_login_action">Continue with Twitch</string>
+    <string name="onboarding_message">In order to browse your followed channels and post in chat, you will need to link your Twitch account.</string>
+    <string name="onboarding_title">Welcome to %s!</string>
     <string name="recentMsg_limit">Recent message limit</string>
     <string name="recentMsg_limit_disabled">Disabled</string>
     <string name="room_emote">Emote</string>

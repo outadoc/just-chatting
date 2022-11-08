@@ -195,7 +195,6 @@
     <string name="irc_notice_whisper_restricted">Vos paramètres vous empêchent d\'envoyer ce chuchotement.</string>
     <string name="irc_notice_whisper_restricted_recipient">Les paramètres de cet·te utilisateur·rice l\'empêchent de recevoir ce chuchotement.</string>
     <string name="live">En direct</string>
-    <string name="log_in">Continuer avec Twitch</string>
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %s.</string>
     <string name="logout_title">Se déconnecter ?</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
@@ -213,6 +212,9 @@
     <string name="notification_foreground_channel_title">Connexion persistente</string>
     <string name="notification_foreground_message">Nous gardons ouverte une connexion pour vous permettre de revenir rapidement sur le tchat.</string>
     <string name="notification_foreground_title">Connecté au tchat Twitch</string>
+    <string name="onboarding_login_action">Continuer avec Twitch</string>
+    <string name="onboarding_message">Pour parcourir vos chaînes suivies et poster dans le tchat, vous devez lier votre compte Twitch.</string>
+    <string name="onboarding_title">Bienvenue dans %s !</string>
     <string name="recentMsg_limit">Limite de messages récents</string>
     <string name="recentMsg_limit_disabled">Désactivé</string>
     <string name="room_emote">Émote</string>

@@ -28,21 +28,14 @@ class NewMainActivity : BaseActivity(), NavigationHandler {
                     onLogoutClick = {
                         onLogout()
                     },
-                    onStreamClick = { stream ->
-                        stream.userLogin?.let { login ->
-                            viewChannel(login)
-                        }
+                    onChannelClick = { login ->
+                        viewChannel(login)
                     },
                     onOpenNotificationPreferences = {
                         openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                     },
                     onOpenBubblePreferences = {
                         openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
-                    },
-                    onFollowClick = { follow ->
-                        follow.toLogin?.let { login ->
-                            viewChannel(login)
-                        }
                     }
                 )
             }

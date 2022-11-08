@@ -14,6 +14,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,32 +22,47 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.model.helix.follows.Follow
-import fr.outadoc.justchatting.model.helix.stream.Stream
+import fr.outadoc.justchatting.ui.search.channels.ChannelSearchViewModel
 import fr.outadoc.justchatting.ui.settings.SettingsContent
+import org.koin.androidx.compose.getViewModel
+
+private enum class Tabs {
+    Live, Followed, Search, Settings
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onLogoutClick: () -> Unit,
-    onStreamClick: (Stream) -> Unit,
-    onFollowClick: (Follow) -> Unit,
+    onChannelClick: (login: String) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit
 ) {
-    var selectedTabIndex by remember { mutableStateOf(0) }
+    var selectedTab by remember { mutableStateOf(Tabs.Live) }
+    val searchViewModel = getViewModel<ChannelSearchViewModel>()
+    val searchState by searchViewModel.state.collectAsState()
+
     Scaffold(
         modifier = modifier,
         topBar = {
-            HomeTopAppBar(
-                onLogoutClick = onLogoutClick
-            )
+            when (selectedTab) {
+                Tabs.Search -> SearchTopAppBar(
+                    query = searchState.query,
+                    onQueryChange = { newQuery ->
+                        searchViewModel.onQueryChange(newQuery)
+                    }
+                )
+
+                else -> HomeTopAppBar(
+                    onLogoutClick = onLogoutClick
+                )
+            }
         },
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
-                    selected = selectedTabIndex == 0,
+                    selected = selectedTab == Tabs.Live,
                     label = { Text(stringResource(R.string.live)) },
                     icon = {
                         Icon(
@@ -54,11 +70,11 @@ fun HomeScreen(
                             contentDescription = null
                         )
                     },
-                    onClick = { selectedTabIndex = 0 }
+                    onClick = { selectedTab = Tabs.Live }
                 )
 
                 NavigationBarItem(
-                    selected = selectedTabIndex == 1,
+                    selected = selectedTab == Tabs.Followed,
                     label = { Text(stringResource(R.string.channels)) },
                     icon = {
                         Icon(
@@ -66,11 +82,11 @@ fun HomeScreen(
                             contentDescription = null
                         )
                     },
-                    onClick = { selectedTabIndex = 1 }
+                    onClick = { selectedTab = Tabs.Followed }
                 )
 
                 NavigationBarItem(
-                    selected = selectedTabIndex == 2,
+                    selected = selectedTab == Tabs.Search,
                     label = { Text(stringResource(R.string.search)) },
                     icon = {
                         Icon(
@@ -78,11 +94,11 @@ fun HomeScreen(
                             contentDescription = null
                         )
                     },
-                    onClick = { selectedTabIndex = 2 }
+                    onClick = { selectedTab = Tabs.Search }
                 )
 
                 NavigationBarItem(
-                    selected = selectedTabIndex == 3,
+                    selected = selectedTab == Tabs.Settings,
                     label = { Text(stringResource(R.string.settings)) },
                     icon = {
                         Icon(
@@ -90,32 +106,45 @@ fun HomeScreen(
                             contentDescription = null
                         )
                     },
-                    onClick = { selectedTabIndex = 3 }
+                    onClick = { selectedTab = Tabs.Settings }
                 )
             }
         }
     ) { insets ->
         Crossfade(
             modifier = Modifier.padding(insets),
-            targetState = selectedTabIndex
+            targetState = selectedTab
         ) {
-            when (selectedTabIndex) {
-                0 -> LiveChannelsList(
-                    onItemClick = onStreamClick
+            when (selectedTab) {
+                Tabs.Live -> LiveChannelsList(
+                    onItemClick = { stream ->
+                        stream.userLogin?.let { login ->
+                            onChannelClick(login)
+                        }
+                    }
                 )
 
-                1 -> FollowedChannelsList(
-                    onItemClick = onFollowClick
+                Tabs.Followed -> FollowedChannelsList(
+                    onItemClick = { stream ->
+                        stream.toLogin?.let { login ->
+                            onChannelClick(login)
+                        }
+                    }
                 )
 
-                2 -> {}
+                Tabs.Search -> SearchResultsList(
+                    onItemClick = { stream ->
+                        stream.broadcasterLogin?.let { login ->
+                            onChannelClick(login)
+                        }
+                    },
+                    viewModel = searchViewModel
+                )
 
-                3 -> SettingsContent(
+                Tabs.Settings -> SettingsContent(
                     onOpenNotificationPreferences = onOpenNotificationPreferences,
                     onOpenBubblePreferences = onOpenBubblePreferences
                 )
-
-                else -> error("Unsupported tab $selectedTabIndex")
             }
         }
     }

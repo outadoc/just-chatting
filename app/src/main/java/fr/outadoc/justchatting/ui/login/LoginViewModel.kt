@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import java.io.IOException
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 class LoginViewModel(
     private val preferencesRepository: PreferenceRepository,
@@ -77,24 +77,42 @@ class LoginViewModel(
         }
     }
 
-    fun onTokenReceived(token: String) {
+    fun onNavigateToUrl(url: String): Boolean {
+        val state = _state.value as? State.LoadWebView ?: return false
+        val token = url.toHttpUrlOrNull()?.parseToken() ?: return false
+
         viewModelScope.launch {
             try {
-                val response = authRepository.validate() ?: throw IOException()
                 preferencesRepository.updatePreferences { prefs ->
                     prefs.copy(
-                        appUser = AppUser.LoggedIn(
-                            id = response.userId,
-                            login = response.login,
+                        appUser = AppUser.NotValidated(
+                            id = null,
+                            login = null,
                             helixToken = token
                         )
                     )
                 }
+
                 _state.update { State.Done }
+
             } catch (e: Exception) {
-                val state = _state.value as? State.LoadWebView ?: return@launch
-                _state.update { state.copy(exception = e) }
+                e.printStackTrace()
+
+                _state.update {
+                    state.copy(exception = e)
+                }
             }
         }
+
+        return true
+    }
+
+    private fun HttpUrl.parseToken(): String? {
+        // URL contains query parameters encoded as a path fragment.
+        // Copy the path fragment to query parameters and parse them this way.
+        return newBuilder()
+            .query(fragment)
+            .build()
+            .queryParameter("access_token")
     }
 }

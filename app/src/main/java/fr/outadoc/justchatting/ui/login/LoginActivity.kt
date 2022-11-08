@@ -45,6 +45,7 @@ class LoginActivity : AppCompatActivity() {
 
                     initWebView(state.url)
                 }
+
                 LoginViewModel.State.Done -> {
                     setResult(RESULT_OK)
                     finish()
@@ -88,7 +89,7 @@ class LoginActivity : AppCompatActivity() {
                         .setPositiveButton(R.string.log_in) { _, _ ->
                             val text = editText.text
                             if (text.isNotEmpty()) {
-                                if (!loginIfValidUrl(text.toString())) {
+                                if (!viewModel.onNavigateToUrl(text.toString())) {
                                     shortToast(R.string.invalid_url)
                                 }
                             }
@@ -124,9 +125,8 @@ class LoginActivity : AppCompatActivity() {
             settings.javaScriptEnabled = true
             webViewClient = object : WebViewClient() {
 
-                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                    loginIfValidUrl(url)
-                    return false
+                override fun onLoadResource(view: WebView, url: String) {
+                    viewModel.onNavigateToUrl(url)
                 }
 
                 override fun onReceivedError(
@@ -135,10 +135,9 @@ class LoginActivity : AppCompatActivity() {
                     description: String,
                     failingUrl: String
                 ) {
-                    val errorMessage = if (errorCode == -11) {
-                        getString(R.string.browser_workaround)
-                    } else {
-                        getString(R.string.error, "$errorCode $description")
+                    val errorMessage = when (errorCode) {
+                        ERROR_FAILED_SSL_HANDSHAKE -> getString(R.string.browser_workaround)
+                        else -> getString(R.string.error, "$errorCode $description")
                     }
 
                     @Language("HTML")
@@ -151,17 +150,6 @@ class LoginActivity : AppCompatActivity() {
 
             loadUrl(helixAuthUrl.toString())
         }
-    }
-
-    private fun loginIfValidUrl(url: String): Boolean {
-        val matcher = "token=(.+?)(?=&)".toPattern().matcher(url)
-        if (!matcher.find()) return false
-
-        viewHolder.webViewContainer.isVisible = false
-        viewHolder.progressBar.isVisible = true
-
-        viewModel.onTokenReceived(token = matcher.group(1)!!)
-        return true
     }
 
     private fun clearCookies() {

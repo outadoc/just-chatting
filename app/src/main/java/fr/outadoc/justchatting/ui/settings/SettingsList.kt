@@ -230,7 +230,7 @@ fun SettingsList(
                                 showLogoutDialog = false
                             }
                         ) {
-                            Text(text = stringResource(R.string.no))
+                            Text(text = stringResource(R.string.yes))
                         }
                     }
                 )

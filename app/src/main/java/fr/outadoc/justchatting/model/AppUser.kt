@@ -13,19 +13,15 @@ sealed class AppUser {
     ) : AppUser()
 
     data class NotValidated(
-        override val id: String?,
-        override val login: String?,
-        override val helixToken: String?
-    ) : AppUser()
+        override val helixToken: String
+    ) : AppUser() {
+        override val id: String? = null
+        override val login: String? = null
+    }
 
     object NotLoggedIn : AppUser() {
         override val id: String? = null
         override val login: String? = null
         override val helixToken: String? = null
     }
-}
-
-fun AppUser.NotValidated.asLoggedIn(): AppUser.LoggedIn? {
-    if (id == null || login == null || helixToken == null) return null
-    return AppUser.LoggedIn(id, login, helixToken)
 }

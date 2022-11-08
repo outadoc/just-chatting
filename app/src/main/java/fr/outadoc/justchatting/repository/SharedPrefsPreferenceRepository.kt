@@ -54,14 +54,20 @@ class SharedPrefsPreferenceRepository(
 
     private fun Preferences.parseUser(): AppUser {
         val id = this[USER_ID]
-        return if (!id.isNullOrEmpty()) {
-            val name = this[USER_LOGIN]
-            val helixToken = this[USER_TOKEN]
+        val login = this[USER_LOGIN]
+        val helixToken = this[USER_TOKEN]
 
-            if (name.isNullOrEmpty() || helixToken.isNullOrEmpty()) {
-                AppUser.NotValidated(id, name, helixToken)
+        return if (helixToken != null) {
+            if (!id.isNullOrEmpty() && !login.isNullOrEmpty()) {
+                AppUser.LoggedIn(
+                    id = id,
+                    login = login,
+                    helixToken = helixToken
+                )
             } else {
-                AppUser.LoggedIn(id, name, helixToken)
+                AppUser.NotValidated(
+                    helixToken = helixToken
+                )
             }
         } else {
             AppUser.NotLoggedIn

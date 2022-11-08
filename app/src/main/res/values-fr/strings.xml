@@ -197,8 +197,7 @@
     <string name="irc_notice_whisper_restricted">Vos paramètres vous empêchent d\'envoyer ce chuchotement.</string>
     <string name="irc_notice_whisper_restricted_recipient">Les paramètres de cet·te utilisateur·rice l\'empêchent de recevoir ce chuchotement.</string>
     <string name="live">En direct</string>
-    <string name="log_in">Se connecter</string>
-    <string name="log_out">Se déconnecter</string>
+    <string name="log_in">Continuer avec Twitch</string>
     <string name="login_problem_solution">Vous pouvez vous connecter à l\'aide d\'un navigateur externe. Après avoir appuyé sur "Autoriser", une page avec une erreur devrait apparaître. Copiez l\'url, revenez ici et cliquez sur le bouton "Enter url". Collez l\'url et cliquez sur "Connexion"</string>
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %s.</string>
     <string name="logout_title">Se déconnecter ?</string>

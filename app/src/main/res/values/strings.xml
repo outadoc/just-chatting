@@ -198,7 +198,7 @@
     <string name="irc_notice_whisper_restricted">Your settings prevent you from sending this whisper.</string>
     <string name="irc_notice_whisper_restricted_recipient">That user’s settings prevent them from receiving this whisper.</string>
     <string name="live">Live</string>
-    <string name="log_in">Log in</string>
+    <string name="log_in">Continue with Twitch</string>
     <string name="login_problem_solution">You can log in using an external browser. After you press \"Authorize\", a page with an error should appear. Copy the url, return here and click the \"Enter url\" button. Paste the url and click \"Log in\"</string>
     <string name="logout_msg">You are currently logged in as %s.</string>
     <string name="logout_title">Log out?</string>

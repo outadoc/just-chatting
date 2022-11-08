@@ -1,15 +1,13 @@
 package fr.outadoc.justchatting.ui.main
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -18,6 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.ui.HapticIconButton
+import fr.outadoc.justchatting.ui.chat.ExpandedTopAppBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,18 +25,16 @@ fun SearchTopAppBar(
     query: String,
     onQueryChange: (String) -> Unit
 ) {
-    Surface(
-        modifier = modifier
-            .statusBarsPadding()
-            .height(72.dp)
+    ExpandedTopAppBar(
+        modifier = modifier.statusBarsPadding(),
+        title = { Text(stringResource(R.string.search)) }
     ) {
         TextField(
             modifier = Modifier
-                .padding(8.dp)
-                .fillMaxSize(),
-            placeholder = {
-                Text(stringResource(R.string.search))
-            },
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 8.dp)
+                .fillMaxWidth(),
+            placeholder = { Text(stringResource(R.string.search_hint)) },
             value = query,
             onValueChange = onQueryChange,
             singleLine = true,

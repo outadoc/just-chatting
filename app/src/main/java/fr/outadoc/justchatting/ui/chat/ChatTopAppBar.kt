@@ -30,6 +30,7 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -300,11 +301,11 @@ fun ExpandedTopAppBar(
     modifier: Modifier = Modifier,
     navigationIcon: @Composable () -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
-    secondRow: @Composable () -> Unit = {},
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    backgroundColor: Color,
-    contentColor: Color,
-    scrollBehavior: TopAppBarScrollBehavior? = null
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
+    contentColor: Color = LocalContentColor.current,
+    scrollBehavior: TopAppBarScrollBehavior? = null,
+    secondRow: @Composable () -> Unit = {}
 ) {
     val appBarContainerColor by animateColorAsState(
         targetValue = backgroundColor,

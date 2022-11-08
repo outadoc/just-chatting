@@ -227,7 +227,8 @@
     <string name="room_subs">Abonné·e·s</string>
     <string name="room_unique">Unique</string>
     <string name="scroll_down">Défiler vers le bas</string>
-    <string name="search">Chercher</string>
+    <string name="search">Recherche</string>
+    <string name="search_hint">Rechercher quelqu\'un…</string>
     <string name="settings">Réglages</string>
     <string name="settings_about_header">À propos</string>
     <string name="settings_about_version">%1$s v%2$s</string>

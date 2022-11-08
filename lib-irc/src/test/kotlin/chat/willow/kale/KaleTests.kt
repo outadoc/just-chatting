@@ -151,7 +151,7 @@ class KaleTests {
         val expectedReturnMessage: IrcMessage = IrcMessage(command = "ANY")
 
         val anySerialiser = object : IMessageSerialiser<Int> {
-            override fun serialise(message: Int): IrcMessage? {
+            override fun serialise(message: Int): IrcMessage {
                 return expectedReturnMessage
             }
         }

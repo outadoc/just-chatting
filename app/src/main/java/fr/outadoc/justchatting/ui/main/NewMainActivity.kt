@@ -71,7 +71,6 @@ class NewMainActivity : BaseActivity(), NavigationHandler {
                 }
 
                 MainViewModel.Destination.Search -> {
-
                 }
             }
         }

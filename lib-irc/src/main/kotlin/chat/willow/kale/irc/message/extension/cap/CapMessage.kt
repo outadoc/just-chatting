@@ -54,7 +54,7 @@ object CapMessage : ICommand {
 
             object Parser : SubcommandParser<Command>(subcommand) {
 
-                override fun parseFromComponents(components: IrcMessageComponents): Command? {
+                override fun parseFromComponents(components: IrcMessageComponents): Command {
                     val version = components.parameters.getOrNull(0)
 
                     return Command(version)
@@ -250,7 +250,7 @@ object CapMessage : ICommand {
 
             object Parser : SubcommandParser<Command>(subcommand) {
 
-                override fun parseFromComponents(components: IrcMessageComponents): Command? {
+                override fun parseFromComponents(components: IrcMessageComponents): Command {
                     return Command
                 }
             }

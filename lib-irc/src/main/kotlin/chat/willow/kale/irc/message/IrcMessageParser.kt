@@ -149,7 +149,7 @@ object IrcMessageParser : IIrcMessageParser {
         return Pair(command, position)
     }
 
-    private fun parseParameters(line: String, fromPosition: Int): Pair<List<String>, Int>? {
+    private fun parseParameters(line: String, fromPosition: Int): Pair<List<String>, Int> {
         var position = fromPosition
         val parameters = mutableListOf<String>()
 

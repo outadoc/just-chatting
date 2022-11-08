@@ -72,7 +72,7 @@ object MonitorMessage : ICommand {
 
             object Parser : SubcommandParser<Command>(subcommand) {
 
-                override fun parseFromComponents(components: IrcMessageComponents): Command? {
+                override fun parseFromComponents(components: IrcMessageComponents): Command {
                     return Command
                 }
             }
@@ -98,7 +98,7 @@ object MonitorMessage : ICommand {
 
             object Parser : SubcommandParser<Command>(subcommand) {
 
-                override fun parseFromComponents(components: IrcMessageComponents): Command? {
+                override fun parseFromComponents(components: IrcMessageComponents): Command {
                     return Command
                 }
             }
@@ -160,7 +160,7 @@ object MonitorMessage : ICommand {
 
             object Parser : SubcommandParser<Command>(subcommand) {
 
-                override fun parseFromComponents(components: IrcMessageComponents): Command? {
+                override fun parseFromComponents(components: IrcMessageComponents): Command {
                     return Command
                 }
             }

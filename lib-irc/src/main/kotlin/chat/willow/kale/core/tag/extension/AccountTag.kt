@@ -31,7 +31,7 @@ data class AccountTag(val account: String) {
             return AccountTag(account = value)
         }
 
-        override fun serialise(tag: AccountTag): Tag? {
+        override fun serialise(tag: AccountTag): Tag {
             return Tag(name = name, value = tag.account)
         }
     }

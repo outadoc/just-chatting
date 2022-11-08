@@ -35,7 +35,7 @@ object QuitMessage : ICommand {
 
         object Parser : MessageParser<Command>() {
 
-            override fun parseFromComponents(components: IrcMessageComponents): Command? {
+            override fun parseFromComponents(components: IrcMessageComponents): Command {
                 val quitMessage = components.parameters.getOrNull(0)
 
                 return Command(quitMessage)

@@ -52,7 +52,7 @@ data class ServerTimeTag(val time: Instant) {
             return ServerTimeTag(time = instant)
         }
 
-        override fun serialise(tag: ServerTimeTag): Tag? {
+        override fun serialise(tag: ServerTimeTag): Tag {
             val instant = tag.time.toString()
 
             return Tag(name = name, value = instant)

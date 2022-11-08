@@ -51,7 +51,7 @@ class SettingsActivity : BaseActivity() {
             this.action = action
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
 
-            //for Android 5-7
+            // for Android 5-7
             putExtra("app_package", packageName)
             putExtra("app_uid", applicationInfo.uid)
 

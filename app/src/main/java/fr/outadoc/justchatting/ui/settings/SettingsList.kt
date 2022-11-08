@@ -4,9 +4,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -189,12 +195,45 @@ fun SettingsList(
         }
 
         item {
+            var showLogoutDialog by remember { mutableStateOf(false) }
             SettingsLink(
                 modifier = Modifier.padding(itemInsets),
-                onClick = onLogoutClick,
+                onClick = { showLogoutDialog = true },
                 onClickLabel = null
             ) {
                 Text(text = stringResource(R.string.settings_account_logout_action))
+            }
+
+            if (showLogoutDialog) {
+                AlertDialog(
+                    onDismissRequest = { showLogoutDialog = false },
+                    title = {
+                        Text(text = stringResource(R.string.logout_title))
+                    },
+                    text = {
+                        Text(
+                            text = stringResource(
+                                R.string.logout_msg,
+                                appPreferences.appUser.login ?: ""
+                            )
+                        )
+                    },
+                    dismissButton = {
+                        Button(onClick = { showLogoutDialog = false }) {
+                            Text(text = stringResource(R.string.no))
+                        }
+                    },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                onLogoutClick()
+                                showLogoutDialog = false
+                            }
+                        ) {
+                            Text(text = stringResource(R.string.no))
+                        }
+                    }
+                )
             }
         }
 

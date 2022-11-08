@@ -56,17 +56,19 @@ fun HomeScreen(
     Scaffold(
         modifier = modifier,
         topBar = {
-            when (selectedTab) {
-                Tabs.Search -> SearchTopAppBar(
-                    query = searchState.query,
-                    onQueryChange = { newQuery ->
-                        searchViewModel.onQueryChange(newQuery)
-                    }
-                )
+            Crossfade(targetState = selectedTab) {
+                when (selectedTab) {
+                    Tabs.Search -> SearchTopAppBar(
+                        query = searchState.query,
+                        onQueryChange = { newQuery ->
+                            searchViewModel.onQueryChange(newQuery)
+                        }
+                    )
 
-                else -> HomeTopAppBar(
-                    onLogoutClick = onLogoutClick
-                )
+                    else -> HomeTopAppBar(
+                        onLogoutClick = onLogoutClick
+                    )
+                }
             }
         },
         bottomBar = {

@@ -54,7 +54,7 @@ fun SearchResultsList(
             ),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (items.itemCount == 0) {
+            if (!isRefreshing && items.itemCount == 0) {
                 item(key = "_noContent") {
                     NoContent(modifier = Modifier.fillParentMaxSize())
                 }

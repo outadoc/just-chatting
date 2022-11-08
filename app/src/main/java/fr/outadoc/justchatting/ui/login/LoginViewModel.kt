@@ -86,8 +86,6 @@ class LoginViewModel(
                 preferencesRepository.updatePreferences { prefs ->
                     prefs.copy(
                         appUser = AppUser.NotValidated(
-                            id = null,
-                            login = null,
                             helixToken = token
                         )
                     )

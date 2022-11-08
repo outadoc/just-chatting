@@ -75,7 +75,6 @@ class MainViewModel(
                             }
 
                             State.LoggedIn(appUser = validatedUser)
-
                         } catch (e: Exception) {
                             if (e is InvalidClientIdException || (e as? HttpException)?.code() == 401) {
                                 preferencesRepository.updatePreferences { current ->
@@ -120,7 +119,6 @@ class MainViewModel(
                         }
 
                         null
-
                     } catch (e: Exception) {
                         if (e is InvalidClientIdException || (e as? HttpException)?.code() == 401) {
                             preferencesRepository.updatePreferences { current ->

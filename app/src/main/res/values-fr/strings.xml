@@ -31,11 +31,9 @@
     <string name="emote_tab_others">Autres</string>
     <string name="emote_tab_recent">Récentes</string>
     <string name="emote_tab_twitch">Twitch</string>
-    <string name="enter_url">Entrer l\'URL</string>
     <string name="error">Erreur : %s</string>
     <string name="followed_at">Suivi·e depuis le %s</string>
     <string name="followers">%s followers</string>
-    <string name="invalid_url">URL invalide</string>
     <string name="irc_msgid_announcement">Annonce</string>
     <string name="irc_msgid_highlighted_message">Message en surbrillance</string>
     <string name="irc_notice_already_banned">%s est déjà interdit·e sur cette chaîne.</string>
@@ -198,14 +196,12 @@
     <string name="irc_notice_whisper_restricted_recipient">Les paramètres de cet·te utilisateur·rice l\'empêchent de recevoir ce chuchotement.</string>
     <string name="live">En direct</string>
     <string name="log_in">Continuer avec Twitch</string>
-    <string name="login_problem_solution">Vous pouvez vous connecter à l\'aide d\'un navigateur externe. Après avoir appuyé sur "Autoriser", une page avec une erreur devrait apparaître. Copiez l\'url, revenez ici et cliquez sur le bouton "Enter url". Collez l\'url et cliquez sur "Connexion"</string>
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %s.</string>
     <string name="logout_title">Se déconnecter ?</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
     <string name="menu_item_showOverflow">Plus d\'actions…</string>
     <string name="message_limit">Limite de messages</string>
     <string name="no">Non</string>
-    <string name="no_browser_found">Aucune application de navigateur trouvée</string>
     <string name="nothing_here">Rien ici</string>
     <string name="notification_action_disconnect">Déconnecter</string>
     <string name="notification_action_reply">Répondre</string>
@@ -239,9 +235,7 @@
     <string name="settings_notifications_openBubbleSettings">Préférences des bulles</string>
     <string name="stream_info">Infos du stream</string>
     <string name="timestamps">Afficher les horodatages</string>
-    <string name="to_enter_url">Entrer l\'URL</string>
     <string name="token_expired">Votre session a expiré. Veuillez vous reconnecter.</string>
-    <string name="trouble_logging_in">Vous avez des problèmes pour vous connecter ?</string>
     <string name="uptime">En direct depuis %s</string>
     <string name="user_redeemed">%1$s a obtenu %2$s pour %3$,d points</string>
     <string name="watch_live">Regarder en direct</string>

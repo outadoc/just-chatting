@@ -92,7 +92,6 @@ class LoginViewModel(
                 }
 
                 _state.update { State.Done }
-
             } catch (e: Exception) {
                 e.printStackTrace()
 

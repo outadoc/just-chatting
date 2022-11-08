@@ -32,11 +32,9 @@
     <string name="emote_tab_others">Others</string>
     <string name="emote_tab_recent">Recent</string>
     <string name="emote_tab_twitch">Twitch</string>
-    <string name="enter_url">Enter url</string>
     <string name="error">Error: %s</string>
     <string name="followed_at">Following since %s</string>
     <string name="followers">%s followers</string>
-    <string name="invalid_url">Invalid url</string>
     <string name="irc_msgid_announcement">Announcement</string>
     <string name="irc_msgid_highlighted_message">Highlighted message</string>
     <string name="irc_notice_already_banned">%s is already banned in this channel.</string>
@@ -199,14 +197,12 @@
     <string name="irc_notice_whisper_restricted_recipient">That user’s settings prevent them from receiving this whisper.</string>
     <string name="live">Live</string>
     <string name="log_in">Continue with Twitch</string>
-    <string name="login_problem_solution">You can log in using an external browser. After you press \"Authorize\", a page with an error should appear. Copy the url, return here and click the \"Enter url\" button. Paste the url and click \"Log in\"</string>
     <string name="logout_msg">You are currently logged in as %s.</string>
     <string name="logout_title">Log out?</string>
     <string name="menu_item_openInBubble">Open in bubble</string>
     <string name="menu_item_showOverflow">More actions…</string>
     <string name="message_limit">Message limit</string>
     <string name="no">No</string>
-    <string name="no_browser_found">No browser app found</string>
     <string name="nothing_here">Nothing here</string>
     <string name="notification_action_disconnect">Disconnect</string>
     <string name="notification_action_reply">Reply</string>
@@ -240,9 +236,7 @@
     <string name="settings_notifications_openBubbleSettings">Bubble settings</string>
     <string name="stream_info">Stream Info</string>
     <string name="timestamps">Show timestamps</string>
-    <string name="to_enter_url">Enter url</string>
     <string name="token_expired">Your session has expired. Please log in again</string>
-    <string name="trouble_logging_in">Having trouble logging in?</string>
     <string name="uptime">%s uptime</string>
     <string name="user_redeemed">%1$s redeemed %2$s for %3$,d points</string>
     <string name="watch_live">Watch live</string>

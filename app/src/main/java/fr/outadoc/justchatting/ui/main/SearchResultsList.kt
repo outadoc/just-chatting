@@ -51,16 +51,22 @@ fun SearchResultsList(
             contentPadding = insets + PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(items) { item: ChannelSearch? ->
-                if (item != null) {
-                    UserItemCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        displayName = item.broadcasterDisplayName,
-                        profileImageURL = item.profileImageURL,
-                        onClick = { onItemClick(item) }
-                    )
-                } else {
-                    UserItemCard(modifier = Modifier.height(64.dp))
+            if (items.itemCount == 0) {
+                item(key = "_noContent") {
+                    NoContent(modifier = Modifier.fillParentMaxSize())
+                }
+            } else {
+                items(items) { item: ChannelSearch? ->
+                    if (item != null) {
+                        UserItemCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            displayName = item.broadcasterDisplayName,
+                            profileImageURL = item.profileImageURL,
+                            onClick = { onItemClick(item) }
+                        )
+                    } else {
+                        UserItemCard(modifier = Modifier.height(64.dp))
+                    }
                 }
             }
         }

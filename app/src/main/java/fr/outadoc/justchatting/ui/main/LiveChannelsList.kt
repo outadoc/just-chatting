@@ -53,20 +53,26 @@ fun LiveChannelsList(
             contentPadding = insets + PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(items) { item: Stream? ->
-                if (item != null) {
-                    LiveStreamCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        title = item.title,
-                        userName = item.userName,
-                        viewerCount = item.viewerCount,
-                        gameName = item.gameName,
-                        startedAt = item.startedAt?.toInstant(),
-                        profileImageURL = item.profileImageURL,
-                        onClick = { onItemClick(item) }
-                    )
-                } else {
-                    LiveStreamCard(modifier = Modifier.height(64.dp))
+            if (items.itemCount == 0) {
+                item(key = "_noContent") {
+                    NoContent(modifier = Modifier.fillParentMaxSize())
+                }
+            } else {
+                items(items) { item: Stream? ->
+                    if (item != null) {
+                        LiveStreamCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            title = item.title,
+                            userName = item.userName,
+                            viewerCount = item.viewerCount,
+                            gameName = item.gameName,
+                            startedAt = item.startedAt?.toInstant(),
+                            profileImageURL = item.profileImageURL,
+                            onClick = { onItemClick(item) }
+                        )
+                    } else {
+                        LiveStreamCard(modifier = Modifier.height(64.dp))
+                    }
                 }
             }
         }

@@ -21,7 +21,6 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import fr.outadoc.justchatting.model.helix.follows.Follow
 import fr.outadoc.justchatting.ui.follow.channels.FollowedChannelsViewModel
-import fr.outadoc.justchatting.ui.streams.LiveStreamCard
 import fr.outadoc.justchatting.ui.streams.UserItemCard
 import kotlinx.datetime.toInstant
 import org.koin.androidx.compose.getViewModel
@@ -54,17 +53,23 @@ fun FollowedChannelsList(
             contentPadding = insets + PaddingValues(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(items) { item: Follow? ->
-                if (item != null) {
-                    UserItemCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        displayName = item.toName,
-                        profileImageURL = item.profileImageURL,
-                        followedAt = item.followedAt?.toInstant(),
-                        onClick = { onItemClick(item) }
-                    )
-                } else {
-                    UserItemCard(modifier = Modifier.height(64.dp))
+            if (items.itemCount == 0) {
+                item(key = "_noContent") {
+                    NoContent(modifier = Modifier.fillParentMaxSize())
+                }
+            } else {
+                items(items) { item: Follow? ->
+                    if (item != null) {
+                        UserItemCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            displayName = item.toName,
+                            profileImageURL = item.profileImageURL,
+                            followedAt = item.followedAt?.toInstant(),
+                            onClick = { onItemClick(item) }
+                        )
+                    } else {
+                        UserItemCard(modifier = Modifier.height(64.dp))
+                    }
                 }
             }
         }

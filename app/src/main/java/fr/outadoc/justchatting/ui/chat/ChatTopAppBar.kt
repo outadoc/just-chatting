@@ -20,13 +20,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cake
+import androidx.compose.material.icons.filled.Compress
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Start
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.LiveTv
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -75,7 +73,6 @@ fun ChatTopAppBar(
     onWatchLiveClicked: () -> Unit,
     onOpenBubbleClicked: () -> Unit
 ) {
-    var showOverflow by remember { mutableStateOf(false) }
     var showStreamInfo by remember { mutableStateOf(false) }
 
     ExpandedTopAppBar(
@@ -132,25 +129,13 @@ fun ChatTopAppBar(
                 )
             }
 
-            IconButton(onClick = { showOverflow = !showOverflow }) {
-                Icon(
-                    imageVector = Icons.Default.MoreVert,
-                    contentDescription = stringResource(R.string.menu_item_showOverflow)
-                )
-            }
-
-            DropdownMenu(
-                expanded = showOverflow,
-                onDismissRequest = { showOverflow = false }
-            ) {
-                DropdownMenuItem(
-                    enabled = canOpenInBubble(),
-                    text = { Text(text = stringResource(R.string.menu_item_openInBubble)) },
-                    onClick = {
-                        onOpenBubbleClicked()
-                        showOverflow = false
-                    }
-                )
+            if (canOpenInBubble()) {
+                HapticIconButton(onClick = { onOpenBubbleClicked() }) {
+                    Icon(
+                        imageVector = Icons.Default.Compress,
+                        contentDescription = stringResource(R.string.menu_item_openInBubble)
+                    )
+                }
             }
         },
         secondRow = {

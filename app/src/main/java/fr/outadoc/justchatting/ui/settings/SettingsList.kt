@@ -5,9 +5,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -218,12 +218,12 @@ fun SettingsList(
                         )
                     },
                     dismissButton = {
-                        Button(onClick = { showLogoutDialog = false }) {
+                        TextButton(onClick = { showLogoutDialog = false }) {
                             Text(text = stringResource(R.string.no))
                         }
                     },
                     confirmButton = {
-                        Button(
+                        TextButton(
                             onClick = {
                                 onAppPreferencesChange(
                                     appPreferences.copy(appUser = AppUser.NotLoggedIn)

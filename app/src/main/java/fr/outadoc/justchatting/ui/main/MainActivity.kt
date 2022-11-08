@@ -2,86 +2,98 @@ package fr.outadoc.justchatting.ui.main
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import com.ncapdevi.fragnav.FragNavController
+import android.provider.Settings
+import androidx.activity.compose.setContent
+import androidx.compose.animation.Crossfade
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.databinding.ActivityMainBinding
 import fr.outadoc.justchatting.ui.chat.ChatActivity
-import fr.outadoc.justchatting.ui.common.NavigationHandler
-import fr.outadoc.justchatting.ui.follow.FollowMediaFragment
 import fr.outadoc.justchatting.ui.login.LoginActivity
-import fr.outadoc.justchatting.ui.search.SearchFragment
-import fr.outadoc.justchatting.ui.settings.SettingsActivity
-import fr.outadoc.justchatting.util.observeEvent
+import fr.outadoc.justchatting.ui.onboarding.OnboardingScreen
 import fr.outadoc.justchatting.util.parseChannelLogin
 import fr.outadoc.justchatting.util.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class MainActivity : BaseActivity(), NavigationHandler {
+class MainActivity : BaseActivity() {
 
     private val viewModel: MainViewModel by viewModel()
-    private lateinit var viewHolder: ActivityMainBinding
-
-    private val fragNavController = FragNavController(
-        supportFragmentManager,
-        R.id.fragmentContainer
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        viewHolder = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(viewHolder.root)
-
-        initNavigation()
-        fragNavController.initialize(savedInstanceState = savedInstanceState)
-
-        viewModel.events.observeEvent(this) { destination ->
-            when (destination) {
-                is MainViewModel.Destination.Channel -> {
-                    startActivity(
-                        ChatActivity.createIntent(
-                            context = this,
-                            channelLogin = destination.login
-                        )
-                    )
-                }
-
-                is MainViewModel.Destination.Login -> {
-                    if (destination.causedByTokenExpiration) {
-                        toast(R.string.token_expired)
-                    }
-
-                    startActivity(Intent(this, LoginActivity::class.java))
-                }
-
-                MainViewModel.Destination.Settings -> {
-                    startActivity(Intent(this, SettingsActivity::class.java))
-                }
-
-                MainViewModel.Destination.Search -> {
-                    fragNavController.pushFragment(SearchFragment())
-                }
+        if (savedInstanceState == null) {
+            intent.parseChannelFromIntent()?.let { login ->
+                viewChannel(login)
             }
         }
 
-        if (savedInstanceState == null) {
-            intent.parseChannelFromIntent()?.let { login ->
-                viewModel.onViewChannelRequest(login)
+        setContent {
+            Mdc3Theme {
+                App()
             }
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        fragNavController.onSaveInstanceState(outState)
+    @Composable
+    private fun App() {
+        val state by viewModel.state.collectAsState()
+        Crossfade(targetState = state) {
+            when (val currentState = state) {
+                is MainViewModel.State.Loading -> {}
+                is MainViewModel.State.LoggedOut -> {
+                    LaunchedEffect(currentState) {
+                        if (currentState.causedByTokenExpiration) {
+                            toast(R.string.token_expired)
+                        }
+                    }
+
+                    OnboardingScreen(
+                        onLoginClick = {
+                            startActivity(Intent(this, LoginActivity::class.java))
+                        }
+                    )
+                }
+
+                is MainViewModel.State.LoggedIn -> {
+                    HomeScreen(
+                        onChannelClick = { login ->
+                            viewChannel(login)
+                        },
+                        onOpenNotificationPreferences = {
+                            openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                        }
+                    ) {
+                        openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
+                    }
+                }
+            }
+        }
     }
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         intent?.parseChannelFromIntent()?.let { login ->
-            viewModel.onViewChannelRequest(login)
+            viewChannel(login)
         }
+    }
+
+    private fun openSettingsIntent(action: String) {
+        val intent = Intent().apply {
+            this.action = action
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            // for Android 5-7
+            putExtra("app_package", packageName)
+            putExtra("app_uid", applicationInfo.uid)
+
+            // for Android 8 and above
+            putExtra("android.provider.extra.APP_PACKAGE", packageName)
+        }
+
+        startActivity(intent)
     }
 
     private fun Intent.parseChannelFromIntent(): String? {
@@ -89,38 +101,12 @@ class MainActivity : BaseActivity(), NavigationHandler {
         return data?.parseChannelLogin()
     }
 
-    override fun viewChannel(login: String) {
-        viewModel.onViewChannelRequest(login)
-    }
-
-    override fun openSearch() {
-        viewModel.onOpenSearchRequested()
-    }
-
-    override fun openSettings() {
-        viewModel.onOpenSettingsRequested()
-    }
-
-    override fun onBackPressed() {
-        if (fragNavController.isRootFragment || !fragNavController.popFragment()) {
-            super.onBackPressed()
-        }
-    }
-
-    private fun initNavigation() {
-        fragNavController.apply {
-            rootFragments = listOf(FollowMediaFragment.newInstance())
-            fragmentHideStrategy = FragNavController.DETACH_ON_NAVIGATE_HIDE_ON_SWITCH
-            transactionListener = object : FragNavController.TransactionListener {
-                override fun onFragmentTransaction(
-                    fragment: Fragment?,
-                    transactionType: FragNavController.TransactionType
-                ) {
-                }
-
-                override fun onTabTransaction(fragment: Fragment?, index: Int) {
-                }
-            }
-        }
+    private fun viewChannel(login: String) {
+        startActivity(
+            ChatActivity.createIntent(
+                context = this,
+                channelLogin = login
+            )
+        )
     }
 }

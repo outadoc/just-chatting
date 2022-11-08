@@ -7,6 +7,8 @@ import androidx.paging.flatMap
 import fr.outadoc.justchatting.model.helix.channel.ChannelSearch
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.ui.common.PagedListViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,6 +29,7 @@ class ChannelSearchViewModel(
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
 
+    @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
     override val pagingData: Flow<PagingData<ChannelSearch>> =
         state.mapNotNull { state -> state.query }
             .distinctUntilChanged()

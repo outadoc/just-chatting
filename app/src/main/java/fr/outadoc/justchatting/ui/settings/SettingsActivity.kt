@@ -29,7 +29,7 @@ class SettingsActivity : BaseActivity() {
     private fun openSettingsIntent(action: String) {
         val intent = Intent().apply {
             this.action = action
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
 
             // for Android 5-7
             putExtra("app_package", packageName)

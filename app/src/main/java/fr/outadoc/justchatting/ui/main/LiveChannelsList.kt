@@ -30,7 +30,7 @@ import plus
 @Composable
 fun LiveChannelsList(
     modifier: Modifier = Modifier,
-    insets: PaddingValues,
+    insets: PaddingValues = PaddingValues(),
     onItemClick: (Stream) -> Unit
 ) {
     val viewModel: FollowedStreamsViewModel = getViewModel()

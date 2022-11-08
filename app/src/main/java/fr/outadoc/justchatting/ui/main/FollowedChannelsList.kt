@@ -31,7 +31,7 @@ import plus
 @Composable
 fun FollowedChannelsList(
     modifier: Modifier = Modifier,
-    insets: PaddingValues,
+    insets: PaddingValues = PaddingValues(),
     onItemClick: (Follow) -> Unit
 ) {
     val viewModel: FollowedChannelsViewModel = getViewModel()

@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.ui.main
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.compose.setContent
 import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
@@ -24,12 +25,6 @@ class NewMainActivity : BaseActivity(), NavigationHandler {
         setContent {
             Mdc3Theme {
                 HomeScreen(
-                    onSearchClick = {
-                        viewModel.onOpenSearchRequested()
-                    },
-                    onSettingsClick = {
-                        viewModel.onOpenSettingsRequested()
-                    },
                     onLogoutClick = {
                         onLogout()
                     },
@@ -37,6 +32,12 @@ class NewMainActivity : BaseActivity(), NavigationHandler {
                         stream.userLogin?.let { login ->
                             viewChannel(login)
                         }
+                    },
+                    onOpenNotificationPreferences = {
+                        openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                    },
+                    onOpenBubblePreferences = {
+                        openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
                     },
                     onFollowClick = { follow ->
                         follow.toLogin?.let { login ->
@@ -87,6 +88,22 @@ class NewMainActivity : BaseActivity(), NavigationHandler {
         intent?.parseChannelFromIntent()?.let { login ->
             viewModel.onViewChannelRequest(login)
         }
+    }
+
+    private fun openSettingsIntent(action: String) {
+        val intent = Intent().apply {
+            this.action = action
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+
+            // for Android 5-7
+            putExtra("app_package", packageName)
+            putExtra("app_uid", applicationInfo.uid)
+
+            // for Android 8 and above
+            putExtra("android.provider.extra.APP_PACKAGE", packageName)
+        }
+
+        startActivity(intent)
     }
 
     private fun Intent.parseChannelFromIntent(): String? {

@@ -6,7 +6,7 @@
     <string name="api_helix_redirect">URL de redirection Helix</string>
     <string name="api_settings">API</string>
     <string name="browser_workaround">Le navigateur de votre système n\'est plus pris en charge. Veuillez cliquer sur le bouton ci-dessous pour une solution de contournement</string>
-    <string name="channels">Chaînes</string>
+    <string name="channels">Suivies</string>
     <string name="chat_ban">%s a été banni·e définitivement</string>
     <string name="chat_clear">Le tchat a été effacé par un·e modérateur·rice</string>
     <string name="chat_clearmsg">Message supprimé de %1$s\: %2$s</string>

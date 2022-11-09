@@ -12,6 +12,8 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,6 +35,8 @@ fun SearchResultsList(
     onItemClick: (ChannelSearch) -> Unit
 ) {
     val items: LazyPagingItems<ChannelSearch> = viewModel.pagingData.collectAsLazyPagingItems()
+    val state by viewModel.state.collectAsState()
+
     val isRefreshing = items.loadState.refresh is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
@@ -54,7 +58,7 @@ fun SearchResultsList(
             ),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (!isRefreshing && items.itemCount == 0) {
+            if (state.query.isNotEmpty() && !isRefreshing && items.itemCount == 0) {
                 item(key = "_noContent") {
                     NoContent(modifier = Modifier.fillParentMaxSize())
                 }

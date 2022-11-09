@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
@@ -113,7 +114,7 @@ fun CompactNavigation(
                     label = { Text(stringResource(R.string.channels)) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.Star,
+                            imageVector = Icons.Filled.Favorite,
                             contentDescription = null
                         )
                     },
@@ -192,7 +193,7 @@ fun MediumNavigation(
                     },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.Star,
+                            imageVector = Icons.Filled.Favorite,
                             contentDescription = null
                         )
                     },
@@ -281,7 +282,7 @@ fun ExpandedNavigation(
                     label = { Text(stringResource(R.string.channels)) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.Star,
+                            imageVector = Icons.Filled.Favorite,
                             contentDescription = null
                         )
                     },

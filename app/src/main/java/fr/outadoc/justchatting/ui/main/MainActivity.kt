@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -22,6 +25,7 @@ class MainActivity : BaseActivity() {
 
     private val viewModel: MainViewModel by viewModel()
 
+    @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
@@ -32,13 +36,13 @@ class MainActivity : BaseActivity() {
 
         setContent {
             Mdc3Theme {
-                App()
+                App(sizeClass = calculateWindowSizeClass(this))
             }
         }
     }
 
     @Composable
-    private fun App() {
+    private fun App(sizeClass: WindowSizeClass) {
         val state by viewModel.state.collectAsState()
         Crossfade(targetState = state) {
             when (val currentState = state) {
@@ -59,6 +63,7 @@ class MainActivity : BaseActivity() {
 
                 is MainViewModel.State.LoggedIn -> {
                     HomeScreen(
+                        sizeClass = sizeClass,
                         onChannelClick = { login ->
                             viewChannel(login)
                         },

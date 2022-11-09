@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.ui.main
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,6 +17,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    sizeClass: WindowSizeClass,
     onChannelClick: (login: String) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit
@@ -33,6 +34,7 @@ fun HomeScreen(
 
     MainNavigation(
         modifier = modifier,
+        sizeClass = sizeClass,
         selectedTab = selectedTab,
         onSelectedTabChange = { selectedTab = it },
         searchViewModel = searchViewModel

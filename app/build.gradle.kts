@@ -126,6 +126,7 @@ dependencies {
     implementation(libs.compose.material.core2)
     implementation(libs.compose.material.core3)
     implementation(libs.compose.material.icons)
+    implementation(libs.compose.material.windowSizeClass)
     implementation(libs.compose.runtime.livedata)
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.tooling)

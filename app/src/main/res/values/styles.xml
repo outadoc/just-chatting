@@ -1,24 +1,30 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="BaseLightTheme" parent="Theme.Material3.Light.NoActionBar">
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="postSplashScreenTheme">@style/Theme.App</item>
+    </style>
+
+    <style name="Theme.Base.App.Light" parent="Theme.Material3.Light.NoActionBar">
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
-    <style name="BaseDarkTheme" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.Base.App.Dark" parent="Theme.Material3.Dark.NoActionBar">
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="LightTheme" parent="BaseLightTheme" />
+    <style name="Theme.App.Light" parent="Theme.Base.App.Light" />
 
-    <style name="DarkTheme" parent="BaseDarkTheme" />
+    <style name="Theme.App.Dark" parent="Theme.Base.App.Dark" />
 
-    <style name="AppTheme" parent="LightTheme" />
+    <style name="Theme.App" parent="Theme.App.Light" />
 
-    <style name="ChatTheme" parent="AppTheme">
+    <style name="Theme.App.Chat">
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 

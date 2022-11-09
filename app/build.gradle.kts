@@ -117,6 +117,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.androidx.room.core)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.splashscreen)
     implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.androidx.webkit)
     implementation(libs.coil.compose)

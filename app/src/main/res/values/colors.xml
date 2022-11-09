@@ -17,4 +17,6 @@
     <color name="chatUserColor13">#FF8F00</color>
     <color name="chatUserColor14">#EF6C00</color>
 
+    <color name="splash_background">#641BBD</color>
+
 </resources>

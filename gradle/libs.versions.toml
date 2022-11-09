@@ -41,6 +41,7 @@ androidx-recyclerview = "androidx.recyclerview:recyclerview:1.2.1"
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-core = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-splashscreen = "androidx.core:core-splashscreen:1.0.0-beta02"
 androidx-swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 androidx-webkit = "androidx.webkit:webkit:1.4.0"
 chucker-noop = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }

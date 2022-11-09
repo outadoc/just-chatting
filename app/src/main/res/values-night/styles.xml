@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="DarkTheme" />
+    <style name="Theme.App" parent="Theme.App.Dark" />
 </resources>

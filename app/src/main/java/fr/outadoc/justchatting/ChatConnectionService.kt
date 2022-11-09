@@ -4,11 +4,11 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
+import fr.outadoc.justchatting.log.logInfo
 import fr.outadoc.justchatting.repository.ChatConnectionPool
 import fr.outadoc.justchatting.ui.chat.ChatNotificationUtils
 import org.koin.android.ext.android.inject
@@ -16,8 +16,6 @@ import org.koin.android.ext.android.inject
 class ChatConnectionService : Service() {
 
     companion object {
-        const val TAG = "ChatConnectionService"
-
         private const val ONGOING_NOTIFICATION_ID = 457542
         private const val ONGOING_NOTIFICATION_CHANNEL_ID = "background_channel"
 
@@ -51,7 +49,7 @@ class ChatConnectionService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.i(TAG, "Received intent $intent")
+        logInfo<ChatConnectionService> { "Received intent $intent" }
 
         NotificationManagerCompat.from(this)
             .createNotificationChannel(
@@ -94,7 +92,7 @@ class ChatConnectionService : Service() {
 
             ACTION_STOP -> {
                 if (channelId != null) {
-                    Log.i(TAG, "Stopping thread for $channelId")
+                    logInfo<ChatConnectionService> { "Stopping thread for $channelId" }
                     connectionPool.stop(channelId)
                     ChatNotificationUtils.dismissNotification(
                         context = this,
@@ -103,11 +101,11 @@ class ChatConnectionService : Service() {
                 }
 
                 if (!connectionPool.hasActiveThreads) {
-                    Log.i(TAG, "Pool has no active threads left, stopping background service")
+                    logInfo<ChatConnectionService> { "Pool has no active threads left, stopping background service" }
                     stopForeground(STOP_FOREGROUND_REMOVE)
                     stopSelf()
                 } else {
-                    Log.i(TAG, "Pool still has active threads left, service will keep running")
+                    logInfo<ChatConnectionService> { "Pool still has active threads left, service will keep running" }
                 }
             }
         }

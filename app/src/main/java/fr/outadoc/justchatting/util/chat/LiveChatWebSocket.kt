@@ -1,8 +1,9 @@
 package fr.outadoc.justchatting.util.chat
 
 import android.content.Context
-import android.util.Log
 import fr.outadoc.justchatting.irc.ChatMessageParser
+import fr.outadoc.justchatting.log.logDebug
+import fr.outadoc.justchatting.log.logError
 import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.HostModeState
@@ -74,7 +75,7 @@ class LiveChatWebSocket private constructor(
                 send("JOIN $hashChannelName")
             }
 
-            Log.d(TAG, "Successfully connected to $hashChannelName")
+            logDebug<LiveChatWebSocket> { "Successfully connected to $hashChannelName" }
 
             emit(
                 Command.Join(
@@ -106,7 +107,7 @@ class LiveChatWebSocket private constructor(
     }
 
     private fun notifyMessage(message: String) {
-        Log.d(TAG, message)
+        logDebug<LiveChatWebSocket> { message }
 
         when (val command = parser.parse(message)) {
             is ChatMessage,
@@ -144,7 +145,7 @@ class LiveChatWebSocket private constructor(
                     emitAll(commands)
                 }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to load recent messages for channel $channelLogin", e)
+            logError<LiveChatWebSocket>(e) { "Failed to load recent messages for channel $channelLogin" }
         }
     }
 }

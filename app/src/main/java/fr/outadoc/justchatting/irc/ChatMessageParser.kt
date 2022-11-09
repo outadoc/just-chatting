@@ -1,11 +1,11 @@
 package fr.outadoc.justchatting.irc
 
-import android.util.Log
 import chat.willow.kale.core.message.IrcMessage
 import chat.willow.kale.irc.message.IrcMessageParser
 import chat.willow.kale.irc.message.rfc1459.NoticeMessage
 import chat.willow.kale.irc.message.rfc1459.PingMessage
 import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
+import fr.outadoc.justchatting.log.logWarning
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.ChatMessage
 import fr.outadoc.justchatting.model.chat.Command
@@ -33,7 +33,7 @@ class ChatMessageParser(private val clock: Clock) {
         }
 
         if (parsedMessage == null) {
-            Log.w(TAG, "Unknown command: $message")
+            logWarning<ChatMessageParser> { "Unknown command: $message" }
         }
 
         return parsedMessage
@@ -94,12 +94,14 @@ class ChatMessageParser(private val clock: Clock) {
                 Command.ClearChat(
                     timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
                 )
+
             duration != null ->
                 Command.Timeout(
                     userLogin = user,
                     duration = duration,
                     timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
                 )
+
             else -> Command.Ban(
                 userLogin = user,
                 timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
@@ -144,8 +146,6 @@ class ChatMessageParser(private val clock: Clock) {
     }
 
     companion object {
-        private const val TAG = "ChatMessageParser"
-
         private val actionRegex = Regex("^\u0001ACTION (.+)\u0001\$")
     }
 }

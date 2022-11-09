@@ -1,8 +1,9 @@
 package fr.outadoc.justchatting.util.chat
 
 import android.content.Context
-import android.util.Log
 import fr.outadoc.justchatting.irc.ChatMessageParser
+import fr.outadoc.justchatting.log.logDebug
+import fr.outadoc.justchatting.log.logError
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.UserState
@@ -67,7 +68,7 @@ class LoggedInChatWebSocket(
                     send("JOIN $hashChannelName")
                 }
 
-                Log.d(TAG, "Successfully logged in to $hashChannelName")
+                logDebug<LoggedInChatWebSocket> { "Successfully logged in to $hashChannelName" }
             }
         }
 
@@ -98,9 +99,9 @@ class LoggedInChatWebSocket(
 
             socket?.send(privMsg)
 
-            Log.d(TAG, "Sent message to $hashChannelName, in reply to $inReplyToId: $message")
+            logDebug<LoggedInChatWebSocket> { "Sent message to $hashChannelName, in reply to $inReplyToId: $message" }
         } catch (e: IOException) {
-            Log.e(TAG, "Error sending message", e)
+            logError<LoggedInChatWebSocket>(e) { "Error sending message" }
             emit(
                 Command.SendMessageError(
                     throwable = e,

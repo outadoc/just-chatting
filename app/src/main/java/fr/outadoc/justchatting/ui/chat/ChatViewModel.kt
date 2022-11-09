@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.ui.chat
 
-import android.util.Log
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
@@ -8,6 +7,7 @@ import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.log.logError
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.ChatMessage
@@ -47,6 +47,7 @@ import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -173,6 +174,8 @@ class ChatViewModel(
     }
 
     private val actions = MutableSharedFlow<Action>(extraBufferCapacity = 16)
+
+    @OptIn(FlowPreview::class)
     val state: StateFlow<State> =
         actions
             .runningFold(State.Initial) { state: State, action -> action.reduce(state) }
@@ -317,7 +320,7 @@ class ChatViewModel(
                     emotesRepository.loadGlobalBadges().body()?.badges
                         ?.toPersistentList()
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to load global badges", e)
+                    logError<ChatViewModel>(e) { "Failed to load global badges" }
                     null
                 }
             }
@@ -327,7 +330,7 @@ class ChatViewModel(
                     emotesRepository.loadChannelBadges(channelId).body()?.badges
                         ?.toPersistentList()
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to load badges for channel $channelId", e)
+                    logError<ChatViewModel>(e) { "Failed to load badges for channel $channelId" }
                     null
                 }
             }
@@ -336,7 +339,7 @@ class ChatViewModel(
                 try {
                     emotesRepository.loadStvEmotes(channelId).body()?.emotes
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to load 7tv emotes for channel $channelId", e)
+                    logError<ChatViewModel>(e) { "Failed to load 7tv emotes for channel $channelId" }
                     null
                 }.orEmpty()
             }
@@ -345,7 +348,7 @@ class ChatViewModel(
                 try {
                     emotesRepository.loadBttvEmotes(channelId).body()?.emotes
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to load BTTV emotes for channel $channelId", e)
+                    logError<ChatViewModel>(e) { "Failed to load BTTV emotes for channel $channelId" }
                     null
                 }.orEmpty()
             }
@@ -354,7 +357,7 @@ class ChatViewModel(
                 try {
                     emotesRepository.loadBttvFfzEmotes(channelId).body()?.emotes
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to load FFZ emotes for channel $channelId", e)
+                    logError<ChatViewModel>(e) { "Failed to load FFZ emotes for channel $channelId" }
                     null
                 }.orEmpty()
             }
@@ -363,7 +366,7 @@ class ChatViewModel(
                 try {
                     emotesRepository.loadGlobalStvEmotes().body()?.emotes
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to load global 7tv emotes", e)
+                    logError<ChatViewModel>(e) { "Failed to load global 7tv emotes" }
                     null
                 }.orEmpty()
             }
@@ -372,7 +375,7 @@ class ChatViewModel(
                 try {
                     emotesRepository.loadGlobalBttvEmotes().body()?.emotes
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to load global BTTV emotes", e)
+                    logError<ChatViewModel>(e) { "Failed to load global BTTV emotes" }
                     null
                 }.orEmpty()
             }
@@ -381,7 +384,7 @@ class ChatViewModel(
                 try {
                     emotesRepository.loadBttvGlobalFfzEmotes().body()?.emotes
                 } catch (e: Exception) {
-                    Log.e(TAG, "Failed to load global FFZ emotes", e)
+                    logError<ChatViewModel>(e) { "Failed to load global FFZ emotes" }
                     null
                 }.orEmpty()
             }
@@ -405,7 +408,7 @@ class ChatViewModel(
             val cheerEmotes = try {
                 repository.loadCheerEmotes(userId = channelId).toPersistentList()
             } catch (e: Exception) {
-                Log.e(TAG, "Failed to load cheermotes for channel $channelId", e)
+                logError<ChatViewModel>(e) { "Failed to load cheermotes for channel $channelId" }
                 null
             }
 
@@ -641,9 +644,5 @@ class ChatViewModel(
                 )
             )
         )
-    }
-
-    companion object {
-        private const val TAG = "ChatViewModel"
     }
 }

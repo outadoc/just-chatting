@@ -6,8 +6,8 @@ import android.content.ContentValues
 import android.database.Cursor
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import android.util.Log
 import fr.outadoc.justchatting.BuildConfig
+import fr.outadoc.justchatting.log.logDebug
 import fr.outadoc.justchatting.repository.TwitchService
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -26,7 +26,6 @@ class UserProfileImageContentProvider : ContentProvider() {
         private const val authority: String =
             "${BuildConfig.APPLICATION_ID}.user-image-provider"
 
-        private const val TAG = "UserProfileImageContentProvider"
         private const val PATH_LOGIN = "login"
 
         fun createForUser(userLogin: String): Uri {
@@ -47,7 +46,7 @@ class UserProfileImageContentProvider : ContentProvider() {
     }
 
     override fun openFile(uri: Uri, mode: String): ParcelFileDescriptor? {
-        Log.d(TAG, "Called openFile($uri, $mode)")
+        logDebug<UserProfileImageContentProvider> { "Called openFile($uri, $mode)" }
 
         if (mode != "r") {
             throw FileNotFoundException("Wrong file mode, only read-only ('r') is supported, got $mode.")

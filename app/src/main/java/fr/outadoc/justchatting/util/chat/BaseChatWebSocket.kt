@@ -1,7 +1,8 @@
 package fr.outadoc.justchatting.util.chat
 
 import android.content.Context
-import android.util.Log
+import fr.outadoc.justchatting.log.logDebug
+import fr.outadoc.justchatting.log.logError
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.repository.AppPreferences
@@ -23,8 +24,6 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
-
-const val TAG = "ChatThread"
 
 abstract class BaseChatWebSocket(
     private val applicationContext: Context,
@@ -48,7 +47,7 @@ abstract class BaseChatWebSocket(
     val flow: Flow<ChatCommand> = _flow
 
     protected fun connect(socketListener: WebSocketListener) {
-        Log.d(TAG, "Connecting to Twitch IRC")
+        logDebug<BaseChatWebSocket> { "Connecting to Twitch IRC" }
         socket = client.newWebSocket(
             listener = socketListener,
             request = Request.Builder()
@@ -59,13 +58,13 @@ abstract class BaseChatWebSocket(
 
     fun disconnect() {
         try {
-            Log.d(TAG, "Disconnecting from $hashChannelName")
+            logDebug<BaseChatWebSocket> { "Disconnecting from $hashChannelName" }
             socket?.close(
                 code = SOCKET_ERROR_NORMAL_CLOSURE,
                 reason = null
             )
         } catch (e: IOException) {
-            Log.e(TAG, "Error while closing socketIn", e)
+            logError<BaseChatWebSocket>(e) { "Error while closing socketIn" }
             emit(
                 Command.SocketError(
                     throwable = e,

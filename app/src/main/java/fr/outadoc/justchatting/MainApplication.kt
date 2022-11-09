@@ -11,11 +11,18 @@ import coil.memory.MemoryCache
 import coil.transition.Transition
 import coil.util.DebugLogger
 import com.google.android.material.color.DynamicColors
+import fr.outadoc.justchatting.log.AndroidLogStrategy
+import fr.outadoc.justchatting.log.Logger
 
 class MainApplication : Application(), ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()
+
+        if (BuildConfig.DEBUG) {
+            Logger.logStrategy = AndroidLogStrategy
+        }
+
         DynamicColors.applyToActivitiesIfAvailable(this)
     }
 

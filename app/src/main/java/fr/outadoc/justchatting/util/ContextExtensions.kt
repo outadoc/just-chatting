@@ -1,9 +1,7 @@
 package fr.outadoc.justchatting.util
 
 import android.content.Context
-import android.content.res.Configuration
 import android.net.ConnectivityManager
-import android.util.TypedValue
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.datastore.core.DataStore

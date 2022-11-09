@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.util
 
-import android.content.Context
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import androidx.compose.runtime.Composable

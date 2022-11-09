@@ -42,7 +42,6 @@ class SettingsViewModel(
                 if (!token.isNullOrBlank()) {
                     authRepository.revokeToken()
                 }
-
             } catch (e: Exception) {
                 e.printStackTrace()
             }

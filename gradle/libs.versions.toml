@@ -27,7 +27,6 @@ androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 androidx-core = "androidx.core:core-ktx:1.8.0"
 androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.0.0"
 androidx-emoji2-core = { module = "androidx.emoji2:emoji2", version.ref = "emoji" }
-androidx-emoji2-views = { module = "androidx.emoji2:emoji2-views", version.ref = "emoji" }
 androidx-fragment = "androidx.fragment:fragment-ktx:1.4.1"
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "lifecycle" }
 androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
@@ -36,13 +35,10 @@ androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmode
 androidx-paging-runtime = "androidx.paging:paging-runtime-ktx:3.1.1"
 androidx-paging-compose = "androidx.paging:paging-compose:1.0.0-alpha17"
 androidx-palette = "androidx.palette:palette:1.0.0"
-androidx-preference = "androidx.preference:preference-ktx:1.2.0"
-androidx-recyclerview = "androidx.recyclerview:recyclerview:1.2.1"
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-core = { module = "androidx.room:room-ktx", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.0-beta02"
-androidx-swiperefreshlayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
 androidx-webkit = "androidx.webkit:webkit:1.4.0"
 chucker-noop = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
 chucker-runtime = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }

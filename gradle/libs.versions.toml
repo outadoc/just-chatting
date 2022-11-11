@@ -8,7 +8,7 @@ koin = "3.2.0"
 kotlin = "1.7.21"
 lifecycle = "2.4.1"
 retrofit = "2.9.0"
-room = "2.4.2"
+room = "2.4.3"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }

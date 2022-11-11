@@ -3,6 +3,6 @@
   "extends": [
     "config:base"
   ],
-  "groupName": "all",
+  "prHourlyLimit": 30,
   "semanticCommits": "enabled"
 }

@@ -15,7 +15,7 @@ android-application = { id = "com.android.application", version.ref = "android" 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "1.7.10-1.0.6" }
+ksp = { id = "com.google.devtools.ksp", version = "1.7.21-1.0.8" }
 spotless = { id = "com.diffplug.spotless", version = "6.6.1" }
 
 [libraries]

@@ -7,6 +7,7 @@ import androidx.paging.flatMap
 import fr.outadoc.justchatting.model.helix.follows.Follow
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.ui.common.PagedListViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
@@ -20,6 +21,7 @@ class FollowedChannelsViewModel(
 
     private val _load = MutableStateFlow(0)
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     override val pagingData: Flow<PagingData<Follow>> =
         _load.flatMapLatest {
             repository.loadFollowedChannels()

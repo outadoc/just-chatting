@@ -115,7 +115,6 @@ dependencies {
     implementation(libs.androidx.room.core)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.splashscreen)
-    implementation(libs.androidx.webkit)
     implementation(libs.coil.compose)
     implementation(libs.coil.core)
     implementation(libs.coil.gif)

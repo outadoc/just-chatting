@@ -25,8 +25,14 @@ jobs:
       - name: Build
         run: ./gradlew assembleRelease
 
-      - name: Run checks
-        run: ./gradlew testReleaseUnitTest
+      - name: Check formatting
+        run: ./gradlew spotlessCheck
+
+      - name: Lint
+        run: ./gradlew lint
+
+      - name: Run unit tests
+        run: ./gradlew test
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.1

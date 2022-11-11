@@ -93,7 +93,7 @@ spotless {
 }
 
 dependencies {
-    implementation(project(":lib-irc"))
+    implementation(platform(libs.kotlin.bom))
 
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.accompanist.webview)
@@ -127,7 +127,7 @@ dependencies {
     implementation(libs.compose.runtime.livedata)
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.tooling)
-    implementation(libs.fragnav)
+    implementation(libs.irc)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.koin.core)

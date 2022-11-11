@@ -64,7 +64,7 @@ kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"
 kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
-leakcanary = "com.squareup.leakcanary:leakcanary-android:2.9.1"
+leakcanary = "com.squareup.leakcanary:leakcanary-android:2.10"
 material-core = "com.google.android.material:material:1.7.0"
 okhttp-logging = "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.10"
 okio = "com.squareup.okio:okio:3.2.0"

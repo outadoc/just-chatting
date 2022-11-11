@@ -24,7 +24,7 @@ import androidx.paging.compose.items
 import fr.outadoc.justchatting.model.helix.channel.ChannelSearch
 import fr.outadoc.justchatting.ui.search.channels.ChannelSearchViewModel
 import fr.outadoc.justchatting.ui.streams.UserItemCard
-import plus
+import fr.outadoc.justchatting.util.plus
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

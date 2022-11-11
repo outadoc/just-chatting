@@ -3,6 +3,7 @@ package fr.outadoc.justchatting
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -102,7 +103,14 @@ class ChatConnectionService : Service() {
 
                 if (!connectionPool.hasActiveThreads) {
                     logInfo<ChatConnectionService> { "Pool has no active threads left, stopping background service" }
-                    stopForeground(STOP_FOREGROUND_REMOVE)
+
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        stopForeground(STOP_FOREGROUND_REMOVE)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        stopForeground(true)
+                    }
+
                     stopSelf()
                 } else {
                     logInfo<ChatConnectionService> { "Pool still has active threads left, service will keep running" }

@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.ui.login
 
 import android.webkit.CookieManager
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -33,87 +34,90 @@ fun LoginScreen(
     val viewModel: LoginViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
 
-    when (val state = state) {
-        LoginViewModel.State.Initial -> {}
-        is LoginViewModel.State.LoadWebView -> {
-            val webViewState = rememberWebViewState(state.url.toString())
-            val navigator = rememberWebViewNavigator()
+    Crossfade(targetState = state) { currentState ->
+        when (currentState) {
+            LoginViewModel.State.Initial -> {}
+            is LoginViewModel.State.LoadWebView -> {
+                val webViewState = rememberWebViewState(currentState.url.toString())
+                val navigator = rememberWebViewNavigator()
 
-            val url: String? = webViewState.content.getCurrentUrl()
+                val url: String? = webViewState.content.getCurrentUrl()
 
-            LaunchedEffect(url) {
-                if (url != null) {
-                    viewModel.onNavigateToUrl(url)
+                LaunchedEffect(url) {
+                    if (url != null) {
+                        viewModel.onNavigateToUrl(url)
+                    }
                 }
-            }
 
-            val context = LocalContext.current
-            LaunchedEffect(state.exception) {
-                state.exception?.let {
-                    context.toast(R.string.connection_error)
+                val context = LocalContext.current
+                LaunchedEffect(currentState.exception) {
+                    currentState.exception?.let {
+                        context.toast(R.string.connection_error)
+                    }
                 }
-            }
 
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = {},
-                        navigationIcon = {
-                            IconButton(
-                                onClick = { viewModel.onCloseClick() }
-                            ) {
-                                Icon(
-                                    Icons.Default.ArrowBack,
-                                    contentDescription = "Cancel login"
-                                )
+                Scaffold(
+                    topBar = {
+                        TopAppBar(
+                            title = {},
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = { viewModel.onCloseClick() }
+                                ) {
+                                    Icon(
+                                        Icons.Default.ArrowBack,
+                                        contentDescription = "Cancel login"
+                                    )
+                                }
+                            },
+                            actions = {
+                                when (webViewState.loadingState) {
+                                    LoadingState.Initializing -> {}
+                                    LoadingState.Finished -> {
+                                        IconButton(
+                                            onClick = { navigator.reload() }
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Refresh,
+                                                contentDescription = "Refresh current page"
+                                            )
+                                        }
+                                    }
+
+                                    is LoadingState.Loading -> {
+                                        IconButton(
+                                            onClick = { navigator.stopLoading() }
+                                        ) {
+                                            Icon(
+                                                Icons.Default.Close,
+                                                contentDescription = "Cancel page load"
+                                            )
+                                        }
+                                    }
+                                }
                             }
+                        )
+                    }
+                ) { insets ->
+                    WebView(
+                        modifier = Modifier.padding(insets),
+                        state = webViewState,
+                        navigator = navigator,
+                        onCreated = { webView ->
+                            // noinspection SetJavascriptEnabled
+                            webView.settings.javaScriptEnabled = true
                         },
-                        actions = {
-                            when (webViewState.loadingState) {
-                                LoadingState.Initializing -> {}
-                                LoadingState.Finished -> {
-                                    IconButton(
-                                        onClick = { navigator.reload() }
-                                    ) {
-                                        Icon(
-                                            Icons.Default.Refresh,
-                                            contentDescription = "Refresh current page"
-                                        )
-                                    }
-                                }
-
-                                is LoadingState.Loading -> {
-                                    IconButton(
-                                        onClick = { navigator.stopLoading() }
-                                    ) {
-                                        Icon(
-                                            Icons.Default.Close,
-                                            contentDescription = "Cancel page load"
-                                        )
-                                    }
-                                }
-                            }
+                        onDispose = {
+                            // If we don't clear cookies, user won't be able to switch accounts.
+                            CookieManager.getInstance().removeAllCookies(null)
                         }
                     )
                 }
-            ) { insets ->
-                WebView(
-                    modifier = Modifier.padding(insets),
-                    state = webViewState,
-                    navigator = navigator,
-                    onCreated = { webView ->
-                        webView.settings.javaScriptEnabled = true
-                    },
-                    onDispose = {
-                        // If we don't clear cookies, user won't be able to switch accounts.
-                        CookieManager.getInstance().removeAllCookies(null)
-                    }
-                )
             }
-        }
 
-        LoginViewModel.State.Done -> {
-            onDone()
+            LoginViewModel.State.Done -> {
+                onDone()
+            }
         }
     }
 }

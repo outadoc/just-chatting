@@ -196,7 +196,6 @@
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %s.</string>
     <string name="logout_title">Se déconnecter ?</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
-    <string name="menu_item_showOverflow">Plus d\'actions…</string>
     <string name="message_limit">Limite de messages</string>
     <string name="no">Non</string>
     <string name="nothing_here">Rien ici</string>
@@ -237,7 +236,6 @@
     <string name="timestamps">Afficher les horodatages</string>
     <string name="token_expired">Votre session a expiré. Veuillez vous reconnecter.</string>
     <string name="uptime">En direct depuis %s</string>
-    <string name="user_redeemed">%1$s a obtenu %2$s pour %3$,d points</string>
     <string name="watch_live">Regarder en direct</string>
     <string name="yes">Oui</string>
 </resources>

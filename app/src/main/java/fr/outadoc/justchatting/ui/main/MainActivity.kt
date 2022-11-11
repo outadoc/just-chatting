@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.ui.main
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.compose.setContent
@@ -44,8 +45,8 @@ class MainActivity : BaseActivity() {
     @Composable
     private fun App(sizeClass: WindowSizeClass) {
         val state by viewModel.state.collectAsState()
-        Crossfade(targetState = state) {
-            when (val currentState = state) {
+        Crossfade(targetState = state) { currentState ->
+            when (currentState) {
                 is MainViewModel.State.Loading -> {}
                 is MainViewModel.State.LoggedOut -> {
                     LaunchedEffect(currentState) {
@@ -68,11 +69,16 @@ class MainActivity : BaseActivity() {
                             viewChannel(login)
                         },
                         onOpenNotificationPreferences = {
-                            openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                            if (Build.VERSION.SDK_INT >= 26) {
+                                openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                            }
+                        },
+                        onOpenBubblePreferences = {
+                            if (Build.VERSION.SDK_INT >= 29) {
+                                openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
+                            }
                         }
-                    ) {
-                        openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
-                    }
+                    )
                 }
             }
         }

@@ -24,7 +24,7 @@ import fr.outadoc.justchatting.ui.follow.channels.FollowedChannelsViewModel
 import fr.outadoc.justchatting.ui.streams.UserItemCard
 import kotlinx.datetime.toInstant
 import org.koin.androidx.compose.getViewModel
-import plus
+import fr.outadoc.justchatting.util.plus
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

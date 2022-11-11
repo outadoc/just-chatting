@@ -197,7 +197,6 @@
     <string name="logout_msg">You are currently logged in as %s.</string>
     <string name="logout_title">Log out?</string>
     <string name="menu_item_openInBubble">Open in bubble</string>
-    <string name="menu_item_showOverflow">More actions…</string>
     <string name="message_limit">Message limit</string>
     <string name="no">No</string>
     <string name="nothing_here">Nothing here</string>
@@ -238,7 +237,6 @@
     <string name="timestamps">Show timestamps</string>
     <string name="token_expired">Your session has expired. Please log in again</string>
     <string name="uptime">%s uptime</string>
-    <string name="user_redeemed">%1$s redeemed %2$s for %3$,d points</string>
     <string name="watch_live">Watch live</string>
     <string name="yes">Yes</string>
 </resources>

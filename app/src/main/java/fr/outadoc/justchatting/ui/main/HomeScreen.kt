@@ -42,8 +42,8 @@ fun HomeScreen(
         Crossfade(
             modifier = Modifier.padding(insets),
             targetState = selectedTab
-        ) {
-            when (selectedTab) {
+        ) { tab ->
+            when (tab) {
                 Tab.Live -> {
                     LiveChannelsList(
                         onItemClick = { stream ->

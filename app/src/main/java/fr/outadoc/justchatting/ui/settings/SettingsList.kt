@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.ui.settings
 
+import android.os.Build
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -21,7 +22,7 @@ import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.repository.AppPreferences
-import plus
+import fr.outadoc.justchatting.util.plus
 
 @ThemePreviews
 @Composable
@@ -160,23 +161,27 @@ fun SettingsList(
             }
         }
 
-        item {
-            SettingsLink(
-                modifier = Modifier.padding(itemInsets),
-                onClick = onOpenNotificationPreferences,
-                onClickLabel = stringResource(R.string.settings_notifications_openNotificationsSettings)
-            ) {
-                Text(text = stringResource(R.string.settings_notifications_openNotificationsSettings))
+        if (Build.VERSION.SDK_INT >= 26) {
+            item {
+                SettingsLink(
+                    modifier = Modifier.padding(itemInsets),
+                    onClick = onOpenNotificationPreferences,
+                    onClickLabel = stringResource(R.string.settings_notifications_openNotificationsSettings)
+                ) {
+                    Text(text = stringResource(R.string.settings_notifications_openNotificationsSettings))
+                }
             }
         }
 
-        item {
-            SettingsLink(
-                modifier = Modifier.padding(itemInsets),
-                onClick = onOpenBubblePreferences,
-                onClickLabel = stringResource(R.string.settings_notifications_openBubbleSettings)
-            ) {
-                Text(text = stringResource(R.string.settings_notifications_openBubbleSettings))
+        if (Build.VERSION.SDK_INT >= 29) {
+            item {
+                SettingsLink(
+                    modifier = Modifier.padding(itemInsets),
+                    onClick = onOpenBubblePreferences,
+                    onClickLabel = stringResource(R.string.settings_notifications_openBubbleSettings)
+                ) {
+                    Text(text = stringResource(R.string.settings_notifications_openBubbleSettings))
+                }
             }
         }
 

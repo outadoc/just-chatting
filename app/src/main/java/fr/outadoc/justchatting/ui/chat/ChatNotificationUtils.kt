@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.ui.chat
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -49,9 +50,15 @@ object ChatNotificationUtils {
             person = person
         )
 
-        context.startForegroundService(
-            ChatConnectionService.createStartIntent(context)
-        )
+        if (Build.VERSION.SDK_INT >= 26) {
+            context.startForegroundService(
+                ChatConnectionService.createStartIntent(context)
+            )
+        } else {
+            context.startService(
+                ChatConnectionService.createStartIntent(context)
+            )
+        }
 
         createNotificationForUser(
             context = context,

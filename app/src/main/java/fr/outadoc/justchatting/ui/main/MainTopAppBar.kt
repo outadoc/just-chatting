@@ -20,8 +20,8 @@ fun MainTopAppBar(
     searchViewModel: ChannelSearchViewModel
 ) {
     val searchState by searchViewModel.state.collectAsState()
-    Crossfade(targetState = selectedTab) {
-        when (selectedTab) {
+    Crossfade(targetState = selectedTab) { tab ->
+        when (tab) {
             Tab.Search -> {
                 SearchTopAppBar(
                     modifier = modifier,

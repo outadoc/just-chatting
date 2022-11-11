@@ -18,7 +18,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.util.formatTime
@@ -28,7 +27,7 @@ import kotlinx.datetime.toInstant
 @ThemePreviews
 @Composable
 fun UserItemPreview() {
-    Mdc3Theme {
+    MaterialTheme {
         UserItemCard(
             modifier = Modifier
                 .padding(8.dp)

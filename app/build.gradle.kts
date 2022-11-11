@@ -135,7 +135,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)
     implementation(libs.material.core)
-    implementation(libs.material.themeadapter)
     implementation(libs.okhttp.logging)
     implementation(libs.okio)
     implementation(libs.retrofit.core)

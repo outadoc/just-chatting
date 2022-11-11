@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
-import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.ui.main.BaseActivity
+import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.util.createChannelDeeplink
 
 class ChatActivity : BaseActivity() {
@@ -28,7 +28,7 @@ class ChatActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            Mdc3Theme {
+            AppTheme {
                 ChannelChatScreen(
                     channelLogin = intent.getStringExtra(CHANNEL_LOGIN)!!
                 )

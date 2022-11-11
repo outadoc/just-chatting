@@ -18,7 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.util.formatNumber
 import fr.outadoc.justchatting.util.formatTimestamp
@@ -28,7 +27,7 @@ import kotlinx.datetime.toInstant
 @ThemePreviews
 @Composable
 fun LiveStreamPreview() {
-    Mdc3Theme {
+    MaterialTheme {
         LiveStreamCard(
             modifier = Modifier.padding(8.dp),
             userName = "Maghla",

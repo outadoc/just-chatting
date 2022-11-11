@@ -42,7 +42,6 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ScreenPreviews
 import fr.outadoc.justchatting.model.chat.Chatter
@@ -155,7 +154,7 @@ fun ChannelChatScreen(channelLogin: String) {
 @ScreenPreviews
 @Composable
 fun ChannelChatScreenLoadingPreview() {
-    Mdc3Theme {
+    MaterialTheme {
         ChannelChatScreen(
             state = ChatViewModel.State.Initial,
             inputState = ChatViewModel.InputState(),

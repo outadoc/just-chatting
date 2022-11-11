@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.ui.login
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.composethemeadapter3.Mdc3Theme
+import fr.outadoc.justchatting.ui.theme.AppTheme
 
 class LoginActivity : AppCompatActivity() {
 
@@ -11,7 +11,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            Mdc3Theme {
+            AppTheme {
                 LoginScreen(
                     onDone = { finish() }
                 )

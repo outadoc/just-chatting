@@ -41,7 +41,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.model.chat.Chatter
@@ -98,7 +97,7 @@ fun ChatInput(
 @ThemePreviews
 @Composable
 fun ChatInputPreviewBasic() {
-    Mdc3Theme {
+    MaterialTheme {
         ChatInput(
             message = TextFieldValue("Lorem ipsum KEKW")
         )
@@ -108,7 +107,7 @@ fun ChatInputPreviewBasic() {
 @ThemePreviews
 @Composable
 fun ChatInputPreviewLongMessage() {
-    Mdc3Theme {
+    MaterialTheme {
         ChatInput(
             message = TextFieldValue(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
@@ -120,7 +119,7 @@ fun ChatInputPreviewLongMessage() {
 @ThemePreviews
 @Composable
 fun ChatInputPreviewEmpty() {
-    Mdc3Theme {
+    MaterialTheme {
         ChatInput()
     }
 }
@@ -128,7 +127,7 @@ fun ChatInputPreviewEmpty() {
 @ThemePreviews
 @Composable
 fun ChatInputPreviewReplying() {
-    Mdc3Theme {
+    MaterialTheme {
         ChatInput(
             replyingTo = ChatEntry.Simple(
                 data = ChatEntry.Data(

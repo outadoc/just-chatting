@@ -51,7 +51,6 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.model.helix.stream.Stream
@@ -159,7 +158,7 @@ fun ChatTopAppBar(
 @ThemePreviews
 @Composable
 fun StreamInfoPreviewFull() {
-    Mdc3Theme {
+    MaterialTheme {
         StreamInfo(
             user = User(
                 id = "",
@@ -181,7 +180,7 @@ fun StreamInfoPreviewFull() {
 @ThemePreviews
 @Composable
 fun StreamInfoPreviewOffline() {
-    Mdc3Theme {
+    MaterialTheme {
         StreamInfo(
             user = User(
                 id = "",

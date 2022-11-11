@@ -92,7 +92,6 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.composepreview.ThemePreviews
@@ -493,7 +492,7 @@ fun ChatMessagePreview(
         }
         .toPersistentHashMap()
 
-    Mdc3Theme {
+    MaterialTheme {
         ChatMessage(
             message = chatEntry,
             inlineContent = inlineBadges,

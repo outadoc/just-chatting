@@ -14,13 +14,12 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 
 @ThemePreviews
 @Composable
 fun SettingsLinksPreview() {
-    Mdc3Theme {
+    MaterialTheme {
         Column(modifier = Modifier.width(256.dp)) {
             SettingsLink(
                 modifier = Modifier.fillMaxWidth(),

@@ -12,11 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.ui.chat.ChatActivity
 import fr.outadoc.justchatting.ui.login.LoginActivity
 import fr.outadoc.justchatting.ui.onboarding.OnboardingScreen
+import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.util.parseChannelLogin
 import fr.outadoc.justchatting.util.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -35,7 +35,7 @@ class MainActivity : BaseActivity() {
         }
 
         setContent {
-            Mdc3Theme {
+            AppTheme {
                 App(sizeClass = calculateWindowSizeClass(this))
             }
         }

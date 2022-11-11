@@ -17,7 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.google.android.material.composethemeadapter3.Mdc3Theme
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ScreenPreviews
 
@@ -26,7 +25,7 @@ private val AppIconSize = 80.dp
 @ScreenPreviews
 @Composable
 fun OnboardingScreenPreview() {
-    Mdc3Theme {
+    MaterialTheme {
         OnboardingScreen(onLoginClick = {})
     }
 }

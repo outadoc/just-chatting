@@ -16,7 +16,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version = "1.7.21-1.0.8" }
-spotless = { id = "com.diffplug.spotless", version = "6.6.1" }
+spotless = { id = "com.diffplug.spotless", version = "6.11.0" }
 
 [libraries]
 accompanist-systemuicontroller = "com.google.accompanist:accompanist-systemuicontroller:0.25.1"

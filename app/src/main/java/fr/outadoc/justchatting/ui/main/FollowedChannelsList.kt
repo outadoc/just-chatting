@@ -50,10 +50,7 @@ fun FollowedChannelsList(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = insets + PaddingValues(
-                vertical = 8.dp,
-                horizontal = 16.dp
-            ),
+            contentPadding = insets + PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             if (!isRefreshing && items.itemCount == 0) {

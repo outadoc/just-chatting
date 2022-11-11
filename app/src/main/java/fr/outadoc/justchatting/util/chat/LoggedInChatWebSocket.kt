@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.util.chat
 
-import android.content.Context
 import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.log.logDebug
 import fr.outadoc.justchatting.log.logError
@@ -8,6 +7,7 @@ import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.model.chat.PingCommand
 import fr.outadoc.justchatting.model.chat.UserState
 import fr.outadoc.justchatting.repository.PreferenceRepository
+import fr.outadoc.justchatting.util.NetworkStateObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -26,23 +26,23 @@ import java.io.IOException
  * Use this class to write messages to the chat.
  */
 class LoggedInChatWebSocket(
-    applicationContext: Context,
+    networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: ChatMessageParser,
     private val preferencesRepository: PreferenceRepository,
     channelLogin: String
-) : BaseChatWebSocket(applicationContext, scope, clock, channelLogin) {
+) : BaseChatWebSocket(networkStateObserver, scope, clock, channelLogin) {
 
     class Factory(
-        private val applicationContext: Context,
+        private val networkStateObserver: NetworkStateObserver,
         private val clock: Clock,
         private val parser: ChatMessageParser,
         private val preferencesRepository: PreferenceRepository,
     ) {
         fun create(scope: CoroutineScope, channelLogin: String): LoggedInChatWebSocket {
             return LoggedInChatWebSocket(
-                applicationContext = applicationContext,
+                networkStateObserver = networkStateObserver,
                 clock = clock,
                 parser = parser,
                 scope = scope,

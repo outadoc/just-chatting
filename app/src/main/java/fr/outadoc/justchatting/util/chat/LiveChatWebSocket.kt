@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.util.chat
 
-import android.content.Context
 import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.log.logDebug
 import fr.outadoc.justchatting.log.logError
@@ -13,6 +12,7 @@ import fr.outadoc.justchatting.model.chat.RoomStateDelta
 import fr.outadoc.justchatting.model.chat.UserState
 import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.repository.RecentMessagesRepository
+import fr.outadoc.justchatting.util.NetworkStateObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -29,17 +29,17 @@ import kotlin.random.Random
  * and commands, except NOTICE and USERSTATE which are handled by [LoggedInChatWebSocket].
  */
 class LiveChatWebSocket private constructor(
-    applicationContext: Context,
+    networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: ChatMessageParser,
     private val recentMessagesRepository: RecentMessagesRepository,
     private val preferencesRepository: PreferenceRepository,
     private val channelLogin: String
-) : BaseChatWebSocket(applicationContext, scope, clock, channelLogin) {
+) : BaseChatWebSocket(networkStateObserver, scope, clock, channelLogin) {
 
     class Factory(
-        private val applicationContext: Context,
+        private val networkStateObserver: NetworkStateObserver,
         private val clock: Clock,
         private val parser: ChatMessageParser,
         private val recentMessagesRepository: RecentMessagesRepository,
@@ -47,7 +47,7 @@ class LiveChatWebSocket private constructor(
     ) {
         fun create(scope: CoroutineScope, channelLogin: String): LiveChatWebSocket {
             return LiveChatWebSocket(
-                applicationContext = applicationContext,
+                networkStateObserver = networkStateObserver,
                 clock = clock,
                 parser = parser,
                 recentMessagesRepository = recentMessagesRepository,

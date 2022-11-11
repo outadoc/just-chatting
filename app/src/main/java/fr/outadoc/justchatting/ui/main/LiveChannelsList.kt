@@ -22,9 +22,9 @@ import androidx.paging.compose.items
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.ui.streams.LiveStreamCard
 import fr.outadoc.justchatting.ui.streams.followed.FollowedStreamsViewModel
+import fr.outadoc.justchatting.util.plus
 import kotlinx.datetime.toInstant
 import org.koin.androidx.compose.getViewModel
-import fr.outadoc.justchatting.util.plus
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

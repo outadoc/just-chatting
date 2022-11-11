@@ -1,12 +1,11 @@
 package fr.outadoc.justchatting.util.chat
 
-import android.content.Context
 import fr.outadoc.justchatting.log.logDebug
 import fr.outadoc.justchatting.log.logError
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.model.chat.Command
 import fr.outadoc.justchatting.repository.AppPreferences
-import fr.outadoc.justchatting.util.isNetworkAvailable
+import fr.outadoc.justchatting.util.NetworkStateObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -14,6 +13,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -26,7 +26,7 @@ import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
 
 abstract class BaseChatWebSocket(
-    private val applicationContext: Context,
+    private val networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val clock: Clock,
     channelName: String
@@ -45,6 +45,16 @@ abstract class BaseChatWebSocket(
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val flow: Flow<ChatCommand> = _flow
+
+    private var isNetworkAvailable: Boolean = false
+
+    init {
+        scope.launch {
+            networkStateObserver.state.collectLatest { state ->
+                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
+            }
+        }
+    }
 
     protected fun connect(socketListener: WebSocketListener) {
         logDebug<BaseChatWebSocket> { "Connecting to Twitch IRC" }
@@ -95,7 +105,7 @@ abstract class BaseChatWebSocket(
         scope.launch(Dispatchers.IO) {
             disconnect()
 
-            while (isActive && !applicationContext.isNetworkAvailable) {
+            while (isActive && !isNetworkAvailable) {
                 delay(1.seconds)
             }
 

@@ -1,6 +1,8 @@
 package fr.outadoc.justchatting.di
 
 import android.content.Context
+import android.net.ConnectivityManager
+import androidx.core.content.getSystemService
 import androidx.room.Room
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
@@ -40,6 +42,7 @@ import fr.outadoc.justchatting.repository.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.repository.TwitchService
 import fr.outadoc.justchatting.ui.chat.LiveChatController
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
+import fr.outadoc.justchatting.util.NetworkStateObserver
 import fr.outadoc.justchatting.util.chat.LiveChatWebSocket
 import fr.outadoc.justchatting.util.chat.LoggedInChatWebSocket
 import fr.outadoc.justchatting.util.chat.PubSubRewardParser
@@ -58,6 +61,8 @@ import java.util.concurrent.TimeUnit
 val mainModule = module {
 
     single<Clock> { Clock.System }
+    single<ConnectivityManager> { get<Context>().getSystemService()!! }
+    single { NetworkStateObserver(get()) }
 
     single<TwitchService> { ApiRepository(get(), get()) }
 

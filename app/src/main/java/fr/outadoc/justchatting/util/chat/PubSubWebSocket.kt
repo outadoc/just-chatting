@@ -1,15 +1,15 @@
 package fr.outadoc.justchatting.util.chat
 
-import android.content.Context
 import fr.outadoc.justchatting.model.chat.ChatCommand
 import fr.outadoc.justchatting.repository.AppPreferences
-import fr.outadoc.justchatting.util.isNetworkAvailable
+import fr.outadoc.justchatting.util.NetworkStateObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
@@ -25,18 +25,18 @@ import org.json.JSONObject
 import kotlin.time.Duration.Companion.seconds
 
 class PubSubWebSocket(
-    private val applicationContext: Context,
+    private val networkStateObserver: NetworkStateObserver,
     private val pubSubRewardParser: PubSubRewardParser,
     private val scope: CoroutineScope,
     channelId: String
 ) {
     class Factory(
-        private val applicationContext: Context,
+        private val networkStateObserver: NetworkStateObserver,
         private val pubSubRewardParser: PubSubRewardParser
     ) {
         fun create(scope: CoroutineScope, channelId: String): PubSubWebSocket {
             return PubSubWebSocket(
-                applicationContext = applicationContext,
+                networkStateObserver = networkStateObserver,
                 pubSubRewardParser = pubSubRewardParser,
                 scope = scope,
                 channelId = channelId
@@ -49,13 +49,22 @@ class PubSubWebSocket(
 
     private val topics = listOf("community-points-channel-v1.$channelId")
 
-    private var pongReceived = false
-
     private val _flow = MutableSharedFlow<ChatCommand>(
         replay = AppPreferences.Defaults.ChatLimitRange.last,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     val flow: Flow<ChatCommand> = _flow
+
+    private var pongReceived = false
+    private var isNetworkAvailable: Boolean = false
+
+    init {
+        scope.launch {
+            networkStateObserver.state.collectLatest { state ->
+                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
+            }
+        }
+    }
 
     fun start() {
         connect(listener = PubSubListener())
@@ -77,7 +86,7 @@ class PubSubWebSocket(
         scope.launch(Dispatchers.IO) {
             disconnect()
 
-            while (isActive && !applicationContext.isNetworkAvailable) {
+            while (isActive && !isNetworkAvailable) {
                 delay(1.seconds)
             }
 

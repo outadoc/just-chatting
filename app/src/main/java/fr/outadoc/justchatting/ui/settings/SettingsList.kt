@@ -22,12 +22,13 @@ import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.repository.AppPreferences
+import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.util.plus
 
 @ThemePreviews
 @Composable
 fun SettingsListPreview() {
-    MaterialTheme {
+    AppTheme {
         SettingsList(
             appPreferences = AppPreferences(),
             onAppPreferencesChange = {},

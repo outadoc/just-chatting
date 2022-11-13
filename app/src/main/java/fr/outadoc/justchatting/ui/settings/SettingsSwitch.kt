@@ -17,11 +17,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.composepreview.ThemePreviews
+import fr.outadoc.justchatting.ui.theme.AppTheme
 
 @ThemePreviews
 @Composable
 fun SettingsSwitchPreview() {
-    MaterialTheme {
+    AppTheme {
         Column(modifier = Modifier.width(256.dp)) {
             SettingsSwitch(
                 modifier = Modifier.fillMaxWidth(),

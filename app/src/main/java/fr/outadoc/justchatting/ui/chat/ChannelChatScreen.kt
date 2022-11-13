@@ -48,6 +48,7 @@ import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.repository.AppPreferences
 import fr.outadoc.justchatting.repository.PreferenceRepository
+import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmotePicker
 import fr.outadoc.justchatting.util.createChannelDeeplink
@@ -154,7 +155,7 @@ fun ChannelChatScreen(channelLogin: String) {
 @ScreenPreviews
 @Composable
 fun ChannelChatScreenLoadingPreview() {
-    MaterialTheme {
+    AppTheme {
         ChannelChatScreen(
             state = ChatViewModel.State.Initial,
             inputState = ChatViewModel.InputState(),

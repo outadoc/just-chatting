@@ -10,11 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.composepreview.ThemePreviews
+import fr.outadoc.justchatting.ui.theme.AppTheme
 
 @ThemePreviews
 @Composable
 fun SettingsHeaderPreview() {
-    MaterialTheme {
+    AppTheme {
         Surface {
             SettingsHeader {
                 Text("Lorem ipsum")

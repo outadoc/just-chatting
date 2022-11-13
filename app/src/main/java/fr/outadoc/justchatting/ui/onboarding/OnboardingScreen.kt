@@ -19,13 +19,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ScreenPreviews
+import fr.outadoc.justchatting.ui.theme.AppTheme
 
 private val AppIconSize = 80.dp
 
 @ScreenPreviews
 @Composable
 fun OnboardingScreenPreview() {
-    MaterialTheme {
+    AppTheme {
         OnboardingScreen(onLoginClick = {})
     }
 }

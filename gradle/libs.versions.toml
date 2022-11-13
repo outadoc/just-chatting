@@ -24,6 +24,7 @@ accompanist-systemuicontroller = "com.google.accompanist:accompanist-systemuicon
 accompanist-webview = "com.google.accompanist:accompanist-webview:0.27.0"
 androidx-activity-compose = "androidx.activity:activity-compose:1.6.1"
 androidx-appcompat = "androidx.appcompat:appcompat:1.5.1"
+androidx-browser = "androidx.browser:browser:1.4.0"
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 androidx-core = "androidx.core:core-ktx:1.9.0"
 androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.0.0"

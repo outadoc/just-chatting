@@ -102,6 +102,7 @@ import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.model.chat.TwitchBadge
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.common.parseHexColor
+import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.BadgeItem
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
@@ -492,7 +493,7 @@ fun ChatMessagePreview(
         }
         .toPersistentHashMap()
 
-    MaterialTheme {
+    AppTheme {
         ChatMessage(
             message = chatEntry,
             inlineContent = inlineBadges,

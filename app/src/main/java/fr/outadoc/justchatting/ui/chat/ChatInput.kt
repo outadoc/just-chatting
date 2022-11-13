@@ -46,6 +46,7 @@ import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.ui.HapticIconButton
+import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import kotlinx.collections.immutable.ImmutableSet
@@ -97,7 +98,7 @@ fun ChatInput(
 @ThemePreviews
 @Composable
 fun ChatInputPreviewBasic() {
-    MaterialTheme {
+    AppTheme {
         ChatInput(
             message = TextFieldValue("Lorem ipsum KEKW")
         )
@@ -107,7 +108,7 @@ fun ChatInputPreviewBasic() {
 @ThemePreviews
 @Composable
 fun ChatInputPreviewLongMessage() {
-    MaterialTheme {
+    AppTheme {
         ChatInput(
             message = TextFieldValue(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
@@ -119,7 +120,7 @@ fun ChatInputPreviewLongMessage() {
 @ThemePreviews
 @Composable
 fun ChatInputPreviewEmpty() {
-    MaterialTheme {
+    AppTheme {
         ChatInput()
     }
 }
@@ -127,7 +128,7 @@ fun ChatInputPreviewEmpty() {
 @ThemePreviews
 @Composable
 fun ChatInputPreviewReplying() {
-    MaterialTheme {
+    AppTheme {
         ChatInput(
             replyingTo = ChatEntry.Simple(
                 data = ChatEntry.Data(

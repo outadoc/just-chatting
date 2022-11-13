@@ -56,6 +56,7 @@ import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.HapticIconButton
+import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.util.formatNumber
 import fr.outadoc.justchatting.util.formatTime
 import fr.outadoc.justchatting.util.formatTimestamp
@@ -158,7 +159,7 @@ fun ChatTopAppBar(
 @ThemePreviews
 @Composable
 fun StreamInfoPreviewFull() {
-    MaterialTheme {
+    AppTheme {
         StreamInfo(
             user = User(
                 id = "",
@@ -180,7 +181,7 @@ fun StreamInfoPreviewFull() {
 @ThemePreviews
 @Composable
 fun StreamInfoPreviewOffline() {
-    MaterialTheme {
+    AppTheme {
         StreamInfo(
             user = User(
                 id = "",

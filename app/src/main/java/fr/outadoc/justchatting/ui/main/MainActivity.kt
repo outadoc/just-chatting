@@ -5,6 +5,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.compose.setContent
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.Crossfade
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
@@ -13,13 +14,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.lifecycleScope
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.ui.chat.ChatActivity
-import fr.outadoc.justchatting.ui.login.LoginActivity
 import fr.outadoc.justchatting.ui.onboarding.OnboardingScreen
 import fr.outadoc.justchatting.ui.theme.AppTheme
-import fr.outadoc.justchatting.util.parseChannelLogin
 import fr.outadoc.justchatting.util.toast
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : BaseActivity() {
@@ -29,9 +31,25 @@ class MainActivity : BaseActivity() {
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         if (savedInstanceState == null) {
-            intent.parseChannelFromIntent()?.let { login ->
-                viewChannel(login)
+            intent.data?.let { data ->
+                viewModel.onReceiveIntent(data)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.events.collectLatest { event ->
+                when (event) {
+                    is MainViewModel.Event.ViewChannel -> {
+                        viewChannel(event.login)
+                    }
+
+                    is MainViewModel.Event.OpenInBrowser -> {
+                        val intent = CustomTabsIntent.Builder().build()
+                        intent.launchUrl(this@MainActivity, event.uri)
+                    }
+                }
             }
         }
 
@@ -57,7 +75,7 @@ class MainActivity : BaseActivity() {
 
                     OnboardingScreen(
                         onLoginClick = {
-                            startActivity(Intent(this, LoginActivity::class.java))
+                            viewModel.onLoginClick()
                         }
                     )
                 }
@@ -86,8 +104,8 @@ class MainActivity : BaseActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?.parseChannelFromIntent()?.let { login ->
-            viewChannel(login)
+        intent?.data?.let { data ->
+            viewModel.onReceiveIntent(data)
         }
     }
 
@@ -105,11 +123,6 @@ class MainActivity : BaseActivity() {
         }
 
         startActivity(intent)
-    }
-
-    private fun Intent.parseChannelFromIntent(): String? {
-        if (action != Intent.ACTION_VIEW) return null
-        return data?.parseChannelLogin()
     }
 
     private fun viewChannel(login: String) {

@@ -4,18 +4,19 @@ import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.deeplink.Deeplink
+import fr.outadoc.justchatting.deeplink.DeeplinkParser
+import fr.outadoc.justchatting.log.logError
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.id.ValidationResponse
 import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.InvalidClientIdException
 import fr.outadoc.justchatting.repository.PreferenceRepository
-import fr.outadoc.justchatting.util.viewChannelBaseUrl
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -23,7 +24,8 @@ import retrofit2.HttpException
 
 class MainViewModel(
     private val authRepository: AuthRepository,
-    private val preferencesRepository: PreferenceRepository
+    private val preferencesRepository: PreferenceRepository,
+    private val deeplinkParser: DeeplinkParser
 ) : ViewModel() {
 
     sealed class State {
@@ -113,53 +115,26 @@ class MainViewModel(
     }
 
     fun onReceiveIntent(data: Uri) = viewModelScope.launch {
-        when {
-            data.isViewChannelUrl() -> {
-                data.pathSegments.firstOrNull()?.let { login ->
-                    _events.emit(
-                        Event.ViewChannel(login = login)
+        when (val deeplink = deeplinkParser.parseDeeplink(data)) {
+            is Deeplink.Authenticated -> {
+                preferencesRepository.updatePreferences { prefs ->
+                    prefs.copy(
+                        appUser = AppUser.NotValidated(
+                            helixToken = deeplink.token
+                        )
                     )
                 }
             }
 
-            data.isRedirectUrl() -> {
-                val token = data.parseToken()
-                if (token != null) {
-                    preferencesRepository.updatePreferences { prefs ->
-                        prefs.copy(
-                            appUser = AppUser.NotValidated(
-                                helixToken = token
-                            )
-                        )
-                    }
-                }
+            is Deeplink.ViewChannel -> {
+                _events.emit(
+                    Event.ViewChannel(login = deeplink.login)
+                )
+            }
+
+            null -> {
+                logError<MainViewModel> { "Invalid deeplink: $data" }
             }
         }
-    }
-
-    private fun Uri.isViewChannelUrl(): Boolean {
-        return scheme == viewChannelBaseUrl.scheme && host == viewChannelBaseUrl.host
-    }
-
-    private suspend fun Uri.isRedirectUrl(): Boolean {
-        val redirectUri: Uri? =
-            preferencesRepository.currentPreferences
-                .firstOrNull()
-                ?.helixRedirect
-                ?.toUri()
-
-        return redirectUri != null &&
-                scheme == redirectUri.scheme &&
-                host == redirectUri.host &&
-                path == redirectUri.path
-    }
-
-    private fun Uri.parseToken(): String? {
-        // URL contains query parameters encoded as a path fragment.
-        // Copy the path fragment to query parameters and parse them this way.
-        return buildUpon()
-            .encodedQuery(fragment)
-            .build()
-            .getQueryParameter("access_token")
     }
 }

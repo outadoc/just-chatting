@@ -15,6 +15,7 @@ import fr.outadoc.justchatting.api.StvEmotesApi
 import fr.outadoc.justchatting.api.TwitchBadgesApi
 import fr.outadoc.justchatting.auth.AuthenticationInterceptor
 import fr.outadoc.justchatting.db.AppDatabase
+import fr.outadoc.justchatting.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.irc.ChatMessageParser
 import fr.outadoc.justchatting.model.chat.BttvChannelDeserializer
 import fr.outadoc.justchatting.model.chat.BttvChannelResponse
@@ -95,6 +96,7 @@ val mainModule = module {
     single<IdApi> { createApi("https://id.twitch.tv/oauth2/") }
 
     single { AuthenticationInterceptor(get()) }
+    single { DeeplinkParser(get()) }
 
     single<GsonConverterFactory> {
         GsonConverterFactory.create(

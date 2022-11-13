@@ -40,6 +40,7 @@ fun SettingsEdit(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
+    readOnly: Boolean = false,
     placeholder: @Composable (() -> Unit)? = null,
     title: @Composable () -> Unit
 ) {
@@ -56,7 +57,8 @@ fun SettingsEdit(
                         .padding(top = 8.dp),
                     value = value,
                     onValueChange = onValueChange,
-                    placeholder = placeholder
+                    placeholder = placeholder,
+                    readOnly = readOnly
                 )
             }
         }

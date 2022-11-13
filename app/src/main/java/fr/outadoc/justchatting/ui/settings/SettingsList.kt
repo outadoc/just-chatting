@@ -262,6 +262,7 @@ fun SettingsList(
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .padding(itemInsets),
+                readOnly = true,
                 value = appPreferences.helixClientId,
                 placeholder = {
                     Text(text = "aaaa-bbbb-cccc-dddd-eeee-ffff")
@@ -279,6 +280,7 @@ fun SettingsList(
                 modifier = Modifier
                     .padding(top = 8.dp)
                     .padding(itemInsets),
+                readOnly = true,
                 value = appPreferences.helixRedirect,
                 placeholder = {
                     Text(text = "https://example.com")

@@ -7,8 +7,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,51 +33,56 @@ fun OnboardingScreenPreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OnboardingScreen(
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit
 ) {
-    Column(
-        modifier = modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Box(
-            modifier = Modifier.widthIn(max = 320.dp)
+    Scaffold(modifier = modifier) { insets ->
+        Column(
+            modifier = Modifier
+                .padding(insets)
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Box(
+                modifier = Modifier.widthIn(max = 320.dp)
             ) {
-                Icon(
+                Column(
                     modifier = Modifier
-                        .size(AppIconSize)
-                        .padding(bottom = 24.dp),
-                    painter = painterResource(R.drawable.ic_notif),
-                    contentDescription = null
-                )
+                        .padding(16.dp)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        modifier = Modifier
+                            .size(AppIconSize)
+                            .padding(bottom = 24.dp),
+                        painter = painterResource(R.drawable.ic_notif),
+                        contentDescription = null
+                    )
 
-                Text(
-                    text = stringResource(
-                        R.string.onboarding_title,
-                        stringResource(R.string.app_name)
-                    ),
-                    style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center
-                )
+                    Text(
+                        text = stringResource(
+                            R.string.onboarding_title,
+                            stringResource(R.string.app_name)
+                        ),
+                        style = MaterialTheme.typography.headlineSmall,
+                        textAlign = TextAlign.Center
+                    )
 
-                Text(
-                    modifier = Modifier.padding(vertical = 32.dp),
-                    text = stringResource(R.string.onboarding_message),
-                    textAlign = TextAlign.Center
-                )
+                    Text(
+                        modifier = Modifier.padding(vertical = 32.dp),
+                        text = stringResource(R.string.onboarding_message),
+                        textAlign = TextAlign.Center
+                    )
 
-                SignInWithTwitchButton(
-                    onClick = onLoginClick
-                )
+                    SignInWithTwitchButton(
+                        onClick = onLoginClick
+                    )
+                }
             }
         }
     }

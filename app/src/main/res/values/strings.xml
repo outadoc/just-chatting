@@ -26,7 +26,6 @@
     <string name="chat_send_msg_error">Error sending message - %s</string>
     <string name="chat_socket_error">Error while closing socket - %s</string>
     <string name="chat_timeout">%1$s has been timed out for %2$s</string>
-    <string name="connection_error">Error connecting to the server. Please try again</string>
     <string name="created_at">Created at %s</string>
     <string name="emote_tab_others">Others</string>
     <string name="emote_tab_recent">Recent</string>

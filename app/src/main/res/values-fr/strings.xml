@@ -25,7 +25,6 @@
     <string name="chat_send_msg_error">Erreur lors de l\'envoi du message - %s</string>
     <string name="chat_socket_error">Erreur lors de la fermeture du socket - %s</string>
     <string name="chat_timeout">%1$s a été mis·e au silence pendant %2$s</string>
-    <string name="connection_error">Erreur de connexion au serveur. Veuillez réessayer</string>
     <string name="created_at">Créé le %s</string>
     <string name="emote_tab_others">Autres</string>
     <string name="emote_tab_recent">Récentes</string>

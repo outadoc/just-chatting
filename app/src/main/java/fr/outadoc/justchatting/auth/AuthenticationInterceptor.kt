@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.auth
 
+import fr.outadoc.justchatting.oauth.OAuthAppCredentials
 import fr.outadoc.justchatting.repository.PreferenceRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -9,7 +10,8 @@ import okhttp3.Response
 import retrofit2.Invocation
 
 class AuthenticationInterceptor(
-    private val preferenceRepository: PreferenceRepository
+    private val preferenceRepository: PreferenceRepository,
+    private val oAuthAppCredentials: OAuthAppCredentials
 ) : Interceptor {
 
     companion object {
@@ -25,7 +27,7 @@ class AuthenticationInterceptor(
             val prefs = preferenceRepository.currentPreferences.first()
             val authenticatedRequest: Request =
                 request.newBuilder()
-                    .header(TWITCH_HEADER_CLIENT_ID, prefs.helixClientId)
+                    .header(TWITCH_HEADER_CLIENT_ID, oAuthAppCredentials.clientId)
                     .apply {
                         prefs.appUser.helixToken?.let { token ->
                             header(TWITCH_HEADER_AUTHORIZATION, "Bearer $token")

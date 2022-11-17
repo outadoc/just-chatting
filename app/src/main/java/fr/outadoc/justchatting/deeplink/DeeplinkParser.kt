@@ -1,15 +1,13 @@
 package fr.outadoc.justchatting.deeplink
 
 import android.net.Uri
-import androidx.core.net.toUri
-import fr.outadoc.justchatting.repository.PreferenceRepository
+import fr.outadoc.justchatting.oauth.OAuthAppCredentials
 import fr.outadoc.justchatting.util.viewChannelBaseUrl
-import kotlinx.coroutines.flow.firstOrNull
 
 data class DeeplinkParser(
-    val preferencesRepository: PreferenceRepository
+    private val oAuthAppCredentials: OAuthAppCredentials
 ) {
-    suspend fun parseDeeplink(uri: Uri): Deeplink? {
+    fun parseDeeplink(uri: Uri): Deeplink? {
         when {
             uri.isViewChannelUrl() -> {
                 uri.pathSegments.firstOrNull()?.let { login ->
@@ -32,17 +30,10 @@ data class DeeplinkParser(
         return scheme == viewChannelBaseUrl.scheme && host == viewChannelBaseUrl.host
     }
 
-    private suspend fun Uri.isRedirectUrl(): Boolean {
-        val redirectUri: Uri? =
-            preferencesRepository.currentPreferences
-                .firstOrNull()
-                ?.helixRedirect
-                ?.toUri()
-
-        return redirectUri != null &&
-            scheme == redirectUri.scheme &&
-            host == redirectUri.host &&
-            path == redirectUri.path
+    private fun Uri.isRedirectUrl(): Boolean {
+        return scheme == oAuthAppCredentials.redirectUri.scheme &&
+            host == oAuthAppCredentials.redirectUri.host &&
+            path == oAuthAppCredentials.redirectUri.path
     }
 
     private fun Uri.parseToken(): String? {

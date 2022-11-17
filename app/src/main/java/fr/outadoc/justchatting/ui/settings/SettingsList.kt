@@ -252,56 +252,6 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets)
             ) {
-                Text(stringResource(R.string.api_settings))
-            }
-        }
-
-        item {
-            SettingsEdit(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-                readOnly = true,
-                value = appPreferences.helixClientId,
-                placeholder = {
-                    Text(text = "aaaa-bbbb-cccc-dddd-eeee-ffff")
-                },
-                onValueChange = { value ->
-                    onAppPreferencesChange(appPreferences.copy(helixClientId = value))
-                }
-            ) {
-                Text(stringResource(R.string.api_helix))
-            }
-        }
-
-        item {
-            SettingsEdit(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-                readOnly = true,
-                value = appPreferences.helixRedirect,
-                placeholder = {
-                    Text(text = "https://example.com")
-                },
-                onValueChange = { value ->
-                    onAppPreferencesChange(appPreferences.copy(helixRedirect = value))
-                }
-            ) {
-                Text(stringResource(R.string.api_helix_redirect))
-            }
-        }
-
-        item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets)
-            ) {
                 Text(stringResource(R.string.settings_about_header))
             }
         }

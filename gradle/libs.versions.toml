@@ -20,8 +20,8 @@ ksp = { id = "com.google.devtools.ksp", version = "1.7.21-1.0.8" }
 spotless = { id = "com.diffplug.spotless", version = "6.11.0" }
 
 [libraries]
-accompanist-systemuicontroller = "com.google.accompanist:accompanist-systemuicontroller:0.27.0"
-accompanist-webview = "com.google.accompanist:accompanist-webview:0.27.0"
+accompanist-systemuicontroller = "com.google.accompanist:accompanist-systemuicontroller:0.27.1"
+accompanist-webview = "com.google.accompanist:accompanist-webview:0.27.1"
 androidx-activity-compose = "androidx.activity:activity-compose:1.6.1"
 androidx-appcompat = "androidx.appcompat:appcompat:1.5.1"
 androidx-browser = "androidx.browser:browser:1.4.0"

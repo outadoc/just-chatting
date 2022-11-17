@@ -48,7 +48,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="https" />
-                <data android:host="outadoc.github.io" />
+                <data android:host="just-chatting.app" />
 
             </intent-filter>
         </activity>

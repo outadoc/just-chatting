@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.di
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
+import androidx.core.net.toUri
 import androidx.room.Room
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
@@ -33,6 +34,7 @@ import fr.outadoc.justchatting.model.chat.TwitchBadgesDeserializer
 import fr.outadoc.justchatting.model.chat.TwitchBadgesResponse
 import fr.outadoc.justchatting.model.helix.emote.EmoteSetDeserializer
 import fr.outadoc.justchatting.model.helix.emote.EmoteSetResponse
+import fr.outadoc.justchatting.oauth.OAuthAppCredentials
 import fr.outadoc.justchatting.repository.ApiRepository
 import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.ChatConnectionPool
@@ -80,13 +82,20 @@ val mainModule = module {
     single { ChatEntryMapper(get()) }
     single { PubSubRewardParser(get()) }
 
-    single { AuthRepository(get(), get()) }
+    single { AuthRepository(get(), get(), get()) }
     single { EmotesRepository(get(), get(), get(), get()) }
     single { RecentMessagesRepository(get()) }
 
     single { get<AppDatabase>().recentEmotes() }
 
     single { Room.databaseBuilder(get(), AppDatabase::class.java, "database").build() }
+
+    single {
+        OAuthAppCredentials(
+            clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
+            redirectUri = "https://outadoc.github.io/just-chatting/callback.html".toUri()
+        )
+    }
 
     single<HelixApi> { createApi("https://api.twitch.tv/helix/") }
     single<TwitchBadgesApi> { createApi("https://badges.twitch.tv/") }
@@ -95,7 +104,7 @@ val mainModule = module {
     single<RecentMessagesApi> { createApi("https://recent-messages.robotty.de/api/") }
     single<IdApi> { createApi("https://id.twitch.tv/oauth2/") }
 
-    single { AuthenticationInterceptor(get()) }
+    single { AuthenticationInterceptor(get(), get()) }
     single { DeeplinkParser(get()) }
 
     single<GsonConverterFactory> {

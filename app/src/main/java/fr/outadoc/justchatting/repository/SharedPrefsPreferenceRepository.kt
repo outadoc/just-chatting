@@ -30,8 +30,6 @@ class SharedPrefsPreferenceRepository(
 
     private fun Preferences.read(): AppPreferences {
         return AppPreferences(
-            helixClientId = this[HELIX_CLIENT_ID] ?: defaultPreferences.helixClientId,
-            helixRedirect = this[HELIX_REDIRECT] ?: defaultPreferences.helixRedirect,
             animateEmotes = this[CHAT_ANIMATED_EMOTES] ?: defaultPreferences.animateEmotes,
             showTimestamps = this[CHAT_TIMESTAMPS] ?: defaultPreferences.showTimestamps,
             recentMsgLimit = this[CHAT_RECENT_LIMIT] ?: defaultPreferences.recentMsgLimit,
@@ -41,8 +39,6 @@ class SharedPrefsPreferenceRepository(
     }
 
     private fun AppPreferences.writeTo(prefs: MutablePreferences) {
-        prefs[HELIX_CLIENT_ID] = helixClientId
-        prefs[HELIX_REDIRECT] = helixRedirect
         prefs[USER_ID] = appUser.id ?: ""
         prefs[USER_LOGIN] = appUser.login ?: ""
         prefs[USER_TOKEN] = appUser.helixToken ?: ""
@@ -75,9 +71,6 @@ class SharedPrefsPreferenceRepository(
     }
 
     private companion object {
-        val HELIX_CLIENT_ID = stringPreferencesKey("helix_client_id")
-        val HELIX_REDIRECT = stringPreferencesKey("helix_redirect")
-
         val USER_ID = stringPreferencesKey("user_id")
         val USER_LOGIN = stringPreferencesKey("username")
         val USER_TOKEN = stringPreferencesKey("token")

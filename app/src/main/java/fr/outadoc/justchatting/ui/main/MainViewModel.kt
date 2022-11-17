@@ -9,6 +9,7 @@ import fr.outadoc.justchatting.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.log.logError
 import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.model.id.ValidationResponse
+import fr.outadoc.justchatting.oauth.OAuthAppCredentials
 import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.InvalidClientIdException
 import fr.outadoc.justchatting.repository.PreferenceRepository
@@ -25,7 +26,8 @@ import retrofit2.HttpException
 class MainViewModel(
     private val authRepository: AuthRepository,
     private val preferencesRepository: PreferenceRepository,
-    private val deeplinkParser: DeeplinkParser
+    private val deeplinkParser: DeeplinkParser,
+    private val oAuthAppCredentials: OAuthAppCredentials
 ) : ViewModel() {
 
     sealed class State {
@@ -59,7 +61,7 @@ class MainViewModel(
                                 helixToken = prefs.appUser.helixToken
                             )
 
-                            if (userInfo.clientId != prefs.helixClientId) {
+                            if (userInfo.clientId != oAuthAppCredentials.clientId) {
                                 throw InvalidClientIdException()
                             }
 
@@ -103,8 +105,8 @@ class MainViewModel(
             "https://id.twitch.tv/oauth2/authorize".toUri()
                 .buildUpon()
                 .appendQueryParameter("response_type", "token")
-                .appendQueryParameter("client_id", prefs.helixClientId)
-                .appendQueryParameter("redirect_uri", prefs.helixRedirect)
+                .appendQueryParameter("client_id", oAuthAppCredentials.clientId)
+                .appendQueryParameter("redirect_uri", oAuthAppCredentials.redirectUri.toString())
                 .appendQueryParameter("force_verify", "true")
                 .appendQueryParameter("scope", helixScopes.joinToString(" "))
                 .build()

@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "fr.outadoc.justchatting.debug",
+            "sha256_cert_fingerprints": [
+                "FA:EA:A7:7B:81:D1:64:EB:18:E7:33:69:AF:39:84:8A:4B:5A:C3:22:0B:F4:BE:8C:BB:54:D4:5E:24:78:E1:1C"
+            ]
+        }
+    }
+]

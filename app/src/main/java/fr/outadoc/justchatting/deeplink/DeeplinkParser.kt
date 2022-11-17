@@ -40,9 +40,9 @@ data class DeeplinkParser(
                 ?.toUri()
 
         return redirectUri != null &&
-                scheme == redirectUri.scheme &&
-                host == redirectUri.host &&
-                path == redirectUri.path
+            scheme == redirectUri.scheme &&
+            host == redirectUri.host &&
+            path == redirectUri.path
     }
 
     private fun Uri.parseToken(): String? {

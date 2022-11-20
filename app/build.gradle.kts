@@ -21,6 +21,22 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        named("debug") {
+            keyAlias = "debug"
+            keyPassword = ""
+            storeFile = rootProject.file("keystores/debug.p12")
+            storePassword = "android"
+        }
+
+        create("release") {
+            keyAlias = "upload_key"
+            keyPassword = ""
+            storeFile = rootProject.file("keystores/release.p12")
+            storePassword = findProperty("release_keystore_password") as String?
+        }
+    }
+
     buildTypes {
         named("debug") {
             applicationIdSuffix = ".debug"
@@ -28,14 +44,26 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
 
-        named("release") {
+        create("qa") {
             isShrinkResources = true
             isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("debug")
+
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("debug")
+        }
+
+        named("release") {
+            isShrinkResources = true
+            isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("release")
+
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
 
@@ -46,15 +74,6 @@ android {
 
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.0-alpha02"
-    }
-
-    signingConfigs {
-        named("debug") {
-            keyAlias = "debug"
-            keyPassword = ""
-            storeFile = rootProject.file("keystores/debug.p12")
-            storePassword = "android"
-        }
     }
 
     compileOptions {
@@ -143,8 +162,9 @@ dependencies {
     ksp(libs.androidx.room.compiler)
 
     // debugImplementation(libs.leakcanary)
-    debugImplementation(libs.chucker.runtime)
-    releaseImplementation(libs.chucker.noop)
+    "debugImplementation"(libs.chucker.runtime)
+    "qaImplementation"(libs.chucker.noop)
+    "releaseImplementation"(libs.chucker.noop)
 
     testImplementation(libs.junit)
 

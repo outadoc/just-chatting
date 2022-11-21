@@ -265,6 +265,7 @@ fun ExpandedNavigation(
                     .systemBarsPadding()
             ) {
                 NavigationDrawerItem(
+                    modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Live,
                     label = { Text(stringResource(R.string.live)) },
                     icon = {
@@ -277,6 +278,7 @@ fun ExpandedNavigation(
                 )
 
                 NavigationDrawerItem(
+                    modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Followed,
                     label = { Text(stringResource(R.string.channels)) },
                     icon = {
@@ -289,6 +291,7 @@ fun ExpandedNavigation(
                 )
 
                 NavigationDrawerItem(
+                    modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Search,
                     label = { Text(stringResource(R.string.search)) },
                     icon = {
@@ -301,6 +304,7 @@ fun ExpandedNavigation(
                 )
 
                 NavigationDrawerItem(
+                    modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Settings,
                     label = { Text(stringResource(R.string.settings)) },
                     icon = {

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -33,6 +34,24 @@ fun LiveStreamPreview() {
             modifier = Modifier.padding(8.dp),
             userName = "Maghla",
             gameName = "Just Chatting",
+            title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+            viewerCount = 5_305,
+            startedAt = "2022-01-01T13:45:04.00Z".toInstant(),
+            profileImageURL = null
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+fun LiveStreamLongPreview() {
+    AppTheme {
+        LiveStreamCard(
+            modifier = Modifier
+                .width(250.dp)
+                .padding(8.dp),
+            userName = "Maghla",
+            gameName = "The Dark Pictures Anthology: The Devil in Me",
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = "2022-01-01T13:45:04.00Z".toInstant(),
@@ -110,7 +129,9 @@ fun LiveStream(
             ) {
                 userName?.let { userName ->
                     Text(
-                        modifier = Modifier.alignByBaseline(),
+                        modifier = Modifier
+                            .weight(1f, fill = true)
+                            .alignByBaseline(),
                         text = userName,
                         style = MaterialTheme.typography.bodyMedium
                     )
@@ -131,7 +152,9 @@ fun LiveStream(
             ) {
                 gameName?.let { gameName ->
                     Text(
-                        modifier = Modifier.alignByBaseline(),
+                        modifier = Modifier
+                            .weight(1f, fill = true)
+                            .alignByBaseline(),
                         text = gameName,
                         style = MaterialTheme.typography.bodyMedium
                     )

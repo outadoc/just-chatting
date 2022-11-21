@@ -1,11 +1,10 @@
 package fr.outadoc.justchatting.util
 
 import android.net.Uri
-
-val viewChannelBaseUrl: Uri = Uri.parse("justchatting://channel")
+import fr.outadoc.justchatting.deeplink.DeeplinkDefinitions
 
 fun String.createChannelDeeplink(): Uri =
-    viewChannelBaseUrl
+    DeeplinkDefinitions.ViewChannel
         .buildUpon()
         .appendPath(this)
         .build()

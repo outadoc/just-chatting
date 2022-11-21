@@ -37,7 +37,6 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="justchatting" />
-                <data android:host="channel" />
 
             </intent-filter>
 

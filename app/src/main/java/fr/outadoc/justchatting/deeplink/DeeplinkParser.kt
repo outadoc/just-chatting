@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.deeplink
 
 import android.net.Uri
 import fr.outadoc.justchatting.oauth.OAuthAppCredentials
-import fr.outadoc.justchatting.util.viewChannelBaseUrl
 
 data class DeeplinkParser(
     private val oAuthAppCredentials: OAuthAppCredentials
@@ -27,13 +26,22 @@ data class DeeplinkParser(
     }
 
     private fun Uri.isViewChannelUrl(): Boolean {
-        return scheme == viewChannelBaseUrl.scheme && host == viewChannelBaseUrl.host
+        return scheme == DeeplinkDefinitions.ViewChannel.scheme &&
+            host == DeeplinkDefinitions.ViewChannel.host
     }
 
     private fun Uri.isRedirectUrl(): Boolean {
-        return scheme == oAuthAppCredentials.redirectUri.scheme &&
-            host == oAuthAppCredentials.redirectUri.host &&
-            path == oAuthAppCredentials.redirectUri.path
+        val isFromUniversalLink =
+            scheme == oAuthAppCredentials.redirectUri.scheme &&
+                host == oAuthAppCredentials.redirectUri.host &&
+                path == oAuthAppCredentials.redirectUri.path
+
+        val isFromDeeplink =
+            scheme == DeeplinkDefinitions.AuthCallback.scheme &&
+                host == DeeplinkDefinitions.AuthCallback.host &&
+                path == DeeplinkDefinitions.AuthCallback.path
+
+        return isFromDeeplink || isFromUniversalLink
     }
 
     private fun Uri.parseToken(): String? {

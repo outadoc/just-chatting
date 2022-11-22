@@ -101,9 +101,6 @@ licenseReport {
     outputDir = file("src/main/assets").path
     configurations = arrayOf("releaseRuntimeClasspath")
     renderers = arrayOf(JsonReportRenderer("dependencies.json"))
-    importers = arrayOf(
-        XmlReportImporter("Other", file("extra-dependencies.xml"))
-    )
 }
 
 tasks.named("generateLicenseReport") {

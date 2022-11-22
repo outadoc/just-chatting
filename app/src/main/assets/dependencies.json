@@ -1055,25 +1055,5 @@
             "moduleLicense": "MIT License",
             "moduleLicenseUrl": "http://www.opensource.org/licenses/mit-license.php"
         }
-    ],
-    "importedModules": [
-        {
-            "moduleName": "Other",
-            "dependencies": [
-                {
-                    "moduleName": "Kale",
-                    "moduleUrl": "https://github.com/WillowChat/Kale",
-                    "moduleVersion": "1.1.0",
-                    "moduleLicense": "ISC License",
-                    "moduleLicenseUrl": "https://opensource.org/licenses/ISC"
-                },
-                {
-                    "moduleName": "Xtra",
-                    "moduleUrl": "https://github.com/crackededed/Xtra",
-                    "moduleLicense": "GNU Affero General Public License v3.0",
-                    "moduleLicenseUrl": "https://www.gnu.org/licenses/agpl-3.0.en.html"
-                }
-            ]
-        }
     ]
 }

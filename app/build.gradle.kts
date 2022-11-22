@@ -1,11 +1,16 @@
 @file:Suppress("UnstableApiUsage")
 
+import com.github.jk1.license.importer.XmlReportImporter
+import com.github.jk1.license.render.JsonReportRenderer
+import org.gradle.configurationcache.extensions.capitalized
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.licenseReport)
 }
 
 android {
@@ -91,6 +96,20 @@ android {
             "plugin:androidx.compose.compiler.plugins.kotlin:metricsDestination=${buildDir.resolve("compose/metrics")}"
         )
     }
+}
+
+licenseReport {
+    outputDir = file("src/main/assets").path
+    excludeOwnGroup = true
+    configurations = arrayOf("releaseRuntimeClasspath")
+    renderers = arrayOf(JsonReportRenderer("dependencies.json"))
+    importers = arrayOf(
+        XmlReportImporter("Other", file("extra-dependencies.xml"))
+    )
+}
+
+tasks.named("generateLicenseReport") {
+    outputs.upToDateWhen { false }
 }
 
 ksp {

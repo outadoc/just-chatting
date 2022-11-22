@@ -8,16 +8,8 @@ plugins {
     alias(libs.plugins.kotlin.parcelize) apply false
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.spotless) apply false
-    alias(libs.plugins.licenseReport)
+    alias(libs.plugins.licenseReport) apply false
 }
 
 group = "fr.outadoc"
 
-licenseReport {
-    excludeOwnGroup = true
-    configurations = arrayOf("releaseRuntimeClasspath")
-    renderers = arrayOf(JsonReportRenderer())
-    importers = arrayOf(
-        XmlReportImporter("Other", file("dependencies.xml"))
-    )
-}

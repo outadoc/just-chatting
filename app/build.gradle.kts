@@ -2,7 +2,6 @@
 
 import com.github.jk1.license.importer.XmlReportImporter
 import com.github.jk1.license.render.JsonReportRenderer
-import org.gradle.configurationcache.extensions.capitalized
 
 plugins {
     alias(libs.plugins.android.application)
@@ -100,7 +99,6 @@ android {
 
 licenseReport {
     outputDir = file("src/main/assets").path
-    excludeOwnGroup = true
     configurations = arrayOf("releaseRuntimeClasspath")
     renderers = arrayOf(JsonReportRenderer("dependencies.json"))
     importers = arrayOf(

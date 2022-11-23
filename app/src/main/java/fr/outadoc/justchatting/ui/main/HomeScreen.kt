@@ -3,17 +3,24 @@ package fr.outadoc.justchatting.ui.main
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.ui.search.channels.ChannelSearchViewModel
 import fr.outadoc.justchatting.ui.settings.SettingsContent
 import org.koin.androidx.compose.getViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -24,6 +31,7 @@ fun HomeScreen(
 ) {
     var selectedTab by remember { mutableStateOf(DefaultTab) }
     val searchViewModel = getViewModel<ChannelSearchViewModel>()
+    val searchState by searchViewModel.state.collectAsState()
 
     BackHandler(
         enabled = selectedTab != DefaultTab,
@@ -37,51 +45,73 @@ fun HomeScreen(
         sizeClass = sizeClass,
         selectedTab = selectedTab,
         onSelectedTabChange = { selectedTab = it },
-        searchViewModel = searchViewModel
-    ) { insets ->
-        Crossfade(
-            modifier = Modifier.padding(insets),
-            targetState = selectedTab
-        ) { tab ->
-            when (tab) {
-                Tab.Live -> {
-                    LiveChannelsList(
-                        onItemClick = { stream ->
-                            stream.userLogin?.let { login ->
-                                onChannelClick(login)
+        topBar = {
+            Crossfade(targetState = selectedTab) { tab ->
+                when (tab) {
+                    Tab.Search -> {
+                        SearchTopAppBar(
+                            modifier = modifier,
+                            query = searchState.query,
+                            onQueryChange = { newQuery ->
+                                searchViewModel.onQueryChange(newQuery)
                             }
-                        }
-                    )
-                }
+                        )
+                    }
 
-                Tab.Followed -> {
-                    FollowedChannelsList(
-                        onItemClick = { stream ->
-                            stream.toLogin?.let { login ->
-                                onChannelClick(login)
+                    else -> {
+                        TopAppBar(
+                            modifier = modifier,
+                            title = { Text(stringResource(R.string.app_name)) }
+                        )
+                    }
+                }
+            }
+        },
+        content = { insets ->
+            Crossfade(
+                modifier = Modifier.padding(insets),
+                targetState = selectedTab
+            ) { tab ->
+                when (tab) {
+                    Tab.Live -> {
+                        LiveChannelsList(
+                            onItemClick = { stream ->
+                                stream.userLogin?.let { login ->
+                                    onChannelClick(login)
+                                }
                             }
-                        }
-                    )
-                }
+                        )
+                    }
 
-                Tab.Search -> {
-                    SearchResultsList(
-                        onItemClick = { stream ->
-                            stream.broadcasterLogin?.let { login ->
-                                onChannelClick(login)
+                    Tab.Followed -> {
+                        FollowedChannelsList(
+                            onItemClick = { stream ->
+                                stream.toLogin?.let { login ->
+                                    onChannelClick(login)
+                                }
                             }
-                        },
-                        viewModel = searchViewModel
-                    )
-                }
+                        )
+                    }
 
-                Tab.Settings -> {
-                    SettingsContent(
-                        onOpenNotificationPreferences = onOpenNotificationPreferences,
-                        onOpenBubblePreferences = onOpenBubblePreferences
-                    )
+                    Tab.Search -> {
+                        SearchResultsList(
+                            onItemClick = { stream ->
+                                stream.broadcasterLogin?.let { login ->
+                                    onChannelClick(login)
+                                }
+                            },
+                            viewModel = searchViewModel
+                        )
+                    }
+
+                    Tab.Settings -> {
+                        SettingsContent(
+                            onOpenNotificationPreferences = onOpenNotificationPreferences,
+                            onOpenBubblePreferences = onOpenBubblePreferences
+                        )
+                    }
                 }
             }
         }
-    }
+    )
 }

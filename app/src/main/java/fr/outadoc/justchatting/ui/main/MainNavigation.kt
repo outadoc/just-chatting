@@ -33,7 +33,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.ui.search.channels.ChannelSearchViewModel
 
 @Composable
 fun MainNavigation(
@@ -41,7 +40,7 @@ fun MainNavigation(
     sizeClass: WindowSizeClass,
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
-    searchViewModel: ChannelSearchViewModel,
+    topBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
     when (sizeClass.widthSizeClass) {
@@ -50,7 +49,7 @@ fun MainNavigation(
                 modifier = modifier,
                 selectedTab = selectedTab,
                 onSelectedTabChange = onSelectedTabChange,
-                searchViewModel = searchViewModel,
+                topBar = topBar,
                 content = content
             )
         }
@@ -60,7 +59,7 @@ fun MainNavigation(
                 modifier = modifier,
                 selectedTab = selectedTab,
                 onSelectedTabChange = onSelectedTabChange,
-                searchViewModel = searchViewModel,
+                topBar = topBar,
                 content = content
             )
         }
@@ -70,7 +69,7 @@ fun MainNavigation(
                 modifier = modifier,
                 selectedTab = selectedTab,
                 onSelectedTabChange = onSelectedTabChange,
-                searchViewModel = searchViewModel,
+                topBar = topBar,
                 content = content
             )
         }
@@ -83,17 +82,12 @@ fun CompactNavigation(
     modifier: Modifier = Modifier,
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
-    searchViewModel: ChannelSearchViewModel,
+    topBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
     Scaffold(
         modifier = modifier,
-        topBar = {
-            MainTopAppBar(
-                selectedTab = selectedTab,
-                searchViewModel = searchViewModel
-            )
-        },
+        topBar = topBar,
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
@@ -155,7 +149,7 @@ fun MediumNavigation(
     modifier: Modifier = Modifier,
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
-    searchViewModel: ChannelSearchViewModel,
+    topBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
     Row {
@@ -235,12 +229,7 @@ fun MediumNavigation(
 
         Scaffold(
             modifier = modifier,
-            topBar = {
-                MainTopAppBar(
-                    selectedTab = selectedTab,
-                    searchViewModel = searchViewModel
-                )
-            },
+            topBar = topBar,
             content = content
         )
     }
@@ -252,7 +241,7 @@ fun ExpandedNavigation(
     modifier: Modifier = Modifier,
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
-    searchViewModel: ChannelSearchViewModel,
+    topBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit
 ) {
     PermanentNavigationDrawer(
@@ -320,12 +309,7 @@ fun ExpandedNavigation(
         content = {
             Scaffold(
                 modifier = modifier,
-                topBar = {
-                    MainTopAppBar(
-                        selectedTab = selectedTab,
-                        searchViewModel = searchViewModel
-                    )
-                },
+                topBar = topBar,
                 content = content
             )
         }

@@ -35,6 +35,7 @@ import fr.outadoc.justchatting.model.chat.TwitchBadgesResponse
 import fr.outadoc.justchatting.model.helix.emote.EmoteSetDeserializer
 import fr.outadoc.justchatting.model.helix.emote.EmoteSetResponse
 import fr.outadoc.justchatting.oauth.OAuthAppCredentials
+import fr.outadoc.justchatting.oss.ReadExternalDependenciesList
 import fr.outadoc.justchatting.repository.ApiRepository
 import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.ChatConnectionPool
@@ -69,6 +70,7 @@ val mainModule = module {
 
     single<TwitchService> { ApiRepository(get(), get()) }
 
+    single { ReadExternalDependenciesList(get()) }
     single<PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }
 
     single { ChatConnectionPool(get()) }

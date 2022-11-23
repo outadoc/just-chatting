@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spotless)
     alias(libs.plugins.licenseReport)
 }
@@ -172,6 +173,8 @@ dependencies {
     implementation(libs.okio)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gson)
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
     ksp(libs.androidx.room.compiler)
 

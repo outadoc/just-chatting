@@ -5,24 +5,30 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ThemePreviews
+import fr.outadoc.justchatting.oss.Dependency
+import fr.outadoc.justchatting.oss.ReadExternalDependenciesList
 import fr.outadoc.justchatting.repository.AppPreferences
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.util.plus
+import org.koin.androidx.compose.get
 
 @ThemePreviews
 @Composable
@@ -47,8 +53,16 @@ fun SettingsList(
     onOpenBubblePreferences: () -> Unit,
     onLogoutClick: () -> Unit,
     itemInsets: PaddingValues = PaddingValues(),
-    insets: PaddingValues = PaddingValues()
+    insets: PaddingValues = PaddingValues(),
+    readDependencies: ReadExternalDependenciesList = get()
 ) {
+    val uriHandler = LocalUriHandler.current
+    var deps: List<Dependency> by remember { mutableStateOf(emptyList()) }
+
+    LaunchedEffect(readDependencies) {
+        deps = readDependencies()
+    }
+
     LazyColumn(
         modifier = modifier,
         contentPadding = insets + PaddingValues(bottom = 16.dp)
@@ -269,6 +283,34 @@ fun SettingsList(
                         BuildConfig.VERSION_NAME
                     )
                 )
+            }
+        }
+
+        item {
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
+        }
+
+        item {
+            SettingsHeader(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(itemInsets)
+            ) {
+                Text("Open-source dependencies")
+            }
+        }
+
+        items(deps) { dependency ->
+            SettingsLink(
+                modifier = Modifier.padding(itemInsets),
+                onClick = {
+                    dependency.moduleUrl?.let { url ->
+                        uriHandler.openUri(url)
+                    }
+                },
+                onClickLabel = "Show website".takeIf { dependency.moduleUrl != null }
+            ) {
+                Text(text = dependency.moduleName)
             }
         }
     }

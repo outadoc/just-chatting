@@ -1,6 +1,5 @@
 @file:Suppress("UnstableApiUsage")
 
-import com.github.jk1.license.importer.XmlReportImporter
 import com.github.jk1.license.render.JsonReportRenderer
 
 plugins {

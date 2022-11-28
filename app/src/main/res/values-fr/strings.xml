@@ -218,6 +218,7 @@
     <string name="room_unique">Unique</string>
     <string name="scroll_down">Défiler vers le bas</string>
     <string name="search">Recherche</string>
+    <string name="search_clear_cd">Effacer le champ de recherche</string>
     <string name="search_hint">Rechercher quelqu\'un…</string>
     <string name="settings">Réglages</string>
     <string name="settings_about_header">À propos</string>

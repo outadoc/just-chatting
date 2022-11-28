@@ -59,7 +59,7 @@ fun SearchTopAppBar(
                 HapticIconButton(onClick = { onQueryChange("") }) {
                     Icon(
                         Icons.Filled.Cancel,
-                        contentDescription = "Clear query"
+                        contentDescription = stringResource(R.string.search_clear_cd)
                     )
                 }
             }

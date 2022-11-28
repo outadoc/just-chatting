@@ -221,7 +221,7 @@
     <string name="search_hint">Rechercher quelqu\'un…</string>
     <string name="settings">Réglages</string>
     <string name="settings_about_header">À propos</string>
-    <string name="settings_about_version">%1$s v%2$s</string>
+    <string name="settings_about_version">Version %1$s</string>
     <string name="settings_account_header">Compte Twitch</string>
     <string name="settings_account_logout_action">Déconnecter mon compte…</string>
     <string name="settings_chat">Tchat</string>

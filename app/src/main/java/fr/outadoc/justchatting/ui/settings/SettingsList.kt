@@ -177,25 +177,27 @@ fun SettingsList(
 
         if (Build.VERSION.SDK_INT >= 26) {
             item {
-                SettingsLink(
+                SettingsText(
                     modifier = Modifier.padding(itemInsets),
                     onClick = onOpenNotificationPreferences,
-                    onClickLabel = stringResource(R.string.settings_notifications_openNotificationsSettings)
-                ) {
-                    Text(text = stringResource(R.string.settings_notifications_openNotificationsSettings))
-                }
+                    onClickLabel = stringResource(R.string.settings_notifications_openNotificationsSettings),
+                    title = {
+                        Text(text = stringResource(R.string.settings_notifications_openNotificationsSettings))
+                    }
+                )
             }
         }
 
         if (Build.VERSION.SDK_INT >= 29) {
             item {
-                SettingsLink(
+                SettingsText(
                     modifier = Modifier.padding(itemInsets),
                     onClick = onOpenBubblePreferences,
-                    onClickLabel = stringResource(R.string.settings_notifications_openBubbleSettings)
-                ) {
-                    Text(text = stringResource(R.string.settings_notifications_openBubbleSettings))
-                }
+                    onClickLabel = stringResource(R.string.settings_notifications_openBubbleSettings),
+                    title = {
+                        Text(text = stringResource(R.string.settings_notifications_openBubbleSettings))
+                    }
+                )
             }
         }
 
@@ -215,13 +217,14 @@ fun SettingsList(
 
         item {
             var showLogoutDialog by remember { mutableStateOf(false) }
-            SettingsLink(
+            SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = { showLogoutDialog = true },
-                onClickLabel = null
-            ) {
-                Text(text = stringResource(R.string.settings_account_logout_action))
-            }
+                onClickLabel = null,
+                title = {
+                    Text(text = stringResource(R.string.settings_account_logout_action))
+                }
+            )
 
             if (showLogoutDialog) {
                 AlertDialog(
@@ -271,19 +274,50 @@ fun SettingsList(
         }
 
         item {
-            SettingsLink(
+            SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = {},
-                onClickLabel = null
-            ) {
-                Text(
-                    text = stringResource(
-                        id = R.string.settings_about_version,
-                        stringResource(R.string.app_name),
-                        BuildConfig.VERSION_NAME
+                onClickLabel = null,
+                title = {
+                    Text(text = stringResource(R.string.app_name))
+                },
+                subtitle = {
+                    Text(
+                        text = stringResource(
+                            R.string.settings_about_version,
+                            BuildConfig.VERSION_NAME
+                        )
                     )
-                )
-            }
+                }
+            )
+        }
+
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = {
+                    uriHandler.openUri("https://github.com/outadoc/just-chatting")
+                },
+                onClickLabel = "Browse the code",
+                title = { Text(text = "Repository") },
+                subtitle = { Text(text = "outadoc/just-chatting") }
+            )
+        }
+
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = {
+                    uriHandler.openUri("https://www.gnu.org/licenses/agpl-3.0.en.html")
+                },
+                onClickLabel = "Show the license",
+                title = { Text(text = "Licensing") },
+                subtitle = {
+                    Text(
+                        text = "Just Chatting is provided under the terms of the GNU Affero General Public License v3.0."
+                    )
+                }
+            )
         }
 
         item {
@@ -301,17 +335,23 @@ fun SettingsList(
         }
 
         items(deps) { dependency ->
-            SettingsLink(
+            SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = {
                     dependency.moduleUrl?.let { url ->
                         uriHandler.openUri(url)
                     }
                 },
-                onClickLabel = "Show website".takeIf { dependency.moduleUrl != null }
-            ) {
-                Text(text = dependency.moduleName)
-            }
+                onClickLabel = "Show website".takeIf { dependency.moduleUrl != null },
+                title = {
+                    Text(text = dependency.moduleName)
+                },
+                subtitle = {
+                    dependency.moduleLicense?.let { license ->
+                        Text(text = license)
+                    }
+                }
+            )
         }
     }
 }

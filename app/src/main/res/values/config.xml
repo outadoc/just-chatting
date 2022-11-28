@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">Just Chatting</string>
+    <string name="app_license_name" translatable="false">GNU Affero General Public License v3.0</string>
+    <string name="app_license_url" translatable="false">https://www.gnu.org/licenses/agpl-3.0.en.html</string>
+    <string name="app_repo_name" translatable="false">outadoc/just-chatting</string>
+    <string name="app_repo_url" translatable="false">https://github.com/outadoc/just-chatting</string>
+</resources>

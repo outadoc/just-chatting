@@ -229,9 +229,7 @@ fun SettingsList(
             if (showLogoutDialog) {
                 AlertDialog(
                     onDismissRequest = { showLogoutDialog = false },
-                    title = {
-                        Text(text = stringResource(R.string.logout_title))
-                    },
+                    title = { Text(text = stringResource(R.string.logout_title)) },
                     text = {
                         Text(
                             text = stringResource(
@@ -276,11 +274,7 @@ fun SettingsList(
         item {
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
-                onClick = {},
-                onClickLabel = null,
-                title = {
-                    Text(text = stringResource(R.string.app_name))
-                },
+                title = { Text(text = stringResource(R.string.app_name)) },
                 subtitle = {
                     Text(
                         text = stringResource(
@@ -293,28 +287,30 @@ fun SettingsList(
         }
 
         item {
+            val repoUrl = stringResource(id = R.string.app_repo_url)
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
-                onClick = {
-                    uriHandler.openUri("https://github.com/outadoc/just-chatting")
-                },
-                onClickLabel = "Browse the code",
-                title = { Text(text = "Repository") },
-                subtitle = { Text(text = "outadoc/just-chatting") }
+                onClick = { uriHandler.openUri(repoUrl) },
+                onClickLabel = stringResource(id = R.string.settings_about_repo_cd),
+                title = { Text(text = stringResource(id = R.string.settings_about_repo_title)) },
+                subtitle = { Text(text = stringResource(id = R.string.app_repo_name)) }
             )
         }
 
         item {
+            val licenseUrl = stringResource(id = R.string.app_license_url)
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
-                onClick = {
-                    uriHandler.openUri("https://www.gnu.org/licenses/agpl-3.0.en.html")
-                },
-                onClickLabel = "Show the license",
-                title = { Text(text = "Licensing") },
+                onClick = { uriHandler.openUri(licenseUrl) },
+                onClickLabel = stringResource(id = R.string.settings_about_license_cd),
+                title = { Text(text = stringResource(id = R.string.settings_about_license_title)) },
                 subtitle = {
                     Text(
-                        text = "Just Chatting is provided under the terms of the GNU Affero General Public License v3.0."
+                        text = stringResource(
+                            id = R.string.settings_about_license_subtitle,
+                            stringResource(id = R.string.app_name),
+                            stringResource(id = R.string.app_license_name)
+                        )
                     )
                 }
             )
@@ -330,7 +326,7 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets)
             ) {
-                Text("Open-source dependencies")
+                Text(stringResource(id = R.string.settings_dependencies_header))
             }
         }
 
@@ -342,10 +338,9 @@ fun SettingsList(
                         uriHandler.openUri(url)
                     }
                 },
-                onClickLabel = "Show website".takeIf { dependency.moduleUrl != null },
-                title = {
-                    Text(text = dependency.moduleName)
-                },
+                onClickLabel = stringResource(id = R.string.settings_dependencies_cd)
+                    .takeIf { dependency.moduleUrl != null },
+                title = { Text(text = dependency.moduleName) },
                 subtitle = {
                     dependency.moduleLicense?.let { license ->
                         Text(text = license)

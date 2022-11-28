@@ -54,8 +54,8 @@ fun SettingsTextSubtitlePreview() {
 @Composable
 fun SettingsText(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    onClickLabel: String?,
+    onClick: () -> Unit = {},
+    onClickLabel: String? = null,
     title: @Composable () -> Unit,
     subtitle: @Composable () -> Unit = {}
 ) {

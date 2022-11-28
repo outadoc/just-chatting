@@ -222,8 +222,15 @@
     <string name="settings">Réglages</string>
     <string name="settings_about_header">À propos</string>
     <string name="settings_about_version">Version %1$s</string>
+    <string name="settings_about_license_title">Licence</string>
+    <string name="settings_about_license_subtitle">%1$s est distribuée sous les termes de la licence %2$s.</string>
+    <string name="settings_about_license_cd">Voir la licence</string>
+    <string name="settings_about_repo_title">Contribuer au projet</string>
+    <string name="settings_about_repo_cd">Voir le code</string>
     <string name="settings_account_header">Compte Twitch</string>
     <string name="settings_account_logout_action">Déconnecter mon compte…</string>
+    <string name="settings_dependencies_header">Dépendences libres</string>
+    <string name="settings_dependencies_cd">Voir le site web</string>
     <string name="settings_chat">Tchat</string>
     <string name="settings_notifications_header">Notifications</string>
     <string name="settings_notifications_openNotificationsSettings">Préferences de notification</string>

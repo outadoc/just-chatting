@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.ui.theme.AppTheme
@@ -77,7 +79,8 @@ fun SettingsText(
             }
 
             CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.bodyMedium
+                LocalTextStyle provides MaterialTheme.typography.bodySmall,
+                LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
             ) {
                 subtitle()
             }

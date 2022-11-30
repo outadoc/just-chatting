@@ -51,7 +51,7 @@ fun SettingsSwitch(
     title: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalTextStyle provides MaterialTheme.typography.bodyLarge
+        LocalTextStyle provides MaterialTheme.typography.titleMedium
     ) {
         Box(
             modifier = Modifier.clickable { onCheckedChange(!checked) }

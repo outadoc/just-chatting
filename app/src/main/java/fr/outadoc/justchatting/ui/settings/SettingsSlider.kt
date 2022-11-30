@@ -61,7 +61,7 @@ fun SettingsSlider(
     title: @Composable () -> Unit
 ) {
     CompositionLocalProvider(
-        LocalTextStyle provides MaterialTheme.typography.bodyLarge
+        LocalTextStyle provides MaterialTheme.typography.titleMedium
     ) {
         Column(modifier = modifier) {
             title()

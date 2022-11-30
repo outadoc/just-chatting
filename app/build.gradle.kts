@@ -129,7 +129,6 @@ dependencies {
     implementation(platform(libs.kotlin.bom))
 
     implementation(libs.accompanist.systemuicontroller)
-    implementation(libs.accompanist.webview)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.browser)
@@ -167,13 +166,12 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.material.core)
     implementation(libs.okhttp.logging)
     implementation(libs.okio)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gson)
-
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1")
 
     ksp(libs.androidx.room.compiler)
 

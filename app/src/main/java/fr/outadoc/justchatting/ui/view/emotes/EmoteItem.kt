@@ -8,7 +8,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import coil.compose.AsyncImage
 import fr.outadoc.justchatting.model.chat.Emote
-import fr.outadoc.justchatting.util.isDark
+import fr.outadoc.justchatting.utils.ui.isDark
 
 @Composable
 fun EmoteItem(

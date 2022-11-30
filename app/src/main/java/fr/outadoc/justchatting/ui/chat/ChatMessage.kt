@@ -107,8 +107,8 @@ import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.BadgeItem
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import fr.outadoc.justchatting.util.createChannelDeeplink
-import fr.outadoc.justchatting.util.formatTimestamp
-import fr.outadoc.justchatting.util.isOdd
+import fr.outadoc.justchatting.utils.core.isOdd
+import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableMap

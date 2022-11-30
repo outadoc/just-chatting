@@ -16,9 +16,9 @@ import fr.outadoc.justchatting.ChatConnectionService
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.contentprovider.profileImageIcon
 import fr.outadoc.justchatting.model.helix.user.User
-import fr.outadoc.justchatting.util.isLaunchedFromBubbleCompat
-import fr.outadoc.justchatting.util.toPendingActivityIntent
-import fr.outadoc.justchatting.util.toPendingForegroundServiceIntent
+import fr.outadoc.justchatting.utils.core.isLaunchedFromBubbleCompat
+import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
+import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 
 object ChatNotificationUtils {
 

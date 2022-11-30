@@ -22,7 +22,7 @@ import androidx.paging.compose.items
 import fr.outadoc.justchatting.model.helix.follows.Follow
 import fr.outadoc.justchatting.ui.follow.channels.FollowedChannelsViewModel
 import fr.outadoc.justchatting.ui.streams.UserItemCard
-import fr.outadoc.justchatting.util.plus
+import fr.outadoc.justchatting.utils.ui.plus
 import kotlinx.datetime.toInstant
 import org.koin.androidx.compose.getViewModel
 

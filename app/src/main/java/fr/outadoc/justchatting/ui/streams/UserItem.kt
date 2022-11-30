@@ -21,7 +21,7 @@ import coil.compose.AsyncImage
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.ui.theme.AppTheme
-import fr.outadoc.justchatting.util.formatTime
+import fr.outadoc.justchatting.utils.ui.formatTime
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toInstant
 

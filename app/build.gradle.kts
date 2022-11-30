@@ -128,6 +128,9 @@ spotless {
 dependencies {
     implementation(platform(libs.kotlin.bom))
 
+    implementation(project(":utils-core"))
+    implementation(project(":utils-ui"))
+
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)

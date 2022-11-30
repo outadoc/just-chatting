@@ -17,8 +17,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.common.ensureMinimumAlpha
 import fr.outadoc.justchatting.ui.common.isLight
-import fr.outadoc.justchatting.util.generateAsync
-import fr.outadoc.justchatting.util.loadImageToBitmap
+import fr.outadoc.justchatting.utils.ui.generateAsync
+import fr.outadoc.justchatting.utils.ui.loadImageToBitmap
 
 data class ChannelBranding(
     val backgroundColor: Color,

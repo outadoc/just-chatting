@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import fr.outadoc.justchatting.util.asStringOrNull
+import fr.outadoc.justchatting.utils.core.asStringOrNull
 import kotlinx.collections.immutable.toImmutableMap
 import java.lang.reflect.Type
 

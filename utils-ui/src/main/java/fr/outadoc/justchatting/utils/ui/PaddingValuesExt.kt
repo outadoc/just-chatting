@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.util
+package fr.outadoc.justchatting.utils.ui
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.calculateEndPadding

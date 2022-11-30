@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.util
+package fr.outadoc.justchatting.utils.ui
 
 import android.text.format.DateFormat
 import android.text.format.DateUtils

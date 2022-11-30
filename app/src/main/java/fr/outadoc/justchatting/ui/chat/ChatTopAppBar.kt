@@ -57,9 +57,9 @@ import fr.outadoc.justchatting.model.helix.stream.Stream
 import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.theme.AppTheme
-import fr.outadoc.justchatting.util.formatNumber
-import fr.outadoc.justchatting.util.formatTime
-import fr.outadoc.justchatting.util.formatTimestamp
+import fr.outadoc.justchatting.utils.core.formatNumber
+import fr.outadoc.justchatting.utils.ui.formatTime
+import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import kotlinx.datetime.toInstant
 
 @OptIn(ExperimentalMaterial3Api::class)

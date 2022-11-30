@@ -27,7 +27,7 @@ import fr.outadoc.justchatting.oss.Dependency
 import fr.outadoc.justchatting.oss.ReadExternalDependenciesList
 import fr.outadoc.justchatting.repository.AppPreferences
 import fr.outadoc.justchatting.ui.theme.AppTheme
-import fr.outadoc.justchatting.util.plus
+import fr.outadoc.justchatting.utils.ui.plus
 import org.koin.androidx.compose.get
 
 @ThemePreviews

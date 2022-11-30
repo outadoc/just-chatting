@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.util
+package fr.outadoc.justchatting.utils.ui
 
 import androidx.palette.graphics.Palette
 import kotlin.coroutines.suspendCoroutine

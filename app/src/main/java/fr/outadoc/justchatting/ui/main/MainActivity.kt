@@ -19,7 +19,7 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.ui.chat.ChatActivity
 import fr.outadoc.justchatting.ui.onboarding.OnboardingScreen
 import fr.outadoc.justchatting.ui.theme.AppTheme
-import fr.outadoc.justchatting.util.toast
+import fr.outadoc.justchatting.utils.ui.toast
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel

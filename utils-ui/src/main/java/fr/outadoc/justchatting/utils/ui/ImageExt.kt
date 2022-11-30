@@ -1,14 +1,10 @@
-package fr.outadoc.justchatting.util
+package fr.outadoc.justchatting.utils.ui
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.view.View
-import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
 import android.widget.ImageView
-import androidx.appcompat.widget.SearchView
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
@@ -70,29 +66,4 @@ suspend fun loadImageToBitmap(
             cont.invokeOnCancellation { disposable.dispose() }
         }
     }
-}
-
-fun EditText.showKeyboard() {
-    requestFocus()
-    val imm: InputMethodManager? =
-        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-    this.postDelayed({
-        imm?.showSoftInput(this, 0)
-    }, 100)
-}
-
-fun SearchView.showKeyboard() {
-    val imm: InputMethodManager? =
-        context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-    this.postDelayed({
-        this.isIconified = false
-        imm?.showSoftInput(this, 0)
-    }, 100)
-}
-
-fun View.hideKeyboard() {
-    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-        windowToken,
-        0
-    )
 }

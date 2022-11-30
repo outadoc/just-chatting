@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.util
+package fr.outadoc.justchatting.utils.ui
 
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable

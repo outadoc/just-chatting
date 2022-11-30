@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.util
+package fr.outadoc.justchatting.utils.core
 
 import android.app.Activity
 import android.os.Build

@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.ui.theme.AppTheme

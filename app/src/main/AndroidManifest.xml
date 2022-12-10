@@ -25,6 +25,12 @@
             android:launchMode="singleTask"
             android:resizeableActivity="true">
 
+            <layout
+                android:defaultWidth="1000dp"
+                android:defaultHeight="800dp"
+                android:minWidth="350dp"
+                android:minHeight="500dp" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -59,7 +65,15 @@
             android:exported="true"
             android:resizeableActivity="true"
             android:theme="@style/Theme.App.Chat"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize">
+
+            <layout
+                android:defaultWidth="500dp"
+                android:defaultHeight="900dp"
+                android:minWidth="300dp"
+                android:minHeight="430dp" />
+
+        </activity>
 
         <provider
             android:name="androidx.startup.InitializationProvider"

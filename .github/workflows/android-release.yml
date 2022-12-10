@@ -1,8 +1,8 @@
-name: Build Android app
+name: Release new version
 
 on:
-  pull_request:
-    branches: [ main ]
+  release:
+    types: [ published ]
 
 jobs:
   build:
@@ -23,19 +23,12 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build app bundle
-        run: ./gradlew bundleQa
-
-      - name: Check formatting
-        run: ./gradlew spotlessCheck
-
-      - name: Lint
-        run: ./gradlew lint
-
-      - name: Run unit tests
-        run: ./gradlew test
+        run: ./gradlew bundleRelease "-PreleaseKeystorePassword=${RELEASE_KEYSTORE_PASSWORD}"
+        env:
+          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.$RELEASE_KEYSTORE_PASSWORD }}
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.1
         with:
           name: apk
-          path: app/build/outputs/bundle/qa/*.aab
+          path: app/build/outputs/bundle/release/*.aab

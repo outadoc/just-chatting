@@ -37,7 +37,7 @@ android {
             keyAlias = "upload_key"
             keyPassword = ""
             storeFile = rootProject.file("keystores/release.p12")
-            storePassword = findProperty("release_keystore_password") as String?
+            storePassword = findProperty("releaseKeystorePassword") as String?
         }
     }
 

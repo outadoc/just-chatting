@@ -445,7 +445,7 @@ class ChatViewModel(
                 .takeIf { it.isNotEmpty() }
                 ?.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 ?.toPersistentSet()
 

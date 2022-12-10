@@ -181,22 +181,24 @@ fun ChatInput(
             horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Start),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AnimatedVisibility(visible = autoCompleteItems.isNotEmpty()) {
-                ChatAutoCompleteRow(
-                    onChatterClick = onChatterClick,
-                    onEmoteClick = onEmoteClick,
-                    items = autoCompleteItems,
-                    animateEmotes = animateEmotes
+            Column {
+                AnimatedVisibility(visible = autoCompleteItems.isNotEmpty()) {
+                    ChatAutoCompleteRow(
+                        onChatterClick = onChatterClick,
+                        onEmoteClick = onEmoteClick,
+                        items = autoCompleteItems,
+                        animateEmotes = animateEmotes
+                    )
+                }
+
+                ChatTextField(
+                    modifier = Modifier.fillMaxWidth(),
+                    message = message,
+                    onMessageChange = onMessageChange,
+                    onToggleEmotePicker = onToggleEmotePicker,
+                    onSubmit = onSubmit
                 )
             }
-
-            ChatTextField(
-                modifier = Modifier.fillMaxWidth(),
-                message = message,
-                onMessageChange = onMessageChange,
-                onToggleEmotePicker = onToggleEmotePicker,
-                onSubmit = onSubmit
-            )
 
             AnimatedVisibility(visible = message.text.isNotEmpty()) {
                 FloatingActionButton(

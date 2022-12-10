@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -14,9 +13,7 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -26,11 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -48,11 +40,6 @@ import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
-import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
-import kotlinx.collections.immutable.ImmutableSet
-import kotlinx.collections.immutable.persistentSetOf
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
 @Composable
@@ -78,11 +65,9 @@ fun ChatInput(
                 ChatInput(
                     modifier = modifier,
                     message = inputState.inputMessage,
-                    previousWord = inputState.previousWord,
-                    emotes = state.allEmotes,
-                    chatters = state.chatters,
-                    replyingTo = inputState.replyingTo,
+                    autoCompleteItems = inputState.autoCompleteItems,
                     animateEmotes = animateEmotes,
+                    replyingTo = inputState.replyingTo,
                     onEmoteClick = onEmoteClick,
                     onChatterClick = onChatterClick,
                     onMessageChange = onMessageChange,
@@ -153,9 +138,7 @@ fun ChatInputPreviewReplying() {
 fun ChatInput(
     modifier: Modifier = Modifier,
     message: TextFieldValue = TextFieldValue(),
-    previousWord: CharSequence = "",
-    emotes: ImmutableSet<Emote> = persistentSetOf(),
-    chatters: ImmutableSet<Chatter> = persistentSetOf(),
+    autoCompleteItems: List<AutoCompleteItem> = emptyList(),
     animateEmotes: Boolean = true,
     replyingTo: ChatEntry? = null,
     onEmoteClick: (Emote) -> Unit = {},
@@ -198,23 +181,22 @@ fun ChatInput(
             horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Start),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            ChatInputAutoComplete(
-                modifier = Modifier.weight(1f, fill = true),
-                previousWord = previousWord,
-                emotes = emotes,
-                chatters = chatters,
-                animateEmotes = animateEmotes,
-                onEmoteClick = onEmoteClick,
-                onChatterClick = onChatterClick
-            ) {
-                ChatTextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    message = message,
-                    onMessageChange = onMessageChange,
-                    onToggleEmotePicker = onToggleEmotePicker,
-                    onSubmit = onSubmit
+            AnimatedVisibility(visible = autoCompleteItems.isNotEmpty()) {
+                ChatAutoCompleteRow(
+                    onChatterClick = onChatterClick,
+                    onEmoteClick = onEmoteClick,
+                    items = autoCompleteItems,
+                    animateEmotes = animateEmotes
                 )
             }
+
+            ChatTextField(
+                modifier = Modifier.fillMaxWidth(),
+                message = message,
+                onMessageChange = onMessageChange,
+                onToggleEmotePicker = onToggleEmotePicker,
+                onSubmit = onSubmit
+            )
 
             AnimatedVisibility(visible = message.text.isNotEmpty()) {
                 FloatingActionButton(
@@ -284,92 +266,4 @@ fun ChatTextField(
             }
         }
     )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ChatInputAutoComplete(
-    modifier: Modifier = Modifier,
-    previousWord: CharSequence,
-    emotes: ImmutableSet<Emote>,
-    chatters: ImmutableSet<Chatter>,
-    animateEmotes: Boolean,
-    onEmoteClick: (Emote) -> Unit,
-    onChatterClick: (Chatter) -> Unit,
-    block: @Composable () -> Unit
-) {
-    val haptic = LocalHapticFeedback.current
-
-    var hiddenByUser by remember(previousWord) { mutableStateOf(false) }
-    var matchingEmotes by remember { mutableStateOf(emptyList<Emote>()) }
-    var matchingChatters by remember { mutableStateOf(emptyList<Chatter>()) }
-
-    LaunchedEffect(previousWord) {
-        withContext(Dispatchers.Default) {
-            val emoteFilter = previousWord
-                .takeIf { it.startsWith(':') }
-                ?.trimStart(':')
-                ?.takeIf { it.isNotEmpty() }
-
-            matchingEmotes =
-                if (emoteFilter == null) emptyList()
-                else emotes.filter { emote ->
-                    emote.name.contains(emoteFilter, ignoreCase = true)
-                }
-        }
-    }
-
-    LaunchedEffect(previousWord) {
-        withContext(Dispatchers.Default) {
-            val chatterFilter = previousWord
-                .takeIf { it.startsWith('@') }
-                ?.trimStart('@')
-                ?.takeIf { it.isNotEmpty() }
-
-            matchingChatters =
-                if (chatterFilter == null) emptyList()
-                else chatters.filter { chatter ->
-                    chatter.name.startsWith(chatterFilter, ignoreCase = true)
-                }
-        }
-    }
-
-    val isVisible = !hiddenByUser && (matchingChatters.isNotEmpty() || matchingEmotes.isNotEmpty())
-
-    ExposedDropdownMenuBox(
-        modifier = modifier,
-        expanded = isVisible,
-        onExpandedChange = { hiddenByUser = true }
-    ) {
-        block()
-
-        ExposedDropdownMenu(
-            expanded = isVisible,
-            onDismissRequest = { hiddenByUser = true }
-        ) {
-            matchingEmotes.forEach { emote ->
-                DropdownMenuItem(
-                    leadingIcon = {
-                        EmoteItem(
-                            modifier = Modifier.size(32.dp),
-                            emote = emote,
-                            animateEmotes = animateEmotes
-                        )
-                    },
-                    text = { Text(text = emote.name) },
-                    onClick = {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onEmoteClick(emote)
-                    }
-                )
-            }
-
-            matchingChatters.forEach { selectionOption ->
-                DropdownMenuItem(
-                    text = { Text(text = selectionOption.name) },
-                    onClick = { onChatterClick(selectionOption) }
-                )
-            }
-        }
-    }
 }

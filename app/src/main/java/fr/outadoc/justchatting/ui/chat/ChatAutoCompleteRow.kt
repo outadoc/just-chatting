@@ -7,6 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.model.chat.Chatter
+import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.ui.theme.AppTheme
 
 @Preview
@@ -14,12 +16,13 @@ import fr.outadoc.justchatting.ui.theme.AppTheme
 fun ChatAutoCompleteRowPreview() {
     AppTheme {
         val items = listOf(
-            AutoCompleteItem.User("BagheraJones"),
-            AutoCompleteItem.User("HortyUnderscore")
+            AutoCompleteItem.User(Chatter("BagheraJones")),
+            AutoCompleteItem.User(Chatter("HortyUnderscore"))
         )
 
         ChatAutoCompleteRow(
-            onClick = {},
+            onChatterClick = {},
+            onEmoteClick = {},
             items = items
         )
     }
@@ -28,7 +31,9 @@ fun ChatAutoCompleteRowPreview() {
 @Composable
 fun ChatAutoCompleteRow(
     modifier: Modifier = Modifier,
-    onClick: (AutoCompleteItem) -> Unit,
+    onChatterClick: (Chatter) -> Unit,
+    onEmoteClick: (Emote) -> Unit,
+    animateEmotes: Boolean = true,
     items: List<AutoCompleteItem>
 ) {
     LazyRow(
@@ -44,10 +49,22 @@ fun ChatAutoCompleteRow(
                 }
             }
         ) { item ->
-            ChatAutoCompleteItem(
-                onClick = { onClick(item) },
-                item = item
-            )
+            when (item) {
+                is AutoCompleteItem.Emote -> {
+                    AutoCompleteEmoteItem(
+                        onClick = { onEmoteClick(item.emote) },
+                        emote = item.emote,
+                        animateEmotes = animateEmotes
+                    )
+                }
+
+                is AutoCompleteItem.User -> {
+                    AutoCompleteUserItem(
+                        onClick = { onChatterClick(item.chatter) },
+                        chatter = item.chatter
+                    )
+                }
+            }
         }
     }
 }

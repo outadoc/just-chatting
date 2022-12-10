@@ -12,36 +12,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.model.chat.Chatter
 import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
-
-@Composable
-fun ChatAutoCompleteItem(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-    item: AutoCompleteItem,
-    animateEmotes: Boolean = true
-) {
-    when (item) {
-        is AutoCompleteItem.Emote -> {
-            AutoCompleteEmoteItem(
-                modifier = modifier,
-                emote = item.emote,
-                onClick = onClick,
-                animateEmotes = animateEmotes
-            )
-        }
-
-        is AutoCompleteItem.User -> {
-            AutoCompleteUserItem(
-                modifier = modifier,
-                onClick = onClick,
-                username = item.username
-            )
-        }
-    }
-}
 
 @Composable
 fun AutoCompleteEmoteItem(
@@ -66,13 +40,13 @@ fun AutoCompleteEmoteItem(
 fun AutoCompleteUserItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    username: String
+    chatter: Chatter
 ) {
     AutoCompleteItemContent(
         modifier = modifier,
         onClick = onClick
     ) {
-        Text(text = "@$username")
+        Text(text = "@${chatter.name}")
     }
 }
 

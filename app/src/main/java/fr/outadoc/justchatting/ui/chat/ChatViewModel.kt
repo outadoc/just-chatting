@@ -264,7 +264,7 @@ class ChatViewModel(
                         }
                         chatters.mapNotNull { chatter ->
                             if (chatter.name.contains(word, ignoreCase = true)) {
-                                AutoCompleteItem.User(chatter.name)
+                                AutoCompleteItem.User(chatter)
                             } else {
                                 null
                             }

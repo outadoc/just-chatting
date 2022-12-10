@@ -3,10 +3,12 @@ package fr.outadoc.justchatting.ui.chat
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Chip
+import androidx.compose.material.ChipDefaults
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -79,6 +81,9 @@ fun AutoCompleteItemContent(
 ) {
     Chip(
         modifier = modifier,
+        colors = ChipDefaults.chipColors(
+            backgroundColor = MaterialTheme.colorScheme.surfaceVariant
+        ),
         onClick = onClick,
         content = content
     )

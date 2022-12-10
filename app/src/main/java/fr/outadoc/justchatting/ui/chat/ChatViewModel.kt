@@ -57,12 +57,15 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
@@ -76,6 +79,7 @@ import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ChatViewModel(
@@ -160,18 +164,15 @@ class ChatViewModel(
         data class AppendEmote(val emote: Emote, val autocomplete: Boolean) : InputAction()
         data class ChangeMessageInput(val message: TextFieldValue) : InputAction()
         data class ReplyToMessage(val chatEntry: ChatEntry? = null) : InputAction()
+        data class UpdateAutoCompleteItems(val items: List<AutoCompleteItem>) : InputAction()
         data class Submit(val screenDensity: Float, val isDarkTheme: Boolean) : InputAction()
     }
 
     data class InputState(
         val inputMessage: TextFieldValue = TextFieldValue(),
-        val replyingTo: ChatEntry? = null
-    ) {
-        val previousWord: CharSequence
-            get() = inputMessage
-                .getTextBeforeSelection(inputMessage.text.length)
-                .takeLastWhile { it != ' ' }
-    }
+        val replyingTo: ChatEntry? = null,
+        val autoCompleteItems: List<AutoCompleteItem> = emptyList()
+    )
 
     private val actions = MutableSharedFlow<Action>(extraBufferCapacity = 16)
 
@@ -238,6 +239,44 @@ class ChatViewModel(
             .flatMapLatest { emotesRepository.loadRecentEmotes() }
             .onEach { recentEmotes -> actions.emit(Action.ChangeRecentEmotes(recentEmotes)) }
             .launchIn(defaultScope)
+
+        state.filterIsInstance<State.Chatting>()
+            .distinctUntilChanged()
+            .map { state -> state.allEmotes to state.chatters }
+            .distinctUntilChanged()
+            .flatMapLatest { (allEmotes, chatters) ->
+                inputState
+                    .map { inputState -> inputState.inputMessage }
+                    .distinctUntilChanged()
+                    .debounce(1.seconds)
+                    .map { message ->
+                        message.getTextBeforeSelection(message.text.length)
+                            .takeLastWhile { it != ' ' }
+                    }
+                    .filter { word -> word.isNotBlank() }
+                    .mapLatest { word ->
+                        allEmotes.mapNotNull { emote ->
+                            if (emote.name.contains(word, ignoreCase = true)) {
+                                AutoCompleteItem.Emote(emote)
+                            } else {
+                                null
+                            }
+                        }
+                        chatters.mapNotNull { chatter ->
+                            if (chatter.name.contains(word, ignoreCase = true)) {
+                                AutoCompleteItem.User(chatter.name)
+                            } else {
+                                null
+                            }
+                        }
+                    }
+                    .flowOn(Dispatchers.Default)
+            }
+            .onEach { autoCompleteItems ->
+                inputActions.emit(
+                    InputAction.UpdateAutoCompleteItems(autoCompleteItems)
+                )
+            }
     }
 
     fun loadChat(channelLogin: String) {
@@ -401,7 +440,7 @@ class ChatViewModel(
                 .takeIf { it.isNotEmpty() }
                 ?.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 ?.toPersistentSet()
 
@@ -554,6 +593,7 @@ class ChatViewModel(
             is InputAction.ChangeMessageInput -> reduce(state)
             is InputAction.ReplyToMessage -> reduce(state)
             is InputAction.Submit -> reduce(state)
+            is InputAction.UpdateAutoCompleteItems -> reduce(state)
         }
     }
 
@@ -622,15 +662,23 @@ class ChatViewModel(
         return inputState.copy(replyingTo = chatEntry)
     }
 
+    private fun InputAction.UpdateAutoCompleteItems.reduce(inputState: InputState): InputState {
+        return inputState.copy(autoCompleteItems = items)
+    }
+
     private fun appendTextToInput(
         inputState: InputState,
         text: String,
         replaceLastWord: Boolean
     ): InputState {
+        val previousWord = inputState.inputMessage
+            .getTextBeforeSelection(inputState.inputMessage.text.length)
+            .takeLastWhile { it != ' ' }
+
         val textBefore = inputState.inputMessage
             .getTextBeforeSelection(inputState.inputMessage.text.length)
             .removeSuffix(
-                if (replaceLastWord) inputState.previousWord else ""
+                if (replaceLastWord) previousWord else ""
             )
 
         val textAfter = inputState.inputMessage

@@ -57,7 +57,6 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -79,7 +78,6 @@ import kotlin.collections.component1
 import kotlin.collections.component2
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ChatViewModel(
@@ -248,26 +246,32 @@ class ChatViewModel(
                 inputState
                     .map { inputState -> inputState.inputMessage }
                     .distinctUntilChanged()
-                    .debounce(1.seconds)
+                    .debounce(300.milliseconds)
                     .map { message ->
                         message.getTextBeforeSelection(message.text.length)
                             .takeLastWhile { it != ' ' }
                     }
-                    .filter { word -> word.isNotBlank() }
                     .mapLatest { word ->
-                        allEmotes.mapNotNull { emote ->
-                            if (emote.name.contains(word, ignoreCase = true)) {
-                                AutoCompleteItem.Emote(emote)
-                            } else {
-                                null
+                        if (word.isBlank()) {
+                            emptyList()
+                        } else {
+                            val emoteItems = allEmotes.mapNotNull { emote ->
+                                if (emote.name.contains(word, ignoreCase = true)) {
+                                    AutoCompleteItem.Emote(emote)
+                                } else {
+                                    null
+                                }
                             }
-                        }
-                        chatters.mapNotNull { chatter ->
-                            if (chatter.name.contains(word, ignoreCase = true)) {
-                                AutoCompleteItem.User(chatter)
-                            } else {
-                                null
+
+                            val chatterItems = chatters.mapNotNull { chatter ->
+                                if (chatter.name.contains(word, ignoreCase = true)) {
+                                    AutoCompleteItem.User(chatter)
+                                } else {
+                                    null
+                                }
                             }
+
+                            emoteItems + chatterItems
                         }
                     }
                     .flowOn(Dispatchers.Default)
@@ -277,6 +281,7 @@ class ChatViewModel(
                     InputAction.UpdateAutoCompleteItems(autoCompleteItems)
                 )
             }
+            .launchIn(viewModelScope)
     }
 
     fun loadChat(channelLogin: String) {

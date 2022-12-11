@@ -5,7 +5,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.component.twitch.model.Follow
-import fr.outadoc.justchatting.repository.TwitchService
+import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.ui.common.PagedListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class FollowedChannelsViewModel(
-    private val repository: TwitchService,
+    private val repository: TwitchRepository,
 ) : PagedListViewModel<Follow>() {
 
     private val _load = MutableStateFlow(0)

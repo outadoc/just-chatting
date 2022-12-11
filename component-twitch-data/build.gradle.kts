@@ -39,6 +39,7 @@ dependencies {
     implementation(libs.irc)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.retrofit.core)
 
     coreLibraryDesugaring(libs.desugar)
 }

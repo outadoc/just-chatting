@@ -46,8 +46,8 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.component.twitch.model.Chatter
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.composepreview.ScreenPreviews
-import fr.outadoc.justchatting.repository.AppPreferences
-import fr.outadoc.justchatting.repository.PreferenceRepository
+import fr.outadoc.justchatting.component.preferences.AppPreferences
+import fr.outadoc.justchatting.component.preferences.PreferenceRepository
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmotePicker
@@ -64,8 +64,8 @@ fun ChannelChatScreen(channelLogin: String) {
     val state by viewModel.state.collectAsState()
     val inputState by viewModel.inputState.collectAsState()
 
-    val preferencesRepository: PreferenceRepository = get()
-    val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
+    val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository = get()
+    val prefs by preferencesRepository.currentPreferences.collectAsState(initial = fr.outadoc.justchatting.component.preferences.AppPreferences())
 
     val context = LocalContext.current
     val density = LocalDensity.current.density

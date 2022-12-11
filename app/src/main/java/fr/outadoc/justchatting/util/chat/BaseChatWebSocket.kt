@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.util.chat
 
 import fr.outadoc.justchatting.component.twitch.parser.model.ChatCommand
 import fr.outadoc.justchatting.component.twitch.parser.model.Command
-import fr.outadoc.justchatting.repository.AppPreferences
+import fr.outadoc.justchatting.component.preferences.AppPreferences
 import fr.outadoc.justchatting.util.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError

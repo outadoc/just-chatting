@@ -5,7 +5,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.component.twitch.model.ChannelSearch
-import fr.outadoc.justchatting.repository.TwitchService
+import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.ui.common.PagedListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlin.time.Duration.Companion.seconds
 
 class ChannelSearchViewModel(
-    private val repository: TwitchService
+    private val repository: TwitchRepository
 ) : PagedListViewModel<ChannelSearch>() {
 
     data class State(val query: String = "")

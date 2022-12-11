@@ -20,7 +20,11 @@ dependencyResolutionManagement {
 rootProject.name = "just-chatting"
 
 include(":app")
+
 include(":utils-core")
 include(":utils-ui")
 include(":utils-logging")
+
+include(":component-preferences")
 include(":component-twitch-data")
+include(":component-twitch-domain")

@@ -8,12 +8,12 @@ import androidx.room.Room
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.BuildConfig
-import fr.outadoc.justchatting.api.BttvEmotesApi
-import fr.outadoc.justchatting.api.HelixApi
-import fr.outadoc.justchatting.api.IdApi
-import fr.outadoc.justchatting.api.RecentMessagesApi
-import fr.outadoc.justchatting.api.StvEmotesApi
-import fr.outadoc.justchatting.api.TwitchBadgesApi
+import fr.outadoc.justchatting.component.twitch.api.BttvEmotesApi
+import fr.outadoc.justchatting.component.twitch.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.api.IdApi
+import fr.outadoc.justchatting.component.twitch.api.RecentMessagesApi
+import fr.outadoc.justchatting.component.twitch.api.StvEmotesApi
+import fr.outadoc.justchatting.component.twitch.api.TwitchBadgesApi
 import fr.outadoc.justchatting.auth.AuthenticationInterceptor
 import fr.outadoc.justchatting.component.twitch.adapters.BttvChannelDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.BttvFfzDeserializer
@@ -34,16 +34,12 @@ import fr.outadoc.justchatting.component.twitch.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.component.twitch.parser.ChatMessageParser
 import fr.outadoc.justchatting.db.AppDatabase
 import fr.outadoc.justchatting.deeplink.DeeplinkParser
-import fr.outadoc.justchatting.oauth.OAuthAppCredentials
+import fr.outadoc.justchatting.component.twitch.model.OAuthAppCredentials
 import fr.outadoc.justchatting.oss.ReadExternalDependenciesList
-import fr.outadoc.justchatting.repository.ApiRepository
-import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.ChatConnectionPool
-import fr.outadoc.justchatting.repository.EmotesRepository
-import fr.outadoc.justchatting.repository.PreferenceRepository
-import fr.outadoc.justchatting.repository.RecentMessagesRepository
+import fr.outadoc.justchatting.component.preferences.PreferenceRepository
 import fr.outadoc.justchatting.repository.SharedPrefsPreferenceRepository
-import fr.outadoc.justchatting.repository.TwitchService
+import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.ui.chat.LiveChatController
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.util.NetworkStateObserver
@@ -68,10 +64,15 @@ val mainModule = module {
     single<ConnectivityManager> { get<Context>().getSystemService()!! }
     single { NetworkStateObserver(get()) }
 
-    single<TwitchService> { ApiRepository(get(), get()) }
+    single<TwitchRepository> {
+        fr.outadoc.justchatting.component.twitch.domain.repository.TwitchRepositoryImpl(
+            get(),
+            get()
+        )
+    }
 
     single { ReadExternalDependenciesList(get()) }
-    single<PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }
+    single<fr.outadoc.justchatting.component.preferences.PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }
 
     single { ChatConnectionPool(get()) }
 
@@ -84,9 +85,22 @@ val mainModule = module {
     single { ChatEntryMapper(get()) }
     single { PubSubRewardParser(get()) }
 
-    single { AuthRepository(get(), get(), get()) }
-    single { EmotesRepository(get(), get(), get(), get()) }
-    single { RecentMessagesRepository(get()) }
+    single {
+        fr.outadoc.justchatting.component.twitch.domain.repository.AuthRepository(
+            get(),
+            get(),
+            get()
+        )
+    }
+    single {
+        fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository(
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
+    single { fr.outadoc.justchatting.component.twitch.domain.repository.RecentMessagesRepository(get()) }
 
     single { get<AppDatabase>().recentEmotes() }
 

@@ -129,7 +129,9 @@ spotless {
 
 dependencies {
     implementation(platform(libs.kotlin.bom))
-    implementation(project(":component-twitch-data"))
+
+    implementation(project(":component-twitch-domain"))
+    implementation(project(":component-preferences"))
 
     implementation(project(":utils-core"))
     implementation(project(":utils-ui"))

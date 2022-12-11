@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.deeplink
 
 import android.net.Uri
-import fr.outadoc.justchatting.oauth.OAuthAppCredentials
+import fr.outadoc.justchatting.component.twitch.model.OAuthAppCredentials
 
 data class DeeplinkParser(
     private val oAuthAppCredentials: OAuthAppCredentials

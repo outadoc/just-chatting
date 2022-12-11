@@ -99,7 +99,7 @@ import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
 import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.composepreview.previewBadges
-import fr.outadoc.justchatting.model.AppUser
+import fr.outadoc.justchatting.component.preferences.AppUser
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.common.parseHexColor
 import fr.outadoc.justchatting.ui.theme.AppTheme
@@ -319,7 +319,7 @@ fun ChatList(
     onMessageLongClick: (ChatEntry) -> Unit,
     onReplyToMessage: (ChatEntry) -> Unit,
     roomState: RoomState,
-    appUser: AppUser,
+    appUser: fr.outadoc.justchatting.component.preferences.AppUser,
     insets: PaddingValues
 ) {
     val inlinesEmotes = remember(emotes) {
@@ -499,7 +499,7 @@ fun ChatMessagePreview(
             inlineContent = inlineBadges,
             animateEmotes = true,
             showTimestamps = true,
-            appUser = AppUser.LoggedIn(
+            appUser = fr.outadoc.justchatting.component.preferences.AppUser.LoggedIn(
                 id = "123",
                 login = "outadoc",
                 helixToken = ""
@@ -516,7 +516,7 @@ fun ChatMessage(
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     background: Color = Color.Transparent,
-    appUser: AppUser
+    appUser: fr.outadoc.justchatting.component.preferences.AppUser
 ) {
     val timestamp = message.timestamp
         .formatTimestamp()
@@ -566,7 +566,7 @@ fun HighlightedMessage(
     message: ChatEntry.Highlighted,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
-    appUser: AppUser,
+    appUser: fr.outadoc.justchatting.component.preferences.AppUser,
     backgroundHint: Color = MaterialTheme.colorScheme.surface
 ) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
@@ -626,7 +626,7 @@ fun SimpleMessage(
     message: ChatEntry.Simple,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
-    appUser: AppUser,
+    appUser: fr.outadoc.justchatting.component.preferences.AppUser,
     backgroundHint: Color = MaterialTheme.colorScheme.surface
 ) {
     Row {
@@ -652,7 +652,7 @@ fun ChatMessageData(
     data: ChatEntry.Data,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
-    appUser: AppUser,
+    appUser: fr.outadoc.justchatting.component.preferences.AppUser,
     backgroundHint: Color
 ) {
     val uriHandler = LocalUriHandler.current
@@ -776,7 +776,7 @@ fun InReplyToMessage(
 @Composable
 @OptIn(ExperimentalTextApi::class)
 fun ChatEntry.Data.toAnnotatedString(
-    appUser: AppUser,
+    appUser: fr.outadoc.justchatting.component.preferences.AppUser,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     urlColor: Color = MaterialTheme.colorScheme.primary,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,

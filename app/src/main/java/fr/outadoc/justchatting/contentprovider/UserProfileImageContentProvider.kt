@@ -7,7 +7,7 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import fr.outadoc.justchatting.BuildConfig
-import fr.outadoc.justchatting.repository.TwitchService
+import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -38,7 +38,7 @@ class UserProfileImageContentProvider : ContentProvider() {
         }
     }
 
-    private val apiRepository by inject<TwitchService>()
+    private val apiRepository by inject<TwitchRepository>()
     private val okHttpClient by inject<OkHttpClient>()
 
     override fun onCreate(): Boolean {

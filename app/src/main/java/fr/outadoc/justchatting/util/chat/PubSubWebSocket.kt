@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.util.chat
 
 import fr.outadoc.justchatting.component.twitch.parser.model.ChatCommand
-import fr.outadoc.justchatting.repository.AppPreferences
+import fr.outadoc.justchatting.component.preferences.AppPreferences
 import fr.outadoc.justchatting.util.NetworkStateObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

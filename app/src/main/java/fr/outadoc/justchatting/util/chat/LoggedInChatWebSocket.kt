@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.component.twitch.parser.ChatMessageParser
 import fr.outadoc.justchatting.component.twitch.parser.model.Command
 import fr.outadoc.justchatting.component.twitch.parser.model.PingCommand
 import fr.outadoc.justchatting.component.twitch.parser.model.UserState
-import fr.outadoc.justchatting.repository.PreferenceRepository
+import fr.outadoc.justchatting.component.preferences.PreferenceRepository
 import fr.outadoc.justchatting.util.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
@@ -30,7 +30,7 @@ class LoggedInChatWebSocket(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: ChatMessageParser,
-    private val preferencesRepository: PreferenceRepository,
+    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
     channelLogin: String
 ) : BaseChatWebSocket(networkStateObserver, scope, clock, channelLogin) {
 
@@ -38,7 +38,7 @@ class LoggedInChatWebSocket(
         private val networkStateObserver: NetworkStateObserver,
         private val clock: Clock,
         private val parser: ChatMessageParser,
-        private val preferencesRepository: PreferenceRepository,
+        private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
     ) {
         fun create(scope: CoroutineScope, channelLogin: String): LoggedInChatWebSocket {
             return LoggedInChatWebSocket(

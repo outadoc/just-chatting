@@ -7,6 +7,7 @@ import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository
 import fr.outadoc.justchatting.component.twitch.model.Chatter
 import fr.outadoc.justchatting.component.twitch.model.CheerEmote
 import fr.outadoc.justchatting.component.twitch.model.Emote
@@ -23,11 +24,10 @@ import fr.outadoc.justchatting.component.twitch.parser.model.PingCommand
 import fr.outadoc.justchatting.component.twitch.parser.model.PointReward
 import fr.outadoc.justchatting.component.twitch.parser.model.RoomStateDelta
 import fr.outadoc.justchatting.component.twitch.parser.model.UserState
-import fr.outadoc.justchatting.model.AppUser
+import fr.outadoc.justchatting.component.preferences.AppUser
 import fr.outadoc.justchatting.repository.ChatConnectionPool
-import fr.outadoc.justchatting.repository.EmotesRepository
-import fr.outadoc.justchatting.repository.PreferenceRepository
-import fr.outadoc.justchatting.repository.TwitchService
+import fr.outadoc.justchatting.component.preferences.PreferenceRepository
+import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.utils.core.isOdd
@@ -81,11 +81,11 @@ import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ChatViewModel(
-    private val repository: TwitchService,
+    private val repository: TwitchRepository,
     private val emotesRepository: EmotesRepository,
     private val chatConnectionPool: ChatConnectionPool,
     private val chatEntryMapper: ChatEntryMapper,
-    private val preferencesRepository: PreferenceRepository,
+    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
     private val clock: Clock
 ) : ViewModel() {
 
@@ -109,7 +109,7 @@ class ChatViewModel(
         @Immutable
         data class Chatting(
             val user: User,
-            val appUser: AppUser,
+            val appUser: fr.outadoc.justchatting.component.preferences.AppUser,
             val stream: Stream? = null,
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val chatMessages: PersistentList<ChatEntry> = persistentListOf(),
@@ -341,7 +341,7 @@ class ChatViewModel(
             user = repository.loadUsersByLogin(logins = listOf(channelLogin))
                 ?.firstOrNull()
                 ?: error("User not loaded"),
-            appUser = prefs.appUser as AppUser.LoggedIn,
+            appUser = prefs.appUser as fr.outadoc.justchatting.component.preferences.AppUser.LoggedIn,
             chatters = persistentSetOf(Chatter(channelLogin)),
             maxAdapterCount = prefs.messageLimit
         )
@@ -361,8 +361,7 @@ class ChatViewModel(
         return withContext(Dispatchers.IO) {
             val globalBadges = async {
                 try {
-                    emotesRepository.loadGlobalBadges().body()?.badges
-                        ?.toPersistentList()
+                    emotesRepository.loadGlobalBadges().badges.toPersistentList()
                 } catch (e: Exception) {
                     logError<ChatViewModel>(e) { "Failed to load global badges" }
                     null
@@ -371,8 +370,7 @@ class ChatViewModel(
 
             val channelBadges = async {
                 try {
-                    emotesRepository.loadChannelBadges(channelId).body()?.badges
-                        ?.toPersistentList()
+                    emotesRepository.loadChannelBadges(channelId).badges.toPersistentList()
                 } catch (e: Exception) {
                     logError<ChatViewModel>(e) { "Failed to load badges for channel $channelId" }
                     null
@@ -381,7 +379,7 @@ class ChatViewModel(
 
             val stvEmotes = async {
                 try {
-                    emotesRepository.loadStvEmotes(channelId).body()?.emotes
+                    emotesRepository.loadStvEmotes(channelId).emotes
                 } catch (e: Exception) {
                     logError<ChatViewModel>(e) { "Failed to load 7tv emotes for channel $channelId" }
                     null
@@ -390,7 +388,7 @@ class ChatViewModel(
 
             val bttvEmotes = async {
                 try {
-                    emotesRepository.loadBttvEmotes(channelId).body()?.emotes
+                    emotesRepository.loadBttvEmotes(channelId).emotes
                 } catch (e: Exception) {
                     logError<ChatViewModel>(e) { "Failed to load BTTV emotes for channel $channelId" }
                     null
@@ -399,7 +397,7 @@ class ChatViewModel(
 
             val ffzEmotes = async {
                 try {
-                    emotesRepository.loadBttvFfzEmotes(channelId).body()?.emotes
+                    emotesRepository.loadBttvFfzEmotes(channelId).emotes
                 } catch (e: Exception) {
                     logError<ChatViewModel>(e) { "Failed to load FFZ emotes for channel $channelId" }
                     null
@@ -408,7 +406,7 @@ class ChatViewModel(
 
             val globalStv = async {
                 try {
-                    emotesRepository.loadGlobalStvEmotes().body()?.emotes
+                    emotesRepository.loadGlobalStvEmotes().emotes
                 } catch (e: Exception) {
                     logError<ChatViewModel>(e) { "Failed to load global 7tv emotes" }
                     null
@@ -417,7 +415,7 @@ class ChatViewModel(
 
             val globalBttv = async {
                 try {
-                    emotesRepository.loadGlobalBttvEmotes().body()?.emotes
+                    emotesRepository.loadGlobalBttvEmotes().emotes
                 } catch (e: Exception) {
                     logError<ChatViewModel>(e) { "Failed to load global BTTV emotes" }
                     null
@@ -426,7 +424,7 @@ class ChatViewModel(
 
             val globalFfz = async {
                 try {
-                    emotesRepository.loadBttvGlobalFfzEmotes().body()?.emotes
+                    emotesRepository.loadBttvGlobalFfzEmotes().emotes
                 } catch (e: Exception) {
                     logError<ChatViewModel>(e) { "Failed to load global FFZ emotes" }
                     null
@@ -445,7 +443,7 @@ class ChatViewModel(
                 .takeIf { it.isNotEmpty() }
                 ?.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
-                        emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
                 }
                 ?.toPersistentSet()
 

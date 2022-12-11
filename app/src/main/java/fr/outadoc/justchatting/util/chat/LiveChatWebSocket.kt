@@ -8,8 +8,6 @@ import fr.outadoc.justchatting.component.twitch.parser.model.PingCommand
 import fr.outadoc.justchatting.component.twitch.parser.model.PointReward
 import fr.outadoc.justchatting.component.twitch.parser.model.RoomStateDelta
 import fr.outadoc.justchatting.component.twitch.parser.model.UserState
-import fr.outadoc.justchatting.repository.PreferenceRepository
-import fr.outadoc.justchatting.repository.RecentMessagesRepository
 import fr.outadoc.justchatting.util.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
@@ -33,8 +31,8 @@ class LiveChatWebSocket private constructor(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: ChatMessageParser,
-    private val recentMessagesRepository: RecentMessagesRepository,
-    private val preferencesRepository: PreferenceRepository,
+    private val recentMessagesRepository: fr.outadoc.justchatting.component.twitch.domain.repository.RecentMessagesRepository,
+    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
     private val channelLogin: String
 ) : BaseChatWebSocket(networkStateObserver, scope, clock, channelLogin) {
 
@@ -42,8 +40,8 @@ class LiveChatWebSocket private constructor(
         private val networkStateObserver: NetworkStateObserver,
         private val clock: Clock,
         private val parser: ChatMessageParser,
-        private val recentMessagesRepository: RecentMessagesRepository,
-        private val preferencesRepository: PreferenceRepository
+        private val recentMessagesRepository: fr.outadoc.justchatting.component.twitch.domain.repository.RecentMessagesRepository,
+        private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository
     ) {
         fun create(scope: CoroutineScope, channelLogin: String): LiveChatWebSocket {
             return LiveChatWebSocket(
@@ -139,9 +137,8 @@ class LiveChatWebSocket private constructor(
 
         try {
             recentMessagesRepository.loadRecentMessages(channelLogin, recentMsgLimit)
-                .body()
-                ?.messages
-                ?.let { commands ->
+                .messages
+                .let { commands ->
                     emitAll(commands)
                 }
         } catch (e: Exception) {

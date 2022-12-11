@@ -4,14 +4,12 @@ import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.component.preferences.AppUser
+import fr.outadoc.justchatting.component.twitch.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.twitch.model.ValidationResponse
 import fr.outadoc.justchatting.deeplink.Deeplink
 import fr.outadoc.justchatting.deeplink.DeeplinkParser
-import fr.outadoc.justchatting.model.AppUser
-import fr.outadoc.justchatting.oauth.OAuthAppCredentials
-import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.InvalidClientIdException
-import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -23,8 +21,8 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class MainViewModel(
-    private val authRepository: AuthRepository,
-    private val preferencesRepository: PreferenceRepository,
+    private val authRepository: fr.outadoc.justchatting.component.twitch.domain.repository.AuthRepository,
+    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
     private val deeplinkParser: DeeplinkParser,
     private val oAuthAppCredentials: OAuthAppCredentials
 ) : ViewModel() {
@@ -46,8 +44,8 @@ class MainViewModel(
     val state: StateFlow<State> =
         preferencesRepository.currentPreferences
             .map { prefs ->
-                when (prefs.appUser) {
-                    is AppUser.LoggedIn -> State.LoggedIn(appUser = prefs.appUser)
+                when (val appUser = prefs.appUser) {
+                    is AppUser.LoggedIn -> State.LoggedIn(appUser = appUser)
                     is AppUser.NotLoggedIn -> State.LoggedOut()
                     is AppUser.NotValidated -> {
                         try {
@@ -57,7 +55,7 @@ class MainViewModel(
                             val validatedUser = AppUser.LoggedIn(
                                 id = userInfo.userId,
                                 login = userInfo.login,
-                                helixToken = prefs.appUser.helixToken
+                                helixToken = appUser.helixToken
                             )
 
                             if (userInfo.clientId != oAuthAppCredentials.clientId) {

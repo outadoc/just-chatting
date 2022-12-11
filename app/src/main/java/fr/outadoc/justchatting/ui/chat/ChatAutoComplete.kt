@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.ui.chat
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Chip
 import androidx.compose.material.ChipDefaults
@@ -12,6 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.model.chat.Chatter
@@ -31,7 +34,9 @@ fun AutoCompleteEmoteItem(
         onClick = onClick
     ) {
         EmoteItem(
-            modifier = Modifier.size(32.dp),
+            modifier = Modifier
+                .size(32.dp)
+                .padding(4.dp),
             emote = emote,
             animateEmotes = animateEmotes
         )
@@ -79,12 +84,17 @@ fun AutoCompleteItemContent(
     onClick: () -> Unit,
     content: @Composable RowScope.() -> Unit
 ) {
+    val haptic = LocalHapticFeedback.current
+
     Chip(
         modifier = modifier,
         colors = ChipDefaults.chipColors(
             backgroundColor = MaterialTheme.colorScheme.surfaceVariant
         ),
-        onClick = onClick,
+        onClick = {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            onClick()
+        },
         content = content
     )
 }

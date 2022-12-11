@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.util.chat
 
+import fr.outadoc.justchatting.component.twitch.model.chat.Badge
 import fr.outadoc.justchatting.component.twitch.parser.ChatMessageParser
 import fr.outadoc.justchatting.component.twitch.parser.model.ChatCommand
 import fr.outadoc.justchatting.component.twitch.parser.model.ChatMessage
@@ -7,7 +8,7 @@ import fr.outadoc.justchatting.component.twitch.parser.model.Command
 import fr.outadoc.justchatting.component.twitch.parser.model.HostModeState
 import fr.outadoc.justchatting.component.twitch.parser.model.PingCommand
 import fr.outadoc.justchatting.component.twitch.parser.model.RoomStateDelta
-import fr.outadoc.justchatting.component.twitch.parser.model.TwitchChatEmote
+import fr.outadoc.justchatting.component.twitch.model.chat.TwitchChatEmote
 import fr.outadoc.justchatting.component.twitch.parser.model.UserState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -37,7 +38,7 @@ class ChatMessageParserTest {
                     TwitchChatEmote(id = "1902", name = "Keepo")
                 ),
                 badges = listOf(
-                    fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                    Badge(
                         id = "turbo",
                         version = "1"
                     )
@@ -66,11 +67,11 @@ class ChatMessageParserTest {
                 isAction = true,
                 emotes = emptyList(),
                 badges = listOf(
-                    fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                    Badge(
                         id = "moderator",
                         version = "1"
                     ),
-                    fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                    Badge(
                         id = "subscriber",
                         version = "3009"
                     )
@@ -113,11 +114,11 @@ class ChatMessageParserTest {
                         )
                     ),
                     badges = listOf(
-                        fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                        Badge(
                             id = "subscriber",
                             version = "36"
                         ),
-                        fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                        Badge(
                             id = "bits",
                             version = "1000"
                         )
@@ -147,11 +148,11 @@ class ChatMessageParserTest {
                     color = "#8A2BE2",
                     emotes = emptyList(),
                     badges = listOf(
-                        fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                        Badge(
                             id = "moderator",
                             version = "1"
                         ),
-                        fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                        Badge(
                             id = "subscriber",
                             version = "3009"
                         )
@@ -314,11 +315,11 @@ class ChatMessageParserTest {
                 isAction = false,
                 emotes = emptyList(),
                 badges = listOf(
-                    fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                    Badge(
                         id = "subscriber",
                         version = "18"
                     ),
-                    fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                    Badge(
                         id = "premium",
                         version = "1"
                     )

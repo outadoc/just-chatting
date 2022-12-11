@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.component.twitch.parser.model
+package fr.outadoc.justchatting.component.twitch.model.chat
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.Stable

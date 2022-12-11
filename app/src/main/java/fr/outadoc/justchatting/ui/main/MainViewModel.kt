@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.outadoc.justchatting.component.twitch.model.AppUser
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.component.twitch.model.id.ValidationResponse
 import fr.outadoc.justchatting.deeplink.Deeplink
 import fr.outadoc.justchatting.deeplink.DeeplinkParser

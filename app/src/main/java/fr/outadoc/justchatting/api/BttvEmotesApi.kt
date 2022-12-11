@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.api
 
-import fr.outadoc.justchatting.component.twitch.parser.model.BttvChannelResponse
-import fr.outadoc.justchatting.component.twitch.parser.model.BttvFfzResponse
-import fr.outadoc.justchatting.component.twitch.parser.model.BttvGlobalResponse
+import fr.outadoc.justchatting.component.twitch.model.chat.BttvChannelResponse
+import fr.outadoc.justchatting.component.twitch.model.chat.BttvFfzResponse
+import fr.outadoc.justchatting.component.twitch.model.chat.BttvGlobalResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

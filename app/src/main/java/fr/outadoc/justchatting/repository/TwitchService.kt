@@ -8,8 +8,8 @@ import fr.outadoc.justchatting.component.twitch.model.helix.follows.FollowRespon
 import fr.outadoc.justchatting.component.twitch.model.helix.stream.Stream
 import fr.outadoc.justchatting.component.twitch.model.helix.stream.StreamsResponse
 import fr.outadoc.justchatting.component.twitch.model.helix.user.User
-import fr.outadoc.justchatting.component.twitch.parser.model.CheerEmote
-import fr.outadoc.justchatting.component.twitch.parser.model.TwitchEmote
+import fr.outadoc.justchatting.component.twitch.model.chat.CheerEmote
+import fr.outadoc.justchatting.component.twitch.model.chat.TwitchEmote
 
 interface TwitchService {
 

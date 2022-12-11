@@ -4,8 +4,8 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import fr.outadoc.justchatting.component.twitch.parser.model.BttvFfzResponse
-import fr.outadoc.justchatting.component.twitch.parser.model.FfzEmote
+import fr.outadoc.justchatting.component.twitch.model.chat.BttvFfzResponse
+import fr.outadoc.justchatting.component.twitch.model.chat.FfzEmote
 import fr.outadoc.justchatting.utils.core.asStringOrNull
 import java.lang.reflect.Type
 

@@ -5,8 +5,8 @@ import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
-import fr.outadoc.justchatting.component.twitch.parser.model.CheerEmote
-import fr.outadoc.justchatting.component.twitch.parser.model.CheerEmotesResponse
+import fr.outadoc.justchatting.component.twitch.model.chat.CheerEmote
+import fr.outadoc.justchatting.component.twitch.model.chat.CheerEmotesResponse
 import java.lang.reflect.Type
 
 class CheerEmotesDeserializer : JsonDeserializer<CheerEmotesResponse> {

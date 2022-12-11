@@ -93,9 +93,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.component.twitch.model.AppUser
-import fr.outadoc.justchatting.component.twitch.parser.model.Emote
-import fr.outadoc.justchatting.component.twitch.parser.model.TwitchBadge
+import fr.outadoc.justchatting.component.twitch.model.chat.Badge
+import fr.outadoc.justchatting.model.AppUser
+import fr.outadoc.justchatting.component.twitch.model.chat.Emote
+import fr.outadoc.justchatting.component.twitch.model.chat.TwitchBadge
 import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.composepreview.previewBadges
@@ -879,7 +880,7 @@ fun ChatEntry.Data.toAnnotatedString(
     }
 }
 
-private val fr.outadoc.justchatting.component.twitch.parser.model.Badge.inlineContentId: String
+private val Badge.inlineContentId: String
     get() = "badge_${id}_$version"
 
 private val TwitchBadge.inlineContentId: String

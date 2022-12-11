@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.component.twitch.model.helix.emote.EmoteSetRespon
 import fr.outadoc.justchatting.component.twitch.model.helix.follows.FollowResponse
 import fr.outadoc.justchatting.component.twitch.model.helix.stream.StreamsResponse
 import fr.outadoc.justchatting.component.twitch.model.helix.user.UsersResponse
-import fr.outadoc.justchatting.component.twitch.parser.model.CheerEmotesResponse
+import fr.outadoc.justchatting.component.twitch.model.chat.CheerEmotesResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

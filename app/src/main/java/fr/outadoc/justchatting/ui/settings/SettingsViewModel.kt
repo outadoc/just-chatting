@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.outadoc.justchatting.component.twitch.model.AppUser
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.repository.AppPreferences
 import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.PreferenceRepository

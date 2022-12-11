@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.component.twitch.parser
 
-import fr.outadoc.justchatting.component.twitch.parser.model.TwitchChatEmote
+import fr.outadoc.justchatting.component.twitch.model.chat.Badge
+import fr.outadoc.justchatting.component.twitch.model.chat.TwitchChatEmote
 import fr.outadoc.justchatting.component.twitch.parser.model.ChatMessage
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
@@ -31,12 +32,12 @@ fun Map<String, String?>.parseEmotes(message: String): List<TwitchChatEmote>? {
         }
 }
 
-fun Map<String, String?>.parseBadges(): List<fr.outadoc.justchatting.component.twitch.parser.model.Badge>? =
+fun Map<String, String?>.parseBadges(): List<Badge>? =
     this["badges"]
         ?.splitAndMakeMap(",", "/")
         ?.entries
         ?.mapNotNull { (key, value) ->
-            value?.let { fr.outadoc.justchatting.component.twitch.parser.model.Badge(key, value) }
+            value?.let { Badge(key, value) }
         }
 
 fun Map<String, String?>.parseTimestamp(): Instant? {

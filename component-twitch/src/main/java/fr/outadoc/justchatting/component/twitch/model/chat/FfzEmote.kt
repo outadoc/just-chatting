@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.component.twitch.parser.model
+package fr.outadoc.justchatting.component.twitch.model.chat
 
 class FfzEmote(
     override val name: String,

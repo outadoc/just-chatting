@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -176,41 +175,40 @@ fun ChatInput(
             }
         }
 
-        Row(
-            modifier = modifier,
-            horizontalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.Start),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
-                AnimatedVisibility(visible = autoCompleteItems.isNotEmpty()) {
-                    ChatAutoCompleteRow(
-                        onChatterClick = onChatterClick,
-                        onEmoteClick = onEmoteClick,
-                        items = autoCompleteItems,
-                        animateEmotes = animateEmotes
-                    )
-                }
+        Column(modifier = modifier) {
+            AnimatedVisibility(visible = autoCompleteItems.isNotEmpty()) {
+                ChatAutoCompleteRow(
+                    onChatterClick = onChatterClick,
+                    onEmoteClick = onEmoteClick,
+                    items = autoCompleteItems,
+                    animateEmotes = animateEmotes
+                )
+            }
 
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 ChatTextField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.weight(1f, fill = true),
                     message = message,
                     onMessageChange = onMessageChange,
                     onToggleEmotePicker = onToggleEmotePicker,
                     onSubmit = onSubmit
                 )
-            }
 
-            AnimatedVisibility(visible = message.text.isNotEmpty()) {
-                FloatingActionButton(
-                    onClick = {
-                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        onSubmit()
+                AnimatedVisibility(visible = message.text.isNotEmpty()) {
+                    FloatingActionButton(
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            onSubmit()
+                        }
+                    ) {
+                        Icon(
+                            Icons.Default.Send,
+                            contentDescription = stringResource(R.string.chat_input_send_cd)
+                        )
                     }
-                ) {
-                    Icon(
-                        Icons.Default.Send,
-                        contentDescription = stringResource(R.string.chat_input_send_cd)
-                    )
                 }
             }
         }

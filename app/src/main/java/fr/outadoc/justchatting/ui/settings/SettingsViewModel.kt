@@ -2,9 +2,9 @@ package fr.outadoc.justchatting.ui.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.outadoc.justchatting.component.preferences.AppPreferences
-import fr.outadoc.justchatting.component.preferences.AppUser
-import fr.outadoc.justchatting.component.preferences.PreferenceRepository
+import fr.outadoc.justchatting.component.data.AppPreferences
+import fr.outadoc.justchatting.component.data.AppUser
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val preferenceRepository: PreferenceRepository,
+    private val preferenceRepository: fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository,
     private val authRepository: fr.outadoc.justchatting.component.twitch.domain.repository.AuthRepository
 ) : ViewModel() {
 

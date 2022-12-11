@@ -4,7 +4,7 @@ import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.outadoc.justchatting.component.preferences.AppUser
+import fr.outadoc.justchatting.component.data.AppUser
 import fr.outadoc.justchatting.component.twitch.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.twitch.model.ValidationResponse
 import fr.outadoc.justchatting.deeplink.Deeplink
@@ -22,7 +22,7 @@ import retrofit2.HttpException
 
 class MainViewModel(
     private val authRepository: fr.outadoc.justchatting.component.twitch.domain.repository.AuthRepository,
-    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
+    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository,
     private val deeplinkParser: DeeplinkParser,
     private val oAuthAppCredentials: OAuthAppCredentials
 ) : ViewModel() {

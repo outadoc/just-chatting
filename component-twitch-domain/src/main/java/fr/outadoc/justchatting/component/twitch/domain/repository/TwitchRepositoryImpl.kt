@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.component.twitch.domain.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import fr.outadoc.justchatting.component.preferences.PreferenceRepository
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.component.twitch.domain.repository.datasource.FollowedChannelsDataSource
@@ -23,7 +23,7 @@ import kotlinx.coroutines.withContext
 
 class TwitchRepositoryImpl(
     private val helix: HelixApi,
-    private val preferencesRepository: PreferenceRepository
+    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 ) : TwitchRepository {
 
     override suspend fun loadSearchChannels(query: String): Pager<String, ChannelSearchResponse> {

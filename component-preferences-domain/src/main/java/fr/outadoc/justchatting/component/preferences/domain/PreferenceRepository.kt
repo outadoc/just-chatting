@@ -1,5 +1,6 @@
-package fr.outadoc.justchatting.component.preferences
+package fr.outadoc.justchatting.component.preferences.domain
 
+import fr.outadoc.justchatting.component.data.AppPreferences
 import kotlinx.coroutines.flow.Flow
 
 interface PreferenceRepository {

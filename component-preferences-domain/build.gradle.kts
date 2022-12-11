@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "fr.outadoc.justchatting.component.chat.data"
+    namespace = "fr.outadoc.justchatting.component.preferences.domain"
     compileSdkVersion = "android-33"
 
     defaultConfig {
@@ -29,19 +29,10 @@ android {
 }
 
 dependencies {
-    implementation(project(":utils-logging"))
-    implementation(project(":utils-core"))
-    implementation(project(":component-preferences-domain"))
+    api(project(":component-preferences-data"))
 
-    implementation(libs.compose.runtime.core)
-    implementation(libs.gson)
-    implementation(libs.irc)
     implementation(libs.kotlinx.coroutines)
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.okhttp.logging)
-    implementation(libs.retrofit.core)
-
-    testImplementation(libs.junit)
+    implementation(libs.androidx.datastore.preferences)
 
     coreLibraryDesugaring(libs.desugar)
 }

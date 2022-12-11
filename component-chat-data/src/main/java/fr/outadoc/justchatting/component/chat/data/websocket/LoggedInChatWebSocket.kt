@@ -28,7 +28,7 @@ class LoggedInChatWebSocket(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: fr.outadoc.justchatting.component.chat.data.parser.ChatMessageParser,
-    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
+    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository,
     channelLogin: String
 ) : BaseChatWebSocket(networkStateObserver, scope, clock, channelLogin) {
 
@@ -36,7 +36,7 @@ class LoggedInChatWebSocket(
         private val networkStateObserver: NetworkStateObserver,
         private val clock: Clock,
         private val parser: fr.outadoc.justchatting.component.chat.data.parser.ChatMessageParser,
-        private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
+        private val preferencesRepository: fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository,
     ) {
         fun create(scope: CoroutineScope, channelLogin: String): LoggedInChatWebSocket {
             return LoggedInChatWebSocket(

@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.component.chat.data.model.PointReward
 import fr.outadoc.justchatting.component.chat.data.model.RoomStateDelta
 import fr.outadoc.justchatting.component.chat.data.model.UserState
 import fr.outadoc.justchatting.component.chat.data.recent.RecentMessagesRepository
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
@@ -32,7 +33,7 @@ class LiveChatWebSocket private constructor(
     private val clock: Clock,
     private val parser: fr.outadoc.justchatting.component.chat.data.parser.ChatMessageParser,
     private val recentMessagesRepository: RecentMessagesRepository,
-    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
+    private val preferencesRepository: PreferenceRepository,
     private val channelLogin: String
 ) : BaseChatWebSocket(networkStateObserver, scope, clock, channelLogin) {
 
@@ -41,7 +42,7 @@ class LiveChatWebSocket private constructor(
         private val clock: Clock,
         private val parser: fr.outadoc.justchatting.component.chat.data.parser.ChatMessageParser,
         private val recentMessagesRepository: RecentMessagesRepository,
-        private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository
+        private val preferencesRepository: PreferenceRepository
     ) {
         fun create(scope: CoroutineScope, channelLogin: String): LiveChatWebSocket {
             return LiveChatWebSocket(

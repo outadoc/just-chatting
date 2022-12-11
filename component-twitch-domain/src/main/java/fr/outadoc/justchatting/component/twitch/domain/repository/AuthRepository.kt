@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.component.twitch.domain.repository
 
-import fr.outadoc.justchatting.component.preferences.PreferenceRepository
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.api.IdApi
 import fr.outadoc.justchatting.component.twitch.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.twitch.model.ValidationResponse

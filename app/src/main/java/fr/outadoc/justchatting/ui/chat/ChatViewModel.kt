@@ -82,7 +82,7 @@ class ChatViewModel(
     private val emotesRepository: EmotesRepository,
     private val chatConnectionPool: fr.outadoc.justchatting.component.chat.domain.ChatConnectionPool,
     private val chatEntryMapper: ChatEntryMapper,
-    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
+    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository,
     private val clock: Clock
 ) : ViewModel() {
 
@@ -106,7 +106,7 @@ class ChatViewModel(
         @Immutable
         data class Chatting(
             val user: User,
-            val appUser: fr.outadoc.justchatting.component.preferences.AppUser,
+            val appUser: fr.outadoc.justchatting.component.data.AppUser,
             val stream: Stream? = null,
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val chatMessages: PersistentList<ChatEntry> = persistentListOf(),
@@ -338,7 +338,7 @@ class ChatViewModel(
             user = repository.loadUsersByLogin(logins = listOf(channelLogin))
                 ?.firstOrNull()
                 ?: error("User not loaded"),
-            appUser = prefs.appUser as fr.outadoc.justchatting.component.preferences.AppUser.LoggedIn,
+            appUser = prefs.appUser as fr.outadoc.justchatting.component.data.AppUser.LoggedIn,
             chatters = persistentSetOf(Chatter(channelLogin)),
             maxAdapterCount = prefs.messageLimit
         )

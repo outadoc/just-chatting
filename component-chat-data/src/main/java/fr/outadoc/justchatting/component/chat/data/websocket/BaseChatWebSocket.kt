@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.component.chat.data.websocket
 
 import fr.outadoc.justchatting.component.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.component.chat.data.model.Command
-import fr.outadoc.justchatting.component.preferences.AppPreferences
+import fr.outadoc.justchatting.component.data.AppPreferences
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError

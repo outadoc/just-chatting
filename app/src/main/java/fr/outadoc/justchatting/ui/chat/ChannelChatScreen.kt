@@ -43,8 +43,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.component.preferences.AppPreferences
-import fr.outadoc.justchatting.component.preferences.PreferenceRepository
+import fr.outadoc.justchatting.component.data.AppPreferences
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.model.Chatter
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.composepreview.ScreenPreviews
@@ -64,7 +64,7 @@ fun ChannelChatScreen(channelLogin: String) {
     val state by viewModel.state.collectAsState()
     val inputState by viewModel.inputState.collectAsState()
 
-    val preferencesRepository: PreferenceRepository = get()
+    val preferencesRepository: fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository = get()
     val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
     val context = LocalContext.current

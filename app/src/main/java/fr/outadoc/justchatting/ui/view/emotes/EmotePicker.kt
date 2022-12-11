@@ -22,8 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.preferences.AppPreferences
-import fr.outadoc.justchatting.component.preferences.PreferenceRepository
+import fr.outadoc.justchatting.component.data.AppPreferences
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.ui.chat.ChatViewModel
 import kotlinx.collections.immutable.toImmutableList
@@ -33,7 +33,7 @@ import org.koin.androidx.compose.get
 fun EmotePicker(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
-    preferencesRepository: PreferenceRepository = get(),
+    preferencesRepository: fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository = get(),
     onEmoteClick: (Emote) -> Unit
 ) {
     val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())

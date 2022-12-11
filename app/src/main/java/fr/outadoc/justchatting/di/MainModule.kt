@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.auth.AuthenticationInterceptor
 import fr.outadoc.justchatting.component.chat.data.recent.RecentMessagesDeserializer
+import fr.outadoc.justchatting.component.preferences.domain.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.component.twitch.adapters.BttvChannelDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.BttvFfzDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.BttvGlobalDeserializer
@@ -34,7 +35,6 @@ import fr.outadoc.justchatting.component.twitch.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.db.AppDatabase
 import fr.outadoc.justchatting.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.oss.ReadExternalDependenciesList
-import fr.outadoc.justchatting.repository.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import kotlinx.datetime.Clock
@@ -62,7 +62,11 @@ val mainModule = module {
     }
 
     single { ReadExternalDependenciesList(get()) }
-    single<fr.outadoc.justchatting.component.preferences.PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }
+    single<fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository> {
+        fr.outadoc.justchatting.component.preferences.domain.SharedPrefsPreferenceRepository(
+            get()
+        )
+    }
 
     single { fr.outadoc.justchatting.component.chat.domain.ChatConnectionPool(get()) }
 

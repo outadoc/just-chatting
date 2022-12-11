@@ -132,7 +132,7 @@ dependencies {
 
     implementation(project(":component-chat-domain"))
     implementation(project(":component-twitch-domain"))
-    implementation(project(":component-preferences"))
+    implementation(project(":component-preferences-domain"))
 
     implementation(project(":utils-core"))
     implementation(project(":utils-ui"))

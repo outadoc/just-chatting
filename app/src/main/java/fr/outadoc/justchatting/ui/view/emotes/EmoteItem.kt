@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import coil.compose.AsyncImage
+import fr.outadoc.justchatting.component.chat.data.model.TwitchChatEmote
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.utils.ui.isDark
 
@@ -14,6 +15,25 @@ import fr.outadoc.justchatting.utils.ui.isDark
 fun EmoteItem(
     modifier: Modifier = Modifier,
     emote: Emote,
+    animateEmotes: Boolean
+) {
+    val density = LocalDensity.current.density
+    AsyncImage(
+        modifier = modifier.fillMaxSize(),
+        contentScale = ContentScale.Fit,
+        contentDescription = emote.name,
+        model = emote.getUrl(
+            animate = animateEmotes,
+            screenDensity = density,
+            isDarkTheme = MaterialTheme.colorScheme.isDark
+        )
+    )
+}
+
+@Composable
+fun ChatEmoteItem(
+    modifier: Modifier = Modifier,
+    emote: TwitchChatEmote,
     animateEmotes: Boolean
 ) {
     val density = LocalDensity.current.density

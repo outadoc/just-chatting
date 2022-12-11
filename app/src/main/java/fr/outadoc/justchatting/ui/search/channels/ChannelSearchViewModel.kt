@@ -4,8 +4,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.flatMap
-import fr.outadoc.justchatting.component.twitch.model.ChannelSearch
 import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
+import fr.outadoc.justchatting.component.twitch.model.ChannelSearch
 import fr.outadoc.justchatting.ui.common.PagedListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

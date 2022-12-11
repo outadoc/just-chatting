@@ -7,8 +7,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
-import fr.outadoc.justchatting.component.preferences.PreferenceRepository
 import fr.outadoc.justchatting.component.preferences.AppUser
+import fr.outadoc.justchatting.component.preferences.PreferenceRepository
 import fr.outadoc.justchatting.util.dataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map

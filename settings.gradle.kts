@@ -26,5 +26,7 @@ include(":utils-ui")
 include(":utils-logging")
 
 include(":component-preferences")
+include(":component-chat-data")
+include(":component-chat-domain")
 include(":component-twitch-data")
 include(":component-twitch-domain")

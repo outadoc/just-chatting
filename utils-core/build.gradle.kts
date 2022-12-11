@@ -30,6 +30,7 @@ android {
 dependencies {
     implementation(libs.gson)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.coroutines)
 
     coreLibraryDesugaring(libs.desugar)
 }

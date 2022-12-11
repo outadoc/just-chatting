@@ -93,18 +93,17 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.component.twitch.model.Badge
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
 import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.composepreview.previewBadges
-import fr.outadoc.justchatting.component.preferences.AppUser
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.common.parseHexColor
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.BadgeItem
+import fr.outadoc.justchatting.ui.view.emotes.ChatEmoteItem
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import fr.outadoc.justchatting.util.createChannelDeeplink
 import fr.outadoc.justchatting.utils.core.isOdd
@@ -666,7 +665,7 @@ fun ChatMessageData(
                         Pair(
                             emote.name,
                             InlineTextContent(emotePlaceholder) {
-                                EmoteItem(
+                                ChatEmoteItem(
                                     emote = emote,
                                     animateEmotes = animateEmotes
                                 )
@@ -880,7 +879,7 @@ fun ChatEntry.Data.toAnnotatedString(
     }
 }
 
-private val Badge.inlineContentId: String
+private val fr.outadoc.justchatting.component.chat.data.model.Badge.inlineContentId: String
     get() = "badge_${id}_$version"
 
 private val TwitchBadge.inlineContentId: String

@@ -9,7 +9,6 @@ import fr.outadoc.justchatting.component.twitch.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.twitch.model.ValidationResponse
 import fr.outadoc.justchatting.deeplink.Deeplink
 import fr.outadoc.justchatting.deeplink.DeeplinkParser
-import fr.outadoc.justchatting.repository.InvalidClientIdException
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted

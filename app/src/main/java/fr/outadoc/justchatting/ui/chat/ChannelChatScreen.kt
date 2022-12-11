@@ -64,8 +64,8 @@ fun ChannelChatScreen(channelLogin: String) {
     val state by viewModel.state.collectAsState()
     val inputState by viewModel.inputState.collectAsState()
 
-    val preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository = get()
-    val prefs by preferencesRepository.currentPreferences.collectAsState(initial = fr.outadoc.justchatting.component.preferences.AppPreferences())
+    val preferencesRepository: PreferenceRepository = get()
+    val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
     val context = LocalContext.current
     val density = LocalDensity.current.density

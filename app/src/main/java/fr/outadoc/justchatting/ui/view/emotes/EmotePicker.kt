@@ -33,10 +33,10 @@ import org.koin.androidx.compose.get
 fun EmotePicker(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
-    preferencesRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository = get(),
+    preferencesRepository: PreferenceRepository = get(),
     onEmoteClick: (Emote) -> Unit
 ) {
-    val prefs by preferencesRepository.currentPreferences.collectAsState(initial = fr.outadoc.justchatting.component.preferences.AppPreferences())
+    val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
     var selectedTab by remember { mutableStateOf(EmoteTab.RECENT) }
 

@@ -12,18 +12,18 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class SettingsViewModel(
-    private val preferenceRepository: fr.outadoc.justchatting.component.preferences.PreferenceRepository,
+    private val preferenceRepository: PreferenceRepository,
     private val authRepository: fr.outadoc.justchatting.component.twitch.domain.repository.AuthRepository
 ) : ViewModel() {
 
-    val appPreferences: StateFlow<fr.outadoc.justchatting.component.preferences.AppPreferences> =
+    val appPreferences: StateFlow<AppPreferences> =
         preferenceRepository.currentPreferences.stateIn(
             viewModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = fr.outadoc.justchatting.component.preferences.AppPreferences()
+            initialValue = AppPreferences()
         )
 
-    fun updatePreferences(appPreferences: fr.outadoc.justchatting.component.preferences.AppPreferences) {
+    fun updatePreferences(appPreferences: AppPreferences) {
         viewModelScope.launch {
             preferenceRepository.updatePreferences { appPreferences }
         }
@@ -33,7 +33,7 @@ class SettingsViewModel(
         viewModelScope.launch {
             val currentUser = preferenceRepository.currentPreferences.first().appUser
             preferenceRepository.updatePreferences { current ->
-                current.copy(appUser = fr.outadoc.justchatting.component.preferences.AppUser.NotLoggedIn)
+                current.copy(appUser = AppUser.NotLoggedIn)
             }
 
             try {

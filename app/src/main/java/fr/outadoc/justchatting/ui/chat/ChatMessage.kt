@@ -98,8 +98,8 @@ import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
 import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.composepreview.previewBadges
-import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
-import fr.outadoc.justchatting.ui.common.parseHexColor
+import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
+import fr.outadoc.justchatting.utils.ui.parseHexColor
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.BadgeItem

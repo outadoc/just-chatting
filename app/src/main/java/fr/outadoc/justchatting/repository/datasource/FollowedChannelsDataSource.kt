@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.repository.datasource
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import fr.outadoc.justchatting.api.HelixApi
-import fr.outadoc.justchatting.model.helix.follows.FollowResponse
+import fr.outadoc.justchatting.component.twitch.model.helix.follows.FollowResponse
 
 class FollowedChannelsDataSource(
     private val userId: String?,

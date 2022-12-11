@@ -2,8 +2,8 @@ package fr.outadoc.justchatting.composepreview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.model.chat.Badge
-import fr.outadoc.justchatting.model.chat.ChatMessage
+import fr.outadoc.justchatting.component.twitch.parser.model.Badge
+import fr.outadoc.justchatting.component.twitch.parser.model.ChatMessage
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant

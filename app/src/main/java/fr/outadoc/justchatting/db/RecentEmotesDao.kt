@@ -5,7 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import fr.outadoc.justchatting.model.chat.RecentEmote
+import fr.outadoc.justchatting.component.twitch.parser.model.RecentEmote
 import kotlinx.coroutines.flow.Flow
 
 @Dao

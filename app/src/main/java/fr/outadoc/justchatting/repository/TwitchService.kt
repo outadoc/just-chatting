@@ -1,15 +1,15 @@
 package fr.outadoc.justchatting.repository
 
 import androidx.paging.Pager
-import fr.outadoc.justchatting.model.chat.CheerEmote
-import fr.outadoc.justchatting.model.chat.TwitchEmote
-import fr.outadoc.justchatting.model.helix.channel.ChannelSearch
-import fr.outadoc.justchatting.model.helix.channel.ChannelSearchResponse
-import fr.outadoc.justchatting.model.helix.follows.Follow
-import fr.outadoc.justchatting.model.helix.follows.FollowResponse
-import fr.outadoc.justchatting.model.helix.stream.Stream
-import fr.outadoc.justchatting.model.helix.stream.StreamsResponse
-import fr.outadoc.justchatting.model.helix.user.User
+import fr.outadoc.justchatting.component.twitch.model.helix.channel.ChannelSearch
+import fr.outadoc.justchatting.component.twitch.model.helix.channel.ChannelSearchResponse
+import fr.outadoc.justchatting.component.twitch.model.helix.follows.Follow
+import fr.outadoc.justchatting.component.twitch.model.helix.follows.FollowResponse
+import fr.outadoc.justchatting.component.twitch.model.helix.stream.Stream
+import fr.outadoc.justchatting.component.twitch.model.helix.stream.StreamsResponse
+import fr.outadoc.justchatting.component.twitch.model.helix.user.User
+import fr.outadoc.justchatting.component.twitch.parser.model.CheerEmote
+import fr.outadoc.justchatting.component.twitch.parser.model.TwitchEmote
 
 interface TwitchService {
 

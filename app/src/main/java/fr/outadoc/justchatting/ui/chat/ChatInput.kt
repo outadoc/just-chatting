@@ -33,9 +33,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.component.twitch.parser.model.Chatter
+import fr.outadoc.justchatting.component.twitch.parser.model.Emote
 import fr.outadoc.justchatting.composepreview.ThemePreviews
-import fr.outadoc.justchatting.model.chat.Chatter
-import fr.outadoc.justchatting.model.chat.Emote
 import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry

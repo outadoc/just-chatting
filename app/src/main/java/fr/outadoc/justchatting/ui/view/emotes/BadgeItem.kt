@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import coil.compose.AsyncImage
-import fr.outadoc.justchatting.model.chat.TwitchBadge
+import fr.outadoc.justchatting.component.twitch.parser.model.TwitchBadge
 
 @Composable
 fun BadgeItem(

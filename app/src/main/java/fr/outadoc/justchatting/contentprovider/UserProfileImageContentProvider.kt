@@ -7,8 +7,8 @@ import android.database.Cursor
 import android.net.Uri
 import android.os.ParcelFileDescriptor
 import fr.outadoc.justchatting.BuildConfig
-import fr.outadoc.justchatting.log.logDebug
 import fr.outadoc.justchatting.repository.TwitchService
+import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import okhttp3.HttpUrl.Companion.toHttpUrl

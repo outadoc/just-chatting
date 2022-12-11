@@ -14,8 +14,8 @@ import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import fr.outadoc.justchatting.ChatConnectionService
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.component.twitch.model.helix.user.User
 import fr.outadoc.justchatting.contentprovider.profileImageIcon
-import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.utils.core.isLaunchedFromBubbleCompat
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent

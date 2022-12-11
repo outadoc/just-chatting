@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.model
+package fr.outadoc.justchatting.component.twitch.model
 
 sealed class AppUser {
 

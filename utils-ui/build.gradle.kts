@@ -13,7 +13,7 @@ android {
         minSdk = 21
         targetSdk = 33
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("proguard-consumer-rules.pro")
+        consumerProguardFiles("consumer-rules.pro")
     }
 
     compileOptions {

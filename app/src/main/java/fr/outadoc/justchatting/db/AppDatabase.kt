@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import fr.outadoc.justchatting.model.chat.RecentEmote
+import fr.outadoc.justchatting.component.twitch.parser.model.RecentEmote
 
 @Database(
     entities = [RecentEmote::class],

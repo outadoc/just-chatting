@@ -4,20 +4,19 @@ import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.component.twitch.model.AppUser
+import fr.outadoc.justchatting.component.twitch.model.id.ValidationResponse
 import fr.outadoc.justchatting.deeplink.Deeplink
 import fr.outadoc.justchatting.deeplink.DeeplinkParser
-import fr.outadoc.justchatting.log.logError
-import fr.outadoc.justchatting.model.AppUser
-import fr.outadoc.justchatting.model.id.ValidationResponse
 import fr.outadoc.justchatting.oauth.OAuthAppCredentials
 import fr.outadoc.justchatting.repository.AuthRepository
 import fr.outadoc.justchatting.repository.InvalidClientIdException
 import fr.outadoc.justchatting.repository.PreferenceRepository
+import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -93,7 +92,6 @@ class MainViewModel(
     val events = _events.asSharedFlow()
 
     fun onLoginClick() = viewModelScope.launch {
-        val prefs = preferencesRepository.currentPreferences.first()
         val helixScopes = listOf(
             "chat:read",
             "chat:edit",

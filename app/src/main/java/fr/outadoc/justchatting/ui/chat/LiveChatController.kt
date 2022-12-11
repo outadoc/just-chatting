@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.ui.chat
 
-import fr.outadoc.justchatting.model.chat.ChatCommand
+import fr.outadoc.justchatting.component.twitch.parser.model.ChatCommand
 import fr.outadoc.justchatting.util.chat.LiveChatWebSocket
 import fr.outadoc.justchatting.util.chat.LoggedInChatWebSocket
 import fr.outadoc.justchatting.util.chat.PubSubWebSocket

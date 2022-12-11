@@ -3,14 +3,14 @@ package fr.outadoc.justchatting.ui.view.chat.model
 import android.content.Context
 import androidx.annotation.DrawableRes
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.model.chat.ChatCommand
-import fr.outadoc.justchatting.model.chat.ChatMessage
-import fr.outadoc.justchatting.model.chat.Command
-import fr.outadoc.justchatting.model.chat.HostModeState
-import fr.outadoc.justchatting.model.chat.PingCommand
-import fr.outadoc.justchatting.model.chat.PointReward
-import fr.outadoc.justchatting.model.chat.RoomStateDelta
-import fr.outadoc.justchatting.model.chat.UserState
+import fr.outadoc.justchatting.component.twitch.parser.model.ChatCommand
+import fr.outadoc.justchatting.component.twitch.parser.model.ChatMessage
+import fr.outadoc.justchatting.component.twitch.parser.model.Command
+import fr.outadoc.justchatting.component.twitch.parser.model.HostModeState
+import fr.outadoc.justchatting.component.twitch.parser.model.PingCommand
+import fr.outadoc.justchatting.component.twitch.parser.model.PointReward
+import fr.outadoc.justchatting.component.twitch.parser.model.RoomStateDelta
+import fr.outadoc.justchatting.component.twitch.parser.model.UserState
 import kotlinx.collections.immutable.toImmutableList
 
 class ChatEntryMapper(private val context: Context) {
@@ -101,6 +101,7 @@ class ChatEntryMapper(private val context: Context) {
             }
 
             is Command.UserNotice -> {
+                val userMessage = userMessage
                 if (userMessage == null) {
                     ChatEntry.Highlighted(
                         header = systemMsg,
@@ -130,6 +131,7 @@ class ChatEntryMapper(private val context: Context) {
             }
 
             is ChatMessage -> {
+                val msgId = msgId
                 val (header, icon) = when {
                     systemMsg != null -> {
                         systemMsg to msgId?.getMessageIdIcon()

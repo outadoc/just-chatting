@@ -21,7 +21,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import fr.outadoc.justchatting.model.helix.channel.ChannelSearch
+import fr.outadoc.justchatting.component.twitch.model.helix.channel.ChannelSearch
 import fr.outadoc.justchatting.ui.search.channels.ChannelSearchViewModel
 import fr.outadoc.justchatting.ui.streams.UserItemCard
 import fr.outadoc.justchatting.utils.ui.plus

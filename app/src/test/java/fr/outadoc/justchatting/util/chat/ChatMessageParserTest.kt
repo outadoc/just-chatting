@@ -1,15 +1,14 @@
 package fr.outadoc.justchatting.util.chat
 
-import fr.outadoc.justchatting.irc.ChatMessageParser
-import fr.outadoc.justchatting.model.chat.Badge
-import fr.outadoc.justchatting.model.chat.ChatCommand
-import fr.outadoc.justchatting.model.chat.ChatMessage
-import fr.outadoc.justchatting.model.chat.Command
-import fr.outadoc.justchatting.model.chat.HostModeState
-import fr.outadoc.justchatting.model.chat.PingCommand
-import fr.outadoc.justchatting.model.chat.RoomStateDelta
-import fr.outadoc.justchatting.model.chat.TwitchChatEmote
-import fr.outadoc.justchatting.model.chat.UserState
+import fr.outadoc.justchatting.component.twitch.parser.ChatMessageParser
+import fr.outadoc.justchatting.component.twitch.parser.model.ChatCommand
+import fr.outadoc.justchatting.component.twitch.parser.model.ChatMessage
+import fr.outadoc.justchatting.component.twitch.parser.model.Command
+import fr.outadoc.justchatting.component.twitch.parser.model.HostModeState
+import fr.outadoc.justchatting.component.twitch.parser.model.PingCommand
+import fr.outadoc.justchatting.component.twitch.parser.model.RoomStateDelta
+import fr.outadoc.justchatting.component.twitch.parser.model.TwitchChatEmote
+import fr.outadoc.justchatting.component.twitch.parser.model.UserState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.Assert
@@ -38,7 +37,10 @@ class ChatMessageParserTest {
                     TwitchChatEmote(id = "1902", name = "Keepo")
                 ),
                 badges = listOf(
-                    Badge(id = "turbo", version = "1")
+                    fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                        id = "turbo",
+                        version = "1"
+                    )
                 ),
                 isFirst = false,
                 timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
@@ -64,8 +66,14 @@ class ChatMessageParserTest {
                 isAction = true,
                 emotes = emptyList(),
                 badges = listOf(
-                    Badge(id = "moderator", version = "1"),
-                    Badge(id = "subscriber", version = "3009")
+                    fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                        id = "moderator",
+                        version = "1"
+                    ),
+                    fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                        id = "subscriber",
+                        version = "3009"
+                    )
                 ),
                 isFirst = false,
                 timestamp = Instant.parse("2022-07-08T16:47:29.487Z"),
@@ -105,8 +113,14 @@ class ChatMessageParserTest {
                         )
                     ),
                     badges = listOf(
-                        Badge(id = "subscriber", version = "36"),
-                        Badge(id = "bits", version = "1000")
+                        fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                            id = "subscriber",
+                            version = "36"
+                        ),
+                        fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                            id = "bits",
+                            version = "1000"
+                        )
                     ),
                     isFirst = false,
                     timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
@@ -133,8 +147,14 @@ class ChatMessageParserTest {
                     color = "#8A2BE2",
                     emotes = emptyList(),
                     badges = listOf(
-                        Badge(id = "moderator", version = "1"),
-                        Badge(id = "subscriber", version = "3009")
+                        fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                            id = "moderator",
+                            version = "1"
+                        ),
+                        fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                            id = "subscriber",
+                            version = "3009"
+                        )
                     ),
                     timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
                     message = "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !",
@@ -294,8 +314,14 @@ class ChatMessageParserTest {
                 isAction = false,
                 emotes = emptyList(),
                 badges = listOf(
-                    Badge(id = "subscriber", version = "18"),
-                    Badge(id = "premium", version = "1")
+                    fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                        id = "subscriber",
+                        version = "18"
+                    ),
+                    fr.outadoc.justchatting.component.twitch.parser.model.Badge(
+                        id = "premium",
+                        version = "1"
+                    )
                 ),
                 isFirst = false,
                 systemMsg = null,

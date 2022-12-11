@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.api
 
-import fr.outadoc.justchatting.model.chat.StvEmotesResponse
+import fr.outadoc.justchatting.component.twitch.parser.model.StvEmotesResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

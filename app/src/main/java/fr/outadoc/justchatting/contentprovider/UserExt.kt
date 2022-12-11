@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.contentprovider
 
 import androidx.core.graphics.drawable.IconCompat
-import fr.outadoc.justchatting.model.helix.user.User
+import fr.outadoc.justchatting.component.twitch.model.helix.user.User
 
 val User.profileImageIcon: IconCompat
     get() = IconCompat.createWithContentUri(

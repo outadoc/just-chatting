@@ -19,7 +19,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import fr.outadoc.justchatting.model.helix.follows.Follow
+import fr.outadoc.justchatting.component.twitch.model.helix.follows.Follow
 import fr.outadoc.justchatting.ui.follow.channels.FollowedChannelsViewModel
 import fr.outadoc.justchatting.ui.streams.UserItemCard
 import fr.outadoc.justchatting.utils.ui.plus

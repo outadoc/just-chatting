@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.util.chat
 
-import fr.outadoc.justchatting.model.chat.PointReward
+import fr.outadoc.justchatting.component.twitch.parser.model.PointReward
 import kotlinx.datetime.Clock
 import kotlinx.datetime.toInstant
 import org.json.JSONObject

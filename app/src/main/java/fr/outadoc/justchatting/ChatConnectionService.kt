@@ -9,9 +9,9 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
-import fr.outadoc.justchatting.log.logInfo
 import fr.outadoc.justchatting.repository.ChatConnectionPool
 import fr.outadoc.justchatting.ui.chat.ChatNotificationUtils
+import fr.outadoc.justchatting.utils.logging.logInfo
 import org.koin.android.ext.android.inject
 
 class ChatConnectionService : Service() {

@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.repository
 
-import fr.outadoc.justchatting.model.chat.ChatCommand
+import fr.outadoc.justchatting.component.twitch.parser.model.ChatCommand
 import fr.outadoc.justchatting.ui.chat.LiveChatController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job

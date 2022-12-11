@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.repository
 
-import fr.outadoc.justchatting.model.AppUser
+import fr.outadoc.justchatting.component.twitch.model.AppUser
 
 data class AppPreferences(
     val animateEmotes: Boolean = true,

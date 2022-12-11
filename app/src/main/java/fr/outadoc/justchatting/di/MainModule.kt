@@ -15,25 +15,25 @@ import fr.outadoc.justchatting.api.RecentMessagesApi
 import fr.outadoc.justchatting.api.StvEmotesApi
 import fr.outadoc.justchatting.api.TwitchBadgesApi
 import fr.outadoc.justchatting.auth.AuthenticationInterceptor
+import fr.outadoc.justchatting.component.twitch.adapters.BttvChannelDeserializer
+import fr.outadoc.justchatting.component.twitch.adapters.BttvFfzDeserializer
+import fr.outadoc.justchatting.component.twitch.adapters.BttvGlobalDeserializer
+import fr.outadoc.justchatting.component.twitch.adapters.CheerEmotesDeserializer
+import fr.outadoc.justchatting.component.twitch.adapters.RecentMessagesDeserializer
+import fr.outadoc.justchatting.component.twitch.adapters.StvEmotesDeserializer
+import fr.outadoc.justchatting.component.twitch.adapters.TwitchBadgesDeserializer
+import fr.outadoc.justchatting.component.twitch.model.helix.emote.EmoteSetDeserializer
+import fr.outadoc.justchatting.component.twitch.model.helix.emote.EmoteSetResponse
+import fr.outadoc.justchatting.component.twitch.parser.ChatMessageParser
+import fr.outadoc.justchatting.component.twitch.parser.model.BttvChannelResponse
+import fr.outadoc.justchatting.component.twitch.parser.model.BttvFfzResponse
+import fr.outadoc.justchatting.component.twitch.parser.model.BttvGlobalResponse
+import fr.outadoc.justchatting.component.twitch.parser.model.CheerEmotesResponse
+import fr.outadoc.justchatting.component.twitch.parser.model.RecentMessagesResponse
+import fr.outadoc.justchatting.component.twitch.parser.model.StvEmotesResponse
+import fr.outadoc.justchatting.component.twitch.parser.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.db.AppDatabase
 import fr.outadoc.justchatting.deeplink.DeeplinkParser
-import fr.outadoc.justchatting.irc.ChatMessageParser
-import fr.outadoc.justchatting.model.chat.BttvChannelDeserializer
-import fr.outadoc.justchatting.model.chat.BttvChannelResponse
-import fr.outadoc.justchatting.model.chat.BttvFfzDeserializer
-import fr.outadoc.justchatting.model.chat.BttvFfzResponse
-import fr.outadoc.justchatting.model.chat.BttvGlobalDeserializer
-import fr.outadoc.justchatting.model.chat.BttvGlobalResponse
-import fr.outadoc.justchatting.model.chat.CheerEmotesDeserializer
-import fr.outadoc.justchatting.model.chat.CheerEmotesResponse
-import fr.outadoc.justchatting.model.chat.RecentMessagesDeserializer
-import fr.outadoc.justchatting.model.chat.RecentMessagesResponse
-import fr.outadoc.justchatting.model.chat.StvEmotesDeserializer
-import fr.outadoc.justchatting.model.chat.StvEmotesResponse
-import fr.outadoc.justchatting.model.chat.TwitchBadgesDeserializer
-import fr.outadoc.justchatting.model.chat.TwitchBadgesResponse
-import fr.outadoc.justchatting.model.helix.emote.EmoteSetDeserializer
-import fr.outadoc.justchatting.model.helix.emote.EmoteSetResponse
 import fr.outadoc.justchatting.oauth.OAuthAppCredentials
 import fr.outadoc.justchatting.oss.ReadExternalDependenciesList
 import fr.outadoc.justchatting.repository.ApiRepository
@@ -124,7 +124,10 @@ val mainModule = module {
                 )
                 .registerTypeAdapter(StvEmotesResponse::class.java, StvEmotesDeserializer())
                 .registerTypeAdapter(BttvGlobalResponse::class.java, BttvGlobalDeserializer())
-                .registerTypeAdapter(BttvChannelResponse::class.java, BttvChannelDeserializer())
+                .registerTypeAdapter(
+                    BttvChannelResponse::class.java,
+                    BttvChannelDeserializer()
+                )
                 .registerTypeAdapter(BttvFfzResponse::class.java, BttvFfzDeserializer())
                 .create()
         )

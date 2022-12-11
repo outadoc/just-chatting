@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.palette.graphics.Palette
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import fr.outadoc.justchatting.model.helix.user.User
+import fr.outadoc.justchatting.component.twitch.model.helix.user.User
 import fr.outadoc.justchatting.ui.common.ensureMinimumAlpha
 import fr.outadoc.justchatting.ui.common.isLight
 import fr.outadoc.justchatting.utils.ui.generateAsync
@@ -43,16 +43,17 @@ fun rememberChannelBranding(
 
     var branding: ChannelBranding by remember(user) { mutableStateOf(defaultBranding) }
 
+    val profileImageUrl = user?.profileImageUrl
     // Set branding asynchronously
-    LaunchedEffect(user?.profileImageUrl) {
-        if (user?.profileImageUrl == null) {
+    LaunchedEffect(profileImageUrl) {
+        if (profileImageUrl == null) {
             branding = defaultBranding
             return@LaunchedEffect
         }
 
         val logo = loadImageToBitmap(
             context = context,
-            imageUrl = user.profileImageUrl,
+            imageUrl = profileImageUrl,
             circle = true,
             width = 256,
             height = 256

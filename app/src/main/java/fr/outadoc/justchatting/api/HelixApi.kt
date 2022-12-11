@@ -1,12 +1,12 @@
 package fr.outadoc.justchatting.api
 
 import fr.outadoc.justchatting.auth.TwitchAuth
-import fr.outadoc.justchatting.model.chat.CheerEmotesResponse
-import fr.outadoc.justchatting.model.helix.channel.ChannelSearchResponse
-import fr.outadoc.justchatting.model.helix.emote.EmoteSetResponse
-import fr.outadoc.justchatting.model.helix.follows.FollowResponse
-import fr.outadoc.justchatting.model.helix.stream.StreamsResponse
-import fr.outadoc.justchatting.model.helix.user.UsersResponse
+import fr.outadoc.justchatting.component.twitch.model.helix.channel.ChannelSearchResponse
+import fr.outadoc.justchatting.component.twitch.model.helix.emote.EmoteSetResponse
+import fr.outadoc.justchatting.component.twitch.model.helix.follows.FollowResponse
+import fr.outadoc.justchatting.component.twitch.model.helix.stream.StreamsResponse
+import fr.outadoc.justchatting.component.twitch.model.helix.user.UsersResponse
+import fr.outadoc.justchatting.component.twitch.parser.model.CheerEmotesResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

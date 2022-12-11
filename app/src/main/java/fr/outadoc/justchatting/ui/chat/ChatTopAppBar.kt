@@ -52,9 +52,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
+import fr.outadoc.justchatting.component.twitch.model.helix.stream.Stream
+import fr.outadoc.justchatting.component.twitch.model.helix.user.User
 import fr.outadoc.justchatting.composepreview.ThemePreviews
-import fr.outadoc.justchatting.model.helix.stream.Stream
-import fr.outadoc.justchatting.model.helix.user.User
 import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.utils.core.formatNumber
@@ -206,11 +206,11 @@ fun StreamInfo(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        if (stream?.title != null) {
-            Text(text = stream.title)
+        stream?.title?.let { title ->
+            Text(text = title)
         }
 
-        if (stream?.viewerCount != null) {
+        stream?.viewerCount?.let { viewerCount ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     modifier = Modifier
@@ -222,8 +222,8 @@ fun StreamInfo(
                 Text(
                     text = pluralStringResource(
                         R.plurals.viewers,
-                        stream.viewerCount,
-                        stream.viewerCount.formatNumber()
+                        viewerCount,
+                        viewerCount.formatNumber()
                     )
                 )
             }
@@ -243,7 +243,7 @@ fun StreamInfo(
             }
         }
 
-        if (user?.followersCount != null) {
+        user?.followersCount?.let { followersCount ->
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     modifier = Modifier
@@ -255,7 +255,7 @@ fun StreamInfo(
                 Text(
                     text = stringResource(
                         R.string.followers,
-                        user.followersCount.formatNumber()
+                        followersCount.formatNumber()
                     )
                 )
             }

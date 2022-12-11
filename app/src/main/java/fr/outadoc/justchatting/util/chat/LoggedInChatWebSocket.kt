@@ -1,13 +1,13 @@
 package fr.outadoc.justchatting.util.chat
 
-import fr.outadoc.justchatting.irc.ChatMessageParser
-import fr.outadoc.justchatting.log.logDebug
-import fr.outadoc.justchatting.log.logError
-import fr.outadoc.justchatting.model.chat.Command
-import fr.outadoc.justchatting.model.chat.PingCommand
-import fr.outadoc.justchatting.model.chat.UserState
+import fr.outadoc.justchatting.component.twitch.parser.ChatMessageParser
+import fr.outadoc.justchatting.component.twitch.parser.model.Command
+import fr.outadoc.justchatting.component.twitch.parser.model.PingCommand
+import fr.outadoc.justchatting.component.twitch.parser.model.UserState
 import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.util.NetworkStateObserver
+import fr.outadoc.justchatting.utils.logging.logDebug
+import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch

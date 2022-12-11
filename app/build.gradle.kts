@@ -130,8 +130,11 @@ spotless {
 dependencies {
     implementation(platform(libs.kotlin.bom))
 
+    implementation(project(":component-twitch"))
+
     implementation(project(":utils-core"))
     implementation(project(":utils-ui"))
+    implementation(project(":utils-logging"))
 
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)
@@ -164,7 +167,6 @@ dependencies {
     implementation(libs.compose.runtime.livedata)
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.tooling)
-    implementation(libs.irc)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.koin.core)

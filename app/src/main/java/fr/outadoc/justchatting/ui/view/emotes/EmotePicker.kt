@@ -22,7 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.model.chat.Emote
+import fr.outadoc.justchatting.component.twitch.parser.model.Emote
 import fr.outadoc.justchatting.repository.AppPreferences
 import fr.outadoc.justchatting.repository.PreferenceRepository
 import fr.outadoc.justchatting.ui.chat.ChatViewModel

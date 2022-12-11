@@ -7,8 +7,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.twitch.model.chat.Chatter
-import fr.outadoc.justchatting.component.twitch.model.chat.Emote
+import fr.outadoc.justchatting.component.twitch.model.Chatter
+import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.ui.theme.AppTheme
 
 @Preview

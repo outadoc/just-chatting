@@ -43,8 +43,8 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.component.twitch.model.chat.Chatter
-import fr.outadoc.justchatting.component.twitch.model.chat.Emote
+import fr.outadoc.justchatting.component.twitch.model.Chatter
+import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.composepreview.ScreenPreviews
 import fr.outadoc.justchatting.repository.AppPreferences
 import fr.outadoc.justchatting.repository.PreferenceRepository

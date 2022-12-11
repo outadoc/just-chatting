@@ -52,8 +52,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.component.twitch.model.helix.stream.Stream
-import fr.outadoc.justchatting.component.twitch.model.helix.user.User
+import fr.outadoc.justchatting.component.twitch.model.Stream
+import fr.outadoc.justchatting.component.twitch.model.User
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.theme.AppTheme

@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import fr.outadoc.justchatting.component.twitch.model.chat.RecentMessagesResponse
+import fr.outadoc.justchatting.component.twitch.model.RecentMessagesResponse
 import fr.outadoc.justchatting.component.twitch.parser.ChatMessageParser
 import fr.outadoc.justchatting.utils.logging.logDebug
 import java.lang.reflect.Type

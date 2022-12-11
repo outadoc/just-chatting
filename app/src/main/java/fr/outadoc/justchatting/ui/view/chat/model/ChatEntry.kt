@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.ui.view.chat.model
 
 import androidx.compose.runtime.Immutable
-import fr.outadoc.justchatting.component.twitch.model.chat.Badge
+import fr.outadoc.justchatting.component.twitch.model.Badge
+import fr.outadoc.justchatting.component.twitch.model.TwitchChatEmote
 import fr.outadoc.justchatting.component.twitch.parser.model.ChatMessage
-import fr.outadoc.justchatting.component.twitch.model.chat.TwitchChatEmote
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.datetime.Instant
 

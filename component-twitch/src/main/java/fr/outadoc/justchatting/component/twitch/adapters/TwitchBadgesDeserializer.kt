@@ -4,8 +4,8 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import fr.outadoc.justchatting.component.twitch.model.chat.TwitchBadge
-import fr.outadoc.justchatting.component.twitch.model.chat.TwitchBadgesResponse
+import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
+import fr.outadoc.justchatting.component.twitch.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.utils.core.asStringOrNull
 import kotlinx.collections.immutable.toImmutableMap
 import java.lang.reflect.Type

@@ -93,13 +93,13 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.component.twitch.model.chat.Badge
-import fr.outadoc.justchatting.model.AppUser
-import fr.outadoc.justchatting.component.twitch.model.chat.Emote
-import fr.outadoc.justchatting.component.twitch.model.chat.TwitchBadge
+import fr.outadoc.justchatting.component.twitch.model.Badge
+import fr.outadoc.justchatting.component.twitch.model.Emote
+import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
 import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.composepreview.previewBadges
+import fr.outadoc.justchatting.model.AppUser
 import fr.outadoc.justchatting.ui.common.ensureColorIsAccessible
 import fr.outadoc.justchatting.ui.common.parseHexColor
 import fr.outadoc.justchatting.ui.theme.AppTheme

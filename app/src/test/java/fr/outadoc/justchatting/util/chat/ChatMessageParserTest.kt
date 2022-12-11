@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.util.chat
 
-import fr.outadoc.justchatting.component.twitch.model.chat.Badge
+import fr.outadoc.justchatting.component.twitch.model.Badge
+import fr.outadoc.justchatting.component.twitch.model.TwitchChatEmote
 import fr.outadoc.justchatting.component.twitch.parser.ChatMessageParser
 import fr.outadoc.justchatting.component.twitch.parser.model.ChatCommand
 import fr.outadoc.justchatting.component.twitch.parser.model.ChatMessage
@@ -8,7 +9,6 @@ import fr.outadoc.justchatting.component.twitch.parser.model.Command
 import fr.outadoc.justchatting.component.twitch.parser.model.HostModeState
 import fr.outadoc.justchatting.component.twitch.parser.model.PingCommand
 import fr.outadoc.justchatting.component.twitch.parser.model.RoomStateDelta
-import fr.outadoc.justchatting.component.twitch.model.chat.TwitchChatEmote
 import fr.outadoc.justchatting.component.twitch.parser.model.UserState
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant

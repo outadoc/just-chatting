@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.repository
 
 import fr.outadoc.justchatting.api.RecentMessagesApi
-import fr.outadoc.justchatting.component.twitch.model.chat.RecentMessagesResponse
+import fr.outadoc.justchatting.component.twitch.model.RecentMessagesResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.Response

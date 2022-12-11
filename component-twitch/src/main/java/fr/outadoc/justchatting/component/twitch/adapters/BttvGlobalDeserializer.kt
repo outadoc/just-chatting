@@ -4,8 +4,8 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonParseException
-import fr.outadoc.justchatting.component.twitch.model.chat.BttvEmote
-import fr.outadoc.justchatting.component.twitch.model.chat.BttvGlobalResponse
+import fr.outadoc.justchatting.component.twitch.model.BttvEmote
+import fr.outadoc.justchatting.component.twitch.model.BttvGlobalResponse
 import java.lang.reflect.Type
 
 class BttvGlobalDeserializer : JsonDeserializer<BttvGlobalResponse> {

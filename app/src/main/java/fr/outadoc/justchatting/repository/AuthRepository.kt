@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.repository
 
 import fr.outadoc.justchatting.api.IdApi
-import fr.outadoc.justchatting.component.twitch.model.id.ValidationResponse
+import fr.outadoc.justchatting.component.twitch.model.ValidationResponse
 import fr.outadoc.justchatting.oauth.OAuthAppCredentials
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first

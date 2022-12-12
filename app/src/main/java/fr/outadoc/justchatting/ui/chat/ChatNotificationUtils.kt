@@ -16,7 +16,7 @@ import fr.outadoc.justchatting.ChatConnectionService
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.component.twitch.model.User
 import fr.outadoc.justchatting.contentprovider.profileImageIcon
-import fr.outadoc.justchatting.utils.core.isLaunchedFromBubbleCompat
+import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 

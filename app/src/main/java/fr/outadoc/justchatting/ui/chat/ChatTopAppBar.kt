@@ -58,6 +58,7 @@ import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.utils.core.formatNumber
+import fr.outadoc.justchatting.utils.ui.canOpenInBubble
 import fr.outadoc.justchatting.utils.ui.formatTime
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import kotlinx.datetime.toInstant

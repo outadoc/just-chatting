@@ -53,6 +53,7 @@ import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.EmotePicker
 import fr.outadoc.justchatting.util.createChannelDeeplink
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
+import fr.outadoc.justchatting.utils.ui.canOpenInBubble
 import fr.outadoc.justchatting.utils.ui.isDark
 import fr.outadoc.justchatting.utils.ui.shortToast
 import org.koin.androidx.compose.get

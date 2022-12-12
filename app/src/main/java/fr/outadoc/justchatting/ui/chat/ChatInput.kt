@@ -36,9 +36,11 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.component.twitch.model.Chatter
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.composepreview.ThemePreviews
+import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
+import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.theme.AppTheme
-import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
+import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import kotlinx.datetime.Instant
 
 @Composable

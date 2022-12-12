@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.ui.chat.ChatViewModel
+import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.ui.follow.channels.FollowedChannelsViewModel
 import fr.outadoc.justchatting.ui.main.MainViewModel
 import fr.outadoc.justchatting.ui.search.channels.ChannelSearchViewModel

@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.component.twitch.model.ValidationResponse
 import fr.outadoc.justchatting.deeplink.Deeplink
 import fr.outadoc.justchatting.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.data.AppUser
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted

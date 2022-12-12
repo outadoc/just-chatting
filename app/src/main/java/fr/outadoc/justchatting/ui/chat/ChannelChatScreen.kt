@@ -46,10 +46,12 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.component.twitch.model.Chatter
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.composepreview.ScreenPreviews
+import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.data.AppPreferences
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.ui.theme.AppTheme
-import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
+import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
+import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.ui.view.emotes.EmotePicker
 import fr.outadoc.justchatting.util.createChannelDeeplink
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink

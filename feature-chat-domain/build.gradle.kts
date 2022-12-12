@@ -31,7 +31,20 @@ android {
 dependencies {
     api(project(":feature-chat-data"))
 
+    implementation(project(":component-twitch-domain"))
+    implementation(project(":component-preferences-domain"))
+
+    implementation(project(":utils-core"))
+    implementation(project(":utils-ui"))
+    implementation(project(":utils-logging"))
+
+    implementation(libs.androidx.annotation)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.compose.runtime.core)
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.datetime)
 
     coreLibraryDesugaring(libs.desugar)
 }

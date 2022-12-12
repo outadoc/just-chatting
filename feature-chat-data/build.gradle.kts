@@ -31,7 +31,7 @@ android {
 dependencies {
     implementation(project(":utils-logging"))
     implementation(project(":utils-core"))
-    implementation(project(":feature-preferences-domain"))
+    implementation(project(":component-preferences-domain"))
 
     implementation(libs.compose.runtime.core)
     implementation(libs.gson)

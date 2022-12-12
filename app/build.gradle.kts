@@ -129,10 +129,12 @@ spotless {
 
 dependencies {
     implementation(platform(libs.kotlin.bom))
+
     implementation(project(":feature-chat-domain"))
+    implementation(project(":feature-chat-presentation"))
 
     implementation(project(":component-twitch-domain"))
-    implementation(project(":feature-preferences-domain"))
+    implementation(project(":component-preferences-domain"))
 
     implementation(project(":utils-core"))
     implementation(project(":utils-ui"))

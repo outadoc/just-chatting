@@ -99,9 +99,9 @@ import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.composepreview.previewBadges
 import fr.outadoc.justchatting.feature.chat.data.model.Badge
+import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.data.AppUser
 import fr.outadoc.justchatting.ui.theme.AppTheme
-import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.BadgeItem
 import fr.outadoc.justchatting.ui.view.emotes.ChatEmoteItem
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
@@ -145,8 +145,8 @@ fun ChatScreen(
     state: ChatViewModel.State,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
-    onMessageLongClick: (ChatEntry) -> Unit,
-    onReplyToMessage: (ChatEntry) -> Unit,
+    onMessageLongClick: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
+    onReplyToMessage: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
     insets: PaddingValues
 ) {
     when (state) {
@@ -190,8 +190,8 @@ fun ChatList(
     state: ChatViewModel.State.Chatting,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
-    onMessageLongClick: (ChatEntry) -> Unit,
-    onReplyToMessage: (ChatEntry) -> Unit,
+    onMessageLongClick: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
+    onReplyToMessage: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
     insets: PaddingValues
 ) {
     val scope = rememberCoroutineScope()
@@ -256,7 +256,10 @@ fun ChatList(
 }
 
 @Composable
-fun RoomStateBanner(modifier: Modifier = Modifier, roomState: RoomState) = with(roomState) {
+fun RoomStateBanner(
+    modifier: Modifier = Modifier,
+    roomState: fr.outadoc.justchatting.feature.chat.presentation.RoomState
+) = with(roomState) {
     Surface(
         modifier = modifier.semantics(mergeDescendants = true) {},
         shape = RoundedCornerShape(percent = 50),
@@ -311,15 +314,15 @@ fun RoomStateBanner(modifier: Modifier = Modifier, roomState: RoomState) = with(
 @Composable
 fun ChatList(
     modifier: Modifier = Modifier,
-    entries: ImmutableList<ChatEntry>,
+    entries: ImmutableList<fr.outadoc.justchatting.feature.chat.presentation.ChatEntry>,
     emotes: ImmutableMap<String, Emote>,
     badges: ImmutableList<TwitchBadge>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     listState: LazyListState,
-    onMessageLongClick: (ChatEntry) -> Unit,
-    onReplyToMessage: (ChatEntry) -> Unit,
-    roomState: RoomState,
+    onMessageLongClick: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
+    onReplyToMessage: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
+    roomState: fr.outadoc.justchatting.feature.chat.presentation.RoomState,
     appUser: AppUser,
     insets: PaddingValues
 ) {
@@ -379,8 +382,8 @@ fun ChatList(
             key = { _, item -> item.hashCode() },
             contentType = { _, item ->
                 when (item) {
-                    is ChatEntry.Highlighted -> 1
-                    is ChatEntry.Simple -> 2
+                    is fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Highlighted -> 1
+                    is fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Simple -> 2
                 }
             }
         ) { index, item ->
@@ -484,7 +487,7 @@ fun SwipeToReply(
 @ThemePreviews
 @Composable
 fun ChatMessagePreview(
-    @PreviewParameter(ChatEntryPreviewProvider::class) chatEntry: ChatEntry
+    @PreviewParameter(ChatEntryPreviewProvider::class) chatEntry: fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 ) {
     val inlineBadges = previewBadges
         .associateWith {
@@ -512,7 +515,7 @@ fun ChatMessagePreview(
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,
-    message: ChatEntry,
+    message: fr.outadoc.justchatting.feature.chat.presentation.ChatEntry,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
@@ -540,7 +543,7 @@ fun ChatMessage(
         }
 
         when (message) {
-            is ChatEntry.Highlighted -> {
+            is fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Highlighted -> {
                 HighlightedMessage(
                     message = message,
                     inlineContent = inlineContent,
@@ -549,7 +552,7 @@ fun ChatMessage(
                 )
             }
 
-            is ChatEntry.Simple -> {
+            is fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Simple -> {
                 SimpleMessage(
                     message = message,
                     inlineContent = inlineContent,
@@ -564,7 +567,7 @@ fun ChatMessage(
 @Composable
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
-    message: ChatEntry.Highlighted,
+    message: fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Highlighted,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
@@ -624,7 +627,7 @@ fun HighlightedMessage(
 @Composable
 fun SimpleMessage(
     modifier: Modifier = Modifier,
-    message: ChatEntry.Simple,
+    message: fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Simple,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
@@ -650,7 +653,7 @@ fun SimpleMessage(
 @Composable
 fun ChatMessageData(
     modifier: Modifier = Modifier,
-    data: ChatEntry.Data,
+    data: fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Data,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
@@ -684,11 +687,11 @@ fun ChatMessageData(
     )
 
     Column(modifier = modifier) {
-        if (data.inReplyTo != null) {
+        data.inReplyTo?.let { inReplyTo ->
             InReplyToMessage(
                 modifier = Modifier.padding(bottom = 8.dp),
-                userName = data.inReplyTo.userName,
-                message = data.inReplyTo.message
+                userName = inReplyTo.userName,
+                message = inReplyTo.message
             )
         }
 
@@ -776,7 +779,7 @@ fun InReplyToMessage(
 @Stable
 @Composable
 @OptIn(ExperimentalTextApi::class)
-fun ChatEntry.Data.toAnnotatedString(
+fun fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Data.toAnnotatedString(
     appUser: AppUser,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     urlColor: Color = MaterialTheme.colorScheme.primary,
@@ -826,8 +829,9 @@ fun ChatEntry.Data.toAnnotatedString(
 
         message
             ?.let { message ->
-                if (inReplyTo != null) message.removePrefix("@${inReplyTo.userName} ")
-                else message
+                inReplyTo?.let { inReplyTo ->
+                    message.removePrefix("@${inReplyTo.userName} ")
+                } ?: message
             }
             ?.split(' ')
             ?.forEach { word ->

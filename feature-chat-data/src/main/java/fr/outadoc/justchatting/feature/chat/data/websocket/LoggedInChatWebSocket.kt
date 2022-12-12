@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.feature.chat.data.model.Command
 import fr.outadoc.justchatting.feature.chat.data.model.PingCommand
 import fr.outadoc.justchatting.feature.chat.data.model.UserState
 import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError

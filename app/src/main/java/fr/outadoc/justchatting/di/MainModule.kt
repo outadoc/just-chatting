@@ -46,12 +46,12 @@ import fr.outadoc.justchatting.feature.chat.data.websocket.PubSubRewardParser
 import fr.outadoc.justchatting.feature.chat.data.websocket.PubSubWebSocket
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.feature.chat.domain.LiveChatController
-import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.feature.preferences.domain.SharedPrefsPreferenceRepository
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.component.preferences.domain.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.oss.ReadExternalDependenciesList
-import fr.outadoc.justchatting.ui.chat.ChatNotifier
-import fr.outadoc.justchatting.ui.chat.ChatNotifierImpl
-import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
+import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
+import fr.outadoc.justchatting.chat.ChatNotifierImpl
+import fr.outadoc.justchatting.feature.chat.presentation.ChatEntryMapper
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import kotlinx.datetime.Clock
 import okhttp3.Cache

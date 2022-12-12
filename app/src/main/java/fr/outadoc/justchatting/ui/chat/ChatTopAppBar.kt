@@ -55,7 +55,7 @@ import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.component.twitch.model.Stream
 import fr.outadoc.justchatting.component.twitch.model.User
 import fr.outadoc.justchatting.composepreview.ThemePreviews
-import fr.outadoc.justchatting.ui.HapticIconButton
+import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.canOpenInBubble

@@ -38,7 +38,7 @@ import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
-import fr.outadoc.justchatting.ui.HapticIconButton
+import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import kotlinx.datetime.Instant

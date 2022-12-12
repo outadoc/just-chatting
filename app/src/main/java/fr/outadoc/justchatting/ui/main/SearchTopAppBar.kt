@@ -23,7 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.ui.HapticIconButton
+import fr.outadoc.justchatting.utils.ui.HapticIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

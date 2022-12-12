@@ -15,7 +15,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.twitch.model.Emote
-import fr.outadoc.justchatting.ui.HapticIconButton
+import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.feature.chat.presentation.EmoteSetItem
 import kotlinx.collections.immutable.ImmutableList
 

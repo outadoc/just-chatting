@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.ui
+package fr.outadoc.justchatting.utils.ui
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.IconButton

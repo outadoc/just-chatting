@@ -2,7 +2,8 @@ package fr.outadoc.justchatting.composepreview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.component.chat.data.model.ChatMessage
+import fr.outadoc.justchatting.feature.chat.data.model.Badge
+import fr.outadoc.justchatting.feature.chat.data.model.ChatMessage
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
@@ -25,8 +26,8 @@ private val simpleEntries = sequence {
                 color = "#FF69B4",
                 emotes = persistentListOf(),
                 badges = persistentListOf(
-                    fr.outadoc.justchatting.component.chat.data.model.Badge("subscriber", "48"),
-                    fr.outadoc.justchatting.component.chat.data.model.Badge("sub-gifter", "100")
+                    Badge("subscriber", "48"),
+                    Badge("sub-gifter", "100")
                 ),
                 inReplyTo = null
             ),

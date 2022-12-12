@@ -9,8 +9,6 @@ import com.chuckerteam.chucker.api.ChuckerInterceptor
 import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.auth.AuthenticationInterceptor
-import fr.outadoc.justchatting.component.chat.data.recent.RecentMessagesDeserializer
-import fr.outadoc.justchatting.component.preferences.domain.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.component.twitch.adapters.BttvChannelDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.BttvFfzDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.BttvGlobalDeserializer
@@ -34,6 +32,19 @@ import fr.outadoc.justchatting.component.twitch.model.StvEmotesResponse
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.db.AppDatabase
 import fr.outadoc.justchatting.deeplink.DeeplinkParser
+import fr.outadoc.justchatting.feature.chat.data.model.RecentMessagesResponse
+import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
+import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesApi
+import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesDeserializer
+import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesRepository
+import fr.outadoc.justchatting.feature.chat.data.websocket.LiveChatWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.LoggedInChatWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.PubSubRewardParser
+import fr.outadoc.justchatting.feature.chat.data.websocket.PubSubWebSocket
+import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
+import fr.outadoc.justchatting.feature.chat.domain.LiveChatController
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.oss.ReadExternalDependenciesList
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -62,22 +73,22 @@ val mainModule = module {
     }
 
     single { ReadExternalDependenciesList(get()) }
-    single<fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository> {
-        fr.outadoc.justchatting.component.preferences.domain.SharedPrefsPreferenceRepository(
+    single<PreferenceRepository> {
+        SharedPrefsPreferenceRepository(
             get()
         )
     }
 
-    single { fr.outadoc.justchatting.component.chat.domain.ChatConnectionPool(get()) }
+    single { ChatConnectionPool(get()) }
 
-    single { fr.outadoc.justchatting.component.chat.domain.LiveChatController.Factory(get(), get(), get()) }
-    single { fr.outadoc.justchatting.component.chat.data.websocket.LiveChatWebSocket.Factory(get(), get(), get(), get(), get()) }
-    single { fr.outadoc.justchatting.component.chat.data.websocket.LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
-    single { fr.outadoc.justchatting.component.chat.data.websocket.PubSubWebSocket.Factory(get(), get()) }
+    single { LiveChatController.Factory(get(), get(), get()) }
+    single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get()) }
+    single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
+    single { PubSubWebSocket.Factory(get(), get()) }
 
-    single { fr.outadoc.justchatting.component.chat.data.parser.ChatMessageParser(get()) }
+    single { ChatMessageParser(get()) }
     single { ChatEntryMapper(get()) }
-    single { fr.outadoc.justchatting.component.chat.data.websocket.PubSubRewardParser(get()) }
+    single { PubSubRewardParser(get()) }
 
     single {
         fr.outadoc.justchatting.component.twitch.domain.repository.AuthRepository(
@@ -94,7 +105,7 @@ val mainModule = module {
             get()
         )
     }
-    single { fr.outadoc.justchatting.component.chat.data.recent.RecentMessagesRepository(get()) }
+    single { RecentMessagesRepository(get()) }
 
     single { get<AppDatabase>().recentEmotes() }
 
@@ -111,7 +122,7 @@ val mainModule = module {
     single<TwitchBadgesApi> { createApi("https://badges.twitch.tv/") }
     single<BttvEmotesApi> { createApi("https://api.betterttv.net/") }
     single<StvEmotesApi> { createApi("https://api.7tv.app/") }
-    single<fr.outadoc.justchatting.component.chat.data.recent.RecentMessagesApi> { createApi("https://recent-messages.robotty.de/api/") }
+    single<RecentMessagesApi> { createApi("https://recent-messages.robotty.de/api/") }
     single<IdApi> { createApi("https://id.twitch.tv/oauth2/") }
 
     single { AuthenticationInterceptor(get(), get()) }
@@ -127,7 +138,7 @@ val mainModule = module {
                     TwitchBadgesDeserializer()
                 )
                 .registerTypeAdapter(
-                    fr.outadoc.justchatting.component.chat.data.model.RecentMessagesResponse::class.java,
+                    RecentMessagesResponse::class.java,
                     RecentMessagesDeserializer(get())
                 )
                 .registerTypeAdapter(StvEmotesResponse::class.java, StvEmotesDeserializer())

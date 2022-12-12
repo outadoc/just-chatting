@@ -7,8 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import coil.compose.AsyncImage
-import fr.outadoc.justchatting.component.chat.data.model.TwitchChatEmote
 import fr.outadoc.justchatting.component.twitch.model.Emote
+import fr.outadoc.justchatting.feature.chat.data.model.TwitchChatEmote
 import fr.outadoc.justchatting.utils.ui.isDark
 
 @Composable

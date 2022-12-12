@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.auth
 
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.api.TwitchAuth
 import fr.outadoc.justchatting.component.twitch.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor
@@ -11,7 +11,7 @@ import okhttp3.Response
 import retrofit2.Invocation
 
 class AuthenticationInterceptor(
-    private val preferenceRepository: fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository,
+    private val preferenceRepository: PreferenceRepository,
     private val oAuthAppCredentials: OAuthAppCredentials
 ) : Interceptor {
 

@@ -30,7 +30,7 @@ android {
 
 dependencies {
     api(project(":component-twitch-data"))
-    implementation(project(":component-preferences-domain"))
+    implementation(project(":feature-preferences-domain"))
 
     implementation(project(":utils-core"))
     implementation(project(":utils-logging"))

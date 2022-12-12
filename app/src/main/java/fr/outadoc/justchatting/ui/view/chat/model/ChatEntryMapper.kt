@@ -3,14 +3,14 @@ package fr.outadoc.justchatting.ui.view.chat.model
 import android.content.Context
 import androidx.annotation.DrawableRes
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.component.chat.data.model.ChatCommand
-import fr.outadoc.justchatting.component.chat.data.model.ChatMessage
-import fr.outadoc.justchatting.component.chat.data.model.Command
-import fr.outadoc.justchatting.component.chat.data.model.HostModeState
-import fr.outadoc.justchatting.component.chat.data.model.PingCommand
-import fr.outadoc.justchatting.component.chat.data.model.PointReward
-import fr.outadoc.justchatting.component.chat.data.model.RoomStateDelta
-import fr.outadoc.justchatting.component.chat.data.model.UserState
+import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
+import fr.outadoc.justchatting.feature.chat.data.model.ChatMessage
+import fr.outadoc.justchatting.feature.chat.data.model.Command
+import fr.outadoc.justchatting.feature.chat.data.model.HostModeState
+import fr.outadoc.justchatting.feature.chat.data.model.PingCommand
+import fr.outadoc.justchatting.feature.chat.data.model.PointReward
+import fr.outadoc.justchatting.feature.chat.data.model.RoomStateDelta
+import fr.outadoc.justchatting.feature.chat.data.model.UserState
 import kotlinx.collections.immutable.toImmutableList
 
 class ChatEntryMapper(private val context: Context) {

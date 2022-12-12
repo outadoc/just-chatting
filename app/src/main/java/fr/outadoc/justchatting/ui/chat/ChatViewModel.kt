@@ -7,14 +7,6 @@ import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.outadoc.justchatting.component.chat.data.model.ChatCommand
-import fr.outadoc.justchatting.component.chat.data.model.ChatMessage
-import fr.outadoc.justchatting.component.chat.data.model.Command
-import fr.outadoc.justchatting.component.chat.data.model.HostModeState
-import fr.outadoc.justchatting.component.chat.data.model.PingCommand
-import fr.outadoc.justchatting.component.chat.data.model.PointReward
-import fr.outadoc.justchatting.component.chat.data.model.RoomStateDelta
-import fr.outadoc.justchatting.component.chat.data.model.UserState
 import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository
 import fr.outadoc.justchatting.component.twitch.model.Chatter
@@ -25,6 +17,17 @@ import fr.outadoc.justchatting.component.twitch.model.Stream
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
 import fr.outadoc.justchatting.component.twitch.model.TwitchEmote
 import fr.outadoc.justchatting.component.twitch.model.User
+import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
+import fr.outadoc.justchatting.feature.chat.data.model.ChatMessage
+import fr.outadoc.justchatting.feature.chat.data.model.Command
+import fr.outadoc.justchatting.feature.chat.data.model.HostModeState
+import fr.outadoc.justchatting.feature.chat.data.model.PingCommand
+import fr.outadoc.justchatting.feature.chat.data.model.PointReward
+import fr.outadoc.justchatting.feature.chat.data.model.RoomStateDelta
+import fr.outadoc.justchatting.feature.chat.data.model.UserState
+import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
+import fr.outadoc.justchatting.feature.data.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.utils.core.isOdd
@@ -80,9 +83,9 @@ import kotlin.time.Duration.Companion.minutes
 class ChatViewModel(
     private val repository: TwitchRepository,
     private val emotesRepository: EmotesRepository,
-    private val chatConnectionPool: fr.outadoc.justchatting.component.chat.domain.ChatConnectionPool,
+    private val chatConnectionPool: ChatConnectionPool,
     private val chatEntryMapper: ChatEntryMapper,
-    private val preferencesRepository: fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository,
+    private val preferencesRepository: PreferenceRepository,
     private val clock: Clock
 ) : ViewModel() {
 
@@ -106,7 +109,7 @@ class ChatViewModel(
         @Immutable
         data class Chatting(
             val user: User,
-            val appUser: fr.outadoc.justchatting.component.data.AppUser,
+            val appUser: AppUser,
             val stream: Stream? = null,
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val chatMessages: PersistentList<ChatEntry> = persistentListOf(),
@@ -338,7 +341,7 @@ class ChatViewModel(
             user = repository.loadUsersByLogin(logins = listOf(channelLogin))
                 ?.firstOrNull()
                 ?: error("User not loaded"),
-            appUser = prefs.appUser as fr.outadoc.justchatting.component.data.AppUser.LoggedIn,
+            appUser = prefs.appUser as AppUser.LoggedIn,
             chatters = persistentSetOf(Chatter(channelLogin)),
             maxAdapterCount = prefs.messageLimit
         )

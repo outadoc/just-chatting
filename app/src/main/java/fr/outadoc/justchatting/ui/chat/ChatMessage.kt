@@ -98,8 +98,8 @@ import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
 import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.composepreview.ThemePreviews
 import fr.outadoc.justchatting.composepreview.previewBadges
-import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
-import fr.outadoc.justchatting.utils.ui.parseHexColor
+import fr.outadoc.justchatting.feature.chat.data.model.Badge
+import fr.outadoc.justchatting.feature.data.AppUser
 import fr.outadoc.justchatting.ui.theme.AppTheme
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntry
 import fr.outadoc.justchatting.ui.view.emotes.BadgeItem
@@ -107,7 +107,9 @@ import fr.outadoc.justchatting.ui.view.emotes.ChatEmoteItem
 import fr.outadoc.justchatting.ui.view.emotes.EmoteItem
 import fr.outadoc.justchatting.util.createChannelDeeplink
 import fr.outadoc.justchatting.utils.core.isOdd
+import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
+import fr.outadoc.justchatting.utils.ui.parseHexColor
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableMap
@@ -318,7 +320,7 @@ fun ChatList(
     onMessageLongClick: (ChatEntry) -> Unit,
     onReplyToMessage: (ChatEntry) -> Unit,
     roomState: RoomState,
-    appUser: fr.outadoc.justchatting.component.data.AppUser,
+    appUser: AppUser,
     insets: PaddingValues
 ) {
     val inlinesEmotes = remember(emotes) {
@@ -498,7 +500,7 @@ fun ChatMessagePreview(
             inlineContent = inlineBadges,
             animateEmotes = true,
             showTimestamps = true,
-            appUser = fr.outadoc.justchatting.component.data.AppUser.LoggedIn(
+            appUser = AppUser.LoggedIn(
                 id = "123",
                 login = "outadoc",
                 helixToken = ""
@@ -515,7 +517,7 @@ fun ChatMessage(
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     background: Color = Color.Transparent,
-    appUser: fr.outadoc.justchatting.component.data.AppUser
+    appUser: AppUser
 ) {
     val timestamp = message.timestamp
         .formatTimestamp()
@@ -565,7 +567,7 @@ fun HighlightedMessage(
     message: ChatEntry.Highlighted,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
-    appUser: fr.outadoc.justchatting.component.data.AppUser,
+    appUser: AppUser,
     backgroundHint: Color = MaterialTheme.colorScheme.surface
 ) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
@@ -625,7 +627,7 @@ fun SimpleMessage(
     message: ChatEntry.Simple,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
-    appUser: fr.outadoc.justchatting.component.data.AppUser,
+    appUser: AppUser,
     backgroundHint: Color = MaterialTheme.colorScheme.surface
 ) {
     Row {
@@ -651,7 +653,7 @@ fun ChatMessageData(
     data: ChatEntry.Data,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
-    appUser: fr.outadoc.justchatting.component.data.AppUser,
+    appUser: AppUser,
     backgroundHint: Color
 ) {
     val uriHandler = LocalUriHandler.current
@@ -775,7 +777,7 @@ fun InReplyToMessage(
 @Composable
 @OptIn(ExperimentalTextApi::class)
 fun ChatEntry.Data.toAnnotatedString(
-    appUser: fr.outadoc.justchatting.component.data.AppUser,
+    appUser: AppUser,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     urlColor: Color = MaterialTheme.colorScheme.primary,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
@@ -879,7 +881,7 @@ fun ChatEntry.Data.toAnnotatedString(
     }
 }
 
-private val fr.outadoc.justchatting.component.chat.data.model.Badge.inlineContentId: String
+private val Badge.inlineContentId: String
     get() = "badge_${id}_$version"
 
 private val TwitchBadge.inlineContentId: String

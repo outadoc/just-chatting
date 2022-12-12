@@ -1,12 +1,12 @@
 package fr.outadoc.justchatting.ui.search.channels
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.component.twitch.model.ChannelSearch
-import fr.outadoc.justchatting.ui.common.PagedListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -22,7 +22,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class ChannelSearchViewModel(
     private val repository: TwitchRepository
-) : PagedListViewModel<ChannelSearch>() {
+) : ViewModel() {
 
     data class State(val query: String = "")
 
@@ -30,7 +30,7 @@ class ChannelSearchViewModel(
     val state = _state.asStateFlow()
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    override val pagingData: Flow<PagingData<ChannelSearch>> =
+    val pagingData: Flow<PagingData<ChannelSearch>> =
         state.mapNotNull { state -> state.query }
             .distinctUntilChanged()
             .debounce(0.5.seconds)

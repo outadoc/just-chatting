@@ -1,12 +1,12 @@
 package fr.outadoc.justchatting.ui.streams.followed
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.component.twitch.model.Stream
-import fr.outadoc.justchatting.ui.common.PagedListViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,12 +17,12 @@ import kotlin.random.Random
 
 class FollowedStreamsViewModel(
     private val repository: TwitchRepository
-) : PagedListViewModel<Stream>() {
+) : ViewModel() {
 
     private val _load = MutableStateFlow(0)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    override val pagingData: Flow<PagingData<Stream>> =
+    val pagingData: Flow<PagingData<Stream>> =
         _load.flatMapLatest {
             repository.loadFollowedStreams()
                 .flow

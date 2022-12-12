@@ -66,6 +66,7 @@ fun ChannelChatScreen(channelLogin: String) {
     val inputState by viewModel.inputState.collectAsState()
 
     val preferencesRepository: PreferenceRepository = get()
+    val notifier: ChatNotifier = get()
     val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
     val context = LocalContext.current
@@ -101,7 +102,7 @@ fun ChannelChatScreen(channelLogin: String) {
     OnLifecycleEvent(
         onPause = {
             if (user != null) {
-                ChatNotificationUtils.notify(
+                notifier.notify(
                     context = context,
                     user = user
                 )
@@ -137,7 +138,7 @@ fun ChannelChatScreen(channelLogin: String) {
         },
         onOpenBubbleClicked = {
             if (canOpenInBubble && user != null) {
-                ChatNotificationUtils.notify(
+                notifier.notify(
                     context = context,
                     user = user
                 )

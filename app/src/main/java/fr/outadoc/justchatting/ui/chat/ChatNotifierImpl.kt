@@ -20,14 +20,16 @@ import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 
-object ChatNotificationUtils {
+class ChatNotifierImpl : ChatNotifier {
 
-    private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
-    private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
+    companion object {
+        private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
+        private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
+    }
 
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 
-    fun notify(context: Context, user: User) {
+    override fun notify(context: Context, user: User) {
         // Don't post a new notification if already in a bubble
         if ((context as? Activity)?.isLaunchedFromBubbleCompat == true) return
 
@@ -182,7 +184,7 @@ object ChatNotificationUtils {
         )
     }
 
-    fun dismissNotification(context: Context, channelId: String) {
+    override fun dismissNotification(context: Context, channelId: String) {
         NotificationManagerCompat.from(context)
             .cancel(notificationIdFor(channelId))
     }

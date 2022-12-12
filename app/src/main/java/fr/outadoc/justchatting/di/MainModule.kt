@@ -22,6 +22,9 @@ import fr.outadoc.justchatting.component.twitch.api.IdApi
 import fr.outadoc.justchatting.component.twitch.api.StvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.TwitchBadgesApi
 import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
+import fr.outadoc.justchatting.component.twitch.domain.repository.AuthRepository
+import fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository
+import fr.outadoc.justchatting.component.twitch.domain.repository.TwitchRepositoryImpl
 import fr.outadoc.justchatting.component.twitch.model.BttvChannelResponse
 import fr.outadoc.justchatting.component.twitch.model.BttvFfzResponse
 import fr.outadoc.justchatting.component.twitch.model.BttvGlobalResponse
@@ -46,6 +49,8 @@ import fr.outadoc.justchatting.feature.chat.domain.LiveChatController
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.SharedPrefsPreferenceRepository
 import fr.outadoc.justchatting.oss.ReadExternalDependenciesList
+import fr.outadoc.justchatting.ui.chat.ChatNotifier
+import fr.outadoc.justchatting.ui.chat.ChatNotifierImpl
 import fr.outadoc.justchatting.ui.view.chat.model.ChatEntryMapper
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import kotlinx.datetime.Clock
@@ -65,21 +70,13 @@ val mainModule = module {
     single<ConnectivityManager> { get<Context>().getSystemService()!! }
     single { NetworkStateObserver(get()) }
 
-    single<TwitchRepository> {
-        fr.outadoc.justchatting.component.twitch.domain.repository.TwitchRepositoryImpl(
-            get(),
-            get()
-        )
-    }
+    single<TwitchRepository> { TwitchRepositoryImpl(get(), get()) }
 
     single { ReadExternalDependenciesList(get()) }
-    single<PreferenceRepository> {
-        SharedPrefsPreferenceRepository(
-            get()
-        )
-    }
+    single<PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }
 
     single { ChatConnectionPool(get()) }
+    single<ChatNotifier> { ChatNotifierImpl() }
 
     single { LiveChatController.Factory(get(), get(), get()) }
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get()) }
@@ -90,21 +87,8 @@ val mainModule = module {
     single { ChatEntryMapper(get()) }
     single { PubSubRewardParser(get()) }
 
-    single {
-        fr.outadoc.justchatting.component.twitch.domain.repository.AuthRepository(
-            get(),
-            get(),
-            get()
-        )
-    }
-    single {
-        fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository(
-            get(),
-            get(),
-            get(),
-            get()
-        )
-    }
+    single { AuthRepository(get(), get(), get()) }
+    single { EmotesRepository(get(), get(), get(), get()) }
     single { RecentMessagesRepository(get()) }
 
     single { get<AppDatabase>().recentEmotes() }

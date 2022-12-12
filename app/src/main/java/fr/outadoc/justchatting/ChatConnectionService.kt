@@ -10,7 +10,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
-import fr.outadoc.justchatting.ui.chat.ChatNotificationUtils
+import fr.outadoc.justchatting.ui.chat.ChatNotifier
 import fr.outadoc.justchatting.utils.logging.logInfo
 import org.koin.android.ext.android.inject
 
@@ -46,6 +46,7 @@ class ChatConnectionService : Service() {
     }
 
     private val connectionPool: ChatConnectionPool by inject()
+    private val chatNotifier: ChatNotifier by inject()
 
     override fun onBind(intent: Intent?): IBinder? = null
 
@@ -95,7 +96,7 @@ class ChatConnectionService : Service() {
                 if (channelId != null) {
                     logInfo<ChatConnectionService> { "Stopping thread for $channelId" }
                     connectionPool.stop(channelId)
-                    ChatNotificationUtils.dismissNotification(
+                    chatNotifier.dismissNotification(
                         context = this,
                         channelId = channelId
                     )

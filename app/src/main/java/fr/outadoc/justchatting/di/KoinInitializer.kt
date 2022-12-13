@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.di
 
 import android.content.Context
 import androidx.startup.Initializer
+import fr.outadoc.justchatting.utils.logging.logDebug
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.KoinApplication
@@ -13,12 +14,19 @@ class KoinInitializer : Initializer<KoinApplication> {
     override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
 
     override fun create(context: Context): KoinApplication {
-        fr.outadoc.justchatting.utils.logging.logDebug<KoinInitializer> { "Setting up Koin dependency injection" }
+        logDebug<KoinInitializer> { "Setting up Koin dependency injection" }
 
         return startKoin {
             androidLogger()
             androidContext(context)
-            modules(mainModule, viewModelModule)
+            modules(
+                mainModule,
+                chatModule,
+                homeModule,
+                settingsModule,
+                mainNavigationModule,
+                twitchModule
+            )
         }
     }
 }

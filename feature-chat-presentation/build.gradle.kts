@@ -46,6 +46,8 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.koin.android)
+    implementation(libs.okhttp.logging)
 
     coreLibraryDesugaring(libs.desugar)
 }

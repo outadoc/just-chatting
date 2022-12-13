@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.presentation
+package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import android.app.Activity
 import android.content.Context
@@ -12,9 +12,10 @@ import androidx.core.app.RemoteInput
 import androidx.core.content.LocusIdCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
-import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.component.twitch.model.User
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
+import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
+import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
+import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
@@ -38,7 +39,7 @@ class ChatNotifierImpl : ChatNotifier {
             Person.Builder()
                 .setKey(user.id)
                 .setName(user.displayName)
-                .setIcon(user.profileImageIcon)
+                .setIcon(user.getProfileImageIcon(context))
                 .build()
 
         createShortcutForChannel(
@@ -94,7 +95,7 @@ class ChatNotifierImpl : ChatNotifier {
                 ShortcutInfoCompat.Builder(context, user.id)
                     .setIntent(intent)
                     .setLongLived(true)
-                    .setIcon(user.profileImageIcon)
+                    .setIcon(user.getProfileImageIcon(context))
                     .setShortLabel(user.displayName)
                     .setPerson(person)
                     .setIsConversation()
@@ -158,7 +159,7 @@ class ChatNotifierImpl : ChatNotifier {
                 .setBubbleMetadata(
                     NotificationCompat.BubbleMetadata.Builder(
                         intent.toPendingActivityIntent(context, mutable = true),
-                        user.profileImageIcon
+                        user.getProfileImageIcon(context)
                     )
                         .setAutoExpandBubble(false)
                         .setSuppressNotification(false)

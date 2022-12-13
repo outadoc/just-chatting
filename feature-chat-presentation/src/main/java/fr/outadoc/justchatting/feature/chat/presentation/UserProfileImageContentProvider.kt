@@ -3,10 +3,10 @@ package fr.outadoc.justchatting.feature.chat.presentation
 import android.content.ContentProvider
 import android.content.ContentResolver
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.coroutines.Dispatchers
@@ -23,15 +23,13 @@ import java.io.FileOutputStream
 class UserProfileImageContentProvider : ContentProvider() {
 
     companion object {
-        private const val authority: String =
-            "${BuildConfig.APPLICATION_ID}.user-image-provider"
 
         private const val PATH_LOGIN = "login"
 
-        fun createForUser(userLogin: String): Uri {
+        fun createForUser(context: Context, userLogin: String): Uri {
             return Uri.Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT)
-                .authority(authority)
+                .authority("${context.applicationContext.packageName}.user-image-provider")
                 .appendPath(PATH_LOGIN)
                 .appendPath(userLogin)
                 .build()

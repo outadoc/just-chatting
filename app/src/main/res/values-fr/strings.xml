@@ -10,16 +10,6 @@
     <string name="message_limit">Limite de messages</string>
     <string name="no">Non</string>
     <string name="nothing_here">Rien ici</string>
-    <string name="notification_action_disconnect">Déconnecter</string>
-    <string name="notification_action_reply">Répondre</string>
-    <string name="notification_action_reply_hint">Répondre dans le tchat…</string>
-    <string name="notification_channel_bubbles_message">Permet d\'afficher le tchat Twitch dans des bulles de notification.</string>
-    <string name="notification_channel_bubbles_openPrompt">Gardez un œil sur le tchat en ouvrant cette notification dans une bulle.</string>
-    <string name="notification_channel_bubbles_title">Bulles de tchat</string>
-    <string name="notification_foreground_channel_message">Permet à l\'application de garder ouverte une connexion au tchat Twitch.</string>
-    <string name="notification_foreground_channel_title">Connexion persistente</string>
-    <string name="notification_foreground_message">Nous gardons ouverte une connexion pour vous permettre de revenir rapidement sur le tchat.</string>
-    <string name="notification_foreground_title">Connecté au tchat Twitch</string>
     <string name="onboarding_login_action">Continuer avec Twitch</string>
     <string name="onboarding_message">Pour parcourir vos chaînes suivies et poster dans le tchat, vous devez lier votre compte Twitch.</string>
     <string name="onboarding_title">Bienvenue dans %s !</string>

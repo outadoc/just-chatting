@@ -26,9 +26,17 @@ include(":utils-ui")
 include(":utils-logging")
 
 include(":feature-preferences-data")
+
 include(":feature-chat-data")
 include(":feature-chat-domain")
 include(":feature-chat-presentation")
+include(":feature-chat-presentation-mobile")
+
+include(":feature-home-presentation")
+include(":feature-home-presentation-mobile")
+
+include(":feature-mainnavigation-presentation")
+include(":feature-mainnavigation-presentation-mobile")
 
 include(":component-twitch-data")
 include(":component-twitch-domain")

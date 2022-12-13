@@ -38,6 +38,7 @@ include(":feature-home-presentation-mobile")
 include(":feature-mainnavigation-presentation")
 include(":feature-mainnavigation-presentation-mobile")
 
+include(":component-deeplink")
 include(":component-twitch-data")
 include(":component-twitch-domain")
 include(":component-preferences-domain")

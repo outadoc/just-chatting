@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
+import fr.outadoc.justchatting.feature.home.presentation.mobile.DefaultTab
+import fr.outadoc.justchatting.feature.home.presentation.mobile.Tab
 import fr.outadoc.justchatting.feature.mainnavigation.presentation.mobile.MainNavigation
 import fr.outadoc.justchatting.feature.settings.SettingsContent
 import org.koin.androidx.compose.getViewModel

@@ -33,7 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.feature.home.Tab
+import fr.outadoc.justchatting.feature.home.presentation.mobile.Tab
 
 @Composable
 fun MainNavigation(

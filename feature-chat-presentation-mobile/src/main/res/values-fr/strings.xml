@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="chat_copiedToClipboard">Message copié dans le presse-papier</string>
+    <string name="chat_copyToClipboard">Copier dans le presse-papier</string>
+    <string name="chat_input_clear_cd">Effacer</string>
+    <string name="chat_input_emote_cd">Ouvrir le sélecteur d\'émote</string>
+    <string name="chat_input_hint">Envoyer un message</string>
+    <string name="chat_input_replyClear">Ne plus répondre à ce message</string>
+    <string name="chat_input_send_cd">Envoyer</string>
+    <string name="created_at">Créé le %s</string>
+    <string name="emote_tab_others">Autres</string>
+    <string name="emote_tab_recent">Récentes</string>
+    <string name="emote_tab_twitch">Twitch</string>
+    <string name="followers">%s followers</string>
+    <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
+    <string name="room_emote">Émote</string>
+    <string name="room_followers">Followers</string>
+    <string name="room_followers_min">Followers %s</string>
+    <string name="room_slow">Lent %s</string>
+    <string name="room_subs">Abonné·e·s</string>
+    <string name="room_unique">Unique</string>
+    <string name="scroll_down">Défiler vers le bas</string>
+    <string name="stream_info">Infos du stream</string>
+    <string name="uptime">En direct depuis %s</string>
+    <string name="watch_live">Regarder en direct</string>
+</resources>

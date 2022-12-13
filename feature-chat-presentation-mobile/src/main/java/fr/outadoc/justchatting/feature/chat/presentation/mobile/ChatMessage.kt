@@ -92,16 +92,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
-import fr.outadoc.justchatting.composepreview.ChatEntryPreviewProvider
-import fr.outadoc.justchatting.composepreview.previewBadges
 import fr.outadoc.justchatting.feature.chat.data.model.Badge
+import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatEntryPreviewProvider
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
 import fr.outadoc.justchatting.feature.data.AppUser
-import fr.outadoc.justchatting.feature.mainnavigation.presentation.AppTheme
 import fr.outadoc.justchatting.utils.core.isOdd
+import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
@@ -141,8 +141,8 @@ fun ChatScreen(
     state: ChatViewModel.State,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
-    onMessageLongClick: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
-    onReplyToMessage: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
+    onMessageLongClick: (ChatEntry) -> Unit,
+    onReplyToMessage: (ChatEntry) -> Unit,
     insets: PaddingValues
 ) {
     when (state) {
@@ -186,8 +186,8 @@ fun ChatList(
     state: ChatViewModel.State.Chatting,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
-    onMessageLongClick: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
-    onReplyToMessage: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
+    onMessageLongClick: (ChatEntry) -> Unit,
+    onReplyToMessage: (ChatEntry) -> Unit,
     insets: PaddingValues
 ) {
     val scope = rememberCoroutineScope()
@@ -310,14 +310,14 @@ fun RoomStateBanner(
 @Composable
 fun ChatList(
     modifier: Modifier = Modifier,
-    entries: ImmutableList<fr.outadoc.justchatting.feature.chat.presentation.ChatEntry>,
+    entries: ImmutableList<ChatEntry>,
     emotes: ImmutableMap<String, Emote>,
     badges: ImmutableList<TwitchBadge>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     listState: LazyListState,
-    onMessageLongClick: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
-    onReplyToMessage: (fr.outadoc.justchatting.feature.chat.presentation.ChatEntry) -> Unit,
+    onMessageLongClick: (ChatEntry) -> Unit,
+    onReplyToMessage: (ChatEntry) -> Unit,
     roomState: fr.outadoc.justchatting.feature.chat.presentation.RoomState,
     appUser: AppUser,
     insets: PaddingValues
@@ -378,8 +378,8 @@ fun ChatList(
             key = { _, item -> item.hashCode() },
             contentType = { _, item ->
                 when (item) {
-                    is fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Highlighted -> 1
-                    is fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Simple -> 2
+                    is ChatEntry.Highlighted -> 1
+                    is ChatEntry.Simple -> 2
                 }
             }
         ) { index, item ->
@@ -483,7 +483,7 @@ fun SwipeToReply(
 @ThemePreviews
 @Composable
 fun ChatMessagePreview(
-    @PreviewParameter(ChatEntryPreviewProvider::class) chatEntry: fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
+    @PreviewParameter(ChatEntryPreviewProvider::class) chatEntry: ChatEntry
 ) {
     val inlineBadges = previewBadges
         .associateWith {
@@ -511,7 +511,7 @@ fun ChatMessagePreview(
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,
-    message: fr.outadoc.justchatting.feature.chat.presentation.ChatEntry,
+    message: ChatEntry,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
@@ -539,7 +539,7 @@ fun ChatMessage(
         }
 
         when (message) {
-            is fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Highlighted -> {
+            is ChatEntry.Highlighted -> {
                 HighlightedMessage(
                     message = message,
                     inlineContent = inlineContent,
@@ -548,7 +548,7 @@ fun ChatMessage(
                 )
             }
 
-            is fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Simple -> {
+            is ChatEntry.Simple -> {
                 SimpleMessage(
                     message = message,
                     inlineContent = inlineContent,
@@ -563,7 +563,7 @@ fun ChatMessage(
 @Composable
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
-    message: fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Highlighted,
+    message: ChatEntry.Highlighted,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
@@ -623,7 +623,7 @@ fun HighlightedMessage(
 @Composable
 fun SimpleMessage(
     modifier: Modifier = Modifier,
-    message: fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Simple,
+    message: ChatEntry.Simple,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
@@ -649,7 +649,7 @@ fun SimpleMessage(
 @Composable
 fun ChatMessageData(
     modifier: Modifier = Modifier,
-    data: fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Data,
+    data: ChatEntry.Data,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
@@ -775,7 +775,7 @@ fun InReplyToMessage(
 @Stable
 @Composable
 @OptIn(ExperimentalTextApi::class)
-fun fr.outadoc.justchatting.feature.chat.presentation.ChatEntry.Data.toAnnotatedString(
+fun ChatEntry.Data.toAnnotatedString(
     appUser: AppUser,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     urlColor: Color = MaterialTheme.colorScheme.primary,

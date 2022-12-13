@@ -32,13 +32,12 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.component.twitch.model.Chatter
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
-import fr.outadoc.justchatting.feature.mainnavigation.presentation.AppTheme
+import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import kotlinx.datetime.Instant

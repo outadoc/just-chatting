@@ -19,8 +19,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import fr.outadoc.justchatting.feature.mainnavigation.presentation.AppTheme
 import fr.outadoc.justchatting.utils.core.formatNumber
+import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import kotlinx.datetime.Instant

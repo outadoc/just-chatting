@@ -131,8 +131,9 @@ dependencies {
     implementation(platform(libs.kotlin.bom))
 
     implementation(project(":feature-chat-domain"))
-    implementation(project(":feature-chat-presentation"))
+    implementation(project(":feature-chat-presentation-mobile"))
 
+    implementation(project(":component-deeplink"))
     implementation(project(":component-twitch-domain"))
     implementation(project(":component-preferences-domain"))
 

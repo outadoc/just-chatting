@@ -9,7 +9,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.emoji2.text.DefaultEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
-import fr.outadoc.justchatting.feature.mainnavigation.presentation.AppTheme
+import fr.outadoc.justchatting.utils.ui.AppTheme
 
 class ChatActivity : AppCompatActivity() {
 

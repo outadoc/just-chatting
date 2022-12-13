@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.mainnavigation.presentation
+package fr.outadoc.justchatting.utils.ui
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

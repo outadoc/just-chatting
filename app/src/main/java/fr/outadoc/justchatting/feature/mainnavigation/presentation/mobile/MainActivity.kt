@@ -23,8 +23,8 @@ import androidx.lifecycle.lifecycleScope
 import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.home.HomeScreen
-import fr.outadoc.justchatting.feature.mainnavigation.presentation.AppTheme
 import fr.outadoc.justchatting.feature.mainnavigation.presentation.MainViewModel
+import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.toast
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

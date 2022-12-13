@@ -20,8 +20,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.feature.mainnavigation.presentation.AppTheme
 import fr.outadoc.justchatting.feature.onboarding.SignInWithTwitchButton
+import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ScreenPreviews
 
 private val AppIconSize = 80.dp

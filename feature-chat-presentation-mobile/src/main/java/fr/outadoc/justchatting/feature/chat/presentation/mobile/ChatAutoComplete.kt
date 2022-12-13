@@ -19,7 +19,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.twitch.model.Chatter
 import fr.outadoc.justchatting.component.twitch.model.Emote
-import fr.outadoc.justchatting.feature.mainnavigation.presentation.AppTheme
+import fr.outadoc.justchatting.utils.ui.AppTheme
 
 @Composable
 fun AutoCompleteEmoteItem(

@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.feature.chat.data.model.Badge
 import fr.outadoc.justchatting.feature.chat.data.model.ChatMessage
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.R
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 

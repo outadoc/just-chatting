@@ -42,13 +42,13 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.model.Chatter
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
-import fr.outadoc.justchatting.feature.data.AppPreferences
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ScreenPreviews

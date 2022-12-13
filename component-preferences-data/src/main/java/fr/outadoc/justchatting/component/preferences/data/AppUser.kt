@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.data
+package fr.outadoc.justchatting.component.preferences.data
 
 sealed class AppUser {
 

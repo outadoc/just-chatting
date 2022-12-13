@@ -43,8 +43,8 @@ dependencies {
     implementation(project(":component-deeplink"))
     implementation(project(":component-twitch-data"))
     implementation(project(":component-preferences-domain"))
+    implementation(project(":component-preferences-data"))
 
-    implementation(project(":feature-preferences-data"))
     implementation(project(":feature-chat-domain"))
     api(project(":feature-chat-presentation"))
 

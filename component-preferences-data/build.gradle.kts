@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "fr.outadoc.justchatting.feature.preferences"
+    namespace = "fr.outadoc.justchatting.component.preferences.data"
     compileSdkVersion = "android-33"
 
     defaultConfig {

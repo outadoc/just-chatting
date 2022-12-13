@@ -7,6 +7,7 @@ import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository
@@ -27,7 +28,6 @@ import fr.outadoc.justchatting.feature.chat.data.model.PointReward
 import fr.outadoc.justchatting.feature.chat.data.model.RoomStateDelta
 import fr.outadoc.justchatting.feature.chat.data.model.UserState
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
-import fr.outadoc.justchatting.feature.data.AppUser
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.core.roundUpOddToEven
 import fr.outadoc.justchatting.utils.logging.logError

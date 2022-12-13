@@ -22,10 +22,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
-import fr.outadoc.justchatting.feature.data.AppPreferences
 import kotlinx.collections.immutable.toImmutableList
 import org.koin.androidx.compose.get
 

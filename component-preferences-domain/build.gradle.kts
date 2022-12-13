@@ -29,8 +29,8 @@ android {
 }
 
 dependencies {
-    api(project(":feature-preferences-data"))
 
+    api(project(":component-preferences-data"))
     implementation(libs.kotlinx.coroutines)
     implementation(libs.androidx.datastore.preferences)
 

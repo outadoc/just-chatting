@@ -22,7 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.feature.data.AppPreferences
+import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.feature.settings.presentation.Dependency
 import fr.outadoc.justchatting.feature.settings.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.utils.ui.AppTheme

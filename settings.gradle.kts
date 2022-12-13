@@ -25,7 +25,7 @@ include(":utils-core")
 include(":utils-ui")
 include(":utils-logging")
 
-include(":feature-preferences-data")
+include(":component-preferences-data")
 
 include(":feature-chat-data")
 include(":feature-chat-domain")

@@ -2,9 +2,9 @@ package fr.outadoc.justchatting.feature.settings.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.component.preferences.data.AppPreferences
+import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.feature.data.AppPreferences
-import fr.outadoc.justchatting.feature.data.AppUser
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first

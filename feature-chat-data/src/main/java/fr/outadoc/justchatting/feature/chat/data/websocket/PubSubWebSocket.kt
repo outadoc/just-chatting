@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.websocket
 
+import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
-import fr.outadoc.justchatting.feature.data.AppPreferences
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

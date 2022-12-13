@@ -92,6 +92,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
 import fr.outadoc.justchatting.feature.chat.data.model.Badge
@@ -99,7 +100,6 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
-import fr.outadoc.justchatting.feature.data.AppUser
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews

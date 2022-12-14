@@ -129,9 +129,8 @@ spotless {
 dependencies {
     implementation(platform(libs.kotlin.bom))
 
-    implementation(project(":feature-chat-domain"))
     implementation(project(":feature-chat-presentation-mobile"))
-
+    implementation(project(":feature-home-presentation-mobile"))
     implementation(project(":feature-preferences-presentation-mobile"))
 
     implementation(project(":component-deeplink"))

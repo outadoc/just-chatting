@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.home
+package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

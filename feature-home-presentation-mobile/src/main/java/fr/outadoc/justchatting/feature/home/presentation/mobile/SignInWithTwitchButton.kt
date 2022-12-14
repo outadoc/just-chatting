@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.mainnavigation.presentation.mobile
+package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
@@ -12,7 +12,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 private val TwitchBrandColor = Color(0xFF7718AD)

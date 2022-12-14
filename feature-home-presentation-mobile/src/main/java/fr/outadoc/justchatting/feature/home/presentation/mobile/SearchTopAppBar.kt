@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.home
+package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 
 @OptIn(ExperimentalMaterial3Api::class)

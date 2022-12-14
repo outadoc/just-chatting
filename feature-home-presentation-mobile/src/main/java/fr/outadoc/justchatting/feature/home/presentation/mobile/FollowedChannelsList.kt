@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.home
+package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,8 +12,6 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,21 +19,21 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import fr.outadoc.justchatting.component.twitch.model.ChannelSearch
-import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
+import fr.outadoc.justchatting.component.twitch.model.Follow
+import fr.outadoc.justchatting.feature.home.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.utils.ui.plus
+import kotlinx.datetime.toInstant
+import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SearchResultsList(
+fun FollowedChannelsList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    viewModel: ChannelSearchViewModel,
-    onItemClick: (ChannelSearch) -> Unit
+    onItemClick: (Follow) -> Unit
 ) {
-    val items: LazyPagingItems<ChannelSearch> = viewModel.pagingData.collectAsLazyPagingItems()
-    val state by viewModel.state.collectAsState()
-
+    val viewModel: FollowedChannelsViewModel = getViewModel()
+    val items: LazyPagingItems<Follow> = viewModel.pagingData.collectAsLazyPagingItems()
     val isRefreshing = items.loadState.refresh is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
@@ -54,17 +52,18 @@ fun SearchResultsList(
             contentPadding = insets + PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            if (state.query.isNotEmpty() && !isRefreshing && items.itemCount == 0) {
+            if (!isRefreshing && items.itemCount == 0) {
                 item(key = "_noContent") {
                     NoContent(modifier = Modifier.fillParentMaxSize())
                 }
             } else {
-                items(items) { item: ChannelSearch? ->
+                items(items) { item: Follow? ->
                     if (item != null) {
                         UserItemCard(
                             modifier = Modifier.fillMaxWidth(),
-                            displayName = item.broadcasterDisplayName,
+                            displayName = item.toName,
                             profileImageURL = item.profileImageURL,
+                            followedAt = item.followedAt?.toInstant(),
                             onClick = { onItemClick(item) }
                         )
                     } else {

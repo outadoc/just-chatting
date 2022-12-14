@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.component.twitch.domain.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.component.twitch.domain.repository.datasource.FollowedChannelsDataSource
@@ -16,7 +17,6 @@ import fr.outadoc.justchatting.component.twitch.model.Stream
 import fr.outadoc.justchatting.component.twitch.model.StreamsResponse
 import fr.outadoc.justchatting.component.twitch.model.TwitchEmote
 import fr.outadoc.justchatting.component.twitch.model.User
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext

@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":feature-chat-domain"))
+    api(project(":feature-chat-domain"))
 
     implementation(project(":component-twitch-domain"))
     implementation(project(":component-preferences-domain"))

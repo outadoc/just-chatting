@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "fr.outadoc.justchatting.feature.home.presentation.mobile"
+    namespace = "fr.outadoc.justchatting.feature.home.presentation"
     compileSdkVersion = "android-33"
 
     defaultConfig {
@@ -29,9 +29,20 @@ android {
 }
 
 dependencies {
-    implementation(libs.compose.ui.core)
+    implementation(project(":utils-logging"))
+
+    implementation(project(":component-twitch-domain"))
+    implementation(project(":component-preferences-domain"))
+    implementation(project(":component-deeplink"))
+
+    implementation(libs.androidx.core)
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.gson)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.retrofit.core)
 
     coreLibraryDesugaring(libs.desugar)
 }

@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.home
+package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,7 +8,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import fr.outadoc.justchatting.R
 
 @Composable
 fun NoContent(modifier: Modifier = Modifier) {

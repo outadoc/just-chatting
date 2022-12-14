@@ -15,13 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.feature.home.FollowedChannelsList
-import fr.outadoc.justchatting.feature.home.LiveChannelsList
-import fr.outadoc.justchatting.feature.home.SearchResultsList
-import fr.outadoc.justchatting.feature.home.SearchTopAppBar
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
-import fr.outadoc.justchatting.feature.mainnavigation.presentation.mobile.MainNavigation
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
 import org.koin.androidx.compose.getViewModel
 

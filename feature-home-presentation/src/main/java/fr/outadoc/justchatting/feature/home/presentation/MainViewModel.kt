@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.mainnavigation.presentation
+package fr.outadoc.justchatting.feature.home.presentation
 
 import android.net.Uri
 import androidx.core.net.toUri

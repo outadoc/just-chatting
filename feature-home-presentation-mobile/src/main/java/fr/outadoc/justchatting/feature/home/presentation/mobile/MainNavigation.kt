@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.mainnavigation.presentation.mobile
+package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
@@ -32,8 +32,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.feature.home.presentation.mobile.Tab
 
 @Composable
 fun MainNavigation(

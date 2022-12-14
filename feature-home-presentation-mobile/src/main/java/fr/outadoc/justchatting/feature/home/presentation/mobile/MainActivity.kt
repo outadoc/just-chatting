@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.mainnavigation.presentation.mobile
+package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import android.content.Intent
 import android.os.Build
@@ -20,10 +20,8 @@ import androidx.core.view.WindowCompat
 import androidx.emoji2.text.DefaultEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.lifecycleScope
-import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
-import fr.outadoc.justchatting.feature.home.presentation.mobile.HomeScreen
-import fr.outadoc.justchatting.feature.mainnavigation.presentation.MainViewModel
+import fr.outadoc.justchatting.feature.home.presentation.MainViewModel
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.toast
 import kotlinx.coroutines.flow.collectLatest

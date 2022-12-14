@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.settings
+package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.WindowInsets
@@ -17,8 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.R
-import fr.outadoc.justchatting.feature.settings.presentation.SettingsViewModel
+import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)

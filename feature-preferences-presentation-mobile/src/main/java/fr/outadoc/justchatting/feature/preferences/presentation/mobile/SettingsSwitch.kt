@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.settings
+package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

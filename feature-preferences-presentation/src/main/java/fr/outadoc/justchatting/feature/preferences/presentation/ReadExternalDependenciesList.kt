@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.settings.presentation
+package fr.outadoc.justchatting.feature.preferences.presentation
 
 import android.content.Context
 import kotlinx.coroutines.Dispatchers

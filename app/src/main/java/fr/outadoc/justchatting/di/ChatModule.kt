@@ -28,8 +28,8 @@ import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.feature.chat.domain.LiveChatController
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntryMapper
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatNotifierImpl
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatNotifierImpl
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.converter.gson.GsonConverterFactory

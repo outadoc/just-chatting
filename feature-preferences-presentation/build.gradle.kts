@@ -3,7 +3,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -29,8 +29,15 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.gson)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(project(":component-preferences-data"))
+    implementation(project(":component-preferences-domain"))
+    implementation(project(":component-twitch-domain"))
 
     coreLibraryDesugaring(libs.desugar)
 }

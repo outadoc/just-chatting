@@ -39,9 +39,20 @@ android {
 dependencies {
     api(project(":feature-preferences-presentation"))
 
+    implementation(project(":utils-ui"))
+
+    implementation(project(":component-preferences-data"))
+
     implementation(libs.compose.ui.core)
+    implementation(libs.koin.compose)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
+    implementation(libs.compose.foundation)
+    implementation(libs.compose.material.core3)
+    implementation(libs.compose.ui.core)
+    implementation(libs.compose.ui.tooling)
+    implementation(libs.kotlinx.datetime)
+
 
     coreLibraryDesugaring(libs.desugar)
 }

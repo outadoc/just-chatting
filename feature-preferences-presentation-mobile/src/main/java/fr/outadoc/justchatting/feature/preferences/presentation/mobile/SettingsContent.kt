@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.settings
+package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -6,7 +6,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.feature.settings.presentation.SettingsViewModel
+import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import org.koin.androidx.compose.getViewModel
 
 @Composable

@@ -132,6 +132,8 @@ dependencies {
     implementation(project(":feature-chat-domain"))
     implementation(project(":feature-chat-presentation-mobile"))
 
+    implementation(project(":feature-preferences-presentation-mobile"))
+
     implementation(project(":component-deeplink"))
     implementation(project(":component-twitch-domain"))
     implementation(project(":component-preferences-domain"))

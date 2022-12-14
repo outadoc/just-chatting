@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.settings
+package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
 import android.os.Build
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,14 +17,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.BuildConfig
-import fr.outadoc.justchatting.R
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
-import fr.outadoc.justchatting.feature.settings.presentation.Dependency
-import fr.outadoc.justchatting.feature.settings.presentation.ReadExternalDependenciesList
+import fr.outadoc.justchatting.feature.preferences.presentation.Dependency
+import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.plus
@@ -272,6 +271,7 @@ fun SettingsList(
         }
 
         item {
+            val context = LocalContext.current
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 title = { Text(text = stringResource(R.string.app_name)) },
@@ -279,7 +279,7 @@ fun SettingsList(
                     Text(
                         text = stringResource(
                             R.string.settings_about_version,
-                            BuildConfig.VERSION_NAME
+                            context.applicationVersionName ?: ""
                         )
                     )
                 }

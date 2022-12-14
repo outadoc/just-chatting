@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.settings
+package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.LocalContentColor

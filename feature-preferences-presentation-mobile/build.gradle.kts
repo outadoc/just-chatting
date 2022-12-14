@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "fr.outadoc.justchatting.feature.mainnavigation.presentation"
+    namespace = "fr.outadoc.justchatting.feature.preferences.presentation.mobile"
     compileSdkVersion = "android-33"
 
     defaultConfig {
@@ -23,12 +23,22 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.0-alpha02"
+    }
+
     kotlinOptions {
         jvmTarget = "11"
     }
 }
 
 dependencies {
+    api(project(":feature-preferences-presentation"))
+
     implementation(libs.compose.ui.core)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)

@@ -23,6 +23,14 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.4.0-alpha02"
+    }
+
     kotlinOptions {
         jvmTarget = "11"
     }

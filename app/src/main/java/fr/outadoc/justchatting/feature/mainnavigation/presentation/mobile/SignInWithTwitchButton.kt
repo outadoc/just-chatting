@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.onboarding
+package fr.outadoc.justchatting.feature.mainnavigation.presentation.mobile
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size

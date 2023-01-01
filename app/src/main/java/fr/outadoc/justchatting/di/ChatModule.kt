@@ -16,6 +16,14 @@ import fr.outadoc.justchatting.component.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.component.twitch.model.StvEmotesResponse
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.db.AppDatabase
+import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
+import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource
+import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelStvEmotesSource
+import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSources
+import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalBttvEmotesSource
+import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalFfzEmotesSource
+import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalStvEmotesSource
+import fr.outadoc.justchatting.feature.chat.data.emotes.TwitchEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.model.RecentMessagesResponse
 import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
 import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesDeserializer
@@ -53,6 +61,28 @@ val chatModule = module {
     single { get<AppDatabase>().recentEmotes() }
 
     single { RecentMessagesRepository(get()) }
+
+    single { ChannelBttvEmotesSource(get()) }
+    single { ChannelFfzEmotesSource(get()) }
+    single { ChannelStvEmotesSource(get()) }
+    single { GlobalBttvEmotesSource(get()) }
+    single { GlobalFfzEmotesSource(get()) }
+    single { GlobalStvEmotesSource(get()) }
+    single { TwitchEmotesSource(get()) }
+
+    single {
+        EmoteListSources {
+            listOf(
+                get<TwitchEmotesSource>(),
+                get<ChannelBttvEmotesSource>(),
+                get<ChannelFfzEmotesSource>(),
+                get<ChannelStvEmotesSource>(),
+                get<GlobalBttvEmotesSource>(),
+                get<GlobalFfzEmotesSource>(),
+                get<GlobalStvEmotesSource>()
+            )
+        }
+    }
 
     single<GsonConverterFactory> {
         GsonConverterFactory.create(

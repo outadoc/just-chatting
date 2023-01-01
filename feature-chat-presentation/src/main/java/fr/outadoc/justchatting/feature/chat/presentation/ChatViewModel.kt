@@ -19,6 +19,7 @@ import fr.outadoc.justchatting.component.twitch.model.Stream
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
 import fr.outadoc.justchatting.component.twitch.model.TwitchEmote
 import fr.outadoc.justchatting.component.twitch.model.User
+import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.feature.chat.data.model.ChatMessage
 import fr.outadoc.justchatting.feature.chat.data.model.Command
@@ -77,7 +78,7 @@ import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ChatViewModel(
-    private val repository: TwitchRepository,
+    private val twitchRepository: TwitchRepository,
     private val emotesRepository: EmotesRepository,
     private val chatConnectionPool: ChatConnectionPool,
     private val chatEntryMapper: ChatEntryMapper,
@@ -334,7 +335,7 @@ class ChatViewModel(
 
         val prefs = preferencesRepository.currentPreferences.first()
         return State.Chatting(
-            user = repository.loadUsersByLogin(logins = listOf(channelLogin))
+            user = twitchRepository.loadUsersByLogin(logins = listOf(channelLogin))
                 ?.firstOrNull()
                 ?: error("User not loaded"),
             appUser = prefs.appUser as AppUser.LoggedIn,
@@ -347,7 +348,7 @@ class ChatViewModel(
     private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return state.copy(
-            stream = repository.loadStreamWithUser(channelId = state.user.id)
+            stream = twitchRepository.loadStreamWithUser(channelId = state.user.id)
         )
     }
 
@@ -427,7 +428,7 @@ class ChatViewModel(
                 }.orEmpty()
             }
 
-            val groups = mapOf(
+            val groups: Map<String, List<Emote>> = mapOf(
                 "BetterTTV" to bttvEmotes.await() + globalBttv.await(),
                 "7TV" to stvEmotes.await() + globalStv.await(),
                 "FrankerFaceZ" to ffzEmotes.await() + globalFfz.await()
@@ -435,7 +436,7 @@ class ChatViewModel(
                 emotes.isNotEmpty()
             }
 
-            val otherEmotes = groups
+            val otherEmotes: PersistentSet<EmoteSetItem>? = groups
                 .takeIf { it.isNotEmpty() }
                 ?.flatMap { (group, emotes) ->
                     listOf(EmoteSetItem.Header(group)) +
@@ -444,7 +445,7 @@ class ChatViewModel(
                 ?.toPersistentSet()
 
             val cheerEmotes = try {
-                repository.loadCheerEmotes(userId = channelId).toPersistentList()
+                twitchRepository.loadCheerEmotes(userId = channelId).toPersistentList()
             } catch (e: Exception) {
                 logError<ChatViewModel>(e) { "Failed to load cheermotes for channel $channelId" }
                 null
@@ -510,7 +511,7 @@ class ChatViewModel(
                     .map { setIds ->
                         async {
                             try {
-                                repository.loadEmotesFromSet(setIds = setIds)
+                                twitchRepository.loadEmotesFromSet(setIds = setIds)
                             } catch (e: Exception) {
                                 e.printStackTrace()
                                 null
@@ -522,7 +523,7 @@ class ChatViewModel(
 
             val emoteOwners: Map<String, User> =
                 try {
-                    repository.loadUsersById(
+                    twitchRepository.loadUsersById(
                         ids = emotes
                             .mapNotNull { emote -> emote.ownerId }
                             .toSet()

@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.di
 
 import android.content.Context
 import androidx.startup.Initializer
-import fr.outadoc.justchatting.log.logDebug
+import fr.outadoc.justchatting.utils.logging.logDebug
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.KoinApplication
@@ -19,7 +19,14 @@ class KoinInitializer : Initializer<KoinApplication> {
         return startKoin {
             androidLogger()
             androidContext(context)
-            modules(mainModule, viewModelModule)
+            modules(
+                mainModule,
+                chatModule,
+                homeModule,
+                settingsModule,
+                mainNavigationModule,
+                twitchModule
+            )
         }
     }
 }

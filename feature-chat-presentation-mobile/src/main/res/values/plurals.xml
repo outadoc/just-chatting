@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="viewers">
+        <item quantity="one">%s viewer</item>
+        <item quantity="other">%s viewers</item>
+    </plurals>
+</resources>

@@ -20,5 +20,29 @@ dependencyResolutionManagement {
 rootProject.name = "just-chatting"
 
 include(":app")
+
 include(":utils-core")
 include(":utils-ui")
+include(":utils-logging")
+
+include(":component-preferences-data")
+
+include(":feature-chat-data")
+include(":feature-chat-domain")
+include(":feature-chat-presentation")
+include(":feature-chat-presentation-mobile")
+
+include(":feature-home-presentation")
+include(":feature-home-presentation-mobile")
+
+include(":feature-mainnavigation-presentation")
+include(":feature-mainnavigation-presentation-mobile")
+
+include(":feature-preferences-presentation")
+include(":feature-preferences-presentation-mobile")
+
+include(":component-deeplink")
+include(":component-twitch-data")
+include(":component-twitch-domain")
+include(":component-preferences-domain")
+

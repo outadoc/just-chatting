@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="chatUserColor0">#C62828</color>
+    <color name="chatUserColor1">#AD1457</color>
+    <color name="chatUserColor2">#6A1B9A</color>
+    <color name="chatUserColor3">#4527A0</color>
+    <color name="chatUserColor4">#283593</color>
+    <color name="chatUserColor5">#1565C0</color>
+    <color name="chatUserColor6">#0277BD</color>
+    <color name="chatUserColor7">#00838F</color>
+    <color name="chatUserColor8">#00695C</color>
+    <color name="chatUserColor9">#2E7D32</color>
+    <color name="chatUserColor10">#558B2F</color>
+    <color name="chatUserColor11">#9E9D24</color>
+    <color name="chatUserColor12">#F9A825</color>
+    <color name="chatUserColor13">#FF8F00</color>
+    <color name="chatUserColor14">#EF6C00</color>
+
+</resources>

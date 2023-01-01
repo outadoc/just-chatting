@@ -75,7 +75,6 @@ android {
 
     buildFeatures {
         compose = true
-        viewBinding = true
     }
 
     composeOptions {
@@ -130,8 +129,17 @@ spotless {
 dependencies {
     implementation(platform(libs.kotlin.bom))
 
+    implementation(project(":feature-chat-presentation-mobile"))
+    implementation(project(":feature-home-presentation-mobile"))
+    implementation(project(":feature-preferences-presentation-mobile"))
+
+    implementation(project(":component-deeplink"))
+    implementation(project(":component-twitch-domain"))
+    implementation(project(":component-preferences-domain"))
+
     implementation(project(":utils-core"))
     implementation(project(":utils-ui"))
+    implementation(project(":utils-logging"))
 
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)
@@ -164,7 +172,6 @@ dependencies {
     implementation(libs.compose.runtime.livedata)
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.tooling)
-    implementation(libs.irc)
     implementation(libs.koin.android)
     implementation(libs.koin.compose)
     implementation(libs.koin.core)
@@ -184,8 +191,6 @@ dependencies {
     "debugImplementation"(libs.chucker.runtime)
     "qaImplementation"(libs.chucker.noop)
     "releaseImplementation"(libs.chucker.noop)
-
-    testImplementation(libs.junit)
 
     coreLibraryDesugaring(libs.desugar)
 }

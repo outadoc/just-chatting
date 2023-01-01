@@ -19,7 +19,7 @@
         tools:targetApi="s">
 
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".feature.home.presentation.mobile.MainActivity"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:exported="true"
             android:launchMode="singleTask"
@@ -59,7 +59,7 @@
         </activity>
 
         <activity
-            android:name=".ui.chat.ChatActivity"
+            android:name=".feature.chat.presentation.mobile.ChatActivity"
             android:allowEmbedded="true"
             android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation"
             android:exported="true"
@@ -92,14 +92,14 @@
         </provider>
 
         <provider
-            android:name=".contentprovider.UserProfileImageContentProvider"
+            android:name=".feature.chat.presentation.UserProfileImageContentProvider"
             android:authorities="${applicationId}.user-image-provider"
             android:exported="true"
             android:grantUriPermissions="true"
             tools:ignore="ExportedContentProvider" />
 
         <service
-            android:name=".ChatConnectionService"
+            android:name=".feature.chat.presentation.ChatConnectionService"
             android:foregroundServiceType="" />
 
     </application>

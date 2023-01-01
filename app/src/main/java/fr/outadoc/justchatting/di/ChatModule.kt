@@ -19,7 +19,7 @@ import fr.outadoc.justchatting.db.AppDatabase
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelStvEmotesSource
-import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSources
+import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalFfzEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalStvEmotesSource
@@ -43,7 +43,7 @@ import org.koin.dsl.module
 import retrofit2.converter.gson.GsonConverterFactory
 
 val chatModule = module {
-    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get()) }
 
     single<ChatNotifier> { ChatNotifierImpl() }
 
@@ -71,7 +71,7 @@ val chatModule = module {
     single { TwitchEmotesSource(get()) }
 
     single {
-        EmoteListSources {
+        EmoteListSourcesProvider {
             listOf(
                 get<TwitchEmotesSource>(),
                 get<ChannelBttvEmotesSource>(),

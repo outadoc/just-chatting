@@ -1,13 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.data.emotes
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-
 abstract class CachedEmoteListSource : EmoteListSource {
 
     data class Params(
@@ -16,28 +8,27 @@ abstract class CachedEmoteListSource : EmoteListSource {
         val emoteSets: List<String>
     )
 
-    private val inputFlow = MutableSharedFlow<Params>(replay = 1)
-
-    private val cachedOutput: Flow<List<EmoteSetItem>> =
-        inputFlow
-            .filterNotNull()
-            .distinctUntilChanged(::shouldUseCache)
-            .map { params -> getEmotes(params) }
+    private var cachedResult: Pair<Params, List<EmoteSetItem>>? = null
 
     override suspend fun getEmotes(
         channelId: String,
         channelName: String,
         emoteSets: List<String>
     ): List<EmoteSetItem> {
-        inputFlow.emit(
-            Params(
-                channelId = channelId,
-                channelName = channelName,
-                emoteSets = emoteSets
-            )
+        val params = Params(
+            channelId = channelId,
+            channelName = channelName,
+            emoteSets = emoteSets
         )
 
-        return cachedOutput.catch { e -> throw e }.first()
+        val cachedResult = this.cachedResult
+        return if (cachedResult != null && shouldUseCache(cachedResult.first, params)) {
+            cachedResult.second
+        } else {
+            getEmotes(params).also { result ->
+                this.cachedResult = params to result
+            }
+        }
     }
 
     abstract suspend fun getEmotes(params: Params): List<EmoteSetItem>

@@ -5,6 +5,7 @@
     <string name="chat_ban">%s has been permanently banned</string>
     <string name="chat_clear">Chat has been cleared by a moderator</string>
     <string name="chat_clearmsg">Message deleted from %1$s\: %2$s</string>
+    <string name="chat_header_recent">Recent</string>
     <string name="chat_join">Connected to %s</string>
     <string name="chat_replyingTo">In reply to</string>
     <string name="chat_replyTo">Reply to this message</string>

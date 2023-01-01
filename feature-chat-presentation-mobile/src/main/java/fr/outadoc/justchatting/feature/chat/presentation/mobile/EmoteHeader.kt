@@ -6,6 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
+import fr.outadoc.justchatting.utils.ui.asString
 
 @Composable
 fun EmoteHeader(
@@ -15,14 +16,14 @@ fun EmoteHeader(
     Column(modifier = modifier) {
         header.title?.let { title ->
             Text(
-                text = title,
+                text = title.asString(),
                 style = MaterialTheme.typography.titleMedium
             )
         }
 
         header.source?.let { source ->
             Text(
-                text = source,
+                text = source.asString(),
                 style = MaterialTheme.typography.labelMedium
             )
         }

@@ -3,6 +3,8 @@ package fr.outadoc.justchatting.feature.chat.data.emotes
 import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
 import fr.outadoc.justchatting.component.twitch.model.TwitchEmote
 import fr.outadoc.justchatting.component.twitch.model.User
+import fr.outadoc.justchatting.feature.chat.data.R
+import fr.outadoc.justchatting.utils.core.asStringOrRes
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -59,7 +61,12 @@ class TwitchEmotesSource(private val twitchRepository: TwitchRepository) : Cache
             val sortedEmotes: List<EmoteSetItem> =
                 (groupedChannelEmotes + groupedEmotes)
                     .flatMap { (ownerName, emotes) ->
-                        listOf(EmoteSetItem.Header(title = ownerName, source = "Twitch"))
+                        listOf(
+                            EmoteSetItem.Header(
+                                title = ownerName?.asStringOrRes(),
+                                source = R.string.chat_source_twitch.asStringOrRes()
+                            )
+                        )
                             .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
                     }
 

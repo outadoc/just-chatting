@@ -8,9 +8,6 @@
     <string name="chat_input_replyClear">Stop replying to this message</string>
     <string name="chat_input_send_cd">Send</string>
     <string name="created_at">Created at %s</string>
-    <string name="emote_tab_others">Others</string>
-    <string name="emote_tab_recent">Recent</string>
-    <string name="emote_tab_twitch">Twitch</string>
     <string name="followers">%s followers</string>
     <string name="menu_item_openInBubble">Open in bubble</string>
     <string name="room_emote">Emote</string>

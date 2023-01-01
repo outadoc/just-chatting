@@ -29,6 +29,8 @@ import fr.outadoc.justchatting.feature.chat.data.model.PointReward
 import fr.outadoc.justchatting.feature.chat.data.model.RoomStateDelta
 import fr.outadoc.justchatting.feature.chat.data.model.UserState
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
+import fr.outadoc.justchatting.utils.core.asStringOrRes
+import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.core.roundUpOddToEven
 import fr.outadoc.justchatting.utils.logging.logError
@@ -133,11 +135,15 @@ class ChatViewModel(
                     .toImmutableMap()
 
             val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
-                get() = listOf(EmoteSetItem.Header("Recent", source = null))
-                    .plus(recentEmotes
+                get() = flatListOf(
+                    EmoteSetItem.Header(
+                        title = R.string.chat_header_recent.asStringOrRes(),
+                        source = null
+                    ),
+                    recentEmotes
                         .filter { recentEmote -> recentEmote.name in allEmotesMap }
                         .map { recentEmote -> EmoteSetItem.Emote(recentEmote) }
-                    )
+                )
                     .plus(pickableEmotes)
                     .toImmutableList()
 
@@ -470,7 +476,7 @@ class ChatViewModel(
         val pickableEmotes = loadPickableEmotes(
             channelId = state.user.id,
             channelName = state.user.displayName,
-            emoteSets = state.userState.emoteSets
+            emoteSets = userState.emoteSets
         )
 
         return state.copy(

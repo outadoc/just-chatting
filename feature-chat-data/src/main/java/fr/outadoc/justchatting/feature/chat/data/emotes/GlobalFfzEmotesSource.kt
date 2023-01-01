@@ -1,6 +1,9 @@
 package fr.outadoc.justchatting.feature.chat.data.emotes
 
 import fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository
+import fr.outadoc.justchatting.feature.chat.data.R
+import fr.outadoc.justchatting.utils.core.asStringOrRes
+import fr.outadoc.justchatting.utils.core.flatListOf
 
 class GlobalFfzEmotesSource(
     private val emotesRepository: EmotesRepository
@@ -10,7 +13,10 @@ class GlobalFfzEmotesSource(
 
     override suspend fun getEmotes(params: Params): List<EmoteSetItem> =
         flatListOf(
-            EmoteSetItem.Header(title = null, source = "FrankerFaceZ"),
+            EmoteSetItem.Header(
+                title = null,
+                source = R.string.chat_source_ffz.asStringOrRes()
+            ),
             emotesRepository.loadBttvGlobalFfzEmotes().emotes
                 .map { emote -> EmoteSetItem.Emote(emote) }
         )

@@ -36,6 +36,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":utils-core"))
+
     implementation(libs.androidx.palette)
     implementation(libs.coil.core)
     implementation(libs.compose.foundation)

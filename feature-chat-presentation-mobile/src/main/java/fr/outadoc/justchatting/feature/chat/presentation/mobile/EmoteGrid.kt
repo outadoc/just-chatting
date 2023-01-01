@@ -15,7 +15,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.twitch.model.Emote
-import fr.outadoc.justchatting.feature.chat.presentation.EmoteSetItem
+import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import kotlinx.collections.immutable.ImmutableList
 
@@ -53,14 +53,12 @@ fun EmoteGrid(
         ) { index, item ->
             when (item) {
                 is EmoteSetItem.Header -> {
-                    item.title?.let { title ->
-                        EmoteHeader(
-                            modifier = Modifier
-                                .padding(top = if (index > 0) 8.dp else 0.dp)
-                                .semantics { heading() },
-                            title = title
-                        )
-                    }
+                    EmoteHeader(
+                        modifier = Modifier
+                            .padding(top = if (index > 0) 8.dp else 0.dp)
+                            .semantics { heading() },
+                        header = item
+                    )
                 }
 
                 is EmoteSetItem.Emote -> {

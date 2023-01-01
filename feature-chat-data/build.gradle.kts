@@ -32,10 +32,12 @@ dependencies {
     implementation(project(":utils-logging"))
     implementation(project(":utils-core"))
     implementation(project(":component-preferences-domain"))
+    implementation(project(":component-twitch-domain"))
 
     implementation(libs.compose.runtime.core)
     implementation(libs.gson)
     implementation(libs.irc)
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)
     implementation(libs.okhttp.logging)

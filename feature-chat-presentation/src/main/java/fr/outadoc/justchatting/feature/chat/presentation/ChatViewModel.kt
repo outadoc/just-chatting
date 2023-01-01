@@ -17,8 +17,9 @@ import fr.outadoc.justchatting.component.twitch.model.Emote
 import fr.outadoc.justchatting.component.twitch.model.RecentEmote
 import fr.outadoc.justchatting.component.twitch.model.Stream
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
-import fr.outadoc.justchatting.component.twitch.model.TwitchEmote
 import fr.outadoc.justchatting.component.twitch.model.User
+import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
+import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.feature.chat.data.model.ChatMessage
 import fr.outadoc.justchatting.feature.chat.data.model.Command
@@ -28,18 +29,19 @@ import fr.outadoc.justchatting.feature.chat.data.model.PointReward
 import fr.outadoc.justchatting.feature.chat.data.model.RoomStateDelta
 import fr.outadoc.justchatting.feature.chat.data.model.UserState
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
+import fr.outadoc.justchatting.utils.core.asStringOrRes
+import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.core.roundUpOddToEven
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
-import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.CoroutineName
@@ -75,14 +77,15 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
-@OptIn(ExperimentalCoroutinesApi::class)
+@OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class ChatViewModel(
-    private val repository: TwitchRepository,
+    private val twitchRepository: TwitchRepository,
     private val emotesRepository: EmotesRepository,
     private val chatConnectionPool: ChatConnectionPool,
     private val chatEntryMapper: ChatEntryMapper,
     private val preferencesRepository: PreferenceRepository,
-    private val clock: Clock
+    private val clock: Clock,
+    private val emoteListSourcesProvider: EmoteListSourcesProvider
 ) : ViewModel() {
 
     private val defaultScope = viewModelScope + CoroutineName("defaultScope")
@@ -113,8 +116,7 @@ class ChatViewModel(
             val cheerEmotes: ImmutableList<CheerEmote> = persistentListOf(),
             val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,
-            val twitchEmotes: ImmutableSet<EmoteSetItem> = persistentSetOf(),
-            val otherEmotes: ImmutableSet<EmoteSetItem> = persistentSetOf(),
+            val pickableEmotes: ImmutableList<EmoteSetItem> = persistentListOf(),
             val recentEmotes: List<RecentEmote> = emptyList(),
             val userState: UserState = UserState(),
             val roomState: RoomState = RoomState(),
@@ -122,22 +124,28 @@ class ChatViewModel(
             val maxAdapterCount: Int
         ) : State() {
 
-            val allEmotes: ImmutableSet<Emote>
-                get() = (twitchEmotes + otherEmotes)
-                    .filterIsInstance<EmoteSetItem.Emote>()
-                    .map { it.emote }
-                    .distinctBy { it.name }
-                    .toImmutableSet()
-
             val allEmotesMap: ImmutableMap<String, Emote>
-                get() = allEmotes.associateBy { emote -> emote.name }
+                get() = pickableEmotes
+                    .asSequence()
+                    .filterIsInstance<EmoteSetItem.Emote>()
+                    .map { item -> item.emote }
+                    .distinctBy { emote -> emote.name }
+                    .associateBy { emote -> emote.name }
                     .plus(cheerEmotes.associateBy { emote -> emote.name })
                     .toImmutableMap()
 
-            val availableRecentEmotes: ImmutableSet<EmoteSetItem>
-                get() = recentEmotes.filter { recentEmote -> recentEmote.name in allEmotesMap }
-                    .map { recentEmote -> EmoteSetItem.Emote(recentEmote) }
-                    .toImmutableSet()
+            val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
+                get() = flatListOf(
+                    EmoteSetItem.Header(
+                        title = R.string.chat_header_recent.asStringOrRes(),
+                        source = null
+                    ),
+                    recentEmotes
+                        .filter { recentEmote -> recentEmote.name in allEmotesMap }
+                        .map { recentEmote -> EmoteSetItem.Emote(recentEmote) }
+                )
+                    .plus(pickableEmotes)
+                    .toImmutableList()
 
             val messagePostConstraint: MessagePostConstraint?
                 get() = lastSentMessageInstant?.let {
@@ -236,9 +244,9 @@ class ChatViewModel(
 
         state.filterIsInstance<State.Chatting>()
             .distinctUntilChanged()
-            .map { state -> state.allEmotes to state.chatters }
+            .map { state -> state.allEmotesMap to state.chatters }
             .distinctUntilChanged()
-            .flatMapLatest { (allEmotes, chatters) ->
+            .flatMapLatest { (allEmotesMap, chatters) ->
                 inputState
                     .map { inputState -> inputState.inputMessage }
                     .distinctUntilChanged()
@@ -251,9 +259,9 @@ class ChatViewModel(
                         if (word.isBlank()) {
                             emptyList()
                         } else {
-                            val emoteItems = allEmotes.mapNotNull { emote ->
-                                if (emote.name.contains(word, ignoreCase = true)) {
-                                    AutoCompleteItem.Emote(emote)
+                            val emoteItems = allEmotesMap.mapNotNull { emote ->
+                                if (emote.key.contains(word, ignoreCase = true)) {
+                                    AutoCompleteItem.Emote(emote.value)
                                 } else {
                                     null
                                 }
@@ -334,7 +342,7 @@ class ChatViewModel(
 
         val prefs = preferencesRepository.currentPreferences.first()
         return State.Chatting(
-            user = repository.loadUsersByLogin(logins = listOf(channelLogin))
+            user = twitchRepository.loadUsersByLogin(logins = listOf(channelLogin))
                 ?.firstOrNull()
                 ?: error("User not loaded"),
             appUser = prefs.appUser as AppUser.LoggedIn,
@@ -347,7 +355,7 @@ class ChatViewModel(
     private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return state.copy(
-            stream = repository.loadStreamWithUser(channelId = state.user.id)
+            stream = twitchRepository.loadStreamWithUser(channelId = state.user.id)
         )
     }
 
@@ -373,89 +381,52 @@ class ChatViewModel(
                 }
             }
 
-            val stvEmotes = async {
-                try {
-                    emotesRepository.loadStvEmotes(channelId).emotes
-                } catch (e: Exception) {
-                    logError<ChatViewModel>(e) { "Failed to load 7tv emotes for channel $channelId" }
-                    null
-                }.orEmpty()
-            }
-
-            val bttvEmotes = async {
-                try {
-                    emotesRepository.loadBttvEmotes(channelId).emotes
-                } catch (e: Exception) {
-                    logError<ChatViewModel>(e) { "Failed to load BTTV emotes for channel $channelId" }
-                    null
-                }.orEmpty()
-            }
-
-            val ffzEmotes = async {
-                try {
-                    emotesRepository.loadBttvFfzEmotes(channelId).emotes
-                } catch (e: Exception) {
-                    logError<ChatViewModel>(e) { "Failed to load FFZ emotes for channel $channelId" }
-                    null
-                }.orEmpty()
-            }
-
-            val globalStv = async {
-                try {
-                    emotesRepository.loadGlobalStvEmotes().emotes
-                } catch (e: Exception) {
-                    logError<ChatViewModel>(e) { "Failed to load global 7tv emotes" }
-                    null
-                }.orEmpty()
-            }
-
-            val globalBttv = async {
-                try {
-                    emotesRepository.loadGlobalBttvEmotes().emotes
-                } catch (e: Exception) {
-                    logError<ChatViewModel>(e) { "Failed to load global BTTV emotes" }
-                    null
-                }.orEmpty()
-            }
-
-            val globalFfz = async {
-                try {
-                    emotesRepository.loadBttvGlobalFfzEmotes().emotes
-                } catch (e: Exception) {
-                    logError<ChatViewModel>(e) { "Failed to load global FFZ emotes" }
-                    null
-                }.orEmpty()
-            }
-
-            val groups = mapOf(
-                "BetterTTV" to bttvEmotes.await() + globalBttv.await(),
-                "7TV" to stvEmotes.await() + globalStv.await(),
-                "FrankerFaceZ" to ffzEmotes.await() + globalFfz.await()
-            ).filterValues { emotes ->
-                emotes.isNotEmpty()
-            }
-
-            val otherEmotes = groups
-                .takeIf { it.isNotEmpty() }
-                ?.flatMap { (group, emotes) ->
-                    listOf(EmoteSetItem.Header(group)) +
-                            emotes.map { emote -> EmoteSetItem.Emote(emote) }
-                }
-                ?.toPersistentSet()
-
             val cheerEmotes = try {
-                repository.loadCheerEmotes(userId = channelId).toPersistentList()
+                twitchRepository.loadCheerEmotes(userId = channelId).toPersistentList()
             } catch (e: Exception) {
                 logError<ChatViewModel>(e) { "Failed to load cheermotes for channel $channelId" }
                 null
             }
 
+            val pickableEmotes = loadPickableEmotes(
+                channelId = channelId,
+                channelName = state.user.displayName,
+                emoteSets = state.userState.emoteSets
+            )
+
             state.copy(
                 cheerEmotes = cheerEmotes ?: state.cheerEmotes,
-                otherEmotes = otherEmotes ?: state.otherEmotes,
+                pickableEmotes = pickableEmotes,
                 channelBadges = channelBadges.await() ?: state.channelBadges,
                 globalBadges = globalBadges.await() ?: state.globalBadges
             )
+        }
+    }
+
+    private suspend fun loadPickableEmotes(
+        channelId: String,
+        channelName: String,
+        emoteSets: List<String>
+    ): PersistentList<EmoteSetItem> {
+        return coroutineScope {
+            emoteListSourcesProvider.getSources()
+                .map { source ->
+                    async {
+                        try {
+                            source.getEmotes(
+                                channelId = channelId,
+                                channelName = channelName,
+                                emoteSets = emoteSets
+                            )
+                        } catch (e: Exception) {
+                            logError<ChatViewModel>(e) { "Failed to load emotes from source $source" }
+                            emptyList()
+                        }
+                    }
+                }
+                .awaitAll()
+                .flatten()
+                .toPersistentList()
         }
     }
 
@@ -501,65 +472,17 @@ class ChatViewModel(
 
     private suspend fun Action.ChangeUserState.reduce(state: State): State {
         if (state !is State.Chatting) return state
-        if (userState == state.userState) return state
 
-        return coroutineScope {
-            val emotes: List<TwitchEmote> =
-                userState.emoteSets.asReversed()
-                    .chunked(25)
-                    .map { setIds ->
-                        async {
-                            try {
-                                repository.loadEmotesFromSet(setIds = setIds)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                null
-                            }.orEmpty()
-                        }
-                    }
-                    .awaitAll()
-                    .flatten()
+        val pickableEmotes = loadPickableEmotes(
+            channelId = state.user.id,
+            channelName = state.user.displayName,
+            emoteSets = userState.emoteSets
+        )
 
-            val emoteOwners: Map<String, User> =
-                try {
-                    repository.loadUsersById(
-                        ids = emotes
-                            .mapNotNull { emote -> emote.ownerId }
-                            .toSet()
-                            .mapNotNull { ownerId ->
-                                ownerId.toLongOrNull()
-                                    ?.takeIf { id -> id > 0 }
-                                    ?.toString()
-                            }
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    null
-                }
-                    .orEmpty()
-                    .associateBy { user -> user.id }
-
-            val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
-                emotes.filter { emote -> emote.ownerId == state.user.id }
-                    .groupBy { emoteOwners[state.user.id]?.displayName }
-
-            val groupedEmotes: Map<String?, List<TwitchEmote>> =
-                emotes.filter { emote -> emote.ownerId != state.user.id }
-                    .groupBy { emote -> emoteOwners[emote.ownerId]?.displayName }
-
-            val sortedEmotes: PersistentSet<EmoteSetItem> =
-                (groupedChannelEmotes + groupedEmotes)
-                    .flatMap { (ownerName, emotes) ->
-                        listOf(EmoteSetItem.Header(title = ownerName))
-                            .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })
-                    }
-                    .toPersistentSet()
-
-            state.copy(
-                userState = userState,
-                twitchEmotes = sortedEmotes
-            )
-        }
+        return state.copy(
+            userState = userState,
+            pickableEmotes = pickableEmotes
+        )
     }
 
     private fun Action.ChangeRoomState.reduce(state: State): State {

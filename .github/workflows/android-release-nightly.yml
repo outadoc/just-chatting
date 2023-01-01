@@ -14,17 +14,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: gradle/wrapper-validation-action@v1
-
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'temurin'
-          cache: gradle
 
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
 
       - name: Get current date
         id: date
@@ -35,19 +35,26 @@ jobs:
         run: echo "::set-output name=version::$(git rev-list HEAD --count)"
 
       - name: Build app bundle
-        run: ./gradlew bundleRelease "-PreleaseKeystorePassword=${RELEASE_KEYSTORE_PASSWORD}" "-PexternalVersionName=${VERSION_NAME}" "-PexternalVersionCode=${VERSION_CODE}"
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: |
+            bundleRelease
+            "-PreleaseKeystorePassword=${RELEASE_KEYSTORE_PASSWORD}"
+            "-PexternalVersionName=${VERSION_NAME}"
+            "-PexternalVersionCode=${VERSION_CODE}"
         env:
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
           VERSION_NAME: "nightly-${{ steps.date.outputs.date }}-${{ github.sha }}"
           VERSION_CODE: ${{ steps.version.outputs.version }}
 
-      - name: Upload a Build Artifact
+      - name: Upload app bundle to GitHub
         uses: actions/upload-artifact@v3.1.1
         with:
           name: apk
           path: app/build/outputs/bundle/release/app-release.aab
 
-      - uses: r0adkll/upload-google-play@78c9e796b1035c94169c101d8e46cb880194bfc3
+      - name: Publish nightly build to internal track
+        uses: r0adkll/upload-google-play@78c9e796b1035c94169c101d8e46cb880194bfc3
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_INTERNAL_APP_SHARING }}
           packageName: fr.outadoc.justchatting

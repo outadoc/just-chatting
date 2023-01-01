@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up JDK 11
+      - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: '11'
@@ -42,7 +42,7 @@ jobs:
         with:
           arguments: test
 
-      - name: Upload a Build Artifact
+      - name: Upload app bundle to GitHub
         uses: actions/upload-artifact@v3.1.1
         with:
           name: apk

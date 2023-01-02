@@ -73,10 +73,10 @@ val chatModule = module {
     single {
         EmoteListSourcesProvider {
             listOf(
-                get<TwitchEmotesSource>(),
                 get<ChannelBttvEmotesSource>(),
                 get<ChannelFfzEmotesSource>(),
                 get<ChannelStvEmotesSource>(),
+                get<TwitchEmotesSource>(),
                 get<GlobalBttvEmotesSource>(),
                 get<GlobalFfzEmotesSource>(),
                 get<GlobalStvEmotesSource>()

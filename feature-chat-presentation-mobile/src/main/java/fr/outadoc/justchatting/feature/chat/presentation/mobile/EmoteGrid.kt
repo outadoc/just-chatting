@@ -40,7 +40,7 @@ fun EmoteGrid(
             items = emotes,
             span = { _, item ->
                 when (item) {
-                    is EmoteSetItem.Emote -> GridItemSpan(1)
+                    is EmoteSetItem.Emote -> GridItemSpan(currentLineSpan = 1)
                     is EmoteSetItem.Header -> GridItemSpan(maxLineSpan)
                 }
             },

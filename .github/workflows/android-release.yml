@@ -23,10 +23,24 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Get tag version name
+        id: tag
+        uses: frabert/replace-string-action@cfa94ab0520558c86227623a272f9a5d244181c9
+        with:
+          pattern: "^v(.+)$"
+          string: ${{ github.ref_name }}
+          replace-with: "$1"
+
+      - name: Compute unique version code
+        id: version
+        run: echo "::set-output name=version::$(git rev-list HEAD --count)"
+
       - name: Build app bundle
-        run: ./gradlew bundleRelease "-PreleaseKeystorePassword=${RELEASE_KEYSTORE_PASSWORD}"
+        run: ./gradlew bundleRelease "-PreleaseKeystorePassword=${RELEASE_KEYSTORE_PASSWORD}" "-PexternalVersionName=${VERSION_NAME}" "-PexternalVersionCode=${VERSION_CODE}"
         env:
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
+          VERSION_NAME: ${{ steps.tag.outputs.replaced }}
+          VERSION_CODE: ${{ steps.version.outputs.version }}
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.1
@@ -34,7 +48,7 @@ jobs:
           name: apk
           path: app/build/outputs/bundle/release/app-release.aab
 
-      - uses: r0adkll/upload-google-play@v1
+      - uses: r0adkll/upload-google-play@78c9e796b1035c94169c101d8e46cb880194bfc3
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_INTERNAL_APP_SHARING }}
           packageName: fr.outadoc.justchatting

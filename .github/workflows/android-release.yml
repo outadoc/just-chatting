@@ -27,7 +27,7 @@ jobs:
 
       - name: Get tag version name
         id: tag
-        uses: frabert/replace-string-action@cfa94ab0520558c86227623a272f9a5d244181c9
+        uses: frabert/replace-string-action@c71139d1c5bef2be70342d76dba2d17aa4b19da4
         with:
           pattern: "^v(.+)$"
           string: ${{ github.ref_name }}

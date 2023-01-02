@@ -1,8 +1,9 @@
 name: Release new version
 
 on:
-  release:
-    types: [ published ]
+  push:
+    branches:
+      - main
 
 jobs:
   build:
@@ -23,13 +24,9 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Get tag version name
-        id: tag
-        uses: frabert/replace-string-action@cfa94ab0520558c86227623a272f9a5d244181c9
-        with:
-          pattern: "^v(.+)$"
-          string: ${{ github.ref_name }}
-          replace-with: "$1"
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
       - name: Compute unique version code
         id: version
@@ -39,7 +36,7 @@ jobs:
         run: ./gradlew bundleRelease "-PreleaseKeystorePassword=${RELEASE_KEYSTORE_PASSWORD}" "-PexternalVersionName=${VERSION_NAME}" "-PexternalVersionCode=${VERSION_CODE}"
         env:
           RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-          VERSION_NAME: ${{ steps.tag.outputs.replaced }}
+          VERSION_NAME: "nightly-${{ steps.date.outputs.date }}-${{ github.sha }}"
           VERSION_CODE: ${{ steps.version.outputs.version }}
 
       - name: Upload a Build Artifact
@@ -55,4 +52,4 @@ jobs:
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: internal
           mappingFile: app/build/outputs/mapping/release/mapping.txt
-          status: draft
+          status: completed

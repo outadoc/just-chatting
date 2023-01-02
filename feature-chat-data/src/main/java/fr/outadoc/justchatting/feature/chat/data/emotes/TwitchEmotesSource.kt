@@ -50,21 +50,22 @@ class TwitchEmotesSource(private val twitchRepository: TwitchRepository) : Cache
                     .orEmpty()
                     .associateBy { user -> user.id }
 
-            val groupedChannelEmotes: Map<String?, List<TwitchEmote>> =
+            val groupedChannelEmotes: Map<User?, List<TwitchEmote>> =
                 emotes.filter { emote -> emote.ownerId == params.channelId }
-                    .groupBy { emoteOwners[params.channelId]?.displayName }
+                    .groupBy { emoteOwners[params.channelId] }
 
-            val groupedEmotes: Map<String?, List<TwitchEmote>> =
+            val groupedEmotes: Map<User?, List<TwitchEmote>> =
                 emotes.filter { emote -> emote.ownerId != params.channelId }
-                    .groupBy { emote -> emoteOwners[emote.ownerId]?.displayName }
+                    .groupBy { emote -> emoteOwners[emote.ownerId] }
 
             val sortedEmotes: List<EmoteSetItem> =
                 (groupedChannelEmotes + groupedEmotes)
-                    .flatMap { (ownerName, emotes) ->
+                    .flatMap { (owner, emotes) ->
                         listOf(
                             EmoteSetItem.Header(
-                                title = ownerName?.asStringOrRes(),
-                                source = R.string.chat_source_twitch.asStringOrRes()
+                                title = owner?.displayName?.asStringOrRes(),
+                                source = R.string.chat_source_twitch.asStringOrRes(),
+                                iconUrl = owner?.profileImageUrl
                             )
                         )
                             .plus(emotes.map { emote -> EmoteSetItem.Emote(emote) })

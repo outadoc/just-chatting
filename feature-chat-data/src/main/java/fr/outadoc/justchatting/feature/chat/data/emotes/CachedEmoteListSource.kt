@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.emotes
 
-abstract class CachedEmoteListSource : EmoteListSource {
+abstract class CachedEmoteListSource<T> : EmoteListSource<T> {
 
     data class Params(
         val channelId: String,
@@ -8,13 +8,13 @@ abstract class CachedEmoteListSource : EmoteListSource {
         val emoteSets: List<String>
     )
 
-    private var cachedResult: Pair<Params, List<EmoteSetItem>>? = null
+    private var cachedResult: Pair<Params, T>? = null
 
     override suspend fun getEmotes(
         channelId: String,
         channelName: String,
         emoteSets: List<String>
-    ): List<EmoteSetItem> {
+    ): T {
         val params = Params(
             channelId = channelId,
             channelName = channelName,
@@ -31,6 +31,6 @@ abstract class CachedEmoteListSource : EmoteListSource {
         }
     }
 
-    abstract suspend fun getEmotes(params: Params): List<EmoteSetItem>
+    abstract suspend fun getEmotes(params: Params): T
     abstract fun shouldUseCache(previous: Params, next: Params): Boolean
 }

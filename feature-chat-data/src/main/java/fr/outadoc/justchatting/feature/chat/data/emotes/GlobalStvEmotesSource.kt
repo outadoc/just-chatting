@@ -7,7 +7,7 @@ import fr.outadoc.justchatting.utils.core.flatListOf
 
 class GlobalStvEmotesSource(
     private val emotesRepository: EmotesRepository
-) : CachedEmoteListSource() {
+) : CachedEmoteListSource<List<EmoteSetItem>>() {
 
     override fun shouldUseCache(previous: Params, next: Params): Boolean = true
 

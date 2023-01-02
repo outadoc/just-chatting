@@ -7,7 +7,7 @@ import fr.outadoc.justchatting.utils.core.flatListOf
 
 class ChannelFfzEmotesSource(
     private val emotesRepository: EmotesRepository
-) : CachedEmoteListSource() {
+) : CachedEmoteListSource<List<EmoteSetItem>>() {
 
     override fun shouldUseCache(previous: Params, next: Params): Boolean =
         previous.channelId == next.channelId && previous.channelName == next.channelName

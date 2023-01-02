@@ -39,13 +39,9 @@ jobs:
         with:
           arguments: |
             bundleRelease
-            "-PreleaseKeystorePassword=${RELEASE_KEYSTORE_PASSWORD}"
-            "-PexternalVersionName=${VERSION_NAME}"
-            "-PexternalVersionCode=${VERSION_CODE}"
-        env:
-          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-          VERSION_NAME: "nightly-${{ steps.date.outputs.date }}-${{ github.sha }}"
-          VERSION_CODE: ${{ steps.version.outputs.version }}
+            "-PreleaseKeystorePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}"
+            "-PexternalVersionName=nightly-${{ steps.date.outputs.date }}-${{ github.sha }}"
+            "-PexternalVersionCode=${{ steps.version.outputs.version }}"
 
       - name: Upload app bundle to GitHub
         uses: actions/upload-artifact@v3.1.1

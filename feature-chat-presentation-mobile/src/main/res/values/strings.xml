@@ -7,6 +7,7 @@
     <string name="chat_input_hint">Send a message</string>
     <string name="chat_input_replyClear">Stop replying to this message</string>
     <string name="chat_input_send_cd">Send</string>
+    <string name="connectionLost_error">Reconnecting to chat…</string>
     <string name="created_at">Created at %s</string>
     <string name="followers">%s followers</string>
     <string name="menu_item_openInBubble">Open in bubble</string>

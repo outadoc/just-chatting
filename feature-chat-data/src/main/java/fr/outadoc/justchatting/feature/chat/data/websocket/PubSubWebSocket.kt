@@ -175,6 +175,10 @@ class PubSubWebSocket(
             ping(this)
         }
 
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            _connectionStatus.update { status -> status.copy(isAlive = false) }
+        }
+
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
             _connectionStatus.update { status -> status.copy(isAlive = false) }
         }

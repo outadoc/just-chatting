@@ -34,6 +34,7 @@ import fr.outadoc.justchatting.utils.core.asStringOrRes
 import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.core.roundUpOddToEven
+import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -337,6 +338,7 @@ class ChatViewModel(
     }
 
     private suspend fun Action.reduce(state: State): State {
+        logDebug<ChatViewModel> { "reduce: $this" }
         return when (this) {
             is Action.AddMessages -> reduce(state)
             is Action.ChangeConnectionStatus -> reduce(state)

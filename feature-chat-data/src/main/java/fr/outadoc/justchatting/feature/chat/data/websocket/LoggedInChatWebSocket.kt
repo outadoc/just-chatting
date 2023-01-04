@@ -90,7 +90,12 @@ class LoggedInChatWebSocket(
 
                 logDebug<LoggedInChatWebSocket> { "Successfully logged in to $hashChannelName" }
 
-                _connectionStatus.update { status -> status.copy(isAlive = true) }
+                _connectionStatus.update { status ->
+                    status.copy(
+                        isAlive = true,
+                        preventSendingMessages = false
+                    )
+                }
             }
         }
 
@@ -110,11 +115,24 @@ class LoggedInChatWebSocket(
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             t.printStackTrace()
+
+            _connectionStatus.update { status ->
+                status.copy(
+                    isAlive = false,
+                    preventSendingMessages = true
+                )
+            }
+
             attemptReconnect(listener = this@LiveChatThreadListener)
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            _connectionStatus.update { status -> status.copy(isAlive = false) }
+            _connectionStatus.update { status ->
+                status.copy(
+                    isAlive = false,
+                    preventSendingMessages = true
+                )
+            }
         }
     }
 

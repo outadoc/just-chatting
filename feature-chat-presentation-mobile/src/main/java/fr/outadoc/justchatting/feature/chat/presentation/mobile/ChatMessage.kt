@@ -32,7 +32,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.foundation.text.appendInlineContent
 import androidx.compose.material.DismissDirection
@@ -50,7 +49,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -98,6 +96,7 @@ import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
 import fr.outadoc.justchatting.feature.chat.data.model.Badge
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
+import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
 import fr.outadoc.justchatting.utils.core.isOdd
@@ -217,6 +216,7 @@ fun ChatList(
             roomState = state.roomState,
             animateEmotes = animateEmotes,
             showTimestamps = showTimestamps,
+            isDisconnected = !state.connectionStatus.isAlive,
             listState = listState,
             onMessageLongClick = onMessageLongClick,
             onReplyToMessage = onReplyToMessage,
@@ -254,53 +254,41 @@ fun ChatList(
 @Composable
 fun RoomStateBanner(
     modifier: Modifier = Modifier,
-    roomState: fr.outadoc.justchatting.feature.chat.presentation.RoomState
-) = with(roomState) {
-    Surface(
-        modifier = modifier.semantics(mergeDescendants = true) {},
-        shape = RoundedCornerShape(percent = 50),
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        shadowElevation = 4.dp
-    ) {
-        Row(
-            modifier = Modifier.padding(4.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.labelMedium
-            ) {
-                if (isEmoteOnly) {
-                    Text(text = stringResource(R.string.room_emote))
-                }
+    roomState: RoomState
+) {
+    SlimSnackbar(modifier = modifier) {
+        with(roomState) {
+            if (isEmoteOnly) {
+                Text(text = stringResource(R.string.room_emote))
+            }
 
-                if (minFollowDuration != null) {
-                    Text(
-                        text = when (minFollowDuration) {
-                            Duration.ZERO -> stringResource(R.string.room_followers)
-                            else -> stringResource(
-                                R.string.room_followers_min,
-                                minFollowDuration.toString()
-                            )
-                        }
-                    )
-                }
-
-                if (uniqueMessagesOnly) {
-                    Text(text = stringResource(R.string.room_unique))
-                }
-
-                if (slowModeDuration != null) {
-                    Text(
-                        text = stringResource(
-                            R.string.room_slow,
-                            slowModeDuration.toString()
+            if (minFollowDuration != null) {
+                Text(
+                    text = when (minFollowDuration) {
+                        Duration.ZERO -> stringResource(R.string.room_followers)
+                        else -> stringResource(
+                            R.string.room_followers_min,
+                            minFollowDuration.toString()
                         )
-                    )
-                }
+                    }
+                )
+            }
 
-                if (isSubOnly) {
-                    Text(text = stringResource(R.string.room_subs))
-                }
+            if (uniqueMessagesOnly) {
+                Text(text = stringResource(R.string.room_unique))
+            }
+
+            if (slowModeDuration != null) {
+                Text(
+                    text = stringResource(
+                        R.string.room_slow,
+                        slowModeDuration.toString()
+                    )
+                )
+            }
+
+            if (isSubOnly) {
+                Text(text = stringResource(R.string.room_subs))
             }
         }
     }
@@ -315,10 +303,11 @@ fun ChatList(
     badges: ImmutableList<TwitchBadge>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
+    isDisconnected: Boolean,
     listState: LazyListState,
     onMessageLongClick: (ChatEntry) -> Unit,
     onReplyToMessage: (ChatEntry) -> Unit,
-    roomState: fr.outadoc.justchatting.feature.chat.presentation.RoomState,
+    roomState: RoomState,
     appUser: AppUser,
     insets: PaddingValues
 ) {
@@ -352,7 +341,10 @@ fun ChatList(
         )
     ) {
         stickyHeader {
-            Column {
+            Column(
+                modifier = Modifier.padding(horizontal = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Spacer(
                     modifier = Modifier.padding(
                         top = insets.calculateTopPadding()
@@ -364,11 +356,22 @@ fun ChatList(
                     exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut()
                 ) {
                     RoomStateBanner(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
+                        modifier = Modifier.fillMaxWidth(),
                         roomState = roomState
                     )
+                }
+
+                AnimatedVisibility(
+                    visible = isDisconnected,
+                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut()
+                ) {
+                    SlimSnackbar(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.errorContainer
+                    ) {
+                        Text(text = stringResource(R.string.connectionLost_error))
+                    }
                 }
             }
         }

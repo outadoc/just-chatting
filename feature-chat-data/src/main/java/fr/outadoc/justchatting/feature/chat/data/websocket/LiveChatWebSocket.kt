@@ -116,6 +116,8 @@ class LiveChatWebSocket private constructor(
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            _connectionStatus.update { status -> status.copy(isAlive = false) }
+
             t.printStackTrace()
 
             emit(

@@ -13,7 +13,8 @@ class ChatConnectionPool(
     private val handlers: MutableMap<String, ChatCommandHandler> = mutableMapOf()
 
     val hasActiveThreads: Boolean
-        get() = handlers.isNotEmpty()
+        get() = handlers.map { handler -> handler.value.connectionStatus.value }
+            .any { status -> status.isAlive }
 
     fun start(channelId: String, channelLogin: String): Flow<ChatCommand> {
         val handler = handlers.getOrPut(channelId) {
@@ -26,7 +27,6 @@ class ChatConnectionPool(
 
     fun stop(channelId: String) {
         handlers[channelId]?.disconnect()
-        handlers.remove(channelId)
     }
 
     fun sendMessage(channelId: String, message: CharSequence, inReplyToId: String? = null) {
@@ -34,7 +34,6 @@ class ChatConnectionPool(
     }
 
     fun dispose() {
-        handlers.values.forEach { it.disconnect() }
-        handlers.clear()
+        handlers.values.forEach { handler -> handler.disconnect() }
     }
 }

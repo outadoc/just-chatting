@@ -49,16 +49,10 @@ sealed class Command : ChatCommand {
 
     data class Disconnect(
         val channelLogin: String?,
-        val timestamp: Instant,
-        val throwable: Throwable?
+        val timestamp: Instant
     ) : Command()
 
     data class SendMessageError(
-        val timestamp: Instant,
-        val throwable: Throwable?
-    ) : Command()
-
-    data class SocketError(
         val timestamp: Instant,
         val throwable: Throwable?
     ) : Command()

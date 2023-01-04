@@ -37,7 +37,7 @@ class LoggedInChatWebSocket(
     private val parser: ChatMessageParser,
     private val preferencesRepository: PreferenceRepository,
     channelLogin: String
-) : BaseChatWebSocket(networkStateObserver, scope, clock, channelLogin) {
+) : BaseChatWebSocket(networkStateObserver, scope, channelLogin) {
 
     class Factory(
         private val networkStateObserver: NetworkStateObserver,

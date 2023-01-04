@@ -58,11 +58,7 @@ class ChatEntryMapper(private val context: Context) {
 
             is Command.Disconnect -> {
                 ChatEntry.Highlighted(
-                    header = context.getString(
-                        R.string.chat_disconnect,
-                        channelLogin,
-                        throwable
-                    ),
+                    header = context.getString(R.string.chat_disconnect, channelLogin),
                     data = null,
                     timestamp = timestamp
                 )
@@ -81,17 +77,6 @@ class ChatEntryMapper(private val context: Context) {
                 ChatEntry.Highlighted(
                     header = context.getString(
                         R.string.chat_send_msg_error,
-                        throwable.toString()
-                    ),
-                    data = null,
-                    timestamp = timestamp
-                )
-            }
-
-            is Command.SocketError -> {
-                ChatEntry.Highlighted(
-                    header = context.getString(
-                        R.string.chat_socket_error,
                         throwable.toString()
                     ),
                     data = null,

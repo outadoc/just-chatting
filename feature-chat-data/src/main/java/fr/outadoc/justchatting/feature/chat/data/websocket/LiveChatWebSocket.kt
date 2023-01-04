@@ -41,7 +41,7 @@ class LiveChatWebSocket private constructor(
     private val recentMessagesRepository: RecentMessagesRepository,
     private val preferencesRepository: PreferenceRepository,
     private val channelLogin: String
-) : BaseChatWebSocket(networkStateObserver, scope, clock, channelLogin) {
+) : BaseChatWebSocket(networkStateObserver, scope, channelLogin) {
 
     class Factory(
         private val networkStateObserver: NetworkStateObserver,
@@ -122,7 +122,6 @@ class LiveChatWebSocket private constructor(
             emit(
                 Command.Disconnect(
                     channelLogin = channelLogin,
-                    throwable = null,
                     timestamp = clock.now()
                 )
             )
@@ -147,7 +146,6 @@ class LiveChatWebSocket private constructor(
             is Command.Disconnect,
             is Command.Join,
             is Command.SendMessageError,
-            is Command.SocketError,
             is Command.Timeout,
             is HostModeState,
             is PointReward,

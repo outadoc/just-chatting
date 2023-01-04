@@ -5,13 +5,12 @@
     <string name="chat_ban">%s a été banni·e définitivement</string>
     <string name="chat_clear">Le tchat a été effacé par un·e modérateur·rice</string>
     <string name="chat_clearmsg">Message supprimé de %1$s\: %2$s</string>
-    <string name="chat_disconnect">Déconnexion de %1$s - %2$s</string>
+    <string name="chat_disconnect">Déconnecté·e de %1$s</string>
     <string name="chat_header_recent">Récentes</string>
     <string name="chat_join">Connecté·e à %s</string>
     <string name="chat_replyingTo">En réponse à</string>
     <string name="chat_replyTo">Répondre à ce message</string>
     <string name="chat_send_msg_error">Erreur lors de l\'envoi du message - %s</string>
-    <string name="chat_socket_error">Erreur lors de la fermeture du socket - %s</string>
     <string name="chat_timeout">%1$s a été mis·e au silence pendant %2$s</string>
 
     <plurals name="user_redeemed">

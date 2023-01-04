@@ -10,9 +10,8 @@
     <string name="chat_replyingTo">In reply to</string>
     <string name="chat_replyTo">Reply to this message</string>
     <string name="chat_send_msg_error">Error sending message - %s</string>
-    <string name="chat_socket_error">Error while closing socket - %s</string>
     <string name="chat_timeout">%1$s has been timed out for %2$s</string>
-    <string name="chat_disconnect">Disconnecting from %1$s - %2$s</string>
+    <string name="chat_disconnect">Disconnected from %1$s</string>
 
     <plurals name="user_redeemed">
         <item quantity="one">%1$s redeemed %2$s for %3$,d point</item>

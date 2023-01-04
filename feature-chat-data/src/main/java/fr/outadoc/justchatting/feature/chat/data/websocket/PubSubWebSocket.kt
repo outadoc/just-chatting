@@ -6,6 +6,8 @@ import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
+import fr.outadoc.justchatting.utils.logging.logDebug
+import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.BufferOverflow
@@ -28,6 +30,7 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import kotlin.time.Duration.Companion.seconds
 
 class PubSubWebSocket(
@@ -100,8 +103,16 @@ class PubSubWebSocket(
     }
 
     override fun disconnect() {
-        socket?.close(1000, null)
-        client.dispatcher.cancelAll()
+        try {
+            logDebug<PubSubWebSocket> { "Disconnecting pubsub socket" }
+            socket?.close(
+                code = SOCKET_ERROR_NORMAL_CLOSURE,
+                reason = null
+            )
+        } catch (e: IOException) {
+            logError<PubSubWebSocket>(e) { "Error while closing socket" }
+            socket?.cancel()
+        }
     }
 
     private fun attemptReconnect(listener: WebSocketListener) {
@@ -130,6 +141,7 @@ class PubSubWebSocket(
                 }
             )
         }.toString()
+
         socket?.send(message)
     }
 

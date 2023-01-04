@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.chat.data.websocket
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
-import fr.outadoc.justchatting.feature.chat.data.model.Command
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
@@ -18,7 +17,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
@@ -29,13 +27,8 @@ import kotlin.time.Duration.Companion.seconds
 abstract class BaseChatWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
-    private val clock: Clock,
     channelName: String
-): ChatCommandHandler {
-
-    private companion object {
-        const val SOCKET_ERROR_NORMAL_CLOSURE = 1_000
-    }
+) : ChatCommandHandler {
 
     private var client: OkHttpClient = OkHttpClient()
     protected var socket: WebSocket? = null
@@ -76,13 +69,8 @@ abstract class BaseChatWebSocket(
                 reason = null
             )
         } catch (e: IOException) {
-            logError<BaseChatWebSocket>(e) { "Error while closing socketIn" }
-            emit(
-                Command.SocketError(
-                    throwable = e,
-                    timestamp = clock.now()
-                )
-            )
+            logError<BaseChatWebSocket>(e) { "Error while closing socket" }
+            socket?.cancel()
         }
     }
 

@@ -342,8 +342,8 @@ fun ChatList(
     ) {
         stickyHeader {
             Column(
-                modifier = Modifier.padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.padding(horizontal = 6.dp),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
                 Spacer(
                     modifier = Modifier.padding(

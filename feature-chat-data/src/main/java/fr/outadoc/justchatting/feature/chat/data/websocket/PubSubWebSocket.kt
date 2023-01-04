@@ -176,7 +176,9 @@ class PubSubWebSocket(
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            t.printStackTrace()
             _connectionStatus.update { status -> status.copy(isAlive = false) }
+            attemptReconnect(listener = this@PubSubListener)
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {

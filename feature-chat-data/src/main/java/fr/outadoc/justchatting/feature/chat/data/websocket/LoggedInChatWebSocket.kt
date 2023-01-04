@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.chat.data.websocket
 
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
+import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.data.model.Command
 import fr.outadoc.justchatting.feature.chat.data.model.PingCommand
 import fr.outadoc.justchatting.feature.chat.data.model.UserState
@@ -10,7 +11,10 @@ import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import okhttp3.Response
@@ -58,6 +62,16 @@ class LoggedInChatWebSocket(
         }
     }
 
+    private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
+        MutableStateFlow(
+            ConnectionStatus(
+                isAlive = false,
+                preventSendingMessages = true
+            )
+        )
+
+    override val connectionStatus = _connectionStatus.asStateFlow()
+
     override fun start() {
         connect(socketListener = LiveChatThreadListener())
     }
@@ -75,6 +89,8 @@ class LoggedInChatWebSocket(
                 }
 
                 logDebug<LoggedInChatWebSocket> { "Successfully logged in to $hashChannelName" }
+
+                _connectionStatus.update { status -> status.copy(isAlive = true) }
             }
         }
 
@@ -95,6 +111,10 @@ class LoggedInChatWebSocket(
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             t.printStackTrace()
             attemptReconnect(listener = this@LiveChatThreadListener)
+        }
+
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+            _connectionStatus.update { status -> status.copy(isAlive = false) }
         }
     }
 

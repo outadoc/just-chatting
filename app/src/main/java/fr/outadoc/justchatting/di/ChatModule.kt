@@ -35,8 +35,8 @@ import fr.outadoc.justchatting.feature.chat.data.websocket.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.LoggedInChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.PubSubRewardParser
 import fr.outadoc.justchatting.feature.chat.data.websocket.PubSubWebSocket
+import fr.outadoc.justchatting.feature.chat.domain.AggregateChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
-import fr.outadoc.justchatting.feature.chat.domain.LiveChatController
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntryMapper
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
@@ -64,7 +64,7 @@ val chatModule = module {
         }
     }
 
-    single { LiveChatController.Factory(get()) }
+    single { AggregateChatCommandHandler.Factory(get()) }
     single { ChatConnectionPool(get()) }
 
     single { ChatMessageParser(get()) }

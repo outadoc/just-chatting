@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.chat.data.websocket
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
+import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import kotlinx.coroutines.CoroutineScope
@@ -11,10 +12,13 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
@@ -62,6 +66,16 @@ class PubSubWebSocket(
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
     override val commandFlow: Flow<ChatCommand> = _flow
+
+    private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
+        MutableStateFlow(
+            ConnectionStatus(
+                isAlive = false,
+                preventSendingMessages = false
+            )
+        )
+
+    override val connectionStatus = _connectionStatus.asStateFlow()
 
     private var pongReceived = false
     private var isNetworkAvailable: Boolean = false
@@ -155,8 +169,14 @@ class PubSubWebSocket(
     private inner class PubSubListener : WebSocketListener() {
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
+            _connectionStatus.update { status -> status.copy(isAlive = true) }
+
             listen()
             ping(this)
+        }
+
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+            _connectionStatus.update { status -> status.copy(isAlive = false) }
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {

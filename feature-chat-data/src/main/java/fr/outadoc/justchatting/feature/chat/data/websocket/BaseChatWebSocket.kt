@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.websocket
 
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
+import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.feature.chat.data.model.Command
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -30,7 +31,8 @@ abstract class BaseChatWebSocket(
     private val scope: CoroutineScope,
     private val clock: Clock,
     channelName: String
-) {
+): ChatCommandHandler {
+
     private companion object {
         const val SOCKET_ERROR_NORMAL_CLOSURE = 1_000
     }
@@ -44,7 +46,7 @@ abstract class BaseChatWebSocket(
         replay = AppPreferences.Defaults.ChatLimitRange.last,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
-    val flow: Flow<ChatCommand> = _flow
+    override val commandFlow: Flow<ChatCommand> = _flow
 
     private var isNetworkAvailable: Boolean = false
 
@@ -66,7 +68,7 @@ abstract class BaseChatWebSocket(
         )
     }
 
-    fun disconnect() {
+    override fun disconnect() {
         try {
             logDebug<BaseChatWebSocket> { "Disconnecting from $hashChannelName" }
             socket?.close(

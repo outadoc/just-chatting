@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.websocket
 
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.data.model.Command
 import fr.outadoc.justchatting.feature.chat.data.model.PingCommand
 import fr.outadoc.justchatting.feature.chat.data.model.UserState
@@ -39,8 +40,13 @@ class LoggedInChatWebSocket(
         private val clock: Clock,
         private val parser: ChatMessageParser,
         private val preferencesRepository: PreferenceRepository,
-    ) {
-        fun create(scope: CoroutineScope, channelLogin: String): LoggedInChatWebSocket {
+    ) : ChatCommandHandlerFactory {
+
+        override fun create(
+            scope: CoroutineScope,
+            channelLogin: String,
+            channelId: String
+        ): LoggedInChatWebSocket {
             return LoggedInChatWebSocket(
                 networkStateObserver = networkStateObserver,
                 clock = clock,
@@ -52,7 +58,7 @@ class LoggedInChatWebSocket(
         }
     }
 
-    fun start() {
+    override fun start() {
         connect(socketListener = LiveChatThreadListener())
     }
 
@@ -92,7 +98,7 @@ class LoggedInChatWebSocket(
         }
     }
 
-    fun send(message: CharSequence, inReplyToId: String?) {
+    override fun send(message: CharSequence, inReplyToId: String?) {
         try {
             val inReplyToPrefix = inReplyToId?.let { id -> "@reply-parent-msg-id=$id " } ?: ""
             val privMsg = "${inReplyToPrefix}PRIVMSG $hashChannelName :$message"

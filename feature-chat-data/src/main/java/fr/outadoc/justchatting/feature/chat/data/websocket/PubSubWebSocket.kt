@@ -1,6 +1,8 @@
 package fr.outadoc.justchatting.feature.chat.data.websocket
 
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
+import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
+import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import kotlinx.coroutines.CoroutineScope
@@ -29,12 +31,18 @@ class PubSubWebSocket(
     private val pubSubRewardParser: PubSubRewardParser,
     private val scope: CoroutineScope,
     channelId: String
-) {
+) : ChatCommandHandler {
+
     class Factory(
         private val networkStateObserver: NetworkStateObserver,
         private val pubSubRewardParser: PubSubRewardParser
-    ) {
-        fun create(scope: CoroutineScope, channelId: String): PubSubWebSocket {
+    ) : ChatCommandHandlerFactory {
+
+        override fun create(
+            scope: CoroutineScope,
+            channelLogin: String,
+            channelId: String
+        ): PubSubWebSocket {
             return PubSubWebSocket(
                 networkStateObserver = networkStateObserver,
                 pubSubRewardParser = pubSubRewardParser,
@@ -53,7 +61,7 @@ class PubSubWebSocket(
         replay = AppPreferences.Defaults.ChatLimitRange.last,
         onBufferOverflow = BufferOverflow.DROP_OLDEST
     )
-    val flow: Flow<ChatCommand> = _flow
+    override val commandFlow: Flow<ChatCommand> = _flow
 
     private var pongReceived = false
     private var isNetworkAvailable: Boolean = false
@@ -66,7 +74,7 @@ class PubSubWebSocket(
         }
     }
 
-    fun start() {
+    override fun start() {
         connect(listener = PubSubListener())
     }
 
@@ -77,7 +85,7 @@ class PubSubWebSocket(
         )
     }
 
-    fun disconnect() {
+    override fun disconnect() {
         socket?.close(1000, null)
         client.dispatcher.cancelAll()
     }
@@ -141,6 +149,8 @@ class PubSubWebSocket(
             }
         }
     }
+
+    override fun send(message: CharSequence, inReplyToId: String?) {}
 
     private inner class PubSubListener : WebSocketListener() {
 

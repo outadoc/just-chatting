@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.websocket
 
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.data.model.ChatMessage
 import fr.outadoc.justchatting.feature.chat.data.model.Command
 import fr.outadoc.justchatting.feature.chat.data.model.HostModeState
@@ -44,8 +45,13 @@ class LiveChatWebSocket private constructor(
         private val parser: ChatMessageParser,
         private val recentMessagesRepository: RecentMessagesRepository,
         private val preferencesRepository: PreferenceRepository
-    ) {
-        fun create(scope: CoroutineScope, channelLogin: String): LiveChatWebSocket {
+    ) : ChatCommandHandlerFactory {
+
+        override fun create(
+            scope: CoroutineScope,
+            channelLogin: String,
+            channelId: String
+        ): LiveChatWebSocket {
             return LiveChatWebSocket(
                 networkStateObserver = networkStateObserver,
                 clock = clock,
@@ -58,12 +64,14 @@ class LiveChatWebSocket private constructor(
         }
     }
 
-    fun start() {
+    override fun start() {
         scope.launch {
             loadRecentMessages()
             connect(socketListener = LiveChatThreadListener())
         }
     }
+
+    override fun send(message: CharSequence, inReplyToId: String?) {}
 
     private inner class LiveChatThreadListener : WebSocketListener() {
 

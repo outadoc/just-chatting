@@ -16,6 +16,7 @@ import fr.outadoc.justchatting.component.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.component.twitch.model.StvEmotesResponse
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.db.AppDatabase
+import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelStvEmotesSource
@@ -49,12 +50,22 @@ val chatModule = module {
 
     single<ChatNotifier> { ChatNotifierImpl() }
 
-    single { ChatConnectionPool(get()) }
-
-    single { LiveChatController.Factory(get(), get(), get()) }
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
     single { PubSubWebSocket.Factory(get(), get()) }
+
+    single {
+        ChatCommandHandlerFactoriesProvider {
+            listOf(
+                get<LiveChatWebSocket.Factory>(),
+                get<LoggedInChatWebSocket.Factory>(),
+                get<PubSubWebSocket.Factory>(),
+            )
+        }
+    }
+
+    single { LiveChatController.Factory(get()) }
+    single { ChatConnectionPool(get()) }
 
     single { ChatMessageParser(get()) }
     single { ChatEntryMapper(get()) }

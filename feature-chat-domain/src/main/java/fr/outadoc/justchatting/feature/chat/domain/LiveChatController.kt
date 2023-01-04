@@ -1,9 +1,8 @@
 package fr.outadoc.justchatting.feature.chat.domain
 
+import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
+import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
-import fr.outadoc.justchatting.feature.chat.data.websocket.LiveChatWebSocket
-import fr.outadoc.justchatting.feature.chat.data.websocket.LoggedInChatWebSocket
-import fr.outadoc.justchatting.feature.chat.data.websocket.PubSubWebSocket
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.merge
@@ -12,15 +11,11 @@ class LiveChatController(
     channelId: String,
     channelLogin: String,
     coroutineScope: CoroutineScope,
-    liveChatThreadFactory: LiveChatWebSocket.Factory,
-    loggedInChatThreadFactory: LoggedInChatWebSocket.Factory,
-    pubSubWebSockerFactory: PubSubWebSocket.Factory
+    chatCommandHandlerFactoriesProvider: ChatCommandHandlerFactoriesProvider
 ) : ChatController {
 
     class Factory(
-        private val liveChatThreadFactory: LiveChatWebSocket.Factory,
-        private val loggedInChatThreadFactory: LoggedInChatWebSocket.Factory,
-        private val pubSubWebSockerFactory: PubSubWebSocket.Factory
+        private val chatCommandHandlerFactoriesProvider: ChatCommandHandlerFactoriesProvider
     ) {
         fun create(
             channelId: String,
@@ -31,36 +26,31 @@ class LiveChatController(
                 channelId = channelId,
                 channelLogin = channelLogin,
                 coroutineScope = coroutineScope,
-                liveChatThreadFactory = liveChatThreadFactory,
-                loggedInChatThreadFactory = loggedInChatThreadFactory,
-                pubSubWebSockerFactory = pubSubWebSockerFactory
+                chatCommandHandlerFactoriesProvider = chatCommandHandlerFactoriesProvider
             )
         }
     }
 
-    private val liveChat = liveChatThreadFactory.create(coroutineScope, channelLogin)
-    private val loggedInChat = loggedInChatThreadFactory.create(coroutineScope, channelLogin)
-    private val pubSub = pubSubWebSockerFactory.create(coroutineScope, channelId)
+    private val handlers: List<ChatCommandHandler> =
+        chatCommandHandlerFactoriesProvider.get().map { handlerFactory ->
+            handlerFactory.create(
+                scope = coroutineScope,
+                channelLogin = channelLogin,
+                channelId = channelId
+            )
+        }
 
-    val flow: Flow<ChatCommand> = merge(
-        liveChat.flow,
-        loggedInChat.flow,
-        pubSub.flow
-    )
+    val flow: Flow<ChatCommand> = handlers.map { handler -> handler.commandFlow }.merge()
 
     override fun send(message: CharSequence, inReplyToId: String?) {
-        loggedInChat.send(message, inReplyToId)
+        handlers.forEach { handler -> handler.send(message, inReplyToId) }
     }
 
     override suspend fun start() {
-        liveChat.start()
-        loggedInChat.start()
-        pubSub.start()
+        handlers.forEach { handler -> handler.start() }
     }
 
     override fun stop() {
-        liveChat.disconnect()
-        loggedInChat.disconnect()
-        pubSub.disconnect()
+        handlers.forEach { handler -> handler.disconnect() }
     }
 }

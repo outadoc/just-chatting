@@ -18,6 +18,7 @@ import fr.outadoc.justchatting.component.twitch.model.RecentEmote
 import fr.outadoc.justchatting.component.twitch.model.Stream
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
 import fr.outadoc.justchatting.component.twitch.model.User
+import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
@@ -95,6 +96,7 @@ class ChatViewModel(
         data class AddMessages(val messages: List<ChatCommand>) : Action()
         data class ChangeRecentEmotes(val recentEmotes: List<RecentEmote>) : Action()
         data class ChangeRoomState(val delta: RoomStateDelta) : Action()
+        data class ChangeConnectionStatus(val connectionStatus: ConnectionStatus) : Action()
         data class ChangeHostModeState(val hostModeState: HostModeState) : Action()
         data class ChangeUserState(val userState: UserState) : Action()
         data class LoadEmotes(val channelId: String) : Action()
@@ -121,6 +123,7 @@ class ChatViewModel(
             val userState: UserState = UserState(),
             val roomState: RoomState = RoomState(),
             val hostModeState: HostModeState? = null,
+            val connectionStatus: ConnectionStatus = ConnectionStatus(),
             val maxAdapterCount: Int
         ) : State() {
 
@@ -219,21 +222,30 @@ class ChatViewModel(
         state.filterIsInstance<State.Chatting>()
             .map { state -> state.user }
             .distinctUntilChanged()
-            .flatMapLatest { user -> chatConnectionPool.start(user.id, user.login) }
-            .map { command ->
-                when (command) {
-                    is PingCommand -> null
-                    is ChatMessage,
-                    is PointReward,
-                    is Command -> Action.AddMessages(listOf(command))
+            .map { user -> chatConnectionPool.start(user.id, user.login) }
+            .onEach { result ->
+                result.commandFlow
+                    .map { command ->
+                        when (command) {
+                            is PingCommand -> null
+                            is ChatMessage,
+                            is PointReward,
+                            is Command -> Action.AddMessages(listOf(command))
 
-                    is HostModeState -> Action.ChangeHostModeState(command)
-                    is RoomStateDelta -> Action.ChangeRoomState(command)
-                    is UserState -> Action.ChangeUserState(command)
-                }
+                            is HostModeState -> Action.ChangeHostModeState(command)
+                            is RoomStateDelta -> Action.ChangeRoomState(command)
+                            is UserState -> Action.ChangeUserState(command)
+                        }
+                    }
+                    .filterNotNull()
+                    .onEach { action -> actions.emit(action) }
+                    .launchIn(defaultScope)
+
+                result.connectionStatus
+                    .map { status -> Action.ChangeConnectionStatus(status) }
+                    .onEach { action -> actions.emit(action) }
+                    .launchIn(defaultScope)
             }
-            .filterNotNull()
-            .onEach { action -> actions.emit(action) }
             .launchIn(defaultScope)
 
         state.filterIsInstance<State.Chatting>()
@@ -327,6 +339,7 @@ class ChatViewModel(
     private suspend fun Action.reduce(state: State): State {
         return when (this) {
             is Action.AddMessages -> reduce(state)
+            is Action.ChangeConnectionStatus -> reduce(state)
             is Action.ChangeHostModeState -> reduce(state)
             is Action.ChangeRecentEmotes -> reduce(state)
             is Action.ChangeRoomState -> reduce(state)
@@ -468,6 +481,11 @@ class ChatViewModel(
                 ?: state.lastSentMessageInstant,
             chatters = state.chatters.addAll(newChatters)
         )
+    }
+
+    private suspend fun Action.ChangeConnectionStatus.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(connectionStatus = connectionStatus)
     }
 
     private suspend fun Action.ChangeUserState.reduce(state: State): State {

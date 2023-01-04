@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 
@@ -56,14 +57,13 @@ class AggregateChatCommandHandler(
                     preventSendingMessages = acc.preventSendingMessages || status.preventSendingMessages
                 )
             }
-        }.stateIn(
-            coroutineScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = ConnectionStatus(
-                isAlive = false,
-                preventSendingMessages = true
+        }
+            .distinctUntilChanged()
+            .stateIn(
+                coroutineScope,
+                started = SharingStarted.WhileSubscribed(),
+                initialValue = ConnectionStatus()
             )
-        )
 
     override fun send(message: CharSequence, inReplyToId: String?) {
         handlers.forEach { handler -> handler.send(message, inReplyToId) }

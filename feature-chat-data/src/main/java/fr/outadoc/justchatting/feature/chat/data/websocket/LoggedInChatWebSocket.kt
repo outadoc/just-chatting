@@ -106,6 +106,8 @@ class LoggedInChatWebSocket(
         }
 
         private fun notifyMessage(message: String) {
+            logDebug<LoggedInChatWebSocket> { message }
+
             when (val command = parser.parse(message)) {
                 is Command.Notice, is UserState -> emit(command)
                 PingCommand -> sendPong()

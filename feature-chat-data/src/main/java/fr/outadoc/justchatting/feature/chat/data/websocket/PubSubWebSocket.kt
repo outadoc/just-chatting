@@ -131,7 +131,7 @@ class PubSubWebSocket(
         }
     }
 
-    private fun listen() {
+    private fun sendListenCommand() {
         val message = JSONObject().apply {
             put("type", "LISTEN")
             put(
@@ -183,7 +183,7 @@ class PubSubWebSocket(
         override fun onOpen(webSocket: WebSocket, response: Response) {
             _connectionStatus.update { status -> status.copy(isAlive = true) }
 
-            listen()
+            sendListenCommand()
             ping(this)
         }
 
@@ -198,6 +198,8 @@ class PubSubWebSocket(
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
+            logDebug<PubSubWebSocket> { text }
+
             val json = if (text.isNotBlank()) JSONObject(text) else null
             when (json?.optString("type")) {
                 "MESSAGE" -> {

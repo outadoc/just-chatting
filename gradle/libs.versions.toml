@@ -61,9 +61,9 @@ desugar = "com.android.tools:desugar_jdk_libs:1.2.2"
 gson = "com.google.code.gson:gson:2.10.1"
 irc = "fr.outadoc:Kale:v1.2.1"
 junit = "junit:junit:4.13.2"
-koin-android = { module = "io.insert-koin:koin-android", version = "3.2.3" }
-koin-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.2.2" }
-koin-core = { module = "io.insert-koin:koin-core", version = "3.2.2" }
+koin-android = { module = "io.insert-koin:koin-android", version = "3.3.2" }
+koin-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.4.1" }
+koin-core = { module = "io.insert-koin:koin-core", version = "3.3.2" }
 kotlinpoet = "com.squareup:kotlinpoet:1.12.0"
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.5"

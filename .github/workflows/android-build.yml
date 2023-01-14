@@ -28,7 +28,9 @@ jobs:
       - name: Build app bundle
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: bundleQa
+          arguments: |
+            bundleQa
+            "-PexternalVersionName=pr-${{ steps.date.outputs.date }}-${{ github.event.pull_request.number }}-${{ github.sha }}"
 
       - name: Check formatting
         uses: gradle/gradle-build-action@v2
@@ -49,4 +51,33 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: apk
-          path: app/build/outputs/bundle/qa/*.aab
+          path: app/build/outputs/bundle/qa/app-qa.aab
+
+      - name: Upload to internal app sharing
+        id: publish
+        uses: r0adkll/upload-google-play@cd131e853c2a6961aabb2bd30b7870c8770b5820
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_INTERNAL_APP_SHARING }}
+          packageName: fr.outadoc.justchatting
+          releaseFiles: app/build/outputs/bundle/qa/app-qa.aab
+          track: internalsharing
+          mappingFile: app/build/outputs/mapping/release/mapping.txt
+          status: completed
+
+      - name: Find status comment
+        uses: peter-evans/find-comment@v2
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: Download from Play Store
+
+      - name: Update status comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          edit-mode: replace
+          body: |
+            [Download from Play Store](${{ steps.publish.outputs.internalSharingDownloadUrl }})
+            ![QR Code download](https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${{ steps.publish.outputs.internalSharingDownloadUrl }})

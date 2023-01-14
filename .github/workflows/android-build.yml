@@ -51,7 +51,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.1
         with:
           name: apk
-          path: app/build/outputs/bundle/qa/*.aab
+          path: app/build/outputs/bundle/qa/app-qa.aab
 
       - name: Upload to internal app sharing
         id: publish
@@ -59,7 +59,7 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_INTERNAL_APP_SHARING }}
           packageName: fr.outadoc.justchatting
-          releaseFiles: app/build/outputs/bundle/release/app-release.aab
+          releaseFiles: app/build/outputs/bundle/qa/app-qa.aab
           track: internalsharing
           mappingFile: app/build/outputs/mapping/release/mapping.txt
           status: completed

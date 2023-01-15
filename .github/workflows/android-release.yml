@@ -49,7 +49,7 @@ jobs:
             "-PexternalVersionCode=${{ steps.version.outputs.version }}"
 
       - name: Upload app bundle to GitHub
-        uses: actions/upload-artifact@v3.1.1
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: apk
           path: app/build/outputs/bundle/release/app-release.aab

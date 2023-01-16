@@ -1,0 +1,17 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application>
+
+        <provider
+            android:name=".LogFileProvider"
+            android:authorities="${applicationId}.logfileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/log_share" />
+
+        </provider>
+    </application>
+</manifest>

@@ -29,6 +29,7 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.plus
 import org.koin.androidx.compose.get
 
+
 @ThemePreviews
 @Composable
 fun SettingsListPreview() {
@@ -38,7 +39,8 @@ fun SettingsListPreview() {
             onAppPreferencesChange = {},
             onOpenNotificationPreferences = {},
             onOpenBubblePreferences = {},
-            onLogoutClick = {}
+            onLogoutClick = {},
+            onShareLogsClick = {}
         )
     }
 }
@@ -51,6 +53,7 @@ fun SettingsList(
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onLogoutClick: () -> Unit,
+    onShareLogsClick: () -> Unit,
     itemInsets: PaddingValues = PaddingValues(),
     insets: PaddingValues = PaddingValues(),
     readDependencies: ReadExternalDependenciesList = get()
@@ -313,6 +316,15 @@ fun SettingsList(
                         )
                     )
                 }
+            )
+        }
+
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                title = { Text(text = stringResource(R.string.settings_logs_title)) },
+                onClick = onShareLogsClick,
+                subtitle = { Text(text = stringResource(R.string.settings_logs_subtitle)) }
             )
         }
 

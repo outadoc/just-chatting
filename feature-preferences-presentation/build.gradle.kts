@@ -29,11 +29,15 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.core)
     implementation(libs.androidx.lifecycle.viewmodel)
     implementation(libs.gson)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.okio)
+
+    implementation(project(":utils-logging"))
 
     implementation(project(":component-preferences-data"))
     implementation(project(":component-preferences-domain"))

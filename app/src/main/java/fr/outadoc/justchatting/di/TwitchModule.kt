@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.component.twitch.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.api.IdApi
 import fr.outadoc.justchatting.component.twitch.api.StvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.TwitchBadgesApi
-import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
+import fr.outadoc.justchatting.component.twitch.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository
 import fr.outadoc.justchatting.component.twitch.domain.repository.TwitchRepositoryImpl
 import fr.outadoc.justchatting.component.twitch.model.OAuthAppCredentials

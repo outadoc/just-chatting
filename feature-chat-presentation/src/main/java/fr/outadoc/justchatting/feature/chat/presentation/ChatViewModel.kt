@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
+import fr.outadoc.justchatting.component.twitch.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository
 import fr.outadoc.justchatting.component.twitch.model.Chatter
 import fr.outadoc.justchatting.component.twitch.model.CheerEmote

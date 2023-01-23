@@ -5,7 +5,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import fr.outadoc.justchatting.component.chatapi.data.model.RecentEmote
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -17,7 +16,7 @@ interface RecentEmotesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(emotes: Collection<RecentEmote>)
 
-    @Query("DELETE FROM recent_emotes WHERE name NOT IN (SELECT name FROM recent_emotes ORDER BY used_at DESC LIMIT ${RecentEmote.MAX_SIZE})")
+    @Query("DELETE FROM recent_emotes WHERE name NOT IN (SELECT name FROM recent_emotes ORDER BY used_at DESC LIMIT ${MaxRecentEmotes})")
     fun deleteOld()
 
     @Transaction

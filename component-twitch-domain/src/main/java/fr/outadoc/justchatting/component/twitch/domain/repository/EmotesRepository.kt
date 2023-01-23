@@ -1,16 +1,17 @@
 package fr.outadoc.justchatting.component.twitch.domain.repository
 
+import fr.outadoc.justchatting.component.chatapi.data.model.BttvEmote
+import fr.outadoc.justchatting.component.chatapi.data.model.FfzEmote
+import fr.outadoc.justchatting.component.chatapi.data.model.RecentEmote
+import fr.outadoc.justchatting.component.chatapi.data.model.StvEmote
+import fr.outadoc.justchatting.component.chatapi.data.model.TwitchBadge
+import fr.outadoc.justchatting.component.chatapi.db.MaxRecentEmotes
+import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
 import fr.outadoc.justchatting.component.twitch.api.BttvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.StvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.TwitchBadgesApi
-import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
-import fr.outadoc.justchatting.component.twitch.model.BttvChannelResponse
-import fr.outadoc.justchatting.component.twitch.model.BttvFfzResponse
-import fr.outadoc.justchatting.component.twitch.model.BttvGlobalResponse
-import fr.outadoc.justchatting.component.twitch.model.RecentEmote
-import fr.outadoc.justchatting.component.twitch.model.StvEmotesResponse
-import fr.outadoc.justchatting.component.twitch.model.TwitchBadgesResponse
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 
 class EmotesRepository(
@@ -19,55 +20,55 @@ class EmotesRepository(
     private val bttvEmotesApi: BttvEmotesApi,
     private val recentEmotes: RecentEmotesDao
 ) {
-    suspend fun loadGlobalBadges(): TwitchBadgesResponse =
+    suspend fun loadGlobalBadges(): List<TwitchBadge> =
         withContext(Dispatchers.IO) {
             twitchBadgesApi.getGlobalBadges()
         }
 
-    suspend fun loadChannelBadges(channelId: String): TwitchBadgesResponse =
+    suspend fun loadChannelBadges(channelId: String): List<TwitchBadge> =
         withContext(Dispatchers.IO) {
             twitchBadgesApi.getChannelBadges(channelId)
         }
 
-    suspend fun loadGlobalStvEmotes(): StvEmotesResponse =
+    suspend fun loadGlobalStvEmotes(): List<StvEmote> =
         withContext(Dispatchers.IO) {
             stvEmotesApi.getGlobalStvEmotes()
         }
 
-    suspend fun loadStvEmotes(channelId: String): StvEmotesResponse =
+    suspend fun loadStvEmotes(channelId: String): List<StvEmote> =
         withContext(Dispatchers.IO) {
             stvEmotesApi.getStvEmotes(channelId)
         }
 
-    suspend fun loadGlobalBttvEmotes(): BttvGlobalResponse =
+    suspend fun loadGlobalBttvEmotes(): List<BttvEmote> =
         withContext(Dispatchers.IO) {
             bttvEmotesApi.getGlobalBttvEmotes()
         }
 
-    suspend fun loadBttvGlobalFfzEmotes(): BttvFfzResponse =
+    suspend fun loadBttvGlobalFfzEmotes(): List<FfzEmote> =
         withContext(Dispatchers.IO) {
             bttvEmotesApi.getBttvGlobalFfzEmotes()
         }
 
-    suspend fun loadBttvEmotes(channelId: String): BttvChannelResponse =
+    suspend fun loadBttvEmotes(channelId: String): List<BttvEmote> =
         withContext(Dispatchers.IO) {
             bttvEmotesApi.getBttvEmotes(channelId)
         }
 
-    suspend fun loadBttvFfzEmotes(channelId: String): BttvFfzResponse =
+    suspend fun loadBttvFfzEmotes(channelId: String): List<FfzEmote> =
         withContext(Dispatchers.IO) {
             bttvEmotesApi.getBttvFfzEmotes(channelId)
         }
 
-    fun loadRecentEmotes() = recentEmotes.getAll()
+    fun loadRecentEmotes(): Flow<List<RecentEmote>> = recentEmotes.getAll()
 
     suspend fun insertRecentEmotes(emotes: Collection<RecentEmote>) =
         withContext(Dispatchers.IO) {
             val listSize = emotes.size
-            val list = if (listSize <= RecentEmote.MAX_SIZE) {
+            val list = if (listSize <= MaxRecentEmotes) {
                 emotes
             } else {
-                emotes.toList().subList(listSize - RecentEmote.MAX_SIZE, listSize)
+                emotes.toList().subList(listSize - MaxRecentEmotes, listSize)
             }
             recentEmotes.ensureMaxSizeAndInsert(list)
         }

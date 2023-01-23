@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.component.deeplink.Deeplink
 import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.component.twitch.domain.repository.AuthRepository
+import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
 import fr.outadoc.justchatting.component.twitch.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.twitch.model.ValidationResponse
 import fr.outadoc.justchatting.utils.logging.logError

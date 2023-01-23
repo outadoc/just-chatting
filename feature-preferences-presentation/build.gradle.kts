@@ -41,7 +41,7 @@ dependencies {
 
     implementation(project(":component-preferences-data"))
     implementation(project(":component-preferences-domain"))
-    implementation(project(":component-twitch-domain"))
+    implementation(project(":component-chatapi-domain"))
 
     coreLibraryDesugaring(libs.desugar)
 }

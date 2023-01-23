@@ -47,4 +47,4 @@ include(":component-preferences-domain")
 
 include(":component-chatapi-db")
 include(":component-chatapi-twitch")
-include(":component-twitch-domain")
+include(":component-chatapi-domain")

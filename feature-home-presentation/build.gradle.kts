@@ -31,7 +31,7 @@ android {
 dependencies {
     implementation(project(":utils-logging"))
 
-    implementation(project(":component-twitch-domain"))
+    implementation(project(":component-chatapi-domain"))
     implementation(project(":component-preferences-domain"))
     implementation(project(":component-deeplink"))
 

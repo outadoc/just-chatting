@@ -43,8 +43,7 @@ dependencies {
     api(project(":feature-home-presentation"))
     api(project(":feature-chat-presentation-mobile"))
     api(project(":feature-preferences-presentation-mobile"))
-
-    implementation(project(":component-twitch-data"))
+    implementation(project(":component-chatapi-twitch"))
 
     implementation(libs.androidx.browser)
     implementation(libs.androidx.paging.compose)

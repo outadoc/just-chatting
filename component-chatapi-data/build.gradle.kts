@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "fr.outadoc.justchatting.component.deeplink"
+    namespace = "fr.outadoc.justchatting.component.chatapi.data"
     compileSdkVersion = "android-33"
 
     defaultConfig {
@@ -20,13 +20,25 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
         jvmTarget = "11"
     }
 }
-dependencies {
-    implementation(project(":component-chatapi-twitch"))
-}
 
+dependencies {
+    implementation(project(":utils-core"))
+    implementation(project(":utils-logging"))
+
+    implementation(libs.androidx.room.core)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.compose.runtime.core)
+    implementation(libs.irc)
+    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.kotlinx.datetime)
+    implementation(libs.retrofit.core)
+
+    coreLibraryDesugaring(libs.desugar)
+}

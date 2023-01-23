@@ -29,7 +29,7 @@ android {
 }
 
 dependencies {
-    api(project(":component-twitch-data"))
+    api(project(":component-chatapi-twitch"))
     implementation(project(":component-preferences-domain"))
 
     implementation(project(":utils-core"))

@@ -1,9 +1,9 @@
-package fr.outadoc.justchatting.component.chatapi.data.model
+package fr.outadoc.justchatting.component.twitch.domain.model
 
 class BttvEmote(
     val id: String,
     override val name: String
-) : Emote() {
+) : fr.outadoc.justchatting.component.twitch.domain.model.Emote() {
 
     companion object {
         private val ZERO_WIDTH_EMOTES = setOf(
@@ -34,5 +34,5 @@ class BttvEmote(
     }
 
     override val isZeroWidth: Boolean
-        get() = name in ZERO_WIDTH_EMOTES
+        get() = name in fr.outadoc.justchatting.component.twitch.domain.model.BttvEmote.Companion.ZERO_WIDTH_EMOTES
 }

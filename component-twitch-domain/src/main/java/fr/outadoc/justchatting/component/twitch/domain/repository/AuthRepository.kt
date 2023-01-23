@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.component.twitch.domain.repository
 
-import fr.outadoc.justchatting.component.chatapi.data.model.OAuthAppCredentials
-import fr.outadoc.justchatting.component.chatapi.data.model.ValidationResponse
+import fr.outadoc.justchatting.component.twitch.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.component.twitch.domain.model.ValidationResponse
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.api.IdApi
 import kotlinx.coroutines.Dispatchers

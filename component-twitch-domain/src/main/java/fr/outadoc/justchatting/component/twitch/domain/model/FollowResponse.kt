@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.component.chatapi.data.model
+package fr.outadoc.justchatting.component.twitch.domain.model
 
 class FollowResponse(
     val total: Int?,

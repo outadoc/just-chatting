@@ -29,7 +29,6 @@ android {
 }
 
 dependencies {
-    api(project(":component-chatapi-data"))
     implementation(project(":component-chatapi-twitch"))
     implementation(project(":component-chatapi-db"))
 

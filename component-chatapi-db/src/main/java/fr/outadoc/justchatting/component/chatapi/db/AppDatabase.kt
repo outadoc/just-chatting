@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.component.chatapi.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import fr.outadoc.justchatting.component.chatapi.data.model.RecentEmote
 
 @Database(
     entities = [RecentEmote::class],

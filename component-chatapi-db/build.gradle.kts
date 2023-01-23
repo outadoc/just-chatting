@@ -29,8 +29,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":component-chatapi-data"))
-
     implementation(project(":utils-core"))
     implementation(project(":utils-logging"))
 

@@ -42,9 +42,9 @@ include(":feature-preferences-presentation")
 include(":feature-preferences-presentation-mobile")
 
 include(":component-deeplink")
-include(":component-chatapi-data")
+
+include(":component-preferences-domain")
+
 include(":component-chatapi-db")
 include(":component-chatapi-twitch")
 include(":component-twitch-domain")
-include(":component-preferences-domain")
-

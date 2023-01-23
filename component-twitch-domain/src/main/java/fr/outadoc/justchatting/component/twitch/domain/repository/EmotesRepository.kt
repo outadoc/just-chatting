@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.component.twitch.domain.repository
 
-import fr.outadoc.justchatting.component.chatapi.data.model.BttvEmote
-import fr.outadoc.justchatting.component.chatapi.data.model.FfzEmote
-import fr.outadoc.justchatting.component.chatapi.data.model.RecentEmote
-import fr.outadoc.justchatting.component.chatapi.data.model.StvEmote
-import fr.outadoc.justchatting.component.chatapi.data.model.TwitchBadge
+import fr.outadoc.justchatting.component.twitch.domain.model.BttvEmote
+import fr.outadoc.justchatting.component.twitch.domain.model.FfzEmote
+import fr.outadoc.justchatting.component.twitch.domain.model.RecentEmote
+import fr.outadoc.justchatting.component.twitch.domain.model.StvEmote
+import fr.outadoc.justchatting.component.twitch.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.chatapi.db.MaxRecentEmotes
 import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
 import fr.outadoc.justchatting.component.twitch.api.BttvEmotesApi
@@ -40,7 +40,7 @@ class EmotesRepository(
             stvEmotesApi.getStvEmotes(channelId)
         }
 
-    suspend fun loadGlobalBttvEmotes(): List<BttvEmote> =
+    suspend fun loadGlobalBttvEmotes(): List<fr.outadoc.justchatting.component.twitch.domain.model.BttvEmote> =
         withContext(Dispatchers.IO) {
             bttvEmotesApi.getGlobalBttvEmotes()
         }
@@ -50,7 +50,7 @@ class EmotesRepository(
             bttvEmotesApi.getBttvGlobalFfzEmotes()
         }
 
-    suspend fun loadBttvEmotes(channelId: String): List<BttvEmote> =
+    suspend fun loadBttvEmotes(channelId: String): List<fr.outadoc.justchatting.component.twitch.domain.model.BttvEmote> =
         withContext(Dispatchers.IO) {
             bttvEmotesApi.getBttvEmotes(channelId)
         }

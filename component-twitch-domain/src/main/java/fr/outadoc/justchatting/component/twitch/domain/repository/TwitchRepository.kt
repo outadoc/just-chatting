@@ -1,15 +1,15 @@
 package fr.outadoc.justchatting.component.twitch.domain.repository
 
 import androidx.paging.Pager
-import fr.outadoc.justchatting.component.chatapi.data.model.ChannelSearch
-import fr.outadoc.justchatting.component.chatapi.data.model.ChannelSearchResponse
-import fr.outadoc.justchatting.component.chatapi.data.model.CheerEmote
-import fr.outadoc.justchatting.component.chatapi.data.model.Follow
-import fr.outadoc.justchatting.component.chatapi.data.model.FollowResponse
-import fr.outadoc.justchatting.component.chatapi.data.model.Stream
-import fr.outadoc.justchatting.component.chatapi.data.model.StreamsResponse
-import fr.outadoc.justchatting.component.chatapi.data.model.TwitchEmote
-import fr.outadoc.justchatting.component.chatapi.data.model.User
+import fr.outadoc.justchatting.component.twitch.domain.model.ChannelSearch
+import fr.outadoc.justchatting.component.twitch.domain.model.ChannelSearchResponse
+import fr.outadoc.justchatting.component.twitch.domain.model.CheerEmote
+import fr.outadoc.justchatting.component.twitch.domain.model.Follow
+import fr.outadoc.justchatting.component.twitch.domain.model.FollowResponse
+import fr.outadoc.justchatting.component.twitch.domain.model.Stream
+import fr.outadoc.justchatting.component.twitch.domain.model.StreamsResponse
+import fr.outadoc.justchatting.component.twitch.domain.model.TwitchEmote
+import fr.outadoc.justchatting.component.twitch.domain.model.User
 
 interface TwitchRepository {
 

@@ -1,11 +1,11 @@
-package fr.outadoc.justchatting.component.twitch.db
+package fr.outadoc.justchatting.component.chatapi.db
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import fr.outadoc.justchatting.component.twitch.model.RecentEmote
+import fr.outadoc.justchatting.component.chatapi.data.model.RecentEmote
 import kotlinx.coroutines.flow.Flow
 
 @Dao

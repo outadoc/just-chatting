@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.component.twitch.domain.repository
 import fr.outadoc.justchatting.component.twitch.api.BttvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.StvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.TwitchBadgesApi
-import fr.outadoc.justchatting.component.twitch.db.RecentEmotesDao
+import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
 import fr.outadoc.justchatting.component.twitch.model.BttvChannelResponse
 import fr.outadoc.justchatting.component.twitch.model.BttvFfzResponse
 import fr.outadoc.justchatting.component.twitch.model.BttvGlobalResponse

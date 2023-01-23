@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "fr.outadoc.justchatting.component.twitch.domain"
+    namespace = "fr.outadoc.justchatting.component.chatapi.db"
     compileSdkVersion = "android-33"
 
     defaultConfig {
@@ -29,24 +29,19 @@ android {
 }
 
 dependencies {
-    api(project(":component-chatapi-data"))
-    implementation(project(":component-chatapi-twitch"))
-    implementation(project(":component-chatapi-db"))
-
-    implementation(project(":component-preferences-domain"))
+    implementation(project(":component-chatapi-data"))
 
     implementation(project(":utils-core"))
     implementation(project(":utils-logging"))
 
     implementation(libs.androidx.room.core)
     implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.paging.runtime)
     implementation(libs.compose.runtime.core)
     implementation(libs.gson)
     implementation(libs.irc)
-    implementation(libs.koin.core)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.retrofit.core)
 
     coreLibraryDesugaring(libs.desugar)
 }

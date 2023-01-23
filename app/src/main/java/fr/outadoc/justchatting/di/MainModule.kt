@@ -3,13 +3,11 @@ package fr.outadoc.justchatting.di
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
-import androidx.room.Room
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.component.auth.AuthenticationInterceptor
 import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.component.twitch.domain.repository.AuthRepository
-import fr.outadoc.justchatting.db.AppDatabase
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import kotlinx.datetime.Clock
 import okhttp3.Cache
@@ -26,8 +24,6 @@ val mainModule = module {
     single { AuthRepository(get(), get(), get()) }
     single { AuthenticationInterceptor(get(), get()) }
     single { DeeplinkParser(get()) }
-
-    single { Room.databaseBuilder(get(), AppDatabase::class.java, "database").build() }
 
     single {
         OkHttpClient.Builder()

@@ -15,7 +15,7 @@ import fr.outadoc.justchatting.component.twitch.model.CheerEmotesResponse
 import fr.outadoc.justchatting.component.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.component.twitch.model.StvEmotesResponse
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadgesResponse
-import fr.outadoc.justchatting.db.AppDatabase
+import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource
@@ -71,7 +71,7 @@ val chatModule = module {
     single { ChatEntryMapper(get()) }
     single { PubSubRewardParser(get()) }
 
-    single { get<AppDatabase>().recentEmotes() }
+    single { get<fr.outadoc.justchatting.component.chatapi.db.AppDatabase>().recentEmotes() }
 
     single { RecentMessagesRepository(get()) }
 

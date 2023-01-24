@@ -17,7 +17,7 @@ class GlobalStvEmotesSource(
                 title = null,
                 source = R.string.chat_source_stv.asStringOrRes()
             ),
-            emotesRepository.loadGlobalStvEmotes().emotes
+            emotesRepository.loadGlobalStvEmotes()
                 .map { emote -> EmoteSetItem.Emote(emote) }
         )
 }

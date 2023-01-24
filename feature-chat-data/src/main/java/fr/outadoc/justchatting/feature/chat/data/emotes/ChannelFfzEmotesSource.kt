@@ -18,7 +18,7 @@ class ChannelFfzEmotesSource(
                 title = params.channelName.asStringOrRes(),
                 source = R.string.chat_source_ffz.asStringOrRes()
             ),
-            emotesRepository.loadBttvFfzEmotes(params.channelId).emotes
+            emotesRepository.loadBttvFfzEmotes(params.channelId)
                 .map { emote -> EmoteSetItem.Emote(emote) }
         )
 }

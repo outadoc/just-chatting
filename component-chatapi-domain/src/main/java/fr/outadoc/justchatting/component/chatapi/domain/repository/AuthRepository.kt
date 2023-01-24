@@ -15,7 +15,13 @@ class AuthRepository(
 ) {
     suspend fun validate(): ValidationResponse? =
         withContext(Dispatchers.IO) {
-            api.validateToken()
+            api.validateToken()?.let { response ->
+                ValidationResponse(
+                    clientId = response.clientId,
+                    login = response.login,
+                    userId = response.userId
+                )
+            }
         }
 
     suspend fun revokeToken() {

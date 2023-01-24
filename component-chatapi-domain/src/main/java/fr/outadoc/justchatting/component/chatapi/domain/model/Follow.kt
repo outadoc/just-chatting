@@ -12,6 +12,5 @@ data class Follow(
     val toLogin: String? = null,
     val toName: String? = null,
     val followedAt: String? = null,
-
     val profileImageURL: String? = null
 ) : Parcelable

@@ -135,6 +135,8 @@ dependencies {
 
     implementation(project(":component-deeplink"))
     implementation(project(":component-chatapi-domain"))
+    implementation(project(":component-chatapi-twitch"))
+    implementation(project(":component-chatapi-db"))
     implementation(project(":component-preferences-domain"))
 
     implementation(project(":utils-core"))
@@ -184,7 +186,6 @@ dependencies {
     implementation(libs.okio)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gson)
-
     ksp(libs.androidx.room.compiler)
 
     // debugImplementation(libs.leakcanary)

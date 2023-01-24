@@ -17,7 +17,7 @@ class GlobalFfzEmotesSource(
                 title = null,
                 source = R.string.chat_source_ffz.asStringOrRes()
             ),
-            emotesRepository.loadBttvGlobalFfzEmotes().emotes
+            emotesRepository.loadBttvGlobalFfzEmotes()
                 .map { emote -> EmoteSetItem.Emote(emote) }
         )
 }

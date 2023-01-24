@@ -1,16 +1,7 @@
 package fr.outadoc.justchatting.component.twitch.model
 
-class StvEmote(
-    override val name: String,
-    override val isZeroWidth: Boolean,
-    private val urls: Map<Float, String>
-) : Emote() {
-
-    override fun getUrl(animate: Boolean, screenDensity: Float, isDarkTheme: Boolean): String {
-        return (urls)
-            .toList()
-            .minByOrNull { url -> screenDensity - url.first }
-            ?.second
-            ?: error("No URLs were provided for this StvEmote")
-    }
-}
+data class StvEmote(
+    val name: String,
+    val isZeroWidth: Boolean,
+    val urls: Map<Float, String>
+)

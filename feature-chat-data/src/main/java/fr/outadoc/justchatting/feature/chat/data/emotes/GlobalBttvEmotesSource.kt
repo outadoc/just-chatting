@@ -17,7 +17,7 @@ class GlobalBttvEmotesSource(
                 title = null,
                 source = R.string.chat_source_bttv.asStringOrRes()
             ),
-            emotesRepository.loadGlobalBttvEmotes().emotes
+            emotesRepository.loadGlobalBttvEmotes()
                 .map { emote -> EmoteSetItem.Emote(emote) }
         )
 }

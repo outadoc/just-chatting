@@ -2,7 +2,9 @@ package fr.outadoc.justchatting.component.chatapi.domain.repository.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import fr.outadoc.justchatting.component.chatapi.domain.model.Follow
 import fr.outadoc.justchatting.component.chatapi.domain.model.FollowResponse
+import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.twitch.api.HelixApi
 
 class FollowedChannelsDataSource(
@@ -25,7 +27,26 @@ class FollowedChannelsDataSource(
             )
 
             LoadResult.Page(
-                data = listOf(response),
+                data = listOf(
+                    FollowResponse(
+                        total = response.total,
+                        data = response.data?.map { follow ->
+                            Follow(
+                                fromId = follow.fromId,
+                                fromLogin = follow.fromLogin,
+                                fromName = follow.fromName,
+                                toId = follow.toId,
+                                toLogin = follow.toLogin,
+                                toName = follow.toName,
+                                followedAt = follow.followedAt,
+                                profileImageURL = follow.profileImageURL,
+                            )
+                        },
+                        pagination = Pagination(
+                            cursor = response.pagination?.cursor
+                        )
+                    )
+                ),
                 nextKey = response.pagination?.cursor,
                 prevKey = null
             )

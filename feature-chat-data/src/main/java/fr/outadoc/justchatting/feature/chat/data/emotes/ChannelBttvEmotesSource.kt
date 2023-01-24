@@ -18,7 +18,7 @@ class ChannelBttvEmotesSource(
                 title = params.channelName.asStringOrRes(),
                 source = R.string.chat_source_bttv.asStringOrRes()
             ),
-            emotesRepository.loadBttvEmotes(params.channelId).emotes
+            emotesRepository.loadBttvEmotes(params.channelId)
                 .map { emote -> EmoteSetItem.Emote(emote) }
         )
 }

@@ -10,6 +10,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.twitch.api.BttvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.StvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.TwitchBadgesApi
+import fr.outadoc.justchatting.component.twitch.model.isZeroWidth
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -45,22 +46,26 @@ class EmotesRepository(
 
     suspend fun loadGlobalStvEmotes(): List<StvEmote> =
         withContext(Dispatchers.IO) {
-            stvEmotesApi.getGlobalStvEmotes().emotes.map { emote ->
+            stvEmotesApi.getGlobalStvEmotes().map { emote ->
                 StvEmote(
                     name = emote.name,
-                    urls = emote.urls,
-                    isZeroWidth = emote.isZeroWidth
+                    isZeroWidth = emote.isZeroWidth,
+                    urls = emote.urls.associate { (density, url) ->
+                        density.toFloat() to url
+                    }
                 )
             }
         }
 
     suspend fun loadStvEmotes(channelId: String): List<StvEmote> =
         withContext(Dispatchers.IO) {
-            stvEmotesApi.getStvEmotes(channelId).emotes.map { emote ->
+            stvEmotesApi.getStvEmotes(channelId).map { emote ->
                 StvEmote(
                     name = emote.name,
-                    urls = emote.urls,
-                    isZeroWidth = emote.isZeroWidth
+                    isZeroWidth = emote.isZeroWidth,
+                    urls = emote.urls.associate { (density, url) ->
+                        density.toFloat() to url
+                    }
                 )
             }
         }

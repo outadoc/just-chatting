@@ -77,10 +77,10 @@ class EmotesRepository(
 
     suspend fun loadBttvGlobalFfzEmotes(): List<FfzEmote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getBttvGlobalFfzEmotes().emotes.map { emote ->
+            bttvEmotesApi.getBttvGlobalFfzEmotes().map { emote ->
                 FfzEmote(
-                    name = emote.name,
-                    urls = emote.urls
+                    name = emote.code,
+                    urls = emote.images
                 )
             }
         }
@@ -97,10 +97,10 @@ class EmotesRepository(
 
     suspend fun loadBttvFfzEmotes(channelId: String): List<FfzEmote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getBttvFfzEmotes(channelId).emotes.map { emote ->
+            bttvEmotesApi.getBttvFfzEmotes(channelId).map { emote ->
                 FfzEmote(
-                    name = emote.name,
-                    urls = emote.urls
+                    name = emote.code,
+                    urls = emote.images
                 )
             }
         }

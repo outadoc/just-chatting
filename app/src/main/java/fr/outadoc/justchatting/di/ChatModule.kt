@@ -2,12 +2,10 @@ package fr.outadoc.justchatting.di
 
 import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
-import fr.outadoc.justchatting.component.twitch.adapters.BttvFfzDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.CheerEmotesDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.EmoteSetDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.StvEmotesDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.TwitchBadgesDeserializer
-import fr.outadoc.justchatting.component.twitch.model.BttvFfzResponse
 import fr.outadoc.justchatting.component.twitch.model.CheerEmotesResponse
 import fr.outadoc.justchatting.component.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.component.twitch.model.StvEmotesResponse
@@ -110,7 +108,6 @@ val chatModule = module {
                     RecentMessagesDeserializer(get())
                 )
                 .registerTypeAdapter(StvEmotesResponse::class.java, StvEmotesDeserializer())
-                .registerTypeAdapter(BttvFfzResponse::class.java, BttvFfzDeserializer())
                 .create()
         )
     }

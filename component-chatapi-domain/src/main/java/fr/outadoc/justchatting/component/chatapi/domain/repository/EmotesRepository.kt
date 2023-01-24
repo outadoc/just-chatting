@@ -67,10 +67,10 @@ class EmotesRepository(
 
     suspend fun loadGlobalBttvEmotes(): List<BttvEmote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getGlobalBttvEmotes().emotes.map { emote ->
+            bttvEmotesApi.getGlobalBttvEmotes().map { emote ->
                 BttvEmote(
                     id = emote.id,
-                    name = emote.name
+                    name = emote.code
                 )
             }
         }
@@ -87,10 +87,10 @@ class EmotesRepository(
 
     suspend fun loadBttvEmotes(channelId: String): List<BttvEmote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getBttvEmotes(channelId).emotes.map { emote ->
+            bttvEmotesApi.getBttvEmotes(channelId).allEmotes.map { emote ->
                 BttvEmote(
                     id = emote.id,
-                    name = emote.name
+                    name = emote.code
                 )
             }
         }

@@ -1,3 +1,9 @@
 package fr.outadoc.justchatting.component.twitch.model
 
-class BttvChannelResponse(val emotes: List<BttvEmote>)
+data class BttvChannelResponse(
+    val channelEmotes: List<BttvEmote>,
+    val sharedEmotes: List<BttvEmote>,
+) {
+    val allEmotes: List<BttvEmote>
+        get() = channelEmotes + sharedEmotes
+}

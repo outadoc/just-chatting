@@ -6,8 +6,8 @@ import androidx.core.content.getSystemService
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.component.auth.AuthenticationInterceptor
-import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
+import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import kotlinx.datetime.Clock
 import okhttp3.Cache

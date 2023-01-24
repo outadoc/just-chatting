@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.palette.graphics.Palette
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import fr.outadoc.justchatting.component.twitch.model.User
+import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.utils.ui.ensureMinimumAlpha
 import fr.outadoc.justchatting.utils.ui.generateAsync
 import fr.outadoc.justchatting.utils.ui.isLight

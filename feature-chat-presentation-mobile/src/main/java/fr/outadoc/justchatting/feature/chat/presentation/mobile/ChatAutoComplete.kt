@@ -17,7 +17,8 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.twitch.model.Chatter
+import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
+import fr.outadoc.justchatting.component.chatapi.domain.model.Chatter
 import fr.outadoc.justchatting.utils.ui.AppTheme
 
 @Composable

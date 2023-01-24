@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.component.auth
 
+import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.api.TwitchAuth
-import fr.outadoc.justchatting.component.twitch.model.OAuthAppCredentials
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import okhttp3.Interceptor

@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -28,11 +29,16 @@ android {
     }
 }
 
+ksp {
+    arg("room.schemaLocation", "$projectDir/schemas")
+    arg("room.incremental", "true")
+}
+
 dependencies {
     implementation(project(":utils-core"))
     implementation(project(":utils-logging"))
 
-    implementation(libs.androidx.room.core)
+    api(libs.androidx.room.core)
     implementation(libs.androidx.room.runtime)
     implementation(libs.compose.runtime.core)
     implementation(libs.gson)
@@ -40,6 +46,8 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.datetime)
     implementation(libs.retrofit.core)
+
+    ksp(libs.androidx.room.compiler)
 
     coreLibraryDesugaring(libs.desugar)
 }

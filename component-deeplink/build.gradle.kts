@@ -27,6 +27,6 @@ android {
     }
 }
 dependencies {
-    implementation(project(":component-chatapi-twitch"))
+    implementation(project(":component-chatapi-domain"))
 }
 

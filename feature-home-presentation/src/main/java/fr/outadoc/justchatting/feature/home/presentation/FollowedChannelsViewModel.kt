@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.flatMap
-import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
-import fr.outadoc.justchatting.component.twitch.model.Follow
+import fr.outadoc.justchatting.component.chatapi.domain.model.Follow
+import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

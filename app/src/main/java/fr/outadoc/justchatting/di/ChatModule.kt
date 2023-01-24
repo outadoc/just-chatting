@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.di
 
 import com.google.gson.GsonBuilder
+import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
 import fr.outadoc.justchatting.component.twitch.adapters.BttvChannelDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.BttvFfzDeserializer
 import fr.outadoc.justchatting.component.twitch.adapters.BttvGlobalDeserializer
@@ -15,7 +16,6 @@ import fr.outadoc.justchatting.component.twitch.model.CheerEmotesResponse
 import fr.outadoc.justchatting.component.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.component.twitch.model.StvEmotesResponse
 import fr.outadoc.justchatting.component.twitch.model.TwitchBadgesResponse
-import fr.outadoc.justchatting.db.AppDatabase
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource

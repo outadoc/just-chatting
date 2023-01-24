@@ -12,7 +12,7 @@ import androidx.core.app.RemoteInput
 import androidx.core.content.LocusIdCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
-import fr.outadoc.justchatting.component.twitch.model.User
+import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon

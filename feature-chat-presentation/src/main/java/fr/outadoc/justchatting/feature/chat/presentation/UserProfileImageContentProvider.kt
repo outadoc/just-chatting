@@ -7,7 +7,7 @@ import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.ParcelFileDescriptor
-import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
+import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking

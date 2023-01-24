@@ -51,8 +51,8 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.twitch.model.Stream
-import fr.outadoc.justchatting.component.twitch.model.User
+import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
+import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.HapticIconButton

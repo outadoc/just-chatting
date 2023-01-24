@@ -7,17 +7,17 @@ import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.component.chatapi.domain.model.Chatter
+import fr.outadoc.justchatting.component.chatapi.domain.model.CheerEmote
+import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
+import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
+import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
+import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
+import fr.outadoc.justchatting.component.chatapi.domain.model.User
+import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesRepository
+import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.component.twitch.domain.api.TwitchRepository
-import fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository
-import fr.outadoc.justchatting.component.twitch.model.Chatter
-import fr.outadoc.justchatting.component.twitch.model.CheerEmote
-import fr.outadoc.justchatting.component.twitch.model.Emote
-import fr.outadoc.justchatting.component.twitch.model.RecentEmote
-import fr.outadoc.justchatting.component.twitch.model.Stream
-import fr.outadoc.justchatting.component.twitch.model.TwitchBadge
-import fr.outadoc.justchatting.component.twitch.model.User
 import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
@@ -380,7 +380,7 @@ class ChatViewModel(
         return withContext(Dispatchers.IO) {
             val globalBadges = async {
                 try {
-                    emotesRepository.loadGlobalBadges().badges.toPersistentList()
+                    emotesRepository.loadGlobalBadges().toPersistentList()
                 } catch (e: Exception) {
                     logError<ChatViewModel>(e) { "Failed to load global badges" }
                     null
@@ -389,7 +389,7 @@ class ChatViewModel(
 
             val channelBadges = async {
                 try {
-                    emotesRepository.loadChannelBadges(channelId).badges.toPersistentList()
+                    emotesRepository.loadChannelBadges(channelId).toPersistentList()
                 } catch (e: Exception) {
                     logError<ChatViewModel>(e) { "Failed to load badges for channel $channelId" }
                     null
@@ -485,7 +485,7 @@ class ChatViewModel(
         )
     }
 
-    private suspend fun Action.ChangeConnectionStatus.reduce(state: State): State {
+    private fun Action.ChangeConnectionStatus.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return state.copy(connectionStatus = connectionStatus)
     }

@@ -26,7 +26,7 @@ android {
         jvmTarget = "11"
     }
 }
-
 dependencies {
-    implementation(project(":component-twitch-data"))
+    implementation(project(":component-chatapi-domain"))
 }
+

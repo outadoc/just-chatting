@@ -31,7 +31,7 @@ android {
 dependencies {
     api(project(":feature-chat-data"))
 
-    implementation(project(":component-twitch-domain"))
+    api(project(":component-chatapi-domain"))
     implementation(project(":component-preferences-domain"))
 
     implementation(project(":utils-core"))

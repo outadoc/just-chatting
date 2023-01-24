@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.emotes
 
-import fr.outadoc.justchatting.component.twitch.domain.repository.EmotesRepository
+import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesRepository
 import fr.outadoc.justchatting.feature.chat.data.R
 import fr.outadoc.justchatting.utils.core.asStringOrRes
 import fr.outadoc.justchatting.utils.core.flatListOf
@@ -17,7 +17,7 @@ class GlobalStvEmotesSource(
                 title = null,
                 source = R.string.chat_source_stv.asStringOrRes()
             ),
-            emotesRepository.loadGlobalStvEmotes().emotes
+            emotesRepository.loadGlobalStvEmotes()
                 .map { emote -> EmoteSetItem.Emote(emote) }
         )
 }

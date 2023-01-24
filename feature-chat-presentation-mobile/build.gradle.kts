@@ -41,7 +41,7 @@ dependencies {
     implementation(project(":utils-core"))
 
     implementation(project(":component-deeplink"))
-    implementation(project(":component-twitch-data"))
+    implementation(project(":component-chatapi-twitch"))
     implementation(project(":component-preferences-domain"))
     implementation(project(":component-preferences-data"))
 

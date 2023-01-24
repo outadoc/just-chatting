@@ -4,7 +4,6 @@ import com.github.jk1.license.render.JsonReportRenderer
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.ksp)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
@@ -108,11 +107,6 @@ tasks.named("generateLicenseReport") {
     outputs.upToDateWhen { false }
 }
 
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", "true")
-}
-
 spotless {
     kotlin {
         target("**/*.kt")
@@ -134,7 +128,9 @@ dependencies {
     implementation(project(":feature-preferences-presentation-mobile"))
 
     implementation(project(":component-deeplink"))
-    implementation(project(":component-twitch-domain"))
+    implementation(project(":component-chatapi-domain"))
+    implementation(project(":component-chatapi-twitch"))
+    implementation(project(":component-chatapi-db"))
     implementation(project(":component-preferences-domain"))
 
     implementation(project(":utils-core"))
@@ -158,8 +154,6 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.palette)
-    implementation(libs.androidx.room.core)
-    implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.splashscreen)
     implementation(libs.coil.compose)
     implementation(libs.coil.core)
@@ -184,8 +178,6 @@ dependencies {
     implementation(libs.okio)
     implementation(libs.retrofit.core)
     implementation(libs.retrofit.gson)
-
-    ksp(libs.androidx.room.compiler)
 
     // debugImplementation(libs.leakcanary)
     "debugImplementation"(libs.chucker.runtime)

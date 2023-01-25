@@ -11,6 +11,7 @@ import fr.outadoc.justchatting.component.twitch.api.BttvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.StvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.TwitchBadgesApi
 import fr.outadoc.justchatting.component.twitch.model.isZeroWidth
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -24,24 +25,40 @@ class EmotesRepository(
 ) {
     suspend fun loadGlobalBadges(): List<TwitchBadge> =
         withContext(Dispatchers.IO) {
-            twitchBadgesApi.getGlobalBadges().badges.map { badge ->
-                TwitchBadge(
-                    id = badge.id,
-                    version = badge.version,
-                    urls = badge.urls
-                )
-            }
+            twitchBadgesApi.getGlobalBadges()
+                .badgeSets
+                .flatMap { (setName, set) ->
+                    set.versions.map { (versionName, version) ->
+                        TwitchBadge(
+                            id = setName,
+                            version = versionName,
+                            urls = persistentMapOf(
+                                1f to version.image1x,
+                                2f to version.image2x,
+                                4f to version.image4x
+                            )
+                        )
+                    }
+                }
         }
 
     suspend fun loadChannelBadges(channelId: String): List<TwitchBadge> =
         withContext(Dispatchers.IO) {
-            twitchBadgesApi.getChannelBadges(channelId).badges.map { badge ->
-                TwitchBadge(
-                    id = badge.id,
-                    version = badge.version,
-                    urls = badge.urls
-                )
-            }
+            twitchBadgesApi.getChannelBadges(channelId)
+                .badgeSets
+                .flatMap { (setName, set) ->
+                    set.versions.map { (versionName, version) ->
+                        TwitchBadge(
+                            id = setName,
+                            version = versionName,
+                            urls = persistentMapOf(
+                                1f to version.image1x,
+                                2f to version.image2x,
+                                4f to version.image4x
+                            )
+                        )
+                    }
+                }
         }
 
     suspend fun loadGlobalStvEmotes(): List<StvEmote> =

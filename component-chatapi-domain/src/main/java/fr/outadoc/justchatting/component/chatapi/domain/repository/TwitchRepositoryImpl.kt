@@ -202,37 +202,48 @@ class TwitchRepositoryImpl(
 
     override suspend fun loadCheerEmotes(userId: String): List<CheerEmote> =
         withContext(Dispatchers.IO) {
-            helix.getCheerEmotes(userId = userId).emotes.map { emote ->
-                CheerEmote(
-                    name = emote.name,
-                    minBits = emote.minBits,
-                    color = emote.color,
-                    images = emote.images.map { image ->
-                        CheerEmote.Image(
-                            theme = image.theme,
-                            isAnimated = image.isAnimated,
-                            dpiScale = image.dpiScale,
-                            url = image.url
+            helix.getCheerEmotes(userId = userId)
+                .data
+                .flatMap { emote ->
+                    emote.tiers.map { tier ->
+                        CheerEmote(
+                            name = tier.id,
+                            minBits = tier.minBits,
+                            color = tier.color,
+                            images = tier.images.flatMap { (themeId, theme) ->
+                                theme.flatMap { (typeId, urls) ->
+                                    urls.map { (scale, url) ->
+                                        CheerEmote.Image(
+                                            theme = themeId,
+                                            isAnimated = typeId == "animated",
+                                            dpiScale = scale.toFloat(),
+                                            url = url
+                                        )
+                                    }
+                                }
+                            }
                         )
                     }
-                )
-            }
+                }
         }
 
-    override suspend fun loadEmotesFromSet(setIds: List<String>): List<TwitchEmote>? =
+    override suspend fun loadEmotesFromSet(setIds: List<String>): List<TwitchEmote> =
         withContext(Dispatchers.IO) {
-            helix.getEmotesFromSet(setIds = setIds).emotes?.map { emote ->
-                TwitchEmote(
-                    id = emote.id,
-                    name = emote.name,
-                    setId = emote.setId,
-                    ownerId = emote.ownerId,
-                    supportedFormats = emote.supportedFormats,
-                    supportedScales = emote.supportedScales,
-                    supportedThemes = emote.supportedThemes,
-                    urlTemplate = emote.urlTemplate
-                )
-            }
+            val response = helix.getEmotesFromSet(setIds = setIds)
+            response.data
+                .map { emote ->
+                    TwitchEmote(
+                        id = emote.id,
+                        name = emote.name,
+                        setId = emote.setId,
+                        ownerId = emote.ownerId,
+                        supportedFormats = emote.format,
+                        supportedScales = emote.scale,
+                        supportedThemes = emote.themeMode,
+                        urlTemplate = response.template
+                    )
+                }
+                .sortedByDescending { it.setId }
         }
 
     override suspend fun loadUserFollowing(

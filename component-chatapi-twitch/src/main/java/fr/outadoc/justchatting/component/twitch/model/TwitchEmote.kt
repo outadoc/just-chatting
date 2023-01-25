@@ -3,13 +3,15 @@ package fr.outadoc.justchatting.component.twitch.model
 import com.google.gson.annotations.SerializedName
 
 data class TwitchEmote(
-    @SerializedName("_id")
     val id: String,
     val name: String,
-    val setId: String? = null,
-    val ownerId: String? = null,
-    val supportedFormats: List<String>,
-    val supportedScales: List<String>,
-    val supportedThemes: List<String>,
-    val urlTemplate: String
+    @SerializedName("emote_set_id")
+    val setId: String,
+    @SerializedName("owner_id")
+    val ownerId: String,
+    val format: List<String>,
+    val scale: List<String>,
+    @SerializedName("theme_mode")
+    val themeMode: List<String>,
+    val images: Map<String, String>
 )

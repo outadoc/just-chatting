@@ -1,6 +1,9 @@
 package fr.outadoc.justchatting.component.twitch.model
 
 data class FfzEmote(
-    val name: String,
-    val urls: Map<String, String>
+    val id: String,
+    val code: String,
+    val images: Map<String, String?>,
+    val imageType: String,
+    val animated: Boolean
 )

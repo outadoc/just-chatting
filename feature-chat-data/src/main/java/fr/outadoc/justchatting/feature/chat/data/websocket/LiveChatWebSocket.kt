@@ -165,11 +165,7 @@ class LiveChatWebSocket private constructor(
         if (recentMsgLimit < 1) return
 
         try {
-            recentMessagesRepository.loadRecentMessages(channelLogin, recentMsgLimit)
-                .messages
-                .let { commands ->
-                    emitAll(commands)
-                }
+            emitAll(recentMessagesRepository.loadRecentMessages(channelLogin, recentMsgLimit))
         } catch (e: Exception) {
             logError<LiveChatWebSocket>(e) { "Failed to load recent messages for channel $channelLogin" }
         }

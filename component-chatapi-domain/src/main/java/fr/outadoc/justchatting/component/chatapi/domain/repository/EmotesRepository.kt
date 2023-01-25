@@ -10,6 +10,8 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.twitch.api.BttvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.StvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.TwitchBadgesApi
+import fr.outadoc.justchatting.component.twitch.model.isZeroWidth
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -23,84 +25,104 @@ class EmotesRepository(
 ) {
     suspend fun loadGlobalBadges(): List<TwitchBadge> =
         withContext(Dispatchers.IO) {
-            twitchBadgesApi.getGlobalBadges().badges.map { badge ->
-                TwitchBadge(
-                    id = badge.id,
-                    version = badge.version,
-                    urls = badge.urls
-                )
-            }
+            twitchBadgesApi.getGlobalBadges()
+                .badgeSets
+                .flatMap { (setName, set) ->
+                    set.versions.map { (versionName, version) ->
+                        TwitchBadge(
+                            id = setName,
+                            version = versionName,
+                            urls = persistentMapOf(
+                                1f to version.image1x,
+                                2f to version.image2x,
+                                4f to version.image4x
+                            )
+                        )
+                    }
+                }
         }
 
     suspend fun loadChannelBadges(channelId: String): List<TwitchBadge> =
         withContext(Dispatchers.IO) {
-            twitchBadgesApi.getChannelBadges(channelId).badges.map { badge ->
-                TwitchBadge(
-                    id = badge.id,
-                    version = badge.version,
-                    urls = badge.urls
-                )
-            }
+            twitchBadgesApi.getChannelBadges(channelId)
+                .badgeSets
+                .flatMap { (setName, set) ->
+                    set.versions.map { (versionName, version) ->
+                        TwitchBadge(
+                            id = setName,
+                            version = versionName,
+                            urls = persistentMapOf(
+                                1f to version.image1x,
+                                2f to version.image2x,
+                                4f to version.image4x
+                            )
+                        )
+                    }
+                }
         }
 
     suspend fun loadGlobalStvEmotes(): List<StvEmote> =
         withContext(Dispatchers.IO) {
-            stvEmotesApi.getGlobalStvEmotes().emotes.map { emote ->
+            stvEmotesApi.getGlobalStvEmotes().map { emote ->
                 StvEmote(
                     name = emote.name,
-                    urls = emote.urls,
-                    isZeroWidth = emote.isZeroWidth
+                    isZeroWidth = emote.isZeroWidth,
+                    urls = emote.urls.associate { (density, url) ->
+                        density.toFloat() to url
+                    }
                 )
             }
         }
 
     suspend fun loadStvEmotes(channelId: String): List<StvEmote> =
         withContext(Dispatchers.IO) {
-            stvEmotesApi.getStvEmotes(channelId).emotes.map { emote ->
+            stvEmotesApi.getStvEmotes(channelId).map { emote ->
                 StvEmote(
                     name = emote.name,
-                    urls = emote.urls,
-                    isZeroWidth = emote.isZeroWidth
+                    isZeroWidth = emote.isZeroWidth,
+                    urls = emote.urls.associate { (density, url) ->
+                        density.toFloat() to url
+                    }
                 )
             }
         }
 
     suspend fun loadGlobalBttvEmotes(): List<BttvEmote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getGlobalBttvEmotes().emotes.map { emote ->
+            bttvEmotesApi.getGlobalBttvEmotes().map { emote ->
                 BttvEmote(
                     id = emote.id,
-                    name = emote.name
+                    name = emote.code
                 )
             }
         }
 
     suspend fun loadBttvGlobalFfzEmotes(): List<FfzEmote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getBttvGlobalFfzEmotes().emotes.map { emote ->
+            bttvEmotesApi.getBttvGlobalFfzEmotes().map { emote ->
                 FfzEmote(
-                    name = emote.name,
-                    urls = emote.urls
+                    name = emote.code,
+                    urls = emote.images
                 )
             }
         }
 
     suspend fun loadBttvEmotes(channelId: String): List<BttvEmote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getBttvEmotes(channelId).emotes.map { emote ->
+            bttvEmotesApi.getBttvEmotes(channelId).allEmotes.map { emote ->
                 BttvEmote(
                     id = emote.id,
-                    name = emote.name
+                    name = emote.code
                 )
             }
         }
 
     suspend fun loadBttvFfzEmotes(channelId: String): List<FfzEmote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getBttvFfzEmotes(channelId).emotes.map { emote ->
+            bttvEmotesApi.getBttvFfzEmotes(channelId).map { emote ->
                 FfzEmote(
-                    name = emote.name,
-                    urls = emote.urls
+                    name = emote.code,
+                    urls = emote.images
                 )
             }
         }

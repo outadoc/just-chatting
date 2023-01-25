@@ -3,9 +3,7 @@ package fr.outadoc.justchatting.di
 import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
 import fr.outadoc.justchatting.component.twitch.adapters.CheerEmotesDeserializer
-import fr.outadoc.justchatting.component.twitch.adapters.EmoteSetDeserializer
 import fr.outadoc.justchatting.component.twitch.model.CheerEmotesResponse
-import fr.outadoc.justchatting.component.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource
@@ -93,7 +91,6 @@ val chatModule = module {
     single<GsonConverterFactory> {
         GsonConverterFactory.create(
             GsonBuilder()
-                .registerTypeAdapter(EmoteSetResponse::class.java, EmoteSetDeserializer())
                 .registerTypeAdapter(CheerEmotesResponse::class.java, CheerEmotesDeserializer())
                 .registerTypeAdapter(
                     RecentMessagesResponse::class.java,

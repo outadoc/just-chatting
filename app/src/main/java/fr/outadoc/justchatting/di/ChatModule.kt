@@ -13,9 +13,7 @@ import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalFfzEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalStvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalTwitchEmotesSource
-import fr.outadoc.justchatting.feature.chat.data.model.RecentMessagesResponse
 import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
-import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesDeserializer
 import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.data.websocket.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.LoggedInChatWebSocket
@@ -59,7 +57,7 @@ val chatModule = module {
 
     single { get<AppDatabase>().recentEmotes() }
 
-    single { RecentMessagesRepository(get()) }
+    single { RecentMessagesRepository(get(), get()) }
 
     single { ChannelBttvEmotesSource(get()) }
     single { ChannelFfzEmotesSource(get()) }
@@ -86,14 +84,5 @@ val chatModule = module {
         }
     }
 
-    single<GsonConverterFactory> {
-        GsonConverterFactory.create(
-            GsonBuilder()
-                .registerTypeAdapter(
-                    RecentMessagesResponse::class.java,
-                    RecentMessagesDeserializer(get())
-                )
-                .create()
-        )
-    }
+    single<GsonConverterFactory> { GsonConverterFactory.create(GsonBuilder().create()) }
 }

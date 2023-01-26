@@ -177,7 +177,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.okio)
     implementation(libs.retrofit.core)
-    implementation(libs.retrofit.gson)
+    implementation(libs.retrofit.serialization)
 
     // debugImplementation(libs.leakcanary)
     "debugImplementation"(libs.chucker.runtime)

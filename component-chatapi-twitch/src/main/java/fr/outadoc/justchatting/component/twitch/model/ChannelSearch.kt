@@ -1,31 +1,31 @@
 package fr.outadoc.justchatting.component.twitch.model
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class ChannelSearch(
-    @SerializedName("id")
+    @SerialName("id")
     val id: String? = null,
-    @SerializedName("title")
+    @SerialName("title")
     val title: String? = null,
-    @SerializedName("broadcaster_login")
+    @SerialName("broadcaster_login")
     val broadcasterLogin: String? = null,
-    @SerializedName("display_name")
+    @SerialName("display_name")
     val broadcasterDisplayName: String? = null,
-    @SerializedName("broadcaster_language")
+    @SerialName("broadcaster_language")
     val broadcasterLanguage: String? = null,
-    @SerializedName("game_id")
+    @SerialName("game_id")
     val gameId: String? = null,
-    @SerializedName("game_name")
+    @SerialName("game_name")
     val gameName: String? = null,
-    @SerializedName("is_live")
+    @SerialName("is_live")
     val isLive: Boolean = false,
-    @SerializedName("started_at")
+    @SerialName("started_at")
     val startedAt: String? = null,
-    @SerializedName("thumbnail_url")
-    val thumbnailUrl: String? = null,
-
-    val profileImageURL: String? = null
+    @SerialName("thumbnail_url")
+    val thumbnailUrl: String? = null
 ) : Parcelable

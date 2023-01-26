@@ -38,8 +38,7 @@ class FollowedChannelsDataSource(
                                 toId = follow.toId,
                                 toLogin = follow.toLogin,
                                 toName = follow.toName,
-                                followedAt = follow.followedAt,
-                                profileImageURL = follow.profileImageURL,
+                                followedAt = follow.followedAt
                             )
                         },
                         pagination = Pagination(

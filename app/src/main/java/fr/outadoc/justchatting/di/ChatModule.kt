@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.di
 
-import com.google.gson.GsonBuilder
 import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
@@ -27,7 +26,6 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatNotifierImpl
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
-import retrofit2.converter.gson.GsonConverterFactory
 
 val chatModule = module {
     viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get()) }
@@ -83,6 +81,4 @@ val chatModule = module {
             )
         }
     }
-
-    single<GsonConverterFactory> { GsonConverterFactory.create(GsonBuilder().create()) }
 }

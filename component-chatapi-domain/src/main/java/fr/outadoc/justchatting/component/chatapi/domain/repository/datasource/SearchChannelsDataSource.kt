@@ -40,8 +40,7 @@ class SearchChannelsDataSource(
                                 gameName = search.gameName,
                                 isLive = search.isLive,
                                 startedAt = search.startedAt,
-                                thumbnailUrl = search.thumbnailUrl,
-                                profileImageURL = search.profileImageURL,
+                                thumbnailUrl = search.thumbnailUrl
                             )
                         },
                         pagination = Pagination(

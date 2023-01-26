@@ -1,3 +1,10 @@
 package fr.outadoc.justchatting.component.twitch.model
 
-data class UsersResponse(val data: List<User>?)
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UsersResponse(
+    @SerialName("data")
+    val data: List<User>?
+)

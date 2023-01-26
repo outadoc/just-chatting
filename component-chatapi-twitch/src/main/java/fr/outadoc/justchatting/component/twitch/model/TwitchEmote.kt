@@ -1,17 +1,24 @@
 package fr.outadoc.justchatting.component.twitch.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TwitchEmote(
+    @SerialName("id")
     val id: String,
+    @SerialName("name")
     val name: String,
-    @SerializedName("emote_set_id")
+    @SerialName("emote_set_id")
     val setId: String,
-    @SerializedName("owner_id")
+    @SerialName("owner_id")
     val ownerId: String,
+    @SerialName("format")
     val format: List<String>,
+    @SerialName("scale")
     val scale: List<String>,
-    @SerializedName("theme_mode")
+    @SerialName("theme_mode")
     val themeMode: List<String>,
+    @SerialName("images")
     val images: Map<String, String>
 )

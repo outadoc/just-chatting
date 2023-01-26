@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class DependencyList(
-    @SerializedName("dependencies")
+    @SerialName("dependencies")
     val dependencies: List<Dependency>
 )

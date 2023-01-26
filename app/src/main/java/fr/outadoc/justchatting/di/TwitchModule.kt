@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.di
 
 import androidx.core.net.toUri
+import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesRepository
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
@@ -11,12 +12,20 @@ import fr.outadoc.justchatting.component.twitch.api.IdApi
 import fr.outadoc.justchatting.component.twitch.api.StvEmotesApi
 import fr.outadoc.justchatting.component.twitch.api.TwitchBadgesApi
 import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesApi
+import kotlinx.serialization.ExperimentalSerializationApi
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 val twitchModule = module {
+    single {
+        Json {
+            ignoreUnknownKeys = true
+        }
+    }
+
     single {
         OAuthAppCredentials(
             clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
@@ -36,10 +45,13 @@ val twitchModule = module {
     single<IdApi> { createApi("https://id.twitch.tv/oauth2/") }
 }
 
-private inline fun <reified T> Scope.createApi(baseUrl: String): T =
-    Retrofit.Builder()
+@OptIn(ExperimentalSerializationApi::class)
+private inline fun <reified T> Scope.createApi(baseUrl: String): T {
+    val contentType = "application/json".toMediaType()
+    return Retrofit.Builder()
         .baseUrl(baseUrl)
         .client(get())
-        .addConverterFactory(get<GsonConverterFactory>())
+        .addConverterFactory(get<Json>().asConverterFactory(contentType))
         .build()
         .create(T::class.java)
+}

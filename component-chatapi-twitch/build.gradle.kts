@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -35,10 +36,10 @@ dependencies {
     implementation(libs.androidx.room.core)
     implementation(libs.androidx.room.runtime)
     implementation(libs.compose.runtime.core)
-    implementation(libs.gson)
     implementation(libs.irc)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.retrofit.core)
 
     coreLibraryDesugaring(libs.desugar)

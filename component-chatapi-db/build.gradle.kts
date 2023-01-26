@@ -41,7 +41,6 @@ dependencies {
     api(libs.androidx.room.core)
     implementation(libs.androidx.room.runtime)
     implementation(libs.compose.runtime.core)
-    implementation(libs.gson)
     implementation(libs.irc)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.datetime)

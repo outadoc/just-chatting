@@ -58,7 +58,6 @@ compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata
 compose-ui-core = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 desugar = "com.android.tools:desugar_jdk_libs:1.2.2"
-gson = "com.google.code.gson:gson:2.10.1"
 irc = "fr.outadoc:Kale:v1.2.1"
 junit = "junit:junit:4.13.2"
 koin-android = { module = "io.insert-koin:koin-android", version = "3.3.2" }
@@ -75,4 +74,4 @@ material-core = "com.google.android.material:material:1.8.0"
 okhttp-logging = "com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.11"
 okio = "com.squareup.okio:okio:3.3.0"
 retrofit-core = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
-retrofit-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofit" }
+retrofit-serialization = "com.jakewharton.retrofit:retrofit2-kotlinx-serialization-converter:0.8.0"

@@ -1,8 +1,10 @@
 package fr.outadoc.justchatting.component.twitch.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TwitchBadgesResponse(
-    @SerializedName("badge_sets")
+    @SerialName("badge_sets")
     val badgeSets: Map<String, TwitchBadgeSet>
 )

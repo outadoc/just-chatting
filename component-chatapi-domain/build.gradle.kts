@@ -41,7 +41,6 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.paging.runtime)
     implementation(libs.compose.runtime.core)
-    implementation(libs.gson)
     implementation(libs.irc)
     implementation(libs.koin.core)
     implementation(libs.kotlinx.collections.immutable)

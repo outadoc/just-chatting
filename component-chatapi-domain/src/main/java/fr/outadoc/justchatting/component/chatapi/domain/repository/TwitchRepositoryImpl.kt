@@ -162,8 +162,7 @@ class TwitchRepositoryImpl(
                         type = stream.type,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
-                        startedAt = stream.startedAt,
-                        profileImageURL = stream.profileImageURL
+                        startedAt = stream.startedAt
                     )
                 }
         }

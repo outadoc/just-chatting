@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -35,11 +36,11 @@ dependencies {
     implementation(project(":component-chatapi-domain"))
 
     implementation(libs.compose.runtime.core)
-    implementation(libs.gson)
     implementation(libs.irc)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.okhttp.logging)
     implementation(libs.retrofit.core)
 

@@ -1,12 +1,14 @@
 package fr.outadoc.justchatting.component.twitch.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 class ValidationResponse(
-    @SerializedName("client_id")
+    @SerialName("client_id")
     val clientId: String,
-    @SerializedName("login")
+    @SerialName("login")
     val login: String,
-    @SerializedName("user_id")
+    @SerialName("user_id")
     val userId: String
 )

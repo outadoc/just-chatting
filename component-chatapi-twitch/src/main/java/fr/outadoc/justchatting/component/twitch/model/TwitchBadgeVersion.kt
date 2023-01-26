@@ -1,14 +1,18 @@
 package fr.outadoc.justchatting.component.twitch.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class TwitchBadgeVersion(
+    @SerialName("title")
     val title: String,
+    @SerialName("description")
     val description: String,
-    @SerializedName("image_url_1x")
+    @SerialName("image_url_1x")
     val image1x: String,
-    @SerializedName("image_url_2x")
+    @SerialName("image_url_2x")
     val image2x: String,
-    @SerializedName("image_url_4x")
-    val image4x: String,
+    @SerialName("image_url_4x")
+    val image4x: String
 )

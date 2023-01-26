@@ -1,25 +1,25 @@
 package fr.outadoc.justchatting.component.twitch.model
 
 import android.os.Parcelable
-import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Parcelize
+@Serializable
 data class Follow(
-    @SerializedName("from_id")
+    @SerialName("from_id")
     val fromId: String? = null,
-    @SerializedName("from_login")
+    @SerialName("from_login")
     val fromLogin: String? = null,
-    @SerializedName("from_name")
+    @SerialName("from_name")
     val fromName: String? = null,
-    @SerializedName("to_id")
+    @SerialName("to_id")
     val toId: String? = null,
-    @SerializedName("to_login")
+    @SerialName("to_login")
     val toLogin: String? = null,
-    @SerializedName("to_name")
+    @SerialName("to_name")
     val toName: String? = null,
-    @SerializedName("followed_at")
-    val followedAt: String? = null,
-
-    val profileImageURL: String? = null
+    @SerialName("followed_at")
+    val followedAt: String? = null
 ) : Parcelable

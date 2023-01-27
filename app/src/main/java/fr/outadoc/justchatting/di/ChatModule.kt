@@ -16,8 +16,8 @@ import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
 import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.data.websocket.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.LoggedInChatWebSocket
-import fr.outadoc.justchatting.feature.chat.data.websocket.PubSubRewardParser
-import fr.outadoc.justchatting.feature.chat.data.websocket.PubSubWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.PubSubRewardParser
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.PubSubWebSocket
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntryMapper
@@ -34,7 +34,7 @@ val chatModule = module {
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
-    single { PubSubWebSocket.Factory(get(), get()) }
+    single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
 
     single {
         ChatCommandHandlerFactoriesProvider {

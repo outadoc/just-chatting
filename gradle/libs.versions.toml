@@ -72,8 +72,8 @@ kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.4.0"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
+ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
 ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 ktor-contentNegociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-io = { module = "io.ktor:ktor-io", version.ref = "ktor" }

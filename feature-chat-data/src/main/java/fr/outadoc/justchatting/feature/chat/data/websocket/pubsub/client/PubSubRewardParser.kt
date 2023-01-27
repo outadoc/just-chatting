@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket
+package fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client
 
 import fr.outadoc.justchatting.feature.chat.data.model.PointReward
 import kotlinx.datetime.Clock

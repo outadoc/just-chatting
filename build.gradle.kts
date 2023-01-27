@@ -11,4 +11,3 @@ plugins {
 }
 
 group = "fr.outadoc"
-

@@ -9,13 +9,18 @@ import android.net.Uri
 import android.os.ParcelFileDescriptor
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.utils.logging.logDebug
+import io.ktor.client.HttpClient
+import io.ktor.client.request.request
+import io.ktor.client.request.url
+import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsChannel
+import io.ktor.http.HttpMethod
+import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import okio.buffer
 import okio.sink
+import okio.source
 import org.koin.android.ext.android.inject
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -37,7 +42,7 @@ class UserProfileImageContentProvider : ContentProvider() {
     }
 
     private val apiRepository by inject<TwitchRepository>()
-    private val okHttpClient by inject<OkHttpClient>()
+    private val httpClient by inject<HttpClient>()
 
     override fun onCreate(): Boolean {
         return true
@@ -63,13 +68,15 @@ class UserProfileImageContentProvider : ContentProvider() {
                             ?.profileImageUrl
                             ?: throw FileNotFoundException("Could not retrieve user info from Twitch API.")
 
-                    val request = okHttpClient.newCall(
-                        Request(url = profileImageUrl.toHttpUrl())
-                    )
+                    val response: HttpResponse =
+                        httpClient.request {
+                            method = HttpMethod.Get
+                            url(profileImageUrl)
+                        }
 
                     val (inSocket, outSocket) = ParcelFileDescriptor.createSocketPair()
 
-                    request.execute().body.source().use { source ->
+                    response.bodyAsChannel().toInputStream().source().use { source ->
                         FileOutputStream(outSocket.fileDescriptor)
                             .sink()
                             .buffer()

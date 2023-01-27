@@ -22,7 +22,6 @@ interface TwitchRepository {
     suspend fun loadUsersByLogin(logins: List<String>): List<User>?
     suspend fun loadCheerEmotes(userId: String): List<CheerEmote>
     suspend fun loadEmotesFromSet(setIds: List<String>): List<TwitchEmote>?
-    suspend fun loadUserFollowing(userId: String?, channelId: String?, userLogin: String?): Boolean
     suspend fun mapStreamsWithUserProfileImages(streams: Collection<Stream>): List<Stream>
     suspend fun mapSearchWithUserProfileImages(searchResults: List<ChannelSearch>): List<ChannelSearch>
 }

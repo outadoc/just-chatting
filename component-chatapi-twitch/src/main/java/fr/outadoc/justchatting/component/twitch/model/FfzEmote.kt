@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FfzEmote(
     @SerialName("id")
-    val id: String,
+    val id: Int,
     @SerialName("code")
     val code: String,
     @SerialName("images")

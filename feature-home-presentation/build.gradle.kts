@@ -41,7 +41,7 @@ dependencies {
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.retrofit.core)
+    implementation(libs.ktor.client.core)
 
     coreLibraryDesugaring(libs.desugar)
 }

@@ -47,7 +47,9 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)
     implementation(libs.koin.android)
-    implementation(libs.okhttp.logging)
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.io)
+    implementation(libs.okio)
 
     coreLibraryDesugaring(libs.desugar)
 }

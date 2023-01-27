@@ -244,15 +244,4 @@ class TwitchRepositoryImpl(
                 }
                 .sortedByDescending { it.setId }
         }
-
-    override suspend fun loadUserFollowing(
-        userId: String?,
-        channelId: String?,
-        userLogin: String?
-    ): Boolean = withContext(Dispatchers.IO) {
-        helix.getUserFollows(
-            userId = userId,
-            channelId = channelId
-        ).total == 1
-    }
 }

@@ -41,8 +41,8 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.okhttp.logging)
-    implementation(libs.retrofit.core)
+    implementation(libs.ktor.client.core)
+    implementation(libs.okhttp)
 
     testImplementation(libs.junit)
 

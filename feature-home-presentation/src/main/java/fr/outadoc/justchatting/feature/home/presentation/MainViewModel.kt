@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.utils.logging.logError
+import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,7 +20,6 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
 
 class MainViewModel(
     private val authRepository: AuthRepository,
@@ -71,7 +71,7 @@ class MainViewModel(
 
                             State.LoggedIn(appUser = validatedUser)
                         } catch (e: Exception) {
-                            if (e is InvalidClientIdException || (e as? HttpException)?.code() == 401) {
+                            if (e is InvalidClientIdException || (e as? ClientRequestException)?.response?.status?.value == 401) {
                                 preferencesRepository.updatePreferences { current ->
                                     current.copy(appUser = AppUser.NotLoggedIn)
                                 }

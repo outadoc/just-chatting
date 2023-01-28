@@ -35,6 +35,8 @@ dependencies {
     implementation(project(":component-preferences-domain"))
     implementation(project(":component-chatapi-domain"))
 
+    implementation(platform(libs.compose.bom))
+
     implementation(libs.compose.runtime.core)
     implementation(libs.irc)
     implementation(libs.kotlinx.collections.immutable)

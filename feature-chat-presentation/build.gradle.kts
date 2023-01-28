@@ -38,6 +38,8 @@ dependencies {
     implementation(project(":utils-ui"))
     implementation(project(":utils-logging"))
 
+    implementation(platform(libs.compose.bom))
+
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.viewmodel)

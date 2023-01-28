@@ -45,6 +45,8 @@ dependencies {
     api(project(":feature-preferences-presentation-mobile"))
     implementation(project(":component-chatapi-twitch"))
 
+    implementation(platform(libs.compose.bom))
+
     implementation(libs.androidx.browser)
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.splashscreen)

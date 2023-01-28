@@ -38,7 +38,7 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 
 public fun Scope.baseHttpClient(
-    block: HttpClientConfig<OkHttpConfig>.() -> Unit = {}
+    block: HttpClientConfig<OkHttpConfig>.() -> Unit = {},
 ): HttpClient {
     return HttpClient(OkHttp) {
         install(ContentNegotiation) {
@@ -67,8 +67,8 @@ public fun Scope.baseHttpClient(
                 cache(
                     Cache(
                         directory = File(get<Context>().cacheDir, "http_cache"),
-                        maxSize = 50L * 1024L * 1024L // 50 MiB
-                    )
+                        maxSize = 50L * 1024L * 1024L, // 50 MiB
+                    ),
                 )
             }
 

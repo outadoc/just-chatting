@@ -31,7 +31,7 @@ val twitchModule = module {
     single {
         OAuthAppCredentials(
             clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
-            redirectUri = "https://just-chatting.app/auth/callback.html".toUri()
+            redirectUri = "https://just-chatting.app/auth/callback.html".toUri(),
         )
     }
 

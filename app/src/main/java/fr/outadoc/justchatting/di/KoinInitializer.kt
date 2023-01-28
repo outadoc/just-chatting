@@ -27,7 +27,7 @@ class KoinInitializer : Initializer<KoinApplication> {
                 homeModule,
                 settingsModule,
                 mainNavigationModule,
-                twitchModule
+                twitchModule,
             )
         }
     }

@@ -77,7 +77,7 @@ val chatModule = module {
                 get<GlobalTwitchEmotesSource>(),
                 get<GlobalBttvEmotesSource>(),
                 get<GlobalFfzEmotesSource>(),
-                get<GlobalStvEmotesSource>()
+                get<GlobalStvEmotesSource>(),
             )
         }
     }

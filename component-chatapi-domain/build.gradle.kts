@@ -37,6 +37,8 @@ dependencies {
     implementation(project(":utils-core"))
     implementation(project(":utils-logging"))
 
+    implementation(platform(libs.compose.bom))
+
     implementation(libs.androidx.room.core)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.paging.runtime)

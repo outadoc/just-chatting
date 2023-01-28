@@ -48,6 +48,8 @@ dependencies {
     implementation(project(":feature-chat-domain"))
     api(project(":feature-chat-presentation"))
 
+    implementation(platform(libs.compose.bom))
+
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)

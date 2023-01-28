@@ -38,6 +38,8 @@ android {
 dependencies {
     implementation(project(":utils-core"))
 
+    implementation(platform(libs.compose.bom))
+
     implementation(libs.androidx.palette)
     implementation(libs.coil.core)
     implementation(libs.compose.foundation)

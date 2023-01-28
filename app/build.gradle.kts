@@ -137,6 +137,8 @@ dependencies {
     implementation(project(":utils-ui"))
     implementation(project(":utils-logging"))
 
+    implementation(platform(libs.compose.bom))
+
     implementation(libs.accompanist.systemuicontroller)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)

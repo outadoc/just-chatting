@@ -29,6 +29,8 @@ android {
 }
 
 dependencies {
+    implementation(platform(libs.compose.bom))
+
     implementation(libs.compose.ui.core)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)

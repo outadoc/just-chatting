@@ -43,6 +43,8 @@ dependencies {
 
     implementation(project(":component-preferences-data"))
 
+    implementation(platform(libs.compose.bom))
+
     implementation(libs.compose.ui.core)
     implementation(libs.koin.compose)
     implementation(libs.kotlinx.collections.immutable)

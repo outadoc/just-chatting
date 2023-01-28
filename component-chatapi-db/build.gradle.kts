@@ -38,6 +38,8 @@ dependencies {
     implementation(project(":utils-core"))
     implementation(project(":utils-logging"))
 
+    implementation(platform(libs.compose.bom))
+
     api(libs.androidx.room.core)
     implementation(libs.androidx.room.runtime)
     implementation(libs.compose.runtime.core)

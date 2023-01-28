@@ -110,7 +110,7 @@ tasks.named("generateLicenseReport") {
 spotless {
     kotlin {
         target("**/*.kt")
-        ktlint("0.45.2").userData(mapOf("disabled_rules" to "no-wildcard-imports"))
+        ktlint("0.48.2").userData(mapOf("disabled_rules" to "no-wildcard-imports"))
         endWithNewline()
     }
 

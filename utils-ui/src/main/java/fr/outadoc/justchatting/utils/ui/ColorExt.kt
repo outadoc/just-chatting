@@ -14,7 +14,7 @@ private const val MIN_LUMINANCE_SEARCH_PRECISION = 1
 fun ensureColorIsAccessible(
     foreground: Color,
     background: Color,
-    minimumContrast: Double = 4.5
+    minimumContrast: Double = 4.5,
 ): Color? {
     // Get X, Y, Z components of foreground and background colors
     val (_, backgroundY, _) = colorToXyz(background)
@@ -23,7 +23,7 @@ fun ensureColorIsAccessible(
     // Calculate the contrast between the foreground and background colors
     val contrast = calculateLuminanceContrast(
         foregroundY = foregroundY,
-        backgroundY = backgroundY
+        backgroundY = backgroundY,
     )
 
     // Contrast is a-ok as-is
@@ -31,7 +31,7 @@ fun ensureColorIsAccessible(
 
     val maxLuminanceContrast = calculateLuminanceContrast(
         foregroundY = 100.0,
-        backgroundY = backgroundY
+        backgroundY = backgroundY,
     )
 
     // Even with max luminance, contrast isn't high enough
@@ -50,11 +50,14 @@ fun ensureColorIsAccessible(
         val testY = (minNewY + maxNewY) / 2
         val testContrast = calculateLuminanceContrast(
             foregroundY = testY,
-            backgroundY = backgroundY
+            backgroundY = backgroundY,
         )
 
-        if (testContrast < minimumContrast) minNewY = testY
-        else maxNewY = testY
+        if (testContrast < minimumContrast) {
+            minNewY = testY
+        } else {
+            maxNewY = testY
+        }
 
         numIterations++
     }
@@ -63,7 +66,7 @@ fun ensureColorIsAccessible(
     return xyzToColor(
         x = foregroundX,
         y = maxNewY,
-        z = foregroundZ
+        z = foregroundZ,
     )
 }
 
@@ -75,14 +78,14 @@ private fun calculateLuminanceContrast(foregroundY: Double, backgroundY: Double)
 fun ensureMinimumAlpha(
     @ColorInt foreground: Int,
     @ColorInt background: Int,
-    minimumContrast: Float = 10.0f
+    minimumContrast: Float = 10.0f,
 ): Int {
     val minAlpha = ColorUtils.calculateMinimumAlpha(foreground, background, minimumContrast)
         .takeIf { it >= 0 } ?: 255
 
     return ColorUtils.setAlphaComponent(
         foreground,
-        minAlpha
+        minAlpha,
     )
 }
 

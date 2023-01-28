@@ -5,7 +5,7 @@ abstract class CachedEmoteListSource<T> : EmoteListSource<T> {
     data class Params(
         val channelId: String,
         val channelName: String,
-        val emoteSets: List<String>
+        val emoteSets: List<String>,
     )
 
     private var cachedResult: Pair<Params, T>? = null
@@ -13,12 +13,12 @@ abstract class CachedEmoteListSource<T> : EmoteListSource<T> {
     override suspend fun getEmotes(
         channelId: String,
         channelName: String,
-        emoteSets: List<String>
+        emoteSets: List<String>,
     ): T {
         val params = Params(
             channelId = channelId,
             channelName = channelName,
-            emoteSets = emoteSets
+            emoteSets = emoteSets,
         )
 
         val cachedResult = this.cachedResult

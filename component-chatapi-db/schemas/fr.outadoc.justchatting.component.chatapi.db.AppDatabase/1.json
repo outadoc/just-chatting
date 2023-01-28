@@ -1,46 +1,42 @@
 {
-  "formatVersion": 1,
   "database": {
-    "version": 1,
     "identityHash": "b59015f39ebe49740102cfa148884daa",
-    "entities": [
-      {
-        "tableName": "recent_emotes",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `url` TEXT NOT NULL, `used_at` INTEGER NOT NULL, PRIMARY KEY(`name`))",
-        "fields": [
-          {
-            "fieldPath": "name",
-            "columnName": "name",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "url",
-            "columnName": "url",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "usedAt",
-            "columnName": "used_at",
-            "affinity": "INTEGER",
-            "notNull": true
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "name"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": []
-      }
-    ],
-    "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
       "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b59015f39ebe49740102cfa148884daa')"
-    ]
-  }
+    ],
+    "entities": [{
+      "indices": [],
+      "foreignKeys": [],
+      "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`name` TEXT NOT NULL, `url` TEXT NOT NULL, `used_at` INTEGER NOT NULL, PRIMARY KEY(`name`))",
+      "fields": [
+        {
+          "notNull": true,
+          "fieldPath": "name",
+          "columnName": "name",
+          "affinity": "TEXT"
+        },
+        {
+          "notNull": true,
+          "fieldPath": "url",
+          "columnName": "url",
+          "affinity": "TEXT"
+        },
+        {
+          "notNull": true,
+          "fieldPath": "usedAt",
+          "columnName": "used_at",
+          "affinity": "INTEGER"
+        }
+      ],
+      "tableName": "recent_emotes",
+      "primaryKey": {
+        "columnNames": ["name"],
+        "autoGenerate": false
+      }
+    }],
+    "version": 1,
+    "views": []
+  },
+  "formatVersion": 1
 }

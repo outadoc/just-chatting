@@ -27,5 +27,5 @@ data class Stream(
     @SerialName("viewer_count")
     val viewerCount: Int? = null,
     @SerialName("started_at")
-    val startedAt: String? = null
+    val startedAt: String? = null,
 ) : Parcelable

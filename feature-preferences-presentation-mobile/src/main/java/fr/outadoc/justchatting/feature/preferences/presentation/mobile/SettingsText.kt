@@ -30,7 +30,7 @@ fun SettingsTextPreview() {
                 onClickLabel = "",
                 title = {
                     Text("Lorem ipsum")
-                }
+                },
             )
         }
     }
@@ -46,7 +46,7 @@ fun SettingsTextSubtitlePreview() {
                 onClick = {},
                 onClickLabel = "",
                 title = { Text("Lorem ipsum") },
-                subtitle = { Text("Dolor sit amet") }
+                subtitle = { Text("Dolor sit amet") },
             )
         }
     }
@@ -58,28 +58,28 @@ fun SettingsText(
     onClick: () -> Unit = {},
     onClickLabel: String? = null,
     title: @Composable () -> Unit,
-    subtitle: @Composable () -> Unit = {}
+    subtitle: @Composable () -> Unit = {},
 ) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClickLabel = onClickLabel) { onClick() }
             .padding(vertical = 16.dp),
-        contentAlignment = Alignment.CenterStart
+        contentAlignment = Alignment.CenterStart,
     ) {
         Column(
             modifier = modifier,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
+            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.titleMedium
+                LocalTextStyle provides MaterialTheme.typography.titleMedium,
             ) {
                 title()
             }
 
             CompositionLocalProvider(
                 LocalTextStyle provides MaterialTheme.typography.bodySmall,
-                LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
+                LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f),
             ) {
                 subtitle()
             }

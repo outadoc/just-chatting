@@ -16,7 +16,7 @@ interface RecentEmotesDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(emotes: Collection<RecentEmote>)
 
-    @Query("DELETE FROM recent_emotes WHERE name NOT IN (SELECT name FROM recent_emotes ORDER BY used_at DESC LIMIT ${MaxRecentEmotes})")
+    @Query("DELETE FROM recent_emotes WHERE name NOT IN (SELECT name FROM recent_emotes ORDER BY used_at DESC LIMIT $MaxRecentEmotes)")
     fun deleteOld()
 
     @Transaction

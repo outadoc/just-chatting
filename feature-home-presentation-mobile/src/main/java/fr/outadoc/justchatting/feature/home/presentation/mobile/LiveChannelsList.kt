@@ -30,7 +30,7 @@ import org.koin.androidx.compose.getViewModel
 fun LiveChannelsList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    onItemClick: (Stream) -> Unit
+    onItemClick: (Stream) -> Unit,
 ) {
     val viewModel: FollowedStreamsViewModel = getViewModel()
     val items: LazyPagingItems<Stream> = viewModel.pagingData.collectAsLazyPagingItems()
@@ -38,19 +38,19 @@ fun LiveChannelsList(
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { items.refresh() }
+        onRefresh = { items.refresh() },
     )
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .pullRefresh(pullRefreshState),
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.TopCenter,
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = insets + PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if (!isRefreshing && items.itemCount == 0) {
                 item(key = "_noContent") {
@@ -67,7 +67,7 @@ fun LiveChannelsList(
                             gameName = item.gameName,
                             startedAt = item.startedAt?.toInstant(),
                             profileImageURL = item.profileImageURL,
-                            onClick = { onItemClick(item) }
+                            onClick = { onItemClick(item) },
                         )
                     } else {
                         LiveStreamCard(modifier = Modifier.height(64.dp))
@@ -79,7 +79,7 @@ fun LiveChannelsList(
         PullRefreshIndicator(
             refreshing = isRefreshing,
             state = pullRefreshState,
-            scale = true
+            scale = true,
         )
     }
 }

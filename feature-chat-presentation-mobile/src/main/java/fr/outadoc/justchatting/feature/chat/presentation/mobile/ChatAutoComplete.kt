@@ -17,8 +17,8 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Chatter
+import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
 import fr.outadoc.justchatting.utils.ui.AppTheme
 
 @Composable
@@ -26,18 +26,18 @@ fun AutoCompleteEmoteItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     animateEmotes: Boolean = true,
-    emote: Emote
+    emote: Emote,
 ) {
     AutoCompleteItemContent(
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     ) {
         EmoteItem(
             modifier = Modifier
                 .size(32.dp)
                 .padding(4.dp),
             emote = emote,
-            animateEmotes = animateEmotes
+            animateEmotes = animateEmotes,
         )
     }
 }
@@ -46,11 +46,11 @@ fun AutoCompleteEmoteItem(
 fun AutoCompleteUserItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    chatter: Chatter
+    chatter: Chatter,
 ) {
     AutoCompleteItemContent(
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     ) {
         Text(text = "@${chatter.name}")
     }
@@ -81,19 +81,19 @@ fun AutoCompleteItemPreviewIcon() {
 fun AutoCompleteItemContent(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    content: @Composable RowScope.() -> Unit
+    content: @Composable RowScope.() -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
 
     Chip(
         modifier = modifier,
         colors = ChipDefaults.chipColors(
-            backgroundColor = MaterialTheme.colorScheme.surfaceVariant
+            backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
         onClick = {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             onClick()
         },
-        content = content
+        content = content,
     )
 }

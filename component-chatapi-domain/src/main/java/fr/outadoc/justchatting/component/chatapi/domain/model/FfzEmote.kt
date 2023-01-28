@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 
 class FfzEmote(
     override val name: String,
-    urls: Map<String, String?>
+    urls: Map<String, String?>,
 ) : Emote() {
 
     private val urlsMap: List<Pair<Float, String?>> =

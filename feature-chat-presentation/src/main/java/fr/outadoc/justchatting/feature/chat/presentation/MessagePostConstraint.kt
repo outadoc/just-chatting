@@ -5,5 +5,5 @@ import kotlin.time.Duration
 
 data class MessagePostConstraint(
     val lastMessageSentAt: Instant,
-    val slowModeDuration: Duration
+    val slowModeDuration: Duration,
 )

@@ -21,7 +21,7 @@ class EmotesRepository(
     private val twitchBadgesApi: TwitchBadgesApi,
     private val stvEmotesApi: StvEmotesApi,
     private val bttvEmotesApi: BttvEmotesApi,
-    private val recentEmotes: RecentEmotesDao
+    private val recentEmotes: RecentEmotesDao,
 ) {
     suspend fun loadGlobalBadges(): List<TwitchBadge> =
         withContext(Dispatchers.IO) {
@@ -35,8 +35,8 @@ class EmotesRepository(
                             urls = persistentMapOf(
                                 1f to version.image1x,
                                 2f to version.image2x,
-                                4f to version.image4x
-                            )
+                                4f to version.image4x,
+                            ),
                         )
                     }
                 }
@@ -54,8 +54,8 @@ class EmotesRepository(
                             urls = persistentMapOf(
                                 1f to version.image1x,
                                 2f to version.image2x,
-                                4f to version.image4x
-                            )
+                                4f to version.image4x,
+                            ),
                         )
                     }
                 }
@@ -69,7 +69,7 @@ class EmotesRepository(
                     isZeroWidth = emote.isZeroWidth,
                     urls = emote.urls.associate { (density, url) ->
                         density.toFloat() to url
-                    }
+                    },
                 )
             }
         }
@@ -82,7 +82,7 @@ class EmotesRepository(
                     isZeroWidth = emote.isZeroWidth,
                     urls = emote.urls.associate { (density, url) ->
                         density.toFloat() to url
-                    }
+                    },
                 )
             }
         }
@@ -92,7 +92,7 @@ class EmotesRepository(
             bttvEmotesApi.getGlobalBttvEmotes().map { emote ->
                 BttvEmote(
                     id = emote.id,
-                    name = emote.code
+                    name = emote.code,
                 )
             }
         }
@@ -102,7 +102,7 @@ class EmotesRepository(
             bttvEmotesApi.getBttvGlobalFfzEmotes().map { emote ->
                 FfzEmote(
                     name = emote.code,
-                    urls = emote.images
+                    urls = emote.images,
                 )
             }
         }
@@ -112,7 +112,7 @@ class EmotesRepository(
             bttvEmotesApi.getBttvEmotes(channelId).allEmotes.map { emote ->
                 BttvEmote(
                     id = emote.id,
-                    name = emote.code
+                    name = emote.code,
                 )
             }
         }
@@ -122,7 +122,7 @@ class EmotesRepository(
             bttvEmotesApi.getBttvFfzEmotes(channelId).map { emote ->
                 FfzEmote(
                     name = emote.code,
-                    urls = emote.images
+                    urls = emote.images,
                 )
             }
         }
@@ -133,7 +133,7 @@ class EmotesRepository(
                 RecentEmote(
                     name = emote.name,
                     url = emote.url,
-                    usedAt = emote.usedAt
+                    usedAt = emote.usedAt,
                 )
             }
         }
@@ -142,17 +142,20 @@ class EmotesRepository(
         withContext(Dispatchers.IO) {
             val listSize: Int = emotes.size
             val list: Collection<RecentEmote> =
-                if (listSize <= MaxRecentEmotes) emotes
-                else emotes.toList().subList(listSize - MaxRecentEmotes, listSize)
+                if (listSize <= MaxRecentEmotes) {
+                    emotes
+                } else {
+                    emotes.toList().subList(listSize - MaxRecentEmotes, listSize)
+                }
 
             recentEmotes.ensureMaxSizeAndInsert(
                 list.map { emote ->
                     fr.outadoc.justchatting.component.chatapi.db.RecentEmote(
                         name = emote.name,
                         url = emote.url,
-                        usedAt = emote.usedAt
+                        usedAt = emote.usedAt,
                     )
-                }
+                },
             )
         }
 }

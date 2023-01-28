@@ -12,5 +12,5 @@ data class RecentEmote(
     @ColumnInfo(name = "url")
     val url: String,
     @ColumnInfo(name = "used_at")
-    val usedAt: Long
+    val usedAt: Long,
 )

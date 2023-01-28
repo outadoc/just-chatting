@@ -4,7 +4,7 @@ import android.net.Uri
 
 data class TwitchChatEmote(
     val id: String,
-    val name: String
+    val name: String,
 ) {
 
     companion object {

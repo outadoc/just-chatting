@@ -27,5 +27,5 @@ data class ChannelSearch(
     @SerialName("started_at")
     val startedAt: String? = null,
     @SerialName("thumbnail_url")
-    val thumbnailUrl: String? = null
+    val thumbnailUrl: String? = null,
 ) : Parcelable

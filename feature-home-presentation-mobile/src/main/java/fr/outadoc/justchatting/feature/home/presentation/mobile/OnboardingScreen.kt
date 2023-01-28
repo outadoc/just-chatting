@@ -36,50 +36,50 @@ fun OnboardingScreenPreview() {
 @Composable
 fun OnboardingScreen(
     modifier: Modifier = Modifier,
-    onLoginClick: () -> Unit
+    onLoginClick: () -> Unit,
 ) {
     Scaffold(modifier = modifier) { insets ->
         Column(
             modifier = Modifier
                 .padding(insets)
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Box(
-                modifier = Modifier.widthIn(max = 320.dp)
+                modifier = Modifier.widthIn(max = 320.dp),
             ) {
                 Column(
                     modifier = Modifier
                         .padding(16.dp)
                         .fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Icon(
                         modifier = Modifier
                             .size(AppIconSize)
                             .padding(bottom = 24.dp),
                         painter = painterResource(R.drawable.ic_notif),
-                        contentDescription = null
+                        contentDescription = null,
                     )
 
                     Text(
                         text = stringResource(
                             R.string.onboarding_title,
-                            stringResource(R.string.app_name)
+                            stringResource(R.string.app_name),
                         ),
                         style = MaterialTheme.typography.headlineSmall,
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
 
                     Text(
                         modifier = Modifier.padding(vertical = 32.dp),
                         text = stringResource(R.string.onboarding_message),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
                     )
 
                     SignInWithTwitchButton(
-                        onClick = onLoginClick
+                        onClick = onLoginClick,
                     )
                 }
             }

@@ -8,5 +8,5 @@ data class CheerEmote(
     @SerialName("prefix")
     val prefix: String,
     @SerialName("tiers")
-    val tiers: List<CheerEmoteTier>
+    val tiers: List<CheerEmoteTier>,
 )

@@ -5,6 +5,6 @@ interface EmoteListSource<T> {
     suspend fun getEmotes(
         channelId: String,
         channelName: String,
-        emoteSets: List<String>
+        emoteSets: List<String>,
     ): T
 }

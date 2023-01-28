@@ -8,7 +8,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 
 class ReadExternalDependenciesList(
-    private val context: Context
+    private val context: Context,
 ) {
     @OptIn(ExperimentalSerializationApi::class)
     suspend operator fun invoke(): List<Dependency> =

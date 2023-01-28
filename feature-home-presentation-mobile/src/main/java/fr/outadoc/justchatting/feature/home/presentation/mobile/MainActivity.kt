@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                     OnboardingScreen(
                         onLoginClick = {
                             viewModel.onLoginClick()
-                        }
+                        },
                     )
                 }
 
@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
                             if (Build.VERSION.SDK_INT >= 29) {
                                 openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
                             }
-                        }
+                        },
                     )
                 }
             }
@@ -143,8 +143,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(
             ChatActivity.createIntent(
                 context = this,
-                channelLogin = login
-            )
+                channelLogin = login,
+            ),
         )
     }
 }

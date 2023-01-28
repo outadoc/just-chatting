@@ -25,7 +25,7 @@ fun Map<String, String?>.parseEmotes(message: String): List<TwitchChatEmote>? {
 
                     TwitchChatEmote(
                         id = emote.key,
-                        name = message.slice(realBegin..realEnd)
+                        name = message.slice(realBegin..realEnd),
                     )
                 }
                 .orEmpty()
@@ -51,7 +51,7 @@ fun Map<String, String?>.parseParentMessage(): ChatMessage.InReplyTo? {
         message = this["reply-parent-msg-body"] ?: return null,
         userId = this["reply-parent-user-id"] ?: return null,
         userLogin = this["reply-parent-user-login"] ?: return null,
-        userName = this["reply-parent-display-name"] ?: return null
+        userName = this["reply-parent-display-name"] ?: return null,
     )
 }
 
@@ -105,7 +105,7 @@ val Map<String, String?>.userId: String?
 
 private fun String.splitAndMakeMap(
     split: String,
-    map: String
+    map: String,
 ): Map<String, String?> = buildMap {
     this@splitAndMakeMap.split(split)
         .dropLastWhile { it.isEmpty() }

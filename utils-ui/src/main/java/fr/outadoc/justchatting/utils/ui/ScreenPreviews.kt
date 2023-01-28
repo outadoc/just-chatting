@@ -7,11 +7,11 @@ import androidx.compose.ui.tooling.preview.Preview
     group = "themes",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
-    showSystemUi = true
+    showSystemUi = true,
 )
 @Preview(
     group = "themes",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
-    showSystemUi = true
+    showSystemUi = true,
 )
 annotation class ScreenPreviews

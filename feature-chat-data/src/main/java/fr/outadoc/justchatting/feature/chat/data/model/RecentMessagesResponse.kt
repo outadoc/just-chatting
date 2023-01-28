@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RecentMessagesResponse(
     @SerialName("messages")
-    val messages: List<String>
+    val messages: List<String>,
 )

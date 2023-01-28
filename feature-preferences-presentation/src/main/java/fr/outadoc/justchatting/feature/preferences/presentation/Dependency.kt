@@ -14,5 +14,5 @@ data class Dependency(
     @SerialName("moduleLicense")
     val moduleLicense: String? = null,
     @SerialName("moduleLicenseUrl")
-    val moduleLicenseUrl: String? = null
+    val moduleLicenseUrl: String? = null,
 )

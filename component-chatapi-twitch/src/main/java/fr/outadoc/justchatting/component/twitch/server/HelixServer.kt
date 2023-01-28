@@ -34,7 +34,7 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
     override suspend fun getFollowedStreams(
         userId: String?,
         limit: Int,
-        offset: String?
+        offset: String?,
     ): StreamsResponse {
         return client.get {
             url {
@@ -67,7 +67,7 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
     override suspend fun getChannels(
         query: String,
         limit: Int,
-        offset: String?
+        offset: String?,
     ): ChannelSearchResponse {
         return client.get {
             url {
@@ -82,7 +82,7 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
     override suspend fun getFollowedChannels(
         userId: String?,
         limit: Int,
-        offset: String?
+        offset: String?,
     ): FollowResponse {
         return client.get {
             url {

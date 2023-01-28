@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase
 
 @Database(
     entities = [RecentEmote::class],
-    version = 1
+    version = 1,
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun recentEmotes(): RecentEmotesDao

@@ -36,7 +36,7 @@ class LoggedInChatWebSocket(
     private val clock: Clock,
     private val parser: ChatMessageParser,
     private val preferencesRepository: PreferenceRepository,
-    channelLogin: String
+    channelLogin: String,
 ) : BaseChatWebSocket(networkStateObserver, scope, channelLogin) {
 
     class Factory(
@@ -49,7 +49,7 @@ class LoggedInChatWebSocket(
         override fun create(
             scope: CoroutineScope,
             channelLogin: String,
-            channelId: String
+            channelId: String,
         ): LoggedInChatWebSocket {
             return LoggedInChatWebSocket(
                 networkStateObserver = networkStateObserver,
@@ -57,7 +57,7 @@ class LoggedInChatWebSocket(
                 parser = parser,
                 scope = scope,
                 channelLogin = channelLogin,
-                preferencesRepository = preferencesRepository
+                preferencesRepository = preferencesRepository,
             )
         }
     }
@@ -66,8 +66,8 @@ class LoggedInChatWebSocket(
         MutableStateFlow(
             ConnectionStatus(
                 isAlive = false,
-                preventSendingMessages = true
-            )
+                preventSendingMessages = true,
+            ),
         )
 
     override val connectionStatus = _connectionStatus.asStateFlow()
@@ -93,7 +93,7 @@ class LoggedInChatWebSocket(
                 _connectionStatus.update { status ->
                     status.copy(
                         isAlive = true,
-                        preventSendingMessages = false
+                        preventSendingMessages = false,
                     )
                 }
             }
@@ -121,7 +121,7 @@ class LoggedInChatWebSocket(
             _connectionStatus.update { status ->
                 status.copy(
                     isAlive = false,
-                    preventSendingMessages = true
+                    preventSendingMessages = true,
                 )
             }
 
@@ -132,7 +132,7 @@ class LoggedInChatWebSocket(
             _connectionStatus.update { status ->
                 status.copy(
                     isAlive = false,
-                    preventSendingMessages = true
+                    preventSendingMessages = true,
                 )
             }
         }
@@ -151,8 +151,8 @@ class LoggedInChatWebSocket(
             emit(
                 Command.SendMessageError(
                     throwable = e,
-                    timestamp = clock.now()
-                )
+                    timestamp = clock.now(),
+                ),
             )
         }
     }

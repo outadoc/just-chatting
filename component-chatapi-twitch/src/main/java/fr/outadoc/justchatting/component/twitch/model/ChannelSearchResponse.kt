@@ -8,5 +8,5 @@ data class ChannelSearchResponse(
     @SerialName("data")
     val data: List<ChannelSearch>?,
     @SerialName("pagination")
-    val pagination: Pagination?
+    val pagination: Pagination?,
 )

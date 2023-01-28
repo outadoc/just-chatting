@@ -34,7 +34,7 @@ fun UserItemPreview() {
                 .width(250.dp),
             displayName = "Maghla",
             followedAt = "2022-01-01T13:45:04.00Z".toInstant(),
-            profileImageURL = null
+            profileImageURL = null,
         )
     }
 }
@@ -46,17 +46,17 @@ fun UserItemCard(
     displayName: String? = null,
     followedAt: Instant? = null,
     profileImageURL: String? = null,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Card(
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     ) {
         UserItem(
             modifier = Modifier.padding(8.dp),
             displayName = displayName,
             followedAt = followedAt,
-            profileImageURL = profileImageURL
+            profileImageURL = profileImageURL,
         )
     }
 }
@@ -66,11 +66,11 @@ fun UserItem(
     modifier: Modifier = Modifier,
     displayName: String?,
     followedAt: Instant?,
-    profileImageURL: String?
+    profileImageURL: String?,
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         profileImageURL?.let { url ->
             AsyncImage(
@@ -79,7 +79,7 @@ fun UserItem(
                     .size(56.dp)
                     .clip(CircleShape),
                 model = url,
-                contentDescription = null
+                contentDescription = null,
             )
         }
 
@@ -89,7 +89,7 @@ fun UserItem(
                     text = displayName,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
 
@@ -98,7 +98,7 @@ fun UserItem(
                 ?.let { followedAt ->
                     Text(
                         text = stringResource(R.string.followed_at, followedAt),
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 }
         }

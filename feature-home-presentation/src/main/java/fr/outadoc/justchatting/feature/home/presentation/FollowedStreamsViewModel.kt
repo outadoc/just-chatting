@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class FollowedStreamsViewModel(
-    private val repository: TwitchRepository
+    private val repository: TwitchRepository,
 ) : ViewModel() {
 
     private val _load = MutableStateFlow(0)

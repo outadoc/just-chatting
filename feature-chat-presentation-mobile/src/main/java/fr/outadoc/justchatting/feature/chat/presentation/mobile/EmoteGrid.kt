@@ -26,15 +26,15 @@ fun EmoteGrid(
     animateEmotes: Boolean,
     emoteSize: Dp = 36.dp,
     onEmoteClick: (Emote) -> Unit,
-    contentPadding: PaddingValues = PaddingValues()
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     LazyVerticalGrid(
         modifier = modifier,
         contentPadding = contentPadding,
         columns = GridCells.Adaptive(
-            minSize = emoteSize + 8.dp
+            minSize = emoteSize + 8.dp,
         ),
-        horizontalArrangement = Arrangement.spacedBy(4.dp)
+        horizontalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         itemsIndexed(
             items = emotes,
@@ -49,7 +49,7 @@ fun EmoteGrid(
                     is EmoteSetItem.Emote -> 1
                     is EmoteSetItem.Header -> 2
                 }
-            }
+            },
         ) { index, item ->
             when (item) {
                 is EmoteSetItem.Header -> {
@@ -57,7 +57,7 @@ fun EmoteGrid(
                         modifier = Modifier
                             .padding(top = if (index > 0) 8.dp else 0.dp)
                             .semantics { heading() },
-                        header = item
+                        header = item,
                     )
                 }
 
@@ -66,7 +66,7 @@ fun EmoteGrid(
                         EmoteItem(
                             modifier = Modifier.size(emoteSize),
                             emote = item.emote,
-                            animateEmotes = animateEmotes
+                            animateEmotes = animateEmotes,
                         )
                     }
                 }

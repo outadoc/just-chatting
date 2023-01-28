@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.update
 import kotlin.time.Duration.Companion.seconds
 
 class ChannelSearchViewModel(
-    private val repository: TwitchRepository
+    private val repository: TwitchRepository,
 ) : ViewModel() {
 
     data class State(val query: String = "")

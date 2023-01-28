@@ -21,5 +21,5 @@ data class Follow(
     @SerialName("to_name")
     val toName: String? = null,
     @SerialName("followed_at")
-    val followedAt: String? = null
+    val followedAt: String? = null,
 ) : Parcelable

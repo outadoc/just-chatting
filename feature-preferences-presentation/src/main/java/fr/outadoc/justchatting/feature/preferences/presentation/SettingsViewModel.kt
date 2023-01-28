@@ -3,10 +3,10 @@ package fr.outadoc.justchatting.feature.preferences.presentation
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -21,7 +21,7 @@ import java.io.IOException
 class SettingsViewModel(
     private val preferenceRepository: PreferenceRepository,
     private val authRepository: AuthRepository,
-    private val logRepository: LogRepository
+    private val logRepository: LogRepository,
 ) : ViewModel() {
 
     sealed class Event {
@@ -35,7 +35,7 @@ class SettingsViewModel(
         preferenceRepository.currentPreferences.stateIn(
             viewModelScope,
             started = SharingStarted.WhileSubscribed(),
-            initialValue = AppPreferences()
+            initialValue = AppPreferences(),
         )
 
     fun updatePreferences(appPreferences: AppPreferences) {

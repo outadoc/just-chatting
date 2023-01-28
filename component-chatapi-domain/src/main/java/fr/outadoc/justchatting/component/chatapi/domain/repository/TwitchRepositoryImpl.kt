@@ -22,7 +22,7 @@ import kotlinx.coroutines.withContext
 
 class TwitchRepositoryImpl(
     private val helix: HelixApi,
-    private val preferencesRepository: PreferenceRepository
+    private val preferencesRepository: PreferenceRepository,
 ) : TwitchRepository {
 
     override suspend fun loadSearchChannels(query: String): Pager<String, ChannelSearchResponse> {
@@ -31,14 +31,14 @@ class TwitchRepositoryImpl(
                 pageSize = 15,
                 initialLoadSize = 15,
                 prefetchDistance = 5,
-                enablePlaceholders = false
+                enablePlaceholders = false,
             ),
             pagingSourceFactory = {
                 SearchChannelsDataSource(
                     query = query,
-                    helixApi = helix
+                    helixApi = helix,
                 )
-            }
+            },
         )
     }
 
@@ -54,7 +54,7 @@ class TwitchRepositoryImpl(
                     map { searchResult ->
                         searchResult.copy(
                             profileImageURL = users.firstOrNull { user -> user.id == searchResult.id }
-                                ?.profileImageUrl
+                                ?.profileImageUrl,
                         )
                     }
                 }
@@ -67,14 +67,14 @@ class TwitchRepositoryImpl(
                 pageSize = 30,
                 initialLoadSize = 30,
                 prefetchDistance = 10,
-                enablePlaceholders = false
+                enablePlaceholders = false,
             ),
             pagingSourceFactory = {
                 FollowedStreamsDataSource(
                     userId = prefs.appUser.id,
-                    helixApi = helix
+                    helixApi = helix,
                 )
-            }
+            },
         )
     }
 
@@ -91,7 +91,7 @@ class TwitchRepositoryImpl(
             return map { stream ->
                 val user = users.firstOrNull { user -> stream.userId == user.id }
                 stream.copy(
-                    profileImageURL = user?.profileImageUrl
+                    profileImageURL = user?.profileImageUrl,
                 )
             }
         }
@@ -103,14 +103,14 @@ class TwitchRepositoryImpl(
                 pageSize = 40,
                 initialLoadSize = 40,
                 prefetchDistance = 10,
-                enablePlaceholders = false
+                enablePlaceholders = false,
             ),
             pagingSourceFactory = {
                 FollowedChannelsDataSource(
                     userId = prefs.appUser.id,
-                    helixApi = helix
+                    helixApi = helix,
                 )
-            }
+            },
         )
     }
 
@@ -134,14 +134,14 @@ class TwitchRepositoryImpl(
                             profileImageUrl = user.profileImageUrl,
                             offlineImageUrl = user.offlineImageUrl,
                             createdAt = user.createdAt,
-                            followersCount = user.followersCount
+                            followersCount = user.followersCount,
                         )
                     }
 
             return map { follow ->
                 val userInfo = results.firstOrNull { user -> user.id == follow.toId }
                 follow.copy(
-                    profileImageURL = userInfo?.profileImageUrl
+                    profileImageURL = userInfo?.profileImageUrl,
                 )
             }
         }
@@ -162,7 +162,7 @@ class TwitchRepositoryImpl(
                         type = stream.type,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
-                        startedAt = stream.startedAt
+                        startedAt = stream.startedAt,
                     )
                 }
         }
@@ -178,7 +178,7 @@ class TwitchRepositoryImpl(
                     profileImageUrl = user.profileImageUrl,
                     offlineImageUrl = user.offlineImageUrl,
                     createdAt = user.createdAt,
-                    followersCount = user.followersCount
+                    followersCount = user.followersCount,
                 )
             }
         }
@@ -194,7 +194,7 @@ class TwitchRepositoryImpl(
                     profileImageUrl = user.profileImageUrl,
                     offlineImageUrl = user.offlineImageUrl,
                     createdAt = user.createdAt,
-                    followersCount = user.followersCount
+                    followersCount = user.followersCount,
                 )
             }
         }
@@ -216,11 +216,11 @@ class TwitchRepositoryImpl(
                                             theme = themeId,
                                             isAnimated = typeId == "animated",
                                             dpiScale = scale.toFloat(),
-                                            url = url
+                                            url = url,
                                         )
                                     }
                                 }
-                            }
+                            },
                         )
                     }
                 }
@@ -239,7 +239,7 @@ class TwitchRepositoryImpl(
                         supportedFormats = emote.format,
                         supportedScales = emote.scale,
                         supportedThemes = emote.themeMode,
-                        urlTemplate = response.template
+                        urlTemplate = response.template,
                     )
                 }
                 .sortedByDescending { it.setId }

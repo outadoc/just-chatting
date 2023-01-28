@@ -71,7 +71,7 @@ fun ChatTopAppBar(
     stream: Stream?,
     channelBranding: ChannelBranding,
     onWatchLiveClicked: () -> Unit,
-    onOpenBubbleClicked: () -> Unit
+    onOpenBubbleClicked: () -> Unit,
 ) {
     var showStreamInfo by remember { mutableStateOf(false) }
 
@@ -84,7 +84,7 @@ fun ChatTopAppBar(
                 Text(
                     text = user?.displayName ?: channelLogin,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
 
                 AnimatedVisibility(visible = stream?.gameName != null) {
@@ -93,7 +93,7 @@ fun ChatTopAppBar(
                             text = gameName,
                             style = MaterialTheme.typography.titleSmall,
                             maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            overflow = TextOverflow.Ellipsis,
                         )
                     }
                 }
@@ -103,18 +103,18 @@ fun ChatTopAppBar(
             AnimatedVisibility(
                 visible = channelBranding.logo != null,
                 enter = fadeIn() + slideInHorizontally(),
-                exit = slideOutHorizontally() + fadeOut()
+                exit = slideOutHorizontally() + fadeOut(),
             ) {
                 channelBranding.logo?.let { logo ->
                     IconButton(
                         modifier = Modifier
                             .size(56.dp)
                             .padding(horizontal = 8.dp),
-                        onClick = { showStreamInfo = !showStreamInfo }
+                        onClick = { showStreamInfo = !showStreamInfo },
                     ) {
                         Image(
                             bitmap = logo.asImageBitmap(),
-                            contentDescription = stringResource(R.string.stream_info)
+                            contentDescription = stringResource(R.string.stream_info),
                         )
                     }
                 }
@@ -125,7 +125,7 @@ fun ChatTopAppBar(
                 Icon(
                     modifier = Modifier.padding(bottom = 3.dp),
                     imageVector = Icons.Outlined.LiveTv,
-                    contentDescription = stringResource(R.string.watch_live)
+                    contentDescription = stringResource(R.string.watch_live),
                 )
             }
 
@@ -133,7 +133,7 @@ fun ChatTopAppBar(
                 HapticIconButton(onClick = { onOpenBubbleClicked() }) {
                     Icon(
                         imageVector = Icons.Default.Compress,
-                        contentDescription = stringResource(R.string.menu_item_openInBubble)
+                        contentDescription = stringResource(R.string.menu_item_openInBubble),
                     )
                 }
             }
@@ -142,17 +142,17 @@ fun ChatTopAppBar(
             AnimatedVisibility(
                 visible = showStreamInfo,
                 enter = fadeIn() + expandVertically(),
-                exit = shrinkVertically() + fadeOut()
+                exit = shrinkVertically() + fadeOut(),
             ) {
                 StreamInfo(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .padding(bottom = 8.dp),
                     user = user,
-                    stream = stream
+                    stream = stream,
                 )
             }
-        }
+        },
     )
 }
 
@@ -166,14 +166,14 @@ fun StreamInfoPreviewFull() {
                 login = "",
                 displayName = "",
                 followersCount = 50,
-                createdAt = "2022-01-01T00:00:00.00Z"
+                createdAt = "2022-01-01T00:00:00.00Z",
             ),
             stream = Stream(
                 title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
                 gameName = "",
                 startedAt = "2022-09-01T00:00:00.00Z",
-                viewerCount = 10_000
-            )
+                viewerCount = 10_000,
+            ),
         )
     }
 }
@@ -188,9 +188,9 @@ fun StreamInfoPreviewOffline() {
                 login = "",
                 displayName = "",
                 followersCount = 50,
-                createdAt = "2022-01-01T00:00:00.00Z"
+                createdAt = "2022-01-01T00:00:00.00Z",
             ),
-            stream = null
+            stream = null,
         )
     }
 }
@@ -200,11 +200,11 @@ fun StreamInfoPreviewOffline() {
 fun StreamInfo(
     modifier: Modifier = Modifier,
     user: User?,
-    stream: Stream?
+    stream: Stream?,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(4.dp)
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         stream?.title?.let { title ->
             Text(text = title)
@@ -217,14 +217,14 @@ fun StreamInfo(
                         .size(24.dp)
                         .padding(end = 8.dp),
                     imageVector = Icons.Default.Visibility,
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Text(
                     text = pluralStringResource(
                         R.plurals.viewers,
                         viewerCount,
-                        viewerCount.formatNumber()
-                    )
+                        viewerCount.formatNumber(),
+                    ),
                 )
             }
         }
@@ -237,7 +237,7 @@ fun StreamInfo(
                         .size(24.dp)
                         .padding(end = 8.dp),
                     imageVector = Icons.Default.Start,
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Text(text = stringResource(R.string.uptime, startedAt))
             }
@@ -250,13 +250,13 @@ fun StreamInfo(
                         .size(24.dp)
                         .padding(end = 8.dp),
                     imageVector = Icons.Default.Favorite,
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Text(
                     text = stringResource(
                         R.string.followers,
-                        followersCount.formatNumber()
-                    )
+                        followersCount.formatNumber(),
+                    ),
                 )
             }
         }
@@ -269,10 +269,10 @@ fun StreamInfo(
                         .size(24.dp)
                         .padding(end = 8.dp),
                     imageVector = Icons.Default.Cake,
-                    contentDescription = null
+                    contentDescription = null,
                 )
                 Text(
-                    text = stringResource(R.string.created_at, createdAt)
+                    text = stringResource(R.string.created_at, createdAt),
                 )
             }
         }
@@ -290,17 +290,17 @@ fun ExpandedTopAppBar(
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = LocalContentColor.current,
     scrollBehavior: TopAppBarScrollBehavior? = null,
-    secondRow: @Composable () -> Unit = {}
+    secondRow: @Composable () -> Unit = {},
 ) {
     val appBarContainerColor by animateColorAsState(
         targetValue = backgroundColor,
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow)
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
     )
 
     Surface(
         modifier = modifier,
         color = appBarContainerColor,
-        contentColor = contentColor
+        contentColor = contentColor,
     ) {
         Column {
             TopAppBar(
@@ -311,9 +311,9 @@ fun ExpandedTopAppBar(
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = backgroundColor,
                     titleContentColor = contentColor,
-                    actionIconContentColor = contentColor
+                    actionIconContentColor = contentColor,
                 ),
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
             )
 
             CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {

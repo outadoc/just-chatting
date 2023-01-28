@@ -6,5 +6,5 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.User
 
 fun User.getProfileImageIcon(context: Context): IconCompat =
     IconCompat.createWithContentUri(
-        UserProfileImageContentProvider.createForUser(context, login)
+        UserProfileImageContentProvider.createForUser(context, login),
     )

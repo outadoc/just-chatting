@@ -24,7 +24,7 @@ fun SettingsSliderPreview() {
             SettingsSlider(
                 modifier = Modifier.fillMaxWidth(),
                 value = 30,
-                onValueChange = {}
+                onValueChange = {},
             ) {
                 Text("Lorem ipsum")
             }
@@ -34,7 +34,7 @@ fun SettingsSliderPreview() {
                 value = 300,
                 valueRange = 10..1000,
                 steps = 10,
-                onValueChange = {}
+                onValueChange = {},
             ) {
                 Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.")
             }
@@ -42,7 +42,7 @@ fun SettingsSliderPreview() {
             SettingsSlider(
                 modifier = Modifier.fillMaxWidth(),
                 value = 1,
-                onValueChange = {}
+                onValueChange = {},
             ) {
                 Text("Lorem ipsum")
             }
@@ -58,10 +58,10 @@ fun SettingsSlider(
     valueRange: IntRange = 0..100,
     steps: Int = 0,
     valueContent: @Composable (Int) -> Unit = {},
-    title: @Composable () -> Unit
+    title: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalTextStyle provides MaterialTheme.typography.titleMedium
+        LocalTextStyle provides MaterialTheme.typography.titleMedium,
     ) {
         Column(modifier = modifier) {
             title()
@@ -72,7 +72,7 @@ fun SettingsSlider(
                     value = value.toFloat(),
                     onValueChange = { value -> onValueChange(value.toInt()) },
                     valueRange = valueRange.first.toFloat()..valueRange.last.toFloat(),
-                    steps = if (steps == 0) 0 else valueRange.last / steps
+                    steps = if (steps == 0) 0 else valueRange.last / steps,
                 )
 
                 valueContent(value)

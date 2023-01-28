@@ -27,7 +27,7 @@ fun SettingsSwitchPreview() {
             SettingsSwitch(
                 modifier = Modifier.fillMaxWidth(),
                 checked = true,
-                onCheckedChange = {}
+                onCheckedChange = {},
             ) {
                 Text("Lorem ipsum")
             }
@@ -35,7 +35,7 @@ fun SettingsSwitchPreview() {
             SettingsSwitch(
                 modifier = Modifier.fillMaxWidth(),
                 checked = false,
-                onCheckedChange = {}
+                onCheckedChange = {},
             ) {
                 Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.")
             }
@@ -48,28 +48,28 @@ fun SettingsSwitch(
     modifier: Modifier = Modifier,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
-    title: @Composable () -> Unit
+    title: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
-        LocalTextStyle provides MaterialTheme.typography.titleMedium
+        LocalTextStyle provides MaterialTheme.typography.titleMedium,
     ) {
         Box(
-            modifier = Modifier.clickable { onCheckedChange(!checked) }
+            modifier = Modifier.clickable { onCheckedChange(!checked) },
         ) {
             Row(
                 modifier = modifier,
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
-                    modifier = Modifier.weight(1f, fill = true)
+                    modifier = Modifier.weight(1f, fill = true),
                 ) {
                     title()
                 }
 
                 Switch(
                     checked = checked,
-                    onCheckedChange = onCheckedChange
+                    onCheckedChange = onCheckedChange,
                 )
             }
         }

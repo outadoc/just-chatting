@@ -8,5 +8,5 @@ data class EmoteSetResponse(
     @SerialName("template")
     val template: String,
     @SerialName("data")
-    val data: List<TwitchEmote>
+    val data: List<TwitchEmote>,
 )

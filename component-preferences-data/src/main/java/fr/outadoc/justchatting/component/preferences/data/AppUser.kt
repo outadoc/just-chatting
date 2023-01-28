@@ -9,11 +9,11 @@ sealed class AppUser {
     data class LoggedIn(
         override val id: String,
         override val login: String,
-        override val helixToken: String
+        override val helixToken: String,
     ) : AppUser()
 
     data class NotValidated(
-        override val helixToken: String
+        override val helixToken: String,
     ) : AppUser() {
         override val id: String? = null
         override val login: String? = null

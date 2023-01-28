@@ -15,5 +15,5 @@ data class ChannelSearch(
     val isLive: Boolean = false,
     val startedAt: String? = null,
     val thumbnailUrl: String? = null,
-    val profileImageURL: String? = null
+    val profileImageURL: String? = null,
 ) : Parcelable

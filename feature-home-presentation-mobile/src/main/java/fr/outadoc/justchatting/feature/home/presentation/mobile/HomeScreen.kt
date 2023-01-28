@@ -26,7 +26,7 @@ fun HomeScreen(
     sizeClass: WindowSizeClass,
     onChannelClick: (login: String) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
-    onOpenBubblePreferences: () -> Unit
+    onOpenBubblePreferences: () -> Unit,
 ) {
     var selectedTab by remember { mutableStateOf(DefaultTab) }
     val searchViewModel = getViewModel<ChannelSearchViewModel>()
@@ -36,7 +36,7 @@ fun HomeScreen(
         enabled = selectedTab != DefaultTab,
         onBack = {
             selectedTab = DefaultTab
-        }
+        },
     )
 
     MainNavigation(
@@ -53,14 +53,14 @@ fun HomeScreen(
                             query = searchState.query,
                             onQueryChange = { newQuery ->
                                 searchViewModel.onQueryChange(newQuery)
-                            }
+                            },
                         )
                     }
 
                     else -> {
                         TopAppBar(
                             modifier = modifier,
-                            title = { Text(stringResource(R.string.app_name)) }
+                            title = { Text(stringResource(R.string.app_name)) },
                         )
                     }
                 }
@@ -69,7 +69,7 @@ fun HomeScreen(
         content = { insets ->
             Crossfade(
                 modifier = Modifier.padding(insets),
-                targetState = selectedTab
+                targetState = selectedTab,
             ) { tab ->
                 when (tab) {
                     Tab.Live -> {
@@ -78,7 +78,7 @@ fun HomeScreen(
                                 stream.userLogin?.let { login ->
                                     onChannelClick(login)
                                 }
-                            }
+                            },
                         )
                     }
 
@@ -88,7 +88,7 @@ fun HomeScreen(
                                 stream.toLogin?.let { login ->
                                     onChannelClick(login)
                                 }
-                            }
+                            },
                         )
                     }
 
@@ -99,18 +99,18 @@ fun HomeScreen(
                                     onChannelClick(login)
                                 }
                             },
-                            viewModel = searchViewModel
+                            viewModel = searchViewModel,
                         )
                     }
 
                     Tab.Settings -> {
                         SettingsContent(
                             onOpenNotificationPreferences = onOpenNotificationPreferences,
-                            onOpenBubblePreferences = onOpenBubblePreferences
+                            onOpenBubblePreferences = onOpenBubblePreferences,
                         )
                     }
                 }
             }
-        }
+        },
     )
 }

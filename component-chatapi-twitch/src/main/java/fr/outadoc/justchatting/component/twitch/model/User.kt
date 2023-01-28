@@ -23,5 +23,5 @@ data class User(
     @SerialName("created_at")
     val createdAt: String? = null,
     @SerialName("followers_count")
-    val followersCount: Int? = null
+    val followersCount: Int? = null,
 ) : Parcelable

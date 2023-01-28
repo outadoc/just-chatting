@@ -33,7 +33,7 @@ fun OnLifecycleEvent(
     onStart: () -> Unit = {},
     onResume: () -> Unit = {},
     onStop: () -> Unit = {},
-    onDestroy: () -> Unit = {}
+    onDestroy: () -> Unit = {},
 ) {
     OnLifecycleEvent { event ->
         when (event) {

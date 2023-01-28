@@ -53,14 +53,14 @@ fun ChatInput(
     onMessageChange: (TextFieldValue) -> Unit,
     onToggleEmotePicker: () -> Unit,
     onClearReplyingTo: () -> Unit,
-    onSubmit: () -> Unit
+    onSubmit: () -> Unit,
 ) {
     when (state) {
         ChatViewModel.State.Initial -> {}
         is ChatViewModel.State.Chatting -> {
             Surface(
                 shadowElevation = 2.dp,
-                tonalElevation = 1.dp
+                tonalElevation = 1.dp,
             ) {
                 ChatInput(
                     modifier = modifier,
@@ -73,7 +73,7 @@ fun ChatInput(
                     onMessageChange = onMessageChange,
                     onToggleEmotePicker = onToggleEmotePicker,
                     onClearReplyingTo = onClearReplyingTo,
-                    onSubmit = onSubmit
+                    onSubmit = onSubmit,
                 )
             }
         }
@@ -85,7 +85,7 @@ fun ChatInput(
 fun ChatInputPreviewBasic() {
     AppTheme {
         ChatInput(
-            message = TextFieldValue("Lorem ipsum KEKW")
+            message = TextFieldValue("Lorem ipsum KEKW"),
         )
     }
 }
@@ -97,7 +97,7 @@ fun ChatInputPreviewLongMessage() {
         ChatInput(
             message = TextFieldValue(
                 "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
-            )
+            ),
         )
     }
 }
@@ -126,10 +126,10 @@ fun ChatInputPreviewReplying() {
                     color = null,
                     emotes = null,
                     badges = null,
-                    inReplyTo = null
+                    inReplyTo = null,
                 ),
-                timestamp = Instant.parse("2022-01-01T00:00:00.00Z")
-            )
+                timestamp = Instant.parse("2022-01-01T00:00:00.00Z"),
+            ),
         )
     }
 }
@@ -146,7 +146,7 @@ fun ChatInput(
     onMessageChange: (TextFieldValue) -> Unit = {},
     onToggleEmotePicker: () -> Unit = {},
     onClearReplyingTo: () -> Unit = {},
-    onSubmit: () -> Unit = {}
+    onSubmit: () -> Unit = {},
 ) {
     val haptic = LocalHapticFeedback.current
 
@@ -156,21 +156,21 @@ fun ChatInput(
                 modifier = Modifier.padding(
                     top = 2.dp,
                     start = 8.dp,
-                    end = 8.dp
+                    end = 8.dp,
                 ),
                 horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 InReplyToMessage(
                     modifier = Modifier.weight(1f),
                     userName = replyingTo?.data?.userName.orEmpty(),
-                    message = replyingTo?.data?.message.orEmpty()
+                    message = replyingTo?.data?.message.orEmpty(),
                 )
 
                 HapticIconButton(onClick = onClearReplyingTo) {
                     Icon(
                         Icons.Default.Clear,
-                        contentDescription = stringResource(R.string.chat_input_replyClear)
+                        contentDescription = stringResource(R.string.chat_input_replyClear),
                     )
                 }
             }
@@ -182,20 +182,20 @@ fun ChatInput(
                     onChatterClick = onChatterClick,
                     onEmoteClick = onEmoteClick,
                     items = autoCompleteItems,
-                    animateEmotes = animateEmotes
+                    animateEmotes = animateEmotes,
                 )
             }
 
             Row(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 ChatTextField(
                     modifier = Modifier.weight(1f, fill = true),
                     message = message,
                     onMessageChange = onMessageChange,
                     onToggleEmotePicker = onToggleEmotePicker,
-                    onSubmit = onSubmit
+                    onSubmit = onSubmit,
                 )
 
                 AnimatedVisibility(visible = message.text.isNotEmpty()) {
@@ -203,11 +203,11 @@ fun ChatInput(
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onSubmit()
-                        }
+                        },
                     ) {
                         Icon(
                             Icons.Default.Send,
-                            contentDescription = stringResource(R.string.chat_input_send_cd)
+                            contentDescription = stringResource(R.string.chat_input_send_cd),
                         )
                     }
                 }
@@ -223,7 +223,7 @@ fun ChatTextField(
     message: TextFieldValue,
     onMessageChange: (TextFieldValue) -> Unit,
     onToggleEmotePicker: () -> Unit,
-    onSubmit: () -> Unit
+    onSubmit: () -> Unit,
 ) {
     TextField(
         modifier = modifier,
@@ -234,37 +234,37 @@ fun ChatTextField(
         textStyle = MaterialTheme.typography.bodyMedium,
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Send,
-            capitalization = KeyboardCapitalization.Sentences
+            capitalization = KeyboardCapitalization.Sentences,
         ),
         keyboardActions = KeyboardActions(
-            onSend = { onSubmit() }
+            onSend = { onSubmit() },
         ),
         placeholder = {
             Text(text = stringResource(R.string.chat_input_hint))
         },
         colors = TextFieldDefaults.textFieldColors(
             focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent
+            unfocusedIndicatorColor = Color.Transparent,
         ),
         leadingIcon = {
             HapticIconButton(onClick = onToggleEmotePicker) {
                 Icon(
                     Icons.Default.Mood,
-                    contentDescription = stringResource(R.string.chat_input_emote_cd)
+                    contentDescription = stringResource(R.string.chat_input_emote_cd),
                 )
             }
         },
         trailingIcon = {
             if (message.text.isNotEmpty()) {
                 HapticIconButton(
-                    onClick = { onMessageChange(TextFieldValue("")) }
+                    onClick = { onMessageChange(TextFieldValue("")) },
                 ) {
                     Icon(
                         Icons.Filled.Cancel,
-                        contentDescription = stringResource(R.string.chat_input_clear_cd)
+                        contentDescription = stringResource(R.string.chat_input_clear_cd),
                     )
                 }
             }
-        }
+        },
     )
 }

@@ -27,7 +27,7 @@ import kotlin.time.Duration.Companion.seconds
 abstract class BaseChatWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
-    channelName: String
+    channelName: String,
 ) : ChatCommandHandler {
 
     private var client: OkHttpClient = OkHttpClient()
@@ -37,7 +37,7 @@ abstract class BaseChatWebSocket(
 
     private val _flow = MutableSharedFlow<ChatCommand>(
         replay = AppPreferences.Defaults.ChatLimitRange.last,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
     override val commandFlow: Flow<ChatCommand> = _flow
 
@@ -57,7 +57,7 @@ abstract class BaseChatWebSocket(
             listener = socketListener,
             request = Request.Builder()
                 .url("wss://irc-ws.chat.twitch.tv")
-                .build()
+                .build(),
         )
     }
 
@@ -66,7 +66,7 @@ abstract class BaseChatWebSocket(
             logDebug<BaseChatWebSocket> { "Disconnecting from $hashChannelName" }
             socket?.close(
                 code = SOCKET_ERROR_NORMAL_CLOSURE,
-                reason = null
+                reason = null,
             )
         } catch (e: IOException) {
             logError<BaseChatWebSocket>(e) { "Error while closing socket" }

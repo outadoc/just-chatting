@@ -20,12 +20,12 @@ import fr.outadoc.justchatting.utils.ui.asString
 @Composable
 fun EmoteHeader(
     modifier: Modifier = Modifier,
-    header: EmoteSetItem.Header
+    header: EmoteSetItem.Header,
 ) {
     Row(
         modifier = modifier
             .padding(horizontal = 4.dp, vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         header.iconUrl?.let { url ->
             AsyncImage(
@@ -35,7 +35,7 @@ fun EmoteHeader(
                     .clip(CircleShape),
                 contentScale = ContentScale.Fit,
                 model = url,
-                contentDescription = null
+                contentDescription = null,
             )
         }
 
@@ -43,14 +43,14 @@ fun EmoteHeader(
             header.title?.let { title ->
                 Text(
                     text = title.asString(),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
 
             header.source?.let { source ->
                 Text(
                     text = source.asString(),
-                    style = MaterialTheme.typography.labelMedium
+                    style = MaterialTheme.typography.labelMedium,
                 )
             }
         }

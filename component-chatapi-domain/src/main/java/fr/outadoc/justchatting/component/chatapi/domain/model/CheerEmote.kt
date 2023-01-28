@@ -4,14 +4,14 @@ class CheerEmote(
     override val name: String,
     val minBits: Int,
     val color: String? = null,
-    private val images: List<Image>
+    private val images: List<Image>,
 ) : Emote() {
 
     data class Image(
         val theme: String,
         val isAnimated: Boolean,
         val dpiScale: Float,
-        val url: String
+        val url: String,
     )
 
     override fun getUrl(animate: Boolean, screenDensity: Float, isDarkTheme: Boolean): String {

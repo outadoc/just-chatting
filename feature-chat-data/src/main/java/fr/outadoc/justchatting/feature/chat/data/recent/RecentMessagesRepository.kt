@@ -7,7 +7,7 @@ import kotlinx.coroutines.withContext
 
 class RecentMessagesRepository(
     private val recentMessagesApi: RecentMessagesApi,
-    private val parser: ChatMessageParser
+    private val parser: ChatMessageParser,
 ) {
     suspend fun loadRecentMessages(channelLogin: String, limit: Int): List<ChatCommand> =
         withContext(Dispatchers.IO) {

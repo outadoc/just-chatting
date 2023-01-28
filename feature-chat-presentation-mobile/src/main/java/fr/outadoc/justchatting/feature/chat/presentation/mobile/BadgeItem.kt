@@ -11,13 +11,13 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 @Composable
 fun BadgeItem(
     modifier: Modifier = Modifier,
-    badge: TwitchBadge
+    badge: TwitchBadge,
 ) {
     val density = LocalDensity.current.density
     AsyncImage(
         modifier = modifier.fillMaxSize(),
         contentScale = ContentScale.Fit,
         model = badge.getUrl(screenDensity = density),
-        contentDescription = badge.title
+        contentDescription = badge.title,
     )
 }

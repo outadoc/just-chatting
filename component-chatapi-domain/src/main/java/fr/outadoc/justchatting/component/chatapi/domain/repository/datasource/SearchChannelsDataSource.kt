@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.component.twitch.api.HelixApi
 
 class SearchChannelsDataSource(
     private val query: String,
-    private val helixApi: HelixApi
+    private val helixApi: HelixApi,
 ) : PagingSource<String, ChannelSearchResponse>() {
 
     override fun getRefreshKey(state: PagingState<String, ChannelSearchResponse>): String? {
@@ -23,7 +23,7 @@ class SearchChannelsDataSource(
             val response = helixApi.getChannels(
                 query = query,
                 limit = params.loadSize,
-                offset = params.key
+                offset = params.key,
             )
 
             LoadResult.Page(
@@ -40,16 +40,16 @@ class SearchChannelsDataSource(
                                 gameName = search.gameName,
                                 isLive = search.isLive,
                                 startedAt = search.startedAt,
-                                thumbnailUrl = search.thumbnailUrl
+                                thumbnailUrl = search.thumbnailUrl,
                             )
                         },
                         pagination = Pagination(
-                            cursor = response.pagination?.cursor
-                        )
-                    )
+                            cursor = response.pagination?.cursor,
+                        ),
+                    ),
                 ),
                 nextKey = response.pagination?.cursor,
-                prevKey = null
+                prevKey = null,
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

@@ -102,7 +102,7 @@ class UserProfileImageContentProvider : ContentProvider() {
         projection: Array<out String>?,
         selection: String?,
         selectionArgs: Array<out String>?,
-        sortOrder: String?
+        sortOrder: String?,
     ): Cursor =
         error("Not implemented")
 
@@ -116,6 +116,6 @@ class UserProfileImageContentProvider : ContentProvider() {
         uri: Uri,
         values: ContentValues?,
         selection: String?,
-        selectionArgs: Array<out String>?
+        selectionArgs: Array<out String>?,
     ): Int = error("Not implemented")
 }

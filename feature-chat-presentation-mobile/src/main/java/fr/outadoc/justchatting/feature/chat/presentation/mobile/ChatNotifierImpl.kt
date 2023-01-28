@@ -46,26 +46,26 @@ class ChatNotifierImpl : ChatNotifier {
             context = context,
             intent = ChatActivity.createIntent(
                 context = context,
-                channelLogin = user.login
+                channelLogin = user.login,
             ),
             user = user,
-            person = person
+            person = person,
         )
 
         if (Build.VERSION.SDK_INT >= 26) {
             context.startForegroundService(
-                ChatConnectionService.createStartIntent(context)
+                ChatConnectionService.createStartIntent(context),
             )
         } else {
             context.startService(
-                ChatConnectionService.createStartIntent(context)
+                ChatConnectionService.createStartIntent(context),
             )
         }
 
         createNotificationForUser(
             context = context,
             user = user,
-            person = person
+            person = person,
         )
     }
 
@@ -73,7 +73,7 @@ class ChatNotifierImpl : ChatNotifier {
         context: Context,
         intent: Intent,
         user: User,
-        person: Person
+        person: Person,
     ) {
         val maxShortcutCount = ShortcutManagerCompat.getMaxShortcutCountPerActivity(context)
         val currentShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context)
@@ -99,8 +99,8 @@ class ChatNotifierImpl : ChatNotifier {
                     .setShortLabel(user.displayName)
                     .setPerson(person)
                     .setIsConversation()
-                    .build()
-            )
+                    .build(),
+            ),
         )
     }
 
@@ -109,11 +109,11 @@ class ChatNotifierImpl : ChatNotifier {
         nm.createNotificationChannel(
             NotificationChannelCompat.Builder(
                 NOTIFICATION_CHANNEL_ID,
-                NotificationManagerCompat.IMPORTANCE_MIN
+                NotificationManagerCompat.IMPORTANCE_MIN,
             )
                 .setName(context.getString(R.string.notification_channel_bubbles_title))
                 .setDescription(context.getString(R.string.notification_channel_bubbles_message))
-                .build()
+                .build(),
         )
 
         return nm.getNotificationChannelCompat(NOTIFICATION_CHANNEL_ID)
@@ -140,44 +140,44 @@ class ChatNotifierImpl : ChatNotifier {
                     R.drawable.ic_close,
                     context.getString(R.string.notification_action_disconnect),
                     ChatConnectionService.createStopIntent(context, channelId = user.id)
-                        .toPendingForegroundServiceIntent(context)
+                        .toPendingForegroundServiceIntent(context),
                 )
                 .addAction(
                     NotificationCompat.Action.Builder(
                         R.drawable.ic_reply,
                         context.getString(R.string.notification_action_reply),
                         ChatConnectionService.createReplyIntent(context, channelId = user.id)
-                            .toPendingForegroundServiceIntent(context, mutable = true)
+                            .toPendingForegroundServiceIntent(context, mutable = true),
                     )
                         .addRemoteInput(
                             RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
                                 .setLabel(context.getString(R.string.notification_action_reply_hint))
-                                .build()
+                                .build(),
                         )
-                        .build()
+                        .build(),
                 )
                 .setBubbleMetadata(
                     NotificationCompat.BubbleMetadata.Builder(
                         intent.toPendingActivityIntent(context, mutable = true),
-                        user.getProfileImageIcon(context)
+                        user.getProfileImageIcon(context),
                     )
                         .setAutoExpandBubble(false)
                         .setSuppressNotification(false)
                         .setDeleteIntent(
                             ChatConnectionService.createStopIntent(context, channelId = user.id)
-                                .toPendingForegroundServiceIntent(context)
+                                .toPendingForegroundServiceIntent(context),
                         )
-                        .build()
+                        .build(),
                 )
                 .setStyle(
                     NotificationCompat.MessagingStyle(person)
                         .addMessage(
                             context.getString(R.string.notification_channel_bubbles_openPrompt),
                             System.currentTimeMillis(),
-                            person
-                        )
+                            person,
+                        ),
                 )
-                .build()
+                .build(),
         )
     }
 

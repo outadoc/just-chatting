@@ -17,7 +17,7 @@ fun HapticIconButton(
     enabled: Boolean = true,
     colors: IconButtonColors = IconButtonDefaults.iconButtonColors(),
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
     IconButton(
@@ -29,6 +29,6 @@ fun HapticIconButton(
         enabled = enabled,
         colors = colors,
         interactionSource = interactionSource,
-        content = content
+        content = content,
     )
 }

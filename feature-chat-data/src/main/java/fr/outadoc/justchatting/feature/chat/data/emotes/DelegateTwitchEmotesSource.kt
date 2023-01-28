@@ -8,7 +8,7 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 class DelegateTwitchEmotesSource(
-    private val twitchRepository: TwitchRepository
+    private val twitchRepository: TwitchRepository,
 ) : CachedEmoteListSource<DelegateTwitchEmotesSource.CachedResult>() {
 
     data class CachedResult(
@@ -46,7 +46,7 @@ class DelegateTwitchEmotesSource(
                                 ownerId.toLongOrNull()
                                     ?.takeIf { id -> id > 0 }
                                     ?.toString()
-                            }
+                            },
                     )
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -59,7 +59,7 @@ class DelegateTwitchEmotesSource(
                 channelEmotes = emotes.filter { emote -> emote.ownerId == params.channelId }
                     .groupBy { emoteOwners[params.channelId] },
                 globalEmotes = emotes.filter { emote -> emote.ownerId != params.channelId }
-                    .groupBy { emote -> emoteOwners[emote.ownerId] }
+                    .groupBy { emote -> emoteOwners[emote.ownerId] },
             )
         }
     }

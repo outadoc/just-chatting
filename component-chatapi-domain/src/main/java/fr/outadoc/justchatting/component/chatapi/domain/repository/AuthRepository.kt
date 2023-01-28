@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 class AuthRepository(
     private val api: IdApi,
     private val preferencesRepository: PreferenceRepository,
-    private val oAuthAppCredentials: OAuthAppCredentials
+    private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
     suspend fun validate(): ValidationResponse? =
         withContext(Dispatchers.IO) {
@@ -19,7 +19,7 @@ class AuthRepository(
                 ValidationResponse(
                     clientId = response.clientId,
                     login = response.login,
-                    userId = response.userId
+                    userId = response.userId,
                 )
             }
         }
@@ -29,7 +29,7 @@ class AuthRepository(
             val prefs = preferencesRepository.currentPreferences.first()
             api.revokeToken(
                 clientId = oAuthAppCredentials.clientId,
-                token = prefs.appUser.helixToken ?: return@withContext
+                token = prefs.appUser.helixToken ?: return@withContext,
             )
         }
     }

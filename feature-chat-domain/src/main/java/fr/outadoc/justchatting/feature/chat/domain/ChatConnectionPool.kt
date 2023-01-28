@@ -16,7 +16,7 @@ class ChatConnectionPool(
 
     class HandlerResult(
         val commandFlow: Flow<ChatCommand>,
-        val connectionStatus: StateFlow<ConnectionStatus>
+        val connectionStatus: StateFlow<ConnectionStatus>,
     )
 
     val hasActiveThreads: Boolean
@@ -31,7 +31,7 @@ class ChatConnectionPool(
 
         return HandlerResult(
             commandFlow = handler.commandFlow,
-            connectionStatus = handler.connectionStatus
+            connectionStatus = handler.connectionStatus,
         )
     }
 

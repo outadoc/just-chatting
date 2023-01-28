@@ -11,14 +11,14 @@ private enum class IntentComponent {
 
 fun Intent.toPendingActivityIntent(
     context: Context,
-    mutable: Boolean = false
+    mutable: Boolean = false,
 ): PendingIntent {
     return toPendingIntent(context, mutable, IntentComponent.Activity)
 }
 
 fun Intent.toPendingForegroundServiceIntent(
     context: Context,
-    mutable: Boolean = false
+    mutable: Boolean = false,
 ): PendingIntent {
     return toPendingIntent(context, mutable, IntentComponent.ForegroundService)
 }
@@ -26,15 +26,21 @@ fun Intent.toPendingForegroundServiceIntent(
 private fun Intent.toPendingIntent(
     context: Context,
     mutable: Boolean,
-    intentComponent: IntentComponent
+    intentComponent: IntentComponent,
 ): PendingIntent {
     val mutableFlag =
-        if (Build.VERSION.SDK_INT >= 31 && mutable) PendingIntent.FLAG_MUTABLE
-        else 0
+        if (Build.VERSION.SDK_INT >= 31 && mutable) {
+            PendingIntent.FLAG_MUTABLE
+        } else {
+            0
+        }
 
     val immutableFlag =
-        if (Build.VERSION.SDK_INT >= 24 && !mutable) PendingIntent.FLAG_IMMUTABLE
-        else 0
+        if (Build.VERSION.SDK_INT >= 24 && !mutable) {
+            PendingIntent.FLAG_IMMUTABLE
+        } else {
+            0
+        }
 
     val flags = PendingIntent.FLAG_UPDATE_CURRENT or mutableFlag or immutableFlag
 
@@ -43,7 +49,7 @@ private fun Intent.toPendingIntent(
             /* context = */ context,
             /* requestCode = */ 0,
             /* intent = */ this,
-            /* flags = */ flags
+            /* flags = */ flags,
         )
 
         IntentComponent.ForegroundService ->
@@ -52,14 +58,14 @@ private fun Intent.toPendingIntent(
                     /* context = */ context,
                     /* requestCode = */ 0,
                     /* intent = */ this,
-                    /* flags = */ flags
+                    /* flags = */ flags,
                 )
             } else {
                 PendingIntent.getService(
                     /* context = */ context,
                     /* requestCode = */ 0,
                     /* intent = */ this,
-                    /* flags = */ flags
+                    /* flags = */ flags,
                 )
             }
     }

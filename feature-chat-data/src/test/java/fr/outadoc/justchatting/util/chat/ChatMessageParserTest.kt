@@ -35,29 +35,29 @@ class ChatMessageParserTest {
                 emotes = listOf(
                     TwitchChatEmote(
                         id = "25",
-                        name = "Kappa"
+                        name = "Kappa",
                     ),
                     TwitchChatEmote(
                         id = "25",
-                        name = "Kappa"
+                        name = "Kappa",
                     ),
                     TwitchChatEmote(
                         id = "1902",
-                        name = "Keepo"
-                    )
+                        name = "Keepo",
+                    ),
                 ),
                 badges = listOf(
                     Badge(
                         id = "turbo",
-                        version = "1"
-                    )
+                        version = "1",
+                    ),
                 ),
                 isFirst = false,
                 timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
                 systemMsg = null,
                 rewardId = null,
                 inReplyTo = null,
-                msgId = null
+                msgId = null,
             )
         }
     }
@@ -78,19 +78,19 @@ class ChatMessageParserTest {
                 badges = listOf(
                     Badge(
                         id = "moderator",
-                        version = "1"
+                        version = "1",
                     ),
                     Badge(
                         id = "subscriber",
-                        version = "3009"
-                    )
+                        version = "3009",
+                    ),
                 ),
                 isFirst = false,
                 timestamp = Instant.parse("2022-07-08T16:47:29.487Z"),
                 systemMsg = null,
                 rewardId = null,
                 inReplyTo = null,
-                msgId = null
+                msgId = null,
             )
         }
     }
@@ -115,29 +115,29 @@ class ChatMessageParserTest {
                     emotes = listOf(
                         TwitchChatEmote(
                             id = "emotesv2_53f30305e78246aea4bc24d299dd09e7",
-                            name = "coxPet"
+                            name = "coxPet",
                         ),
                         TwitchChatEmote(
                             id = "emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8",
-                            name = "moumou4Content"
-                        )
+                            name = "moumou4Content",
+                        ),
                     ),
                     badges = listOf(
                         Badge(
                             id = "subscriber",
-                            version = "36"
+                            version = "36",
                         ),
                         Badge(
                             id = "bits",
-                            version = "1000"
-                        )
+                            version = "1000",
+                        ),
                     ),
                     isFirst = false,
                     timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
                     rewardId = null,
                     msgId = "resub",
-                    inReplyTo = null
-                )
+                    inReplyTo = null,
+                ),
             )
         }
     }
@@ -159,21 +159,21 @@ class ChatMessageParserTest {
                     badges = listOf(
                         Badge(
                             id = "moderator",
-                            version = "1"
+                            version = "1",
                         ),
                         Badge(
                             id = "subscriber",
-                            version = "3009"
-                        )
+                            version = "3009",
+                        ),
                     ),
                     timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
                     message = "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !",
                     msgId = "announcement",
                     systemMsg = null,
                     rewardId = null,
-                    inReplyTo = null
+                    inReplyTo = null,
                 ),
-                systemMsg = null
+                systemMsg = null,
             )
         }
     }
@@ -186,7 +186,7 @@ class ChatMessageParserTest {
                 systemMsg = "3 raiders from maxent__ have joined!",
                 timestamp = Instant.parse("2022-07-08T18:11:52.832Z"),
                 msgId = "raid",
-                userMessage = null
+                userMessage = null,
             )
         }
     }
@@ -206,7 +206,7 @@ class ChatMessageParserTest {
                 minFollowDuration = null,
                 slowModeDuration = null,
                 uniqueMessagesOnly = false,
-                isSubOnly = false
+                isSubOnly = false,
             )
         }
     }
@@ -220,7 +220,7 @@ class ChatMessageParserTest {
                 minFollowDuration = 15.minutes,
                 slowModeDuration = 2.minutes,
                 uniqueMessagesOnly = true,
-                isSubOnly = true
+                isSubOnly = true,
             )
         }
     }
@@ -231,7 +231,7 @@ class ChatMessageParserTest {
         expected {
             Command.Ban(
                 userLogin = "ronni",
-                timestamp = Instant.parse("2022-01-20T21:55:56.806Z")
+                timestamp = Instant.parse("2022-01-20T21:55:56.806Z"),
             )
         }
     }
@@ -243,7 +243,7 @@ class ChatMessageParserTest {
             Command.Timeout(
                 userLogin = "ronni",
                 duration = 350.seconds,
-                timestamp = Instant.parse("2022-01-20T22:55:20.727Z")
+                timestamp = Instant.parse("2022-01-20T22:55:20.727Z"),
             )
         }
     }
@@ -253,7 +253,7 @@ class ChatMessageParserTest {
         input { "@room-id=12345678;tmi-sent-ts=1642715695392 :tmi.twitch.tv CLEARCHAT #dallas" }
         expected {
             Command.ClearChat(
-                timestamp = Instant.parse("2022-01-20T21:54:55.392Z")
+                timestamp = Instant.parse("2022-01-20T21:54:55.392Z"),
             )
         }
     }
@@ -274,8 +274,8 @@ class ChatMessageParserTest {
                     "494046698",
                     "537206155",
                     "592920959",
-                    "610186276"
-                )
+                    "610186276",
+                ),
             )
         }
     }
@@ -303,9 +303,9 @@ class ChatMessageParserTest {
                     message = "On dirait EVE on line",
                     id = "7ffcf399-8d69-495c-920c-ea15a96eeee4",
                     userId = "108193474",
-                    userLogin = "brankhorst"
+                    userLogin = "brankhorst",
                 ),
-                msgId = null
+                msgId = null,
             )
         }
     }
@@ -326,19 +326,19 @@ class ChatMessageParserTest {
                 badges = listOf(
                     Badge(
                         id = "subscriber",
-                        version = "18"
+                        version = "18",
                     ),
                     Badge(
                         id = "premium",
-                        version = "1"
-                    )
+                        version = "1",
+                    ),
                 ),
                 isFirst = false,
                 systemMsg = null,
                 timestamp = Instant.parse("2022-08-25T18:32:59.625Z"),
                 rewardId = null,
                 msgId = "highlighted-message",
-                inReplyTo = null
+                inReplyTo = null,
             )
         }
     }
@@ -349,7 +349,7 @@ class ChatMessageParserTest {
         expected {
             HostModeState(
                 targetChannelLogin = "clara_doxal",
-                viewerCount = 3529
+                viewerCount = 3529,
             )
         }
     }
@@ -360,7 +360,7 @@ class ChatMessageParserTest {
         expected {
             HostModeState(
                 targetChannelLogin = null,
-                viewerCount = 42
+                viewerCount = 42,
             )
         }
     }
@@ -371,7 +371,7 @@ class ChatMessageParserTest {
         expected {
             HostModeState(
                 targetChannelLogin = "clara_doxal",
-                viewerCount = null
+                viewerCount = null,
             )
         }
     }
@@ -404,7 +404,7 @@ class ChatMessageParserTest {
         val assertion = Assertion.Builder().apply(block).build()
         Assert.assertEquals(
             assertion.expected,
-            parser.parse(assertion.input)
+            parser.parse(assertion.input),
         )
     }
 }

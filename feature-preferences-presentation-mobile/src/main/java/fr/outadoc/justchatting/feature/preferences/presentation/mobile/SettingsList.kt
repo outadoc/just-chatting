@@ -29,7 +29,6 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.plus
 import org.koin.androidx.compose.get
 
-
 @ThemePreviews
 @Composable
 fun SettingsListPreview() {
@@ -40,7 +39,7 @@ fun SettingsListPreview() {
             onOpenNotificationPreferences = {},
             onOpenBubblePreferences = {},
             onLogoutClick = {},
-            onShareLogsClick = {}
+            onShareLogsClick = {},
         )
     }
 }
@@ -56,7 +55,7 @@ fun SettingsList(
     onShareLogsClick: () -> Unit,
     itemInsets: PaddingValues = PaddingValues(),
     insets: PaddingValues = PaddingValues(),
-    readDependencies: ReadExternalDependenciesList = get()
+    readDependencies: ReadExternalDependenciesList = get(),
 ) {
     val uriHandler = LocalUriHandler.current
     var deps: List<Dependency> by remember { mutableStateOf(emptyList()) }
@@ -67,13 +66,13 @@ fun SettingsList(
 
     LazyColumn(
         modifier = modifier,
-        contentPadding = insets + PaddingValues(bottom = 16.dp)
+        contentPadding = insets + PaddingValues(bottom = 16.dp),
     ) {
         item {
             SettingsHeader(
                 modifier = Modifier
                     .padding(itemInsets)
-                    .padding(top = 8.dp)
+                    .padding(top = 8.dp),
             ) {
                 Text(stringResource(R.string.settings_chat))
             }
@@ -85,7 +84,7 @@ fun SettingsList(
                 checked = appPreferences.animateEmotes,
                 onCheckedChange = { checked ->
                     onAppPreferencesChange(appPreferences.copy(animateEmotes = checked))
-                }
+                },
             ) {
                 Text(stringResource(R.string.animated_emotes))
             }
@@ -101,7 +100,7 @@ fun SettingsList(
                 checked = appPreferences.showTimestamps,
                 onCheckedChange = { checked ->
                     onAppPreferencesChange(appPreferences.copy(showTimestamps = checked))
-                }
+                },
             ) {
                 Text(stringResource(R.string.timestamps))
             }
@@ -125,9 +124,9 @@ fun SettingsList(
                 valueContent = { value ->
                     Text(
                         modifier = Modifier.width(48.dp),
-                        text = "%,d".format(value)
+                        text = "%,d".format(value),
                     )
-                }
+                },
             ) {
                 Text(stringResource(R.string.message_limit))
             }
@@ -154,10 +153,10 @@ fun SettingsList(
                     } else {
                         Text(
                             modifier = Modifier.width(48.dp),
-                            text = "%,d".format(value)
+                            text = "%,d".format(value),
                         )
                     }
-                }
+                },
             ) {
                 Text(stringResource(R.string.recentMsg_limit))
             }
@@ -171,7 +170,7 @@ fun SettingsList(
             SettingsHeader(
                 modifier = Modifier
                     .padding(top = 8.dp)
-                    .padding(itemInsets)
+                    .padding(itemInsets),
             ) {
                 Text(stringResource(R.string.settings_notifications_header))
             }
@@ -185,7 +184,7 @@ fun SettingsList(
                     onClickLabel = stringResource(R.string.settings_notifications_openNotificationsSettings),
                     title = {
                         Text(text = stringResource(R.string.settings_notifications_openNotificationsSettings))
-                    }
+                    },
                 )
             }
         }
@@ -198,7 +197,7 @@ fun SettingsList(
                     onClickLabel = stringResource(R.string.settings_notifications_openBubbleSettings),
                     title = {
                         Text(text = stringResource(R.string.settings_notifications_openBubbleSettings))
-                    }
+                    },
                 )
             }
         }
@@ -211,7 +210,7 @@ fun SettingsList(
             SettingsHeader(
                 modifier = Modifier
                     .padding(top = 8.dp)
-                    .padding(itemInsets)
+                    .padding(itemInsets),
             ) {
                 Text(stringResource(R.string.settings_account_header))
             }
@@ -225,7 +224,7 @@ fun SettingsList(
                 onClickLabel = null,
                 title = {
                     Text(text = stringResource(R.string.settings_account_logout_action))
-                }
+                },
             )
 
             if (showLogoutDialog) {
@@ -236,8 +235,8 @@ fun SettingsList(
                         Text(
                             text = stringResource(
                                 R.string.logout_msg,
-                                appPreferences.appUser.login ?: ""
-                            )
+                                appPreferences.appUser.login ?: "",
+                            ),
                         )
                     },
                     dismissButton = {
@@ -250,11 +249,11 @@ fun SettingsList(
                             onClick = {
                                 onLogoutClick()
                                 showLogoutDialog = false
-                            }
+                            },
                         ) {
                             Text(text = stringResource(R.string.yes))
                         }
-                    }
+                    },
                 )
             }
         }
@@ -267,7 +266,7 @@ fun SettingsList(
             SettingsHeader(
                 modifier = Modifier
                     .padding(top = 8.dp)
-                    .padding(itemInsets)
+                    .padding(itemInsets),
             ) {
                 Text(stringResource(R.string.settings_about_header))
             }
@@ -282,10 +281,10 @@ fun SettingsList(
                     Text(
                         text = stringResource(
                             R.string.settings_about_version,
-                            context.applicationVersionName ?: ""
-                        )
+                            context.applicationVersionName ?: "",
+                        ),
                     )
-                }
+                },
             )
         }
 
@@ -296,7 +295,7 @@ fun SettingsList(
                 onClick = { uriHandler.openUri(repoUrl) },
                 onClickLabel = stringResource(id = R.string.settings_about_repo_cd),
                 title = { Text(text = stringResource(id = R.string.settings_about_repo_title)) },
-                subtitle = { Text(text = stringResource(id = R.string.app_repo_name)) }
+                subtitle = { Text(text = stringResource(id = R.string.app_repo_name)) },
             )
         }
 
@@ -312,10 +311,10 @@ fun SettingsList(
                         text = stringResource(
                             id = R.string.settings_about_license_subtitle,
                             stringResource(id = R.string.app_name),
-                            stringResource(id = R.string.app_license_name)
-                        )
+                            stringResource(id = R.string.app_license_name),
+                        ),
                     )
-                }
+                },
             )
         }
 
@@ -324,7 +323,7 @@ fun SettingsList(
                 modifier = Modifier.padding(itemInsets),
                 title = { Text(text = stringResource(R.string.settings_logs_title)) },
                 onClick = onShareLogsClick,
-                subtitle = { Text(text = stringResource(R.string.settings_logs_subtitle)) }
+                subtitle = { Text(text = stringResource(R.string.settings_logs_subtitle)) },
             )
         }
 
@@ -336,7 +335,7 @@ fun SettingsList(
             SettingsHeader(
                 modifier = Modifier
                     .padding(top = 8.dp)
-                    .padding(itemInsets)
+                    .padding(itemInsets),
             ) {
                 Text(stringResource(id = R.string.settings_dependencies_header))
             }
@@ -357,7 +356,7 @@ fun SettingsList(
                     dependency.moduleLicense?.let { license ->
                         Text(text = license)
                     }
-                }
+                },
             )
         }
     }

@@ -15,7 +15,7 @@ import fr.outadoc.justchatting.utils.ui.isDark
 fun EmoteItem(
     modifier: Modifier = Modifier,
     emote: Emote,
-    animateEmotes: Boolean
+    animateEmotes: Boolean,
 ) {
     val density = LocalDensity.current.density
     AsyncImage(
@@ -25,8 +25,8 @@ fun EmoteItem(
         model = emote.getUrl(
             animate = animateEmotes,
             screenDensity = density,
-            isDarkTheme = MaterialTheme.colorScheme.isDark
-        )
+            isDarkTheme = MaterialTheme.colorScheme.isDark,
+        ),
     )
 }
 
@@ -34,7 +34,7 @@ fun EmoteItem(
 fun ChatEmoteItem(
     modifier: Modifier = Modifier,
     emote: TwitchChatEmote,
-    animateEmotes: Boolean
+    animateEmotes: Boolean,
 ) {
     val density = LocalDensity.current.density
     AsyncImage(
@@ -44,7 +44,7 @@ fun ChatEmoteItem(
         model = emote.getUrl(
             animate = animateEmotes,
             screenDensity = density,
-            isDarkTheme = MaterialTheme.colorScheme.isDark
-        )
+            isDarkTheme = MaterialTheme.colorScheme.isDark,
+        ),
     )
 }

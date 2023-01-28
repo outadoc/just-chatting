@@ -24,13 +24,13 @@ sealed class ChatEntry {
         val color: String?,
         val emotes: ImmutableList<TwitchChatEmote>?,
         val badges: ImmutableList<Badge>?,
-        val inReplyTo: ChatMessage.InReplyTo?
+        val inReplyTo: ChatMessage.InReplyTo?,
     )
 
     @Immutable
     data class Simple(
         override val data: Data,
-        override val timestamp: Instant
+        override val timestamp: Instant,
     ) : ChatEntry()
 
     @Immutable
@@ -38,6 +38,6 @@ sealed class ChatEntry {
         val header: String?,
         val headerIconResId: Int? = null,
         override val data: Data?,
-        override val timestamp: Instant
+        override val timestamp: Instant,
     ) : ChatEntry()
 }

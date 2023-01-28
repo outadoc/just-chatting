@@ -14,7 +14,7 @@ data class StvEmote(
     @SerialName("visibility_simple")
     val visibility: List<String>,
     @SerialName("urls")
-    val urls: List<List<String>>
+    val urls: List<List<String>>,
 )
 
 val StvEmote.isZeroWidth: Boolean

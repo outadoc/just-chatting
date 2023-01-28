@@ -40,7 +40,7 @@ class LiveChatWebSocket private constructor(
     private val parser: ChatMessageParser,
     private val recentMessagesRepository: RecentMessagesRepository,
     private val preferencesRepository: PreferenceRepository,
-    private val channelLogin: String
+    private val channelLogin: String,
 ) : BaseChatWebSocket(networkStateObserver, scope, channelLogin) {
 
     class Factory(
@@ -48,13 +48,13 @@ class LiveChatWebSocket private constructor(
         private val clock: Clock,
         private val parser: ChatMessageParser,
         private val recentMessagesRepository: RecentMessagesRepository,
-        private val preferencesRepository: PreferenceRepository
+        private val preferencesRepository: PreferenceRepository,
     ) : ChatCommandHandlerFactory {
 
         override fun create(
             scope: CoroutineScope,
             channelLogin: String,
-            channelId: String
+            channelId: String,
         ): LiveChatWebSocket {
             return LiveChatWebSocket(
                 networkStateObserver = networkStateObserver,
@@ -63,7 +63,7 @@ class LiveChatWebSocket private constructor(
                 recentMessagesRepository = recentMessagesRepository,
                 preferencesRepository = preferencesRepository,
                 scope = scope,
-                channelLogin = channelLogin
+                channelLogin = channelLogin,
             )
         }
     }
@@ -72,8 +72,8 @@ class LiveChatWebSocket private constructor(
         MutableStateFlow(
             ConnectionStatus(
                 isAlive = false,
-                preventSendingMessages = false
-            )
+                preventSendingMessages = false,
+            ),
         )
 
     override val connectionStatus = _connectionStatus.asStateFlow()
@@ -102,8 +102,8 @@ class LiveChatWebSocket private constructor(
             emit(
                 Command.Join(
                     channelLogin = channelLogin,
-                    timestamp = clock.now()
-                )
+                    timestamp = clock.now(),
+                ),
             )
 
             _connectionStatus.update { status -> status.copy(isAlive = true) }
@@ -122,8 +122,8 @@ class LiveChatWebSocket private constructor(
             emit(
                 Command.Disconnect(
                     channelLogin = channelLogin,
-                    timestamp = clock.now()
-                )
+                    timestamp = clock.now(),
+                ),
             )
 
             attemptReconnect(listener = this@LiveChatThreadListener)
@@ -149,12 +149,14 @@ class LiveChatWebSocket private constructor(
             is Command.Timeout,
             is HostModeState,
             is PointReward,
-            is RoomStateDelta -> emit(command)
+            is RoomStateDelta,
+            -> emit(command)
 
             is PingCommand -> sendPong()
             is Command.Notice,
             is UserState,
-            null -> {
+            null,
+            -> {
             }
         }
     }

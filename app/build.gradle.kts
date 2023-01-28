@@ -107,19 +107,6 @@ tasks.named("generateLicenseReport") {
     outputs.upToDateWhen { false }
 }
 
-spotless {
-    kotlin {
-        target("**/*.kt")
-        ktlint("0.48.2").userData(mapOf("disabled_rules" to "no-wildcard-imports"))
-        endWithNewline()
-    }
-
-    json {
-        target("**/*.json")
-        simple().indentWithSpaces(2)
-    }
-}
-
 dependencies {
     implementation(platform(libs.kotlin.bom))
 

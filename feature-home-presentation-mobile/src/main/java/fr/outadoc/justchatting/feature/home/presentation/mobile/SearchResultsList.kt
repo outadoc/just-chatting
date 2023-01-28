@@ -31,7 +31,7 @@ fun SearchResultsList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
     viewModel: ChannelSearchViewModel,
-    onItemClick: (ChannelSearch) -> Unit
+    onItemClick: (ChannelSearch) -> Unit,
 ) {
     val items: LazyPagingItems<ChannelSearch> = viewModel.pagingData.collectAsLazyPagingItems()
     val state by viewModel.state.collectAsState()
@@ -40,19 +40,19 @@ fun SearchResultsList(
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { items.refresh() }
+        onRefresh = { items.refresh() },
     )
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .pullRefresh(pullRefreshState),
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.TopCenter,
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = insets + PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if (state.query.isNotEmpty() && !isRefreshing && items.itemCount == 0) {
                 item(key = "_noContent") {
@@ -65,7 +65,7 @@ fun SearchResultsList(
                             modifier = Modifier.fillMaxWidth(),
                             displayName = item.broadcasterDisplayName,
                             profileImageURL = item.profileImageURL,
-                            onClick = { onItemClick(item) }
+                            onClick = { onItemClick(item) },
                         )
                     } else {
                         UserItemCard(modifier = Modifier.height(64.dp))
@@ -77,7 +77,7 @@ fun SearchResultsList(
         PullRefreshIndicator(
             refreshing = isRefreshing,
             state = pullRefreshState,
-            scale = true
+            scale = true,
         )
     }
 }

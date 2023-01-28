@@ -8,7 +8,7 @@ data class TwitchEmote(
     private val supportedFormats: List<String>,
     private val supportedScales: List<String>,
     private val supportedThemes: List<String>,
-    private val urlTemplate: String
+    private val urlTemplate: String,
 ) : Emote() {
 
     private val supportedScalesMap: List<Pair<String, Float>> =
@@ -30,7 +30,7 @@ data class TwitchEmote(
                 ?: "default",
             theme = supportedThemes.firstOrNull { it == preferredTheme }
                 ?: supportedThemes.first(),
-            scale = closestDensity
+            scale = closestDensity,
         )
     }
 
@@ -38,7 +38,7 @@ data class TwitchEmote(
         id: String,
         format: String,
         theme: String,
-        scale: String
+        scale: String,
     ): String {
         return urlTemplate
             .replace("{{id}}", id)

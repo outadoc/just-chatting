@@ -87,7 +87,7 @@ class ChatViewModel(
     private val chatEntryMapper: ChatEntryMapper,
     private val preferencesRepository: PreferenceRepository,
     private val clock: Clock,
-    private val emoteListSourcesProvider: EmoteListSourcesProvider
+    private val emoteListSourcesProvider: EmoteListSourcesProvider,
 ) : ViewModel() {
 
     private val defaultScope = viewModelScope + CoroutineName("defaultScope")
@@ -125,7 +125,7 @@ class ChatViewModel(
             val roomState: RoomState = RoomState(),
             val hostModeState: HostModeState? = null,
             val connectionStatus: ConnectionStatus = ConnectionStatus(),
-            val maxAdapterCount: Int
+            val maxAdapterCount: Int,
         ) : State() {
 
             val allEmotesMap: ImmutableMap<String, Emote>
@@ -142,11 +142,11 @@ class ChatViewModel(
                 get() = flatListOf(
                     EmoteSetItem.Header(
                         title = R.string.chat_header_recent.asStringOrRes(),
-                        source = null
+                        source = null,
                     ),
                     recentEmotes
                         .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                        .map { recentEmote -> EmoteSetItem.Emote(recentEmote) }
+                        .map { recentEmote -> EmoteSetItem.Emote(recentEmote) },
                 )
                     .plus(pickableEmotes)
                     .toImmutableList()
@@ -158,7 +158,7 @@ class ChatViewModel(
                     } else {
                         MessagePostConstraint(
                             lastMessageSentAt = it,
-                            slowModeDuration = roomState.slowModeDuration
+                            slowModeDuration = roomState.slowModeDuration,
                         )
                     }
                 }
@@ -177,7 +177,7 @@ class ChatViewModel(
     data class InputState(
         val inputMessage: TextFieldValue = TextFieldValue(),
         val replyingTo: ChatEntry? = null,
-        val autoCompleteItems: List<AutoCompleteItem> = emptyList()
+        val autoCompleteItems: List<AutoCompleteItem> = emptyList(),
     )
 
     private val actions = MutableSharedFlow<Action>(extraBufferCapacity = 16)
@@ -190,7 +190,7 @@ class ChatViewModel(
             .stateIn(
                 scope = defaultScope,
                 started = SharingStarted.WhileSubscribed(),
-                initialValue = State.Initial
+                initialValue = State.Initial,
             )
 
     private val inputActions = MutableSharedFlow<InputAction>()
@@ -200,7 +200,7 @@ class ChatViewModel(
             .stateIn(
                 scope = inputScope,
                 started = SharingStarted.WhileSubscribed(),
-                initialValue = InputState()
+                initialValue = InputState(),
             )
 
     init {
@@ -231,7 +231,8 @@ class ChatViewModel(
                             is PingCommand -> null
                             is ChatMessage,
                             is PointReward,
-                            is Command -> Action.AddMessages(listOf(command))
+                            is Command,
+                            -> Action.AddMessages(listOf(command))
 
                             is HostModeState -> Action.ChangeHostModeState(command)
                             is RoomStateDelta -> Action.ChangeRoomState(command)
@@ -295,7 +296,7 @@ class ChatViewModel(
             }
             .onEach { autoCompleteItems ->
                 inputActions.emit(
-                    InputAction.UpdateAutoCompleteItems(autoCompleteItems)
+                    InputAction.UpdateAutoCompleteItems(autoCompleteItems),
                 )
             }
             .launchIn(viewModelScope)
@@ -362,7 +363,7 @@ class ChatViewModel(
                 ?: error("User not loaded"),
             appUser = prefs.appUser as AppUser.LoggedIn,
             chatters = persistentSetOf(Chatter(channelLogin)),
-            maxAdapterCount = prefs.messageLimit
+            maxAdapterCount = prefs.messageLimit,
         )
     }
 
@@ -370,7 +371,7 @@ class ChatViewModel(
     private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return state.copy(
-            stream = twitchRepository.loadStreamWithUser(channelId = state.user.id)
+            stream = twitchRepository.loadStreamWithUser(channelId = state.user.id),
         )
     }
 
@@ -406,14 +407,14 @@ class ChatViewModel(
             val pickableEmotes = loadPickableEmotes(
                 channelId = channelId,
                 channelName = state.user.displayName,
-                emoteSets = state.userState.emoteSets
+                emoteSets = state.userState.emoteSets,
             )
 
             state.copy(
                 cheerEmotes = cheerEmotes ?: state.cheerEmotes,
                 pickableEmotes = pickableEmotes,
                 channelBadges = channelBadges.await() ?: state.channelBadges,
-                globalBadges = globalBadges.await() ?: state.globalBadges
+                globalBadges = globalBadges.await() ?: state.globalBadges,
             )
         }
     }
@@ -421,7 +422,7 @@ class ChatViewModel(
     private suspend fun loadPickableEmotes(
         channelId: String,
         channelName: String,
-        emoteSets: List<String>
+        emoteSets: List<String>,
     ): PersistentList<EmoteSetItem> {
         return coroutineScope {
             emoteListSourcesProvider.getSources()
@@ -431,7 +432,7 @@ class ChatViewModel(
                             source.getEmotes(
                                 channelId = channelId,
                                 channelName = channelName,
-                                emoteSets = emoteSets
+                                emoteSets = emoteSets,
                             )
                         } catch (e: Exception) {
                             logError<ChatViewModel>(e) { "Failed to load emotes from source $source" }
@@ -481,7 +482,7 @@ class ChatViewModel(
                 .toPersistentList(),
             lastSentMessageInstant = lastSentMessageInstant
                 ?: state.lastSentMessageInstant,
-            chatters = state.chatters.addAll(newChatters)
+            chatters = state.chatters.addAll(newChatters),
         )
     }
 
@@ -496,12 +497,12 @@ class ChatViewModel(
         val pickableEmotes = loadPickableEmotes(
             channelId = state.user.id,
             channelName = state.user.displayName,
-            emoteSets = userState.emoteSets
+            emoteSets = userState.emoteSets,
         )
 
         return state.copy(
             userState = userState,
-            pickableEmotes = pickableEmotes
+            pickableEmotes = pickableEmotes,
         )
     }
 
@@ -513,8 +514,8 @@ class ChatViewModel(
                 isSubOnly = delta.isSubOnly ?: state.roomState.isSubOnly,
                 minFollowDuration = delta.minFollowDuration ?: state.roomState.minFollowDuration,
                 uniqueMessagesOnly = delta.uniqueMessagesOnly ?: state.roomState.uniqueMessagesOnly,
-                slowModeDuration = delta.slowModeDuration ?: state.roomState.slowModeDuration
-            )
+                slowModeDuration = delta.slowModeDuration ?: state.roomState.slowModeDuration,
+            ),
         )
     }
 
@@ -549,7 +550,7 @@ class ChatViewModel(
             chatConnectionPool.sendMessage(
                 channelId = state.user.id,
                 message = inputState.inputMessage.text,
-                inReplyToId = inputState.replyingTo?.data?.messageId
+                inReplyToId = inputState.replyingTo?.data?.messageId,
             )
 
             val prefs = preferencesRepository.currentPreferences.first()
@@ -564,9 +565,9 @@ class ChatViewModel(
                                 url = emote.getUrl(
                                     animate = prefs.animateEmotes,
                                     screenDensity = screenDensity,
-                                    isDarkTheme = isDarkTheme
+                                    isDarkTheme = isDarkTheme,
                                 ),
-                                usedAt = currentTime
+                                usedAt = currentTime,
                             )
                         }
                     }
@@ -576,7 +577,7 @@ class ChatViewModel(
 
         return inputState.copy(
             inputMessage = TextFieldValue(""),
-            replyingTo = null
+            replyingTo = null,
         )
     }
 
@@ -588,7 +589,7 @@ class ChatViewModel(
         return appendTextToInput(
             inputState = inputState,
             text = emote.name,
-            replaceLastWord = autocomplete
+            replaceLastWord = autocomplete,
         )
     }
 
@@ -596,7 +597,7 @@ class ChatViewModel(
         return appendTextToInput(
             inputState = inputState,
             text = chatter.name,
-            replaceLastWord = autocomplete
+            replaceLastWord = autocomplete,
         )
     }
 
@@ -611,7 +612,7 @@ class ChatViewModel(
     private fun appendTextToInput(
         inputState: InputState,
         text: String,
-        replaceLastWord: Boolean
+        replaceLastWord: Boolean,
     ): InputState {
         val previousWord = inputState.inputMessage
             .getTextBeforeSelection(inputState.inputMessage.text.length)
@@ -620,7 +621,7 @@ class ChatViewModel(
         val textBefore = inputState.inputMessage
             .getTextBeforeSelection(inputState.inputMessage.text.length)
             .removeSuffix(
-                if (replaceLastWord) previousWord else ""
+                if (replaceLastWord) previousWord else "",
             )
 
         val textAfter = inputState.inputMessage
@@ -630,9 +631,9 @@ class ChatViewModel(
             inputMessage = inputState.inputMessage.copy(
                 text = "${textBefore}$text $textAfter",
                 selection = TextRange(
-                    index = textBefore.length + text.length + 1
-                )
-            )
+                    index = textBefore.length + text.length + 1,
+                ),
+            ),
         )
     }
 }

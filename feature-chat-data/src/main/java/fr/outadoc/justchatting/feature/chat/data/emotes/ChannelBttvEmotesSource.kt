@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.utils.core.asStringOrRes
 import fr.outadoc.justchatting.utils.core.flatListOf
 
 class ChannelBttvEmotesSource(
-    private val emotesRepository: EmotesRepository
+    private val emotesRepository: EmotesRepository,
 ) : CachedEmoteListSource<List<EmoteSetItem>>() {
 
     override fun shouldUseCache(previous: Params, next: Params): Boolean =
@@ -16,9 +16,9 @@ class ChannelBttvEmotesSource(
         flatListOf(
             EmoteSetItem.Header(
                 title = params.channelName.asStringOrRes(),
-                source = R.string.chat_source_bttv.asStringOrRes()
+                source = R.string.chat_source_bttv.asStringOrRes(),
             ),
             emotesRepository.loadBttvEmotes(params.channelId)
-                .map { emote -> EmoteSetItem.Emote(emote) }
+                .map { emote -> EmoteSetItem.Emote(emote) },
         )
 }

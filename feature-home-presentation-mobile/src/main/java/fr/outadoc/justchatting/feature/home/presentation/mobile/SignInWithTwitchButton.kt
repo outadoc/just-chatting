@@ -25,27 +25,27 @@ fun SignInWithTwitchButtonPreview() {
 @Composable
 fun SignInWithTwitchButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Button(
         modifier = modifier,
         onClick = onClick,
         colors = ButtonDefaults.buttonColors(
             containerColor = TwitchBrandColor,
-            contentColor = Color.White
-        )
+            contentColor = Color.White,
+        ),
     ) {
         Icon(
             painterResource(R.drawable.ic_twitch),
             contentDescription = null,
-            modifier = Modifier.size(ButtonDefaults.IconSize)
+            modifier = Modifier.size(ButtonDefaults.IconSize),
         )
 
         Spacer(Modifier.size(ButtonDefaults.IconSpacing))
 
         Text(
             text = stringResource(R.string.onboarding_login_action),
-            style = MaterialTheme.typography.bodyLarge
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
 }

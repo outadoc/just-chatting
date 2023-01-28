@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Pagination(
     @SerialName("cursor")
-    val cursor: String? = null
+    val cursor: String? = null,
 )

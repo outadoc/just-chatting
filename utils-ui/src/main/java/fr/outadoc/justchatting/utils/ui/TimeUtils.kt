@@ -28,7 +28,7 @@ fun Instant.formatTimestamp(): String? {
 @Composable
 fun Instant.formatTime(
     tz: TimeZone = TimeZone.currentSystemDefault(),
-    clock: Clock = Clock.System
+    clock: Clock = Clock.System,
 ): String? {
     val context = LocalContext.current
     return remember(this, tz, clock) {
@@ -40,7 +40,7 @@ fun Instant.formatTime(
                 DateUtils.FORMAT_NO_YEAR
             } else {
                 DateUtils.FORMAT_SHOW_DATE
-            }
+            },
         )
     }
 }

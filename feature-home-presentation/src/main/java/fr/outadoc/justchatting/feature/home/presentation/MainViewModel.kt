@@ -25,7 +25,7 @@ class MainViewModel(
     private val authRepository: AuthRepository,
     private val preferencesRepository: PreferenceRepository,
     private val deeplinkParser: DeeplinkParser,
-    private val oAuthAppCredentials: OAuthAppCredentials
+    private val oAuthAppCredentials: OAuthAppCredentials,
 ) : ViewModel() {
 
     private class InvalidClientIdException : Exception()
@@ -33,7 +33,7 @@ class MainViewModel(
     sealed class State {
         object Loading : State()
         data class LoggedOut(
-            val causedByTokenExpiration: Boolean = false
+            val causedByTokenExpiration: Boolean = false,
         ) : State()
 
         data class LoggedIn(val appUser: AppUser) : State()
@@ -58,7 +58,7 @@ class MainViewModel(
                             val validatedUser = AppUser.LoggedIn(
                                 id = userInfo.userId,
                                 login = userInfo.login,
-                                helixToken = appUser.helixToken
+                                helixToken = appUser.helixToken,
                             )
 
                             if (userInfo.clientId != oAuthAppCredentials.clientId) {
@@ -86,7 +86,7 @@ class MainViewModel(
             .stateIn(
                 viewModelScope,
                 started = SharingStarted.WhileSubscribed(),
-                initialValue = State.Loading
+                initialValue = State.Loading,
             )
 
     private val _events = MutableSharedFlow<Event>()
@@ -97,7 +97,7 @@ class MainViewModel(
             "chat:read",
             "chat:edit",
             "channel:moderate",
-            "user:read:follows"
+            "user:read:follows",
         )
 
         val helixAuthUrl: Uri =
@@ -111,7 +111,7 @@ class MainViewModel(
                 .build()
 
         _events.emit(
-            Event.OpenInBrowser(uri = helixAuthUrl)
+            Event.OpenInBrowser(uri = helixAuthUrl),
         )
     }
 
@@ -121,15 +121,15 @@ class MainViewModel(
                 preferencesRepository.updatePreferences { prefs ->
                     prefs.copy(
                         appUser = AppUser.NotValidated(
-                            helixToken = deeplink.token
-                        )
+                            helixToken = deeplink.token,
+                        ),
                     )
                 }
             }
 
             is Deeplink.ViewChannel -> {
                 _events.emit(
-                    Event.ViewChannel(login = deeplink.login)
+                    Event.ViewChannel(login = deeplink.login),
                 )
             }
 

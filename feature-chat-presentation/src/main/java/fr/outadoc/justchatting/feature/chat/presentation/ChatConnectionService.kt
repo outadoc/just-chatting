@@ -56,11 +56,11 @@ class ChatConnectionService : Service() {
             .createNotificationChannel(
                 NotificationChannelCompat.Builder(
                     ONGOING_NOTIFICATION_CHANNEL_ID,
-                    NotificationManagerCompat.IMPORTANCE_MIN
+                    NotificationManagerCompat.IMPORTANCE_MIN,
                 )
                     .setName(getString(R.string.notification_foreground_channel_title))
                     .setDescription(getString(R.string.notification_foreground_channel_message))
-                    .build()
+                    .build(),
             )
 
         val notification = NotificationCompat.Builder(this, ONGOING_NOTIFICATION_CHANNEL_ID)
@@ -68,7 +68,7 @@ class ChatConnectionService : Service() {
             .setContentText(getString(R.string.notification_foreground_message))
             .setStyle(
                 NotificationCompat.BigTextStyle()
-                    .bigText(getString(R.string.notification_foreground_message))
+                    .bigText(getString(R.string.notification_foreground_message)),
             )
             .setSmallIcon(R.drawable.ic_notif)
             .setOngoing(true)
@@ -86,7 +86,7 @@ class ChatConnectionService : Service() {
                 if (channelId != null && quickReplyResult != null) {
                     connectionPool.sendMessage(
                         channelId = channelId,
-                        message = quickReplyResult
+                        message = quickReplyResult,
                     )
                 }
             }
@@ -97,7 +97,7 @@ class ChatConnectionService : Service() {
                     connectionPool.stop(channelId)
                     chatNotifier.dismissNotification(
                         context = this,
-                        channelId = channelId
+                        channelId = channelId,
                     )
                 }
 

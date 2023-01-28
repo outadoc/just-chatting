@@ -20,5 +20,5 @@ data class TwitchEmote(
     @SerialName("theme_mode")
     val themeMode: List<String>,
     @SerialName("images")
-    val images: Map<String, String>
+    val images: Map<String, String>,
 )

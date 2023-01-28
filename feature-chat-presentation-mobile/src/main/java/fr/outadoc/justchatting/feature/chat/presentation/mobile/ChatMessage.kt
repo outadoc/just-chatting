@@ -120,13 +120,13 @@ private val badgeSize = 1.4.em
 private val emotePlaceholder = Placeholder(
     width = emoteSize,
     height = emoteSize,
-    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
 )
 
 private val badgePlaceholder = Placeholder(
     width = badgeSize,
     height = badgeSize,
-    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter
+    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
 )
 
 private val urlRegex = Patterns.WEB_URL.toRegex()
@@ -142,14 +142,14 @@ fun ChatScreen(
     showTimestamps: Boolean,
     onMessageLongClick: (ChatEntry) -> Unit,
     onReplyToMessage: (ChatEntry) -> Unit,
-    insets: PaddingValues
+    insets: PaddingValues,
 ) {
     when (state) {
         ChatViewModel.State.Initial -> {
             Column(
                 modifier = modifier,
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 CircularProgressIndicator()
             }
@@ -160,7 +160,7 @@ fun ChatScreen(
                 Column(
                     modifier = modifier,
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     CircularProgressIndicator()
                 }
@@ -172,7 +172,7 @@ fun ChatScreen(
                     showTimestamps = showTimestamps,
                     onMessageLongClick = onMessageLongClick,
                     onReplyToMessage = onReplyToMessage,
-                    insets = insets
+                    insets = insets,
                 )
             }
         }
@@ -187,7 +187,7 @@ fun ChatList(
     showTimestamps: Boolean,
     onMessageLongClick: (ChatEntry) -> Unit,
     onReplyToMessage: (ChatEntry) -> Unit,
-    insets: PaddingValues
+    insets: PaddingValues,
 ) {
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
@@ -203,7 +203,7 @@ fun ChatList(
     LaunchedEffect(state.chatMessages, wasListScrolledByUser) {
         if (!wasListScrolledByUser) {
             listState.scrollToItem(
-                index = (state.chatMessages.size - 1).coerceAtLeast(0)
+                index = (state.chatMessages.size - 1).coerceAtLeast(0),
             )
         }
     }
@@ -221,12 +221,12 @@ fun ChatList(
             onMessageLongClick = onMessageLongClick,
             onReplyToMessage = onReplyToMessage,
             appUser = state.appUser,
-            insets = insets
+            insets = insets,
         )
 
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.BottomCenter),
-            visible = wasListScrolledByUser
+            visible = wasListScrolledByUser,
         ) {
             FloatingActionButton(
                 modifier = Modifier
@@ -237,14 +237,14 @@ fun ChatList(
                     scope.launch {
                         wasListScrolledByUser = false
                         listState.scrollToItem(
-                            index = (state.chatMessages.size - 1).coerceAtLeast(0)
+                            index = (state.chatMessages.size - 1).coerceAtLeast(0),
                         )
                     }
-                }
+                },
             ) {
                 Icon(
                     Icons.Default.ArrowDownward,
-                    contentDescription = stringResource(R.string.scroll_down)
+                    contentDescription = stringResource(R.string.scroll_down),
                 )
             }
         }
@@ -254,7 +254,7 @@ fun ChatList(
 @Composable
 fun RoomStateBanner(
     modifier: Modifier = Modifier,
-    roomState: RoomState
+    roomState: RoomState,
 ) {
     SlimSnackbar(modifier = modifier) {
         with(roomState) {
@@ -268,9 +268,9 @@ fun RoomStateBanner(
                         Duration.ZERO -> stringResource(R.string.room_followers)
                         else -> stringResource(
                             R.string.room_followers_min,
-                            minFollowDuration.toString()
+                            minFollowDuration.toString(),
                         )
-                    }
+                    },
                 )
             }
 
@@ -282,8 +282,8 @@ fun RoomStateBanner(
                 Text(
                     text = stringResource(
                         R.string.room_slow,
-                        slowModeDuration.toString()
-                    )
+                        slowModeDuration.toString(),
+                    ),
                 )
             }
 
@@ -309,14 +309,14 @@ fun ChatList(
     onReplyToMessage: (ChatEntry) -> Unit,
     roomState: RoomState,
     appUser: AppUser,
-    insets: PaddingValues
+    insets: PaddingValues,
 ) {
     val inlinesEmotes = remember(emotes) {
         emotes.mapValues { (_, emote) ->
             InlineTextContent(emotePlaceholder) {
                 EmoteItem(
                     emote = emote,
-                    animateEmotes = animateEmotes
+                    animateEmotes = animateEmotes,
                 )
             }
         }.toPersistentHashMap()
@@ -328,7 +328,7 @@ fun ChatList(
                 badge.inlineContentId,
                 InlineTextContent(badgePlaceholder) {
                     BadgeItem(badge = badge)
-                }
+                },
             )
         }.toPersistentHashMap()
     }
@@ -337,38 +337,38 @@ fun ChatList(
         modifier = modifier,
         state = listState,
         contentPadding = PaddingValues(
-            bottom = insets.calculateBottomPadding()
-        )
+            bottom = insets.calculateBottomPadding(),
+        ),
     ) {
         stickyHeader {
             Column(
                 modifier = Modifier.padding(horizontal = 6.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
+                verticalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Spacer(
                     modifier = Modifier.padding(
-                        top = insets.calculateTopPadding()
-                    )
+                        top = insets.calculateTopPadding(),
+                    ),
                 )
                 AnimatedVisibility(
                     visible = !roomState.isDefault,
                     enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut()
+                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
                 ) {
                     RoomStateBanner(
                         modifier = Modifier.fillMaxWidth(),
-                        roomState = roomState
+                        roomState = roomState,
                     )
                 }
 
                 AnimatedVisibility(
                     visible = isDisconnected,
                     enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut()
+                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
                 ) {
                     SlimSnackbar(
                         modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.errorContainer
+                        color = MaterialTheme.colorScheme.errorContainer,
                     ) {
                         Text(text = stringResource(R.string.connectionLost_error))
                     }
@@ -384,18 +384,21 @@ fun ChatList(
                     is ChatEntry.Highlighted -> 1
                     is ChatEntry.Simple -> 2
                 }
-            }
+            },
         ) { index, item ->
             val background =
-                if (index.isOdd) MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
-                else MaterialTheme.colorScheme.surface
+                if (index.isOdd) {
+                    MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.4f)
+                } else {
+                    MaterialTheme.colorScheme.surface
+                }
 
             val canBeRepliedTo = item.data?.messageId != null
             val replyToActionCd = stringResource(R.string.chat_replyTo)
 
             SwipeToReply(
                 onDismiss = { onReplyToMessage(item) },
-                enabled = canBeRepliedTo
+                enabled = canBeRepliedTo,
             ) {
                 ChatMessage(
                     modifier = Modifier
@@ -403,7 +406,7 @@ fun ChatList(
                         .combinedClickable(
                             onClick = {},
                             onLongClick = { onMessageLongClick(item) },
-                            onLongClickLabel = stringResource(R.string.chat_copyToClipboard)
+                            onLongClickLabel = stringResource(R.string.chat_copyToClipboard),
                         )
                         .semantics {
                             if (canBeRepliedTo) {
@@ -411,7 +414,7 @@ fun ChatList(
                                     CustomAccessibilityAction(replyToActionCd) {
                                         onReplyToMessage(item)
                                         true
-                                    }
+                                    },
                                 )
                             }
                         },
@@ -420,7 +423,7 @@ fun ChatList(
                     animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
                     background = background,
-                    appUser = appUser
+                    appUser = appUser,
                 )
             }
         }
@@ -433,13 +436,13 @@ fun SwipeToReply(
     modifier: Modifier = Modifier,
     enabled: Boolean,
     onDismiss: () -> Unit,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     val dismissState = rememberDismissState(
         confirmStateChange = {
             if (it == DismissValue.DismissedToEnd) onDismiss()
             it != DismissValue.DismissedToEnd
-        }
+        },
     )
 
     SwipeToDismiss(
@@ -452,7 +455,7 @@ fun SwipeToReply(
             if (direction != DismissDirection.StartToEnd) return@SwipeToDismiss
 
             val scale by animateFloatAsState(
-                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f,
             )
 
             val haptic = LocalHapticFeedback.current
@@ -466,15 +469,15 @@ fun SwipeToReply(
                 Modifier
                     .fillMaxSize()
                     .padding(start = 8.dp),
-                contentAlignment = Alignment.CenterStart
+                contentAlignment = Alignment.CenterStart,
             ) {
                 Icon(
                     Icons.Default.Reply,
                     contentDescription = "Reply",
-                    modifier = Modifier.scale(scale)
+                    modifier = Modifier.scale(scale),
                 )
             }
-        }
+        },
     ) {
         val elevation = animateDpAsState(if (dismissState.dismissDirection != null) 4.dp else 0.dp)
         Surface(shadowElevation = elevation.value) {
@@ -486,7 +489,7 @@ fun SwipeToReply(
 @ThemePreviews
 @Composable
 fun ChatMessagePreview(
-    @PreviewParameter(ChatEntryPreviewProvider::class) chatEntry: ChatEntry
+    @PreviewParameter(ChatEntryPreviewProvider::class) chatEntry: ChatEntry,
 ) {
     val inlineBadges = previewBadges
         .associateWith {
@@ -505,8 +508,8 @@ fun ChatMessagePreview(
             appUser = AppUser.LoggedIn(
                 id = "123",
                 login = "outadoc",
-                helixToken = ""
-            )
+                helixToken = "",
+            ),
         )
     }
 }
@@ -519,7 +522,7 @@ fun ChatMessage(
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     background: Color = Color.Transparent,
-    appUser: AppUser
+    appUser: AppUser,
 ) {
     val timestamp = message.timestamp
         .formatTimestamp()
@@ -530,14 +533,14 @@ fun ChatMessage(
             .background(MaterialTheme.colorScheme.surface)
             .background(background)
             .padding(4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         if (timestamp != null) {
             Text(
                 modifier = Modifier.padding(4.dp),
                 text = timestamp,
                 color = LocalContentColor.current.copy(alpha = 0.8f),
-                style = MaterialTheme.typography.bodySmall
+                style = MaterialTheme.typography.bodySmall,
             )
         }
 
@@ -547,7 +550,7 @@ fun ChatMessage(
                     message = message,
                     inlineContent = inlineContent,
                     animateEmotes = animateEmotes,
-                    appUser = appUser
+                    appUser = appUser,
                 )
             }
 
@@ -556,7 +559,7 @@ fun ChatMessage(
                     message = message,
                     inlineContent = inlineContent,
                     animateEmotes = animateEmotes,
-                    appUser = appUser
+                    appUser = appUser,
                 )
             }
         }
@@ -570,7 +573,7 @@ fun HighlightedMessage(
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
-    backgroundHint: Color = MaterialTheme.colorScheme.surface
+    backgroundHint: Color = MaterialTheme.colorScheme.surface,
 ) {
     Row(modifier = Modifier.height(IntrinsicSize.Min)) {
         Box(
@@ -578,7 +581,7 @@ fun HighlightedMessage(
                 .padding(vertical = 4.dp)
                 .background(MaterialTheme.colorScheme.primary)
                 .width(4.dp)
-                .fillMaxHeight()
+                .fillMaxHeight(),
         )
 
         Column {
@@ -586,24 +589,24 @@ fun HighlightedMessage(
                 modifier = Modifier
                     .padding(vertical = 4.dp)
                     .fillMaxWidth(),
-                shape = RectangleShape
+                shape = RectangleShape,
             ) {
                 message.header?.let { header ->
                     Row(
                         modifier = Modifier.padding(4.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         message.headerIconResId?.let { resId ->
                             Icon(
                                 modifier = Modifier.padding(end = 4.dp),
                                 painter = painterResource(id = resId),
-                                contentDescription = null
+                                contentDescription = null,
                             )
                         }
 
                         Text(
                             text = header,
-                            style = MaterialTheme.typography.titleSmall
+                            style = MaterialTheme.typography.titleSmall,
                         )
                     }
                 }
@@ -616,7 +619,7 @@ fun HighlightedMessage(
                     inlineContent = inlineContent,
                     animateEmotes = animateEmotes,
                     appUser = appUser,
-                    backgroundHint = backgroundHint
+                    backgroundHint = backgroundHint,
                 )
             }
         }
@@ -630,7 +633,7 @@ fun SimpleMessage(
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
-    backgroundHint: Color = MaterialTheme.colorScheme.surface
+    backgroundHint: Color = MaterialTheme.colorScheme.surface,
 ) {
     Row {
         Spacer(modifier = Modifier.width(4.dp))
@@ -638,13 +641,13 @@ fun SimpleMessage(
         ChatMessageData(
             modifier = modifier.padding(
                 horizontal = 4.dp,
-                vertical = 6.dp
+                vertical = 6.dp,
             ),
             data = message.data,
             inlineContent = inlineContent,
             animateEmotes = animateEmotes,
             appUser = appUser,
-            backgroundHint = backgroundHint
+            backgroundHint = backgroundHint,
         )
     }
 }
@@ -656,7 +659,7 @@ fun ChatMessageData(
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
-    backgroundHint: Color
+    backgroundHint: Color,
 ) {
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
@@ -671,18 +674,18 @@ fun ChatMessageData(
                             InlineTextContent(emotePlaceholder) {
                                 ChatEmoteItem(
                                     emote = emote,
-                                    animateEmotes = animateEmotes
+                                    animateEmotes = animateEmotes,
                                 )
-                            }
+                            },
                         )
                     }
-                    .toImmutableMap()
+                    .toImmutableMap(),
             )
 
     val annotatedString = data.toAnnotatedString(
         appUser = appUser,
         inlineContent = fullInlineContent,
-        backgroundHint = backgroundHint
+        backgroundHint = backgroundHint,
     )
 
     Column(modifier = modifier) {
@@ -690,7 +693,7 @@ fun ChatMessageData(
             InReplyToMessage(
                 modifier = Modifier.padding(bottom = 8.dp),
                 userName = inReplyTo.userName,
-                message = inReplyTo.message
+                message = inReplyTo.message,
             )
         }
 
@@ -732,7 +735,7 @@ fun ChatMessageData(
             text = annotatedString,
             inlineContent = fullInlineContent,
             lineHeight = emoteSize,
-            style = MaterialTheme.typography.bodyMedium
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }
@@ -741,14 +744,14 @@ fun ChatMessageData(
 fun InReplyToMessage(
     modifier: Modifier = Modifier,
     userName: String,
-    message: String
+    message: String,
 ) {
     CompositionLocalProvider(
-        LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
+        LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f),
     ) {
         Row(
             modifier = modifier,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Icon(
                 modifier = Modifier
@@ -756,7 +759,7 @@ fun InReplyToMessage(
                     .alignByBaseline()
                     .padding(end = 4.dp, top = 1.dp),
                 imageVector = Icons.Default.Reply,
-                contentDescription = stringResource(R.string.chat_replyingTo)
+                contentDescription = stringResource(R.string.chat_replyingTo),
             )
 
             Text(
@@ -769,7 +772,7 @@ fun InReplyToMessage(
                 },
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
             )
         }
     }
@@ -784,7 +787,7 @@ fun ChatEntry.Data.toAnnotatedString(
     urlColor: Color = MaterialTheme.colorScheme.primary,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
-    mentionColor: Color = MaterialTheme.colorScheme.background
+    mentionColor: Color = MaterialTheme.colorScheme.background,
 ): AnnotatedString {
     val randomChatColors = integerArrayResource(R.array.randomChatColors).map { Color(it) }
 
@@ -792,10 +795,10 @@ fun ChatEntry.Data.toAnnotatedString(
         color?.let { color ->
             ensureColorIsAccessible(
                 foreground = color.parseHexColor(),
-                background = backgroundHint
+                background = backgroundHint,
             )
         } ?: randomChatColors.random(
-            Random(userName.hashCode())
+            Random(userName.hashCode()),
         )
     }
 
@@ -803,7 +806,7 @@ fun ChatEntry.Data.toAnnotatedString(
         badges?.forEach { badge ->
             appendInlineContent(
                 id = badge.inlineContentId,
-                alternateText = " "
+                alternateText = " ",
             )
 
             append(' ')
@@ -813,7 +816,7 @@ fun ChatEntry.Data.toAnnotatedString(
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 withAnnotation(
                     tag = UrlAnnotationTag,
-                    annotation = userName.createChannelDeeplink().toString()
+                    annotation = userName.createChannelDeeplink().toString(),
                 ) {
                     append(userName)
                 }
@@ -849,14 +852,14 @@ fun ChatEntry.Data.toAnnotatedString(
                         withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                             withAnnotation(
                                 tag = UrlAnnotationTag,
-                                annotation = username.createChannelDeeplink().toString()
+                                annotation = username.createChannelDeeplink().toString(),
                             ) {
                                 if (username == appUser.login) {
                                     withStyle(
                                         SpanStyle(
                                             background = mentionBackground,
-                                            color = mentionColor
-                                        )
+                                            color = mentionColor,
+                                        ),
                                     ) {
                                         append(word)
                                     }
@@ -870,7 +873,7 @@ fun ChatEntry.Data.toAnnotatedString(
                     word in inlineContent -> {
                         appendInlineContent(
                             id = word,
-                            alternateText = word
+                            alternateText = word,
                         )
                     }
 

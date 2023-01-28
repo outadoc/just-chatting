@@ -15,5 +15,5 @@ data class Stream(
     val title: String? = null,
     val viewerCount: Int? = null,
     val startedAt: String? = null,
-    val profileImageURL: String? = null
+    val profileImageURL: String? = null,
 ) : Parcelable

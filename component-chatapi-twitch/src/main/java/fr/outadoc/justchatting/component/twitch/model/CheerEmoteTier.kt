@@ -12,5 +12,5 @@ data class CheerEmoteTier(
     @SerialName("color")
     val color: String? = null,
     @SerialName("images")
-    val images: Map<String, Map<String, Map<String, String>>>
+    val images: Map<String, Map<String, Map<String, String>>>,
 )

@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.component.twitch.api.HelixApi
 
 class FollowedChannelsDataSource(
     private val userId: String?,
-    private val helixApi: HelixApi
+    private val helixApi: HelixApi,
 ) : PagingSource<String, FollowResponse>() {
 
     override fun getRefreshKey(state: PagingState<String, FollowResponse>): String? {
@@ -23,7 +23,7 @@ class FollowedChannelsDataSource(
             val response = helixApi.getFollowedChannels(
                 userId = userId,
                 limit = params.loadSize,
-                offset = params.key
+                offset = params.key,
             )
 
             LoadResult.Page(
@@ -38,16 +38,16 @@ class FollowedChannelsDataSource(
                                 toId = follow.toId,
                                 toLogin = follow.toLogin,
                                 toName = follow.toName,
-                                followedAt = follow.followedAt
+                                followedAt = follow.followedAt,
                             )
                         },
                         pagination = Pagination(
-                            cursor = response.pagination?.cursor
-                        )
-                    )
+                            cursor = response.pagination?.cursor,
+                        ),
+                    ),
                 ),
                 nextKey = response.pagination?.cursor,
-                prevKey = null
+                prevKey = null,
             )
         } catch (e: Exception) {
             LoadResult.Error(e)

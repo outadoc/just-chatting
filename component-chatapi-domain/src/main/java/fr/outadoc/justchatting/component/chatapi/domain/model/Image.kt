@@ -5,5 +5,5 @@ data class Image(
     var start: Int,
     var end: Int,
     val isEmote: Boolean,
-    val isZeroWidth: Boolean = false
+    val isZeroWidth: Boolean = false,
 )

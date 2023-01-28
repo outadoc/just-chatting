@@ -29,7 +29,7 @@ import fr.outadoc.justchatting.utils.ui.HapticIconButton
 fun SearchTopAppBar(
     modifier: Modifier = Modifier,
     query: String,
-    onQueryChange: (String) -> Unit
+    onQueryChange: (String) -> Unit,
 ) {
     val focusRequester = FocusRequester()
     TextField(
@@ -43,7 +43,7 @@ fun SearchTopAppBar(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
             disabledIndicatorColor = Color.Transparent,
-            errorIndicatorColor = Color.Transparent
+            errorIndicatorColor = Color.Transparent,
         ),
         placeholder = { Text(stringResource(R.string.search_hint)) },
         value = query,
@@ -51,18 +51,18 @@ fun SearchTopAppBar(
         singleLine = true,
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Search,
-            autoCorrect = false
+            autoCorrect = false,
         ),
         trailingIcon = {
             AnimatedVisibility(visible = query.isNotEmpty()) {
                 HapticIconButton(onClick = { onQueryChange("") }) {
                     Icon(
                         Icons.Filled.Cancel,
-                        contentDescription = stringResource(R.string.search_clear_cd)
+                        contentDescription = stringResource(R.string.search_clear_cd),
                     )
                 }
             }
-        }
+        },
     )
 
     LaunchedEffect(onQueryChange) {

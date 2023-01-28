@@ -10,5 +10,5 @@ class ValidationResponse(
     @SerialName("login")
     val login: String,
     @SerialName("user_id")
-    val userId: String
+    val userId: String,
 )

@@ -37,7 +37,7 @@ fun LiveStreamPreview() {
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = "2022-01-01T13:45:04.00Z".toInstant(),
-            profileImageURL = null
+            profileImageURL = null,
         )
     }
 }
@@ -55,7 +55,7 @@ fun LiveStreamLongPreview() {
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = "2022-01-01T13:45:04.00Z".toInstant(),
-            profileImageURL = null
+            profileImageURL = null,
         )
     }
 }
@@ -70,11 +70,11 @@ fun LiveStreamCard(
     gameName: String? = null,
     startedAt: Instant? = null,
     profileImageURL: String? = null,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
 ) {
     Card(
         modifier = modifier,
-        onClick = onClick
+        onClick = onClick,
     ) {
         LiveStream(
             modifier = Modifier.padding(8.dp),
@@ -83,7 +83,7 @@ fun LiveStreamCard(
             viewerCount = viewerCount,
             gameName = gameName,
             startedAt = startedAt,
-            profileImageURL = profileImageURL
+            profileImageURL = profileImageURL,
         )
     }
 }
@@ -96,11 +96,11 @@ fun LiveStream(
     viewerCount: Int?,
     gameName: String?,
     startedAt: Instant?,
-    profileImageURL: String?
+    profileImageURL: String?,
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         profileImageURL?.let { url ->
             AsyncImage(
@@ -109,7 +109,7 @@ fun LiveStream(
                     .size(56.dp)
                     .clip(CircleShape),
                 model = url,
-                contentDescription = null
+                contentDescription = null,
             )
         }
 
@@ -119,13 +119,13 @@ fun LiveStream(
                     text = title,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.titleMedium,
                 )
             }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 userName?.let { userName ->
                     Text(
@@ -133,7 +133,7 @@ fun LiveStream(
                             .weight(1f, fill = true)
                             .alignByBaseline(),
                         text = userName,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
 
@@ -141,14 +141,14 @@ fun LiveStream(
                     Text(
                         modifier = Modifier.alignByBaseline(),
                         text = viewerCount.formatNumber(),
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 }
             }
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 gameName?.let { gameName ->
                     Text(
@@ -156,7 +156,7 @@ fun LiveStream(
                             .weight(1f, fill = true)
                             .alignByBaseline(),
                         text = gameName,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
 
@@ -166,7 +166,7 @@ fun LiveStream(
                         Text(
                             modifier = Modifier.alignByBaseline(),
                             text = startedAt,
-                            style = MaterialTheme.typography.labelMedium
+                            style = MaterialTheme.typography.labelMedium,
                         )
                     }
             }

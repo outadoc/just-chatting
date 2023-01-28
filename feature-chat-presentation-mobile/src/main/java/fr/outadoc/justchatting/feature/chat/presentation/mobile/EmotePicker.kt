@@ -26,7 +26,7 @@ fun EmotePicker(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     preferencesRepository: PreferenceRepository = get(),
-    onEmoteClick: (Emote) -> Unit
+    onEmoteClick: (Emote) -> Unit,
 ) {
     val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
@@ -35,7 +35,7 @@ fun EmotePicker(
             Column(
                 modifier = modifier,
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 CircularProgressIndicator()
             }
@@ -49,7 +49,7 @@ fun EmotePicker(
                     Column(
                         modifier = Modifier.fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                        horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         CircularProgressIndicator()
                     }
@@ -62,11 +62,11 @@ fun EmotePicker(
                             top = 16.dp,
                             bottom = 16.dp + WindowInsets.navigationBars
                                 .asPaddingValues()
-                                .calculateBottomPadding()
+                                .calculateBottomPadding(),
                         ),
                         emotes = emotes.toImmutableList(),
                         animateEmotes = prefs.animateEmotes,
-                        onEmoteClick = onEmoteClick
+                        onEmoteClick = onEmoteClick,
                     )
                 }
             }

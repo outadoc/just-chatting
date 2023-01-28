@@ -30,7 +30,7 @@ import org.koin.androidx.compose.getViewModel
 fun FollowedChannelsList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    onItemClick: (Follow) -> Unit
+    onItemClick: (Follow) -> Unit,
 ) {
     val viewModel: FollowedChannelsViewModel = getViewModel()
     val items: LazyPagingItems<Follow> = viewModel.pagingData.collectAsLazyPagingItems()
@@ -38,19 +38,19 @@ fun FollowedChannelsList(
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { items.refresh() }
+        onRefresh = { items.refresh() },
     )
 
     Box(
         modifier = modifier
             .fillMaxSize()
             .pullRefresh(pullRefreshState),
-        contentAlignment = Alignment.TopCenter
+        contentAlignment = Alignment.TopCenter,
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
             contentPadding = insets + PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             if (!isRefreshing && items.itemCount == 0) {
                 item(key = "_noContent") {
@@ -64,7 +64,7 @@ fun FollowedChannelsList(
                             displayName = item.toName,
                             profileImageURL = item.profileImageURL,
                             followedAt = item.followedAt?.toInstant(),
-                            onClick = { onItemClick(item) }
+                            onClick = { onItemClick(item) },
                         )
                     } else {
                         UserItemCard(modifier = Modifier.height(64.dp))
@@ -76,7 +76,7 @@ fun FollowedChannelsList(
         PullRefreshIndicator(
             refreshing = isRefreshing,
             state = pullRefreshState,
-            scale = true
+            scale = true,
         )
     }
 }

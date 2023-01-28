@@ -13,7 +13,7 @@ abstract class Emote {
     abstract fun getUrl(
         animate: Boolean,
         screenDensity: Float = 1f,
-        isDarkTheme: Boolean = false
+        isDarkTheme: Boolean = false,
     ): String
 
     override fun equals(other: Any?): Boolean {

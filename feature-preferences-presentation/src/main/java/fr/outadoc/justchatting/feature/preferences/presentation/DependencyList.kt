@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class DependencyList(
     @SerialName("dependencies")
-    val dependencies: List<Dependency>
+    val dependencies: List<Dependency>,
 )

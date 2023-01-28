@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class SharedPrefsPreferenceRepository(
-    applicationContext: Context
+    applicationContext: Context,
 ) : PreferenceRepository {
 
     private val dataStore = applicationContext.dataStore
@@ -34,7 +34,7 @@ class SharedPrefsPreferenceRepository(
             showTimestamps = this[CHAT_TIMESTAMPS] ?: defaultPreferences.showTimestamps,
             recentMsgLimit = this[CHAT_RECENT_LIMIT] ?: defaultPreferences.recentMsgLimit,
             messageLimit = this[CHAT_LIMIT] ?: defaultPreferences.messageLimit,
-            appUser = this.parseUser()
+            appUser = this.parseUser(),
         )
     }
 
@@ -58,11 +58,11 @@ class SharedPrefsPreferenceRepository(
                 AppUser.LoggedIn(
                     id = id,
                     login = login,
-                    helixToken = helixToken
+                    helixToken = helixToken,
                 )
             } else {
                 AppUser.NotValidated(
-                    helixToken = helixToken
+                    helixToken = helixToken,
                 )
             }
         } else {

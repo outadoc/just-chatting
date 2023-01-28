@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class CheerEmotesResponse(
     @SerialName("data")
-    val data: List<CheerEmote>
+    val data: List<CheerEmote>,
 )

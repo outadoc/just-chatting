@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.component.chatapi.domain.model
 
 class BttvEmote(
     val id: String,
-    override val name: String
+    override val name: String,
 ) : Emote() {
 
     companion object {
@@ -14,7 +14,7 @@ class BttvEmote(
             "ReinDeer",
             "CandyCane",
             "cvMask",
-            "cvHazmat"
+            "cvHazmat",
         )
     }
 
@@ -22,7 +22,7 @@ class BttvEmote(
         val availableDensities = listOf(
             1.0 to "1x",
             2.0 to "2x",
-            3.0 to "3x"
+            3.0 to "3x",
         )
 
         val closest: String = availableDensities

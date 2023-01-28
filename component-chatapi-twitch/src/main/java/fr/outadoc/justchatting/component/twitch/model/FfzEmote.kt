@@ -14,5 +14,5 @@ data class FfzEmote(
     @SerialName("imageType")
     val imageType: String,
     @SerialName("animated")
-    val animated: Boolean
+    val animated: Boolean,
 )

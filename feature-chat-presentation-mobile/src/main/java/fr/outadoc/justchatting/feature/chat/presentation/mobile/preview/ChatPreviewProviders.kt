@@ -10,7 +10,7 @@ import kotlinx.datetime.Instant
 
 val previewBadges = listOf(
     "badge_subscriber_48",
-    "badge_sub-gifter_100"
+    "badge_sub-gifter_100",
 )
 
 private val simpleEntries = sequence {
@@ -27,12 +27,12 @@ private val simpleEntries = sequence {
                 emotes = persistentListOf(),
                 badges = persistentListOf(
                     Badge("subscriber", "48"),
-                    Badge("sub-gifter", "100")
+                    Badge("sub-gifter", "100"),
                 ),
-                inReplyTo = null
+                inReplyTo = null,
             ),
-            timestamp = Instant.fromEpochMilliseconds(1664396374382)
-        )
+            timestamp = Instant.fromEpochMilliseconds(1664396374382),
+        ),
     )
 
     yield(
@@ -52,11 +52,11 @@ private val simpleEntries = sequence {
                     userId = "221570322",
                     userName = "djessy728",
                     userLogin = "djessy728",
-                    message = "Salut Antoine, est tu encore en contact avec Mathieu? Et penses tu streamer un peu avec lui?"
-                )
+                    message = "Salut Antoine, est tu encore en contact avec Mathieu? Et penses tu streamer un peu avec lui?",
+                ),
             ),
-            timestamp = Instant.fromEpochMilliseconds(1664399217864)
-        )
+            timestamp = Instant.fromEpochMilliseconds(1664399217864),
+        ),
     )
 }
 
@@ -73,12 +73,12 @@ private val highlightedEntries = sequence {
                 color = "#8A2BE2",
                 emotes = persistentListOf(),
                 badges = persistentListOf(),
-                inReplyTo = null
+                inReplyTo = null,
             ),
             timestamp = Instant.fromEpochMilliseconds(1664398268452),
             header = "clo_chette_ subscribed at Tier 1. They've subscribed for 18 months!",
-            headerIconResId = R.drawable.ic_star
-        )
+            headerIconResId = R.drawable.ic_star,
+        ),
     )
 
     yield(
@@ -86,8 +86,8 @@ private val highlightedEntries = sequence {
             header = "This room is now in followers-only mode.",
             headerIconResId = null,
             data = null,
-            timestamp = Instant.fromEpochMilliseconds(1664400523912)
-        )
+            timestamp = Instant.fromEpochMilliseconds(1664400523912),
+        ),
     )
 }
 

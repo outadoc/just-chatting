@@ -12,49 +12,49 @@ sealed class Command : ChatCommand {
         val systemMsg: String?,
         val timestamp: Instant,
         val userMessage: ChatMessage?,
-        val msgId: String?
+        val msgId: String?,
     ) : Command()
 
     data class Notice(
         val message: String?,
         val timestamp: Instant,
-        val messageId: String?
+        val messageId: String?,
     ) : Command()
 
     data class ClearChat(
-        val timestamp: Instant
+        val timestamp: Instant,
     ) : Command()
 
     data class Timeout(
         val duration: Duration?,
         val timestamp: Instant,
-        val userLogin: String?
+        val userLogin: String?,
     ) : Command()
 
     data class Ban(
         val timestamp: Instant,
-        val userLogin: String?
+        val userLogin: String?,
     ) : Command()
 
     data class ClearMessage(
         val message: String?,
         val timestamp: Instant,
-        val userLogin: String?
+        val userLogin: String?,
     ) : Command()
 
     data class Join(
         val channelLogin: String?,
-        val timestamp: Instant
+        val timestamp: Instant,
     ) : Command()
 
     data class Disconnect(
         val channelLogin: String?,
-        val timestamp: Instant
+        val timestamp: Instant,
     ) : Command()
 
     data class SendMessageError(
         val timestamp: Instant,
-        val throwable: Throwable?
+        val throwable: Throwable?,
     ) : Command()
 }
 
@@ -73,7 +73,7 @@ data class ChatMessage(
     val timestamp: Instant,
     val rewardId: String?,
     val inReplyTo: InReplyTo?,
-    val msgId: String?
+    val msgId: String?,
 ) : ChatCommand {
 
     @Immutable
@@ -82,7 +82,7 @@ data class ChatMessage(
         val userName: String,
         val message: String,
         val userId: String,
-        val userLogin: String
+        val userLogin: String,
     )
 }
 
@@ -97,20 +97,20 @@ data class PointReward(
     val rewardTitle: String?,
     val rewardCost: Int?,
     val rewardImage: RewardImage?,
-    val timestamp: Instant
+    val timestamp: Instant,
 ) : ChatCommand {
 
     data class RewardImage(
         val url1: String?,
         val url2: String?,
-        val url4: String?
+        val url4: String?,
     ) : RemoteImage {
 
         private val urlForDensity: Map<Float, String?>
             get() = mapOf(
                 1f to url1,
                 2f to url2,
-                4f to url4
+                4f to url4,
             )
 
         override fun getUrl(screenDensity: Float): String? {
@@ -127,14 +127,14 @@ data class RoomStateDelta(
     val minFollowDuration: Duration? = null,
     val uniqueMessagesOnly: Boolean? = null,
     val slowModeDuration: Duration? = null,
-    val isSubOnly: Boolean? = null
+    val isSubOnly: Boolean? = null,
 ) : ChatCommand
 
 data class UserState(
-    val emoteSets: List<String> = emptyList()
+    val emoteSets: List<String> = emptyList(),
 ) : ChatCommand
 
 data class HostModeState(
     val targetChannelLogin: String?,
-    val viewerCount: Int?
+    val viewerCount: Int?,
 ) : ChatCommand

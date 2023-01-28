@@ -11,12 +11,12 @@ operator fun PaddingValues.plus(paddingValues: PaddingValues): PaddingValues {
     val layoutDirection = LocalLayoutDirection.current
     return PaddingValues(
         start = calculateStartPadding(layoutDirection) + paddingValues.calculateStartPadding(
-            layoutDirection
+            layoutDirection,
         ),
         top = calculateTopPadding() + paddingValues.calculateTopPadding(),
         end = calculateEndPadding(layoutDirection) + paddingValues.calculateEndPadding(
-            layoutDirection
+            layoutDirection,
         ),
-        bottom = calculateBottomPadding() + paddingValues.calculateBottomPadding()
+        bottom = calculateBottomPadding() + paddingValues.calculateBottomPadding(),
     )
 }

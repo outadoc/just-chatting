@@ -9,7 +9,7 @@ data class TwitchBadge(
     val id: String,
     val version: String,
     private val urls: ImmutableMap<Float, String>,
-    val title: String? = null
+    val title: String? = null,
 ) {
     @Stable
     fun getUrl(screenDensity: Float): String {

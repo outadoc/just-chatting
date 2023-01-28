@@ -14,5 +14,5 @@ inline fun <reified T : Any> logWarning(noinline content: () -> String) =
 
 inline fun <reified T : Any> logError(
     throwable: Throwable? = null,
-    noinline content: () -> String
+    noinline content: () -> String,
 ) = Logger.e(T::class, throwable, content)

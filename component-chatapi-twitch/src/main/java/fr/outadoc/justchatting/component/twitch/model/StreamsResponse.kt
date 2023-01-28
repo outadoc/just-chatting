@@ -8,5 +8,5 @@ data class StreamsResponse(
     @SerialName("data")
     val data: List<Stream>?,
     @SerialName("pagination")
-    val pagination: Pagination?
+    val pagination: Pagination?,
 )

@@ -17,11 +17,11 @@ class AggregateChatCommandHandler(
     channelId: String,
     channelLogin: String,
     coroutineScope: CoroutineScope,
-    chatCommandHandlerFactoriesProvider: ChatCommandHandlerFactoriesProvider
+    chatCommandHandlerFactoriesProvider: ChatCommandHandlerFactoriesProvider,
 ) : ChatCommandHandler {
 
     class Factory(
-        private val chatCommandHandlerFactoriesProvider: ChatCommandHandlerFactoriesProvider
+        private val chatCommandHandlerFactoriesProvider: ChatCommandHandlerFactoriesProvider,
     ) {
         fun create(
             channelId: String,
@@ -32,7 +32,7 @@ class AggregateChatCommandHandler(
                 channelId = channelId,
                 channelLogin = channelLogin,
                 coroutineScope = coroutineScope,
-                chatCommandHandlerFactoriesProvider = chatCommandHandlerFactoriesProvider
+                chatCommandHandlerFactoriesProvider = chatCommandHandlerFactoriesProvider,
             )
         }
     }
@@ -42,7 +42,7 @@ class AggregateChatCommandHandler(
             handlerFactory.create(
                 scope = coroutineScope,
                 channelLogin = channelLogin,
-                channelId = channelId
+                channelId = channelId,
             )
         }
 
@@ -54,7 +54,7 @@ class AggregateChatCommandHandler(
             statuses.reduce { acc, status ->
                 ConnectionStatus(
                     isAlive = acc.isAlive && status.isAlive,
-                    preventSendingMessages = acc.preventSendingMessages || status.preventSendingMessages
+                    preventSendingMessages = acc.preventSendingMessages || status.preventSendingMessages,
                 )
             }
         }
@@ -62,7 +62,7 @@ class AggregateChatCommandHandler(
             .stateIn(
                 coroutineScope,
                 started = SharingStarted.WhileSubscribed(),
-                initialValue = ConnectionStatus()
+                initialValue = ConnectionStatus(),
             )
 
     override fun send(message: CharSequence, inReplyToId: String?) {

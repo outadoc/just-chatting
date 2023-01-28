@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.utils.core.asStringOrRes
 import fr.outadoc.justchatting.utils.core.flatListOf
 
 class GlobalFfzEmotesSource(
-    private val emotesRepository: EmotesRepository
+    private val emotesRepository: EmotesRepository,
 ) : CachedEmoteListSource<List<EmoteSetItem>>() {
 
     override fun shouldUseCache(previous: Params, next: Params): Boolean = true
@@ -15,9 +15,9 @@ class GlobalFfzEmotesSource(
         flatListOf(
             EmoteSetItem.Header(
                 title = null,
-                source = R.string.chat_source_ffz.asStringOrRes()
+                source = R.string.chat_source_ffz.asStringOrRes(),
             ),
             emotesRepository.loadBttvGlobalFfzEmotes()
-                .map { emote -> EmoteSetItem.Emote(emote) }
+                .map { emote -> EmoteSetItem.Emote(emote) },
         )
 }

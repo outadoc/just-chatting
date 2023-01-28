@@ -4,7 +4,7 @@ import android.net.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
 
 data class DeeplinkParser(
-    private val oAuthAppCredentials: OAuthAppCredentials
+    private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
     fun parseDeeplink(uri: Uri): Deeplink? {
         when {

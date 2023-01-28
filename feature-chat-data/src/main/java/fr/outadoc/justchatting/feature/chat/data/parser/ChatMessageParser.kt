@@ -64,7 +64,7 @@ class ChatMessageParser(private val clock: Clock) {
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             inReplyTo = ircMessage.tags.parseParentMessage(),
             msgId = ircMessage.tags.messageId,
-            systemMsg = ircMessage.tags.systemMsg
+            systemMsg = ircMessage.tags.systemMsg,
         )
     }
 
@@ -73,7 +73,7 @@ class ChatMessageParser(private val clock: Clock) {
             systemMsg = ircMessage.tags.systemMsg,
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             userMessage = parseMessage(ircMessage),
-            msgId = ircMessage.tags.messageId
+            msgId = ircMessage.tags.messageId,
         )
     }
 
@@ -81,7 +81,7 @@ class ChatMessageParser(private val clock: Clock) {
         return Command.ClearMessage(
             message = ircMessage.parameters.getOrNull(1),
             userLogin = ircMessage.tags.login,
-            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
+            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
         )
     }
 
@@ -92,19 +92,19 @@ class ChatMessageParser(private val clock: Clock) {
         return when {
             user == null ->
                 Command.ClearChat(
-                    timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
+                    timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
                 )
 
             duration != null ->
                 Command.Timeout(
                     userLogin = user,
                     duration = duration,
-                    timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
+                    timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
                 )
 
             else -> Command.Ban(
                 userLogin = user,
-                timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
+                timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             )
         }
     }
@@ -116,7 +116,7 @@ class ChatMessageParser(private val clock: Clock) {
         return Command.Notice(
             message = notice.message,
             messageId = ircMessage.tags.messageId,
-            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
+            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
         )
     }
 
@@ -126,7 +126,7 @@ class ChatMessageParser(private val clock: Clock) {
             minFollowDuration = ircMessage.tags.minFollowDuration,
             uniqueMessagesOnly = ircMessage.tags.uniqueMessagesOnly,
             slowModeDuration = ircMessage.tags.slowModeDuration,
-            isSubOnly = ircMessage.tags.isSubOnly
+            isSubOnly = ircMessage.tags.isSubOnly,
         )
     }
 
@@ -137,7 +137,7 @@ class ChatMessageParser(private val clock: Clock) {
         val (targetLogin, viewerCount) = params
         return HostModeState(
             targetChannelLogin = targetLogin.takeIf { login -> login != "-" },
-            viewerCount = viewerCount.toIntOrNull()
+            viewerCount = viewerCount.toIntOrNull(),
         )
     }
 

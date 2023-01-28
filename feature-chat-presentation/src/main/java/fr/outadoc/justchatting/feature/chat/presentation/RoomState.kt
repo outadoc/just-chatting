@@ -9,7 +9,7 @@ data class RoomState(
     val minFollowDuration: Duration? = null,
     val uniqueMessagesOnly: Boolean = false,
     val slowModeDuration: Duration? = null,
-    val isSubOnly: Boolean = false
+    val isSubOnly: Boolean = false,
 ) {
     val isDefault: Boolean =
         !isEmoteOnly &&

@@ -27,11 +27,11 @@ fun SettingsHeaderPreview() {
 @Composable
 fun SettingsHeader(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     CompositionLocalProvider(
         LocalTextStyle provides MaterialTheme.typography.labelMedium,
-        LocalContentColor provides MaterialTheme.colorScheme.primary
+        LocalContentColor provides MaterialTheme.colorScheme.primary,
     ) {
         Box(modifier = modifier) {
             content()

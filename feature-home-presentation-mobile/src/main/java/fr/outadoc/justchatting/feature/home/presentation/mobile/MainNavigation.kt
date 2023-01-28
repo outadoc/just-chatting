@@ -40,7 +40,7 @@ fun MainNavigation(
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
     topBar: @Composable () -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     when (sizeClass.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
@@ -49,7 +49,7 @@ fun MainNavigation(
                 selectedTab = selectedTab,
                 onSelectedTabChange = onSelectedTabChange,
                 topBar = topBar,
-                content = content
+                content = content,
             )
         }
 
@@ -59,7 +59,7 @@ fun MainNavigation(
                 selectedTab = selectedTab,
                 onSelectedTabChange = onSelectedTabChange,
                 topBar = topBar,
-                content = content
+                content = content,
             )
         }
 
@@ -69,7 +69,7 @@ fun MainNavigation(
                 selectedTab = selectedTab,
                 onSelectedTabChange = onSelectedTabChange,
                 topBar = topBar,
-                content = content
+                content = content,
             )
         }
     }
@@ -82,7 +82,7 @@ fun CompactNavigation(
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
     topBar: @Composable () -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
@@ -95,10 +95,10 @@ fun CompactNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Default.LiveTv,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Live) }
+                    onClick = { onSelectedTabChange(Tab.Live) },
                 )
 
                 NavigationBarItem(
@@ -107,10 +107,10 @@ fun CompactNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Followed) }
+                    onClick = { onSelectedTabChange(Tab.Followed) },
                 )
 
                 NavigationBarItem(
@@ -119,10 +119,10 @@ fun CompactNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Search) }
+                    onClick = { onSelectedTabChange(Tab.Search) },
                 )
 
                 NavigationBarItem(
@@ -131,14 +131,14 @@ fun CompactNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Settings) }
+                    onClick = { onSelectedTabChange(Tab.Settings) },
                 )
             }
         },
-        content = content
+        content = content,
     )
 }
 
@@ -149,7 +149,7 @@ fun MediumNavigation(
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
     topBar: @Composable () -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     Row {
         NavigationRail {
@@ -157,7 +157,7 @@ fun MediumNavigation(
                 modifier = Modifier.fillMaxHeight(),
                 verticalArrangement = Arrangement.spacedBy(
                     16.dp,
-                    alignment = Alignment.CenterVertically
+                    alignment = Alignment.CenterVertically,
                 ),
             ) {
                 NavigationRailItem(
@@ -170,10 +170,10 @@ fun MediumNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Default.LiveTv,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Live) }
+                    onClick = { onSelectedTabChange(Tab.Live) },
                 )
 
                 NavigationRailItem(
@@ -186,10 +186,10 @@ fun MediumNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Followed) }
+                    onClick = { onSelectedTabChange(Tab.Followed) },
                 )
 
                 NavigationRailItem(
@@ -202,10 +202,10 @@ fun MediumNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Search) }
+                    onClick = { onSelectedTabChange(Tab.Search) },
                 )
 
                 NavigationRailItem(
@@ -218,10 +218,10 @@ fun MediumNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Settings) }
+                    onClick = { onSelectedTabChange(Tab.Settings) },
                 )
             }
         }
@@ -229,7 +229,7 @@ fun MediumNavigation(
         Scaffold(
             modifier = modifier,
             topBar = topBar,
-            content = content
+            content = content,
         )
     }
 }
@@ -241,7 +241,7 @@ fun ExpandedNavigation(
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
     topBar: @Composable () -> Unit = {},
-    content: @Composable (PaddingValues) -> Unit
+    content: @Composable (PaddingValues) -> Unit,
 ) {
     PermanentNavigationDrawer(
         modifier = modifier,
@@ -250,7 +250,7 @@ fun ExpandedNavigation(
                 modifier = Modifier
                     .width(240.dp)
                     .padding(vertical = 16.dp)
-                    .systemBarsPadding()
+                    .systemBarsPadding(),
             ) {
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
@@ -259,10 +259,10 @@ fun ExpandedNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Default.LiveTv,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Live) }
+                    onClick = { onSelectedTabChange(Tab.Live) },
                 )
 
                 NavigationDrawerItem(
@@ -272,10 +272,10 @@ fun ExpandedNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Followed) }
+                    onClick = { onSelectedTabChange(Tab.Followed) },
                 )
 
                 NavigationDrawerItem(
@@ -285,10 +285,10 @@ fun ExpandedNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Search) }
+                    onClick = { onSelectedTabChange(Tab.Search) },
                 )
 
                 NavigationDrawerItem(
@@ -298,10 +298,10 @@ fun ExpandedNavigation(
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Settings,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Settings) }
+                    onClick = { onSelectedTabChange(Tab.Settings) },
                 )
             }
         },
@@ -309,8 +309,8 @@ fun ExpandedNavigation(
             Scaffold(
                 modifier = modifier,
                 topBar = topBar,
-                content = content
+                content = content,
             )
-        }
+        },
     )
 }

@@ -18,20 +18,20 @@ import androidx.compose.ui.unit.dp
 fun SlimSnackbar(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     Surface(
         modifier = modifier.semantics(mergeDescendants = true) {},
         shape = RoundedCornerShape(percent = 50),
         color = color,
-        shadowElevation = 4.dp
+        shadowElevation = 4.dp,
     ) {
         CompositionLocalProvider(
-            LocalTextStyle provides MaterialTheme.typography.labelMedium
+            LocalTextStyle provides MaterialTheme.typography.labelMedium,
         ) {
             Row(
                 modifier = Modifier.padding(4.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 content()
             }

@@ -13,7 +13,7 @@ class LogFileProvider : FileProvider(R.xml.log_share) {
             getUriForFile(
                 context,
                 "${context.packageName}.logfileprovider",
-                path.toFile()
+                path.toFile(),
             )
     }
 }

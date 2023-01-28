@@ -14,5 +14,5 @@ data class TwitchBadgeVersion(
     @SerialName("image_url_2x")
     val image2x: String,
     @SerialName("image_url_4x")
-    val image4x: String
+    val image4x: String,
 )

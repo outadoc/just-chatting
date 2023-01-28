@@ -36,9 +36,9 @@ class PubSubRewardParser(private val clock: Clock) {
             rewardImage = PointReward.RewardImage(
                 url1 = rewardImage?.optString("url_1x") ?: defaultImage?.optString("url_1x"),
                 url2 = rewardImage?.optString("url_2x") ?: defaultImage?.optString("url_2x"),
-                url4 = rewardImage?.optString("url_4x") ?: defaultImage?.optString("url_4x")
+                url4 = rewardImage?.optString("url_4x") ?: defaultImage?.optString("url_4x"),
             ),
-            timestamp = messageData?.optString("timestamp")?.toInstant() ?: clock.now()
+            timestamp = messageData?.optString("timestamp")?.toInstant() ?: clock.now(),
         )
     }
 }

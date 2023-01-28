@@ -13,7 +13,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 @SuppressLint("CheckResult")
 fun ImageView.loadImage(
     url: String?,
-    circle: Boolean = false
+    circle: Boolean = false,
 ) {
     try {
         val request = ImageRequest.Builder(context)
@@ -38,7 +38,7 @@ suspend fun loadImageToBitmap(
     imageUrl: String,
     circle: Boolean = false,
     width: Int,
-    height: Int
+    height: Int,
 ): Bitmap? {
     return suspendCancellableCoroutine { cont ->
         val request = ImageRequest.Builder(context)
@@ -50,14 +50,14 @@ suspend fun loadImageToBitmap(
             .target(
                 onSuccess = { drawable ->
                     cont.resumeWith(
-                        Result.success((drawable as? BitmapDrawable)?.bitmap)
+                        Result.success((drawable as? BitmapDrawable)?.bitmap),
                     )
                 },
                 onError = { drawable ->
                     cont.resumeWith(
-                        Result.success((drawable as? BitmapDrawable)?.bitmap)
+                        Result.success((drawable as? BitmapDrawable)?.bitmap),
                     )
-                }
+                },
             )
             .build()
 

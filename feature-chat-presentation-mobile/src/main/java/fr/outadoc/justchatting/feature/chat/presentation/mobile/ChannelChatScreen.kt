@@ -103,10 +103,10 @@ fun ChannelChatScreen(channelLogin: String) {
             if (user != null) {
                 notifier.notify(
                     context = context,
-                    user = user
+                    user = user,
                 )
             }
-        }
+        },
     )
 
     val canOpenInBubble = canOpenInBubble()
@@ -139,17 +139,17 @@ fun ChannelChatScreen(channelLogin: String) {
             if (canOpenInBubble && user != null) {
                 notifier.notify(
                     context = context,
-                    user = user
+                    user = user,
                 )
             }
         },
         onSubmit = {
             viewModel.submit(
                 screenDensity = density,
-                isDarkTheme = isDarkTheme
+                isDarkTheme = isDarkTheme,
             )
         },
-        onReplyToMessage = viewModel::onReplyToMessage
+        onReplyToMessage = viewModel::onReplyToMessage,
     )
 }
 
@@ -163,7 +163,7 @@ fun ChannelChatScreenLoadingPreview() {
             channelLogin = "outadoc",
             channelBranding = rememberChannelBranding(user = null),
             animateEmotes = false,
-            showTimestamps = true
+            showTimestamps = true,
         )
     }
 }
@@ -187,7 +187,7 @@ fun ChannelChatScreen(
     onClearReplyingTo: () -> Unit = {},
     onOpenBubbleClicked: () -> Unit = {},
     onSubmit: () -> Unit = {},
-    onReplyToMessage: (ChatEntry) -> Unit = {}
+    onReplyToMessage: (ChatEntry) -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val clipboard = LocalClipboardManager.current
@@ -207,8 +207,11 @@ fun ChannelChatScreen(
 
     Scaffold(
         modifier = modifier.then(
-            if (!isEmotePickerOpen) Modifier.imePadding()
-            else Modifier
+            if (!isEmotePickerOpen) {
+                Modifier.imePadding()
+            } else {
+                Modifier
+            },
         ),
         topBar = {
             ChatTopAppBar(
@@ -217,7 +220,7 @@ fun ChannelChatScreen(
                 stream = stream,
                 channelBranding = channelBranding,
                 onWatchLiveClicked = onWatchLiveClicked,
-                onOpenBubbleClicked = onOpenBubbleClicked
+                onOpenBubbleClicked = onOpenBubbleClicked,
             )
         },
         content = { insets ->
@@ -234,14 +237,14 @@ fun ChannelChatScreen(
                     }
                 },
                 onReplyToMessage = onReplyToMessage,
-                insets = insets
+                insets = insets,
             )
         },
         bottomBar = {
             Column {
                 ChatSlowModeProgress(
                     modifier = Modifier.fillMaxWidth(),
-                    state = state
+                    state = state,
                 )
 
                 ChatInput(
@@ -249,8 +252,11 @@ fun ChannelChatScreen(
                         .focusRequester(inputFocusRequester)
                         .padding(8.dp)
                         .then(
-                            if (!isEmotePickerOpen) Modifier.navigationBarsPadding()
-                            else Modifier
+                            if (!isEmotePickerOpen) {
+                                Modifier.navigationBarsPadding()
+                            } else {
+                                Modifier
+                            },
                         )
                         .fillMaxWidth(),
                     state = state,
@@ -267,7 +273,7 @@ fun ChannelChatScreen(
                     onEmoteClick = onEmoteClick,
                     onChatterClick = onChatterClick,
                     onClearReplyingTo = onClearReplyingTo,
-                    onSubmit = onSubmit
+                    onSubmit = onSubmit,
                 )
 
                 var imeHeight by remember { mutableStateOf(350.dp) }
@@ -285,20 +291,20 @@ fun ChannelChatScreen(
                 AnimatedVisibility(
                     visible = isEmotePickerOpen,
                     enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut()
+                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
                 ) {
                     Surface(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(imeHeight)
+                            .height(imeHeight),
                     ) {
                         EmotePicker(
                             onEmoteClick = onEmoteClick,
-                            state = state
+                            state = state,
                         )
                     }
                 }
             }
-        }
+        },
     )
 }

@@ -43,7 +43,7 @@ class ChatActivity : AppCompatActivity() {
         setContent {
             AppTheme {
                 ChannelChatScreen(
-                    channelLogin = intent.getStringExtra(CHANNEL_LOGIN)!!
+                    channelLogin = intent.getStringExtra(CHANNEL_LOGIN)!!,
                 )
             }
         }

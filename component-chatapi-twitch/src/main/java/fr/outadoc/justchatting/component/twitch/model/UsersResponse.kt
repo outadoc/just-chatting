@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class UsersResponse(
     @SerialName("data")
-    val data: List<User>?
+    val data: List<User>?,
 )

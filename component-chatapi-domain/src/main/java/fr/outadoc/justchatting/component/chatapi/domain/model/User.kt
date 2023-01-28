@@ -12,5 +12,5 @@ data class User(
     val profileImageUrl: String? = null,
     val offlineImageUrl: String? = null,
     val createdAt: String? = null,
-    val followersCount: Int? = null
+    val followersCount: Int? = null,
 ) : Parcelable

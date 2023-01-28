@@ -23,14 +23,14 @@ import fr.outadoc.justchatting.utils.ui.loadImageToBitmap
 data class ChannelBranding(
     val backgroundColor: Color,
     val contentColor: Color,
-    val logo: Bitmap?
+    val logo: Bitmap?,
 )
 
 @Composable
 fun rememberChannelBranding(
     user: User?,
     fallbackBackgroundColor: Color = MaterialTheme.colorScheme.surface,
-    fallbackContentColor: Color = MaterialTheme.colorScheme.onSurface
+    fallbackContentColor: Color = MaterialTheme.colorScheme.onSurface,
 ): ChannelBranding {
     val context = LocalContext.current
     val systemUiController = rememberSystemUiController()
@@ -38,7 +38,7 @@ fun rememberChannelBranding(
     val defaultBranding = ChannelBranding(
         logo = null,
         backgroundColor = fallbackBackgroundColor,
-        contentColor = fallbackContentColor
+        contentColor = fallbackContentColor,
     )
 
     var branding: ChannelBranding by remember(user) { mutableStateOf(defaultBranding) }
@@ -56,7 +56,7 @@ fun rememberChannelBranding(
             imageUrl = profileImageUrl,
             circle = true,
             width = 256,
-            height = 256
+            height = 256,
         )
 
         val swatch = logo?.let {
@@ -70,12 +70,12 @@ fun rememberChannelBranding(
                 Color(
                     ensureMinimumAlpha(
                         foreground = swatch.titleTextColor,
-                        background = swatch.rgb
-                    )
+                        background = swatch.rgb,
+                    ),
                 )
             } ?: fallbackContentColor,
             backgroundColor = swatch?.let { Color(swatch.rgb) }
-                ?: fallbackBackgroundColor
+                ?: fallbackBackgroundColor,
         )
     }
 
@@ -83,7 +83,7 @@ fun rememberChannelBranding(
     LaunchedEffect(user?.displayName, branding.logo) {
         if (user?.displayName != null && branding.logo != null) {
             (context as? Activity)?.setTaskDescription(
-                ActivityManager.TaskDescription(user.displayName, branding.logo)
+                ActivityManager.TaskDescription(user.displayName, branding.logo),
             )
         }
     }
@@ -92,7 +92,7 @@ fun rememberChannelBranding(
     LaunchedEffect(branding) {
         systemUiController.setStatusBarColor(
             color = Color.Transparent,
-            darkIcons = !branding.contentColor.isLight
+            darkIcons = !branding.contentColor.isLight,
         )
     }
 

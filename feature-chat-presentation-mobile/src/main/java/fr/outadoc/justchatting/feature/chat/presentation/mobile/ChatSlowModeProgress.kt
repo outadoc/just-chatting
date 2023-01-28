@@ -19,7 +19,7 @@ import kotlin.time.Duration
 @Composable
 fun ChatSlowModeProgress(
     modifier: Modifier,
-    state: ChatViewModel.State
+    state: ChatViewModel.State,
 ) {
     when (state) {
         ChatViewModel.State.Initial -> {}
@@ -29,8 +29,8 @@ fun ChatSlowModeProgress(
                 constraint = state.messagePostConstraint
                     ?: MessagePostConstraint(
                         lastMessageSentAt = Instant.DISTANT_PAST,
-                        slowModeDuration = Duration.ZERO
-                    )
+                        slowModeDuration = Duration.ZERO,
+                    ),
             )
         }
     }
@@ -39,7 +39,7 @@ fun ChatSlowModeProgress(
 @Composable
 fun ChatSlowModeProgress(
     modifier: Modifier,
-    constraint: MessagePostConstraint
+    constraint: MessagePostConstraint,
 ) {
     val slowModeDuration = constraint.slowModeDuration
     val progress = remember(slowModeDuration) { Animatable(initialValue = 1f) }
@@ -55,15 +55,15 @@ fun ChatSlowModeProgress(
 
             progress.snapTo(
                 targetValue = remainingSlowModeDuration.inWholeMilliseconds.toFloat() /
-                    slowModeDuration.inWholeMilliseconds.toFloat()
+                    slowModeDuration.inWholeMilliseconds.toFloat(),
             )
 
             progress.animateTo(
                 targetValue = 0f,
                 animationSpec = tween(
                     durationMillis = remainingSlowModeDuration.inWholeMilliseconds.toInt(),
-                    easing = LinearEasing
-                )
+                    easing = LinearEasing,
+                ),
             )
         }
     }
@@ -72,6 +72,6 @@ fun ChatSlowModeProgress(
 
     LinearProgressIndicator(
         modifier = modifier.alpha(progressVisibility.value),
-        progress = progress.value
+        progress = progress.value,
     )
 }

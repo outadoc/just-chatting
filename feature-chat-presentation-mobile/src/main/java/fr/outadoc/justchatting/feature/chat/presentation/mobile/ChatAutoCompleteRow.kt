@@ -18,13 +18,13 @@ fun ChatAutoCompleteRowPreview() {
     AppTheme {
         val items = listOf(
             AutoCompleteItem.User(Chatter("BagheraJones")),
-            AutoCompleteItem.User(Chatter("HortyUnderscore"))
+            AutoCompleteItem.User(Chatter("HortyUnderscore")),
         )
 
         ChatAutoCompleteRow(
             onChatterClick = {},
             onEmoteClick = {},
-            items = items
+            items = items,
         )
     }
 }
@@ -35,11 +35,11 @@ fun ChatAutoCompleteRow(
     onChatterClick: (Chatter) -> Unit,
     onEmoteClick: (Emote) -> Unit,
     animateEmotes: Boolean = true,
-    items: List<AutoCompleteItem>
+    items: List<AutoCompleteItem>,
 ) {
     LazyRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         items(
             items = items,
@@ -48,21 +48,21 @@ fun ChatAutoCompleteRow(
                     is AutoCompleteItem.Emote -> 0
                     is AutoCompleteItem.User -> 1
                 }
-            }
+            },
         ) { item ->
             when (item) {
                 is AutoCompleteItem.Emote -> {
                     AutoCompleteEmoteItem(
                         onClick = { onEmoteClick(item.emote) },
                         emote = item.emote,
-                        animateEmotes = animateEmotes
+                        animateEmotes = animateEmotes,
                     )
                 }
 
                 is AutoCompleteItem.User -> {
                     AutoCompleteUserItem(
                         onClick = { onChatterClick(item.chatter) },
-                        chatter = item.chatter
+                        chatter = item.chatter,
                     )
                 }
             }

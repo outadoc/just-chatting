@@ -37,24 +37,24 @@ class PubSubWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val pubSubRewardParser: PubSubRewardParser,
     private val scope: CoroutineScope,
-    channelId: String
+    channelId: String,
 ) : ChatCommandHandler {
 
     class Factory(
         private val networkStateObserver: NetworkStateObserver,
-        private val pubSubRewardParser: PubSubRewardParser
+        private val pubSubRewardParser: PubSubRewardParser,
     ) : ChatCommandHandlerFactory {
 
         override fun create(
             scope: CoroutineScope,
             channelLogin: String,
-            channelId: String
+            channelId: String,
         ): PubSubWebSocket {
             return PubSubWebSocket(
                 networkStateObserver = networkStateObserver,
                 pubSubRewardParser = pubSubRewardParser,
                 scope = scope,
-                channelId = channelId
+                channelId = channelId,
             )
         }
     }
@@ -66,7 +66,7 @@ class PubSubWebSocket(
 
     private val _flow = MutableSharedFlow<ChatCommand>(
         replay = AppPreferences.Defaults.ChatLimitRange.last,
-        onBufferOverflow = BufferOverflow.DROP_OLDEST
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
     override val commandFlow: Flow<ChatCommand> = _flow
 
@@ -74,8 +74,8 @@ class PubSubWebSocket(
         MutableStateFlow(
             ConnectionStatus(
                 isAlive = false,
-                preventSendingMessages = false
-            )
+                preventSendingMessages = false,
+            ),
         )
 
     override val connectionStatus = _connectionStatus.asStateFlow()
@@ -98,7 +98,7 @@ class PubSubWebSocket(
     private fun connect(listener: WebSocketListener) {
         socket = client.newWebSocket(
             request = Request.Builder().url("wss://pubsub-edge.twitch.tv").build(),
-            listener = listener
+            listener = listener,
         )
     }
 
@@ -107,7 +107,7 @@ class PubSubWebSocket(
             logDebug<PubSubWebSocket> { "Disconnecting pubsub socket" }
             socket?.close(
                 code = SOCKET_ERROR_NORMAL_CLOSURE,
-                reason = null
+                reason = null,
             )
         } catch (e: IOException) {
             logError<PubSubWebSocket>(e) { "Error while closing socket" }
@@ -138,7 +138,7 @@ class PubSubWebSocket(
                 "data",
                 JSONObject().apply {
                     put("topics", JSONArray().apply { topics.forEach { put(it) } })
-                }
+                },
             )
         }.toString()
 
@@ -205,8 +205,11 @@ class PubSubWebSocket(
                 "MESSAGE" -> {
                     val data: JSONObject? =
                         json.optString("data").let {
-                            if (it.isNotBlank()) JSONObject(it)
-                            else null
+                            if (it.isNotBlank()) {
+                                JSONObject(it)
+                            } else {
+                                null
+                            }
                         }
 
                     val topic = data?.optString("topic")
@@ -216,10 +219,10 @@ class PubSubWebSocket(
 
                     when {
                         topic?.startsWith("community-points-channel") == true &&
-                                messageType?.startsWith("reward-redeemed") == true -> {
+                            messageType?.startsWith("reward-redeemed") == true -> {
                             scope.launch {
                                 _flow.emit(
-                                    pubSubRewardParser.parse(text)
+                                    pubSubRewardParser.parse(text),
                                 )
                             }
                         }

@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.utils.core.asStringOrRes
 import fr.outadoc.justchatting.utils.core.flatListOf
 
 class GlobalTwitchEmotesSource(
-    private val delegateTwitchEmotesSource: DelegateTwitchEmotesSource
+    private val delegateTwitchEmotesSource: DelegateTwitchEmotesSource,
 ) : CachedEmoteListSource<List<EmoteSetItem>>() {
 
     override fun shouldUseCache(previous: Params, next: Params): Boolean = false
@@ -14,7 +14,7 @@ class GlobalTwitchEmotesSource(
         val cache = delegateTwitchEmotesSource.getEmotes(
             channelId = params.channelId,
             channelName = params.channelName,
-            emoteSets = params.emoteSets
+            emoteSets = params.emoteSets,
         )
 
         return cache.globalEmotes.flatMap { (owner, emotes) ->
@@ -22,9 +22,9 @@ class GlobalTwitchEmotesSource(
                 EmoteSetItem.Header(
                     title = owner?.displayName?.asStringOrRes(),
                     source = R.string.chat_source_twitch.asStringOrRes(),
-                    iconUrl = owner?.profileImageUrl
+                    iconUrl = owner?.profileImageUrl,
                 ),
-                emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                emotes.map { emote -> EmoteSetItem.Emote(emote) },
             )
         }
     }

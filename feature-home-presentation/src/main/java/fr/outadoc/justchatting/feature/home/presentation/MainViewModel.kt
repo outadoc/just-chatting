@@ -96,6 +96,9 @@ class MainViewModel(
         val helixScopes = listOf(
             "chat:read",
             "chat:edit",
+            "channel:read:redemptions",
+            "channel:read:polls",
+            "channel:read:predictions",
             "channel:moderate",
             "user:read:follows",
         )

@@ -35,7 +35,7 @@ val chatModule = module {
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
-    single { PubSubWebSocket.Factory(get(), get(), get()) }
+    single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
 
     single {
         ChatCommandHandlerFactoriesProvider {
@@ -47,7 +47,7 @@ val chatModule = module {
         }
     }
 
-    single { PubSubChannelPointsPlugin(get()) }
+    single { PubSubChannelPointsPlugin(get(), get()) }
 
     single {
         PubSubPluginsProvider {

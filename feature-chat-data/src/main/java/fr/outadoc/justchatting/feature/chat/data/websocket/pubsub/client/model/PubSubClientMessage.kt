@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.model
+package fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

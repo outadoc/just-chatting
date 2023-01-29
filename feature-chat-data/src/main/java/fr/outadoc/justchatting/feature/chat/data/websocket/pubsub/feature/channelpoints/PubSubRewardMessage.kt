@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.channelpoints.model
+package fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.channelpoints
 
 import fr.outadoc.justchatting.component.twitch.model.Reward
 import fr.outadoc.justchatting.component.twitch.model.User

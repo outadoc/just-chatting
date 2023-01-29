@@ -6,8 +6,10 @@ import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.model.PubSubClientMessage
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.model.PubSubServerMessage
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.model.PubSubClientMessage
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.model.PubSubServerMessage
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.plugin.PubSubPlugin
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.plugin.PubSubPluginsProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -42,13 +44,15 @@ class PubSubWebSocket(
     private val scope: CoroutineScope,
     private val httpClient: HttpClient,
     private val preferencesRepository: PreferenceRepository,
+    private val pubSubPluginsProvider: PubSubPluginsProvider,
     private val channelId: String,
 ) : ChatCommandHandler {
 
     companion object {
         const val ENDPOINT = "wss://pubsub-edge.twitch.tv"
-        const val TOPIC_POINTS = "community-points-channel-v1"
     }
+
+    private val plugins = pubSubPluginsProvider.get()
 
     private val _flow = MutableSharedFlow<ChatCommand>(
         replay = AppPreferences.Defaults.ChatLimitRange.last,
@@ -108,7 +112,8 @@ class PubSubWebSocket(
                 sendSerialized<PubSubClientMessage>(
                     PubSubClientMessage.Listen(
                         data = PubSubClientMessage.Listen.Data(
-                            topics = listOf("$TOPIC_POINTS.$channelId"),
+                            topics = pubSubPluginsProvider.get()
+                                .map { plugin -> plugin.getTopic(channelId) },
                             authToken = helixToken,
                         ),
                     ),
@@ -141,6 +146,14 @@ class PubSubWebSocket(
 
         when (received) {
             is PubSubServerMessage.Message -> {
+                val plugin: PubSubPlugin<*>? = plugins.firstOrNull { plugin ->
+                    plugin.getTopic(channelId) == received.data.topic
+                }
+
+                plugin?.parseMessage(received.data.message)
+                    ?.let { parsed ->
+                        _flow.emit(parsed)
+                    }
             }
 
             is PubSubServerMessage.Response -> {
@@ -175,6 +188,7 @@ class PubSubWebSocket(
         private val networkStateObserver: NetworkStateObserver,
         private val httpClient: HttpClient,
         private val preferencesRepository: PreferenceRepository,
+        private val pubSubPluginsProvider: PubSubPluginsProvider,
     ) : ChatCommandHandlerFactory {
 
         override fun create(
@@ -187,6 +201,7 @@ class PubSubWebSocket(
                 scope = scope,
                 httpClient = httpClient,
                 preferencesRepository = preferencesRepository,
+                pubSubPluginsProvider = pubSubPluginsProvider,
                 channelId = channelId,
             )
         }

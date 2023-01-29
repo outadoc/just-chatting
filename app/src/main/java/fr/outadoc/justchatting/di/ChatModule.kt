@@ -14,11 +14,11 @@ import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalStvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalTwitchEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
 import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesRepository
-import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LiveChatWebSocket
-import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.EventSubWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.feature.channelpoints.EventSubChannelPointsPlugin
 import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPluginsProvider
+import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LiveChatWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntryMapper
@@ -35,7 +35,7 @@ val chatModule = module {
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get()) }
-    single { EventSubWebSocket.Factory(get(), get(), get(), get()) }
+    single { EventSubWebSocket.Factory(get(), get(), get(), get(), get()) }
 
     single {
         ChatCommandHandlerFactoriesProvider {
@@ -47,7 +47,7 @@ val chatModule = module {
         }
     }
 
-    single { EventSubChannelPointsPlugin(get(), get()) }
+    single { EventSubChannelPointsPlugin(get()) }
 
     single {
         EventSubPluginsProvider {

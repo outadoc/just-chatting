@@ -108,8 +108,9 @@ class LiveChatWebSocket private constructor(
                 } else {
                     logDebug<LiveChatWebSocket> { "Network is out, delay and retry" }
                     _connectionStatus.update { status -> status.copy(isAlive = false) }
-                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
                 }
+
+                delayWithJitter(1.seconds, maxJitter = 3.seconds)
             }
         }
     }
@@ -133,8 +134,10 @@ class LiveChatWebSocket private constructor(
 
                 // Receive messages
                 while (isActive) {
-                    val received = incoming.receive() as Frame.Text
-                    handleMessage(received.readText().trim())
+                    when (val received = incoming.receive()) {
+                        is Frame.Text -> handleMessage(received.readText().trim())
+                        else -> {}
+                    }
                 }
             } catch (e: Exception) {
                 logError<LiveChatWebSocket>(e) { "Socket was closed" }

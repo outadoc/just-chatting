@@ -102,8 +102,9 @@ class LoggedInChatWebSocket(
                 } else {
                     logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
                     _connectionStatus.update { status -> status.copy(isAlive = false) }
-                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
                 }
+
+                delayWithJitter(1.seconds, maxJitter = 3.seconds)
             }
         }
     }
@@ -138,8 +139,10 @@ class LoggedInChatWebSocket(
 
                 // Receive messages
                 while (isActive) {
-                    val received = incoming.receive() as Frame.Text
-                    handleMessage(received.readText().trim())
+                    when (val received = incoming.receive()) {
+                        is Frame.Text -> handleMessage(received.readText().trim())
+                        else -> {}
+                    }
                 }
             } catch (e: Exception) {
                 logError<LoggedInChatWebSocket>(e) { "Socket was closed" }

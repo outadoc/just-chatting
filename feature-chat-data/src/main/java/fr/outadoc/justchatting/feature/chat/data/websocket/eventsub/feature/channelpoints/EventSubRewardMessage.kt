@@ -1,43 +1,45 @@
 package fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.feature.channelpoints
 
-import fr.outadoc.justchatting.component.twitch.model.Reward
-import fr.outadoc.justchatting.component.twitch.model.User
 import kotlinx.datetime.Instant
 import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class EventSubRewardMessage {
+data class EventSubRewardMessage(
+    @SerialName("id")
+    val id: String,
+    @SerialName("broadcaster_user_id")
+    val broadcasterUserId: String,
+    @SerialName("broadcaster_user_login")
+    val broadcasterUserLogin: String,
+    @SerialName("broadcaster_user_name")
+    val broadcasterUserName: String,
+    @SerialName("user_id")
+    val userId: String,
+    @SerialName("user_login")
+    val userLogin: String,
+    @SerialName("user_name")
+    val userName: String,
+    @SerialName("status")
+    val status: String,
+    @SerialName("redeemed_at")
+    @Serializable(with = InstantIso8601Serializer::class)
+    val redeemedAt: Instant,
+    @SerialName("user_input")
+    val userAddedMessage: String,
+    @SerialName("reward")
+    val reward: Reward
+) {
     @Serializable
-    @SerialName("reward-redeemed")
-    data class Redeemed(
-        @SerialName("data")
-        val data: Data,
-    ) : EventSubRewardMessage() {
-
-        @Serializable
-        data class Data(
-            @SerialName("timestamp")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val timestamp: Instant? = null,
-            @SerialName("redemption")
-            val redemption: Redemption,
-        )
-
-        @Serializable
-        data class Redemption(
-            @SerialName("id")
-            val id: String,
-            @SerialName("user")
-            val user: User,
-            @SerialName("user_input")
-            val userAddedMessage: String,
-            @SerialName("redeemed_at")
-            @Serializable(with = InstantIso8601Serializer::class)
-            val redeemedAt: Instant? = null,
-            @SerialName("reward")
-            val reward: Reward,
-        )
-    }
+    data class Reward(
+        @SerialName("id")
+        val id: String,
+        @SerialName("title")
+        val title: String,
+        @SerialName("cost")
+        val cost: Int,
+        @SerialName("prompt")
+        val prompt: String
+    )
 }

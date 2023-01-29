@@ -2,33 +2,30 @@ package fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.feature.cha
 
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.feature.chat.data.model.PointReward
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model.EventSubMessageWithEvent
 import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPlugin
-import kotlinx.datetime.Clock
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class EventSubChannelPointsPlugin(
-    private val clock: Clock,
     private val json: Json,
 ) : EventSubPlugin<EventSubRewardMessage> {
 
-    override fun getTopic(channelId: String): String =
-        "community-points-channel-v1.$channelId"
+    override val topic: String = "channel.channel_points_custom_reward_redemption.add"
 
-    override fun parseMessage(message: String): ChatCommand =
-        when (val res = json.decodeFromString<EventSubRewardMessage>(message)) {
-            is EventSubRewardMessage.Redeemed -> {
-                PointReward(
-                    id = res.data.redemption.id,
-                    userId = res.data.redemption.user.id,
-                    userLogin = res.data.redemption.user.login,
-                    userName = res.data.redemption.user.displayName,
-                    message = res.data.redemption.userAddedMessage,
-                    rewardTitle = res.data.redemption.reward.title,
-                    rewardCost = res.data.redemption.reward.cost,
-                    timestamp = res.data.redemption.redeemedAt ?: clock.now(),
-                    rewardImage = null,
-                )
-            }
-        }
+    override fun parseMessage(message: String): ChatCommand {
+        val res = json.decodeFromString<EventSubMessageWithEvent<EventSubRewardMessage>>(message)
+        val event = res.payload.event
+        return PointReward(
+            id = event.id,
+            userId = event.userId,
+            userLogin = event.userLogin,
+            userName = event.userName,
+            message = event.userAddedMessage,
+            rewardTitle = event.reward.title,
+            rewardCost = event.reward.cost,
+            timestamp = event.redeemedAt,
+            rewardImage = null,
+        )
+    }
 }

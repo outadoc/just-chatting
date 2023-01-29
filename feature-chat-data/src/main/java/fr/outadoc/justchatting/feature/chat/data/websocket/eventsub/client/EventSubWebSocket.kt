@@ -6,8 +6,8 @@ import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
-import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model.EventSubClientMessage
-import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model.EventSubServerMessage
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model.EventSubMessageWithMetadata
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model.Subscription
 import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPlugin
 import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPluginsProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -16,12 +16,13 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
 import io.ktor.client.HttpClient
-import io.ktor.client.plugins.websocket.receiveDeserialized
+import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
 import io.ktor.client.plugins.websocket.sendSerialized
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.websocket.CloseReason
-import io.ktor.websocket.DefaultWebSocketSession
+import io.ktor.websocket.Frame
 import io.ktor.websocket.close
+import io.ktor.websocket.readText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -32,11 +33,11 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.minutes
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.seconds
 
 class EventSubWebSocket(
@@ -45,11 +46,12 @@ class EventSubWebSocket(
     private val httpClient: HttpClient,
     private val preferencesRepository: PreferenceRepository,
     private val eventSubPluginsProvider: EventSubPluginsProvider,
+    private val json: Json,
     private val channelId: String,
 ) : ChatCommandHandler {
 
     companion object {
-        const val ENDPOINT = "wss://eventsub-beta.wss.twitch.tv/ws"
+        const val DEFAULT_ENDPOINT = "wss://eventsub-beta.wss.twitch.tv/ws"
     }
 
     private val plugins = eventSubPluginsProvider.get()
@@ -70,6 +72,7 @@ class EventSubWebSocket(
 
     override val connectionStatus = _connectionStatus.asStateFlow()
 
+    private var endpointUrl: String = DEFAULT_ENDPOINT
     private var isNetworkAvailable: Boolean = false
     private var socketJob: Job? = null
 
@@ -93,46 +96,24 @@ class EventSubWebSocket(
                 } else {
                     logDebug<EventSubWebSocket> { "Network is out, delay and retry" }
                     _connectionStatus.update { status -> status.copy(isAlive = false) }
-                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
                 }
+
+                delayWithJitter(1.seconds, maxJitter = 3.seconds)
             }
         }
     }
 
     private suspend fun listen() {
-        httpClient.webSocket(ENDPOINT) {
+        httpClient.webSocket(endpointUrl) {
             try {
-                val helixToken: String =
-                    preferencesRepository.currentPreferences.first().appUser.helixToken
-                        ?: error("User is not authenticated")
-
-                logDebug<EventSubWebSocket> { "Socket open, sending the LISTEN message" }
-
-                // Tell the server what we want to receive
-                sendSerialized<EventSubClientMessage>(
-                    EventSubClientMessage.Listen(
-                        data = EventSubClientMessage.Listen.Data(
-                            topics = eventSubPluginsProvider.get()
-                                .map { plugin -> plugin.getTopic(channelId) },
-                            authToken = helixToken,
-                        ),
-                    ),
-                )
-
-                logDebug<EventSubWebSocket> { "Sent LISTEN message" }
-
-                // Send PING from time to time
-                launch {
-                    while (isActive) {
-                        logDebug<EventSubWebSocket> { "Sending PING" }
-                        sendSerialized(EventSubClientMessage.Ping)
-                        delayWithJitter(4.minutes, maxJitter = 30.seconds)
-                    }
-                }
+                logDebug<EventSubWebSocket> { "Socket open, waiting for welcome" }
 
                 // Receive messages
                 while (isActive) {
-                    handleMessage(receiveDeserialized())
+                    when (val frame = incoming.receive()) {
+                        is Frame.Text -> handleMessage(frame.readText())
+                        else -> {}
+                    }
                 }
             } catch (e: Exception) {
                 logError<EventSubWebSocket>(e) { "Socket was closed" }
@@ -140,33 +121,53 @@ class EventSubWebSocket(
         }
     }
 
-    private suspend fun DefaultWebSocketSession.handleMessage(received: EventSubServerMessage) {
-        logInfo<EventSubWebSocket> { "received: $received" }
+    private suspend fun DefaultClientWebSocketSession.handleMessage(message: String) {
+        val received = json.decodeFromString<EventSubMessageWithMetadata>(message)
 
-        when (received) {
-            is EventSubServerMessage.Message -> {
+        logInfo<EventSubWebSocket> { "received: $message" }
+        logInfo<EventSubWebSocket> { "received decoded: $received" }
+
+        when (received.metadata) {
+            is EventSubMessageWithMetadata.Metadata.Welcome -> {
+                received.payload.session?.id?.let { sessionId ->
+                    plugins.map { plugin -> plugin.topic }
+                        .forEach { topic ->
+                            sendSerialized(
+                                Subscription(
+                                    type = topic,
+                                    condition = Subscription.Condition(
+                                        broadcasterUserId = channelId
+                                    ),
+                                    transport = Subscription.Transport(
+                                        sessionId = sessionId
+                                    )
+                                )
+                            )
+                        }
+                }
+            }
+
+            is EventSubMessageWithMetadata.Metadata.Notification -> {
                 val plugin: EventSubPlugin<*>? = plugins.firstOrNull { plugin ->
-                    plugin.getTopic(channelId) == received.data.topic
+                    plugin.topic == received.metadata.subscriptionType
                 }
 
-                plugin?.parseMessage(received.data.message)
+                plugin?.parseMessage(message)
                     ?.let { parsed ->
                         _flow.emit(parsed)
                     }
             }
 
-            is EventSubServerMessage.Response -> {
-                if (received.error.isNotEmpty()) {
-                    _connectionStatus.update { status -> status.copy(isAlive = false) }
-                    close(CloseReason(CloseReason.Codes.PROTOCOL_ERROR, message = ""))
+            is EventSubMessageWithMetadata.Metadata.Reconnect -> {
+                if (received.payload.session?.reconnectUrl != null) {
+                    endpointUrl = received.payload.session.reconnectUrl
                 }
-            }
 
-            EventSubServerMessage.Pong -> {}
-
-            EventSubServerMessage.Reconnect -> {
                 close(CloseReason(CloseReason.Codes.SERVICE_RESTART, message = ""))
             }
+
+            is EventSubMessageWithMetadata.Metadata.KeepAlive -> {}
+            is EventSubMessageWithMetadata.Metadata.Revocation -> {}
         }
     }
 
@@ -188,6 +189,7 @@ class EventSubWebSocket(
         private val httpClient: HttpClient,
         private val preferencesRepository: PreferenceRepository,
         private val eventSubPluginsProvider: EventSubPluginsProvider,
+        private val json: Json
     ) : ChatCommandHandlerFactory {
 
         override fun create(
@@ -201,6 +203,7 @@ class EventSubWebSocket(
                 httpClient = httpClient,
                 preferencesRepository = preferencesRepository,
                 eventSubPluginsProvider = eventSubPluginsProvider,
+                json = json,
                 channelId = channelId,
             )
         }

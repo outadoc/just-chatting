@@ -178,7 +178,7 @@ class PubSubWebSocket(
     }
 
     private fun doDisconnect() {
-        logDebug<PubSubWebSocket> { "Disconnecting pubsub socket" }
+        logDebug<PubSubWebSocket> { "Disconnecting PubSub socket" }
         socketJob?.cancel()
     }
 

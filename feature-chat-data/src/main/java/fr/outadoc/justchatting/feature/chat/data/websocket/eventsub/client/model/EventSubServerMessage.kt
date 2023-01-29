@@ -1,10 +1,10 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.model
+package fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class PubSubServerMessage {
+sealed class EventSubServerMessage {
 
     @Serializable
     @SerialName("RESPONSE")
@@ -13,7 +13,7 @@ sealed class PubSubServerMessage {
         val nonce: String? = null,
         @SerialName("error")
         val error: String,
-    ) : PubSubServerMessage()
+    ) : EventSubServerMessage()
 
     @Serializable
     @SerialName("MESSAGE")
@@ -22,7 +22,7 @@ sealed class PubSubServerMessage {
         val nonce: String? = null,
         @SerialName("data")
         val data: Data,
-    ) : PubSubServerMessage() {
+    ) : EventSubServerMessage() {
 
         @Serializable
         data class Data(
@@ -35,9 +35,9 @@ sealed class PubSubServerMessage {
 
     @Serializable
     @SerialName("PONG")
-    object Pong : PubSubServerMessage()
+    object Pong : EventSubServerMessage()
 
     @Serializable
     @SerialName("RECONNECT")
-    object Reconnect : PubSubServerMessage()
+    object Reconnect : EventSubServerMessage()
 }

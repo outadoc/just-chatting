@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client
+package fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client
 
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
@@ -6,10 +6,10 @@ import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.model.PubSubClientMessage
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.model.PubSubServerMessage
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.plugin.PubSubPlugin
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.plugin.PubSubPluginsProvider
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model.EventSubClientMessage
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model.EventSubServerMessage
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPlugin
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPluginsProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -39,20 +39,20 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-class PubSubWebSocket(
+class EventSubWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val httpClient: HttpClient,
     private val preferencesRepository: PreferenceRepository,
-    private val pubSubPluginsProvider: PubSubPluginsProvider,
+    private val eventSubPluginsProvider: EventSubPluginsProvider,
     private val channelId: String,
 ) : ChatCommandHandler {
 
     companion object {
-        const val ENDPOINT = "wss://pubsub-edge.twitch.tv"
+        const val ENDPOINT = "wss://eventsub-beta.wss.twitch.tv/ws"
     }
 
-    private val plugins = pubSubPluginsProvider.get()
+    private val plugins = eventSubPluginsProvider.get()
 
     private val _flow = MutableSharedFlow<ChatCommand>(
         replay = AppPreferences.Defaults.ChatLimitRange.last,
@@ -83,15 +83,15 @@ class PubSubWebSocket(
 
     override fun start() {
         socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
-            logDebug<PubSubWebSocket> { "Starting job" }
+            logDebug<EventSubWebSocket> { "Starting job" }
 
             while (isActive) {
                 if (isNetworkAvailable) {
-                    logDebug<PubSubWebSocket> { "Network is available, listening" }
+                    logDebug<EventSubWebSocket> { "Network is available, listening" }
                     _connectionStatus.update { status -> status.copy(isAlive = true) }
                     listen()
                 } else {
-                    logDebug<PubSubWebSocket> { "Network is out, delay and retry" }
+                    logDebug<EventSubWebSocket> { "Network is out, delay and retry" }
                     _connectionStatus.update { status -> status.copy(isAlive = false) }
                     delayWithJitter(1.seconds, maxJitter = 3.seconds)
                 }
@@ -106,26 +106,26 @@ class PubSubWebSocket(
                     preferencesRepository.currentPreferences.first().appUser.helixToken
                         ?: error("User is not authenticated")
 
-                logDebug<PubSubWebSocket> { "Socket open, sending the LISTEN message" }
+                logDebug<EventSubWebSocket> { "Socket open, sending the LISTEN message" }
 
                 // Tell the server what we want to receive
-                sendSerialized<PubSubClientMessage>(
-                    PubSubClientMessage.Listen(
-                        data = PubSubClientMessage.Listen.Data(
-                            topics = pubSubPluginsProvider.get()
+                sendSerialized<EventSubClientMessage>(
+                    EventSubClientMessage.Listen(
+                        data = EventSubClientMessage.Listen.Data(
+                            topics = eventSubPluginsProvider.get()
                                 .map { plugin -> plugin.getTopic(channelId) },
                             authToken = helixToken,
                         ),
                     ),
                 )
 
-                logDebug<PubSubWebSocket> { "Sent LISTEN message" }
+                logDebug<EventSubWebSocket> { "Sent LISTEN message" }
 
                 // Send PING from time to time
                 launch {
                     while (isActive) {
-                        logDebug<PubSubWebSocket> { "Sending PING" }
-                        sendSerialized(PubSubClientMessage.Ping)
+                        logDebug<EventSubWebSocket> { "Sending PING" }
+                        sendSerialized(EventSubClientMessage.Ping)
                         delayWithJitter(4.minutes, maxJitter = 30.seconds)
                     }
                 }
@@ -135,17 +135,17 @@ class PubSubWebSocket(
                     handleMessage(receiveDeserialized())
                 }
             } catch (e: Exception) {
-                logError<PubSubWebSocket>(e) { "Socket was closed" }
+                logError<EventSubWebSocket>(e) { "Socket was closed" }
             }
         }
     }
 
-    private suspend fun DefaultWebSocketSession.handleMessage(received: PubSubServerMessage) {
-        logInfo<PubSubWebSocket> { "received: $received" }
+    private suspend fun DefaultWebSocketSession.handleMessage(received: EventSubServerMessage) {
+        logInfo<EventSubWebSocket> { "received: $received" }
 
         when (received) {
-            is PubSubServerMessage.Message -> {
-                val plugin: PubSubPlugin<*>? = plugins.firstOrNull { plugin ->
+            is EventSubServerMessage.Message -> {
+                val plugin: EventSubPlugin<*>? = plugins.firstOrNull { plugin ->
                     plugin.getTopic(channelId) == received.data.topic
                 }
 
@@ -155,16 +155,16 @@ class PubSubWebSocket(
                     }
             }
 
-            is PubSubServerMessage.Response -> {
+            is EventSubServerMessage.Response -> {
                 if (received.error.isNotEmpty()) {
                     _connectionStatus.update { status -> status.copy(isAlive = false) }
                     close(CloseReason(CloseReason.Codes.PROTOCOL_ERROR, message = ""))
                 }
             }
 
-            PubSubServerMessage.Pong -> {}
+            EventSubServerMessage.Pong -> {}
 
-            PubSubServerMessage.Reconnect -> {
+            EventSubServerMessage.Reconnect -> {
                 close(CloseReason(CloseReason.Codes.SERVICE_RESTART, message = ""))
             }
         }
@@ -177,7 +177,7 @@ class PubSubWebSocket(
     }
 
     private fun doDisconnect() {
-        logDebug<PubSubWebSocket> { "Disconnecting PubSub socket" }
+        logDebug<EventSubWebSocket> { "Disconnecting socket" }
         socketJob?.cancel()
     }
 
@@ -187,20 +187,20 @@ class PubSubWebSocket(
         private val networkStateObserver: NetworkStateObserver,
         private val httpClient: HttpClient,
         private val preferencesRepository: PreferenceRepository,
-        private val pubSubPluginsProvider: PubSubPluginsProvider,
+        private val eventSubPluginsProvider: EventSubPluginsProvider,
     ) : ChatCommandHandlerFactory {
 
         override fun create(
             scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): PubSubWebSocket {
-            return PubSubWebSocket(
+        ): EventSubWebSocket {
+            return EventSubWebSocket(
                 networkStateObserver = networkStateObserver,
                 scope = scope,
                 httpClient = httpClient,
                 preferencesRepository = preferencesRepository,
-                pubSubPluginsProvider = pubSubPluginsProvider,
+                eventSubPluginsProvider = eventSubPluginsProvider,
                 channelId = channelId,
             )
         }

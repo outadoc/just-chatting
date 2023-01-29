@@ -1,10 +1,10 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.model
+package fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class PubSubClientMessage {
+sealed class EventSubClientMessage {
 
     @Serializable
     @SerialName("LISTEN")
@@ -13,7 +13,7 @@ sealed class PubSubClientMessage {
         val nonce: String? = null,
         @SerialName("data")
         val data: Data,
-    ) : PubSubClientMessage() {
+    ) : EventSubClientMessage() {
 
         @Serializable
         data class Data(
@@ -26,5 +26,5 @@ sealed class PubSubClientMessage {
 
     @Serializable
     @SerialName("PING")
-    object Ping : PubSubClientMessage()
+    object Ping : EventSubClientMessage()
 }

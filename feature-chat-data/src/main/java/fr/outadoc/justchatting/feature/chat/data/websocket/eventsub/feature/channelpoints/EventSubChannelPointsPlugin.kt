@@ -1,23 +1,23 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.channelpoints
+package fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.feature.channelpoints
 
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.feature.chat.data.model.PointReward
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.plugin.PubSubPlugin
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPlugin
 import kotlinx.datetime.Clock
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
-class PubSubChannelPointsPlugin(
+class EventSubChannelPointsPlugin(
     private val clock: Clock,
     private val json: Json,
-) : PubSubPlugin<PubSubRewardMessage> {
+) : EventSubPlugin<EventSubRewardMessage> {
 
     override fun getTopic(channelId: String): String =
         "community-points-channel-v1.$channelId"
 
     override fun parseMessage(message: String): ChatCommand =
-        when (val res = json.decodeFromString<PubSubRewardMessage>(message)) {
-            is PubSubRewardMessage.Redeemed -> {
+        when (val res = json.decodeFromString<EventSubRewardMessage>(message)) {
+            is EventSubRewardMessage.Redeemed -> {
                 PointReward(
                     id = res.data.redemption.id,
                     userId = res.data.redemption.user.id,

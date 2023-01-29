@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.channelpoints
+package fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.feature.channelpoints
 
 import fr.outadoc.justchatting.component.twitch.model.Reward
 import fr.outadoc.justchatting.component.twitch.model.User
@@ -8,13 +8,13 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class PubSubRewardMessage {
+sealed class EventSubRewardMessage {
     @Serializable
     @SerialName("reward-redeemed")
     data class Redeemed(
         @SerialName("data")
         val data: Data,
-    ) : PubSubRewardMessage() {
+    ) : EventSubRewardMessage() {
 
         @Serializable
         data class Data(

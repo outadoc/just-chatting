@@ -16,9 +16,9 @@ import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
 import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LoggedInChatWebSocket
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.PubSubWebSocket
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.channelpoints.PubSubChannelPointsPlugin
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.plugin.PubSubPluginsProvider
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.EventSubWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.feature.channelpoints.EventSubChannelPointsPlugin
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntryMapper
@@ -35,24 +35,24 @@ val chatModule = module {
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get()) }
-    single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
+    single { EventSubWebSocket.Factory(get(), get(), get(), get()) }
 
     single {
         ChatCommandHandlerFactoriesProvider {
             listOf(
                 get<LiveChatWebSocket.Factory>(),
                 get<LoggedInChatWebSocket.Factory>(),
-                get<PubSubWebSocket.Factory>(),
+                get<EventSubWebSocket.Factory>(),
             )
         }
     }
 
-    single { PubSubChannelPointsPlugin(get(), get()) }
+    single { EventSubChannelPointsPlugin(get(), get()) }
 
     single {
-        PubSubPluginsProvider {
+        EventSubPluginsProvider {
             listOf(
-                get<PubSubChannelPointsPlugin>(),
+                get<EventSubChannelPointsPlugin>(),
             )
         }
     }

@@ -19,6 +19,9 @@ import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.feature.chan
 import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LoggedInChatWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.PubSubWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.channelpoints.PubSubChannelPointsPlugin
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.plugin.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntryMapper
@@ -36,13 +39,16 @@ val chatModule = module {
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get()) }
     single { EventSubWebSocket.Factory(get(), get(), get(), get(), get()) }
+    single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
 
     single {
         ChatCommandHandlerFactoriesProvider {
             listOf(
                 get<LiveChatWebSocket.Factory>(),
                 get<LoggedInChatWebSocket.Factory>(),
-                get<EventSubWebSocket.Factory>(),
+                // TODO replace PubSub with EventSub
+                //get<EventSubWebSocket.Factory>(),
+                get<PubSubWebSocket.Factory>(),
             )
         }
     }
@@ -53,6 +59,16 @@ val chatModule = module {
         EventSubPluginsProvider {
             listOf(
                 get<EventSubChannelPointsPlugin>(),
+            )
+        }
+    }
+
+    single { PubSubChannelPointsPlugin(get(), get()) }
+
+    single {
+        PubSubPluginsProvider {
+            listOf(
+                get<PubSubChannelPointsPlugin>(),
             )
         }
     }

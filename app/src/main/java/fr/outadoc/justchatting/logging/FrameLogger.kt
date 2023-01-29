@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket
+package fr.outadoc.justchatting.logging
 
 import fr.outadoc.justchatting.utils.logging.logDebug
 import io.ktor.util.AttributeKey

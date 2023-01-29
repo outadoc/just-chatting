@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepositor
 import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.feature.chat.data.websocket.FrameLogger
+import fr.outadoc.justchatting.logging.FrameLogger
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import io.ktor.client.HttpClient

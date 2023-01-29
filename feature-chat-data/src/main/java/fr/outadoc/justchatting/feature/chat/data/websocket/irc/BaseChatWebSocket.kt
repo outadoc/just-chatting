@@ -1,8 +1,9 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket
+package fr.outadoc.justchatting.feature.chat.data.websocket.irc
 
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
+import fr.outadoc.justchatting.feature.chat.data.websocket.SOCKET_ERROR_NORMAL_CLOSURE
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError

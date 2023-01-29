@@ -14,8 +14,8 @@ import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalStvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalTwitchEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
 import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesRepository
-import fr.outadoc.justchatting.feature.chat.data.websocket.LiveChatWebSocket
-import fr.outadoc.justchatting.feature.chat.data.websocket.LoggedInChatWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LiveChatWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.PubSubWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.channelpoints.PubSubChannelPointsPlugin
 import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.plugin.PubSubPluginsProvider

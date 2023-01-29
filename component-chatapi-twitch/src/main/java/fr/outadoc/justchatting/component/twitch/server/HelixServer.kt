@@ -31,7 +31,9 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
         return client.get {
             url {
                 path("streams")
-                parameters.appendAll("user_id", ids)
+                ids.forEach { id ->
+                    parameter("user_id", id)
+                }
             }
         }.body()
     }
@@ -55,7 +57,9 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
         return client.get {
             url {
                 path("users")
-                parameters.appendAll("id", ids)
+                ids.forEach { id ->
+                    parameter("id", id)
+                }
             }
         }.body()
     }
@@ -64,7 +68,9 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
         return client.get {
             url {
                 path("users")
-                parameters.appendAll("login", logins)
+                logins.forEach { login ->
+                    parameter("login", login)
+                }
             }
         }.body()
     }
@@ -103,7 +109,9 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
         return client.get {
             url {
                 path("chat/emotes/set")
-                parameters.appendAll("emote_set_id", setIds)
+                setIds.forEach { id ->
+                    parameter("emote_set_id", id)
+                }
             }
         }.body()
     }

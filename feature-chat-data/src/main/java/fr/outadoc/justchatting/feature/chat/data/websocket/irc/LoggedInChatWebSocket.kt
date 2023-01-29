@@ -120,13 +120,6 @@ class LoggedInChatWebSocket(
                 send("CAP REQ :twitch.tv/tags twitch.tv/commands")
                 send("JOIN #$channelLogin")
 
-                _flow.emit(
-                    Command.Join(
-                        channelLogin = channelLogin,
-                        timestamp = clock.now(),
-                    ),
-                )
-
                 launch {
                     messagesToSend.collect { message ->
                         if (isActive) {

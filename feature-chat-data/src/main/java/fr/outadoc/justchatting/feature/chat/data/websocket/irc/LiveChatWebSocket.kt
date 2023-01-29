@@ -133,7 +133,6 @@ class LiveChatWebSocket private constructor(
 
                 // Receive messages
                 while (isActive) {
-                    logDebug<LiveChatWebSocket> { "Waiting for new messages" }
                     val received = incoming.receive() as Frame.Text
                     handleMessage(received.readText().trim())
                 }

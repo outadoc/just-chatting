@@ -34,7 +34,7 @@ val chatModule = module {
     single<ChatNotifier> { ChatNotifierImpl() }
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
-    single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
+    single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get()) }
     single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
 
     single {

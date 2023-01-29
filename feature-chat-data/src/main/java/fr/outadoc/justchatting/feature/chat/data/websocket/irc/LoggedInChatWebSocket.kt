@@ -1,32 +1,49 @@
 package fr.outadoc.justchatting.feature.chat.data.websocket.irc
 
+import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
+import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.feature.chat.data.model.Command
 import fr.outadoc.justchatting.feature.chat.data.model.PingCommand
 import fr.outadoc.justchatting.feature.chat.data.model.UserState
 import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
+import fr.outadoc.justchatting.utils.core.delayWithJitter
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
+import fr.outadoc.justchatting.utils.logging.logInfo
+import io.ktor.client.HttpClient
+import io.ktor.client.plugins.websocket.webSocket
+import io.ktor.websocket.DefaultWebSocketSession
+import io.ktor.websocket.Frame
+import io.ktor.websocket.readText
+import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import okhttp3.Response
-import okhttp3.WebSocket
-import okhttp3.WebSocketListener
 import java.io.IOException
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Logged in chat thread.
  *
  * Needed because user's own messages are only send when logged out. This thread handles
- * user-specific NOTICE and USERSTATE messages, and [LiveChatWebSocket] handles the rest.
+ * user-specific NOTICE and USERSTATE messages, and [LoggedInChatWebSocket] handles the rest.
  *
  * Use this class to write messages to the chat.
  */
@@ -35,15 +52,149 @@ class LoggedInChatWebSocket(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: ChatMessageParser,
+    private val httpClient: HttpClient,
     private val preferencesRepository: PreferenceRepository,
-    channelLogin: String,
-) : BaseChatWebSocket(networkStateObserver, scope, channelLogin) {
+    private val channelLogin: String,
+) : ChatCommandHandler {
+
+    companion object {
+        const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
+    }
+
+    private val _flow = MutableSharedFlow<ChatCommand>(
+        replay = AppPreferences.Defaults.ChatLimitRange.last,
+        onBufferOverflow = BufferOverflow.DROP_OLDEST,
+    )
+    override val commandFlow: Flow<ChatCommand> = _flow
+
+    private val messagesToSend = MutableSharedFlow<String>()
+
+    private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
+        MutableStateFlow(
+            ConnectionStatus(
+                isAlive = false,
+                preventSendingMessages = false,
+            ),
+        )
+
+    override val connectionStatus = _connectionStatus.asStateFlow()
+
+    private var isNetworkAvailable: Boolean = false
+    private var socketJob: Job? = null
+
+    init {
+        scope.launch {
+            networkStateObserver.state.collectLatest { state ->
+                isNetworkAvailable = state is NetworkStateObserver.NetworkState.Available
+            }
+        }
+    }
+
+    override fun start() {
+        socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
+            logDebug<LoggedInChatWebSocket> { "Starting job" }
+
+            while (isActive) {
+                if (isNetworkAvailable) {
+                    logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
+                    _connectionStatus.update { status -> status.copy(isAlive = true) }
+                    listen()
+                } else {
+                    logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
+                    _connectionStatus.update { status -> status.copy(isAlive = false) }
+                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                }
+            }
+        }
+    }
+
+    private suspend fun listen() {
+        httpClient.webSocket(ENDPOINT) {
+            try {
+                logDebug<LoggedInChatWebSocket> { "Socket open, logging in" }
+
+                val prefs = preferencesRepository.currentPreferences.first()
+                send("PASS oauth:${prefs.appUser.helixToken}")
+                send("NICK ${prefs.appUser.login}")
+                send("CAP REQ :twitch.tv/tags twitch.tv/commands")
+                send("JOIN #$channelLogin")
+
+                _flow.emit(
+                    Command.Join(
+                        channelLogin = channelLogin,
+                        timestamp = clock.now(),
+                    ),
+                )
+
+                launch {
+                    messagesToSend.collect { message ->
+                        if (isActive) {
+                            logDebug<LoggedInChatWebSocket> { "Sending PRIMSG: $message" }
+                            send(message)
+                            logDebug<LoggedInChatWebSocket> { "Sent message" }
+                        }
+                    }
+                }
+
+                // Receive messages
+                while (isActive) {
+                    val received = incoming.receive() as Frame.Text
+                    handleMessage(received.readText().trim())
+                }
+            } catch (e: Exception) {
+                logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
+            }
+        }
+    }
+
+    private suspend fun DefaultWebSocketSession.handleMessage(received: String) {
+        logInfo<LoggedInChatWebSocket> { "received: $received" }
+
+        when (val command = parser.parse(received)) {
+            is Command.Notice, is UserState -> _flow.emit(command)
+            is PingCommand -> send("PONG :tmi.twitch.tv")
+            else -> {}
+        }
+    }
+
+    override fun disconnect() {
+        scope.launch {
+            doDisconnect()
+        }
+    }
+
+    private fun doDisconnect() {
+        logDebug<LoggedInChatWebSocket> { "Disconnecting logged in chat socket" }
+        socketJob?.cancel()
+    }
+
+    override fun send(message: CharSequence, inReplyToId: String?) {
+        scope.launch {
+            try {
+                val inReplyToPrefix = inReplyToId?.let { id -> "@reply-parent-msg-id=$id " } ?: ""
+                val privMsg = "${inReplyToPrefix}PRIVMSG #$channelLogin :$message"
+
+                logDebug<LoggedInChatWebSocket> { "Queuing message to #$channelLogin, in reply to $inReplyToId: $message" }
+
+                messagesToSend.emit(privMsg)
+            } catch (e: IOException) {
+                logError<LoggedInChatWebSocket>(e) { "Error sending message" }
+                _flow.emit(
+                    Command.SendMessageError(
+                        throwable = e,
+                        timestamp = clock.now(),
+                    ),
+                )
+            }
+        }
+    }
 
     class Factory(
-        private val networkStateObserver: NetworkStateObserver,
         private val clock: Clock,
+        private val networkStateObserver: NetworkStateObserver,
         private val parser: ChatMessageParser,
         private val preferencesRepository: PreferenceRepository,
+        private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
 
         override fun create(
@@ -52,107 +203,13 @@ class LoggedInChatWebSocket(
             channelId: String,
         ): LoggedInChatWebSocket {
             return LoggedInChatWebSocket(
-                networkStateObserver = networkStateObserver,
                 clock = clock,
-                parser = parser,
+                networkStateObserver = networkStateObserver,
                 scope = scope,
-                channelLogin = channelLogin,
+                parser = parser,
+                httpClient = httpClient,
                 preferencesRepository = preferencesRepository,
-            )
-        }
-    }
-
-    private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
-        MutableStateFlow(
-            ConnectionStatus(
-                isAlive = false,
-                preventSendingMessages = true,
-            ),
-        )
-
-    override val connectionStatus = _connectionStatus.asStateFlow()
-
-    override fun start() {
-        connect(socketListener = LiveChatThreadListener())
-    }
-
-    private inner class LiveChatThreadListener : WebSocketListener() {
-
-        override fun onOpen(webSocket: WebSocket, response: Response) {
-            scope.launch {
-                val prefs = preferencesRepository.currentPreferences.first()
-                with(webSocket) {
-                    send("PASS oauth:${prefs.appUser.helixToken}")
-                    send("NICK ${prefs.appUser.login}")
-                    send("CAP REQ :twitch.tv/tags twitch.tv/commands")
-                    send("JOIN $hashChannelName")
-                }
-
-                logDebug<LoggedInChatWebSocket> { "Successfully logged in to $hashChannelName" }
-
-                _connectionStatus.update { status ->
-                    status.copy(
-                        isAlive = true,
-                        preventSendingMessages = false,
-                    )
-                }
-            }
-        }
-
-        override fun onMessage(webSocket: WebSocket, text: String) {
-            text.lineSequence()
-                .filter { message -> message.isNotBlank() }
-                .forEach(::notifyMessage)
-        }
-
-        private fun notifyMessage(message: String) {
-            logDebug<LoggedInChatWebSocket> { message }
-
-            when (val command = parser.parse(message)) {
-                is Command.Notice, is UserState -> emit(command)
-                PingCommand -> sendPong()
-                else -> {}
-            }
-        }
-
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            t.printStackTrace()
-
-            _connectionStatus.update { status ->
-                status.copy(
-                    isAlive = false,
-                    preventSendingMessages = true,
-                )
-            }
-
-            attemptReconnect(listener = this@LiveChatThreadListener)
-        }
-
-        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            _connectionStatus.update { status ->
-                status.copy(
-                    isAlive = false,
-                    preventSendingMessages = true,
-                )
-            }
-        }
-    }
-
-    override fun send(message: CharSequence, inReplyToId: String?) {
-        try {
-            val inReplyToPrefix = inReplyToId?.let { id -> "@reply-parent-msg-id=$id " } ?: ""
-            val privMsg = "${inReplyToPrefix}PRIVMSG $hashChannelName :$message"
-
-            socket?.send(privMsg)
-
-            logDebug<LoggedInChatWebSocket> { "Sent message to $hashChannelName, in reply to $inReplyToId: $message" }
-        } catch (e: IOException) {
-            logError<LoggedInChatWebSocket>(e) { "Error sending message" }
-            emit(
-                Command.SendMessageError(
-                    throwable = e,
-                    timestamp = clock.now(),
-                ),
+                channelLogin = channelLogin,
             )
         }
     }

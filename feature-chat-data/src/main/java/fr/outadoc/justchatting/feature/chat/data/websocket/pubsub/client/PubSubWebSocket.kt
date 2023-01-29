@@ -132,7 +132,6 @@ class PubSubWebSocket(
 
                 // Receive messages
                 while (isActive) {
-                    logDebug<PubSubWebSocket> { "Waiting for new messages" }
                     handleMessage(receiveDeserialized())
                 }
             } catch (e: Exception) {

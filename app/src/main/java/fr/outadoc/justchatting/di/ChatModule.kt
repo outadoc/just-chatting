@@ -14,6 +14,9 @@ import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalStvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalTwitchEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
 import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesRepository
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.EventSubWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.feature.channelpoints.EventSubChannelPointsPlugin
+import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.PubSubWebSocket
@@ -35,6 +38,7 @@ val chatModule = module {
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get()) }
+    single { EventSubWebSocket.Factory(get(), get(), get(), get(), get()) }
     single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
 
     single {
@@ -42,7 +46,19 @@ val chatModule = module {
             listOf(
                 get<LiveChatWebSocket.Factory>(),
                 get<LoggedInChatWebSocket.Factory>(),
+                // TODO replace PubSub with EventSub
+                // get<EventSubWebSocket.Factory>(),
                 get<PubSubWebSocket.Factory>(),
+            )
+        }
+    }
+
+    single { EventSubChannelPointsPlugin(get()) }
+
+    single {
+        EventSubPluginsProvider {
+            listOf(
+                get<EventSubChannelPointsPlugin>(),
             )
         }
     }

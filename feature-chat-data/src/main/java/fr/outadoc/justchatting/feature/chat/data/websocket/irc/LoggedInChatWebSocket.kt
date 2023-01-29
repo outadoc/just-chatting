@@ -102,8 +102,9 @@ class LoggedInChatWebSocket(
                 } else {
                     logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
                     _connectionStatus.update { status -> status.copy(isAlive = false) }
-                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
                 }
+
+                delayWithJitter(1.seconds, maxJitter = 3.seconds)
             }
         }
     }
@@ -119,13 +120,6 @@ class LoggedInChatWebSocket(
                 send("CAP REQ :twitch.tv/tags twitch.tv/commands")
                 send("JOIN #$channelLogin")
 
-                _flow.emit(
-                    Command.Join(
-                        channelLogin = channelLogin,
-                        timestamp = clock.now(),
-                    ),
-                )
-
                 launch {
                     messagesToSend.collect { message ->
                         if (isActive) {
@@ -138,8 +132,10 @@ class LoggedInChatWebSocket(
 
                 // Receive messages
                 while (isActive) {
-                    val received = incoming.receive() as Frame.Text
-                    handleMessage(received.readText().trim())
+                    when (val received = incoming.receive()) {
+                        is Frame.Text -> handleMessage(received.readText().trim())
+                        else -> {}
+                    }
                 }
             } catch (e: Exception) {
                 logError<LoggedInChatWebSocket>(e) { "Socket was closed" }

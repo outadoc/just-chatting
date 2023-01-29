@@ -24,4 +24,6 @@ interface HelixApi {
     suspend fun getEmotesFromSet(setIds: List<String>): EmoteSetResponse
 
     suspend fun getCheerEmotes(userId: String?): CheerEmotesResponse
+
+    suspend fun createSubscription(type: String, channelId: String, sessionId: String)
 }

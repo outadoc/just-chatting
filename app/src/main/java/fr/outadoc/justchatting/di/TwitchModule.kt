@@ -25,6 +25,7 @@ val twitchModule = module {
     single {
         Json {
             ignoreUnknownKeys = true
+            encodeDefaults = true
         }
     }
 

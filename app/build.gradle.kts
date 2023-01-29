@@ -173,9 +173,6 @@ dependencies {
     implementation(libs.okio)
 
     // debugImplementation(libs.leakcanary)
-    "debugImplementation"(libs.chucker.runtime)
-    "qaImplementation"(libs.chucker.noop)
-    "releaseImplementation"(libs.chucker.noop)
 
     coreLibraryDesugaring(libs.desugar)
 }

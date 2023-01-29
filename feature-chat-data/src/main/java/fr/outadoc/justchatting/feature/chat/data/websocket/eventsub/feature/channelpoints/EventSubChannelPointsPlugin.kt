@@ -11,7 +11,7 @@ class EventSubChannelPointsPlugin(
     private val json: Json,
 ) : EventSubPlugin<EventSubRewardMessage> {
 
-    override val topic: String = "channel.channel_points_custom_reward_redemption.add"
+    override val subscriptionType: String = "channel.channel_points_custom_reward_redemption.add"
 
     override fun parseMessage(message: String): ChatCommand {
         val res = json.decodeFromString<EventSubMessageWithEvent<EventSubRewardMessage>>(message)

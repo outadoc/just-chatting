@@ -81,7 +81,7 @@ private fun Scope.baseHttpClient(
         }
 
         install(Logging) {
-            level = LogLevel.HEADERS
+            level = LogLevel.ALL
             logger = object : Logger {
                 override fun log(message: String) = logDebug<HttpClient> { message }
             }

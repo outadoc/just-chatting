@@ -6,12 +6,17 @@ import fr.outadoc.justchatting.component.twitch.model.CheerEmotesResponse
 import fr.outadoc.justchatting.component.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.component.twitch.model.FollowResponse
 import fr.outadoc.justchatting.component.twitch.model.StreamsResponse
+import fr.outadoc.justchatting.component.twitch.model.Subscription
 import fr.outadoc.justchatting.component.twitch.model.UsersResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.http.path
 
 class HelixServer(httpClient: HttpClient) : HelixApi {
@@ -110,5 +115,23 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
                 parameter("broadcaster_id", userId)
             }
         }.body()
+    }
+
+    override suspend fun createSubscription(type: String, channelId: String, sessionId: String) {
+        client.post {
+            url {
+                path("eventsub/subscriptions")
+                contentType(ContentType.Application.Json)
+                setBody(
+                    Subscription(
+                        type = type,
+                        condition = Subscription.Condition(
+                            broadcasterUserId = channelId
+                        ),
+                        transport = Subscription.Transport(sessionId = sessionId)
+                    )
+                )
+            }
+        }
     }
 }

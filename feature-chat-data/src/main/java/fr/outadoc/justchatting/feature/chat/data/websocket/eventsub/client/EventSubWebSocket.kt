@@ -1,13 +1,12 @@
 package fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client
 
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.component.twitch.api.HelixApi
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model.EventSubMessageWithMetadata
-import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model.Subscription
 import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPlugin
 import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.EventSubPluginsProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -17,7 +16,6 @@ import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
-import io.ktor.client.plugins.websocket.sendSerialized
 import io.ktor.client.plugins.websocket.webSocket
 import io.ktor.websocket.CloseReason
 import io.ktor.websocket.Frame
@@ -44,7 +42,7 @@ class EventSubWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val httpClient: HttpClient,
-    private val preferencesRepository: PreferenceRepository,
+    private val helixApi: HelixApi,
     private val eventSubPluginsProvider: EventSubPluginsProvider,
     private val json: Json,
     private val channelId: String,
@@ -130,18 +128,12 @@ class EventSubWebSocket(
         when (received.metadata) {
             is EventSubMessageWithMetadata.Metadata.Welcome -> {
                 received.payload.session?.id?.let { sessionId ->
-                    plugins.map { plugin -> plugin.topic }
-                        .forEach { topic ->
-                            sendSerialized(
-                                Subscription(
-                                    type = topic,
-                                    condition = Subscription.Condition(
-                                        broadcasterUserId = channelId
-                                    ),
-                                    transport = Subscription.Transport(
-                                        sessionId = sessionId
-                                    )
-                                )
+                    plugins.map { plugin -> plugin.subscriptionType }
+                        .forEach { subscriptionType ->
+                            helixApi.createSubscription(
+                                type = subscriptionType,
+                                channelId = channelId,
+                                sessionId = sessionId
                             )
                         }
                 }
@@ -149,7 +141,7 @@ class EventSubWebSocket(
 
             is EventSubMessageWithMetadata.Metadata.Notification -> {
                 val plugin: EventSubPlugin<*>? = plugins.firstOrNull { plugin ->
-                    plugin.topic == received.metadata.subscriptionType
+                    plugin.subscriptionType == received.metadata.subscriptionType
                 }
 
                 plugin?.parseMessage(message)
@@ -187,7 +179,7 @@ class EventSubWebSocket(
     class Factory(
         private val networkStateObserver: NetworkStateObserver,
         private val httpClient: HttpClient,
-        private val preferencesRepository: PreferenceRepository,
+        private val helixApi: HelixApi,
         private val eventSubPluginsProvider: EventSubPluginsProvider,
         private val json: Json
     ) : ChatCommandHandlerFactory {
@@ -201,7 +193,7 @@ class EventSubWebSocket(
                 networkStateObserver = networkStateObserver,
                 scope = scope,
                 httpClient = httpClient,
-                preferencesRepository = preferencesRepository,
+                helixApi = helixApi,
                 eventSubPluginsProvider = eventSubPluginsProvider,
                 json = json,
                 channelId = channelId,

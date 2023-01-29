@@ -4,6 +4,6 @@ import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
 
 interface EventSubPlugin<T : Any> {
 
-    val topic: String
+    val subscriptionType: String
     fun parseMessage(message: String): ChatCommand?
 }

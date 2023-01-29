@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.client.model
+package fr.outadoc.justchatting.component.twitch.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -23,7 +23,7 @@ data class Subscription(
     @Serializable
     data class Transport(
         @SerialName("method")
-        val method: String = "websockets",
+        val method: String = "websocket",
         @SerialName("session_id")
         val sessionId: String
     )

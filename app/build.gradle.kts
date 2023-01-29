@@ -170,7 +170,6 @@ dependencies {
     implementation(libs.ktor.logging)
     implementation(libs.ktor.serialization)
     implementation(libs.material.core)
-    implementation(libs.okhttp)
     implementation(libs.okio)
 
     // debugImplementation(libs.leakcanary)

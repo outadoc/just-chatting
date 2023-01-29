@@ -45,7 +45,6 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.client.core)
-    implementation(libs.okhttp)
 
     testImplementation(libs.junit)
 

@@ -23,6 +23,7 @@ import io.ktor.websocket.close
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -78,12 +79,13 @@ class PubSubWebSocket(
     }
 
     override fun start() {
-        socketJob = scope.launch(Dispatchers.IO) {
+        socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
             logDebug<PubSubWebSocket> { "Starting job" }
 
             while (isActive) {
                 if (isNetworkAvailable) {
                     logDebug<PubSubWebSocket> { "Network is available, listening" }
+                    _connectionStatus.update { status -> status.copy(isAlive = true) }
                     listen()
                 } else {
                     logDebug<PubSubWebSocket> { "Network is out, delay and retry" }
@@ -113,8 +115,6 @@ class PubSubWebSocket(
                     ),
                 )
 
-                _connectionStatus.update { status -> status.copy(isAlive = true) }
-
                 logDebug<PubSubWebSocket> { "Sent LISTEN message" }
 
                 // Send PING from time to time
@@ -133,8 +133,6 @@ class PubSubWebSocket(
                 }
             } catch (e: Exception) {
                 logError<PubSubWebSocket>(e) { "Socket was closed" }
-            } finally {
-                _connectionStatus.update { status -> status.copy(isAlive = false) }
             }
         }
     }

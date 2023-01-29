@@ -39,7 +39,6 @@ import kotlin.time.Duration.Companion.seconds
 
 class PubSubWebSocket(
     private val networkStateObserver: NetworkStateObserver,
-    private val pubSubRewardParser: PubSubRewardParser,
     private val scope: CoroutineScope,
     private val httpClient: HttpClient,
     private val preferencesRepository: PreferenceRepository,
@@ -174,7 +173,6 @@ class PubSubWebSocket(
 
     class Factory(
         private val networkStateObserver: NetworkStateObserver,
-        private val pubSubRewardParser: PubSubRewardParser,
         private val httpClient: HttpClient,
         private val preferencesRepository: PreferenceRepository,
     ) : ChatCommandHandlerFactory {
@@ -186,10 +184,9 @@ class PubSubWebSocket(
         ): PubSubWebSocket {
             return PubSubWebSocket(
                 networkStateObserver = networkStateObserver,
-                pubSubRewardParser = pubSubRewardParser,
+                scope = scope,
                 httpClient = httpClient,
                 preferencesRepository = preferencesRepository,
-                scope = scope,
                 channelId = channelId,
             )
         }

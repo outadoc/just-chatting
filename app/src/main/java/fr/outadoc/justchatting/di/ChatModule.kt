@@ -16,8 +16,9 @@ import fr.outadoc.justchatting.feature.chat.data.parser.ChatMessageParser
 import fr.outadoc.justchatting.feature.chat.data.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.data.websocket.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.LoggedInChatWebSocket
-import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.PubSubRewardParser
 import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.PubSubWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.channelpoints.PubSubChannelPointsPlugin
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.plugin.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.feature.chat.presentation.ChatEntryMapper
@@ -34,7 +35,7 @@ val chatModule = module {
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get()) }
-    single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
+    single { PubSubWebSocket.Factory(get(), get(), get()) }
 
     single {
         ChatCommandHandlerFactoriesProvider {
@@ -46,12 +47,21 @@ val chatModule = module {
         }
     }
 
+    single { PubSubChannelPointsPlugin(get()) }
+
+    single {
+        PubSubPluginsProvider {
+            listOf(
+                get<PubSubChannelPointsPlugin>(),
+            )
+        }
+    }
+
     single { AggregateChatCommandHandler.Factory(get()) }
     single { ChatConnectionPool(get()) }
 
     single { ChatMessageParser(get()) }
     single { ChatEntryMapper(get()) }
-    single { PubSubRewardParser(get()) }
 
     single { get<AppDatabase>().recentEmotes() }
 

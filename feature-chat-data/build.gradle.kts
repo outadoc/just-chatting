@@ -33,6 +33,7 @@ dependencies {
     implementation(project(":utils-logging"))
     implementation(project(":utils-core"))
     implementation(project(":component-preferences-domain"))
+    implementation(project(":component-chatapi-twitch"))
     implementation(project(":component-chatapi-domain"))
 
     implementation(platform(libs.compose.bom))

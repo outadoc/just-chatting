@@ -134,10 +134,10 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
                     Subscription(
                         type = type,
                         condition = Subscription.Condition(
-                            broadcasterUserId = channelId
+                            broadcasterUserId = channelId,
                         ),
-                        transport = Subscription.Transport(sessionId = sessionId)
-                    )
+                        transport = Subscription.Transport(sessionId = sessionId),
+                    ),
                 )
             }
         }

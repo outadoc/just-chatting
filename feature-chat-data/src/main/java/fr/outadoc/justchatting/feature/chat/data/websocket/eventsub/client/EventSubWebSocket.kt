@@ -133,7 +133,7 @@ class EventSubWebSocket(
                             helixApi.createSubscription(
                                 type = subscriptionType,
                                 channelId = channelId,
-                                sessionId = sessionId
+                                sessionId = sessionId,
                             )
                         }
                 }
@@ -181,7 +181,7 @@ class EventSubWebSocket(
         private val httpClient: HttpClient,
         private val helixApi: HelixApi,
         private val eventSubPluginsProvider: EventSubPluginsProvider,
-        private val json: Json
+        private val json: Json,
     ) : ChatCommandHandlerFactory {
 
         override fun create(

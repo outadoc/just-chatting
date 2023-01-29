@@ -29,7 +29,7 @@ data class EventSubRewardMessage(
     @SerialName("user_input")
     val userAddedMessage: String,
     @SerialName("reward")
-    val reward: Reward
+    val reward: Reward,
 ) {
     @Serializable
     data class Reward(
@@ -40,6 +40,6 @@ data class EventSubRewardMessage(
         @SerialName("cost")
         val cost: Int,
         @SerialName("prompt")
-        val prompt: String
+        val prompt: String,
     )
 }

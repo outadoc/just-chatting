@@ -6,11 +6,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class EventSubMessageWithEvent<T : Any>(
     @SerialName("payload")
-    val payload: Payload<T>
+    val payload: Payload<T>,
 ) {
     @Serializable
     data class Payload<T>(
         @SerialName("event")
-        val event: T
+        val event: T,
     )
 }

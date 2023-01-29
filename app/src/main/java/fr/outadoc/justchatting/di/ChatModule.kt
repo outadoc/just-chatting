@@ -47,7 +47,7 @@ val chatModule = module {
                 get<LiveChatWebSocket.Factory>(),
                 get<LoggedInChatWebSocket.Factory>(),
                 // TODO replace PubSub with EventSub
-                //get<EventSubWebSocket.Factory>(),
+                // get<EventSubWebSocket.Factory>(),
                 get<PubSubWebSocket.Factory>(),
             )
         }

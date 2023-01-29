@@ -17,7 +17,7 @@ data class Subscription(
     @Serializable
     data class Condition(
         @SerialName("broadcaster_user_id")
-        val broadcasterUserId: String
+        val broadcasterUserId: String,
     )
 
     @Serializable
@@ -25,6 +25,6 @@ data class Subscription(
         @SerialName("method")
         val method: String = "websocket",
         @SerialName("session_id")
-        val sessionId: String
+        val sessionId: String,
     )
 }

@@ -12,7 +12,7 @@ data class EventSubMessageWithMetadata(
     @SerialName("metadata")
     val metadata: Metadata,
     @SerialName("payload")
-    val payload: Payload
+    val payload: Payload,
 ) {
     @Serializable
     @JsonClassDiscriminator("message_type")
@@ -86,7 +86,7 @@ data class EventSubMessageWithMetadata(
         @SerialName("subscription")
         val subscription: Subscription? = null,
         @SerialName("session")
-        val session: Session? = null
+        val session: Session? = null,
     ) {
         @Serializable
         data class Session(
@@ -99,7 +99,7 @@ data class EventSubMessageWithMetadata(
             @SerialName("keepalive_timeout_seconds")
             val keepAliveTimeoutInSec: Int,
             @SerialName("reconnect_url")
-            val reconnectUrl: String? = null
+            val reconnectUrl: String? = null,
         )
 
         @Serializable

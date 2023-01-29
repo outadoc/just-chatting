@@ -42,7 +42,6 @@ import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.Reply
-import androidx.compose.material.icons.filled.Token
 import androidx.compose.material.rememberDismissState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -78,8 +77,6 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
-import androidx.compose.ui.text.Placeholder
-import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
@@ -89,7 +86,7 @@ import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
+import fr.outadoc.justchatting.component.chatapi.domain.model.CheerEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.preferences.data.AppUser
@@ -107,27 +104,13 @@ import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import fr.outadoc.justchatting.utils.ui.parseHexColor
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 import kotlin.time.Duration
-
-private val emoteSize = 1.8.em
-private val badgeSize = 1.4.em
-
-private val emotePlaceholder = Placeholder(
-    width = emoteSize,
-    height = emoteSize,
-    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
-)
-
-private val badgePlaceholder = Placeholder(
-    width = badgeSize,
-    height = badgeSize,
-    placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
-)
 
 private val urlRegex = Patterns.WEB_URL.toRegex()
 private const val UrlAnnotationTag = "URL"
@@ -212,6 +195,7 @@ fun ChatList(
         ChatList(
             entries = state.chatMessages,
             emotes = state.allEmotesMap,
+            cheerEmotes = state.cheerEmotes,
             badges = state.globalBadges.addAll(state.channelBadges),
             roomState = state.roomState,
             animateEmotes = animateEmotes,
@@ -300,6 +284,7 @@ fun ChatList(
     modifier: Modifier = Modifier,
     entries: ImmutableList<ChatEntry>,
     emotes: ImmutableMap<String, Emote>,
+    cheerEmotes: ImmutableMap<String, CheerEmote>,
     badges: ImmutableList<TwitchBadge>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
@@ -311,27 +296,44 @@ fun ChatList(
     appUser: AppUser,
     insets: PaddingValues,
 ) {
-    val inlinesEmotes = remember(emotes) {
-        emotes.mapValues { (_, emote) ->
-            InlineTextContent(emotePlaceholder) {
-                EmoteItem(
+    val inlinesEmotes: PersistentMap<String, InlineTextContent> =
+        remember(emotes) {
+            emotes.mapValues { (_, emote) ->
+                emoteTextContent(
                     emote = emote,
                     animateEmotes = animateEmotes,
                 )
-            }
-        }.toPersistentHashMap()
-    }
+            }.toPersistentHashMap()
+        }
 
-    val inlineBadges = remember(badges) {
-        badges.associate { badge ->
-            Pair(
-                badge.inlineContentId,
-                InlineTextContent(badgePlaceholder) {
-                    BadgeItem(badge = badge)
-                },
-            )
-        }.toPersistentHashMap()
-    }
+    val inlineBadges: PersistentMap<String, InlineTextContent> =
+        remember(badges) {
+            badges.associate { badge ->
+                Pair(
+                    badge.inlineContentId,
+                    badgeTextContent(
+                        badge = badge,
+                    ),
+                )
+            }.toPersistentHashMap()
+        }
+
+    val inlineCheerEmotes: PersistentMap<String, InlineTextContent> =
+        remember(cheerEmotes) {
+            cheerEmotes.mapValues { (_, cheer) ->
+                cheerEmoteTextContent(
+                    cheer = cheer,
+                    animateEmotes = animateEmotes,
+                )
+            }.toPersistentHashMap()
+        }
+
+    val inlineContent: PersistentMap<String, InlineTextContent> =
+        remember(inlinesEmotes, inlineBadges, inlineCheerEmotes) {
+            inlinesEmotes
+                .putAll(inlineBadges)
+                .putAll(inlineCheerEmotes)
+        }
 
     LazyColumn(
         modifier = modifier,
@@ -419,7 +421,7 @@ fun ChatList(
                             }
                         },
                     message = item,
-                    inlineContent = inlinesEmotes.putAll(inlineBadges),
+                    inlineContent = inlineContent,
                     animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
                     background = background,
@@ -492,11 +494,7 @@ fun ChatMessagePreview(
     @PreviewParameter(ChatEntryPreviewProvider::class) chatEntry: ChatEntry,
 ) {
     val inlineBadges = previewBadges
-        .associateWith {
-            InlineTextContent(badgePlaceholder) {
-                Icon(Icons.Default.Token, contentDescription = null)
-            }
-        }
+        .associateWith { previewTextContent() }
         .toPersistentHashMap()
 
     AppTheme {
@@ -671,12 +669,10 @@ fun ChatMessageData(
                     .associate { emote ->
                         Pair(
                             emote.name,
-                            InlineTextContent(emotePlaceholder) {
-                                ChatEmoteItem(
-                                    emote = emote,
-                                    animateEmotes = animateEmotes,
-                                )
-                            },
+                            emoteTextContent(
+                                emote = emote,
+                                animateEmotes = animateEmotes,
+                            ),
                         )
                     }
                     .toImmutableMap(),

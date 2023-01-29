@@ -7,13 +7,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import coil.compose.AsyncImage
-import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
+import fr.outadoc.justchatting.feature.chat.data.model.TwitchChatEmote
 import fr.outadoc.justchatting.utils.ui.isDark
 
 @Composable
-fun EmoteItem(
+fun ChatEmoteItem(
     modifier: Modifier = Modifier,
-    emote: Emote,
+    emote: TwitchChatEmote,
     animateEmotes: Boolean,
 ) {
     val density = LocalDensity.current.density

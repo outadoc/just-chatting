@@ -39,14 +39,18 @@ import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
+import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.CoroutineName
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -116,7 +120,7 @@ class ChatViewModel(
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val chatMessages: PersistentList<ChatEntry> = persistentListOf(),
             val chatters: PersistentSet<Chatter> = persistentSetOf(),
-            val cheerEmotes: ImmutableList<CheerEmote> = persistentListOf(),
+            val cheerEmotes: PersistentMap<String, CheerEmote> = persistentMapOf(),
             val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,
             val pickableEmotes: ImmutableList<EmoteSetItem> = persistentListOf(),
@@ -135,7 +139,6 @@ class ChatViewModel(
                     .map { item -> item.emote }
                     .distinctBy { emote -> emote.name }
                     .associateBy { emote -> emote.name }
-                    .plus(cheerEmotes.associateBy { emote -> emote.name })
                     .toImmutableMap()
 
             val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
@@ -379,36 +382,42 @@ class ChatViewModel(
         if (state !is State.Chatting) return state
 
         return withContext(Dispatchers.IO) {
-            val globalBadges = async {
+            val globalBadges: Deferred<PersistentList<TwitchBadge>?> =
+                async {
+                    try {
+                        emotesRepository.loadGlobalBadges().toPersistentList()
+                    } catch (e: Exception) {
+                        logError<ChatViewModel>(e) { "Failed to load global badges" }
+                        null
+                    }
+                }
+
+            val channelBadges: Deferred<PersistentList<TwitchBadge>?> =
+                async {
+                    try {
+                        emotesRepository.loadChannelBadges(channelId).toPersistentList()
+                    } catch (e: Exception) {
+                        logError<ChatViewModel>(e) { "Failed to load badges for channel $channelId" }
+                        null
+                    }
+                }
+
+            val cheerEmotes: PersistentMap<String, CheerEmote>? =
                 try {
-                    emotesRepository.loadGlobalBadges().toPersistentList()
+                    twitchRepository.loadCheerEmotes(userId = channelId)
+                        .associateBy { emote -> emote.name }
+                        .toPersistentHashMap()
                 } catch (e: Exception) {
-                    logError<ChatViewModel>(e) { "Failed to load global badges" }
+                    logError<ChatViewModel>(e) { "Failed to load cheermotes for channel $channelId" }
                     null
                 }
-            }
 
-            val channelBadges = async {
-                try {
-                    emotesRepository.loadChannelBadges(channelId).toPersistentList()
-                } catch (e: Exception) {
-                    logError<ChatViewModel>(e) { "Failed to load badges for channel $channelId" }
-                    null
-                }
-            }
-
-            val cheerEmotes = try {
-                twitchRepository.loadCheerEmotes(userId = channelId).toPersistentList()
-            } catch (e: Exception) {
-                logError<ChatViewModel>(e) { "Failed to load cheermotes for channel $channelId" }
-                null
-            }
-
-            val pickableEmotes = loadPickableEmotes(
-                channelId = channelId,
-                channelName = state.user.displayName,
-                emoteSets = state.userState.emoteSets,
-            )
+            val pickableEmotes: PersistentList<EmoteSetItem> =
+                loadPickableEmotes(
+                    channelId = channelId,
+                    channelName = state.user.displayName,
+                    emoteSets = state.userState.emoteSets,
+                )
 
             state.copy(
                 cheerEmotes = cheerEmotes ?: state.cheerEmotes,

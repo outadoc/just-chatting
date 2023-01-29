@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.component.chatapi.domain.model
 
-class CheerEmote(
+data class CheerEmote(
     override val name: String,
     val minBits: Int,
     val color: String? = null,

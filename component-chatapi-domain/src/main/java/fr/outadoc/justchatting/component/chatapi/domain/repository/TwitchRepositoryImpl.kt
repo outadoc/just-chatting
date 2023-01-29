@@ -206,7 +206,7 @@ class TwitchRepositoryImpl(
                 .flatMap { emote ->
                     emote.tiers.map { tier ->
                         CheerEmote(
-                            name = tier.id,
+                            name = "${emote.prefix}${tier.id}",
                             minBits = tier.minBits,
                             color = tier.color,
                             images = tier.images.flatMap { (themeId, theme) ->

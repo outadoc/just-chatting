@@ -112,6 +112,7 @@ class EventSubWebSocket(
                         is Frame.Text -> {
                             frame.readText()
                                 .lines()
+                                .filter { it.isNotBlank() }
                                 .forEach { line -> handleMessage(line) }
                         }
 

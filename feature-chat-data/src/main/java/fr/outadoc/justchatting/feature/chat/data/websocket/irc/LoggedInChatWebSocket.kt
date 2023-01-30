@@ -136,6 +136,7 @@ class LoggedInChatWebSocket(
                         is Frame.Text -> {
                             received.readText()
                                 .lines()
+                                .filter { it.isNotBlank() }
                                 .forEach { line -> handleMessage(line) }
                         }
                         else -> {}

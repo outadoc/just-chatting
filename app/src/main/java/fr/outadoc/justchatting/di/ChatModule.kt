@@ -20,7 +20,9 @@ import fr.outadoc.justchatting.feature.chat.data.websocket.eventsub.plugin.Event
 import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.client.PubSubWebSocket
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.broadcastsettingsupdate.PubSubBroadcastSettingsUpdatePlugin
 import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.channelpoints.PubSubChannelPointsPlugin
+import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.feature.prediction.PubSubPredictionPlugin
 import fr.outadoc.justchatting.feature.chat.data.websocket.pubsub.plugin.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatCommandHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
@@ -64,11 +66,15 @@ val chatModule = module {
     }
 
     single { PubSubChannelPointsPlugin(get(), get()) }
+    single { PubSubPredictionPlugin(get(), get()) }
+    single { PubSubBroadcastSettingsUpdatePlugin(get(), get()) }
 
     single {
         PubSubPluginsProvider {
             listOf(
                 get<PubSubChannelPointsPlugin>(),
+                get<PubSubPredictionPlugin>(),
+                get<PubSubBroadcastSettingsUpdatePlugin>(),
             )
         }
     }

@@ -32,7 +32,7 @@ sealed class PubSubRewardMessage {
             @SerialName("user")
             val user: User,
             @SerialName("user_input")
-            val userAddedMessage: String,
+            val userAddedMessage: String? = null,
             @SerialName("redeemed_at")
             @Serializable(with = InstantIso8601Serializer::class)
             val redeemedAt: Instant? = null,

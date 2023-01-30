@@ -109,7 +109,12 @@ class EventSubWebSocket(
                 // Receive messages
                 while (isActive) {
                     when (val frame = incoming.receive()) {
-                        is Frame.Text -> handleMessage(frame.readText())
+                        is Frame.Text -> {
+                            frame.readText()
+                                .lines()
+                                .forEach { line -> handleMessage(line) }
+                        }
+
                         else -> {}
                     }
                 }

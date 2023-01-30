@@ -133,7 +133,11 @@ class LoggedInChatWebSocket(
                 // Receive messages
                 while (isActive) {
                     when (val received = incoming.receive()) {
-                        is Frame.Text -> handleMessage(received.readText().trim())
+                        is Frame.Text -> {
+                            received.readText()
+                                .lines()
+                                .forEach { line -> handleMessage(line) }
+                        }
                         else -> {}
                     }
                 }

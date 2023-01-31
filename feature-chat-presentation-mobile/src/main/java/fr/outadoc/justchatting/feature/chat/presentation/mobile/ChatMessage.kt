@@ -13,8 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
 import fr.outadoc.justchatting.utils.ui.AppTheme
@@ -26,7 +26,7 @@ import kotlinx.collections.immutable.toPersistentHashMap
 @ThemePreviews
 @Composable
 fun ChatMessagePreview(
-    @PreviewParameter(ChatEntryPreviewProvider::class) chatEntry: ChatEntry,
+    @PreviewParameter(ChatEntryPreviewProvider::class) message: ChatEvent.Message,
 ) {
     val inlineBadges = previewBadges
         .associateWith { previewTextContent() }
@@ -34,7 +34,7 @@ fun ChatMessagePreview(
 
     AppTheme {
         ChatMessage(
-            message = chatEntry,
+            message = message,
             inlineContent = inlineBadges,
             animateEmotes = true,
             showTimestamps = true,
@@ -50,7 +50,7 @@ fun ChatMessagePreview(
 @Composable
 fun ChatMessage(
     modifier: Modifier = Modifier,
-    message: ChatEntry,
+    message: ChatEvent.Message,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
@@ -78,7 +78,7 @@ fun ChatMessage(
         }
 
         when (message) {
-            is ChatEntry.Highlighted -> {
+            is ChatEvent.Highlighted -> {
                 HighlightedMessage(
                     message = message,
                     inlineContent = inlineContent,
@@ -87,7 +87,7 @@ fun ChatMessage(
                 )
             }
 
-            is ChatEntry.Simple -> {
+            is ChatEvent.Simple -> {
                 SimpleMessage(
                     message = message,
                     inlineContent = inlineContent,

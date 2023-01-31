@@ -7,10 +7,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.PlaceholderVerticalAlign
 import androidx.compose.ui.unit.em
-import fr.outadoc.justchatting.component.chatapi.domain.model.CheerEmote
-import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
+import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
-import fr.outadoc.justchatting.feature.chat.data.model.TwitchChatEmote
 import fr.outadoc.justchatting.utils.core.formatNumber
 
 private val emoteSizeFloat = 1.8
@@ -36,21 +34,13 @@ fun emoteTextContent(emote: Emote, animateEmotes: Boolean): InlineTextContent =
         )
     }
 
-fun emoteTextContent(emote: TwitchChatEmote, animateEmotes: Boolean): InlineTextContent =
-    InlineTextContent(emotePlaceholder) {
-        ChatEmoteItem(
-            emote = emote,
-            animateEmotes = animateEmotes,
-        )
-    }
-
 fun badgeTextContent(badge: TwitchBadge): InlineTextContent =
     InlineTextContent(badgePlaceholder) {
         BadgeItem(badge = badge)
     }
 
-fun cheerEmoteTextContent(cheer: CheerEmote, animateEmotes: Boolean): InlineTextContent {
-    val textWidthEm: Float = cheer.minBits.formatNumber().length / 1.8f
+fun cheerEmoteTextContent(cheer: Emote, animateEmotes: Boolean): InlineTextContent {
+    val textWidthEm: Float = cheer.bitsValue?.let { it.formatNumber().length / 1.8f } ?: 0f
     return InlineTextContent(
         Placeholder(
             width = (emoteSizeFloat + textWidthEm + 0.3f).em,

@@ -31,6 +31,7 @@ android {
 dependencies {
     api(project(":feature-chat-domain"))
 
+    implementation(project(":component-chatapi-common"))
     implementation(project(":component-chatapi-domain"))
     implementation(project(":component-preferences-domain"))
 

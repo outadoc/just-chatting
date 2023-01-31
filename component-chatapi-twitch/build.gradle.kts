@@ -33,6 +33,9 @@ dependencies {
     implementation(project(":utils-core"))
     implementation(project(":utils-logging"))
 
+    implementation(project(":component-chatapi-common"))
+    implementation(project(":component-preferences-domain"))
+
     implementation(platform(libs.compose.bom))
 
     implementation(libs.androidx.room.core)
@@ -43,6 +46,8 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.client.core)
+
+    testImplementation(libs.junit)
 
     coreLibraryDesugaring(libs.desugar)
 }

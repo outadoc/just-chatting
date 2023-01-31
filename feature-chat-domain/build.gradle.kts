@@ -33,6 +33,7 @@ dependencies {
 
     api(project(":component-chatapi-domain"))
     implementation(project(":component-preferences-domain"))
+    implementation(project(":component-chatapi-common"))
 
     implementation(project(":utils-core"))
     implementation(project(":utils-ui"))

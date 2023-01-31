@@ -22,14 +22,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import kotlinx.collections.immutable.ImmutableMap
 
 @Composable
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
-    message: ChatEntry.Highlighted,
+    message: ChatEvent.Highlighted,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,

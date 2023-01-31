@@ -34,6 +34,7 @@ dependencies {
     implementation(project(":utils-core"))
     implementation(project(":component-preferences-domain"))
     implementation(project(":component-chatapi-twitch"))
+    implementation(project(":component-chatapi-common"))
     implementation(project(":component-chatapi-domain"))
 
     implementation(platform(libs.compose.bom))
@@ -45,8 +46,6 @@ dependencies {
     implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.client.core)
-
-    testImplementation(libs.junit)
 
     coreLibraryDesugaring(libs.desugar)
 }

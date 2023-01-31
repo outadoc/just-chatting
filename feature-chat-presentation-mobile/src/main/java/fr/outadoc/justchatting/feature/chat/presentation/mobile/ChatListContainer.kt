@@ -22,7 +22,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import kotlinx.coroutines.launch
 
@@ -32,8 +32,8 @@ fun ChatListContainer(
     state: ChatViewModel.State.Chatting,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
-    onMessageLongClick: (ChatEntry) -> Unit,
-    onReplyToMessage: (ChatEntry) -> Unit,
+    onMessageLongClick: (ChatEvent.Message) -> Unit,
+    onReplyToMessage: (ChatEvent.Message) -> Unit,
     insets: PaddingValues,
 ) {
     val scope = rememberCoroutineScope()

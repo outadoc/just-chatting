@@ -45,6 +45,7 @@ include(":component-deeplink")
 
 include(":component-preferences-domain")
 
+include(":component-chatapi-common")
 include(":component-chatapi-db")
 include(":component-chatapi-twitch")
 include(":component-chatapi-domain")

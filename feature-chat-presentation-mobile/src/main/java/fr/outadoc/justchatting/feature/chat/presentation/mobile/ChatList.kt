@@ -28,11 +28,10 @@ import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.chatapi.domain.model.CheerEmote
-import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList
@@ -44,16 +43,16 @@ import kotlinx.collections.immutable.toPersistentHashMap
 @Composable
 fun ChatList(
     modifier: Modifier = Modifier,
-    entries: ImmutableList<ChatEntry>,
+    entries: ImmutableList<ChatEvent.Message>,
     emotes: ImmutableMap<String, Emote>,
-    cheerEmotes: ImmutableMap<String, CheerEmote>,
+    cheerEmotes: ImmutableMap<String, Emote>,
     badges: ImmutableList<TwitchBadge>,
     animateEmotes: Boolean,
     showTimestamps: Boolean,
     isDisconnected: Boolean,
     listState: LazyListState,
-    onMessageLongClick: (ChatEntry) -> Unit,
-    onReplyToMessage: (ChatEntry) -> Unit,
+    onMessageLongClick: (ChatEvent.Message) -> Unit,
+    onReplyToMessage: (ChatEvent.Message) -> Unit,
     roomState: RoomState,
     appUser: AppUser,
     insets: PaddingValues,
@@ -145,8 +144,8 @@ fun ChatList(
             key = { _, item -> item.hashCode() },
             contentType = { _, item ->
                 when (item) {
-                    is ChatEntry.Highlighted -> 1
-                    is ChatEntry.Simple -> 2
+                    is ChatEvent.Highlighted -> 1
+                    is ChatEvent.Simple -> 2
                 }
             },
         ) { index, item ->

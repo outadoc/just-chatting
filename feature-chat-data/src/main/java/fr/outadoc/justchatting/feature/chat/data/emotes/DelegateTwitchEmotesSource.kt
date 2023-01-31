@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.emotes
 
-import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchEmote
+import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import kotlinx.coroutines.async
@@ -12,8 +12,8 @@ class DelegateTwitchEmotesSource(
 ) : CachedEmoteListSource<DelegateTwitchEmotesSource.CachedResult>() {
 
     data class CachedResult(
-        val channelEmotes: Map<User?, List<TwitchEmote>>,
-        val globalEmotes: Map<User?, List<TwitchEmote>>,
+        val channelEmotes: Map<User?, List<Emote>>,
+        val globalEmotes: Map<User?, List<Emote>>,
     )
 
     override fun shouldUseCache(previous: Params, next: Params): Boolean =
@@ -21,7 +21,7 @@ class DelegateTwitchEmotesSource(
 
     override suspend fun getEmotes(params: Params): CachedResult {
         return coroutineScope {
-            val emotes: List<TwitchEmote> =
+            val emotes: List<Emote> =
                 params.emoteSets.chunked(25)
                     .map { setIds ->
                         async {

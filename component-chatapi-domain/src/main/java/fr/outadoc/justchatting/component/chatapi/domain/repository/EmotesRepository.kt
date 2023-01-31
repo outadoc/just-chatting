@@ -1,17 +1,15 @@
 package fr.outadoc.justchatting.component.chatapi.domain.repository
 
+import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
 import fr.outadoc.justchatting.component.chatapi.db.MaxRecentEmotes
 import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
-import fr.outadoc.justchatting.component.chatapi.domain.model.BttvEmote
-import fr.outadoc.justchatting.component.chatapi.domain.model.FfzEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
-import fr.outadoc.justchatting.component.chatapi.domain.model.StvEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
-import fr.outadoc.justchatting.component.twitch.api.BttvEmotesApi
-import fr.outadoc.justchatting.component.twitch.api.StvEmotesApi
-import fr.outadoc.justchatting.component.twitch.api.TwitchBadgesApi
-import fr.outadoc.justchatting.component.twitch.model.isZeroWidth
-import kotlinx.collections.immutable.persistentMapOf
+import fr.outadoc.justchatting.component.twitch.http.api.BttvEmotesApi
+import fr.outadoc.justchatting.component.twitch.http.api.StvEmotesApi
+import fr.outadoc.justchatting.component.twitch.http.api.TwitchBadgesApi
+import fr.outadoc.justchatting.component.twitch.utils.map
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -32,10 +30,12 @@ class EmotesRepository(
                         TwitchBadge(
                             id = setName,
                             version = versionName,
-                            urls = persistentMapOf(
-                                1f to version.image1x,
-                                2f to version.image2x,
-                                4f to version.image4x,
+                            urls = EmoteUrls(
+                                mapOf(
+                                    1f to version.image1x,
+                                    2f to version.image2x,
+                                    4f to version.image4x,
+                                ),
                             ),
                         )
                     }
@@ -51,80 +51,52 @@ class EmotesRepository(
                         TwitchBadge(
                             id = setName,
                             version = versionName,
-                            urls = persistentMapOf(
-                                1f to version.image1x,
-                                2f to version.image2x,
-                                4f to version.image4x,
+                            urls = EmoteUrls(
+                                mapOf(
+                                    1f to version.image1x,
+                                    2f to version.image2x,
+                                    4f to version.image4x,
+                                ),
                             ),
                         )
                     }
                 }
         }
 
-    suspend fun loadGlobalStvEmotes(): List<StvEmote> =
+    suspend fun loadGlobalStvEmotes(): List<Emote> =
         withContext(Dispatchers.IO) {
-            stvEmotesApi.getGlobalStvEmotes().map { emote ->
-                StvEmote(
-                    name = emote.name,
-                    isZeroWidth = emote.isZeroWidth,
-                    urls = emote.urls.associate { (density, url) ->
-                        density.toFloat() to url
-                    },
-                )
-            }
+            stvEmotesApi.getGlobalStvEmotes()
+                .map { emote -> emote.map() }
         }
 
-    suspend fun loadStvEmotes(channelId: String): List<StvEmote> =
+    suspend fun loadStvEmotes(channelId: String): List<Emote> =
         withContext(Dispatchers.IO) {
-            stvEmotesApi.getStvEmotes(channelId).map { emote ->
-                StvEmote(
-                    name = emote.name,
-                    isZeroWidth = emote.isZeroWidth,
-                    urls = emote.urls.associate { (density, url) ->
-                        density.toFloat() to url
-                    },
-                )
-            }
+            stvEmotesApi.getStvEmotes(channelId)
+                .map { emote -> emote.map() }
         }
 
-    suspend fun loadGlobalBttvEmotes(): List<BttvEmote> =
+    suspend fun loadGlobalBttvEmotes(): List<Emote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getGlobalBttvEmotes().map { emote ->
-                BttvEmote(
-                    id = emote.id,
-                    name = emote.code,
-                )
-            }
+            bttvEmotesApi.getGlobalBttvEmotes()
+                .map { emote -> emote.map() }
         }
 
-    suspend fun loadBttvGlobalFfzEmotes(): List<FfzEmote> =
+    suspend fun loadBttvEmotes(channelId: String): List<Emote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getBttvGlobalFfzEmotes().map { emote ->
-                FfzEmote(
-                    name = emote.code,
-                    urls = emote.images,
-                )
-            }
+            bttvEmotesApi.getBttvEmotes(channelId).allEmotes
+                .map { emote -> emote.map() }
         }
 
-    suspend fun loadBttvEmotes(channelId: String): List<BttvEmote> =
+    suspend fun loadBttvGlobalFfzEmotes(): List<Emote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getBttvEmotes(channelId).allEmotes.map { emote ->
-                BttvEmote(
-                    id = emote.id,
-                    name = emote.code,
-                )
-            }
+            bttvEmotesApi.getBttvGlobalFfzEmotes()
+                .map { emote -> emote.map() }
         }
 
-    suspend fun loadBttvFfzEmotes(channelId: String): List<FfzEmote> =
+    suspend fun loadBttvFfzEmotes(channelId: String): List<Emote> =
         withContext(Dispatchers.IO) {
-            bttvEmotesApi.getBttvFfzEmotes(channelId).map { emote ->
-                FfzEmote(
-                    name = emote.code,
-                    urls = emote.images,
-                )
-            }
+            bttvEmotesApi.getBttvFfzEmotes(channelId)
+                .map { emote -> emote.map() }
         }
 
     fun loadRecentEmotes(): Flow<List<RecentEmote>> =

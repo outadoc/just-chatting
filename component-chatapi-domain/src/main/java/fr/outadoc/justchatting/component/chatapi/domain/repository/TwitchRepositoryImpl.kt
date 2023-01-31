@@ -2,20 +2,20 @@ package fr.outadoc.justchatting.component.chatapi.domain.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResponse
-import fr.outadoc.justchatting.component.chatapi.domain.model.CheerEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Follow
 import fr.outadoc.justchatting.component.chatapi.domain.model.FollowResponse
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.StreamsResponse
-import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.FollowedChannelsDataSource
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.FollowedStreamsDataSource
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.SearchChannelsDataSource
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.component.twitch.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.utils.map
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
@@ -199,49 +199,22 @@ class TwitchRepositoryImpl(
             }
         }
 
-    override suspend fun loadCheerEmotes(userId: String): List<CheerEmote> =
+    override suspend fun loadCheerEmotes(userId: String): List<Emote> =
         withContext(Dispatchers.IO) {
             helix.getCheerEmotes(userId = userId)
                 .data
                 .flatMap { emote ->
                     emote.tiers.map { tier ->
-                        CheerEmote(
-                            name = "${emote.prefix}${tier.id}",
-                            minBits = tier.minBits,
-                            color = tier.color,
-                            images = tier.images.flatMap { (themeId, theme) ->
-                                theme.flatMap { (typeId, urls) ->
-                                    urls.map { (scale, url) ->
-                                        CheerEmote.Image(
-                                            theme = themeId,
-                                            isAnimated = typeId == "animated",
-                                            dpiScale = scale.toFloat(),
-                                            url = url,
-                                        )
-                                    }
-                                }
-                            },
-                        )
+                        tier.map(prefix = emote.prefix)
                     }
                 }
         }
 
-    override suspend fun loadEmotesFromSet(setIds: List<String>): List<TwitchEmote> =
+    override suspend fun loadEmotesFromSet(setIds: List<String>): List<Emote> =
         withContext(Dispatchers.IO) {
             val response = helix.getEmotesFromSet(setIds = setIds)
             response.data
-                .map { emote ->
-                    TwitchEmote(
-                        id = emote.id,
-                        name = emote.name,
-                        setId = emote.setId,
-                        ownerId = emote.ownerId,
-                        supportedFormats = emote.format,
-                        supportedScales = emote.scale,
-                        supportedThemes = emote.themeMode,
-                        urlTemplate = response.template,
-                    )
-                }
                 .sortedByDescending { it.setId }
+                .map { emote -> emote.map(templateUrl = response.template) }
         }
 }

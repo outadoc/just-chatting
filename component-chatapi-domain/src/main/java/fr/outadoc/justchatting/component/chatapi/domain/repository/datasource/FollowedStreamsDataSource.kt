@@ -5,7 +5,7 @@ import androidx.paging.PagingState
 import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.StreamsResponse
-import fr.outadoc.justchatting.component.twitch.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 
 class FollowedStreamsDataSource(
     private val userId: String?,

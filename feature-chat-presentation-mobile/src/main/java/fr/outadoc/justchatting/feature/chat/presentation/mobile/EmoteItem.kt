@@ -7,7 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import coil.compose.AsyncImage
-import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
+import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.feature.chat.presentation.getBestUrl
 import fr.outadoc.justchatting.utils.ui.isDark
 
 @Composable
@@ -21,8 +22,7 @@ fun EmoteItem(
         modifier = modifier.fillMaxSize(),
         contentScale = ContentScale.Fit,
         contentDescription = emote.name,
-        model = emote.getUrl(
-            animate = animateEmotes,
+        model = emote.urls.getBestUrl(
             screenDensity = density,
             isDarkTheme = MaterialTheme.colorScheme.isDark,
         ),

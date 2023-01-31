@@ -1,21 +1,21 @@
 package fr.outadoc.justchatting.feature.chat.domain
 
-import fr.outadoc.justchatting.feature.chat.data.ChatCommandHandler
-import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
-import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
+import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 
 class ChatConnectionPool(
-    private val factory: AggregateChatCommandHandler.Factory,
+    private val factory: AggregateChatEventHandler.Factory,
 ) {
     private val coroutineScope: CoroutineScope = CoroutineScope(Job())
-    private val handlers: MutableMap<String, ChatCommandHandler> = mutableMapOf()
+    private val handlers: MutableMap<String, ChatEventHandler> = mutableMapOf()
 
     class HandlerResult(
-        val commandFlow: Flow<ChatCommand>,
+        val commandFlow: Flow<ChatEvent>,
         val connectionStatus: StateFlow<ConnectionStatus>,
     )
 

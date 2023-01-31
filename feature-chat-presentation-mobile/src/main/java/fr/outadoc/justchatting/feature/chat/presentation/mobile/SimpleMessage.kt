@@ -10,14 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import kotlinx.collections.immutable.ImmutableMap
 
 @Composable
 fun SimpleMessage(
     modifier: Modifier = Modifier,
-    message: ChatEntry.Simple,
+    message: ChatEvent.Simple,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,

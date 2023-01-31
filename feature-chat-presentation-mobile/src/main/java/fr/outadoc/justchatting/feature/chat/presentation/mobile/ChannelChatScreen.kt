@@ -42,11 +42,11 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Chatter
-import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
@@ -111,7 +111,7 @@ fun ChannelChatScreen(channelLogin: String) {
 
     val canOpenInBubble = canOpenInBubble()
 
-    ChannelChatScreen(
+    ChannelChatScreenContent(
         state = state,
         inputState = inputState,
         channelLogin = channelLogin,
@@ -157,7 +157,7 @@ fun ChannelChatScreen(channelLogin: String) {
 @Composable
 fun ChannelChatScreenLoadingPreview() {
     AppTheme {
-        ChannelChatScreen(
+        ChannelChatScreenContent(
             state = ChatViewModel.State.Initial,
             inputState = ChatViewModel.InputState(),
             channelLogin = "outadoc",
@@ -170,7 +170,7 @@ fun ChannelChatScreenLoadingPreview() {
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ChannelChatScreen(
+fun ChannelChatScreenContent(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     inputState: ChatViewModel.InputState,
@@ -187,7 +187,7 @@ fun ChannelChatScreen(
     onClearReplyingTo: () -> Unit = {},
     onOpenBubbleClicked: () -> Unit = {},
     onSubmit: () -> Unit = {},
-    onReplyToMessage: (ChatEntry) -> Unit = {},
+    onReplyToMessage: (ChatEvent.Message) -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val clipboard = LocalClipboardManager.current

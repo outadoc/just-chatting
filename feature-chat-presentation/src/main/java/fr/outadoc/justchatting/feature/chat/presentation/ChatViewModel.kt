@@ -7,9 +7,11 @@ import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
+import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
 import fr.outadoc.justchatting.component.chatapi.domain.model.Chatter
-import fr.outadoc.justchatting.component.chatapi.domain.model.CheerEmote
-import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
@@ -18,17 +20,8 @@ import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesReposit
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.feature.chat.data.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
-import fr.outadoc.justchatting.feature.chat.data.model.ChatCommand
-import fr.outadoc.justchatting.feature.chat.data.model.ChatMessage
-import fr.outadoc.justchatting.feature.chat.data.model.Command
-import fr.outadoc.justchatting.feature.chat.data.model.HostModeState
-import fr.outadoc.justchatting.feature.chat.data.model.PingCommand
-import fr.outadoc.justchatting.feature.chat.data.model.PointReward
-import fr.outadoc.justchatting.feature.chat.data.model.RoomStateDelta
-import fr.outadoc.justchatting.feature.chat.data.model.UserState
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.utils.core.asStringOrRes
 import fr.outadoc.justchatting.utils.core.flatListOf
@@ -88,7 +81,6 @@ class ChatViewModel(
     private val twitchRepository: TwitchRepository,
     private val emotesRepository: EmotesRepository,
     private val chatConnectionPool: ChatConnectionPool,
-    private val chatEntryMapper: ChatEntryMapper,
     private val preferencesRepository: PreferenceRepository,
     private val clock: Clock,
     private val emoteListSourcesProvider: EmoteListSourcesProvider,
@@ -98,12 +90,12 @@ class ChatViewModel(
     private val inputScope = viewModelScope + CoroutineName("inputScope")
 
     sealed class Action {
-        data class AddMessages(val messages: List<ChatCommand>) : Action()
+        data class AddMessages(val messages: List<ChatEvent.Message>) : Action()
         data class ChangeRecentEmotes(val recentEmotes: List<RecentEmote>) : Action()
-        data class ChangeRoomState(val delta: RoomStateDelta) : Action()
+        data class ChangeRoomState(val delta: ChatEvent.RoomStateDelta) : Action()
         data class ChangeConnectionStatus(val connectionStatus: ConnectionStatus) : Action()
-        data class ChangeHostModeState(val hostModeState: HostModeState) : Action()
-        data class ChangeUserState(val userState: UserState) : Action()
+        data class ChangeHostModeState(val hostModeState: ChatEvent.HostModeState) : Action()
+        data class ChangeUserState(val userState: ChatEvent.UserState) : Action()
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
         object LoadStreamDetails : Action()
@@ -118,16 +110,16 @@ class ChatViewModel(
             val appUser: AppUser,
             val stream: Stream? = null,
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
-            val chatMessages: PersistentList<ChatEntry> = persistentListOf(),
+            val chatMessages: PersistentList<ChatEvent.Message> = persistentListOf(),
             val chatters: PersistentSet<Chatter> = persistentSetOf(),
-            val cheerEmotes: PersistentMap<String, CheerEmote> = persistentMapOf(),
+            val cheerEmotes: PersistentMap<String, Emote> = persistentMapOf(),
             val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,
             val pickableEmotes: ImmutableList<EmoteSetItem> = persistentListOf(),
             val recentEmotes: List<RecentEmote> = emptyList(),
-            val userState: UserState = UserState(),
+            val userState: ChatEvent.UserState = ChatEvent.UserState(),
             val roomState: RoomState = RoomState(),
-            val hostModeState: HostModeState? = null,
+            val hostModeState: ChatEvent.HostModeState? = null,
             val connectionStatus: ConnectionStatus = ConnectionStatus(),
             val maxAdapterCount: Int,
         ) : State() {
@@ -149,7 +141,14 @@ class ChatViewModel(
                     ),
                     recentEmotes
                         .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                        .map { recentEmote -> EmoteSetItem.Emote(recentEmote) },
+                        .map { recentEmote ->
+                            EmoteSetItem.Emote(
+                                Emote(
+                                    name = recentEmote.name,
+                                    urls = EmoteUrls(recentEmote.url),
+                                ),
+                            )
+                        },
                 )
                     .plus(pickableEmotes)
                     .toImmutableList()
@@ -172,14 +171,14 @@ class ChatViewModel(
         data class AppendChatter(val chatter: Chatter, val autocomplete: Boolean) : InputAction()
         data class AppendEmote(val emote: Emote, val autocomplete: Boolean) : InputAction()
         data class ChangeMessageInput(val message: TextFieldValue) : InputAction()
-        data class ReplyToMessage(val chatEntry: ChatEntry? = null) : InputAction()
+        data class ReplyToMessage(val chatEvent: ChatEvent.Message? = null) : InputAction()
         data class UpdateAutoCompleteItems(val items: List<AutoCompleteItem>) : InputAction()
         data class Submit(val screenDensity: Float, val isDarkTheme: Boolean) : InputAction()
     }
 
     data class InputState(
         val inputMessage: TextFieldValue = TextFieldValue(),
-        val replyingTo: ChatEntry? = null,
+        val replyingTo: ChatEvent.Message? = null,
         val autoCompleteItems: List<AutoCompleteItem> = emptyList(),
     )
 
@@ -231,15 +230,25 @@ class ChatViewModel(
                 result.commandFlow
                     .map { command ->
                         when (command) {
-                            is PingCommand -> null
-                            is ChatMessage,
-                            is PointReward,
-                            is Command,
-                            -> Action.AddMessages(listOf(command))
+                            is ChatEvent.Highlighted -> {
+                                Action.AddMessages(listOf(command))
+                            }
 
-                            is HostModeState -> Action.ChangeHostModeState(command)
-                            is RoomStateDelta -> Action.ChangeRoomState(command)
-                            is UserState -> Action.ChangeUserState(command)
+                            is ChatEvent.Simple -> {
+                                Action.AddMessages(listOf(command))
+                            }
+
+                            is ChatEvent.HostModeState -> {
+                                Action.ChangeHostModeState(command)
+                            }
+
+                            is ChatEvent.RoomStateDelta -> {
+                                Action.ChangeRoomState(command)
+                            }
+
+                            is ChatEvent.UserState -> {
+                                Action.ChangeUserState(command)
+                            }
                         }
                     }
                     .filterNotNull()
@@ -311,7 +320,7 @@ class ChatViewModel(
         }
     }
 
-    fun onReplyToMessage(entry: ChatEntry?) {
+    fun onReplyToMessage(entry: ChatEvent.Message?) {
         inputScope.launch {
             inputActions.emit(InputAction.ReplyToMessage(entry))
         }
@@ -402,7 +411,7 @@ class ChatViewModel(
                     }
                 }
 
-            val cheerEmotes: PersistentMap<String, CheerEmote>? =
+            val cheerEmotes: PersistentMap<String, Emote>? =
                 try {
                     twitchRepository.loadCheerEmotes(userId = channelId)
                         .associateBy { emote -> emote.name }
@@ -460,22 +469,20 @@ class ChatViewModel(
 
         // Note that this is the last message we've sent
         val lastSentMessageInstant: Instant? =
-            messages.filterIsInstance<ChatMessage>()
-                .lastOrNull { message ->
-                    message.userId != null && message.userId == state.appUser.id
-                }
-                ?.timestamp
+            messages.lastOrNull { message ->
+                message.data?.userId != null && message.data?.userId == state.appUser.id
+            }?.timestamp
 
         // Remember names of chatters
         val newChatters: PersistentSet<Chatter> =
             messages.asSequence()
-                .filterIsInstance<ChatMessage>()
-                .map { message -> Chatter(message.userName) }
+                .mapNotNull { message -> message.data?.userName }
+                .map { userName -> Chatter(userName) }
                 .toPersistentSet()
 
-        val newMessages: PersistentList<ChatEntry> =
+        val newMessages: PersistentList<ChatEvent> =
             state.chatMessages
-                .addAll(messages.mapNotNull(chatEntryMapper::map))
+                .addAll(messages)
                 .distinct()
                 .toPersistentList()
 
@@ -487,6 +494,7 @@ class ChatViewModel(
 
         return state.copy(
             chatMessages = newMessages
+                .filterIsInstance<ChatEvent.Message>()
                 .takeLast(maxCount)
                 .toPersistentList(),
             lastSentMessageInstant = lastSentMessageInstant
@@ -562,7 +570,6 @@ class ChatViewModel(
                 inReplyToId = inputState.replyingTo?.data?.messageId,
             )
 
-            val prefs = preferencesRepository.currentPreferences.first()
             val usedEmotes: List<RecentEmote> =
                 inputState.inputMessage
                     .text
@@ -571,8 +578,7 @@ class ChatViewModel(
                         state.allEmotesMap[word]?.let { emote ->
                             RecentEmote(
                                 name = word,
-                                url = emote.getUrl(
-                                    animate = prefs.animateEmotes,
+                                url = emote.urls.getBestUrl(
                                     screenDensity = screenDensity,
                                     isDarkTheme = isDarkTheme,
                                 ),
@@ -611,7 +617,7 @@ class ChatViewModel(
     }
 
     private fun InputAction.ReplyToMessage.reduce(inputState: InputState): InputState {
-        return inputState.copy(replyingTo = chatEntry)
+        return inputState.copy(replyingTo = chatEvent)
     }
 
     private fun InputAction.UpdateAutoCompleteItems.reduce(inputState: InputState): InputState {

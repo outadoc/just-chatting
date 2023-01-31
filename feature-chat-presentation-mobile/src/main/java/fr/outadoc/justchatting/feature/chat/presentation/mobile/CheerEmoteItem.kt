@@ -11,14 +11,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.chatapi.domain.model.CheerEmote
+import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.parseHexColor
 
 @Composable
 fun CheerEmoteItem(
     modifier: Modifier = Modifier,
-    emote: CheerEmote,
+    emote: Emote,
     animateEmotes: Boolean,
 ) {
     Row(
@@ -36,8 +36,8 @@ fun CheerEmoteItem(
             modifier = Modifier.padding(
                 bottom = 1.dp,
             ),
-            text = emote.minBits.formatNumber(),
-            color = emote.color?.parseHexColor() ?: LocalContentColor.current,
+            text = emote.bitsValue?.formatNumber() ?: "",
+            color = emote.colorHex?.parseHexColor() ?: LocalContentColor.current,
             fontWeight = FontWeight.Bold,
         )
     }

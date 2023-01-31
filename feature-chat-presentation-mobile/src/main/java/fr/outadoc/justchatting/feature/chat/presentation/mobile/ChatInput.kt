@@ -32,10 +32,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Chatter
-import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
@@ -115,8 +115,8 @@ fun ChatInputPreviewEmpty() {
 fun ChatInputPreviewReplying() {
     AppTheme {
         ChatInput(
-            replyingTo = ChatEntry.Simple(
-                data = ChatEntry.Data(
+            replyingTo = ChatEvent.Simple(
+                data = ChatEvent.Data(
                     message = "Lorem ipsum dolor sit amet?",
                     messageId = "",
                     userId = "",
@@ -124,7 +124,7 @@ fun ChatInputPreviewReplying() {
                     userLogin = "",
                     isAction = false,
                     color = null,
-                    emotes = null,
+                    embeddedEmotes = null,
                     badges = null,
                     inReplyTo = null,
                 ),
@@ -140,7 +140,7 @@ fun ChatInput(
     message: TextFieldValue = TextFieldValue(),
     autoCompleteItems: List<AutoCompleteItem> = emptyList(),
     animateEmotes: Boolean = true,
-    replyingTo: ChatEntry? = null,
+    replyingTo: ChatEvent.Message? = null,
     onEmoteClick: (Emote) -> Unit = {},
     onChatterClick: (Chatter) -> Unit = {},
     onMessageChange: (TextFieldValue) -> Unit = {},

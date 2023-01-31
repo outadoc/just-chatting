@@ -1,9 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import fr.outadoc.justchatting.feature.chat.data.model.Badge
-import fr.outadoc.justchatting.feature.chat.data.model.ChatMessage
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.R
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
@@ -15,8 +13,8 @@ val previewBadges = listOf(
 
 private val simpleEntries = sequence {
     yield(
-        ChatEntry.Simple(
-            data = ChatEntry.Data(
+        ChatEvent.Simple(
+            data = ChatEvent.Data(
                 userName = "Hiccoz",
                 userId = "68552712",
                 userLogin = "hiccoz",
@@ -24,10 +22,10 @@ private val simpleEntries = sequence {
                 messageId = "b43bd9e5-ec6e-47fe-a5da-c3213540fe06",
                 isAction = false,
                 color = "#FF69B4",
-                emotes = persistentListOf(),
+                embeddedEmotes = persistentListOf(),
                 badges = persistentListOf(
-                    Badge("subscriber", "48"),
-                    Badge("sub-gifter", "100"),
+                    fr.outadoc.justchatting.component.chatapi.common.Badge("subscriber", "48"),
+                    fr.outadoc.justchatting.component.chatapi.common.Badge("sub-gifter", "100"),
                 ),
                 inReplyTo = null,
             ),
@@ -36,8 +34,8 @@ private val simpleEntries = sequence {
     )
 
     yield(
-        ChatEntry.Simple(
-            data = ChatEntry.Data(
+        ChatEvent.Simple(
+            data = ChatEvent.Data(
                 userName = "컬러히에",
                 userId = "232421548",
                 userLogin = "kolorye",
@@ -45,9 +43,9 @@ private val simpleEntries = sequence {
                 messageId = "4b3f4db7-5956-4ade-adba-ed282c22eb50",
                 isAction = false,
                 color = "#5F9EA0",
-                emotes = persistentListOf(),
+                embeddedEmotes = persistentListOf(),
                 badges = persistentListOf(),
-                inReplyTo = ChatMessage.InReplyTo(
+                inReplyTo = ChatEvent.Data.InReplyTo(
                     id = "4d0a8518-9bc5-44a6-8249-c2ed9122f987",
                     userId = "221570322",
                     userName = "djessy728",
@@ -62,8 +60,8 @@ private val simpleEntries = sequence {
 
 private val highlightedEntries = sequence {
     yield(
-        ChatEntry.Highlighted(
-            data = ChatEntry.Data(
+        ChatEvent.Highlighted(
+            data = ChatEvent.Data(
                 userName = "clo_chette_",
                 userId = "672551946",
                 userLogin = "clo_chette_",
@@ -71,7 +69,7 @@ private val highlightedEntries = sequence {
                 messageId = "9431957c-0185-4de8-91a6-d1734b733d90",
                 isAction = false,
                 color = "#8A2BE2",
-                emotes = persistentListOf(),
+                embeddedEmotes = persistentListOf(),
                 badges = persistentListOf(),
                 inReplyTo = null,
             ),
@@ -82,7 +80,7 @@ private val highlightedEntries = sequence {
     )
 
     yield(
-        ChatEntry.Highlighted(
+        ChatEvent.Highlighted(
             header = "This room is now in followers-only mode.",
             headerIconResId = null,
             data = null,
@@ -91,8 +89,8 @@ private val highlightedEntries = sequence {
     )
 }
 
-class ChatEntryPreviewProvider : PreviewParameterProvider<ChatEntry> {
-    override val values: Sequence<ChatEntry> = sequence {
+class ChatEntryPreviewProvider : PreviewParameterProvider<ChatEvent> {
+    override val values: Sequence<ChatEvent> = sequence {
         yieldAll(simpleEntries)
         yieldAll(highlightedEntries)
     }

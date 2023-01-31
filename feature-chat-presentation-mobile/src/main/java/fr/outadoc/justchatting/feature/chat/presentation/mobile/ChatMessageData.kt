@@ -28,9 +28,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.chatapi.common.Badge
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.feature.chat.data.model.Badge
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEntry
 import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.ui.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
@@ -42,7 +42,7 @@ import kotlin.random.Random
 @Composable
 fun ChatMessageData(
     modifier: Modifier = Modifier,
-    data: ChatEntry.Data,
+    data: ChatEvent.Data,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
@@ -54,7 +54,7 @@ fun ChatMessageData(
     val fullInlineContent =
         inlineContent.toPersistentHashMap()
             .putAll(
-                data.emotes.orEmpty()
+                data.embeddedEmotes.orEmpty()
                     .associate { emote ->
                         Pair(
                             emote.name,
@@ -128,7 +128,7 @@ fun ChatMessageData(
 @Stable
 @Composable
 @OptIn(ExperimentalTextApi::class)
-fun ChatEntry.Data.toAnnotatedString(
+fun ChatEvent.Data.toAnnotatedString(
     appUser: AppUser,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     urlColor: Color = MaterialTheme.colorScheme.primary,

@@ -14,7 +14,7 @@ import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.chatapi.domain.model.Emote
+import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import kotlinx.collections.immutable.ImmutableList

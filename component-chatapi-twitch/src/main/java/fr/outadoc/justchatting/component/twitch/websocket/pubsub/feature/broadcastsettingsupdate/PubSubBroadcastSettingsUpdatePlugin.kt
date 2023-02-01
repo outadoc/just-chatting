@@ -14,13 +14,28 @@ class PubSubBroadcastSettingsUpdatePlugin(
     override fun getTopic(channelId: String): String =
         "broadcast-settings-update.$channelId"
 
-    override fun parseMessage(message: String): ChatEvent =
+    override fun parseMessage(message: String): List<ChatEvent> =
         when (val res = json.decodeFromString<PubSubBroadcastSettingsUpdateMessage>(message)) {
             is PubSubBroadcastSettingsUpdateMessage.Update -> {
-                ChatEvent.Highlighted(
-                    header = "Stream title changed to ${res.status}",
-                    timestamp = clock.now(),
-                    data = null,
+                listOfNotNull(
+                    if (res.status != res.oldStatus) {
+                        ChatEvent.Highlighted(
+                            header = "Stream title changed to \"${res.status}\"",
+                            timestamp = clock.now(),
+                            data = null,
+                        )
+                    } else {
+                        null
+                    },
+                    if (res.game != res.oldGame) {
+                        ChatEvent.Highlighted(
+                            header = "Gamed changed to \"${res.game}\"",
+                            timestamp = clock.now(),
+                            data = null,
+                        )
+                    } else {
+                        null
+                    },
                 )
             }
         }

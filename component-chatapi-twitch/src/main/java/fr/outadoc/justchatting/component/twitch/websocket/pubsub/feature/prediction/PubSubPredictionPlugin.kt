@@ -15,9 +15,9 @@ class PubSubPredictionPlugin(
     override fun getTopic(channelId: String): String =
         "predictions-channel-v1.$channelId"
 
-    override fun parseMessage(message: String): ChatEvent? {
+    override fun parseMessage(message: String): List<ChatEvent> {
         val res = json.decodeFromString<PubSubPredictionMessage>(message)
-        return when (val event = res.data.event) {
+        val event = when (val event = res.data.event) {
             is PubSubPredictionMessage.Event.Active -> {
                 ChatEvent.Highlighted(
                     header = buildString {
@@ -71,5 +71,7 @@ class PubSubPredictionPlugin(
                 )
             }
         }
+
+        return listOfNotNull(event)
     }
 }

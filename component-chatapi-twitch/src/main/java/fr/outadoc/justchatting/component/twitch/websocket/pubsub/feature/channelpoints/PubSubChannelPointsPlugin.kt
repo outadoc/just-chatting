@@ -17,20 +17,22 @@ class PubSubChannelPointsPlugin(
     override fun getTopic(channelId: String): String =
         "community-points-channel-v1.$channelId"
 
-    override fun parseMessage(message: String): ChatEvent =
+    override fun parseMessage(message: String): List<ChatEvent> =
         when (val res = json.decodeFromString<PubSubRewardMessage>(message)) {
             is PubSubRewardMessage.Redeemed -> {
-                ChatEvent.Highlighted(
-                    header = context.resources.getQuantityString(
-                        R.plurals.user_redeemed,
-                        res.data.redemption.reward.cost,
-                        res.data.redemption.user.displayName,
-                        res.data.redemption.reward.title,
-                        res.data.redemption.reward.cost,
+                listOf(
+                    ChatEvent.Highlighted(
+                        header = context.resources.getQuantityString(
+                            R.plurals.user_redeemed,
+                            res.data.redemption.reward.cost,
+                            res.data.redemption.user.displayName,
+                            res.data.redemption.reward.title,
+                            res.data.redemption.reward.cost,
+                        ),
+                        headerIconResId = R.drawable.ic_toll,
+                        data = null,
+                        timestamp = res.data.redemption.redeemedAt ?: clock.now(),
                     ),
-                    headerIconResId = R.drawable.ic_toll,
-                    data = null,
-                    timestamp = res.data.redemption.redeemedAt ?: clock.now(),
                 )
             }
         }

@@ -29,8 +29,10 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
@@ -150,10 +152,11 @@ class PubSubWebSocket(
                         plugin.getTopic(channelId) == received.data.topic
                     }
 
-                plugin?.parseMessage(received.data.message)
-                    ?.let { parsed ->
-                        _flow.emit(parsed)
-                    }
+                plugin?.apply {
+                    _flow.emitAll(
+                        parseMessage(received.data.message).asFlow(),
+                    )
+                }
             }
 
             is PubSubServerMessage.Response -> {

@@ -19,5 +19,11 @@ sealed class PubSubBroadcastSettingsUpdateMessage {
         val game: String,
         @SerialName("game_id")
         val gameId: Int,
+        @SerialName("old_status")
+        val oldStatus: String?,
+        @SerialName("old_game")
+        val oldGame: String?,
+        @SerialName("old_game_id")
+        val oldGameId: Int?,
     ) : PubSubBroadcastSettingsUpdateMessage()
 }

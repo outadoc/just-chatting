@@ -173,12 +173,13 @@ class LiveChatWebSocket private constructor(
                     ?.let { event -> _flow.emit(event) }
             }
 
-            is PingCommand -> send("PONG :tmi.twitch.tv")
-            is Command.Notice,
-            is UserState,
-            null,
-            -> {
+            is PingCommand -> {
+                send("PONG :tmi.twitch.tv")
             }
+
+            is Command.Notice -> {}
+            is UserState -> {}
+            null -> {}
         }
     }
 

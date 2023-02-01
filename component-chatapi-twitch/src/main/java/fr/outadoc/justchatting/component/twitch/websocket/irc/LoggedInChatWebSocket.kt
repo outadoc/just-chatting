@@ -22,6 +22,7 @@ import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -156,12 +157,23 @@ class LoggedInChatWebSocket(
         logInfo<LoggedInChatWebSocket> { "received: $received" }
 
         when (val command = parser.parse(received)) {
-            is Command.Notice, is UserState -> {
+            is Command.Notice -> {
                 mapper.map(command)
                     ?.let { event -> _flow.emit(event) }
             }
 
-            is PingCommand -> send("PONG :tmi.twitch.tv")
+            is UserState -> {
+                _flow.emit(
+                    ChatEvent.UserState(
+                        emoteSets = command.emoteSets.toImmutableList()
+                    )
+                )
+            }
+
+            is PingCommand -> {
+                send("PONG :tmi.twitch.tv")
+            }
+
             else -> {}
         }
     }

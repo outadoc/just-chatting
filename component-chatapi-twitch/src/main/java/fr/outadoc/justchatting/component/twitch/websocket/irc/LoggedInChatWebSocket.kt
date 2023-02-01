@@ -165,8 +165,8 @@ class LoggedInChatWebSocket(
             is UserState -> {
                 _flow.emit(
                     ChatEvent.UserState(
-                        emoteSets = command.emoteSets.toImmutableList()
-                    )
+                        emoteSets = command.emoteSets.toImmutableList(),
+                    ),
                 )
             }
 

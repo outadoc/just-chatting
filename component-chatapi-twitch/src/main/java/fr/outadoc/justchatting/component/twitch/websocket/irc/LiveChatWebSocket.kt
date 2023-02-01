@@ -172,8 +172,8 @@ class LiveChatWebSocket private constructor(
                 _flow.emit(
                     ChatEvent.HostModeState(
                         targetChannelLogin = command.targetChannelLogin,
-                        viewerCount = command.viewerCount
-                    )
+                        viewerCount = command.viewerCount,
+                    ),
                 )
             }
 
@@ -185,7 +185,7 @@ class LiveChatWebSocket private constructor(
                         uniqueMessagesOnly = command.uniqueMessagesOnly,
                         slowModeDuration = command.slowModeDuration,
                         isSubOnly = command.isSubOnly,
-                    )
+                    ),
                 )
             }
 

@@ -4,9 +4,9 @@ import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEmote
 import fr.outadoc.justchatting.component.twitch.websocket.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ChatMessage
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.HostModeState
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.RoomStateDelta
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.UserState

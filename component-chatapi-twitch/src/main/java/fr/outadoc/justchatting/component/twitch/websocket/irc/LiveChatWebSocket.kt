@@ -8,9 +8,9 @@ import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ChatMessage
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Command
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.HostModeState
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.RoomStateDelta
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.UserState
@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.emitAll
+import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
@@ -59,7 +60,7 @@ class LiveChatWebSocket private constructor(
     private val context: Context,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
-    private val mapper: IrcEventMapper,
+    private val mapper: IrcMessageMapper,
     private val httpClient: HttpClient,
     private val recentMessagesRepository: RecentMessagesRepository,
     private val preferencesRepository: PreferenceRepository,
@@ -158,27 +159,40 @@ class LiveChatWebSocket private constructor(
     private suspend fun DefaultWebSocketSession.handleMessage(received: String) {
         logInfo<LiveChatWebSocket> { "received: $received" }
 
-        when (val command = parser.parse(received)) {
-            is ChatMessage,
-            is Command.ClearChat,
-            is Command.ClearMessage,
-            is Command.UserNotice,
-            is Command.Ban,
-            is Command.SendMessageError,
-            is Command.Timeout,
-            is HostModeState,
-            is RoomStateDelta,
-            -> {
-                mapper.map(command)
-                    ?.let { event -> _flow.emit(event) }
+        when (val command: IrcEvent? = parser.parse(received)) {
+            is UserState, is Message.Notice -> {
+                // Handled by LoggedInChatWebSocket
+            }
+
+            is Message -> {
+                _flow.emit(mapper.map(command))
+            }
+
+            is HostModeState -> {
+                _flow.emit(
+                    ChatEvent.HostModeState(
+                        targetChannelLogin = command.targetChannelLogin,
+                        viewerCount = command.viewerCount
+                    )
+                )
+            }
+
+            is RoomStateDelta -> {
+                _flow.emit(
+                    ChatEvent.RoomStateDelta(
+                        isEmoteOnly = command.isEmoteOnly,
+                        minFollowDuration = command.minFollowDuration,
+                        uniqueMessagesOnly = command.uniqueMessagesOnly,
+                        slowModeDuration = command.slowModeDuration,
+                        isSubOnly = command.isSubOnly,
+                    )
+                )
             }
 
             is PingCommand -> {
                 send("PONG :tmi.twitch.tv")
             }
 
-            is Command.Notice -> {}
-            is UserState -> {}
             null -> {}
         }
     }
@@ -206,6 +220,7 @@ class LiveChatWebSocket private constructor(
                 recentMessagesRepository
                     .loadRecentMessages(channelLogin, recentMsgLimit)
                     .asFlow()
+                    .filterIsInstance<Message>()
                     .mapNotNull { event -> mapper.map(event) },
             )
         } catch (e: Exception) {
@@ -218,7 +233,7 @@ class LiveChatWebSocket private constructor(
         private val context: Context,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
-        private val mapper: IrcEventMapper,
+        private val mapper: IrcMessageMapper,
         private val recentMessagesRepository: RecentMessagesRepository,
         private val preferencesRepository: PreferenceRepository,
         private val httpClient: HttpClient,

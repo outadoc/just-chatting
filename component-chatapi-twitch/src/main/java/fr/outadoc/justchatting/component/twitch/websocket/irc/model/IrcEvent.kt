@@ -8,74 +8,69 @@ import kotlin.time.Duration
 
 sealed interface IrcEvent
 
-sealed class Command : IrcEvent {
+sealed interface Message : IrcEvent {
+
+    data class ChatMessage(
+        val id: String?,
+        val userId: String?,
+        val userLogin: String,
+        val userName: String,
+        val message: String?,
+        val color: String?,
+        val isAction: Boolean = false,
+        val embeddedEmotes: List<Emote>?,
+        val badges: List<Badge>?,
+        val isFirst: Boolean = false,
+        val systemMsg: String?,
+        val timestamp: Instant,
+        val rewardId: String?,
+        val inReplyTo: InReplyTo?,
+        val msgId: String?,
+    ) : Message {
+
+        @Immutable
+        data class InReplyTo(
+            val id: String,
+            val userName: String,
+            val message: String,
+            val userId: String,
+            val userLogin: String,
+        )
+    }
 
     data class UserNotice(
         val systemMsg: String?,
         val timestamp: Instant,
         val userMessage: ChatMessage?,
         val msgId: String?,
-    ) : Command()
+    ) : Message
 
     data class Notice(
         val message: String?,
         val timestamp: Instant,
         val messageId: String?,
-    ) : Command()
+    ) : Message
 
     data class ClearChat(
         val timestamp: Instant,
-    ) : Command()
+    ) : Message
 
     data class Timeout(
         val duration: Duration?,
         val timestamp: Instant,
         val userLogin: String?,
-    ) : Command()
+    ) : Message
 
     data class Ban(
         val timestamp: Instant,
         val userLogin: String?,
-    ) : Command()
+    ) : Message
 
     data class ClearMessage(
         val message: String?,
         val timestamp: Instant,
         val userLogin: String?,
-    ) : Command()
-
-    data class SendMessageError(
-        val timestamp: Instant,
-        val throwable: Throwable?,
-    ) : Command()
-}
-
-data class ChatMessage(
-    val id: String?,
-    val userId: String?,
-    val userLogin: String,
-    val userName: String,
-    val message: String?,
-    val color: String?,
-    val isAction: Boolean = false,
-    val embeddedEmotes: List<Emote>?,
-    val badges: List<Badge>?,
-    val isFirst: Boolean = false,
-    val systemMsg: String?,
-    val timestamp: Instant,
-    val rewardId: String?,
-    val inReplyTo: InReplyTo?,
-    val msgId: String?,
-) : IrcEvent {
-
-    @Immutable
-    data class InReplyTo(
-        val id: String,
-        val userName: String,
-        val message: String,
-        val userId: String,
-        val userLogin: String,
-    )
+    ) : Message
 }
 
 object PingCommand : IrcEvent

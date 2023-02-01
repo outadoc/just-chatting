@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandl
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
 import fr.outadoc.justchatting.component.twitch.websocket.eventsub.EventSubWebSocket
-import fr.outadoc.justchatting.component.twitch.websocket.irc.IrcEventMapper
+import fr.outadoc.justchatting.component.twitch.websocket.irc.IrcMessageMapper
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.TwitchIrcCommandParser
@@ -72,7 +72,7 @@ val chatModule = module {
     single { ChatConnectionPool(get()) }
 
     single { TwitchIrcCommandParser(get()) }
-    single { IrcEventMapper(get()) }
+    single { IrcMessageMapper(get()) }
 
     single { get<AppDatabase>().recentEmotes() }
 

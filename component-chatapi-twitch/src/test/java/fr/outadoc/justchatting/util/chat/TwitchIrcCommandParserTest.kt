@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEmote
 import fr.outadoc.justchatting.component.twitch.websocket.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ChatMessage
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Command
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.HostModeState
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
@@ -99,7 +99,7 @@ class TwitchIrcCommandParserTest {
     fun `Parse sub gift USERNOTICE`() = test {
         input { "@badge-info=subscriber/41;badges=subscriber/36,bits/1000;color=#FFFFFF;display-name=Frfun;emotes=emotesv2_53f30305e78246aea4bc24d299dd09e7:0-5/emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8:25-38;flags=;id=4c5a38ff-6bb3-4cad-a555-dc8a736cfc38;login=frfun;mod=0;msg-id=resub;msg-param-cumulative-months=41;msg-param-months=0;msg-param-multimonth-duration=0;msg-param-multimonth-tenure=0;msg-param-should-share-streak=1;msg-param-streak-months=40;msg-param-sub-plan-name=Channel\\sSubscription\\s(maghla);msg-param-sub-plan=Prime;msg-param-was-gifted=false;room-id=131215608;subscriber=1;system-msg=Frfun\\ssubscribed\\swith\\sPrime.\\sThey've\\ssubscribed\\sfor\\s41\\smonths,\\scurrently\\son\\sa\\s40\\smonth\\sstreak!;tmi-sent-ts=1657298959852;user-id=99037844;user-type= :tmi.twitch.tv USERNOTICE #maghla :coxPet pat pat le requin moumou4Content" }
         expected {
-            Command.UserNotice(
+            Message.UserNotice(
                 systemMsg = "Frfun subscribed with Prime. They've subscribed for 41 months, currently on a 40 month streak!",
                 timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
                 msgId = "resub",
@@ -146,7 +146,7 @@ class TwitchIrcCommandParserTest {
     fun `Parse announcement USERNOTICE`() = test {
         input { "@badge-info=subscriber/11;badges=moderator/1,subscriber/3009;color=#8A2BE2;display-name=pepitipepibot;emotes=;flags=;id=54b4d931-8db5-47ad-b6e7-6687cdbbb8ec;login=pepitipepibot;mod=1;msg-id=announcement;room-id=402890635;subscriber=1;system-msg=;tmi-sent-ts=1657301015335;user-id=651859616;user-type=mod :tmi.twitch.tv USERNOTICE #pelerine :LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !" }
         expected {
-            Command.UserNotice(
+            Message.UserNotice(
                 timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
                 msgId = "announcement",
                 userMessage = ChatMessage(
@@ -182,7 +182,7 @@ class TwitchIrcCommandParserTest {
     fun `Parse raid USERNOTICE`() = test {
         input { "@badge-info=;badges=hype-train/2;color=#C8C8C8;display-name=maxent__;emotes=;flags=;historical=1;id=5bca8513-e6b2-455b-a898-1cc7d3bf5332;login=maxent__;mod=0;msg-id=raid;msg-param-displayName=maxent__;msg-param-login=maxent__;msg-param-profileImageURL=https://static-cdn.jtvnw.net/jtv_user_pictures/12a5e085-db37-4e5d-b59a-77eb9f6dd8a2-profile_image-70x70.png;msg-param-viewerCount=3;rm-received-ts=1657303912918;room-id=402890635;subscriber=0;system-msg=3\\sraiders\\sfrom\\smaxent__\\shave\\sjoined!;tmi-sent-ts=1657303912832;user-id=563254735;user-type= :tmi.twitch.tv USERNOTICE #pelerine\n" }
         expected {
-            Command.UserNotice(
+            Message.UserNotice(
                 systemMsg = "3 raiders from maxent__ have joined!",
                 timestamp = Instant.parse("2022-07-08T18:11:52.832Z"),
                 msgId = "raid",
@@ -229,7 +229,7 @@ class TwitchIrcCommandParserTest {
     fun `Parse CLEARCHAT permanent ban message`() = test {
         input { "@room-id=12345678;target-user-id=87654321;tmi-sent-ts=1642715756806 :tmi.twitch.tv CLEARCHAT #dallas :ronni" }
         expected {
-            Command.Ban(
+            Message.Ban(
                 userLogin = "ronni",
                 timestamp = Instant.parse("2022-01-20T21:55:56.806Z"),
             )
@@ -240,7 +240,7 @@ class TwitchIrcCommandParserTest {
     fun `Parse CLEARCHAT temporary ban message`() = test {
         input { "@ban-duration=350;room-id=12345678;target-user-id=87654321;tmi-sent-ts=1642719320727 :tmi.twitch.tv CLEARCHAT #dallas :ronni" }
         expected {
-            Command.Timeout(
+            Message.Timeout(
                 userLogin = "ronni",
                 duration = 350.seconds,
                 timestamp = Instant.parse("2022-01-20T22:55:20.727Z"),
@@ -252,7 +252,7 @@ class TwitchIrcCommandParserTest {
     fun `Parse CLEARCHAT global clear message`() = test {
         input { "@room-id=12345678;tmi-sent-ts=1642715695392 :tmi.twitch.tv CLEARCHAT #dallas" }
         expected {
-            Command.ClearChat(
+            Message.ClearChat(
                 timestamp = Instant.parse("2022-01-20T21:54:55.392Z"),
             )
         }

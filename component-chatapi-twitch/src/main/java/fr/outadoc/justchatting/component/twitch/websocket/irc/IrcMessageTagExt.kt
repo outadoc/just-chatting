@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.component.twitch.websocket.irc
 import fr.outadoc.justchatting.component.chatapi.common.ChatEmote
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.twitch.utils.map
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ChatMessage
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.minutes
@@ -46,8 +46,8 @@ fun Map<String, String?>.parseTimestamp(): Instant? {
     return prop?.toLong()?.let { Instant.fromEpochMilliseconds(it) }
 }
 
-fun Map<String, String?>.parseParentMessage(): ChatMessage.InReplyTo? {
-    return ChatMessage.InReplyTo(
+fun Map<String, String?>.parseParentMessage(): Message.ChatMessage.InReplyTo? {
+    return Message.ChatMessage.InReplyTo(
         id = this["reply-parent-msg-id"] ?: return null,
         message = this["reply-parent-msg-body"] ?: return null,
         userId = this["reply-parent-user-id"] ?: return null,

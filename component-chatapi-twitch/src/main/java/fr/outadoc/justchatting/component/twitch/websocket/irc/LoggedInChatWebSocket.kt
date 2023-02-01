@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Command
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.UserState
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -55,7 +55,7 @@ class LoggedInChatWebSocket(
     private val clock: Clock,
     private val context: Context,
     private val parser: TwitchIrcCommandParser,
-    private val mapper: IrcEventMapper,
+    private val mapper: IrcMessageMapper,
     private val httpClient: HttpClient,
     private val preferencesRepository: PreferenceRepository,
     private val channelLogin: String,
@@ -157,7 +157,7 @@ class LoggedInChatWebSocket(
         logInfo<LoggedInChatWebSocket> { "received: $received" }
 
         when (val command = parser.parse(received)) {
-            is Command.Notice -> {
+            is Message.Notice -> {
                 mapper.map(command)
                     ?.let { event -> _flow.emit(event) }
             }
@@ -218,7 +218,7 @@ class LoggedInChatWebSocket(
         private val clock: Clock,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
-        private val mapper: IrcEventMapper,
+        private val mapper: IrcMessageMapper,
         private val preferencesRepository: PreferenceRepository,
         private val httpClient: HttpClient,
         private val context: Context,

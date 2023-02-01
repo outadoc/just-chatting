@@ -4,20 +4,14 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.twitch.R
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ChatMessage
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Command
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.HostModeState
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.RoomStateDelta
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.UserState
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import kotlinx.collections.immutable.toImmutableList
 
-class IrcEventMapper(private val context: Context) {
+class IrcMessageMapper(private val context: Context) {
 
-    fun map(ircEvent: IrcEvent): ChatEvent? = with(ircEvent) {
+    fun map(ircEvent: Message): ChatEvent = with(ircEvent) {
         when (this) {
-            is Command.ClearChat -> {
+            is Message.ClearChat -> {
                 ChatEvent.Highlighted(
                     header = context.getString(R.string.chat_clear),
                     data = null,
@@ -25,7 +19,7 @@ class IrcEventMapper(private val context: Context) {
                 )
             }
 
-            is Command.Ban -> {
+            is Message.Ban -> {
                 ChatEvent.Highlighted(
                     header = context.getString(R.string.chat_ban, userLogin),
                     data = null,
@@ -33,7 +27,7 @@ class IrcEventMapper(private val context: Context) {
                 )
             }
 
-            is Command.Timeout -> {
+            is Message.Timeout -> {
                 ChatEvent.Highlighted(
                     header = context.getString(R.string.chat_timeout, userLogin, duration),
                     data = null,
@@ -41,7 +35,7 @@ class IrcEventMapper(private val context: Context) {
                 )
             }
 
-            is Command.ClearMessage -> {
+            is Message.ClearMessage -> {
                 ChatEvent.Highlighted(
                     header = context.getString(R.string.chat_clearmsg, userLogin, message),
                     data = null,
@@ -49,7 +43,7 @@ class IrcEventMapper(private val context: Context) {
                 )
             }
 
-            is Command.Notice -> {
+            is Message.Notice -> {
                 ChatEvent.Highlighted(
                     header = messageId?.getNoticeString(context = context, message = message)
                         ?: message,
@@ -58,18 +52,7 @@ class IrcEventMapper(private val context: Context) {
                 )
             }
 
-            is Command.SendMessageError -> {
-                ChatEvent.Highlighted(
-                    header = context.getString(
-                        R.string.chat_send_msg_error,
-                        throwable.toString(),
-                    ),
-                    data = null,
-                    timestamp = timestamp,
-                )
-            }
-
-            is Command.UserNotice -> {
+            is Message.UserNotice -> {
                 val userMessage = userMessage
                 if (userMessage == null) {
                     ChatEvent.Highlighted(
@@ -99,7 +82,7 @@ class IrcEventMapper(private val context: Context) {
                 }
             }
 
-            is ChatMessage -> {
+            is Message.ChatMessage -> {
                 val msgId = msgId
                 val (header, icon) = when {
                     systemMsg != null -> {
@@ -158,12 +141,6 @@ class IrcEventMapper(private val context: Context) {
                     )
                 }
             }
-
-            PingCommand,
-            is RoomStateDelta,
-            is UserState,
-            is HostModeState,
-            -> null
         }
     }
 }

@@ -5,10 +5,9 @@ import chat.willow.kale.irc.message.IrcMessageParser
 import chat.willow.kale.irc.message.rfc1459.NoticeMessage
 import chat.willow.kale.irc.message.rfc1459.PingMessage
 import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ChatMessage
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Command
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.HostModeState
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.RoomStateDelta
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.UserState
@@ -39,7 +38,7 @@ class TwitchIrcCommandParser(private val clock: Clock) {
         return parsedMessage
     }
 
-    private fun parseMessage(ircMessage: IrcMessage): ChatMessage? {
+    private fun parseMessage(ircMessage: IrcMessage): Message.ChatMessage? {
         val privateMessage = PrivMsgMessage.Message.Parser.parse(ircMessage)
             ?: return null
 
@@ -49,7 +48,7 @@ class TwitchIrcCommandParser(private val clock: Clock) {
 
         val message = actionGroups?.groupValues?.get(1) ?: privateMessage.message
 
-        return ChatMessage(
+        return Message.ChatMessage(
             id = ircMessage.tags.id,
             userId = ircMessage.tags.userId,
             userLogin = ircMessage.tags.login ?: privateMessage.source.nick,
@@ -68,8 +67,8 @@ class TwitchIrcCommandParser(private val clock: Clock) {
         )
     }
 
-    private fun parseUserNotice(ircMessage: IrcMessage): Command.UserNotice {
-        return Command.UserNotice(
+    private fun parseUserNotice(ircMessage: IrcMessage): Message.UserNotice {
+        return Message.UserNotice(
             systemMsg = ircMessage.tags.systemMsg,
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             userMessage = parseMessage(ircMessage),
@@ -77,43 +76,43 @@ class TwitchIrcCommandParser(private val clock: Clock) {
         )
     }
 
-    private fun parseClearMessage(ircMessage: IrcMessage): Command.ClearMessage {
-        return Command.ClearMessage(
+    private fun parseClearMessage(ircMessage: IrcMessage): Message.ClearMessage {
+        return Message.ClearMessage(
             message = ircMessage.parameters.getOrNull(1),
             userLogin = ircMessage.tags.login,
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
         )
     }
 
-    private fun parseClearChat(ircMessage: IrcMessage): Command {
+    private fun parseClearChat(ircMessage: IrcMessage): Message {
         val user = ircMessage.parameters.getOrNull(1)
         val duration = ircMessage.tags.banDuration
 
         return when {
             user == null ->
-                Command.ClearChat(
+                Message.ClearChat(
                     timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
                 )
 
             duration != null ->
-                Command.Timeout(
+                Message.Timeout(
                     userLogin = user,
                     duration = duration,
                     timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
                 )
 
-            else -> Command.Ban(
+            else -> Message.Ban(
                 userLogin = user,
                 timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             )
         }
     }
 
-    private fun parseNotice(ircMessage: IrcMessage): Command.Notice? {
+    private fun parseNotice(ircMessage: IrcMessage): Message.Notice? {
         val notice = NoticeMessage.Command.Parser.parse(ircMessage)
             ?: return null
 
-        return Command.Notice(
+        return Message.Notice(
             message = notice.message,
             messageId = ircMessage.tags.messageId,
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),

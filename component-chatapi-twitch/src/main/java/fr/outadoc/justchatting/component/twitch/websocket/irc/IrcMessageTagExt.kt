@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
+import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEmote
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.twitch.utils.map
@@ -33,12 +34,12 @@ fun Map<String, String?>.parseEmotes(message: String): List<Emote>? {
         }
 }
 
-fun Map<String, String?>.parseBadges(): List<fr.outadoc.justchatting.component.chatapi.common.Badge>? =
+fun Map<String, String?>.parseBadges(): List<Badge>? =
     this["badges"]
         ?.splitAndMakeMap(",", "/")
         ?.entries
         ?.mapNotNull { (key, value) ->
-            value?.let { fr.outadoc.justchatting.component.chatapi.common.Badge(key, value) }
+            value?.let { Badge(key, value) }
         }
 
 fun Map<String, String?>.parseTimestamp(): Instant? {

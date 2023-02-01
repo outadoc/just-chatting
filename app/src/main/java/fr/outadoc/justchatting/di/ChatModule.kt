@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessa
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.PubSubWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.broadcastsettingsupdate.PubSubBroadcastSettingsUpdatePlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.channelpoints.PubSubChannelPointsPlugin
+import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.poll.PubSubPollPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.prediction.PubSubPredictionPlugin
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource
@@ -47,14 +48,13 @@ val chatModule = module {
             listOf(
                 get<LiveChatWebSocket.Factory>(),
                 get<LoggedInChatWebSocket.Factory>(),
-                // TODO replace PubSub with EventSub
-                // get<EventSubWebSocket.Factory>(),
                 get<PubSubWebSocket.Factory>(),
             )
         }
     }
 
     single { PubSubChannelPointsPlugin(get(), get(), get()) }
+    single { PubSubPollPlugin(get(), get()) }
     single { PubSubPredictionPlugin(get(), get()) }
     single { PubSubBroadcastSettingsUpdatePlugin(get(), get()) }
 
@@ -62,6 +62,7 @@ val chatModule = module {
         PubSubPluginsProvider {
             listOf(
                 get<PubSubChannelPointsPlugin>(),
+                get<PubSubPollPlugin>(),
                 get<PubSubPredictionPlugin>(),
                 get<PubSubBroadcastSettingsUpdatePlugin>(),
             )

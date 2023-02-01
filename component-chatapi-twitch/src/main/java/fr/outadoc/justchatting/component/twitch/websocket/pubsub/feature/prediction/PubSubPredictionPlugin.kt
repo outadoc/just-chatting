@@ -15,15 +15,15 @@ class PubSubPredictionPlugin(
     override fun getTopic(channelId: String): String =
         "predictions-channel-v1.$channelId"
 
-    override fun parseMessage(message: String): List<ChatEvent> {
-        val res = json.decodeFromString<PubSubPredictionMessage>(message)
-        val event = when (val event = res.data.event) {
+    override fun parseMessage(payload: String): List<ChatEvent> {
+        val message = json.decodeFromString<PubSubPredictionMessage>(payload)
+        val event = when (val prediction = message.data.event) {
             is PubSubPredictionMessage.Event.Active -> {
                 ChatEvent.Highlighted(
                     header = buildString {
                         appendLine("Prediction in progress!")
-                        appendLine(event.title)
-                        event.outcomes.forEach { outcome ->
+                        appendLine(prediction.title)
+                        prediction.outcomes.forEach { outcome ->
                             appendLine(
                                 "${outcome.title}: ${outcome.totalPoints.formatNumber()}",
                             )
@@ -38,8 +38,8 @@ class PubSubPredictionPlugin(
                 ChatEvent.Highlighted(
                     header = buildString {
                         appendLine("Prediction locked!")
-                        appendLine(event.title)
-                        event.outcomes.forEach { outcome ->
+                        appendLine(prediction.title)
+                        prediction.outcomes.forEach { outcome ->
                             appendLine(
                                 "${outcome.title}: ${outcome.totalPoints.formatNumber()}",
                             )
@@ -53,14 +53,14 @@ class PubSubPredictionPlugin(
             is PubSubPredictionMessage.Event.ResolvePending -> null
             is PubSubPredictionMessage.Event.Resolved -> {
                 val winner: PubSubPredictionMessage.Outcome =
-                    event.outcomes.first { outcome -> outcome.id == event.winningOutcomeId }
+                    prediction.outcomes.first { outcome -> outcome.id == prediction.winningOutcomeId }
 
                 ChatEvent.Highlighted(
                     header = buildString {
                         appendLine("Prediction ended!")
-                        appendLine(event.title)
+                        appendLine(prediction.title)
                         appendLine("Winner: ${winner.title}")
-                        event.outcomes.forEach { outcome ->
+                        prediction.outcomes.forEach { outcome ->
                             appendLine(
                                 "${outcome.title}: ${outcome.totalPoints.formatNumber()}",
                             )

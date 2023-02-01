@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.prediction
 
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.utils.core.formatNumber
 import kotlinx.datetime.Clock
 import kotlinx.serialization.decodeFromString
@@ -9,7 +10,7 @@ import kotlinx.serialization.json.Json
 class PubSubPredictionPlugin(
     private val clock: Clock,
     private val json: Json,
-) : fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin<PubSubPredictionMessage> {
+) : PubSubPlugin<PubSubPredictionMessage> {
 
     override fun getTopic(channelId: String): String =
         "predictions-channel-v1.$channelId"
@@ -27,7 +28,7 @@ class PubSubPredictionPlugin(
                                 "${outcome.title}: ${outcome.totalPoints.formatNumber()}",
                             )
                         }
-                    },
+                    }.trimEnd(),
                     data = null,
                     timestamp = clock.now(),
                 )
@@ -43,7 +44,7 @@ class PubSubPredictionPlugin(
                                 "${outcome.title}: ${outcome.totalPoints.formatNumber()}",
                             )
                         }
-                    },
+                    }.trimEnd(),
                     data = null,
                     timestamp = clock.now(),
                 )
@@ -64,7 +65,7 @@ class PubSubPredictionPlugin(
                                 "${outcome.title}: ${outcome.totalPoints.formatNumber()}",
                             )
                         }
-                    },
+                    }.trimEnd(),
                     data = null,
                     timestamp = clock.now(),
                 )

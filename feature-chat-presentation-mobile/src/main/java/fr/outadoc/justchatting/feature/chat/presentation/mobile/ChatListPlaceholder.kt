@@ -13,7 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.placeholder.PlaceholderHighlight
 import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ScreenPreviews
@@ -66,6 +68,7 @@ fun ChatListPlaceholder(modifier: Modifier = Modifier) {
                         .placeholder(
                             visible = true,
                             color = MaterialTheme.colorScheme.surfaceVariant,
+                            highlight = PlaceholderHighlight.shimmer(),
                         ),
                 )
             }

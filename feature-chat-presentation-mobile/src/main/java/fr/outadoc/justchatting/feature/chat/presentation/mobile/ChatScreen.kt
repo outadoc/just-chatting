@@ -1,11 +1,8 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
@@ -22,24 +19,12 @@ fun ChatScreen(
 ) {
     when (state) {
         ChatViewModel.State.Initial -> {
-            Column(
-                modifier = modifier,
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                CircularProgressIndicator()
-            }
+            ChatListPlaceholder(modifier = modifier.fillMaxSize())
         }
 
         is ChatViewModel.State.Chatting -> {
             if (state.chatMessages.isEmpty()) {
-                Column(
-                    modifier = modifier,
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    CircularProgressIndicator()
-                }
+                ChatListPlaceholder(modifier = modifier.fillMaxSize())
             } else {
                 ChatListContainer(
                     modifier = modifier,

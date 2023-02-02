@@ -1,4 +1,5 @@
 [versions]
+accompanist = "0.28.0"
 android = "7.4.0"
 coil = "2.2.2"
 compose = "2023.01.00"
@@ -20,8 +21,9 @@ licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.
 spotless = { id = "com.diffplug.spotless", version = "6.14.0" }
 
 [libraries]
-accompanist-systemuicontroller = "com.google.accompanist:accompanist-systemuicontroller:0.28.0"
-accompanist-webview = "com.google.accompanist:accompanist-webview:0.28.0"
+accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
+accompanist-webview = { module = "com.google.accompanist:accompanist-webview", version.ref = "accompanist" }
 androidx-activity-compose = "androidx.activity:activity-compose:1.6.1"
 androidx-annotation = "androidx.annotation:annotation:1.5.0"
 androidx-appcompat = "androidx.appcompat:appcompat:1.5.1"

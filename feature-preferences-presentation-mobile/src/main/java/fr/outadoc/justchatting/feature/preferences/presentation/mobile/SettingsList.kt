@@ -17,7 +17,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,7 +26,6 @@ import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDepe
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.plus
-import org.koin.androidx.compose.get
 
 @ThemePreviews
 @Composable
@@ -40,6 +38,8 @@ fun SettingsListPreview() {
             onOpenBubblePreferences = {},
             onLogoutClick = {},
             onShareLogsClick = {},
+            readDependencies = { emptyList() },
+            versionName = "1.2.3",
         )
     }
 }
@@ -55,7 +55,8 @@ fun SettingsList(
     onShareLogsClick: () -> Unit,
     itemInsets: PaddingValues = PaddingValues(),
     insets: PaddingValues = PaddingValues(),
-    readDependencies: ReadExternalDependenciesList = get(),
+    readDependencies: ReadExternalDependenciesList,
+    versionName: String,
 ) {
     val uriHandler = LocalUriHandler.current
     var deps: List<Dependency> by remember { mutableStateOf(emptyList()) }
@@ -273,7 +274,6 @@ fun SettingsList(
         }
 
         item {
-            val context = LocalContext.current
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 title = { Text(text = stringResource(R.string.app_name)) },
@@ -281,7 +281,7 @@ fun SettingsList(
                     Text(
                         text = stringResource(
                             R.string.settings_about_version,
-                            context.applicationVersionName ?: "",
+                            versionName,
                         ),
                     )
                 },

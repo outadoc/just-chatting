@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
+import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -51,6 +52,8 @@ fun SettingsContent(
         onOpenBubblePreferences = onOpenBubblePreferences,
         onLogoutClick = viewModel::logout,
         onShareLogsClick = viewModel::onShareLogsClick,
+        readDependencies = get(),
         itemInsets = PaddingValues(horizontal = 16.dp),
+        versionName = context.applicationVersionName.orEmpty(),
     )
 }

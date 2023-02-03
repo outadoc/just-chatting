@@ -65,6 +65,7 @@ class EventSubWebSocket(
             ConnectionStatus(
                 isAlive = false,
                 preventSendingMessages = false,
+                registeredListeners = 0,
             ),
         )
 
@@ -85,6 +86,8 @@ class EventSubWebSocket(
     override fun start() {
         socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
             logDebug<EventSubWebSocket> { "Starting job" }
+
+            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
             while (isActive) {
                 if (isNetworkAvailable) {
@@ -171,6 +174,7 @@ class EventSubWebSocket(
 
     override fun disconnect() {
         scope.launch {
+            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
             doDisconnect()
         }
     }

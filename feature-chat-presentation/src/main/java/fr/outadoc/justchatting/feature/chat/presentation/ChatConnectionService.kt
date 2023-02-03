@@ -11,6 +11,10 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.utils.logging.logInfo
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 
 class ChatConnectionService : Service() {
@@ -44,14 +48,80 @@ class ChatConnectionService : Service() {
         }
     }
 
-    private val connectionPool: ChatConnectionPool by inject()
     private val chatNotifier: ChatNotifier by inject()
+
+    private val connectionPool: ChatConnectionPool by inject()
+
+    private lateinit var job: Job
+    private val coroutineScope: CoroutineScope
+        get() = CoroutineScope(Dispatchers.Default + job)
+
+    override fun onCreate() {
+        super.onCreate()
+
+        postForegroundNotification()
+
+        job = Job()
+
+        coroutineScope.launch {
+            connectionPool.connectionStatus.collect { status ->
+                if (status.registeredListeners < 1) {
+                    logInfo<ChatConnectionService> { "Pool has no active threads left, stopping background service" }
+
+                    if (Build.VERSION.SDK_INT >= 24) {
+                        stopForeground(STOP_FOREGROUND_REMOVE)
+                    } else {
+                        @Suppress("DEPRECATION")
+                        stopForeground(true)
+                    }
+
+                    stopSelf()
+                } else {
+                    logInfo<ChatConnectionService> { "Pool still has active threads left, service will keep running" }
+                }
+            }
+        }
+    }
 
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         logInfo<ChatConnectionService> { "Received intent $intent" }
 
+        postForegroundNotification()
+
+        val channelId = intent?.getStringExtra(EXTRA_CHANNEL_ID)
+        if (channelId != null) {
+            when (intent.action) {
+                ACTION_REPLY -> {
+                    val quickReplyResult: CharSequence? =
+                        RemoteInput.getResultsFromIntent(intent)
+                            ?.getCharSequence(KEY_QUICK_REPLY_TEXT)
+
+                    if (quickReplyResult != null) {
+                        connectionPool.sendMessage(
+                            channelId = channelId,
+                            message = quickReplyResult,
+                        )
+                    }
+                }
+
+                ACTION_STOP -> {
+                    logInfo<ChatConnectionService> { "Stopping thread for $channelId" }
+
+                    connectionPool.stop(channelId)
+                    chatNotifier.dismissNotification(
+                        context = this,
+                        channelId = channelId,
+                    )
+                }
+            }
+        }
+
+        return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun postForegroundNotification() {
         NotificationManagerCompat.from(this)
             .createNotificationChannel(
                 NotificationChannelCompat.Builder(
@@ -75,54 +145,15 @@ class ChatConnectionService : Service() {
             .build()
 
         startForeground(ONGOING_NOTIFICATION_ID, notification)
-
-        val channelId = intent?.getStringExtra(EXTRA_CHANNEL_ID)
-        when (intent?.action) {
-            ACTION_REPLY -> {
-                val quickReplyResult: CharSequence? =
-                    RemoteInput.getResultsFromIntent(intent)
-                        ?.getCharSequence(KEY_QUICK_REPLY_TEXT)
-
-                if (channelId != null && quickReplyResult != null) {
-                    connectionPool.sendMessage(
-                        channelId = channelId,
-                        message = quickReplyResult,
-                    )
-                }
-            }
-
-            ACTION_STOP -> {
-                if (channelId != null) {
-                    logInfo<ChatConnectionService> { "Stopping thread for $channelId" }
-                    connectionPool.stop(channelId)
-                    chatNotifier.dismissNotification(
-                        context = this,
-                        channelId = channelId,
-                    )
-                }
-
-                if (!connectionPool.hasActiveThreads) {
-                    logInfo<ChatConnectionService> { "Pool has no active threads left, stopping background service" }
-
-                    if (Build.VERSION.SDK_INT >= 24) {
-                        stopForeground(STOP_FOREGROUND_REMOVE)
-                    } else {
-                        @Suppress("DEPRECATION")
-                        stopForeground(true)
-                    }
-
-                    stopSelf()
-                } else {
-                    logInfo<ChatConnectionService> { "Pool still has active threads left, service will keep running" }
-                }
-            }
-        }
-
-        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onLowMemory() {
         super.onLowMemory()
         connectionPool.dispose()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 }

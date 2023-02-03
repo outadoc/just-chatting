@@ -82,6 +82,7 @@ class LiveChatWebSocket private constructor(
             ConnectionStatus(
                 isAlive = false,
                 preventSendingMessages = false,
+                registeredListeners = 0,
             ),
         )
 
@@ -101,6 +102,8 @@ class LiveChatWebSocket private constructor(
     override fun start() {
         socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
             logDebug<LiveChatWebSocket> { "Starting job" }
+
+            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
             loadRecentMessages()
 
@@ -199,6 +202,7 @@ class LiveChatWebSocket private constructor(
 
     override fun disconnect() {
         scope.launch {
+            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
             doDisconnect()
         }
     }

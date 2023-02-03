@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.domain
 
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import kotlinx.coroutines.CoroutineScope
@@ -48,12 +49,13 @@ class AggregateChatEventHandler(
     override val commandFlow: Flow<ChatEvent> =
         handlers.map { handler -> handler.commandFlow }.merge()
 
-    override val connectionStatus: StateFlow<fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus> =
+    override val connectionStatus: StateFlow<ConnectionStatus> =
         combine(handlers.map { handler -> handler.connectionStatus }) { statuses ->
             statuses.reduce { acc, status ->
-                fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus(
+                ConnectionStatus(
                     isAlive = acc.isAlive && status.isAlive,
                     preventSendingMessages = acc.preventSendingMessages || status.preventSendingMessages,
+                    registeredListeners = acc.registeredListeners + status.registeredListeners,
                 )
             }
         }
@@ -61,7 +63,7 @@ class AggregateChatEventHandler(
             .stateIn(
                 coroutineScope,
                 started = SharingStarted.WhileSubscribed(),
-                initialValue = fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus(),
+                initialValue = ConnectionStatus(),
             )
 
     override fun send(message: CharSequence, inReplyToId: String?) {

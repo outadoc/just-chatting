@@ -78,6 +78,7 @@ class LoggedInChatWebSocket(
             ConnectionStatus(
                 isAlive = false,
                 preventSendingMessages = false,
+                registeredListeners = 0,
             ),
         )
 
@@ -97,6 +98,8 @@ class LoggedInChatWebSocket(
     override fun start() {
         socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
             logDebug<LoggedInChatWebSocket> { "Starting job" }
+
+            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
             while (isActive) {
                 if (isNetworkAvailable) {
@@ -180,6 +183,7 @@ class LoggedInChatWebSocket(
 
     override fun disconnect() {
         scope.launch {
+            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
             doDisconnect()
         }
     }

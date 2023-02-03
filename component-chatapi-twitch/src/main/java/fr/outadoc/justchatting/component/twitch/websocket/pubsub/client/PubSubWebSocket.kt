@@ -66,6 +66,7 @@ class PubSubWebSocket(
             ConnectionStatus(
                 isAlive = false,
                 preventSendingMessages = false,
+                registeredListeners = 0,
             ),
         )
 
@@ -85,6 +86,8 @@ class PubSubWebSocket(
     override fun start() {
         socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
             logDebug<PubSubWebSocket> { "Starting job" }
+
+            _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
             while (isActive) {
                 if (isNetworkAvailable) {
@@ -176,6 +179,7 @@ class PubSubWebSocket(
 
     override fun disconnect() {
         scope.launch {
+            _connectionStatus.update { status -> status.copy(registeredListeners = 0) }
             doDisconnect()
         }
     }

@@ -19,7 +19,7 @@ class PubSubPredictionPlugin(
         val message = json.decodeFromString<PubSubPredictionMessage>(payload)
         val event = when (val prediction = message.data.event) {
             is PubSubPredictionMessage.Event.Active -> {
-                ChatEvent.Highlighted(
+                ChatEvent.Message.Highlighted(
                     header = buildString {
                         appendLine("Prediction in progress!")
                         appendLine(prediction.title)
@@ -35,7 +35,7 @@ class PubSubPredictionPlugin(
             }
 
             is PubSubPredictionMessage.Event.Locked -> {
-                ChatEvent.Highlighted(
+                ChatEvent.Message.Highlighted(
                     header = buildString {
                         appendLine("Prediction locked!")
                         appendLine(prediction.title)
@@ -55,7 +55,7 @@ class PubSubPredictionPlugin(
                 val winner: PubSubPredictionMessage.Outcome =
                     prediction.outcomes.first { outcome -> outcome.id == prediction.winningOutcomeId }
 
-                ChatEvent.Highlighted(
+                ChatEvent.Message.Highlighted(
                     header = buildString {
                         appendLine("Prediction ended!")
                         appendLine(prediction.title)

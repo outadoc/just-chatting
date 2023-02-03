@@ -19,7 +19,7 @@ class PubSubBroadcastSettingsUpdatePlugin(
             is PubSubBroadcastSettingsUpdateMessage.Update -> {
                 listOfNotNull(
                     if (message.status != message.oldStatus) {
-                        ChatEvent.Highlighted(
+                        ChatEvent.Message.Highlighted(
                             header = "Stream title changed to \"${message.status}\"",
                             timestamp = clock.now(),
                             data = null,
@@ -28,7 +28,7 @@ class PubSubBroadcastSettingsUpdatePlugin(
                         null
                     },
                     if (message.game != message.oldGame) {
-                        ChatEvent.Highlighted(
+                        ChatEvent.Message.Highlighted(
                             header = "Gamed changed to \"${message.game}\"",
                             timestamp = clock.now(),
                             data = null,

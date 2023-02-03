@@ -12,7 +12,7 @@ class IrcMessageMapper(private val context: Context) {
     fun map(ircEvent: Message): ChatEvent = with(ircEvent) {
         when (this) {
             is Message.ClearChat -> {
-                ChatEvent.Highlighted(
+                ChatEvent.Message.Highlighted(
                     header = context.getString(R.string.chat_clear),
                     data = null,
                     timestamp = timestamp,
@@ -20,7 +20,7 @@ class IrcMessageMapper(private val context: Context) {
             }
 
             is Message.Ban -> {
-                ChatEvent.Highlighted(
+                ChatEvent.Message.Highlighted(
                     header = context.getString(R.string.chat_ban, userLogin),
                     data = null,
                     timestamp = timestamp,
@@ -28,7 +28,7 @@ class IrcMessageMapper(private val context: Context) {
             }
 
             is Message.Timeout -> {
-                ChatEvent.Highlighted(
+                ChatEvent.Message.Highlighted(
                     header = context.getString(R.string.chat_timeout, userLogin, duration),
                     data = null,
                     timestamp = timestamp,
@@ -36,7 +36,7 @@ class IrcMessageMapper(private val context: Context) {
             }
 
             is Message.ClearMessage -> {
-                ChatEvent.Highlighted(
+                ChatEvent.Message.Highlighted(
                     header = context.getString(R.string.chat_clearmsg, userLogin, message),
                     data = null,
                     timestamp = timestamp,
@@ -44,7 +44,7 @@ class IrcMessageMapper(private val context: Context) {
             }
 
             is Message.Notice -> {
-                ChatEvent.Highlighted(
+                ChatEvent.Message.Highlighted(
                     header = messageId?.getNoticeString(context = context, message = message)
                         ?: message,
                     data = null,
@@ -55,14 +55,14 @@ class IrcMessageMapper(private val context: Context) {
             is Message.UserNotice -> {
                 val userMessage = userMessage
                 if (userMessage == null) {
-                    ChatEvent.Highlighted(
+                    ChatEvent.Message.Highlighted(
                         header = systemMsg,
                         headerIconResId = msgId?.getMessageIdIcon(),
                         data = null,
                         timestamp = timestamp,
                     )
                 } else {
-                    ChatEvent.Highlighted(
+                    ChatEvent.Message.Highlighted(
                         header = systemMsg ?: msgId?.getMessageIdString(context),
                         headerIconResId = msgId?.getMessageIdIcon(),
                         data = ChatEvent.Data(
@@ -128,14 +128,14 @@ class IrcMessageMapper(private val context: Context) {
                 )
 
                 if (header != null) {
-                    ChatEvent.Highlighted(
+                    ChatEvent.Message.Highlighted(
                         header = header,
                         headerIconResId = icon,
                         data = data,
                         timestamp = timestamp,
                     )
                 } else {
-                    ChatEvent.Simple(
+                    ChatEvent.Message.Simple(
                         data = data,
                         timestamp = timestamp,
                     )

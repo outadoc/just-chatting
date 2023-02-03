@@ -39,7 +39,7 @@ class PubSubPollPlugin(
     }
 
     private fun PubSubPollMessage.Data.Poll.toChatEvent(header: String): ChatEvent.Message {
-        return ChatEvent.Highlighted(
+        return ChatEvent.Message.Highlighted(
             header = buildString {
                 appendLine(header)
                 appendLine(title)

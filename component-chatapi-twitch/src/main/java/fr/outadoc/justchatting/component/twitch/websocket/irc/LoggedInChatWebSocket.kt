@@ -205,7 +205,7 @@ class LoggedInChatWebSocket(
             } catch (e: IOException) {
                 logError<LoggedInChatWebSocket>(e) { "Error sending message" }
                 _flow.emit(
-                    ChatEvent.Highlighted(
+                    ChatEvent.Message.Highlighted(
                         header = context.getString(
                             R.string.chat_send_msg_error,
                             e.toString(),

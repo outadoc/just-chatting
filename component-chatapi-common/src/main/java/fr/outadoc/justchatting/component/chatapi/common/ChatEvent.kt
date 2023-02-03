@@ -10,8 +10,23 @@ import kotlin.time.Duration
 sealed class ChatEvent {
 
     sealed class Message : ChatEvent() {
+
         abstract val data: Data?
         abstract val timestamp: Instant
+
+        @Immutable
+        data class Simple(
+            override val data: Data,
+            override val timestamp: Instant,
+        ) : Message()
+
+        @Immutable
+        data class Highlighted(
+            val header: String?,
+            val headerIconResId: Int? = null,
+            override val data: Data?,
+            override val timestamp: Instant,
+        ) : Message()
     }
 
     @Immutable
@@ -36,20 +51,6 @@ sealed class ChatEvent {
             val userLogin: String,
         )
     }
-
-    @Immutable
-    data class Simple(
-        override val data: Data,
-        override val timestamp: Instant,
-    ) : Message()
-
-    @Immutable
-    data class Highlighted(
-        val header: String?,
-        val headerIconResId: Int? = null,
-        override val data: Data?,
-        override val timestamp: Instant,
-    ) : Message()
 
     @Immutable
     data class RoomStateDelta(

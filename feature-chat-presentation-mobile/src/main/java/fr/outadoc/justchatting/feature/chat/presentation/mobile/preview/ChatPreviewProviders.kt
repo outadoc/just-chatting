@@ -13,7 +13,7 @@ val previewBadges = listOf(
 
 private val simpleEntries = sequence {
     yield(
-        ChatEvent.Simple(
+        ChatEvent.Message.Simple(
             data = ChatEvent.Data(
                 userName = "Hiccoz",
                 userId = "68552712",
@@ -34,7 +34,7 @@ private val simpleEntries = sequence {
     )
 
     yield(
-        ChatEvent.Simple(
+        ChatEvent.Message.Simple(
             data = ChatEvent.Data(
                 userName = "컬러히에",
                 userId = "232421548",
@@ -60,7 +60,7 @@ private val simpleEntries = sequence {
 
 private val highlightedEntries = sequence {
     yield(
-        ChatEvent.Highlighted(
+        ChatEvent.Message.Highlighted(
             data = ChatEvent.Data(
                 userName = "clo_chette_",
                 userId = "672551946",
@@ -80,7 +80,7 @@ private val highlightedEntries = sequence {
     )
 
     yield(
-        ChatEvent.Highlighted(
+        ChatEvent.Message.Highlighted(
             header = "This room is now in followers-only mode.",
             headerIconResId = null,
             data = null,

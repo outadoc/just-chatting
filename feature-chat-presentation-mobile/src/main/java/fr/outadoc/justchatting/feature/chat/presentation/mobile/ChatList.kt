@@ -144,8 +144,8 @@ fun ChatList(
             key = { _, item -> item.hashCode() },
             contentType = { _, item ->
                 when (item) {
-                    is ChatEvent.Highlighted -> 1
-                    is ChatEvent.Simple -> 2
+                    is ChatEvent.Message.Highlighted -> 1
+                    is ChatEvent.Message.Simple -> 2
                 }
             },
         ) { index, item ->

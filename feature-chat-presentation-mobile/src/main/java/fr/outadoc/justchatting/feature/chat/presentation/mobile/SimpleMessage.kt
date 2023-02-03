@@ -17,7 +17,7 @@ import kotlinx.collections.immutable.ImmutableMap
 @Composable
 fun SimpleMessage(
     modifier: Modifier = Modifier,
-    message: ChatEvent.Simple,
+    message: ChatEvent.Message.Simple,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,

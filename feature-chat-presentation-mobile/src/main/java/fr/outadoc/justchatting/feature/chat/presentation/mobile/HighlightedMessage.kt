@@ -29,7 +29,7 @@ import kotlinx.collections.immutable.ImmutableMap
 @Composable
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
-    message: ChatEvent.Highlighted,
+    message: ChatEvent.Message.Highlighted,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,

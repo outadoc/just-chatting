@@ -21,7 +21,7 @@ class PubSubChannelPointsPlugin(
         when (val message = json.decodeFromString<PubSubRewardMessage>(payload)) {
             is PubSubRewardMessage.Redeemed -> {
                 listOf(
-                    ChatEvent.Highlighted(
+                    ChatEvent.Message.Highlighted(
                         header = context.resources.getQuantityString(
                             R.plurals.user_redeemed,
                             message.data.redemption.reward.cost,

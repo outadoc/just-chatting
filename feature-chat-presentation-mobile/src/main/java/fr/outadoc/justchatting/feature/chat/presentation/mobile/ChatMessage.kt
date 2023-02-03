@@ -78,7 +78,7 @@ fun ChatMessage(
         }
 
         when (message) {
-            is ChatEvent.Highlighted -> {
+            is ChatEvent.Message.Highlighted -> {
                 HighlightedMessage(
                     message = message,
                     inlineContent = inlineContent,
@@ -87,7 +87,7 @@ fun ChatMessage(
                 )
             }
 
-            is ChatEvent.Simple -> {
+            is ChatEvent.Message.Simple -> {
                 SimpleMessage(
                     message = message,
                     inlineContent = inlineContent,

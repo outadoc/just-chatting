@@ -133,7 +133,7 @@ class LiveChatWebSocket private constructor(
                 send("JOIN #$channelLogin")
 
                 _flow.emit(
-                    ChatEvent.Highlighted(
+                    ChatEvent.Message.Highlighted(
                         header = context.getString(R.string.chat_join, channelLogin),
                         data = null,
                         timestamp = clock.now(),

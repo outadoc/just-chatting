@@ -65,10 +65,4 @@ sealed class ChatEvent {
     data class UserState(
         val emoteSets: ImmutableList<String> = persistentListOf(),
     ) : ChatEvent()
-
-    @Immutable
-    data class HostModeState(
-        val targetChannelLogin: String?,
-        val viewerCount: Int?,
-    ) : ChatEvent()
 }

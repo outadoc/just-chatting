@@ -8,7 +8,6 @@ import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.HostModeState
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
@@ -169,15 +168,6 @@ class LiveChatWebSocket private constructor(
 
             is Message -> {
                 _flow.emit(mapper.map(command))
-            }
-
-            is HostModeState -> {
-                _flow.emit(
-                    ChatEvent.HostModeState(
-                        targetChannelLogin = command.targetChannelLogin,
-                        viewerCount = command.viewerCount,
-                    ),
-                )
             }
 
             is RoomStateDelta -> {

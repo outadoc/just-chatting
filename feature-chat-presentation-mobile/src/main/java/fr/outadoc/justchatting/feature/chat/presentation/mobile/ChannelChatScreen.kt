@@ -38,19 +38,8 @@ fun ChannelChatScreen(channelLogin: String) {
 
     val isDarkTheme = MaterialTheme.colorScheme.isDark
 
-    val hostModeState = (state as? ChatViewModel.State.Chatting)?.hostModeState
     val user = (state as? ChatViewModel.State.Chatting)?.user
-
     val channelBranding: ChannelBranding = rememberChannelBranding(user)
-
-    LaunchedEffect(hostModeState) {
-        val targetUri = hostModeState?.targetChannelLogin?.createChannelDeeplink()
-        if (targetUri != null && hostModeState.viewerCount != null) {
-            // The broadcaster just launched a raid to another channel,
-            // so let's go there as well!
-            uriHandler.openUri(targetUri.toString())
-        }
-    }
 
     var isEmotePickerOpen by remember { mutableStateOf(false) }
 

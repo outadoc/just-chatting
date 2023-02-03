@@ -4,7 +4,6 @@ import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEmote
 import fr.outadoc.justchatting.component.twitch.utils.map
 import fr.outadoc.justchatting.component.twitch.websocket.irc.TwitchIrcCommandParser
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.HostModeState
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
@@ -339,39 +338,6 @@ class TwitchIrcCommandParserTest {
                 rewardId = null,
                 msgId = "highlighted-message",
                 inReplyTo = null,
-            )
-        }
-    }
-
-    @Test
-    fun `Parse HOSTTARGET message when entering host mode`() = test {
-        input { ":tmi.twitch.tv HOSTTARGET #hortyunderscore :clara_doxal 3529" }
-        expected {
-            HostModeState(
-                targetChannelLogin = "clara_doxal",
-                viewerCount = 3529,
-            )
-        }
-    }
-
-    @Test
-    fun `Parse HOSTTARGET message when exiting host mode`() = test {
-        input { ":tmi.twitch.tv HOSTTARGET #hortyunderscore :- 42" }
-        expected {
-            HostModeState(
-                targetChannelLogin = null,
-                viewerCount = 42,
-            )
-        }
-    }
-
-    @Test
-    fun `Parse HOSTTARGET message when joining currently hosting channel`() = test {
-        input { ":tmi.twitch.tv HOSTTARGET #hortyunderscore :clara_doxal -" }
-        expected {
-            HostModeState(
-                targetChannelLogin = "clara_doxal",
-                viewerCount = null,
             )
         }
     }

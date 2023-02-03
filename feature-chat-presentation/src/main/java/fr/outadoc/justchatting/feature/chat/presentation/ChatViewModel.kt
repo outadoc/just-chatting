@@ -94,7 +94,6 @@ class ChatViewModel(
         data class ChangeRecentEmotes(val recentEmotes: List<RecentEmote>) : Action()
         data class ChangeRoomState(val delta: ChatEvent.RoomStateDelta) : Action()
         data class ChangeConnectionStatus(val connectionStatus: ConnectionStatus) : Action()
-        data class ChangeHostModeState(val hostModeState: ChatEvent.HostModeState) : Action()
         data class ChangeUserState(val userState: ChatEvent.UserState) : Action()
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
@@ -119,7 +118,6 @@ class ChatViewModel(
             val recentEmotes: List<RecentEmote> = emptyList(),
             val userState: ChatEvent.UserState = ChatEvent.UserState(),
             val roomState: RoomState = RoomState(),
-            val hostModeState: ChatEvent.HostModeState? = null,
             val connectionStatus: ConnectionStatus = ConnectionStatus(),
             val maxAdapterCount: Int,
         ) : State() {
@@ -238,10 +236,6 @@ class ChatViewModel(
                                 Action.AddMessages(listOf(command))
                             }
 
-                            is ChatEvent.HostModeState -> {
-                                Action.ChangeHostModeState(command)
-                            }
-
                             is ChatEvent.RoomStateDelta -> {
                                 Action.ChangeRoomState(command)
                             }
@@ -355,7 +349,6 @@ class ChatViewModel(
         return when (this) {
             is Action.AddMessages -> reduce(state)
             is Action.ChangeConnectionStatus -> reduce(state)
-            is Action.ChangeHostModeState -> reduce(state)
             is Action.ChangeRecentEmotes -> reduce(state)
             is Action.ChangeRoomState -> reduce(state)
             is Action.ChangeUserState -> reduce(state)
@@ -539,11 +532,6 @@ class ChatViewModel(
     private fun Action.ChangeRecentEmotes.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return state.copy(recentEmotes = recentEmotes)
-    }
-
-    private fun Action.ChangeHostModeState.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(hostModeState = hostModeState)
     }
 
     private suspend fun InputAction.reduce(state: InputState): InputState {

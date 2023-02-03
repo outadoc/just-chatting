@@ -5,7 +5,6 @@ import chat.willow.kale.irc.message.IrcMessageParser
 import chat.willow.kale.irc.message.rfc1459.NoticeMessage
 import chat.willow.kale.irc.message.rfc1459.PingMessage
 import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.HostModeState
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
@@ -27,7 +26,6 @@ class TwitchIrcCommandParser(private val clock: Clock) {
             "CLEARMSG" -> parseClearMessage(ircMessage)
             "CLEARCHAT" -> parseClearChat(ircMessage)
             "ROOMSTATE" -> parseRoomState(ircMessage)
-            "HOSTTARGET" -> parseHostTarget(ircMessage)
             else -> null
         }
 
@@ -126,17 +124,6 @@ class TwitchIrcCommandParser(private val clock: Clock) {
             uniqueMessagesOnly = ircMessage.tags.uniqueMessagesOnly,
             slowModeDuration = ircMessage.tags.slowModeDuration,
             isSubOnly = ircMessage.tags.isSubOnly,
-        )
-    }
-
-    private fun parseHostTarget(ircMessage: IrcMessage): HostModeState? {
-        val params = ircMessage.parameters.getOrNull(1)?.split(' ')
-        if (params?.size != 2) return null
-
-        val (targetLogin, viewerCount) = params
-        return HostModeState(
-            targetChannelLogin = targetLogin.takeIf { login -> login != "-" },
-            viewerCount = viewerCount.toIntOrNull(),
         )
     }
 

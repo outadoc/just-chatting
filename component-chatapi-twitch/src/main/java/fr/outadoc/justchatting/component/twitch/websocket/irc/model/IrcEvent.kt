@@ -86,8 +86,3 @@ data class RoomStateDelta(
 data class UserState(
     val emoteSets: List<String> = emptyList(),
 ) : IrcEvent
-
-data class HostModeState(
-    val targetChannelLogin: String?,
-    val viewerCount: Int?,
-) : IrcEvent

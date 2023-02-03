@@ -54,7 +54,7 @@ fun ChatMessageData(
     val fullInlineContent =
         inlineContent.toPersistentHashMap()
             .putAll(
-                data.embeddedEmotes.orEmpty()
+                data.embeddedEmotes
                     .associate { emote ->
                         Pair(
                             emote.name,
@@ -150,7 +150,7 @@ fun ChatEvent.Message.Data.toAnnotatedString(
     }
 
     return buildAnnotatedString {
-        badges?.forEach { badge ->
+        badges.forEach { badge ->
             appendInlineContent(
                 id = badge.inlineContentId,
                 alternateText = " ",

@@ -30,16 +30,16 @@ sealed class ChatEvent {
 
         @Immutable
         data class Data(
+            val messageId: String?,
+            val message: String?,
             val userId: String?,
             val userName: String,
             val userLogin: String,
-            val isAction: Boolean,
-            val message: String?,
-            val messageId: String?,
-            val color: String?,
-            val embeddedEmotes: ImmutableList<Emote>?,
-            val badges: ImmutableList<Badge>?,
-            val inReplyTo: InReplyTo?,
+            val isAction: Boolean = false,
+            val color: String? = null,
+            val embeddedEmotes: ImmutableList<Emote> = persistentListOf(),
+            val badges: ImmutableList<Badge> = persistentListOf(),
+            val inReplyTo: InReplyTo? = null,
         ) {
             @Immutable
             data class InReplyTo(

@@ -17,25 +17,19 @@ fun ChatScreen(
     onReplyToMessage: (ChatEvent.Message) -> Unit,
     insets: PaddingValues,
 ) {
-    when (state) {
-        ChatViewModel.State.Initial -> {
-            ChatListPlaceholder(modifier = modifier.fillMaxSize())
-        }
-
-        is ChatViewModel.State.Chatting -> {
-            if (state.chatMessages.isEmpty()) {
-                ChatListPlaceholder(modifier = modifier.fillMaxSize())
-            } else {
-                ChatListContainer(
-                    modifier = modifier,
-                    state = state,
-                    animateEmotes = animateEmotes,
-                    showTimestamps = showTimestamps,
-                    onMessageLongClick = onMessageLongClick,
-                    onReplyToMessage = onReplyToMessage,
-                    insets = insets,
-                )
-            }
-        }
+    if (state !is ChatViewModel.State.Chatting || state.chatMessages.isEmpty()) {
+        ChatListPlaceholder(
+            modifier = modifier.fillMaxSize(),
+        )
+    } else {
+        ChatListContainer(
+            modifier = modifier,
+            state = state,
+            animateEmotes = animateEmotes,
+            showTimestamps = showTimestamps,
+            onMessageLongClick = onMessageLongClick,
+            onReplyToMessage = onReplyToMessage,
+            insets = insets,
+        )
     }
 }

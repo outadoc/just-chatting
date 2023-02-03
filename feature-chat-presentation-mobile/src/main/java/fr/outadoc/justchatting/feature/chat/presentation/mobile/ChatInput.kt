@@ -17,7 +17,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -36,49 +35,10 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
-import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import kotlinx.datetime.Instant
-
-@Composable
-fun ChatInput(
-    modifier: Modifier = Modifier,
-    state: ChatViewModel.State,
-    inputState: ChatViewModel.InputState,
-    animateEmotes: Boolean,
-    onEmoteClick: (Emote) -> Unit,
-    onChatterClick: (Chatter) -> Unit,
-    onMessageChange: (TextFieldValue) -> Unit,
-    onToggleEmotePicker: () -> Unit,
-    onClearReplyingTo: () -> Unit,
-    onSubmit: () -> Unit,
-) {
-    when (state) {
-        ChatViewModel.State.Initial -> {}
-        is ChatViewModel.State.Chatting -> {
-            Surface(
-                shadowElevation = 2.dp,
-                tonalElevation = 1.dp,
-            ) {
-                ChatInput(
-                    modifier = modifier,
-                    message = inputState.inputMessage,
-                    autoCompleteItems = inputState.autoCompleteItems,
-                    animateEmotes = animateEmotes,
-                    replyingTo = inputState.replyingTo,
-                    onEmoteClick = onEmoteClick,
-                    onChatterClick = onChatterClick,
-                    onMessageChange = onMessageChange,
-                    onToggleEmotePicker = onToggleEmotePicker,
-                    onClearReplyingTo = onClearReplyingTo,
-                    onSubmit = onSubmit,
-                )
-            }
-        }
-    }
-}
 
 @ThemePreviews
 @Composable
@@ -147,6 +107,7 @@ fun ChatInput(
     onToggleEmotePicker: () -> Unit = {},
     onClearReplyingTo: () -> Unit = {},
     onSubmit: () -> Unit = {},
+    canSubmit: Boolean = true,
 ) {
     val haptic = LocalHapticFeedback.current
 
@@ -198,7 +159,7 @@ fun ChatInput(
                     onSubmit = onSubmit,
                 )
 
-                AnimatedVisibility(visible = message.text.isNotEmpty()) {
+                AnimatedVisibility(visible = canSubmit && message.text.isNotEmpty()) {
                     FloatingActionButton(
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)

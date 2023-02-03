@@ -42,7 +42,7 @@ import kotlin.random.Random
 @Composable
 fun ChatMessageData(
     modifier: Modifier = Modifier,
-    data: ChatEvent.Data,
+    data: ChatEvent.Message.Data,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     animateEmotes: Boolean,
     appUser: AppUser,
@@ -128,7 +128,7 @@ fun ChatMessageData(
 @Stable
 @Composable
 @OptIn(ExperimentalTextApi::class)
-fun ChatEvent.Data.toAnnotatedString(
+fun ChatEvent.Message.Data.toAnnotatedString(
     appUser: AppUser,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     urlColor: Color = MaterialTheme.colorScheme.primary,

@@ -27,29 +27,29 @@ sealed class ChatEvent {
             override val data: Data?,
             override val timestamp: Instant,
         ) : Message()
-    }
 
-    @Immutable
-    data class Data(
-        val userId: String?,
-        val userName: String,
-        val userLogin: String,
-        val isAction: Boolean,
-        val message: String?,
-        val messageId: String?,
-        val color: String?,
-        val embeddedEmotes: ImmutableList<Emote>?,
-        val badges: ImmutableList<Badge>?,
-        val inReplyTo: InReplyTo?,
-    ) {
         @Immutable
-        data class InReplyTo(
-            val id: String,
+        data class Data(
+            val userId: String?,
             val userName: String,
-            val message: String,
-            val userId: String,
             val userLogin: String,
-        )
+            val isAction: Boolean,
+            val message: String?,
+            val messageId: String?,
+            val color: String?,
+            val embeddedEmotes: ImmutableList<Emote>?,
+            val badges: ImmutableList<Badge>?,
+            val inReplyTo: InReplyTo?,
+        ) {
+            @Immutable
+            data class InReplyTo(
+                val id: String,
+                val userName: String,
+                val message: String,
+                val userId: String,
+                val userLogin: String,
+            )
+        }
     }
 
     @Immutable

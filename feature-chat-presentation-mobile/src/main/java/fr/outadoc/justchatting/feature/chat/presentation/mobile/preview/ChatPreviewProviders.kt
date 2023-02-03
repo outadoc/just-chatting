@@ -14,7 +14,7 @@ val previewBadges = listOf(
 private val simpleEntries = sequence {
     yield(
         ChatEvent.Message.Simple(
-            data = ChatEvent.Data(
+            data = ChatEvent.Message.Data(
                 userName = "Hiccoz",
                 userId = "68552712",
                 userLogin = "hiccoz",
@@ -35,7 +35,7 @@ private val simpleEntries = sequence {
 
     yield(
         ChatEvent.Message.Simple(
-            data = ChatEvent.Data(
+            data = ChatEvent.Message.Data(
                 userName = "컬러히에",
                 userId = "232421548",
                 userLogin = "kolorye",
@@ -45,7 +45,7 @@ private val simpleEntries = sequence {
                 color = "#5F9EA0",
                 embeddedEmotes = persistentListOf(),
                 badges = persistentListOf(),
-                inReplyTo = ChatEvent.Data.InReplyTo(
+                inReplyTo = ChatEvent.Message.Data.InReplyTo(
                     id = "4d0a8518-9bc5-44a6-8249-c2ed9122f987",
                     userId = "221570322",
                     userName = "djessy728",
@@ -61,7 +61,7 @@ private val simpleEntries = sequence {
 private val highlightedEntries = sequence {
     yield(
         ChatEvent.Message.Highlighted(
-            data = ChatEvent.Data(
+            data = ChatEvent.Message.Data(
                 userName = "clo_chette_",
                 userId = "672551946",
                 userLogin = "clo_chette_",

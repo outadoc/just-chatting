@@ -65,7 +65,7 @@ class IrcMessageMapper(private val context: Context) {
                     ChatEvent.Message.Highlighted(
                         header = systemMsg ?: msgId?.getMessageIdString(context),
                         headerIconResId = msgId?.getMessageIdIcon(),
-                        data = ChatEvent.Data(
+                        data = ChatEvent.Message.Data(
                             message = userMessage.message,
                             messageId = userMessage.id,
                             userId = userMessage.userId,
@@ -106,7 +106,7 @@ class IrcMessageMapper(private val context: Context) {
                     }
                 }
 
-                val data = ChatEvent.Data(
+                val data = ChatEvent.Message.Data(
                     message = message,
                     messageId = id,
                     userId = userId,
@@ -117,7 +117,7 @@ class IrcMessageMapper(private val context: Context) {
                     embeddedEmotes = embeddedEmotes?.toImmutableList(),
                     badges = badges?.toImmutableList(),
                     inReplyTo = inReplyTo?.let {
-                        ChatEvent.Data.InReplyTo(
+                        ChatEvent.Message.Data.InReplyTo(
                             id = inReplyTo.id,
                             userName = inReplyTo.userName,
                             message = inReplyTo.message,

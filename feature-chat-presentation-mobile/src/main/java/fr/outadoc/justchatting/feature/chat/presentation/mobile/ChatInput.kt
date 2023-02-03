@@ -76,7 +76,7 @@ fun ChatInputPreviewReplying() {
     AppTheme {
         ChatInput(
             replyingTo = ChatEvent.Message.Simple(
-                data = ChatEvent.Data(
+                data = ChatEvent.Message.Data(
                     message = "Lorem ipsum dolor sit amet?",
                     messageId = "",
                     userId = "",

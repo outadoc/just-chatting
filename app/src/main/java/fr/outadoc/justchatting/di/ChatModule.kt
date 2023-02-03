@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.di
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
-import fr.outadoc.justchatting.component.twitch.websocket.eventsub.EventSubWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.IrcMessageMapper
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LoggedInChatWebSocket
@@ -40,7 +39,6 @@ val chatModule = module {
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get(), get(), get()) }
-    single { EventSubWebSocket.Factory(get(), get(), get(), get(), get()) }
     single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
 
     single {

@@ -1,37 +1,12 @@
 package fr.outadoc.justchatting.utils.ui
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.widget.ImageView
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
 import kotlinx.coroutines.suspendCancellableCoroutine
-
-@SuppressLint("CheckResult")
-fun ImageView.loadImage(
-    url: String?,
-    circle: Boolean = false,
-) {
-    try {
-        val request = ImageRequest.Builder(context)
-            .data(url)
-            .crossfade(true)
-            .apply {
-                if (circle) {
-                    transformations(CircleCropTransformation())
-                }
-            }
-            .target(this)
-            .build()
-
-        context.imageLoader.enqueue(request)
-    } catch (e: IllegalArgumentException) {
-        e.printStackTrace()
-    }
-}
 
 suspend fun loadImageToBitmap(
     context: Context,

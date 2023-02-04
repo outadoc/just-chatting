@@ -33,7 +33,7 @@
     <string name="settings_thirdparty_ffz_subtitle">Récupérer et afficher les émotes FrankerFaceZ, grâce aux données de betterttv.net.</string>
     <string name="settings_thirdparty_stv_title">Émotes 7TV</string>
     <string name="settings_thirdparty_stv_subtitle">Récupérer et afficher les émotes 7TV, grâce aux données de 7tv.app.</string>
-    <string name="timestamps">Afficher les horodatages</string>
+    <string name="timestamps">Horodatage des messages</string>
     <string name="recentMsg_limit">Limite de messages récents</string>
     <string name="recentMsg_limit_disabled">Désactivé</string>
     <string name="yes">Oui</string>

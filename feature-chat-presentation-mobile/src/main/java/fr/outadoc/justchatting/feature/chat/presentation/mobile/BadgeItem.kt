@@ -20,9 +20,11 @@ fun BadgeItem(
     AsyncImage(
         modifier = modifier.fillMaxSize(),
         contentScale = ContentScale.Fit,
-        model = badge.urls.getBestUrl(
-            screenDensity = density,
-            isDarkTheme = MaterialTheme.colorScheme.isDark,
+        model = remoteImageModel(
+            badge.urls.getBestUrl(
+                screenDensity = density,
+                isDarkTheme = MaterialTheme.colorScheme.isDark,
+            )
         ),
         contentDescription = badge.title,
     )

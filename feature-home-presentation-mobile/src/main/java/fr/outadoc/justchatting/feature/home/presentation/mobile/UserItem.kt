@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.formatTime
@@ -85,7 +86,7 @@ fun UserItem(
                 .padding(end = 8.dp)
                 .size(56.dp)
                 .clip(CircleShape),
-            model = profileImageURL,
+            model = remoteImageModel(profileImageURL),
             contentDescription = null,
         )
 

@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.androidx.annotation)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.lifecycle.viewmodel)
+    implementation(libs.coil.core)
     implementation(libs.compose.runtime.core)
     implementation(libs.compose.ui.core)
     implementation(libs.kotlinx.collections.immutable)

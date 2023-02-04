@@ -34,7 +34,7 @@ fun EmoteHeader(
                     .size(24.dp)
                     .clip(CircleShape),
                 contentScale = ContentScale.Fit,
-                model = url,
+                model = remoteImageModel(url),
                 contentDescription = null,
             )
         }

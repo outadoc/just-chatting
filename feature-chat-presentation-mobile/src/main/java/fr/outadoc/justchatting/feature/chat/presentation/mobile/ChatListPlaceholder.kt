@@ -35,21 +35,21 @@ fun ChatListPlaceholderPreview() {
 @Composable
 fun ChatListPlaceholder(
     modifier: Modifier = Modifier,
-    placeholderItemCount: Int = 100
+    placeholderItemCount: Int = 100,
 ) {
     val random = remember { Random(seed = 0xbadcafe) }
     val listState = rememberLazyListState(
-        initialFirstVisibleItemIndex = placeholderItemCount - 1
+        initialFirstVisibleItemIndex = placeholderItemCount - 1,
     )
 
     LazyColumn(
         modifier = modifier,
         userScrollEnabled = false,
-        state = listState
+        state = listState,
     ) {
         items(
             count = placeholderItemCount,
-            contentType = { Any() }
+            contentType = { Any() },
         ) { index ->
             Box(
                 modifier = Modifier

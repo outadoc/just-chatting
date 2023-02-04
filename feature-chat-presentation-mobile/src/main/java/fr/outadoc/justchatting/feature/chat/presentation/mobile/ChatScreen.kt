@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -17,19 +18,30 @@ fun ChatScreen(
     onReplyToMessage: (ChatEvent.Message) -> Unit,
     insets: PaddingValues,
 ) {
-    if (state !is ChatViewModel.State.Chatting || state.chatMessages.isEmpty()) {
-        ChatListPlaceholder(
-            modifier = modifier.fillMaxSize(),
-        )
-    } else {
-        ChatListContainer(
-            modifier = modifier,
-            state = state,
-            animateEmotes = animateEmotes,
-            showTimestamps = showTimestamps,
-            onMessageLongClick = onMessageLongClick,
-            onReplyToMessage = onReplyToMessage,
-            insets = insets,
-        )
+    val hasMessages: Boolean =
+        (state as? ChatViewModel.State.Chatting)
+            ?.chatMessages
+            .isNullOrEmpty()
+
+    Crossfade(targetState = hasMessages) { showPlaceholder ->
+        when {
+            showPlaceholder -> {
+                ChatListPlaceholder(
+                    modifier = modifier.fillMaxSize(),
+                )
+            }
+
+            state is ChatViewModel.State.Chatting -> {
+                ChatListContainer(
+                    modifier = modifier,
+                    state = state,
+                    animateEmotes = animateEmotes,
+                    showTimestamps = showTimestamps,
+                    onMessageLongClick = onMessageLongClick,
+                    onReplyToMessage = onReplyToMessage,
+                    insets = insets,
+                )
+            }
+        }
     }
 }

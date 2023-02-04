@@ -35,7 +35,7 @@ fun SettingsSwitchPreview() {
                 },
                 subtitle = {
                     Text("Dolor sit amet")
-                }
+                },
             )
 
             SettingsSwitch(

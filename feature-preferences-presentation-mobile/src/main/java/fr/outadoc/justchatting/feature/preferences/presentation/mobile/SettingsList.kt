@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 import android.os.Build
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
@@ -114,62 +113,6 @@ fun SettingsList(
         }
 
         item {
-            SettingsSlider(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-                value = appPreferences.messageLimit,
-                onValueChange = { value ->
-                    onAppPreferencesChange(appPreferences.copy(messageLimit = value))
-                },
-                valueRange = AppPreferences.Defaults.ChatLimitRange,
-                steps = 10,
-                valueContent = { value ->
-                    Text(
-                        modifier = Modifier.width(48.dp),
-                        text = "%,d".format(value),
-                    )
-                },
-            ) {
-                Text(stringResource(R.string.message_limit))
-            }
-        }
-
-        item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
-        }
-
-        item {
-            SettingsSlider(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-                value = appPreferences.recentMsgLimit,
-                onValueChange = { value ->
-                    onAppPreferencesChange(appPreferences.copy(recentMsgLimit = value))
-                },
-                valueRange = AppPreferences.Defaults.RecentChatLimitRange,
-                steps = 10,
-                valueContent = { value ->
-                    if (value == 0) {
-                        Text(text = stringResource(R.string.recentMsg_limit_disabled))
-                    } else {
-                        Text(
-                            modifier = Modifier.width(48.dp),
-                            text = "%,d".format(value),
-                        )
-                    }
-                },
-            ) {
-                Text(stringResource(R.string.recentMsg_limit))
-            }
-        }
-
-        item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
-        }
-
-        item {
             SettingsHeader(
                 modifier = Modifier
                     .padding(top = 8.dp)
@@ -191,7 +134,7 @@ fun SettingsList(
                 },
                 subtitle = {
                     Text(stringResource(R.string.settings_thirdparty_recent_subtitle))
-                }
+                },
             )
         }
 
@@ -211,7 +154,7 @@ fun SettingsList(
                 },
                 subtitle = {
                     Text(stringResource(R.string.settings_thirdparty_bttv_subtitle))
-                }
+                },
             )
         }
 
@@ -231,7 +174,7 @@ fun SettingsList(
                 },
                 subtitle = {
                     Text(stringResource(R.string.settings_thirdparty_ffz_subtitle))
-                }
+                },
             )
         }
 
@@ -251,7 +194,7 @@ fun SettingsList(
                 },
                 subtitle = {
                     Text(stringResource(R.string.settings_thirdparty_stv_subtitle))
-                }
+                },
             )
         }
 

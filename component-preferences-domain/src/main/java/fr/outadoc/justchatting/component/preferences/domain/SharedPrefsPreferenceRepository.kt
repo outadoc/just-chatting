@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.MutablePreferences
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser
@@ -32,8 +31,11 @@ class SharedPrefsPreferenceRepository(
         return AppPreferences(
             animateEmotes = this[CHAT_ANIMATED_EMOTES] ?: defaultPreferences.animateEmotes,
             showTimestamps = this[CHAT_TIMESTAMPS] ?: defaultPreferences.showTimestamps,
-            recentMsgLimit = this[CHAT_RECENT_LIMIT] ?: defaultPreferences.recentMsgLimit,
-            messageLimit = this[CHAT_LIMIT] ?: defaultPreferences.messageLimit,
+            enableRecentMessages = this[THIRDPARTY_ENABLE_RECENT]
+                ?: defaultPreferences.enableRecentMessages,
+            enableBttvEmotes = this[THIRDPARTY_ENABLE_BTTV] ?: defaultPreferences.enableBttvEmotes,
+            enableFfzEmotes = this[THIRDPARTY_ENABLE_FFZ] ?: defaultPreferences.enableFfzEmotes,
+            enableStvEmotes = this[THIRDPARTY_ENABLE_STV] ?: defaultPreferences.enableStvEmotes,
             appUser = this.parseUser(),
         )
     }
@@ -42,10 +44,14 @@ class SharedPrefsPreferenceRepository(
         prefs[USER_ID] = appUser.id ?: ""
         prefs[USER_LOGIN] = appUser.login ?: ""
         prefs[USER_TOKEN] = appUser.helixToken ?: ""
+
         prefs[CHAT_ANIMATED_EMOTES] = animateEmotes
         prefs[CHAT_TIMESTAMPS] = showTimestamps
-        prefs[CHAT_RECENT_LIMIT] = recentMsgLimit
-        prefs[CHAT_LIMIT] = messageLimit
+
+        prefs[THIRDPARTY_ENABLE_RECENT] = enableRecentMessages
+        prefs[THIRDPARTY_ENABLE_BTTV] = enableBttvEmotes
+        prefs[THIRDPARTY_ENABLE_FFZ] = enableFfzEmotes
+        prefs[THIRDPARTY_ENABLE_STV] = enableStvEmotes
     }
 
     private fun Preferences.parseUser(): AppUser {
@@ -77,7 +83,10 @@ class SharedPrefsPreferenceRepository(
 
         val CHAT_ANIMATED_EMOTES = booleanPreferencesKey("animatedGifEmotes")
         val CHAT_TIMESTAMPS = booleanPreferencesKey("chat_timestamps")
-        val CHAT_LIMIT = intPreferencesKey("chat_limit")
-        val CHAT_RECENT_LIMIT = intPreferencesKey("chat_recent_limit")
+
+        val THIRDPARTY_ENABLE_RECENT = booleanPreferencesKey("thirdparty_enable_recent")
+        val THIRDPARTY_ENABLE_BTTV = booleanPreferencesKey("thirdparty_enable_bttv")
+        val THIRDPARTY_ENABLE_FFZ = booleanPreferencesKey("thirdparty_enable_ffz")
+        val THIRDPARTY_ENABLE_STV = booleanPreferencesKey("thirdparty_enable_stv")
     }
 }

@@ -18,6 +18,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesRepository
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
+import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
@@ -368,7 +369,7 @@ class ChatViewModel(
                 ?: error("User not loaded"),
             appUser = prefs.appUser as AppUser.LoggedIn,
             chatters = persistentSetOf(Chatter(channelLogin)),
-            maxAdapterCount = prefs.messageLimit,
+            maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
         )
     }
 

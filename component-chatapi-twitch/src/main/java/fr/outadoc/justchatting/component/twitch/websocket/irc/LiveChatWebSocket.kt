@@ -5,6 +5,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
+import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
@@ -206,13 +207,15 @@ class LiveChatWebSocket private constructor(
 
     private suspend fun loadRecentMessages() {
         val prefs = preferencesRepository.currentPreferences.first()
-        val recentMsgLimit = prefs.recentMsgLimit
-        if (recentMsgLimit < 1) return
+        if (!prefs.enableRecentMessages) return
 
         try {
             _flow.emitAll(
                 recentMessagesRepository
-                    .loadRecentMessages(channelLogin, recentMsgLimit)
+                    .loadRecentMessages(
+                        channelLogin = channelLogin,
+                        limit = AppPreferences.Defaults.RecentChatLimit,
+                    )
                     .asFlow()
                     .filterIsInstance<Message>()
                     .mapNotNull { event -> mapper.map(event) },

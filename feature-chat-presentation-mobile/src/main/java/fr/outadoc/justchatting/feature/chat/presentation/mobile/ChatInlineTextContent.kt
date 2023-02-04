@@ -26,11 +26,10 @@ private val badgePlaceholder = Placeholder(
     placeholderVerticalAlign = PlaceholderVerticalAlign.TextCenter,
 )
 
-fun emoteTextContent(emote: Emote, animateEmotes: Boolean): InlineTextContent =
+fun emoteTextContent(emote: Emote): InlineTextContent =
     InlineTextContent(emotePlaceholder) {
         EmoteItem(
             emote = emote,
-            animateEmotes = animateEmotes,
         )
     }
 
@@ -39,7 +38,7 @@ fun badgeTextContent(badge: TwitchBadge): InlineTextContent =
         BadgeItem(badge = badge)
     }
 
-fun cheerEmoteTextContent(cheer: Emote, animateEmotes: Boolean): InlineTextContent {
+fun cheerEmoteTextContent(cheer: Emote): InlineTextContent {
     val textWidthEm: Float = cheer.bitsValue?.let { it.formatNumber().length / 1.8f } ?: 0f
     return InlineTextContent(
         Placeholder(
@@ -50,7 +49,6 @@ fun cheerEmoteTextContent(cheer: Emote, animateEmotes: Boolean): InlineTextConte
     ) {
         CheerEmoteItem(
             emote = cheer,
-            animateEmotes = animateEmotes,
         )
     }
 }

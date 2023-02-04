@@ -24,7 +24,7 @@ fun BadgeItem(
             badge.urls.getBestUrl(
                 screenDensity = density,
                 isDarkTheme = MaterialTheme.colorScheme.isDark,
-            )
+            ),
         ),
         contentDescription = badge.title,
     )

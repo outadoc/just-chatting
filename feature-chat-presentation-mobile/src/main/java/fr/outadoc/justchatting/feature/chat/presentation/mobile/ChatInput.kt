@@ -94,7 +94,6 @@ fun ChatInput(
     modifier: Modifier = Modifier,
     message: TextFieldValue = TextFieldValue(),
     autoCompleteItems: List<AutoCompleteItem> = emptyList(),
-    animateEmotes: Boolean = true,
     replyingTo: ChatEvent.Message? = null,
     onEmoteClick: (Emote) -> Unit = {},
     onChatterClick: (Chatter) -> Unit = {},
@@ -138,7 +137,6 @@ fun ChatInput(
                     onChatterClick = onChatterClick,
                     onEmoteClick = onEmoteClick,
                     items = autoCompleteItems,
-                    animateEmotes = animateEmotes,
                 )
             }
 

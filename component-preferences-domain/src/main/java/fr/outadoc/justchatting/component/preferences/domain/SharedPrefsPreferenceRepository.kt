@@ -29,8 +29,7 @@ class SharedPrefsPreferenceRepository(
 
     private fun Preferences.read(): AppPreferences {
         return AppPreferences(
-            animateEmotes = this[CHAT_ANIMATED_EMOTES] ?: defaultPreferences.animateEmotes,
-            showTimestamps = this[CHAT_TIMESTAMPS] ?: defaultPreferences.showTimestamps,
+            showTimestamps = this[CHAT_ACCESSIBILITY_TIMESTAMPS] ?: defaultPreferences.showTimestamps,
             enableRecentMessages = this[THIRDPARTY_ENABLE_RECENT]
                 ?: defaultPreferences.enableRecentMessages,
             enableBttvEmotes = this[THIRDPARTY_ENABLE_BTTV] ?: defaultPreferences.enableBttvEmotes,
@@ -45,8 +44,7 @@ class SharedPrefsPreferenceRepository(
         prefs[USER_LOGIN] = appUser.login ?: ""
         prefs[USER_TOKEN] = appUser.helixToken ?: ""
 
-        prefs[CHAT_ANIMATED_EMOTES] = animateEmotes
-        prefs[CHAT_TIMESTAMPS] = showTimestamps
+        prefs[CHAT_ACCESSIBILITY_TIMESTAMPS] = showTimestamps
 
         prefs[THIRDPARTY_ENABLE_RECENT] = enableRecentMessages
         prefs[THIRDPARTY_ENABLE_BTTV] = enableBttvEmotes
@@ -82,7 +80,7 @@ class SharedPrefsPreferenceRepository(
         val USER_TOKEN = stringPreferencesKey("token")
 
         val CHAT_ANIMATED_EMOTES = booleanPreferencesKey("animatedGifEmotes")
-        val CHAT_TIMESTAMPS = booleanPreferencesKey("chat_timestamps")
+        val CHAT_ACCESSIBILITY_TIMESTAMPS = booleanPreferencesKey("chat_timestamps")
 
         val THIRDPARTY_ENABLE_RECENT = booleanPreferencesKey("thirdparty_enable_recent")
         val THIRDPARTY_ENABLE_BTTV = booleanPreferencesKey("thirdparty_enable_bttv")

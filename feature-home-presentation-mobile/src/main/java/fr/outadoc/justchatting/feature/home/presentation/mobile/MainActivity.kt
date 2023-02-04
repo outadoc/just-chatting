@@ -101,14 +101,15 @@ class MainActivity : AppCompatActivity() {
                             viewChannel(login)
                         },
                         onOpenNotificationPreferences = {
-                            if (Build.VERSION.SDK_INT >= 26) {
-                                openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                            }
+                            openSettingsIntent(action = "android.settings.APP_NOTIFICATION_SETTINGS")
                         },
                         onOpenBubblePreferences = {
                             if (Build.VERSION.SDK_INT >= 29) {
                                 openSettingsIntent(action = Settings.ACTION_APP_NOTIFICATION_BUBBLE_SETTINGS)
                             }
+                        },
+                        onOpenAccessibilityPreferences = {
+                            openSettingsIntent(action = "android.settings.ACCESSIBILITY_SETTINGS")
                         },
                     )
                 }

@@ -44,7 +44,6 @@ fun ChatMessageData(
     modifier: Modifier = Modifier,
     data: ChatEvent.Message.Data,
     inlineContent: ImmutableMap<String, InlineTextContent>,
-    animateEmotes: Boolean,
     appUser: AppUser,
     backgroundHint: Color,
 ) {
@@ -60,7 +59,6 @@ fun ChatMessageData(
                             emote.name,
                             emoteTextContent(
                                 emote = emote,
-                                animateEmotes = animateEmotes,
                             ),
                         )
                     }

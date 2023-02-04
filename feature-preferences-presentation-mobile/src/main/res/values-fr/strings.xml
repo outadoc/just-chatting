@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="all_goBack">Go back</string>
-    <string name="animated_emotes">Émotes animées</string>
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %s.</string>
     <string name="logout_title">Se déconnecter ?</string>
     <string name="message_limit">Limite de messages</string>
@@ -18,7 +17,11 @@
     <string name="settings_account_logout_action">Déconnecter mon compte…</string>
     <string name="settings_dependencies_header">Dépendences libres</string>
     <string name="settings_dependencies_cd">Voir le site web</string>
-    <string name="settings_chat">Accessibilité</string>
+    <string name="settings_accessibility_header">Accessibilité</string>
+    <string name="settings_accessibility_animations_title">Émotes animées</string>
+    <string name="settings_accessibility_animations_subtitle">Vous pouvez désactiver l\'animation des émotes en activant l\'option de "Suppression des animations" dans les réglages de votre appareil.</string>
+    <string name="settings_accessibility_animations_action">Ouvrir les réglages d\'accessibilité du système</string>
+    <string name="settings_accessibility_timestamps_title">Horodatage des messages</string>
     <string name="settings_logs_title">Partager les logs</string>
     <string name="settings_logs_subtitle">Exporter et partager vos logs récents à des fins de débogage.</string>
     <string name="settings_notifications_header">Notifications</string>
@@ -33,8 +36,5 @@
     <string name="settings_thirdparty_ffz_subtitle">Récupérer et afficher les émotes FrankerFaceZ, grâce aux données de betterttv.net.</string>
     <string name="settings_thirdparty_stv_title">Émotes 7TV</string>
     <string name="settings_thirdparty_stv_subtitle">Récupérer et afficher les émotes 7TV, grâce aux données de 7tv.app.</string>
-    <string name="timestamps">Horodatage des messages</string>
-    <string name="recentMsg_limit">Limite de messages récents</string>
-    <string name="recentMsg_limit_disabled">Désactivé</string>
     <string name="yes">Oui</string>
 </resources>

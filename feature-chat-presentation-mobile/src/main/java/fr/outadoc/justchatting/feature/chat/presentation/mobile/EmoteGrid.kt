@@ -23,7 +23,6 @@ import kotlinx.collections.immutable.ImmutableList
 fun EmoteGrid(
     modifier: Modifier = Modifier,
     emotes: ImmutableList<EmoteSetItem>,
-    animateEmotes: Boolean,
     emoteSize: Dp = 36.dp,
     onEmoteClick: (Emote) -> Unit,
     contentPadding: PaddingValues = PaddingValues(),
@@ -66,7 +65,6 @@ fun EmoteGrid(
                         EmoteItem(
                             modifier = Modifier.size(emoteSize),
                             emote = item.emote,
-                            animateEmotes = animateEmotes,
                         )
                     }
                 }

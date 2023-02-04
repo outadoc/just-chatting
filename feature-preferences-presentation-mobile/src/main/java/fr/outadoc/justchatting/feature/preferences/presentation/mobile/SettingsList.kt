@@ -35,6 +35,7 @@ fun SettingsListPreview() {
             onAppPreferencesChange = {},
             onOpenNotificationPreferences = {},
             onOpenBubblePreferences = {},
+            onOpenAccessibilityPreferences = {},
             onLogoutClick = {},
             onShareLogsClick = {},
             readDependencies = { emptyList() },
@@ -50,6 +51,7 @@ fun SettingsList(
     onAppPreferencesChange: (AppPreferences) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
+    onOpenAccessibilityPreferences: () -> Unit,
     onLogoutClick: () -> Unit,
     onShareLogsClick: () -> Unit,
     itemInsets: PaddingValues = PaddingValues(),
@@ -74,25 +76,8 @@ fun SettingsList(
                     .padding(itemInsets)
                     .padding(top = 8.dp),
             ) {
-                Text(stringResource(R.string.settings_chat))
+                Text(stringResource(R.string.settings_accessibility_header))
             }
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.animateEmotes,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(animateEmotes = checked))
-                },
-                title = {
-                    Text(stringResource(R.string.animated_emotes))
-                },
-            )
-        }
-
-        item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
         }
 
         item {
@@ -103,7 +88,25 @@ fun SettingsList(
                     onAppPreferencesChange(appPreferences.copy(showTimestamps = checked))
                 },
                 title = {
-                    Text(stringResource(R.string.timestamps))
+                    Text(stringResource(R.string.settings_accessibility_timestamps_title))
+                },
+            )
+        }
+
+        item {
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
+        }
+
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = onOpenAccessibilityPreferences,
+                onClickLabel = stringResource(R.string.settings_accessibility_animations_action),
+                title = {
+                    Text(stringResource(R.string.settings_accessibility_animations_title))
+                },
+                subtitle = {
+                    Text(stringResource(R.string.settings_accessibility_animations_subtitle))
                 },
             )
         }
@@ -208,17 +211,15 @@ fun SettingsList(
             }
         }
 
-        if (Build.VERSION.SDK_INT >= 26) {
-            item {
-                SettingsText(
-                    modifier = Modifier.padding(itemInsets),
-                    onClick = onOpenNotificationPreferences,
-                    onClickLabel = stringResource(R.string.settings_notifications_openNotificationsSettings),
-                    title = {
-                        Text(text = stringResource(R.string.settings_notifications_openNotificationsSettings))
-                    },
-                )
-            }
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = onOpenNotificationPreferences,
+                onClickLabel = stringResource(R.string.settings_notifications_openNotificationsSettings),
+                title = {
+                    Text(text = stringResource(R.string.settings_notifications_openNotificationsSettings))
+                },
+            )
         }
 
         if (Build.VERSION.SDK_INT >= 29) {

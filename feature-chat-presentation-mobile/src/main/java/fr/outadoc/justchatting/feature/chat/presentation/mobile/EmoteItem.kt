@@ -15,7 +15,6 @@ import fr.outadoc.justchatting.utils.ui.isDark
 fun EmoteItem(
     modifier: Modifier = Modifier,
     emote: Emote,
-    animateEmotes: Boolean,
 ) {
     val density = LocalDensity.current.density
     AsyncImage(
@@ -26,7 +25,7 @@ fun EmoteItem(
             emote.urls.getBestUrl(
                 screenDensity = density,
                 isDarkTheme = MaterialTheme.colorScheme.isDark,
-            )
+            ),
         ),
     )
 }

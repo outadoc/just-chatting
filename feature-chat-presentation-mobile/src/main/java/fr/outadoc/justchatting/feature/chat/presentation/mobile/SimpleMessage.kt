@@ -19,7 +19,6 @@ fun SimpleMessage(
     modifier: Modifier = Modifier,
     message: ChatEvent.Message.Simple,
     inlineContent: ImmutableMap<String, InlineTextContent>,
-    animateEmotes: Boolean,
     appUser: AppUser,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
 ) {
@@ -33,7 +32,6 @@ fun SimpleMessage(
             ),
             data = message.data,
             inlineContent = inlineContent,
-            animateEmotes = animateEmotes,
             appUser = appUser,
             backgroundHint = backgroundHint,
         )

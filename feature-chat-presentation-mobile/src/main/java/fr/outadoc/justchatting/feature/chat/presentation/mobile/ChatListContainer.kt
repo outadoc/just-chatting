@@ -30,7 +30,6 @@ import kotlinx.coroutines.launch
 fun ChatListContainer(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State.Chatting,
-    animateEmotes: Boolean,
     showTimestamps: Boolean,
     onMessageLongClick: (ChatEvent.Message) -> Unit,
     onReplyToMessage: (ChatEvent.Message) -> Unit,
@@ -62,7 +61,6 @@ fun ChatListContainer(
             cheerEmotes = state.cheerEmotes,
             badges = state.globalBadges.addAll(state.channelBadges),
             roomState = state.roomState,
-            animateEmotes = animateEmotes,
             showTimestamps = showTimestamps,
             isDisconnected = !state.connectionStatus.isAlive,
             listState = listState,

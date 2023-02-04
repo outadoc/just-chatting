@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="all_goBack">Retour</string>
-    <string name="animated_emotes">Animated emotes</string>
     <string name="logout_msg">You are currently logged in as %s.</string>
     <string name="logout_title">Log out?</string>
     <string name="message_limit">Message limit</string>
@@ -18,7 +17,11 @@
     <string name="settings_account_logout_action">Log out…</string>
     <string name="settings_dependencies_header">Open-source dependencies</string>
     <string name="settings_dependencies_cd">Show website</string>
-    <string name="settings_chat">Accessibility</string>
+    <string name="settings_accessibility_header">Accessibility</string>
+    <string name="settings_accessibility_animations_title">Animated emotes</string>
+    <string name="settings_accessibility_animations_subtitle">You can disable animated emotes by enabling "Reduce motion" in your device\'s accessibility settings.</string>
+    <string name="settings_accessibility_animations_action">Open system accessibility settings</string>
+    <string name="settings_accessibility_timestamps_title">Show timestamps</string>
     <string name="settings_logs_title">Share logs</string>
     <string name="settings_logs_subtitle">Dump recent logs and share them for debugging purposes.</string>
     <string name="settings_notifications_header">Notifications</string>
@@ -33,8 +36,5 @@
     <string name="settings_thirdparty_ffz_subtitle">Fetch and display FrankerFaceZ emotes, using data provided by betterttv.net.</string>
     <string name="settings_thirdparty_stv_title">7TV Emotes</string>
     <string name="settings_thirdparty_stv_subtitle">Fetch and display 7TV emotes, using data provided by 7tv.app.</string>
-    <string name="recentMsg_limit">Recent message limit</string>
-    <string name="recentMsg_limit_disabled">Disabled</string>
-    <string name="timestamps">Show timestamps</string>
     <string name="yes">Yes</string>
 </resources>

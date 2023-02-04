@@ -27,6 +27,7 @@ fun HomeScreen(
     onChannelClick: (login: String) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
+    onOpenAccessibilityPreferences: () -> Unit,
 ) {
     var selectedTab by remember { mutableStateOf(DefaultTab) }
     val searchViewModel = getViewModel<ChannelSearchViewModel>()
@@ -107,6 +108,7 @@ fun HomeScreen(
                         SettingsContent(
                             onOpenNotificationPreferences = onOpenNotificationPreferences,
                             onOpenBubblePreferences = onOpenBubblePreferences,
+                            onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
                         )
                     }
                 }

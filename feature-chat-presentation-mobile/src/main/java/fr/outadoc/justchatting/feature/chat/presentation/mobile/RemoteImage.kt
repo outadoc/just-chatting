@@ -14,7 +14,7 @@ fun remoteImageModel(url: String?): ImageRequest {
         Settings.Global.getFloat(
             context.contentResolver,
             Settings.Global.ANIMATOR_DURATION_SCALE,
-            1.0f
+            1.0f,
         )
 
     return ImageRequest.Builder(context)

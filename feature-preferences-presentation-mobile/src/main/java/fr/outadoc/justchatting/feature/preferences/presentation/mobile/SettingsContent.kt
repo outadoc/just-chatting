@@ -18,6 +18,7 @@ fun SettingsContent(
     modifier: Modifier = Modifier,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
+    onOpenAccessibilityPreferences: () -> Unit,
 ) {
     val viewModel: SettingsViewModel = getViewModel()
     val appPreferences by viewModel.appPreferences.collectAsState()
@@ -50,6 +51,7 @@ fun SettingsContent(
         },
         onOpenNotificationPreferences = onOpenNotificationPreferences,
         onOpenBubblePreferences = onOpenBubblePreferences,
+        onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
         onLogoutClick = viewModel::logout,
         onShareLogsClick = viewModel::onShareLogsClick,
         readDependencies = get(),

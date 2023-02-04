@@ -31,7 +31,6 @@ fun HighlightedMessage(
     modifier: Modifier = Modifier,
     message: ChatEvent.Message.Highlighted,
     inlineContent: ImmutableMap<String, InlineTextContent>,
-    animateEmotes: Boolean,
     appUser: AppUser,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
 ) {
@@ -77,7 +76,6 @@ fun HighlightedMessage(
                     modifier = modifier.padding(4.dp),
                     data = data,
                     inlineContent = inlineContent,
-                    animateEmotes = animateEmotes,
                     appUser = appUser,
                     backgroundHint = backgroundHint,
                 )

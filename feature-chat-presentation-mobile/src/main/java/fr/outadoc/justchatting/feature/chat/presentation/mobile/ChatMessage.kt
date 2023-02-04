@@ -36,7 +36,6 @@ fun ChatMessagePreview(
         ChatMessage(
             message = message,
             inlineContent = inlineBadges,
-            animateEmotes = true,
             showTimestamps = true,
             appUser = AppUser.LoggedIn(
                 id = "123",
@@ -52,7 +51,6 @@ fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatEvent.Message,
     inlineContent: ImmutableMap<String, InlineTextContent>,
-    animateEmotes: Boolean,
     showTimestamps: Boolean,
     background: Color = Color.Transparent,
     appUser: AppUser,
@@ -82,7 +80,6 @@ fun ChatMessage(
                 HighlightedMessage(
                     message = message,
                     inlineContent = inlineContent,
-                    animateEmotes = animateEmotes,
                     appUser = appUser,
                 )
             }
@@ -91,7 +88,6 @@ fun ChatMessage(
                 SimpleMessage(
                     message = message,
                     inlineContent = inlineContent,
-                    animateEmotes = animateEmotes,
                     appUser = appUser,
                 )
             }

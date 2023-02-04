@@ -24,7 +24,6 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 fun AutoCompleteEmoteItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    animateEmotes: Boolean = true,
     emote: Emote,
 ) {
     AutoCompleteItemContent(
@@ -36,7 +35,6 @@ fun AutoCompleteEmoteItem(
                 .size(32.dp)
                 .padding(4.dp),
             emote = emote,
-            animateEmotes = animateEmotes,
         )
     }
 }

@@ -54,7 +54,6 @@ fun ChannelChatScreenLoadingPreview() {
             inputState = ChatViewModel.InputState(),
             channelLogin = "outadoc",
             channelBranding = rememberChannelBranding(user = null),
-            animateEmotes = false,
             showTimestamps = true,
         )
     }
@@ -69,7 +68,6 @@ fun ChannelChatScreenContent(
     channelLogin: String,
     channelBranding: ChannelBranding,
     isEmotePickerOpen: Boolean = false,
-    animateEmotes: Boolean,
     showTimestamps: Boolean,
     onWatchLiveClicked: () -> Unit = {},
     onMessageChange: (TextFieldValue) -> Unit = {},
@@ -119,7 +117,6 @@ fun ChannelChatScreenContent(
             ChatScreen(
                 modifier = Modifier.fillMaxSize(),
                 state = state,
-                animateEmotes = animateEmotes,
                 showTimestamps = showTimestamps,
                 onMessageLongClick = { item ->
                     item.data?.message?.let { rawMessage ->
@@ -158,7 +155,6 @@ fun ChannelChatScreenContent(
                         canSubmit = state is ChatViewModel.State.Chatting,
                         message = inputState.inputMessage,
                         autoCompleteItems = inputState.autoCompleteItems,
-                        animateEmotes = animateEmotes,
                         replyingTo = inputState.replyingTo,
                         onEmoteClick = onEmoteClick,
                         onChatterClick = onChatterClick,

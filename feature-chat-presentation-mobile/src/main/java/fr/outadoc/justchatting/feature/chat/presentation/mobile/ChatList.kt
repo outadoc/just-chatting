@@ -47,7 +47,6 @@ fun ChatList(
     emotes: ImmutableMap<String, Emote>,
     cheerEmotes: ImmutableMap<String, Emote>,
     badges: ImmutableList<TwitchBadge>,
-    animateEmotes: Boolean,
     showTimestamps: Boolean,
     isDisconnected: Boolean,
     listState: LazyListState,
@@ -62,7 +61,6 @@ fun ChatList(
             emotes.mapValues { (_, emote) ->
                 emoteTextContent(
                     emote = emote,
-                    animateEmotes = animateEmotes,
                 )
             }.toPersistentHashMap()
         }
@@ -84,7 +82,6 @@ fun ChatList(
             cheerEmotes.mapValues { (_, cheer) ->
                 cheerEmoteTextContent(
                     cheer = cheer,
-                    animateEmotes = animateEmotes,
                 )
             }.toPersistentHashMap()
         }
@@ -183,7 +180,6 @@ fun ChatList(
                         },
                     message = item,
                     inlineContent = inlineContent,
-                    animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
                     background = background,
                     appUser = appUser,

@@ -56,6 +56,8 @@ fun EmotePicker(
                 } else {
                     EmoteGrid(
                         modifier = Modifier.fillMaxSize(),
+                        emotes = emotes.toImmutableList(),
+                        onEmoteClick = onEmoteClick,
                         contentPadding = PaddingValues(
                             start = 16.dp,
                             end = 16.dp,
@@ -64,9 +66,6 @@ fun EmotePicker(
                                 .asPaddingValues()
                                 .calculateBottomPadding(),
                         ),
-                        emotes = emotes.toImmutableList(),
-                        animateEmotes = prefs.animateEmotes,
-                        onEmoteClick = onEmoteClick,
                     )
                 }
             }

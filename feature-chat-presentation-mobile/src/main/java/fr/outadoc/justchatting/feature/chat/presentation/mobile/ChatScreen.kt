@@ -12,7 +12,6 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 fun ChatScreen(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
-    animateEmotes: Boolean,
     showTimestamps: Boolean,
     onMessageLongClick: (ChatEvent.Message) -> Unit,
     onReplyToMessage: (ChatEvent.Message) -> Unit,
@@ -35,7 +34,6 @@ fun ChatScreen(
                 ChatListContainer(
                     modifier = modifier,
                     state = state,
-                    animateEmotes = animateEmotes,
                     showTimestamps = showTimestamps,
                     onMessageLongClick = onMessageLongClick,
                     onReplyToMessage = onReplyToMessage,

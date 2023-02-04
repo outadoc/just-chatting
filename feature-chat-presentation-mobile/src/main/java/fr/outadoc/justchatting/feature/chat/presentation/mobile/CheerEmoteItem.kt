@@ -19,7 +19,6 @@ import fr.outadoc.justchatting.utils.ui.parseHexColor
 fun CheerEmoteItem(
     modifier: Modifier = Modifier,
     emote: Emote,
-    animateEmotes: Boolean,
 ) {
     Row(
         modifier = modifier,
@@ -29,7 +28,6 @@ fun CheerEmoteItem(
         EmoteItem(
             modifier = Modifier.aspectRatio(1f),
             emote = emote,
-            animateEmotes = animateEmotes,
         )
 
         Text(

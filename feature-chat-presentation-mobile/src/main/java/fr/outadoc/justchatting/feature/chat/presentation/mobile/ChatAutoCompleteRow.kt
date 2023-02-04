@@ -34,7 +34,6 @@ fun ChatAutoCompleteRow(
     modifier: Modifier = Modifier,
     onChatterClick: (Chatter) -> Unit,
     onEmoteClick: (Emote) -> Unit,
-    animateEmotes: Boolean = true,
     items: List<AutoCompleteItem>,
 ) {
     LazyRow(
@@ -55,7 +54,6 @@ fun ChatAutoCompleteRow(
                     AutoCompleteEmoteItem(
                         onClick = { onEmoteClick(item.emote) },
                         emote = item.emote,
-                        animateEmotes = animateEmotes,
                     )
                 }
 

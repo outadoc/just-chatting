@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.component.preferences.data
 
 data class AppPreferences(
     val appUser: AppUser = AppUser.NotLoggedIn,
-    val animateEmotes: Boolean = true,
     val showTimestamps: Boolean = true,
     val enableRecentMessages: Boolean = true,
     val enableFfzEmotes: Boolean = true,

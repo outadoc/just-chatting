@@ -70,7 +70,6 @@ fun ChannelChatScreen(channelLogin: String) {
         channelLogin = channelLogin,
         channelBranding = channelBranding,
         isEmotePickerOpen = isEmotePickerOpen,
-        animateEmotes = prefs.animateEmotes,
         showTimestamps = prefs.showTimestamps,
         onWatchLiveClicked = {
             uriHandler.openUri(channelLogin.createChannelExternalLink().toString())

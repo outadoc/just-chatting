@@ -9,7 +9,6 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResponse
 import fr.outadoc.justchatting.component.chatapi.domain.model.Follow
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
-import fr.outadoc.justchatting.component.chatapi.domain.model.StreamsResponse
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.FollowedChannelsDataSource
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.FollowedStreamsDataSource
@@ -63,9 +62,9 @@ class TwitchRepositoryImpl(
                 }
         }
 
-    override suspend fun loadFollowedStreams(): Pager<String, StreamsResponse> {
+    override suspend fun loadFollowedStreams(): Flow<PagingData<Stream>> {
         val prefs = preferencesRepository.currentPreferences.first()
-        return Pager(
+        val pager = Pager(
             config = PagingConfig(
                 pageSize = 30,
                 initialLoadSize = 30,
@@ -79,9 +78,18 @@ class TwitchRepositoryImpl(
                 )
             },
         )
+
+        return pager.flow.map { page ->
+            page.flatMap { streams ->
+                streams
+                    .associateBy { stream -> stream.userId }
+                    .values
+                    .let { stream -> mapStreamsWithUserProfileImages(stream) }
+            }
+        }
     }
 
-    override suspend fun mapStreamsWithUserProfileImages(streams: Collection<Stream>): List<Stream> =
+    private suspend fun mapStreamsWithUserProfileImages(streams: Collection<Stream>): List<Stream> =
         with(streams) {
             val users = mapNotNull { it.userId }
                 .chunked(100)
@@ -159,7 +167,7 @@ class TwitchRepositoryImpl(
         withContext(Dispatchers.IO) {
             helix.getStreams(ids = listOf(channelId))
                 .data
-                ?.firstOrNull()
+                .firstOrNull()
                 ?.let { stream ->
                     Stream(
                         id = stream.id,

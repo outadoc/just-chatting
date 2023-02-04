@@ -11,7 +11,11 @@ interface HelixApi {
 
     suspend fun getStreams(ids: List<String>): StreamsResponse
 
-    suspend fun getFollowedStreams(userId: String?, limit: Int, after: String?): StreamsResponse
+    suspend fun getFollowedStreams(
+        userId: String?,
+        limit: Int,
+        after: String? = null
+    ): StreamsResponse
 
     suspend fun getUsersById(ids: List<String>): UsersResponse
 

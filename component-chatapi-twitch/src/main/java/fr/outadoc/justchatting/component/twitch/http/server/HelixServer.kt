@@ -43,7 +43,7 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
                 path("streams/followed")
                 parameter("user_id", userId)
                 parameter("first", limit)
-                parameter("after", after)
+                after?.let { parameter("after", after) }
             }
         }.body()
     }

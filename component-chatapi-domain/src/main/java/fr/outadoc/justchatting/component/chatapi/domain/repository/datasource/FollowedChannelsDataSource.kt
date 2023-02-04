@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import fr.outadoc.justchatting.component.chatapi.domain.model.Follow
 import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.http.model.FollowResponse
 
 class FollowedChannelsDataSource(
     private val userId: String?,
@@ -15,40 +16,23 @@ class FollowedChannelsDataSource(
 
     override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, List<Follow>> {
         return try {
-            val response = when (val key = params.key) {
-                is Pagination.Next ->
-                    helixApi.getFollowedChannels(
-                        userId = userId,
-                        limit = params.loadSize,
-                        after = key.cursor,
-                    )
+            val before: String? = (params.key as? Pagination.Previous)?.cursor
+            val after: String? = (params.key as? Pagination.Next)?.cursor
 
-                is Pagination.Previous -> {
-                    helixApi.getFollowedChannels(
-                        userId = userId,
-                        limit = params.loadSize,
-                        before = key.cursor,
-                    )
-                }
+            val response: FollowResponse =
+                helixApi.getFollowedChannels(
+                    userId = userId,
+                    limit = params.loadSize,
+                    before = before,
+                    after = after,
+                )
 
-                null -> {
-                    helixApi.getFollowedChannels(
-                        userId = userId,
-                        limit = params.loadSize,
-                    )
-                }
-            }
-
-            val isFirstPage = params.key == null
-            val totalItemCount = response.total
-
+            val isFirstPage: Boolean = params.key == null
+            val totalItemCount: Int = response.total
             val otherItems: Int =
                 when {
                     response.pagination.cursor == null -> 0
-
-                    isFirstPage && totalItemCount != null ->
-                        totalItemCount - response.data.orEmpty().size
-
+                    isFirstPage -> totalItemCount - response.data.size
                     else -> LoadResult.Page.COUNT_UNDEFINED
                 }
 
@@ -64,18 +48,17 @@ class FollowedChannelsDataSource(
 
             LoadResult.Page(
                 data = listOf(
-                    response.data.orEmpty()
-                        .map { follow ->
-                            Follow(
-                                fromId = follow.fromId,
-                                fromLogin = follow.fromLogin,
-                                fromName = follow.fromName,
-                                toId = follow.toId,
-                                toLogin = follow.toLogin,
-                                toName = follow.toName,
-                                followedAt = follow.followedAt,
-                            )
-                        },
+                    response.data.map { follow ->
+                        Follow(
+                            fromId = follow.fromId,
+                            fromLogin = follow.fromLogin,
+                            fromName = follow.fromName,
+                            toId = follow.toId,
+                            toLogin = follow.toLogin,
+                            toName = follow.toName,
+                            followedAt = follow.followedAt,
+                        )
+                    },
                 ),
                 nextKey = response.pagination.cursor?.let { cursor -> Pagination.Next(cursor) },
                 prevKey = response.pagination.cursor?.let { cursor -> Pagination.Previous(cursor) },

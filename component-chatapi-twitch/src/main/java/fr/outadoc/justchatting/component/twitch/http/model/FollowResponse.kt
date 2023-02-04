@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FollowResponse(
     @SerialName("total")
-    val total: Int?,
+    val total: Int,
     @SerialName("data")
-    val data: List<Follow>?,
+    val data: List<Follow>,
     @SerialName("pagination")
     val pagination: Pagination,
 )

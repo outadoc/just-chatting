@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -18,10 +19,10 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.ScreenPreviews
+import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import kotlin.random.Random
 
-@ScreenPreviews
+@ThemePreviews
 @Composable
 fun ChatListPlaceholderPreview() {
     AppTheme {
@@ -32,13 +33,24 @@ fun ChatListPlaceholderPreview() {
 }
 
 @Composable
-fun ChatListPlaceholder(modifier: Modifier = Modifier) {
+fun ChatListPlaceholder(
+    modifier: Modifier = Modifier,
+    placeholderItemCount: Int = 100
+) {
     val random = remember { Random(seed = 0xbadcafe) }
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = placeholderItemCount - 1
+    )
+
     LazyColumn(
         modifier = modifier,
         userScrollEnabled = false,
+        state = listState
     ) {
-        items(count = 100, contentType = { Any() }) { index ->
+        items(
+            count = placeholderItemCount,
+            contentType = { Any() }
+        ) { index ->
             Box(
                 modifier = Modifier
                     .fillMaxWidth()

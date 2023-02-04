@@ -1,3 +1,6 @@
 package fr.outadoc.justchatting.component.chatapi.domain.model
 
-data class Pagination(val cursor: String?)
+sealed class Pagination {
+    data class Previous(val cursor: String) : Pagination()
+    data class Next(val cursor: String) : Pagination()
+}

@@ -11,15 +11,20 @@ interface HelixApi {
 
     suspend fun getStreams(ids: List<String>): StreamsResponse
 
-    suspend fun getFollowedStreams(userId: String?, limit: Int, offset: String?): StreamsResponse
+    suspend fun getFollowedStreams(userId: String?, limit: Int, after: String?): StreamsResponse
 
     suspend fun getUsersById(ids: List<String>): UsersResponse
 
     suspend fun getUsersByLogin(logins: List<String>): UsersResponse
 
-    suspend fun getChannels(query: String, limit: Int, offset: String?): ChannelSearchResponse
+    suspend fun getChannels(query: String, limit: Int, after: String?): ChannelSearchResponse
 
-    suspend fun getFollowedChannels(userId: String?, limit: Int, offset: String?): FollowResponse
+    suspend fun getFollowedChannels(
+        userId: String?,
+        limit: Int,
+        before: String? = null,
+        after: String? = null,
+    ): FollowResponse
 
     suspend fun getEmotesFromSet(setIds: List<String>): EmoteSetResponse
 

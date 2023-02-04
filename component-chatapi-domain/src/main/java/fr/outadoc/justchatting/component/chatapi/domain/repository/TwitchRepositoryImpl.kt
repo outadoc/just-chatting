@@ -2,11 +2,12 @@ package fr.outadoc.justchatting.component.chatapi.domain.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.flatMap
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResponse
 import fr.outadoc.justchatting.component.chatapi.domain.model.Follow
-import fr.outadoc.justchatting.component.chatapi.domain.model.FollowResponse
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.StreamsResponse
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
@@ -17,7 +18,9 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.utils.map
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class TwitchRepositoryImpl(
@@ -96,14 +99,14 @@ class TwitchRepositoryImpl(
             }
         }
 
-    override suspend fun loadFollowedChannels(): Pager<String, FollowResponse> {
+    override suspend fun loadFollowedChannels(): Flow<PagingData<Follow>> {
         val prefs = preferencesRepository.currentPreferences.first()
-        return Pager(
+        val pager = Pager(
             config = PagingConfig(
                 pageSize = 40,
                 initialLoadSize = 40,
                 prefetchDistance = 10,
-                enablePlaceholders = false,
+                enablePlaceholders = true,
             ),
             pagingSourceFactory = {
                 FollowedChannelsDataSource(
@@ -112,9 +115,15 @@ class TwitchRepositoryImpl(
                 )
             },
         )
+
+        return pager.flow.map { page ->
+            page.flatMap { follows ->
+                mapFollowsWithUserProfileImages(follows)
+            }
+        }
     }
 
-    override suspend fun mapFollowsWithUserProfileImages(follows: Collection<Follow>): Collection<Follow> =
+    private suspend fun mapFollowsWithUserProfileImages(follows: Collection<Follow>): Collection<Follow> =
         with(follows) {
             val results: List<User> =
                 filter { follow -> follow.profileImageURL == null }

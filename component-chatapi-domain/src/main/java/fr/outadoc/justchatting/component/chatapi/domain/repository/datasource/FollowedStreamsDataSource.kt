@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.component.chatapi.domain.repository.datasource
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.StreamsResponse
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
@@ -12,18 +11,14 @@ class FollowedStreamsDataSource(
     private val helixApi: HelixApi,
 ) : PagingSource<String, StreamsResponse>() {
 
-    override fun getRefreshKey(state: PagingState<String, StreamsResponse>): String? {
-        return state.anchorPosition?.let { anchorPosition ->
-            state.closestItemToPosition(anchorPosition)?.pagination?.cursor
-        }
-    }
+    override fun getRefreshKey(state: PagingState<String, StreamsResponse>): String? = null
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, StreamsResponse> {
         return try {
             val response = helixApi.getFollowedStreams(
                 userId = userId,
                 limit = params.loadSize,
-                offset = params.key,
+                after = params.key,
             )
 
             LoadResult.Page(
@@ -43,9 +38,6 @@ class FollowedStreamsDataSource(
                                 startedAt = stream.startedAt,
                             )
                         },
-                        pagination = Pagination(
-                            cursor = response.pagination?.cursor,
-                        ),
                     ),
                 ),
                 nextKey = response.pagination?.cursor,

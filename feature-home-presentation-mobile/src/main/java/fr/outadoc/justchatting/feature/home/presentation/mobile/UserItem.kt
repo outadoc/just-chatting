@@ -72,16 +72,14 @@ fun UserItem(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        profileImageURL?.let { url ->
-            AsyncImage(
-                modifier = Modifier
-                    .padding(end = 8.dp)
-                    .size(56.dp)
-                    .clip(CircleShape),
-                model = url,
-                contentDescription = null,
-            )
-        }
+        AsyncImage(
+            modifier = Modifier
+                .padding(end = 8.dp)
+                .size(56.dp)
+                .clip(CircleShape),
+            model = profileImageURL,
+            contentDescription = null,
+        )
 
         Column {
             displayName?.let { displayName ->

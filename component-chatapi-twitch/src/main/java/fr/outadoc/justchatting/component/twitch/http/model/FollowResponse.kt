@@ -10,5 +10,5 @@ data class FollowResponse(
     @SerialName("data")
     val data: List<Follow>?,
     @SerialName("pagination")
-    val pagination: Pagination?,
+    val pagination: Pagination,
 )

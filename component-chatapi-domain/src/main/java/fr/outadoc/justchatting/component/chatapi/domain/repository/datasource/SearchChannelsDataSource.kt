@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResponse
-import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 
 class SearchChannelsDataSource(
@@ -12,18 +11,14 @@ class SearchChannelsDataSource(
     private val helixApi: HelixApi,
 ) : PagingSource<String, ChannelSearchResponse>() {
 
-    override fun getRefreshKey(state: PagingState<String, ChannelSearchResponse>): String? {
-        return state.anchorPosition?.let { anchorPosition ->
-            state.closestItemToPosition(anchorPosition)?.pagination?.cursor
-        }
-    }
+    override fun getRefreshKey(state: PagingState<String, ChannelSearchResponse>): String? = null
 
     override suspend fun load(params: LoadParams<String>): LoadResult<String, ChannelSearchResponse> {
         return try {
             val response = helixApi.getChannels(
                 query = query,
                 limit = params.loadSize,
-                offset = params.key,
+                after = params.key,
             )
 
             LoadResult.Page(
@@ -43,9 +38,6 @@ class SearchChannelsDataSource(
                                 thumbnailUrl = search.thumbnailUrl,
                             )
                         },
-                        pagination = Pagination(
-                            cursor = response.pagination?.cursor,
-                        ),
                     ),
                 ),
                 nextKey = response.pagination?.cursor,

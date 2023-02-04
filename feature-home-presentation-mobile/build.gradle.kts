@@ -47,6 +47,7 @@ dependencies {
 
     implementation(platform(libs.compose.bom))
 
+    implementation(libs.accompanist.placeholder)
     implementation(libs.androidx.browser)
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.splashscreen)

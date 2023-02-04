@@ -5,12 +5,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,6 +22,9 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import com.google.accompanist.placeholder.PlaceholderHighlight
+import com.google.accompanist.placeholder.material.placeholder
+import com.google.accompanist.placeholder.material.shimmer
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.utils.ui.plus
@@ -68,7 +72,16 @@ fun SearchResultsList(
                             onClick = { onItemClick(item) },
                         )
                     } else {
-                        UserItemCard(modifier = Modifier.height(64.dp))
+                        UserItemCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .placeholder(
+                                    visible = true,
+                                    shape = CardDefaults.shape,
+                                    color = MaterialTheme.colorScheme.surfaceVariant,
+                                    highlight = PlaceholderHighlight.shimmer(),
+                                ),
+                        )
                     }
                 }
             }

@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ChannelSearchResponse(
     @SerialName("data")
-    val data: List<ChannelSearch>?,
+    val data: List<ChannelSearch>,
     @SerialName("pagination")
-    val pagination: Pagination?,
+    val pagination: Pagination,
 )

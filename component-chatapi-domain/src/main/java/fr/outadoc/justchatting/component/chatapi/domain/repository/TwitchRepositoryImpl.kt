@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
-import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResponse
 import fr.outadoc.justchatting.component.chatapi.domain.model.Follow
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
@@ -27,13 +26,13 @@ class TwitchRepositoryImpl(
     private val preferencesRepository: PreferenceRepository,
 ) : TwitchRepository {
 
-    override suspend fun loadSearchChannels(query: String): Pager<String, ChannelSearchResponse> {
-        return Pager(
+    override suspend fun loadSearchChannels(query: String): Flow<PagingData<ChannelSearch>> {
+        val pager = Pager(
             config = PagingConfig(
                 pageSize = 15,
                 initialLoadSize = 15,
                 prefetchDistance = 5,
-                enablePlaceholders = false,
+                enablePlaceholders = true,
             ),
             pagingSourceFactory = {
                 SearchChannelsDataSource(
@@ -42,9 +41,15 @@ class TwitchRepositoryImpl(
                 )
             },
         )
+
+        return pager.flow.map { page ->
+            page.flatMap { searchResponse ->
+                mapSearchWithUserProfileImages(searchResponse)
+            }
+        }
     }
 
-    override suspend fun mapSearchWithUserProfileImages(searchResults: List<ChannelSearch>): List<ChannelSearch> =
+    private suspend fun mapSearchWithUserProfileImages(searchResults: List<ChannelSearch>): List<ChannelSearch> =
         with(searchResults) {
             return mapNotNull { result -> result.id }
                 .chunked(size = 100)
@@ -69,7 +74,7 @@ class TwitchRepositoryImpl(
                 pageSize = 30,
                 initialLoadSize = 30,
                 prefetchDistance = 10,
-                enablePlaceholders = false,
+                enablePlaceholders = true,
             ),
             pagingSourceFactory = {
                 FollowedStreamsDataSource(

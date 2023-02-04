@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.flatMap
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -15,7 +14,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlin.time.Duration.Companion.seconds
@@ -34,16 +32,7 @@ class ChannelSearchViewModel(
         state.mapNotNull { state -> state.query }
             .distinctUntilChanged()
             .debounce(0.5.seconds)
-            .flatMapLatest { query ->
-                repository.loadSearchChannels(query)
-                    .flow
-                    .map { page ->
-                        page.flatMap { searchResponse ->
-                            searchResponse.data.orEmpty()
-                                .let { search -> repository.mapSearchWithUserProfileImages(search) }
-                        }
-                    }
-            }
+            .flatMapLatest { query -> repository.loadSearchChannels(query) }
             .cachedIn(viewModelScope)
 
     fun onQueryChange(query: String) {

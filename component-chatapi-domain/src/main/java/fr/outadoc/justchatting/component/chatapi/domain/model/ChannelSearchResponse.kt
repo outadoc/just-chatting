@@ -1,5 +1,0 @@
-package fr.outadoc.justchatting.component.chatapi.domain.model
-
-class ChannelSearchResponse(
-    val data: List<ChannelSearch>?,
-)

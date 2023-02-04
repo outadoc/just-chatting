@@ -5,16 +5,15 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Reply
-import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.DismissValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
+import androidx.compose.material3.SwipeToDismiss
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,7 +24,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SwipeToReply(
     modifier: Modifier = Modifier,
@@ -34,7 +33,7 @@ fun SwipeToReply(
     content: @Composable () -> Unit,
 ) {
     val dismissState = rememberDismissState(
-        confirmStateChange = {
+        confirmValueChange = {
             if (it == DismissValue.DismissedToEnd) onDismiss()
             it != DismissValue.DismissedToEnd
         },
@@ -44,7 +43,6 @@ fun SwipeToReply(
         modifier = modifier,
         state = dismissState,
         directions = if (enabled) setOf(DismissDirection.StartToEnd) else emptySet(),
-        dismissThresholds = { FractionalThreshold(0.15f) },
         background = {
             val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
             if (direction != DismissDirection.StartToEnd) return@SwipeToDismiss
@@ -73,10 +71,15 @@ fun SwipeToReply(
                 )
             }
         },
-    ) {
-        val elevation = animateDpAsState(if (dismissState.dismissDirection != null) 4.dp else 0.dp)
-        Surface(shadowElevation = elevation.value) {
-            content()
-        }
-    }
+        dismissContent = {
+            val elevation = animateDpAsState(
+                if (dismissState.dismissDirection != null) 4.dp
+                else 0.dp
+            )
+
+            Surface(shadowElevation = elevation.value) {
+                content()
+            }
+        },
+    )
 }

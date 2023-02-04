@@ -43,6 +43,7 @@ class SearchChannelsDataSource(
                             isLive = search.isLive,
                             startedAt = search.startedAt,
                             thumbnailUrl = search.thumbnailUrl,
+                            tags = search.tags,
                         )
                     },
                 ),

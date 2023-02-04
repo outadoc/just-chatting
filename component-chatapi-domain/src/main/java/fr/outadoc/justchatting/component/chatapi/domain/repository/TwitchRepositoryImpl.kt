@@ -185,7 +185,7 @@ class TwitchRepositoryImpl(
                         title = stream.title,
                         viewerCount = stream.viewerCount,
                         startedAt = stream.startedAt,
-                        tags = stream.tags
+                        tags = stream.tags,
                     )
                 }
         }

@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.component.chatapi.domain.model
 
 import android.os.Parcelable
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
@@ -16,4 +17,5 @@ data class ChannelSearch(
     val startedAt: String? = null,
     val thumbnailUrl: String? = null,
     val profileImageURL: String? = null,
+    val tags: List<String> = persistentListOf(),
 ) : Parcelable

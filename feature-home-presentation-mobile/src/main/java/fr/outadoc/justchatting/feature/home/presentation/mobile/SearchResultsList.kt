@@ -72,6 +72,7 @@ fun SearchResultsList(
                             modifier = Modifier.fillMaxWidth(),
                             displayName = item.broadcasterDisplayName,
                             profileImageURL = item.profileImageURL,
+                            tags = item.tags,
                             onClick = { onItemClick(item) },
                         )
                     } else {

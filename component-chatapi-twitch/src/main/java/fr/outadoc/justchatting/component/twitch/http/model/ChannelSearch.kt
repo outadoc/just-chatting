@@ -28,4 +28,6 @@ data class ChannelSearch(
     val startedAt: String? = null,
     @SerialName("thumbnail_url")
     val thumbnailUrl: String? = null,
+    @SerialName("tags")
+    val tags: List<String> = emptyList(),
 ) : Parcelable

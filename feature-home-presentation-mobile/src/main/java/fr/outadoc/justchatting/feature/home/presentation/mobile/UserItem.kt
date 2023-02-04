@@ -1,6 +1,9 @@
 package fr.outadoc.justchatting.feature.home.presentation.mobile
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -31,10 +34,11 @@ fun UserItemPreview() {
         UserItemCard(
             modifier = Modifier
                 .padding(8.dp)
-                .width(250.dp),
+                .width(300.dp),
             displayName = "Maghla",
             followedAt = "2022-01-01T13:45:04.00Z".toInstant(),
             profileImageURL = null,
+            tags = listOf("French", "ASMR"),
         )
     }
 }
@@ -46,6 +50,7 @@ fun UserItemCard(
     displayName: String? = null,
     followedAt: Instant? = null,
     profileImageURL: String? = null,
+    tags: List<String> = emptyList(),
     onClick: () -> Unit = {},
 ) {
     Card(
@@ -57,16 +62,19 @@ fun UserItemCard(
             displayName = displayName,
             followedAt = followedAt,
             profileImageURL = profileImageURL,
+            tags = tags,
         )
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun UserItem(
     modifier: Modifier = Modifier,
     displayName: String?,
     followedAt: Instant?,
     profileImageURL: String?,
+    tags: List<String>,
 ) {
     Row(
         modifier = modifier,
@@ -99,6 +107,17 @@ fun UserItem(
                         style = MaterialTheme.typography.labelMedium,
                     )
                 }
+
+            if (tags.isNotEmpty()) {
+                FlowRow(
+                    modifier = Modifier.padding(top = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    tags.forEach { tag ->
+                        StreamTagChip(tag = tag)
+                    }
+                }
+            }
         }
     }
 }

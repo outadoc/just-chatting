@@ -175,8 +175,8 @@ fun StreamInfoPreviewFull() {
                 startedAt = "2022-09-01T00:00:00.00Z",
                 viewerCount = 10_000,
                 tags = listOf(
-                    "French"
-                )
+                    "French",
+                ),
             ),
         )
     }

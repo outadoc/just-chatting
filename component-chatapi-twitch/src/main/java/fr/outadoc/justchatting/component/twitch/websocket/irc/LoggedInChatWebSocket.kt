@@ -161,8 +161,7 @@ class LoggedInChatWebSocket(
 
         when (val command = parser.parse(received)) {
             is Message.Notice -> {
-                mapper.map(command)
-                    ?.let { event -> _flow.emit(event) }
+                _flow.emit(mapper.map(command))
             }
 
             is UserState -> {

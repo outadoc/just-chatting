@@ -324,7 +324,7 @@ fun ExpandedTopAppBar(
                 navigationIcon = navigationIcon,
                 actions = actions,
                 windowInsets = windowInsets,
-                colors = TopAppBarDefaults.smallTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = backgroundColor,
                     titleContentColor = contentColor,
                     actionIconContentColor = contentColor,

@@ -36,7 +36,7 @@ val twitchModule = module {
         )
     }
 
-    single { EmotesRepository(get(), get(), get(), get()) }
+    single { EmotesRepository(get(), get(), get(), get(), get()) }
 
     single<TwitchRepository> { TwitchRepositoryImpl(get(), get()) }
 

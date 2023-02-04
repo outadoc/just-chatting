@@ -13,6 +13,8 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -43,7 +45,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -173,6 +174,9 @@ fun StreamInfoPreviewFull() {
                 gameName = "",
                 startedAt = "2022-09-01T00:00:00.00Z",
                 viewerCount = 10_000,
+                tags = listOf(
+                    "French"
+                )
             ),
         )
     }
@@ -195,7 +199,7 @@ fun StreamInfoPreviewOffline() {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun StreamInfo(
     modifier: Modifier = Modifier,
@@ -208,6 +212,18 @@ fun StreamInfo(
     ) {
         stream?.title?.let { title ->
             Text(text = title)
+        }
+
+        val tags = stream?.tags
+        if (!tags.isNullOrEmpty()) {
+            FlowRow(
+                modifier = Modifier.padding(top = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                tags.forEach { tag ->
+                    StreamTagChip(tag = tag)
+                }
+            }
         }
 
         stream?.viewerCount?.let { viewerCount ->

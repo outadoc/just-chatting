@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.home.presentation.mobile
+package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding

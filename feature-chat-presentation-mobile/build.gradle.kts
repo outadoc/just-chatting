@@ -39,6 +39,7 @@ android {
 dependencies {
     implementation(project(":utils-ui"))
     implementation(project(":utils-core"))
+    implementation(project(":utils-logging"))
 
     implementation(project(":component-deeplink"))
     implementation(project(":component-chatapi-common"))

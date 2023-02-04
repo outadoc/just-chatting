@@ -3,12 +3,15 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
+import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.Person
 import androidx.core.app.RemoteInput
+import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
@@ -18,6 +21,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
+import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
 
 class ChatNotifierImpl : ChatNotifier {
@@ -62,11 +66,23 @@ class ChatNotifierImpl : ChatNotifier {
             )
         }
 
-        createNotificationForUser(
-            context = context,
-            user = user,
-            person = person,
-        )
+        val notificationsPermissionCheck: Int =
+            ContextCompat.checkSelfPermission(context, "android.permission.POST_NOTIFICATIONS")
+
+        when (notificationsPermissionCheck) {
+            PackageManager.PERMISSION_GRANTED -> {
+                // noinspection MissingPermission
+                createNotificationForUser(
+                    context = context,
+                    user = user,
+                    person = person,
+                )
+            }
+
+            else -> {
+                logError<ChatNotifierImpl> { "Notifications permission not granted (code: $notificationsPermissionCheck)" }
+            }
+        }
     }
 
     private fun createShortcutForChannel(
@@ -119,6 +135,7 @@ class ChatNotifierImpl : ChatNotifier {
         return nm.getNotificationChannelCompat(NOTIFICATION_CHANNEL_ID)
     }
 
+    @RequiresPermission("android.permission.POST_NOTIFICATIONS")
     private fun createNotificationForUser(context: Context, user: User, person: Person) {
         val nm = NotificationManagerCompat.from(context)
         val intent = ChatActivity.createIntent(context, user.login)

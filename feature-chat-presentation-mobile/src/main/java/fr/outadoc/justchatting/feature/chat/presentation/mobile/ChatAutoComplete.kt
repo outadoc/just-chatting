@@ -1,25 +1,24 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Chip
-import androidx.compose.material.ChipDefaults
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.ElevatedSuggestionChip
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Chatter
 import fr.outadoc.justchatting.utils.ui.AppTheme
+import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @Composable
 fun AutoCompleteEmoteItem(
@@ -56,7 +55,7 @@ fun AutoCompleteUserItem(
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun AutoCompleteItemPreviewSimple() {
     AppTheme {
@@ -66,7 +65,7 @@ fun AutoCompleteItemPreviewSimple() {
     }
 }
 
-@Preview
+@ThemePreviews
 @Composable
 fun AutoCompleteItemPreviewIcon() {
     AppTheme {
@@ -76,24 +75,24 @@ fun AutoCompleteItemPreviewIcon() {
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AutoCompleteItemContent(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
-    content: @Composable RowScope.() -> Unit,
+    content: @Composable () -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
 
-    Chip(
+    ElevatedSuggestionChip(
         modifier = modifier,
-        colors = ChipDefaults.chipColors(
-            backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+        colors = SuggestionChipDefaults.elevatedSuggestionChipColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant,
         ),
         onClick = {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
             onClick()
         },
-        content = content,
+        label = content,
     )
 }

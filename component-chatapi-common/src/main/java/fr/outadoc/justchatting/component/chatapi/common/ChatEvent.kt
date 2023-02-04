@@ -65,4 +65,11 @@ sealed class ChatEvent {
     data class UserState(
         val emoteSets: ImmutableList<String> = persistentListOf(),
     ) : ChatEvent()
+
+    @Immutable
+    data class RemoveContent(
+        val upUntil: Instant,
+        val matchingUserId: String? = null,
+        val matchingMessageId: String? = null,
+    ) : ChatEvent()
 }

@@ -4,45 +4,15 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.twitch.R
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ClearChat
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import kotlinx.collections.immutable.toImmutableList
 
 class IrcMessageMapper(private val context: Context) {
 
-    fun map(ircEvent: Message): ChatEvent = with(ircEvent) {
+    fun mapMessage(ircEvent: Message): ChatEvent = with(ircEvent) {
         when (this) {
-            is Message.ClearChat -> {
-                ChatEvent.Message.Highlighted(
-                    header = context.getString(R.string.chat_clear),
-                    data = null,
-                    timestamp = timestamp,
-                )
-            }
-
-            is Message.Ban -> {
-                ChatEvent.Message.Highlighted(
-                    header = context.getString(R.string.chat_ban, userLogin),
-                    data = null,
-                    timestamp = timestamp,
-                )
-            }
-
-            is Message.Timeout -> {
-                ChatEvent.Message.Highlighted(
-                    header = context.getString(R.string.chat_timeout, userLogin, duration),
-                    data = null,
-                    timestamp = timestamp,
-                )
-            }
-
-            is Message.ClearMessage -> {
-                ChatEvent.Message.Highlighted(
-                    header = context.getString(R.string.chat_clearmsg, userLogin, message),
-                    data = null,
-                    timestamp = timestamp,
-                )
-            }
-
             is Message.Notice -> {
                 ChatEvent.Message.Highlighted(
                     header = messageId?.getNoticeString(context = context, message = message)
@@ -141,6 +111,40 @@ class IrcMessageMapper(private val context: Context) {
                     )
                 }
             }
+        }
+    }
+
+    fun mapOptional(command: IrcEvent): ChatEvent? {
+        return when (command) {
+            is ClearChat -> {
+                if (command.targetUserId != null) {
+                    if (command.duration == null) {
+                        ChatEvent.Message.Highlighted(
+                            timestamp = command.timestamp,
+                            header = context.getString(R.string.chat_ban, command.targetUserLogin),
+                            data = null,
+                        )
+                    } else {
+                        ChatEvent.Message.Highlighted(
+                            timestamp = command.timestamp,
+                            header = context.getString(
+                                R.string.chat_timeout,
+                                command.targetUserLogin,
+                                command.duration,
+                            ),
+                            data = null,
+                        )
+                    }
+                } else {
+                    ChatEvent.Message.Highlighted(
+                        timestamp = command.timestamp,
+                        header = context.getString(R.string.chat_clear),
+                        data = null,
+                    )
+                }
+            }
+
+            else -> null
         }
     }
 }

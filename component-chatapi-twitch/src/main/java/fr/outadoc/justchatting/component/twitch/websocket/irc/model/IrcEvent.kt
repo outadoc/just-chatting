@@ -50,27 +50,6 @@ sealed interface Message : IrcEvent {
         val timestamp: Instant,
         val messageId: String?,
     ) : Message
-
-    data class ClearChat(
-        val timestamp: Instant,
-    ) : Message
-
-    data class Timeout(
-        val duration: Duration?,
-        val timestamp: Instant,
-        val userLogin: String?,
-    ) : Message
-
-    data class Ban(
-        val timestamp: Instant,
-        val userLogin: String?,
-    ) : Message
-
-    data class ClearMessage(
-        val message: String?,
-        val timestamp: Instant,
-        val userLogin: String?,
-    ) : Message
 }
 
 object PingCommand : IrcEvent
@@ -85,4 +64,18 @@ data class RoomStateDelta(
 
 data class UserState(
     val emoteSets: List<String> = emptyList(),
+) : IrcEvent
+
+data class ClearChat(
+    val timestamp: Instant,
+    val targetUserId: String?,
+    val targetUserLogin: String?,
+    val duration: Duration?,
+) : IrcEvent
+
+data class ClearMessage(
+    val timestamp: Instant,
+    val targetMessage: String?,
+    val targetMessageId: String?,
+    val targetUserLogin: String?,
 ) : IrcEvent

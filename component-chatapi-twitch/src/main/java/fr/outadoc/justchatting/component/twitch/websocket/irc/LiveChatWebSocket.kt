@@ -9,6 +9,8 @@ import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ClearChat
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ClearMessage
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
@@ -168,7 +170,7 @@ class LiveChatWebSocket private constructor(
             }
 
             is Message -> {
-                _flow.emit(mapper.map(command))
+                _flow.emit(mapper.mapMessage(command))
             }
 
             is RoomStateDelta -> {
@@ -181,6 +183,32 @@ class LiveChatWebSocket private constructor(
                         isSubOnly = command.isSubOnly,
                     ),
                 )
+            }
+
+            is ClearChat -> {
+                _flow.emit(
+                    ChatEvent.RemoveContent(
+                        upUntil = command.timestamp,
+                        matchingUserId = command.targetUserId,
+                    ),
+                )
+
+                mapper.mapOptional(command)?.let { message ->
+                    _flow.emit(message)
+                }
+            }
+
+            is ClearMessage -> {
+                _flow.emit(
+                    ChatEvent.RemoveContent(
+                        upUntil = command.timestamp,
+                        matchingMessageId = command.targetMessageId,
+                    ),
+                )
+
+                mapper.mapOptional(command)?.let { message ->
+                    _flow.emit(message)
+                }
             }
 
             is PingCommand -> {
@@ -218,7 +246,7 @@ class LiveChatWebSocket private constructor(
                     )
                     .asFlow()
                     .filterIsInstance<Message>()
-                    .mapNotNull { event -> mapper.map(event) },
+                    .mapNotNull { event -> mapper.mapMessage(event) },
             )
         } catch (e: Exception) {
             logError<LiveChatWebSocket>(e) { "Failed to load recent messages for channel $channelLogin" }

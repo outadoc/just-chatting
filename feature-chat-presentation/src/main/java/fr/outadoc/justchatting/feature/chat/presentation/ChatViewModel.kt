@@ -96,6 +96,7 @@ class ChatViewModel(
         data class ChangeRoomState(val delta: ChatEvent.RoomStateDelta) : Action()
         data class ChangeConnectionStatus(val connectionStatus: ConnectionStatus) : Action()
         data class ChangeUserState(val userState: ChatEvent.UserState) : Action()
+        data class RemoveContent(val removedContent: ChatEvent.RemoveContent) : Action()
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
         object LoadStreamDetails : Action()
@@ -119,6 +120,7 @@ class ChatViewModel(
             val recentEmotes: List<RecentEmote> = emptyList(),
             val userState: ChatEvent.UserState = ChatEvent.UserState(),
             val roomState: RoomState = RoomState(),
+            val removedContent: PersistentList<ChatEvent.RemoveContent> = persistentListOf(),
             val connectionStatus: ConnectionStatus = ConnectionStatus(),
             val maxAdapterCount: Int,
         ) : State() {
@@ -244,6 +246,10 @@ class ChatViewModel(
                             is ChatEvent.UserState -> {
                                 Action.ChangeUserState(command)
                             }
+
+                            is ChatEvent.RemoveContent -> {
+                                Action.RemoveContent(command)
+                            }
                         }
                     }
                     .filterNotNull()
@@ -353,6 +359,7 @@ class ChatViewModel(
             is Action.ChangeRecentEmotes -> reduce(state)
             is Action.ChangeRoomState -> reduce(state)
             is Action.ChangeUserState -> reduce(state)
+            is Action.RemoveContent -> reduce(state)
             is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
             is Action.LoadStreamDetails -> reduce(state)
@@ -527,6 +534,13 @@ class ChatViewModel(
                 uniqueMessagesOnly = delta.uniqueMessagesOnly ?: state.roomState.uniqueMessagesOnly,
                 slowModeDuration = delta.slowModeDuration ?: state.roomState.slowModeDuration,
             ),
+        )
+    }
+
+    private fun Action.RemoveContent.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(
+            removedContent = state.removedContent.add(removedContent),
         )
     }
 

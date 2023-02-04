@@ -228,9 +228,11 @@ class TwitchIrcCommandParserTest {
     fun `Parse CLEARCHAT permanent ban message`() = test {
         input { "@room-id=12345678;target-user-id=87654321;tmi-sent-ts=1642715756806 :tmi.twitch.tv CLEARCHAT #dallas :ronni" }
         expected {
-            Message.Ban(
-                userLogin = "ronni",
+            Message.ClearChat(
                 timestamp = Instant.parse("2022-01-20T21:55:56.806Z"),
+                userId = "87654321",
+                userLogin = "ronni",
+                duration = null,
             )
         }
     }
@@ -239,10 +241,11 @@ class TwitchIrcCommandParserTest {
     fun `Parse CLEARCHAT temporary ban message`() = test {
         input { "@ban-duration=350;room-id=12345678;target-user-id=87654321;tmi-sent-ts=1642719320727 :tmi.twitch.tv CLEARCHAT #dallas :ronni" }
         expected {
-            Message.Timeout(
-                userLogin = "ronni",
-                duration = 350.seconds,
+            Message.ClearChat(
                 timestamp = Instant.parse("2022-01-20T22:55:20.727Z"),
+                userLogin = "ronni",
+                userId = "87654321",
+                duration = 350.seconds,
             )
         }
     }
@@ -253,6 +256,9 @@ class TwitchIrcCommandParserTest {
         expected {
             Message.ClearChat(
                 timestamp = Instant.parse("2022-01-20T21:54:55.392Z"),
+                userId = null,
+                userLogin = null,
+                duration = null,
             )
         }
     }

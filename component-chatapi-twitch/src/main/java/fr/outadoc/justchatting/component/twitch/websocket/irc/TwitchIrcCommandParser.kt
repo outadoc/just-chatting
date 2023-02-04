@@ -5,6 +5,8 @@ import chat.willow.kale.irc.message.IrcMessageParser
 import chat.willow.kale.irc.message.rfc1459.NoticeMessage
 import chat.willow.kale.irc.message.rfc1459.PingMessage
 import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ClearChat
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ClearMessage
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
@@ -74,36 +76,22 @@ class TwitchIrcCommandParser(private val clock: Clock) {
         )
     }
 
-    private fun parseClearMessage(ircMessage: IrcMessage): Message.ClearMessage {
-        return Message.ClearMessage(
-            message = ircMessage.parameters.getOrNull(1),
-            userLogin = ircMessage.tags.login,
+    private fun parseClearMessage(ircMessage: IrcMessage): IrcEvent {
+        return ClearMessage(
+            targetMessage = ircMessage.parameters.getOrNull(1),
+            targetMessageId = ircMessage.tags.targetMessageId,
+            targetUserLogin = ircMessage.tags.login,
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
         )
     }
 
-    private fun parseClearChat(ircMessage: IrcMessage): Message {
-        val user = ircMessage.parameters.getOrNull(1)
-        val duration = ircMessage.tags.banDuration
-
-        return when {
-            user == null ->
-                Message.ClearChat(
-                    timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
-                )
-
-            duration != null ->
-                Message.Timeout(
-                    userLogin = user,
-                    duration = duration,
-                    timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
-                )
-
-            else -> Message.Ban(
-                userLogin = user,
-                timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
-            )
-        }
+    private fun parseClearChat(ircMessage: IrcMessage): IrcEvent {
+        return ClearChat(
+            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
+            targetUserId = ircMessage.tags.targetUserId,
+            targetUserLogin = ircMessage.parameters.getOrNull(1),
+            duration = ircMessage.tags.banDuration,
+        )
     }
 
     private fun parseNotice(ircMessage: IrcMessage): Message.Notice? {

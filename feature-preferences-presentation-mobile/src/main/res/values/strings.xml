@@ -31,8 +31,8 @@
     <string name="settings_thirdparty_bttv_subtitle">Fetch and display BetterTTV emotes, using data provided by betterttv.net.</string>
     <string name="settings_thirdparty_ffz_title">FrankerFaceZ Emotes</string>
     <string name="settings_thirdparty_ffz_subtitle">Fetch and display FrankerFaceZ emotes, using data provided by betterttv.net.</string>
-    <string name="settings_thirdparty_stv_title">7tv Emotes</string>
-    <string name="settings_thirdparty_stv_subtitle">Fetch and display 7tv emotes, using data provided by 7tv.app.</string>
+    <string name="settings_thirdparty_stv_title">7TV Emotes</string>
+    <string name="settings_thirdparty_stv_subtitle">Fetch and display 7TV emotes, using data provided by 7tv.app.</string>
     <string name="recentMsg_limit">Recent message limit</string>
     <string name="recentMsg_limit_disabled">Disabled</string>
     <string name="timestamps">Show timestamps</string>

@@ -21,7 +21,7 @@ interface HelixApi {
 
     suspend fun getUsersByLogin(logins: List<String>): UsersResponse
 
-    suspend fun getChannels(query: String, limit: Int, after: String?): ChannelSearchResponse
+    suspend fun searchChannels(query: String, limit: Int, after: String?): ChannelSearchResponse
 
     suspend fun getFollowedChannels(
         userId: String?,

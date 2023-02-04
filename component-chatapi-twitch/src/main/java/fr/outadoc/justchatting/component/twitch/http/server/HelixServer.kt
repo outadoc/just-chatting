@@ -70,7 +70,7 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
         }.body()
     }
 
-    override suspend fun getChannels(
+    override suspend fun searchChannels(
         query: String,
         limit: Int,
         after: String?,

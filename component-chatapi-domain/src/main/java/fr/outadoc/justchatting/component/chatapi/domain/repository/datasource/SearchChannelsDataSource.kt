@@ -16,7 +16,7 @@ class SearchChannelsDataSource(
 
     override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, List<ChannelSearch>> {
         return try {
-            val response = helixApi.getChannels(
+            val response = helixApi.searchChannels(
                 query = query,
                 limit = params.loadSize,
                 after = (params.key as? Pagination.Next)?.cursor,

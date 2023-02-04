@@ -21,12 +21,13 @@
     <string name="settings_accessibility_animations_title">Animated emotes</string>
     <string name="settings_accessibility_animations_subtitle">You can disable animated emotes by enabling "Reduce motion" in your device\'s accessibility settings.</string>
     <string name="settings_accessibility_animations_action">Open system accessibility settings</string>
-    <string name="settings_accessibility_timestamps_title">Show timestamps</string>
+    <string name="settings_accessibility_timestamps_title">Message timestamps</string>
+    <string name="settings_accessibility_timestamps_subtitle">Show the time at which messages were sent.</string>
     <string name="settings_logs_title">Share logs</string>
     <string name="settings_logs_subtitle">Dump recent logs and share them for debugging purposes.</string>
     <string name="settings_notifications_header">Notifications</string>
     <string name="settings_notifications_openNotificationsSettings">Notification settings</string>
-    <string name="settings_notifications_openBubbleSettings">Bubble settings</string>
+    <string name="settings_notifications_openBubbleSettings">Chat bubble settings</string>
     <string name="settings_thirdparty_header">Third-party integrations</string>
     <string name="settings_thirdparty_recent_title">Recent messages</string>
     <string name="settings_thirdparty_recent_subtitle">When joining a chat room, recent messages are fetched and displayed using data provided by recent-messages.robotty.de.</string>

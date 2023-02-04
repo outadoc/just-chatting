@@ -22,11 +22,12 @@
     <string name="settings_accessibility_animations_subtitle">Vous pouvez désactiver l\'animation des émotes en activant l\'option de "Suppression des animations" dans les réglages de votre appareil.</string>
     <string name="settings_accessibility_animations_action">Ouvrir les réglages d\'accessibilité du système</string>
     <string name="settings_accessibility_timestamps_title">Horodatage des messages</string>
+    <string name="settings_accessibility_timestamps_subtitle">Afficher l\'heure d\'envoi des messages dans la conversation.</string>
     <string name="settings_logs_title">Partager les logs</string>
     <string name="settings_logs_subtitle">Exporter et partager vos logs récents à des fins de débogage.</string>
     <string name="settings_notifications_header">Notifications</string>
     <string name="settings_notifications_openNotificationsSettings">Préferences de notification</string>
-    <string name="settings_notifications_openBubbleSettings">Préférences des bulles</string>
+    <string name="settings_notifications_openBubbleSettings">Préférences des bulles de conversation</string>
     <string name="settings_thirdparty_header">Intégrations tierces</string>
     <string name="settings_thirdparty_recent_title">Messages récents</string>
     <string name="settings_thirdparty_recent_subtitle">Lorsque vous rejoignez une conversation, les messages récents sont récupérés et affichés grâce aux données de recent-messages.robotty.de.</string>

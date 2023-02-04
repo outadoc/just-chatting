@@ -90,6 +90,9 @@ fun SettingsList(
                 title = {
                     Text(stringResource(R.string.settings_accessibility_timestamps_title))
                 },
+                subtitle = {
+                    Text(stringResource(R.string.settings_accessibility_timestamps_subtitle))
+                },
             )
         }
 
@@ -199,6 +202,10 @@ fun SettingsList(
                     Text(stringResource(R.string.settings_thirdparty_stv_subtitle))
                 },
             )
+        }
+
+        item {
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
         }
 
         item {

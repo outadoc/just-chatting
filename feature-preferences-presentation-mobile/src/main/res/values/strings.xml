@@ -18,7 +18,7 @@
     <string name="settings_account_logout_action">Log out…</string>
     <string name="settings_dependencies_header">Open-source dependencies</string>
     <string name="settings_dependencies_cd">Show website</string>
-    <string name="settings_chat">Chat</string>
+    <string name="settings_chat">Accessibility</string>
     <string name="settings_logs_title">Share logs</string>
     <string name="settings_logs_subtitle">Dump recent logs and share them for debugging purposes.</string>
     <string name="settings_notifications_header">Notifications</string>

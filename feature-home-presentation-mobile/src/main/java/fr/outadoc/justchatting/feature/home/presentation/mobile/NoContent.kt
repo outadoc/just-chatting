@@ -8,6 +8,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import fr.outadoc.justchatting.utils.ui.AppTheme
+import fr.outadoc.justchatting.utils.ui.ScreenPreviews
+
+@ScreenPreviews
+@Composable
+fun NoContentPreview() {
+    AppTheme {
+        NoContent()
+    }
+}
 
 @Composable
 fun NoContent(modifier: Modifier = Modifier) {

@@ -10,8 +10,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,9 +20,6 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import com.google.accompanist.placeholder.PlaceholderHighlight
-import com.google.accompanist.placeholder.material.placeholder
-import com.google.accompanist.placeholder.material.shimmer
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.utils.ui.plus
@@ -58,9 +53,17 @@ fun SearchResultsList(
             contentPadding = insets + PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            if (state.query.isNotEmpty() && !isRefreshing && items.itemCount == 0) {
-                item(key = "_noContent") {
-                    NoContent(modifier = Modifier.fillParentMaxSize())
+            if (state.query.isNotEmpty() && items.itemCount == 0) {
+                if (!isRefreshing) {
+                    item(key = "_noContent") {
+                        NoContent(modifier = Modifier.fillParentMaxSize())
+                    }
+                } else {
+                    items(50) {
+                        UserItemCardPlaceholder(
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
                 }
             } else {
                 items(items) { item: ChannelSearch? ->
@@ -72,15 +75,8 @@ fun SearchResultsList(
                             onClick = { onItemClick(item) },
                         )
                     } else {
-                        UserItemCard(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .placeholder(
-                                    visible = true,
-                                    shape = CardDefaults.shape,
-                                    color = MaterialTheme.colorScheme.surfaceVariant,
-                                    highlight = PlaceholderHighlight.shimmer(),
-                                ),
+                        UserItemCardPlaceholder(
+                            modifier = Modifier.fillMaxWidth(),
                         )
                     }
                 }

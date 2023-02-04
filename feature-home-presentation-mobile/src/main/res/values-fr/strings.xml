@@ -3,7 +3,7 @@
     <string name="channels">Suivies</string>
     <string name="followed_at">Suivi·e depuis le %s</string>
     <string name="live">En direct</string>
-    <string name="nothing_here">Rien ici</string>
+    <string name="nothing_here">Rien à voir ici</string>
     <string name="onboarding_login_action">Continuer avec Twitch</string>
     <string name="onboarding_message">Pour parcourir vos chaînes suivies et poster dans le tchat, vous devez lier votre compte Twitch.</string>
     <string name="onboarding_title">Bienvenue dans %s !</string>

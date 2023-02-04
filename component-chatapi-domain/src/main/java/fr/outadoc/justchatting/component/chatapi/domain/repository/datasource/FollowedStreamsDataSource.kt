@@ -24,8 +24,11 @@ class FollowedStreamsDataSource(
                 )
 
             val itemsAfter: Int =
-                if (response.pagination.cursor == null) 0
-                else LoadResult.Page.COUNT_UNDEFINED
+                if (response.pagination.cursor == null) {
+                    0
+                } else {
+                    LoadResult.Page.COUNT_UNDEFINED
+                }
 
             LoadResult.Page(
                 data = listOf(

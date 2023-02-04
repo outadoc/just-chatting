@@ -74,6 +74,7 @@ fun LiveChannelsList(
                             gameName = item.gameName,
                             startedAt = item.startedAt?.toInstant(),
                             profileImageURL = item.profileImageURL,
+                            tags = item.tags,
                             onClick = { onItemClick(item) },
                         )
                     } else {

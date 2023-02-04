@@ -28,4 +28,6 @@ data class Stream(
     val viewerCount: Int? = null,
     @SerialName("started_at")
     val startedAt: String? = null,
+    @SerialName("tags")
+    val tags: List<String> = emptyList(),
 ) : Parcelable

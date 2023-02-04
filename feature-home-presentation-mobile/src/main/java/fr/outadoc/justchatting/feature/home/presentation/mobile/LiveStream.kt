@@ -2,6 +2,8 @@ package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,6 +25,7 @@ import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toInstant
 
@@ -38,6 +41,13 @@ fun LiveStreamPreview() {
             viewerCount = 5_305,
             startedAt = "2022-01-01T13:45:04.00Z".toInstant(),
             profileImageURL = null,
+            tags = listOf(
+                "French",
+                "Test",
+                "Sponsored",
+                "Label 1",
+                "Super long label with too much text, you can't really argue otherwise",
+            ),
         )
     }
 }
@@ -70,6 +80,7 @@ fun LiveStreamCard(
     gameName: String? = null,
     startedAt: Instant? = null,
     profileImageURL: String? = null,
+    tags: List<String> = persistentListOf(),
     onClick: () -> Unit = {},
 ) {
     Card(
@@ -84,10 +95,12 @@ fun LiveStreamCard(
             gameName = gameName,
             startedAt = startedAt,
             profileImageURL = profileImageURL,
+            tags = tags,
         )
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LiveStream(
     modifier: Modifier = Modifier,
@@ -97,6 +110,7 @@ fun LiveStream(
     gameName: String?,
     startedAt: Instant?,
     profileImageURL: String?,
+    tags: List<String>,
 ) {
     Row(
         modifier = modifier,
@@ -167,6 +181,17 @@ fun LiveStream(
                             style = MaterialTheme.typography.labelMedium,
                         )
                     }
+            }
+
+            if (tags.isNotEmpty()) {
+                FlowRow(
+                    modifier = Modifier.padding(top = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    tags.forEach { tag ->
+                        StreamTagChip(tag = tag)
+                    }
+                }
             }
         }
     }

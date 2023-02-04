@@ -44,6 +44,7 @@ class FollowedStreamsDataSource(
                             title = stream.title,
                             viewerCount = stream.viewerCount,
                             startedAt = stream.startedAt,
+                            tags = stream.tags,
                         )
                     },
                 ),

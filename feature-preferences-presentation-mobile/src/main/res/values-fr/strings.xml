@@ -24,6 +24,15 @@
     <string name="settings_notifications_header">Notifications</string>
     <string name="settings_notifications_openNotificationsSettings">Préferences de notification</string>
     <string name="settings_notifications_openBubbleSettings">Préférences des bulles</string>
+    <string name="settings_thirdparty_header">Intégrations tierces</string>
+    <string name="settings_thirdparty_recent_title">Messages récents</string>
+    <string name="settings_thirdparty_recent_subtitle">Lorsque vous rejoignez une conversation, les messages récents sont récupérés et affichés grâce aux données de recent-messages.robotty.de.</string>
+    <string name="settings_thirdparty_bttv_title">Émotes BetterTTV</string>
+    <string name="settings_thirdparty_bttv_subtitle">Récupérer et afficher les émotes BetterTTV, grâce aux données de betterttv.net.</string>
+    <string name="settings_thirdparty_ffz_title">Émotes FrankerFaceZ</string>
+    <string name="settings_thirdparty_ffz_subtitle">Récupérer et afficher les émotes FrankerFaceZ, grâce aux données de betterttv.net.</string>
+    <string name="settings_thirdparty_stv_title">Émotes 7tv</string>
+    <string name="settings_thirdparty_stv_subtitle">Récupérer et afficher les émotes 7tv, grâce aux données de 7tv.app.</string>
     <string name="timestamps">Afficher les horodatages</string>
     <string name="recentMsg_limit">Limite de messages récents</string>
     <string name="recentMsg_limit_disabled">Désactivé</string>

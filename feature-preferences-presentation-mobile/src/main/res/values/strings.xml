@@ -24,6 +24,15 @@
     <string name="settings_notifications_header">Notifications</string>
     <string name="settings_notifications_openNotificationsSettings">Notification settings</string>
     <string name="settings_notifications_openBubbleSettings">Bubble settings</string>
+    <string name="settings_thirdparty_header">Third-party integrations</string>
+    <string name="settings_thirdparty_recent_title">Recent messages</string>
+    <string name="settings_thirdparty_recent_subtitle">When joining a chat room, recent messages are fetched and displayed using data provided by recent-messages.robotty.de.</string>
+    <string name="settings_thirdparty_bttv_title">BetterTTV Emotes</string>
+    <string name="settings_thirdparty_bttv_subtitle">Fetch and display BetterTTV emotes, using data provided by betterttv.net.</string>
+    <string name="settings_thirdparty_ffz_title">FrankerFaceZ Emotes</string>
+    <string name="settings_thirdparty_ffz_subtitle">Fetch and display FrankerFaceZ emotes, using data provided by betterttv.net.</string>
+    <string name="settings_thirdparty_stv_title">7tv Emotes</string>
+    <string name="settings_thirdparty_stv_subtitle">Fetch and display 7tv emotes, using data provided by 7tv.app.</string>
     <string name="recentMsg_limit">Recent message limit</string>
     <string name="recentMsg_limit_disabled">Disabled</string>
     <string name="timestamps">Show timestamps</string>

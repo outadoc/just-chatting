@@ -86,9 +86,10 @@ fun SettingsList(
                 onCheckedChange = { checked ->
                     onAppPreferencesChange(appPreferences.copy(animateEmotes = checked))
                 },
-            ) {
-                Text(stringResource(R.string.animated_emotes))
-            }
+                title = {
+                    Text(stringResource(R.string.animated_emotes))
+                },
+            )
         }
 
         item {
@@ -102,9 +103,10 @@ fun SettingsList(
                 onCheckedChange = { checked ->
                     onAppPreferencesChange(appPreferences.copy(showTimestamps = checked))
                 },
-            ) {
-                Text(stringResource(R.string.timestamps))
-            }
+                title = {
+                    Text(stringResource(R.string.timestamps))
+                },
+            )
         }
 
         item {
@@ -165,6 +167,92 @@ fun SettingsList(
 
         item {
             Divider(modifier = Modifier.padding(vertical = 4.dp))
+        }
+
+        item {
+            SettingsHeader(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(itemInsets),
+            ) {
+                Text(stringResource(R.string.settings_thirdparty_header))
+            }
+        }
+
+        item {
+            SettingsSwitch(
+                modifier = Modifier.padding(itemInsets),
+                checked = appPreferences.enableRecentMessages,
+                onCheckedChange = { checked ->
+                    onAppPreferencesChange(appPreferences.copy(enableRecentMessages = checked))
+                },
+                title = {
+                    Text(stringResource(R.string.settings_thirdparty_recent_title))
+                },
+                subtitle = {
+                    Text(stringResource(R.string.settings_thirdparty_recent_subtitle))
+                }
+            )
+        }
+
+        item {
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
+        }
+
+        item {
+            SettingsSwitch(
+                modifier = Modifier.padding(itemInsets),
+                checked = appPreferences.enableBttvEmotes,
+                onCheckedChange = { checked ->
+                    onAppPreferencesChange(appPreferences.copy(enableBttvEmotes = checked))
+                },
+                title = {
+                    Text(stringResource(R.string.settings_thirdparty_bttv_title))
+                },
+                subtitle = {
+                    Text(stringResource(R.string.settings_thirdparty_bttv_subtitle))
+                }
+            )
+        }
+
+        item {
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
+        }
+
+        item {
+            SettingsSwitch(
+                modifier = Modifier.padding(itemInsets),
+                checked = appPreferences.enableFfzEmotes,
+                onCheckedChange = { checked ->
+                    onAppPreferencesChange(appPreferences.copy(enableFfzEmotes = checked))
+                },
+                title = {
+                    Text(stringResource(R.string.settings_thirdparty_ffz_title))
+                },
+                subtitle = {
+                    Text(stringResource(R.string.settings_thirdparty_ffz_subtitle))
+                }
+            )
+        }
+
+        item {
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
+        }
+
+        item {
+            SettingsSwitch(
+                modifier = Modifier.padding(itemInsets),
+                checked = appPreferences.enableStvEmotes,
+                onCheckedChange = { checked ->
+                    onAppPreferencesChange(appPreferences.copy(enableStvEmotes = checked))
+                },
+                title = {
+                    Text(stringResource(R.string.settings_thirdparty_stv_title))
+                },
+                subtitle = {
+                    Text(stringResource(R.string.settings_thirdparty_stv_subtitle))
+                }
+            )
         }
 
         item {

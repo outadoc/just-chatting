@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -28,17 +30,22 @@ fun SettingsSwitchPreview() {
                 modifier = Modifier.fillMaxWidth(),
                 checked = true,
                 onCheckedChange = {},
-            ) {
-                Text("Lorem ipsum")
-            }
+                title = {
+                    Text("Lorem ipsum")
+                },
+                subtitle = {
+                    Text("Dolor sit amet")
+                }
+            )
 
             SettingsSwitch(
                 modifier = Modifier.fillMaxWidth(),
                 checked = false,
                 onCheckedChange = {},
-            ) {
-                Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.")
-            }
+                title = {
+                    Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.")
+                },
+            )
         }
     }
 }
@@ -49,29 +56,40 @@ fun SettingsSwitch(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     title: @Composable () -> Unit,
+    subtitle: @Composable () -> Unit = {},
 ) {
-    CompositionLocalProvider(
-        LocalTextStyle provides MaterialTheme.typography.titleMedium,
+    Box(
+        modifier = Modifier.clickable { onCheckedChange(!checked) },
     ) {
-        Box(
-            modifier = Modifier.clickable { onCheckedChange(!checked) },
+        Row(
+            modifier = modifier,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Row(
-                modifier = modifier,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically,
+            Column(
+                modifier = Modifier
+                    .padding(vertical = 8.dp)
+                    .weight(1f, fill = true),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                Box(
-                    modifier = Modifier.weight(1f, fill = true),
+                CompositionLocalProvider(
+                    LocalTextStyle provides MaterialTheme.typography.titleMedium,
                 ) {
                     title()
                 }
 
-                Switch(
-                    checked = checked,
-                    onCheckedChange = onCheckedChange,
-                )
+                CompositionLocalProvider(
+                    LocalTextStyle provides MaterialTheme.typography.bodySmall,
+                    LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f),
+                ) {
+                    subtitle()
+                }
             }
+
+            Switch(
+                checked = checked,
+                onCheckedChange = onCheckedChange,
+            )
         }
     }
 }

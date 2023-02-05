@@ -60,6 +60,7 @@ fun ChatListContainer(
             emotes = state.allEmotesMap,
             cheerEmotes = state.cheerEmotes,
             badges = state.globalBadges.addAll(state.channelBadges),
+            removedContent = state.removedContent,
             roomState = state.roomState,
             showTimestamps = showTimestamps,
             isDisconnected = !state.connectionStatus.isAlive,

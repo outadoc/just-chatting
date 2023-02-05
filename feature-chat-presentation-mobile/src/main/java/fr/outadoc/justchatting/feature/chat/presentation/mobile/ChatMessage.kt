@@ -20,7 +20,9 @@ import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewB
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentHashMap
 
 @ThemePreviews
@@ -51,8 +53,10 @@ fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatEvent.Message,
     inlineContent: ImmutableMap<String, InlineTextContent>,
+    removedContent: ImmutableList<ChatEvent.RemoveContent> = persistentListOf(),
     showTimestamps: Boolean,
     background: Color = Color.Transparent,
+    backgroundHint: Color = MaterialTheme.colorScheme.surface,
     appUser: AppUser,
 ) {
     val timestamp = message.timestamp
@@ -78,18 +82,33 @@ fun ChatMessage(
         when (message) {
             is ChatEvent.Message.Highlighted -> {
                 HighlightedMessage(
-                    message = message,
-                    inlineContent = inlineContent,
-                    appUser = appUser,
-                )
+                    header = message.header,
+                    headerIconResId = message.headerIconResId
+                ) {
+                    message.data?.let { data ->
+                        ChatMessageDataOrCensored(
+                            timestamp = message.timestamp,
+                            data = data,
+                            inlineContent = inlineContent,
+                            appUser = appUser,
+                            backgroundHint = backgroundHint,
+                            removedContent = removedContent
+                        )
+                    }
+                }
             }
 
             is ChatEvent.Message.Simple -> {
-                SimpleMessage(
-                    message = message,
-                    inlineContent = inlineContent,
-                    appUser = appUser,
-                )
+                SimpleMessage {
+                    ChatMessageDataOrCensored(
+                        timestamp = message.timestamp,
+                        data = message.data,
+                        inlineContent = inlineContent,
+                        appUser = appUser,
+                        backgroundHint = backgroundHint,
+                        removedContent = removedContent
+                    )
+                }
             }
         }
     }

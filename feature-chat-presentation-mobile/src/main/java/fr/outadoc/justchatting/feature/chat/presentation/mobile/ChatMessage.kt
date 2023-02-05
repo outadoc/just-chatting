@@ -83,7 +83,7 @@ fun ChatMessage(
             is ChatEvent.Message.Highlighted -> {
                 HighlightedMessage(
                     header = message.header,
-                    headerIconResId = message.headerIconResId
+                    headerIconResId = message.headerIconResId,
                 ) {
                     message.body?.let { data ->
                         ChatMessageBodyOrCensored(
@@ -93,7 +93,7 @@ fun ChatMessage(
                             inlineContent = inlineContent,
                             appUser = appUser,
                             backgroundHint = backgroundHint,
-                            removedContent = removedContent
+                            removedContent = removedContent,
                         )
                     }
                 }
@@ -111,7 +111,7 @@ fun ChatMessage(
                         inlineContent = inlineContent,
                         appUser = appUser,
                         backgroundHint = backgroundHint,
-                        removedContent = removedContent
+                        removedContent = removedContent,
                     )
                 }
             }

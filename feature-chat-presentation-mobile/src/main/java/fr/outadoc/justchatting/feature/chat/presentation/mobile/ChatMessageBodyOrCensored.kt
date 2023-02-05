@@ -32,11 +32,11 @@ fun ChatMessageBodyOrCensored(
         ChatMessageBody(
             modifier = modifier,
             body = body.copy(
-                message = stringResource(R.string.chat_message_removedByModeration)
+                message = stringResource(R.string.chat_message_removedByModeration),
             ),
             inlineContent = inlineContent,
             appUser = appUser,
-            backgroundHint = backgroundHint
+            backgroundHint = backgroundHint,
         )
     } else {
         ChatMessageBody(
@@ -44,7 +44,7 @@ fun ChatMessageBodyOrCensored(
             body = body,
             inlineContent = inlineContent,
             appUser = appUser,
-            backgroundHint = backgroundHint
+            backgroundHint = backgroundHint,
         )
     }
 }

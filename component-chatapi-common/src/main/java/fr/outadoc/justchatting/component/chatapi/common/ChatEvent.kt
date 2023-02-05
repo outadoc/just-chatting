@@ -88,4 +88,9 @@ sealed interface ChatEvent {
     data class ViewerCountUpdate(
         val viewerCount: Int,
     ) : ChatEvent
+
+    @Immutable
+    data class PredictionUpdate(
+        val prediction: Prediction,
+    ) : ChatEvent
 }

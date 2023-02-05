@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
 import fr.outadoc.justchatting.component.chatapi.common.Poll
+import fr.outadoc.justchatting.component.chatapi.common.Prediction
 import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
@@ -95,6 +96,7 @@ class ChatViewModel(
         data class ChangeUserState(val userState: ChatEvent.UserState) : Action()
         data class RemoveContent(val removedContent: ChatEvent.RemoveContent) : Action()
         data class UpdatePoll(val poll: Poll) : Action()
+        data class UpdatePrediction(val prediction: Prediction) : Action()
         data class UpdateStreamMetadata(
             val viewerCount: Int? = null,
             val streamTitle: String? = null,
@@ -253,6 +255,10 @@ class ChatViewModel(
                                 Action.UpdatePoll(command.poll)
                             }
 
+                            is ChatEvent.PredictionUpdate -> {
+                                Action.UpdatePrediction(command.prediction)
+                            }
+
                             is ChatEvent.BroadcastSettingsUpdate -> {
                                 Action.UpdateStreamMetadata(
                                     streamTitle = command.streamTitle,
@@ -376,6 +382,7 @@ class ChatViewModel(
             is Action.ChangeUserState -> reduce(state)
             is Action.RemoveContent -> reduce(state)
             is Action.UpdatePoll -> reduce(state)
+            is Action.UpdatePrediction -> reduce(state)
             is Action.UpdateStreamMetadata -> reduce(state)
             is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
@@ -571,6 +578,15 @@ class ChatViewModel(
         return state.copy(
             ongoingEvents = state.ongoingEvents.copy(
                 poll = poll,
+            ),
+        )
+    }
+
+    private fun Action.UpdatePrediction.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(
+            ongoingEvents = state.ongoingEvents.copy(
+                prediction = prediction,
             ),
         )
     }

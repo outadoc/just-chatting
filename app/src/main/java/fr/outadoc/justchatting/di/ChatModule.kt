@@ -54,7 +54,7 @@ val chatModule = module {
 
     single { PubSubChannelPointsPlugin(get(), get(), get()) }
     single { PubSubPollPlugin(get()) }
-    single { PubSubPredictionPlugin(get(), get()) }
+    single { PubSubPredictionPlugin(get()) }
     single { PubSubBroadcastSettingsPlugin(get()) }
     single { PubSubViewerCountPlugin(get()) }
 

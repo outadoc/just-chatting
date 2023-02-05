@@ -28,7 +28,7 @@ fun HighlightedMessage(
     headerIconResId: Int?,
     data: @Composable () -> Unit,
 ) {
-    Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+    Row(modifier = modifier.height(IntrinsicSize.Min)) {
         Box(
             modifier = Modifier
                 .padding(vertical = 4.dp)
@@ -65,11 +65,7 @@ fun HighlightedMessage(
                 }
             }
 
-            Box(
-                modifier = modifier.padding(4.dp),
-            ) {
-                data()
-            }
+            data()
         }
     }
 }

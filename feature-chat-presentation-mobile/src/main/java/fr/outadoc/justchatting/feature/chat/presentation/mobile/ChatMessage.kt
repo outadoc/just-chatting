@@ -87,6 +87,7 @@ fun ChatMessage(
                 ) {
                     message.body?.let { data ->
                         ChatMessageBodyOrCensored(
+                            modifier = Modifier.padding(4.dp),
                             timestamp = message.timestamp,
                             body = data,
                             inlineContent = inlineContent,
@@ -101,6 +102,10 @@ fun ChatMessage(
             is ChatEvent.Message.Simple -> {
                 SimpleMessage {
                     ChatMessageBodyOrCensored(
+                        modifier = Modifier.padding(
+                            horizontal = 4.dp,
+                            vertical = 6.dp,
+                        ),
                         timestamp = message.timestamp,
                         body = message.body,
                         inlineContent = inlineContent,

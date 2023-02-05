@@ -2,9 +2,9 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import kotlinx.collections.immutable.ImmutableList
@@ -23,16 +23,20 @@ fun ChatMessageBodyOrCensored(
     backgroundHint: Color,
 ) {
     val shouldCensor: Boolean =
-        remember(timestamp, body.messageId, body.userId, removedContent) {
-            removedContent
-                .filter { rule -> rule.upUntil > timestamp }
-                .filter { rule -> rule.matchingMessageId == null || rule.matchingMessageId == body.messageId }
-                .any { rule -> rule.matchingUserId == null || rule.matchingUserId == body.userId }
-        }
+        removedContent
+            .filter { rule -> rule.upUntil > timestamp }
+            .filter { rule -> rule.matchingMessageId == null || rule.matchingMessageId == body.messageId }
+            .any { rule -> rule.matchingUserId == null || rule.matchingUserId == body.userId }
 
     if (shouldCensor) {
-        ChatMessageCensoredBody(
-            modifier = modifier
+        ChatMessageBody(
+            modifier = modifier,
+            body = body.copy(
+                message = stringResource(R.string.chat_message_removedByModeration)
+            ),
+            inlineContent = inlineContent,
+            appUser = appUser,
+            backgroundHint = backgroundHint
         )
     } else {
         ChatMessageBody(

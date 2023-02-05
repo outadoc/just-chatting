@@ -7,6 +7,9 @@
     <string name="chat_input_hint">Envoyer un message</string>
     <string name="chat_input_replyClear">Ne plus répondre à ce message</string>
     <string name="chat_input_send_cd">Envoyer</string>
+    <string name="chat_message_removedByModeration"><![CDATA[
+    <message supprimé par la modération>
+    ]]></string>
     <string name="connectionLost_error">Reconnexion au tchat…</string>
     <string name="created_at">Créé le %s</string>
     <string name="followers">%s followers</string>

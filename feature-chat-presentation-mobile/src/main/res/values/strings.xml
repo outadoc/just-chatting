@@ -14,6 +14,10 @@
     <string name="created_at">Created at %s</string>
     <string name="followers">%s followers</string>
     <string name="menu_item_openInBubble">Open in bubble</string>
+    <string name="poll_status_ended">Poll ended</string>
+    <string name="poll_status_progress">Poll in progress</string>
+    <string name="poll_status_voterCount">%s voters</string>
+    <string name="poll_status_winner_cd">Winning choice</string>
     <string name="room_emote">Emote</string>
     <string name="room_followers">Followers</string>
     <string name="room_followers_min">Followers %s</string>

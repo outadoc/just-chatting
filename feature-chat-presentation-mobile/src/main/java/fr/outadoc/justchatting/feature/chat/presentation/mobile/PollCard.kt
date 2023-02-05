@@ -19,15 +19,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.Poll
+import fr.outadoc.justchatting.utils.core.formatNumber
+import fr.outadoc.justchatting.utils.core.formatPercent
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.customColors
 import kotlinx.datetime.Instant
-import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -45,10 +47,30 @@ fun PollCard(
                     null
                 }
 
+            val status = when (poll.status) {
+                Poll.Status.Active -> R.string.poll_status_progress
+                Poll.Status.Completed, Poll.Status.Archived -> R.string.poll_status_ended
+            }
+
+            Text(
+                modifier = Modifier.padding(bottom = 4.dp),
+                text = buildString {
+                    append(stringResource(status))
+                    append(" · ")
+                    append(
+                        stringResource(
+                            R.string.poll_status_voterCount,
+                            poll.totalVoters.formatNumber(),
+                        ),
+                    )
+                },
+                style = MaterialTheme.typography.titleSmall,
+            )
+
             Text(
                 modifier = Modifier.padding(bottom = 4.dp),
                 text = poll.title,
-                style = MaterialTheme.typography.titleLarge
+                style = MaterialTheme.typography.headlineSmall,
             )
 
             poll.choices.forEach { choice ->
@@ -58,7 +80,7 @@ fun PollCard(
                         .fillMaxWidth(),
                     choice = choice,
                     totalPollVotes = poll.votes,
-                    isWinner = choice == winningChoice
+                    isWinner = choice == winningChoice,
                 )
             }
         }
@@ -88,7 +110,7 @@ fun PollChoice(
                 MaterialTheme.colorScheme.primaryContainer
             },
             trackColor = MaterialTheme.colorScheme.outlineVariant,
-            progress = ratio
+            progress = ratio,
         )
 
         Row(
@@ -96,27 +118,27 @@ fun PollChoice(
                 .fillMaxSize()
                 .padding(horizontal = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 if (isWinner) {
                     Icon(
                         modifier = Modifier.padding(end = 8.dp),
                         imageVector = Icons.Default.CheckCircle,
-                        contentDescription = "Winning"
+                        contentDescription = stringResource(R.string.poll_status_winner_cd),
                     )
                 }
 
                 Text(
                     text = choice.title,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
 
             Text(
-                text = "${(ratio * 100).roundToInt()} %",
-                fontWeight = FontWeight.Bold
+                text = ratio.formatPercent(),
+                fontWeight = FontWeight.Bold,
             )
         }
     }
@@ -135,9 +157,9 @@ private val mockPoll = Poll(
                 total = 12345,
                 bits = 123,
                 channelPoints = 50,
-                base = 1412
+                base = 1412,
             ),
-            totalVoters = 1000
+            totalVoters = 1000,
         ),
         Poll.Choice(
             choiceId = "1",
@@ -146,9 +168,9 @@ private val mockPoll = Poll(
                 total = 102345,
                 bits = 123,
                 channelPoints = 50,
-                base = 1412
+                base = 1412,
             ),
-            totalVoters = 1000
+            totalVoters = 1000,
         ),
         Poll.Choice(
             choiceId = "1",
@@ -157,9 +179,9 @@ private val mockPoll = Poll(
                 total = 52450,
                 bits = 123,
                 channelPoints = 50,
-                base = 1412
+                base = 1412,
             ),
-            totalVoters = 1000
+            totalVoters = 1000,
         ),
     ),
     duration = 3.minutes,
@@ -169,8 +191,8 @@ private val mockPoll = Poll(
         total = 134356,
         bits = 1311,
         channelPoints = 2345,
-        base = 757
-    )
+        base = 757,
+    ),
 )
 
 @ThemePreviews
@@ -178,7 +200,7 @@ private val mockPoll = Poll(
 fun PollCardPreview() {
     AppTheme {
         PollCard(
-            poll = mockPoll.copy(status = Poll.Status.Active)
+            poll = mockPoll.copy(status = Poll.Status.Active),
         )
     }
 }
@@ -188,7 +210,7 @@ fun PollCardPreview() {
 fun PollCardPreviewCompleted() {
     AppTheme {
         PollCard(
-            poll = mockPoll.copy(status = Poll.Status.Completed)
+            poll = mockPoll.copy(status = Poll.Status.Completed),
         )
     }
 }

@@ -14,6 +14,10 @@
     <string name="created_at">Créé le %s</string>
     <string name="followers">%s followers</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
+    <string name="poll_status_ended">Sondage terminé</string>
+    <string name="poll_status_progress">Sondage en cours</string>
+    <string name="poll_status_voterCount">%s votant·e·s</string>
+    <string name="poll_status_winner_cd">Choix gagnant</string>
     <string name="room_emote">Émote</string>
     <string name="room_followers">Followers</string>
     <string name="room_followers_min">Followers %s</string>

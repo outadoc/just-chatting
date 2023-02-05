@@ -1,34 +1,19 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Card
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.Poll
 import fr.outadoc.justchatting.utils.core.formatNumber
-import fr.outadoc.justchatting.utils.core.formatPercent
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
-import fr.outadoc.justchatting.utils.ui.customColors
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
@@ -78,68 +63,12 @@ fun PollCard(
                     modifier = Modifier
                         .padding(vertical = 4.dp)
                         .fillMaxWidth(),
-                    choice = choice,
-                    totalPollVotes = poll.votes,
+                    title = choice.title,
+                    votes = choice.votes.total,
+                    totalVotes = poll.votes.total,
                     isWinner = choice == winningChoice,
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun PollChoice(
-    modifier: Modifier = Modifier,
-    choice: Poll.Choice,
-    totalPollVotes: Poll.Votes,
-    isWinner: Boolean,
-) {
-    val totalVotes = totalPollVotes.total.toFloat()
-    val optionVotes = choice.votes.total.toFloat()
-
-    val ratio = if (totalVotes == 0f) 0f else (optionVotes / totalVotes)
-
-    Box(modifier = modifier.height(32.dp)) {
-        LinearProgressIndicator(
-            modifier = Modifier
-                .fillMaxSize()
-                .clip(MaterialTheme.shapes.medium),
-            color = if (isWinner) {
-                MaterialTheme.customColors.success
-            } else {
-                MaterialTheme.colorScheme.primaryContainer
-            },
-            trackColor = MaterialTheme.colorScheme.outlineVariant,
-            progress = ratio,
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 8.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                if (isWinner) {
-                    Icon(
-                        modifier = Modifier.padding(end = 8.dp),
-                        imageVector = Icons.Default.CheckCircle,
-                        contentDescription = stringResource(R.string.poll_status_winner_cd),
-                    )
-                }
-
-                Text(
-                    text = choice.title,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-
-            Text(
-                text = ratio.formatPercent(),
-                fontWeight = FontWeight.Bold,
-            )
         }
     }
 }

@@ -18,6 +18,11 @@
     <string name="poll_status_progress">Poll in progress</string>
     <string name="poll_status_voterCount">%s voters</string>
     <string name="poll_status_winner_cd">Winning choice</string>
+    <string name="prediction_status_ended">Results are in!</string>
+    <string name="prediction_status_locked">Waiting for the results</string>
+    <string name="prediction_status_progress">Prediction in progress</string>
+    <string name="prediction_status_points">%s points spent</string>
+    <string name="prediction_status_winner_cd">Winning outcome</string>
     <string name="room_emote">Emote</string>
     <string name="room_followers">Followers</string>
     <string name="room_followers_min">Followers %s</string>

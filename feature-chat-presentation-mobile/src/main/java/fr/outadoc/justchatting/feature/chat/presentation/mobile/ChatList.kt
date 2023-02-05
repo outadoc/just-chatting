@@ -151,6 +151,21 @@ fun ChatList(
                         )
                     }
                 }
+
+                val prediction = ongoingEvents.prediction
+                AnimatedVisibility(
+                    visible = prediction != null,
+                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
+                ) {
+                    if (prediction != null) {
+                        PredictionCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            prediction = prediction,
+                            badges = badges,
+                        )
+                    }
+                }
             }
         }
 

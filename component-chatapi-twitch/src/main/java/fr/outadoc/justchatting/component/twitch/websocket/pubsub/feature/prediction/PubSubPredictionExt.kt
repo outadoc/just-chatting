@@ -13,8 +13,8 @@ internal fun PubSubPredictionMessage.Outcome.map(): Prediction.Outcome {
         totalUsers = totalUsers,
         badge = Badge(
             id = badge.setId,
-            version = badge.version
-        )
+            version = badge.version,
+        ),
     )
 }
 
@@ -30,7 +30,7 @@ internal fun PubSubPredictionMessage.map(): Prediction {
                 lockedAt = null,
                 outcomes = prediction.outcomes.map { outcome -> outcome.map() },
                 predictionWindow = prediction.predictionWindowSeconds.seconds,
-                winningOutcome = null
+                winningOutcome = null,
             )
         }
 
@@ -44,7 +44,7 @@ internal fun PubSubPredictionMessage.map(): Prediction {
                 lockedAt = prediction.lockedAt,
                 outcomes = prediction.outcomes.map { outcome -> outcome.map() },
                 predictionWindow = prediction.predictionWindowSeconds.seconds,
-                winningOutcome = null
+                winningOutcome = null,
             )
         }
 
@@ -59,7 +59,7 @@ internal fun PubSubPredictionMessage.map(): Prediction {
                 lockedAt = prediction.lockedAt,
                 outcomes = prediction.outcomes.map { outcome -> outcome.map() },
                 predictionWindow = prediction.predictionWindowSeconds.seconds,
-                winningOutcome = outcomes.first { outcome -> outcome.id == prediction.winningOutcomeId }
+                winningOutcome = outcomes.first { outcome -> outcome.id == prediction.winningOutcomeId },
             )
         }
 
@@ -74,7 +74,7 @@ internal fun PubSubPredictionMessage.map(): Prediction {
                 lockedAt = prediction.lockedAt,
                 outcomes = prediction.outcomes.map { outcome -> outcome.map() },
                 predictionWindow = prediction.predictionWindowSeconds.seconds,
-                winningOutcome = outcomes.first { outcome -> outcome.id == prediction.winningOutcomeId }
+                winningOutcome = outcomes.first { outcome -> outcome.id == prediction.winningOutcomeId },
             )
         }
     }

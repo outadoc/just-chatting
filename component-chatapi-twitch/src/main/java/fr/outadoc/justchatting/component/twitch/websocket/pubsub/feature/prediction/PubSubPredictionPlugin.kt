@@ -16,8 +16,8 @@ class PubSubPredictionPlugin(
         val message = json.decodeFromString<PubSubPredictionMessage>(payload)
         return listOfNotNull(
             ChatEvent.PredictionUpdate(
-                message.map()
-            )
+                message.map(),
+            ),
         )
     }
 }

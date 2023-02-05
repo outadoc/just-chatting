@@ -30,8 +30,10 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.component.chatapi.common.Poll
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.chat.presentation.OngoingEvents
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList
@@ -54,6 +56,7 @@ fun ChatList(
     onMessageLongClick: (ChatEvent.Message) -> Unit,
     onReplyToMessage: (ChatEvent.Message) -> Unit,
     roomState: RoomState,
+    ongoingEvents: OngoingEvents,
     appUser: AppUser,
     insets: PaddingValues,
 ) {
@@ -132,6 +135,20 @@ fun ChatList(
                         color = MaterialTheme.colorScheme.errorContainer,
                     ) {
                         Text(text = stringResource(R.string.connectionLost_error))
+                    }
+                }
+
+                val poll = ongoingEvents.poll
+                AnimatedVisibility(
+                    visible = poll != null,
+                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
+                ) {
+                    if (poll != null && poll.status != Poll.Status.Archived) {
+                        PollCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            poll = poll,
+                        )
                     }
                 }
             }

@@ -68,6 +68,7 @@ fun ChatListContainer(
             onMessageLongClick = onMessageLongClick,
             onReplyToMessage = onReplyToMessage,
             appUser = state.appUser,
+            ongoingEvents = state.ongoingEvents,
             insets = insets,
         )
 

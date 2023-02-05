@@ -51,7 +51,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -68,14 +67,12 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class ChatViewModel(
@@ -98,6 +95,12 @@ class ChatViewModel(
         data class ChangeUserState(val userState: ChatEvent.UserState) : Action()
         data class RemoveContent(val removedContent: ChatEvent.RemoveContent) : Action()
         data class UpdatePoll(val poll: Poll) : Action()
+        data class UpdateStreamMetadata(
+            val viewerCount: Int? = null,
+            val streamTitle: String? = null,
+            val gameName: String? = null,
+        ) : Action()
+
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
         object LoadStreamDetails : Action()
@@ -209,13 +212,6 @@ class ChatViewModel(
             )
 
     init {
-        defaultScope.launch {
-            while (isActive) {
-                delay(5.minutes)
-                actions.emit(Action.LoadStreamDetails)
-            }
-        }
-
         state.filterIsInstance<State.Chatting>()
             .map { state -> state.user }
             .distinctUntilChanged()
@@ -255,6 +251,19 @@ class ChatViewModel(
 
                             is ChatEvent.PollUpdate -> {
                                 Action.UpdatePoll(command.poll)
+                            }
+
+                            is ChatEvent.BroadcastSettingsUpdate -> {
+                                Action.UpdateStreamMetadata(
+                                    streamTitle = command.streamTitle,
+                                    gameName = command.gameName,
+                                )
+                            }
+
+                            is ChatEvent.ViewerCountUpdate -> {
+                                Action.UpdateStreamMetadata(
+                                    viewerCount = command.viewerCount,
+                                )
                             }
                         }
                     }
@@ -367,6 +376,7 @@ class ChatViewModel(
             is Action.ChangeUserState -> reduce(state)
             is Action.RemoveContent -> reduce(state)
             is Action.UpdatePoll -> reduce(state)
+            is Action.UpdateStreamMetadata -> reduce(state)
             is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
             is Action.LoadStreamDetails -> reduce(state)
@@ -561,6 +571,17 @@ class ChatViewModel(
         return state.copy(
             ongoingEvents = state.ongoingEvents.copy(
                 poll = poll,
+            ),
+        )
+    }
+
+    private fun Action.UpdateStreamMetadata.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(
+            stream = state.stream?.copy(
+                title = streamTitle ?: state.stream.title,
+                gameName = gameName ?: state.stream.gameName,
+                viewerCount = viewerCount ?: state.stream.viewerCount,
             ),
         )
     }

@@ -9,7 +9,7 @@ import kotlinx.serialization.json.JsonClassDiscriminator
 
 @Serializable
 @OptIn(ExperimentalSerializationApi::class)
-data class PubSubPredictionMessage(
+internal data class PubSubPredictionMessage(
     @SerialName("data")
     val data: Data,
 ) {

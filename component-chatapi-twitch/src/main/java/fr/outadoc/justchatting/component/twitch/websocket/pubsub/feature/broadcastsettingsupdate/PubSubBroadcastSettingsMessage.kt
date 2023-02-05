@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class PubSubBroadcastSettingsUpdateMessage {
+internal sealed class PubSubBroadcastSettingsMessage {
 
     @Serializable
     @SerialName("broadcast_settings_update")
@@ -25,5 +25,5 @@ sealed class PubSubBroadcastSettingsUpdateMessage {
         val oldGame: String?,
         @SerialName("old_game_id")
         val oldGameId: Int?,
-    ) : PubSubBroadcastSettingsUpdateMessage()
+    ) : PubSubBroadcastSettingsMessage()
 }

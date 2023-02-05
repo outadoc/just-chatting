@@ -77,4 +77,15 @@ sealed interface ChatEvent {
     data class PollUpdate(
         val poll: Poll,
     ) : ChatEvent
+
+    @Immutable
+    data class BroadcastSettingsUpdate(
+        val streamTitle: String,
+        val gameName: String,
+    ) : ChatEvent
+
+    @Immutable
+    data class ViewerCountUpdate(
+        val viewerCount: Int,
+    ) : ChatEvent
 }

@@ -9,10 +9,11 @@ import fr.outadoc.justchatting.component.twitch.websocket.irc.LoggedInChatWebSoc
 import fr.outadoc.justchatting.component.twitch.websocket.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.PubSubWebSocket
-import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.broadcastsettingsupdate.PubSubBroadcastSettingsUpdatePlugin
+import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.broadcastsettingsupdate.PubSubBroadcastSettingsPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.channelpoints.PubSubChannelPointsPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.poll.PubSubPollPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.prediction.PubSubPredictionPlugin
+import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.viewercount.PubSubViewerCountPlugin
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelStvEmotesSource
@@ -54,7 +55,8 @@ val chatModule = module {
     single { PubSubChannelPointsPlugin(get(), get(), get()) }
     single { PubSubPollPlugin(get()) }
     single { PubSubPredictionPlugin(get(), get()) }
-    single { PubSubBroadcastSettingsUpdatePlugin(get(), get()) }
+    single { PubSubBroadcastSettingsPlugin(get()) }
+    single { PubSubViewerCountPlugin(get()) }
 
     single {
         PubSubPluginsProvider {
@@ -62,7 +64,8 @@ val chatModule = module {
                 get<PubSubChannelPointsPlugin>(),
                 get<PubSubPollPlugin>(),
                 get<PubSubPredictionPlugin>(),
-                get<PubSubBroadcastSettingsUpdatePlugin>(),
+                get<PubSubBroadcastSettingsPlugin>(),
+                get<PubSubViewerCountPlugin>(),
             )
         }
     }

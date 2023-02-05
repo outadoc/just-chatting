@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class PubSubPollMessage {
+internal sealed class PubSubPollMessage {
 
     abstract val data: Data
 

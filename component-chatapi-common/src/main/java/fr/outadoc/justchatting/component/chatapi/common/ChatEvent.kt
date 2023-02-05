@@ -7,9 +7,9 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
 @Immutable
-sealed class ChatEvent {
+sealed interface ChatEvent {
 
-    sealed class Message : ChatEvent() {
+    sealed class Message : ChatEvent {
 
         abstract val body: Body?
         abstract val timestamp: Instant
@@ -59,17 +59,22 @@ sealed class ChatEvent {
         val uniqueMessagesOnly: Boolean? = null,
         val slowModeDuration: Duration? = null,
         val isSubOnly: Boolean? = null,
-    ) : ChatEvent()
+    ) : ChatEvent
 
     @Immutable
     data class UserState(
         val emoteSets: ImmutableList<String> = persistentListOf(),
-    ) : ChatEvent()
+    ) : ChatEvent
 
     @Immutable
     data class RemoveContent(
         val upUntil: Instant,
         val matchingUserId: String? = null,
         val matchingMessageId: String? = null,
-    ) : ChatEvent()
+    ) : ChatEvent
+
+    @Immutable
+    data class PollUpdate(
+        val poll: Poll,
+    ) : ChatEvent
 }

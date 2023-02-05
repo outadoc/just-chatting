@@ -33,8 +33,8 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Emote
-import fr.outadoc.justchatting.component.chatapi.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
+import fr.outadoc.justchatting.feature.chat.presentation.Chatter
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.utils.ui.ThemePreviews

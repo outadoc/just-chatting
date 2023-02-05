@@ -8,32 +8,34 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class PubSubPollMessage {
 
+    abstract val data: Data
+
     @Serializable
     @SerialName("POLL_CREATE")
     data class Create(
         @SerialName("data")
-        val data: Data,
+        override val data: Data,
     ) : PubSubPollMessage()
 
     @Serializable
     @SerialName("POLL_UPDATE")
     data class Update(
         @SerialName("data")
-        val data: Data,
+        override val data: Data,
     ) : PubSubPollMessage()
 
     @Serializable
     @SerialName("POLL_COMPLETE")
     data class Complete(
         @SerialName("data")
-        val data: Data,
+        override val data: Data,
     ) : PubSubPollMessage()
 
     @Serializable
     @SerialName("POLL_ARCHIVE")
     data class Archive(
         @SerialName("data")
-        val data: Data,
+        override val data: Data,
     ) : PubSubPollMessage()
 
     @Serializable

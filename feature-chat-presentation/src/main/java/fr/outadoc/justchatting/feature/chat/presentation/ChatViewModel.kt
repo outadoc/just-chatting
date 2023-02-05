@@ -11,7 +11,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
-import fr.outadoc.justchatting.component.chatapi.domain.model.Chatter
+import fr.outadoc.justchatting.component.chatapi.common.Poll
 import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
@@ -97,6 +97,7 @@ class ChatViewModel(
         data class ChangeConnectionStatus(val connectionStatus: ConnectionStatus) : Action()
         data class ChangeUserState(val userState: ChatEvent.UserState) : Action()
         data class RemoveContent(val removedContent: ChatEvent.RemoveContent) : Action()
+        data class UpdatePoll(val poll: Poll) : Action()
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
         object LoadStreamDetails : Action()
@@ -120,6 +121,7 @@ class ChatViewModel(
             val recentEmotes: List<RecentEmote> = emptyList(),
             val userState: ChatEvent.UserState = ChatEvent.UserState(),
             val roomState: RoomState = RoomState(),
+            val ongoingEvents: OngoingEvents = OngoingEvents(),
             val removedContent: PersistentList<ChatEvent.RemoveContent> = persistentListOf(),
             val connectionStatus: ConnectionStatus = ConnectionStatus(),
             val maxAdapterCount: Int,
@@ -250,6 +252,10 @@ class ChatViewModel(
                             is ChatEvent.RemoveContent -> {
                                 Action.RemoveContent(command)
                             }
+
+                            is ChatEvent.PollUpdate -> {
+                                Action.UpdatePoll(command.poll)
+                            }
                         }
                     }
                     .filterNotNull()
@@ -360,6 +366,7 @@ class ChatViewModel(
             is Action.ChangeRoomState -> reduce(state)
             is Action.ChangeUserState -> reduce(state)
             is Action.RemoveContent -> reduce(state)
+            is Action.UpdatePoll -> reduce(state)
             is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
             is Action.LoadStreamDetails -> reduce(state)
@@ -547,6 +554,15 @@ class ChatViewModel(
     private fun Action.ChangeRecentEmotes.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return state.copy(recentEmotes = recentEmotes)
+    }
+
+    private fun Action.UpdatePoll.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(
+            ongoingEvents = state.ongoingEvents.copy(
+                poll = poll,
+            ),
+        )
     }
 
     private suspend fun InputAction.reduce(state: InputState): InputState {

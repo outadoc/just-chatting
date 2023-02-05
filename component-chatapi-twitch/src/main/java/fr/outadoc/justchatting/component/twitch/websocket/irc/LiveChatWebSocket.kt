@@ -9,13 +9,7 @@ import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ClearChat
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ClearMessage
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.RoomStateDelta
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.UserState
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
@@ -70,7 +64,7 @@ class LiveChatWebSocket private constructor(
 ) : ChatEventHandler {
 
     companion object {
-        const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
+        private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
     private val _flow = MutableSharedFlow<ChatEvent>(
@@ -165,15 +159,15 @@ class LiveChatWebSocket private constructor(
         logInfo<LiveChatWebSocket> { "received: $received" }
 
         when (val command: IrcEvent? = parser.parse(received)) {
-            is UserState, is Message.Notice -> {
+            is IrcEvent.Command.UserState, is IrcEvent.Message.Notice -> {
                 // Handled by LoggedInChatWebSocket
             }
 
-            is Message -> {
+            is IrcEvent.Message -> {
                 _flow.emit(mapper.mapMessage(command))
             }
 
-            is RoomStateDelta -> {
+            is IrcEvent.Command.RoomStateDelta -> {
                 _flow.emit(
                     ChatEvent.RoomStateDelta(
                         isEmoteOnly = command.isEmoteOnly,
@@ -185,7 +179,7 @@ class LiveChatWebSocket private constructor(
                 )
             }
 
-            is ClearChat -> {
+            is IrcEvent.Command.ClearChat -> {
                 _flow.emit(
                     ChatEvent.RemoveContent(
                         upUntil = command.timestamp,
@@ -198,7 +192,7 @@ class LiveChatWebSocket private constructor(
                 }
             }
 
-            is ClearMessage -> {
+            is IrcEvent.Command.ClearMessage -> {
                 _flow.emit(
                     ChatEvent.RemoveContent(
                         upUntil = command.timestamp,
@@ -211,7 +205,7 @@ class LiveChatWebSocket private constructor(
                 }
             }
 
-            is PingCommand -> {
+            is IrcEvent.Command.Ping -> {
                 send("PONG :tmi.twitch.tv")
             }
 
@@ -245,7 +239,7 @@ class LiveChatWebSocket private constructor(
                         limit = AppPreferences.Defaults.RecentChatLimit,
                     )
                     .asFlow()
-                    .filterIsInstance<Message>()
+                    .filterIsInstance<IrcEvent.Message>()
                     .mapNotNull { event -> mapper.mapMessage(event) },
             )
         } catch (e: Exception) {

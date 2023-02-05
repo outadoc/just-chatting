@@ -4,16 +4,14 @@ import android.content.Context
 import androidx.annotation.DrawableRes
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.twitch.R
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.ClearChat
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
 import kotlinx.collections.immutable.toImmutableList
 
 class IrcMessageMapper(private val context: Context) {
 
-    fun mapMessage(ircEvent: Message): ChatEvent = with(ircEvent) {
+    fun mapMessage(ircEvent: IrcEvent.Message): ChatEvent = with(ircEvent) {
         when (this) {
-            is Message.Notice -> {
+            is IrcEvent.Message.Notice -> {
                 ChatEvent.Message.Highlighted(
                     header = messageId?.getNoticeString(context = context, message = message)
                         ?: message,
@@ -22,7 +20,7 @@ class IrcMessageMapper(private val context: Context) {
                 )
             }
 
-            is Message.UserNotice -> {
+            is IrcEvent.Message.UserNotice -> {
                 val userMessage = userMessage
                 if (userMessage == null) {
                     ChatEvent.Message.Highlighted(
@@ -52,7 +50,7 @@ class IrcMessageMapper(private val context: Context) {
                 }
             }
 
-            is Message.ChatMessage -> {
+            is IrcEvent.Message.ChatMessage -> {
                 val msgId = msgId
                 val (header, icon) = when {
                     systemMsg != null -> {
@@ -116,7 +114,7 @@ class IrcMessageMapper(private val context: Context) {
 
     fun mapOptional(command: IrcEvent): ChatEvent? {
         return when (command) {
-            is ClearChat -> {
+            is IrcEvent.Command.ClearChat -> {
                 if (command.targetUserId != null) {
                     if (command.duration == null) {
                         ChatEvent.Message.Highlighted(

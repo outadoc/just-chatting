@@ -50,7 +50,7 @@ class PubSubWebSocket(
 ) : ChatEventHandler {
 
     companion object {
-        const val ENDPOINT = "wss://pubsub-edge.twitch.tv"
+        private const val ENDPOINT = "wss://pubsub-edge.twitch.tv"
     }
 
     private val plugins = pubSubPluginsProvider.get()

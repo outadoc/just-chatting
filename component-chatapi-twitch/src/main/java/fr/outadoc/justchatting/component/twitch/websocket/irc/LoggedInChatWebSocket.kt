@@ -8,9 +8,7 @@ import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.Message
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.PingCommand
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.UserState
+import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -62,7 +60,7 @@ class LoggedInChatWebSocket(
 ) : ChatEventHandler {
 
     companion object {
-        const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
+        private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
     private val _flow = MutableSharedFlow<ChatEvent>(
@@ -160,11 +158,11 @@ class LoggedInChatWebSocket(
         logInfo<LoggedInChatWebSocket> { "received: $received" }
 
         when (val command = parser.parse(received)) {
-            is Message.Notice -> {
+            is IrcEvent.Message.Notice -> {
                 _flow.emit(mapper.mapMessage(command))
             }
 
-            is UserState -> {
+            is IrcEvent.Command.UserState -> {
                 _flow.emit(
                     ChatEvent.UserState(
                         emoteSets = command.emoteSets.toImmutableList(),
@@ -172,7 +170,7 @@ class LoggedInChatWebSocket(
                 )
             }
 
-            is PingCommand -> {
+            is IrcEvent.Command.Ping -> {
                 send("PONG :tmi.twitch.tv")
             }
 

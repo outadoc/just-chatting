@@ -194,8 +194,8 @@ fun ChannelChatScreenContent(
                             .height(imeHeight),
                     ) {
                         EmotePicker(
-                            onEmoteClick = onEmoteClick,
                             state = state,
+                            onEmoteClick = onEmoteClick,
                         )
                     }
                 }

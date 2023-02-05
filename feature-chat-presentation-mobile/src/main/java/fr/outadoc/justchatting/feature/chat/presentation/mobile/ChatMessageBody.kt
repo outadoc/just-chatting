@@ -40,9 +40,9 @@ import kotlinx.coroutines.coroutineScope
 import kotlin.random.Random
 
 @Composable
-fun ChatMessageData(
+fun ChatMessageBody(
     modifier: Modifier = Modifier,
-    data: ChatEvent.Message.Data,
+    body: ChatEvent.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     appUser: AppUser,
     backgroundHint: Color,
@@ -53,7 +53,7 @@ fun ChatMessageData(
     val fullInlineContent =
         inlineContent.toPersistentHashMap()
             .putAll(
-                data.embeddedEmotes
+                body.embeddedEmotes
                     .associate { emote ->
                         Pair(
                             emote.name,
@@ -65,14 +65,14 @@ fun ChatMessageData(
                     .toImmutableMap(),
             )
 
-    val annotatedString = data.toAnnotatedString(
+    val annotatedString = body.toAnnotatedString(
         appUser = appUser,
         inlineContent = fullInlineContent,
         backgroundHint = backgroundHint,
     )
 
     Column(modifier = modifier) {
-        data.inReplyTo?.let { inReplyTo ->
+        body.inReplyTo?.let { inReplyTo ->
             InReplyToMessage(
                 modifier = Modifier.padding(bottom = 8.dp),
                 userName = inReplyTo.userName,
@@ -126,7 +126,7 @@ fun ChatMessageData(
 @Stable
 @Composable
 @OptIn(ExperimentalTextApi::class)
-fun ChatEvent.Message.Data.toAnnotatedString(
+fun ChatEvent.Message.Body.toAnnotatedString(
     appUser: AppUser,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     urlColor: Color = MaterialTheme.colorScheme.primary,

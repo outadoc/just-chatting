@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun ChatMessageCensoredData(
+fun ChatMessageCensoredBody(
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier) {

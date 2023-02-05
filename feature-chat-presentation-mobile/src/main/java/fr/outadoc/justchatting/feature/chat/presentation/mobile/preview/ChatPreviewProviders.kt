@@ -14,7 +14,7 @@ val previewBadges = listOf(
 private val simpleEntries = sequence {
     yield(
         ChatEvent.Message.Simple(
-            data = ChatEvent.Message.Data(
+            body = ChatEvent.Message.Body(
                 userName = "Hiccoz",
                 userId = "68552712",
                 userLogin = "hiccoz",
@@ -35,7 +35,7 @@ private val simpleEntries = sequence {
 
     yield(
         ChatEvent.Message.Simple(
-            data = ChatEvent.Message.Data(
+            body = ChatEvent.Message.Body(
                 userName = "컬러히에",
                 userId = "232421548",
                 userLogin = "kolorye",
@@ -45,7 +45,7 @@ private val simpleEntries = sequence {
                 color = "#5F9EA0",
                 embeddedEmotes = persistentListOf(),
                 badges = persistentListOf(),
-                inReplyTo = ChatEvent.Message.Data.InReplyTo(
+                inReplyTo = ChatEvent.Message.Body.InReplyTo(
                     id = "4d0a8518-9bc5-44a6-8249-c2ed9122f987",
                     userId = "221570322",
                     userName = "djessy728",
@@ -61,7 +61,7 @@ private val simpleEntries = sequence {
 private val highlightedEntries = sequence {
     yield(
         ChatEvent.Message.Highlighted(
-            data = ChatEvent.Message.Data(
+            body = ChatEvent.Message.Body(
                 userName = "clo_chette_",
                 userId = "672551946",
                 userLogin = "clo_chette_",
@@ -83,7 +83,7 @@ private val highlightedEntries = sequence {
         ChatEvent.Message.Highlighted(
             header = "This room is now in followers-only mode.",
             headerIconResId = null,
-            data = null,
+            body = null,
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
         ),
     )

@@ -11,12 +11,12 @@ sealed class ChatEvent {
 
     sealed class Message : ChatEvent() {
 
-        abstract val data: Data?
+        abstract val body: Body?
         abstract val timestamp: Instant
 
         @Immutable
         data class Simple(
-            override val data: Data,
+            override val body: Body,
             override val timestamp: Instant,
         ) : Message()
 
@@ -24,12 +24,12 @@ sealed class ChatEvent {
         data class Highlighted(
             val header: String?,
             val headerIconResId: Int? = null,
-            override val data: Data?,
+            override val body: Body?,
             override val timestamp: Instant,
         ) : Message()
 
         @Immutable
-        data class Data(
+        data class Body(
             val messageId: String?,
             val message: String?,
             val userId: String?,

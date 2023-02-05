@@ -76,7 +76,7 @@ fun ChatInputPreviewReplying() {
     AppTheme {
         ChatInput(
             replyingTo = ChatEvent.Message.Simple(
-                data = ChatEvent.Message.Data(
+                body = ChatEvent.Message.Body(
                     message = "Lorem ipsum dolor sit amet?",
                     messageId = "",
                     userId = "",
@@ -106,7 +106,7 @@ fun ChatInput(
     val haptic = LocalHapticFeedback.current
 
     Column {
-        AnimatedVisibility(visible = replyingTo?.data != null) {
+        AnimatedVisibility(visible = replyingTo?.body != null) {
             Row(
                 modifier = Modifier.padding(
                     top = 2.dp,
@@ -118,8 +118,8 @@ fun ChatInput(
             ) {
                 InReplyToMessage(
                     modifier = Modifier.weight(1f),
-                    userName = replyingTo?.data?.userName.orEmpty(),
-                    message = replyingTo?.data?.message.orEmpty(),
+                    userName = replyingTo?.body?.userName.orEmpty(),
+                    message = replyingTo?.body?.message.orEmpty(),
                 )
 
                 HapticIconButton(onClick = onClearReplyingTo) {

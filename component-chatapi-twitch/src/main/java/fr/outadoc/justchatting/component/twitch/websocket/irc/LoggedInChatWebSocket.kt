@@ -209,7 +209,7 @@ class LoggedInChatWebSocket(
                             R.string.chat_send_msg_error,
                             e.toString(),
                         ),
-                        data = null,
+                        body = null,
                         timestamp = clock.now(),
                     ),
                 )

@@ -13,31 +13,31 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 
 @Composable
-fun ChatMessageDataOrCensored(
+fun ChatMessageBodyOrCensored(
     modifier: Modifier = Modifier,
     timestamp: Instant,
-    data: ChatEvent.Message.Data,
+    body: ChatEvent.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     removedContent: ImmutableList<ChatEvent.RemoveContent> = persistentListOf(),
     appUser: AppUser,
     backgroundHint: Color,
 ) {
     val shouldCensor: Boolean =
-        remember(timestamp, data.messageId, data.userId, removedContent) {
+        remember(timestamp, body.messageId, body.userId, removedContent) {
             removedContent
                 .filter { rule -> rule.upUntil > timestamp }
-                .filter { rule -> rule.matchingMessageId == null || rule.matchingMessageId == data.messageId }
-                .any { rule -> rule.matchingUserId == null || rule.matchingUserId == data.userId }
+                .filter { rule -> rule.matchingMessageId == null || rule.matchingMessageId == body.messageId }
+                .any { rule -> rule.matchingUserId == null || rule.matchingUserId == body.userId }
         }
 
     if (shouldCensor) {
-        ChatMessageCensoredData(
+        ChatMessageCensoredBody(
             modifier = modifier
         )
     } else {
-        ChatMessageData(
+        ChatMessageBody(
             modifier = modifier,
-            data = data,
+            body = body,
             inlineContent = inlineContent,
             appUser = appUser,
             backgroundHint = backgroundHint

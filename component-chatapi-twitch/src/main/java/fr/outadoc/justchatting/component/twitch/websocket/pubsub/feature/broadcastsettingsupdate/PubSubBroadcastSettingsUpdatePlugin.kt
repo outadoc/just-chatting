@@ -22,7 +22,7 @@ class PubSubBroadcastSettingsUpdatePlugin(
                         ChatEvent.Message.Highlighted(
                             header = "Stream title changed to \"${message.status}\"",
                             timestamp = clock.now(),
-                            data = null,
+                            body = null,
                         )
                     } else {
                         null
@@ -31,7 +31,7 @@ class PubSubBroadcastSettingsUpdatePlugin(
                         ChatEvent.Message.Highlighted(
                             header = "Gamed changed to \"${message.game}\"",
                             timestamp = clock.now(),
-                            data = null,
+                            body = null,
                         )
                     } else {
                         null

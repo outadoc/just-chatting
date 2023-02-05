@@ -154,7 +154,7 @@ fun ChatList(
                     MaterialTheme.colorScheme.surface
                 }
 
-            val canBeRepliedTo = item.data?.messageId != null
+            val canBeRepliedTo = item.body?.messageId != null
             val replyToActionCd = stringResource(R.string.chat_replyTo)
 
             SwipeToReply(

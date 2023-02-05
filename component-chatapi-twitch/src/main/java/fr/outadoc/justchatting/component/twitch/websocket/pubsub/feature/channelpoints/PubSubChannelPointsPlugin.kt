@@ -30,7 +30,7 @@ class PubSubChannelPointsPlugin(
                             message.data.redemption.reward.cost,
                         ),
                         headerIconResId = R.drawable.ic_toll,
-                        data = null,
+                        body = null,
                         timestamp = message.data.redemption.redeemedAt ?: clock.now(),
                     ),
                 )

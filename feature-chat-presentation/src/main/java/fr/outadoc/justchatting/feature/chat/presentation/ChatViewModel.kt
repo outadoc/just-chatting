@@ -471,13 +471,13 @@ class ChatViewModel(
         // Note that this is the last message we've sent
         val lastSentMessageInstant: Instant? =
             messages.lastOrNull { message ->
-                message.data?.userId != null && message.data?.userId == state.appUser.id
+                message.body?.userId != null && message.body?.userId == state.appUser.id
             }?.timestamp
 
         // Remember names of chatters
         val newChatters: PersistentSet<Chatter> =
             messages.asSequence()
-                .mapNotNull { message -> message.data?.userName }
+                .mapNotNull { message -> message.body?.userName }
                 .map { userName -> Chatter(userName) }
                 .toPersistentSet()
 
@@ -570,7 +570,7 @@ class ChatViewModel(
             chatConnectionPool.sendMessage(
                 channelId = state.user.id,
                 message = inputState.inputMessage.text,
-                inReplyToId = inputState.replyingTo?.data?.messageId,
+                inReplyToId = inputState.replyingTo?.body?.messageId,
             )
 
             val usedEmotes: List<RecentEmote> =

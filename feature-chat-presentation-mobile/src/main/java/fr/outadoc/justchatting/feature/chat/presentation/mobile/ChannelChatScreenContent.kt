@@ -119,7 +119,7 @@ fun ChannelChatScreenContent(
                 state = state,
                 showTimestamps = showTimestamps,
                 onMessageLongClick = { item ->
-                    item.data?.message?.let { rawMessage ->
+                    item.body?.message?.let { rawMessage ->
                         clipboard.setText(AnnotatedString(rawMessage))
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         context.shortToast(R.string.chat_copiedToClipboard)

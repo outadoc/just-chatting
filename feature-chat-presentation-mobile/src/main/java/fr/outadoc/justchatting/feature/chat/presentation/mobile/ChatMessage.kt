@@ -85,10 +85,10 @@ fun ChatMessage(
                     header = message.header,
                     headerIconResId = message.headerIconResId
                 ) {
-                    message.data?.let { data ->
-                        ChatMessageDataOrCensored(
+                    message.body?.let { data ->
+                        ChatMessageBodyOrCensored(
                             timestamp = message.timestamp,
-                            data = data,
+                            body = data,
                             inlineContent = inlineContent,
                             appUser = appUser,
                             backgroundHint = backgroundHint,
@@ -100,9 +100,9 @@ fun ChatMessage(
 
             is ChatEvent.Message.Simple -> {
                 SimpleMessage {
-                    ChatMessageDataOrCensored(
+                    ChatMessageBodyOrCensored(
                         timestamp = message.timestamp,
-                        data = message.data,
+                        body = message.body,
                         inlineContent = inlineContent,
                         appUser = appUser,
                         backgroundHint = backgroundHint,

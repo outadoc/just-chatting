@@ -51,7 +51,7 @@ class PubSubPollPlugin(
                     )
                 }
             }.trimEnd(),
-            data = null,
+            body = null,
             timestamp = clock.now(),
         )
     }

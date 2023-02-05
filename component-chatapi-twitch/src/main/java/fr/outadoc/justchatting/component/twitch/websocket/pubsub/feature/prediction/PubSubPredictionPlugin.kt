@@ -29,7 +29,7 @@ class PubSubPredictionPlugin(
                             )
                         }
                     }.trimEnd(),
-                    data = null,
+                    body = null,
                     timestamp = clock.now(),
                 )
             }
@@ -45,7 +45,7 @@ class PubSubPredictionPlugin(
                             )
                         }
                     }.trimEnd(),
-                    data = null,
+                    body = null,
                     timestamp = clock.now(),
                 )
             }
@@ -66,7 +66,7 @@ class PubSubPredictionPlugin(
                             )
                         }
                     }.trimEnd(),
-                    data = null,
+                    body = null,
                     timestamp = clock.now(),
                 )
             }

@@ -115,7 +115,7 @@ fun ChatList(
                     ),
                 )
                 AnimatedVisibility(
-                    visible = !roomState.isDefault,
+                    visible = roomState != RoomState.Default,
                     enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
                     exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
                 ) {

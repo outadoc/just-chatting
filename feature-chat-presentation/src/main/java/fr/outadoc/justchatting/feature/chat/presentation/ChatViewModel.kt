@@ -158,7 +158,7 @@ class ChatViewModel(
 
             val messagePostConstraint: MessagePostConstraint?
                 get() = lastSentMessageInstant?.let {
-                    if (roomState.slowModeDuration?.isPositive() != true) {
+                    if (!roomState.slowModeDuration.isPositive()) {
                         null
                     } else {
                         MessagePostConstraint(

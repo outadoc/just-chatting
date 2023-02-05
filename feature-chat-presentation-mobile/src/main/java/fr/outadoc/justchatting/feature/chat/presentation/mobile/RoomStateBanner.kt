@@ -18,7 +18,7 @@ fun RoomStateBanner(
                 Text(text = stringResource(R.string.room_emote))
             }
 
-            if (minFollowDuration != null) {
+            if (!minFollowDuration.isNegative()) {
                 Text(
                     text = when (minFollowDuration) {
                         Duration.ZERO -> stringResource(R.string.room_followers)
@@ -34,7 +34,7 @@ fun RoomStateBanner(
                 Text(text = stringResource(R.string.room_unique))
             }
 
-            if (slowModeDuration != null) {
+            if (slowModeDuration.isPositive()) {
                 Text(
                     text = stringResource(
                         R.string.room_slow,

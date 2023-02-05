@@ -6,15 +6,12 @@ import kotlin.time.Duration
 @Immutable
 data class RoomState(
     val isEmoteOnly: Boolean = false,
-    val minFollowDuration: Duration? = null,
+    val minFollowDuration: Duration = -Duration.INFINITE,
     val uniqueMessagesOnly: Boolean = false,
-    val slowModeDuration: Duration? = null,
+    val slowModeDuration: Duration = Duration.ZERO,
     val isSubOnly: Boolean = false,
 ) {
-    val isDefault: Boolean =
-        !isEmoteOnly &&
-            !uniqueMessagesOnly &&
-            !isSubOnly &&
-            minFollowDuration == null &&
-            slowModeDuration == null
+    companion object {
+        val Default = RoomState()
+    }
 }

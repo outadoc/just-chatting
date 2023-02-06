@@ -3,8 +3,8 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountTree
@@ -48,29 +48,28 @@ fun PredictionOutcome(
         Row(
             modifier = modifier,
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Column(
-                modifier = Modifier.padding(horizontal = 8.dp),
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                ) {
-                    icon()
+            icon()
 
+            Column(
+                modifier = Modifier
+                    .weight(1f, fill = true),
+                verticalArrangement = Arrangement.Center
+            ) {
                     Text(
                         text = title,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                     )
-                }
 
                 LinearProgressIndicator(
                     modifier = Modifier
+                        .fillMaxWidth()
                         .clip(MaterialTheme.shapes.medium)
                         .height(8.dp),
                     color = color,
+                    trackColor = MaterialTheme.colorScheme.surfaceVariant,
                     progress = ratio,
                 )
             }

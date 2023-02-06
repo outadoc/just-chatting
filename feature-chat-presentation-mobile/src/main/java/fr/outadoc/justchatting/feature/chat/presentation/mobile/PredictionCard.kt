@@ -3,6 +3,8 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.LocalContentColor
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,6 +18,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.ui.parseHexColor
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -70,13 +73,17 @@ fun PredictionCard(
                     title = outcome.title,
                     votes = outcome.totalPoints,
                     totalVotes = totalPointsSpent,
-                    color = outcome.color.parseHexColor(),
+                    color = ensureColorIsAccessible(
+                        foreground = outcome.color.parseHexColor(),
+                        background = MaterialTheme.colorScheme.surface
+                    ) ?: LocalContentColor.current,
                     icon = {
                         badges.firstOrNull { badge ->
                             badge.id == outcome.badge.id &&
-                                badge.version == outcome.badge.version
+                                    badge.version == outcome.badge.version
                         }?.let { twitchBadge ->
                             BadgeItem(
+                                modifier = Modifier.size(32.dp),
                                 badge = twitchBadge,
                             )
                         }

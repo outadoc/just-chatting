@@ -78,8 +78,12 @@ val Map<String, String?>.firstMsg: Boolean
 val Map<String, String?>.id: String?
     get() = this["id"]?.takeUnless { it.isEmpty() }
 
-val Map<String, String?>.isEmoteOnly: Boolean
-    get() = this["emote-only"] == "1"
+val Map<String, String?>.isEmoteOnly: Boolean?
+    get() = when (this["emote-only"]) {
+        "1" -> true
+        "0" -> false
+        else -> null
+    }
 
 val Map<String, String?>.minFollowDuration: Duration?
     get() = this["followers-only"]?.toIntOrNull()?.minutes
@@ -87,11 +91,19 @@ val Map<String, String?>.minFollowDuration: Duration?
 val Map<String, String?>.slowModeDuration: Duration?
     get() = this["slow"]?.toIntOrNull()?.seconds
 
-val Map<String, String?>.uniqueMessagesOnly: Boolean
-    get() = this["r9k"] == "1"
+val Map<String, String?>.uniqueMessagesOnly: Boolean?
+    get() = when (this["r9k"]) {
+        "1" -> true
+        "0" -> false
+        else -> null
+    }
 
-val Map<String, String?>.isSubOnly: Boolean
-    get() = this["subs-only"] == "1"
+val Map<String, String?>.isSubOnly: Boolean?
+    get() = when (this["subs-only"]) {
+        "1" -> true
+        "0" -> false
+        else -> null
+    }
 
 val Map<String, String?>.login: String?
     get() = this["login"]?.takeUnless { it.isEmpty() }

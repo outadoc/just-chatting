@@ -198,8 +198,8 @@ class TwitchIrcCommandParserTest {
         expected {
             IrcEvent.Command.RoomStateDelta(
                 isEmoteOnly = false,
-                minFollowDuration = null,
-                slowModeDuration = null,
+                minFollowDuration = (-1).minutes,
+                slowModeDuration = 0.seconds,
                 uniqueMessagesOnly = false,
                 isSubOnly = false,
             )
@@ -216,6 +216,16 @@ class TwitchIrcCommandParserTest {
                 slowModeDuration = 2.minutes,
                 uniqueMessagesOnly = true,
                 isSubOnly = true,
+            )
+        }
+    }
+
+    @Test
+    fun `Parse delta ROOMSTATE`() = test {
+        input { "@room-id=402890635;slow=0 :tmi.twitch.tv ROOMSTATE #pelerine" }
+        expected {
+            IrcEvent.Command.RoomStateDelta(
+                slowModeDuration = 0.seconds,
             )
         }
     }

@@ -83,7 +83,7 @@ fun PredictionCard(
                                 badge.version == outcome.badge.version
                         }?.let { twitchBadge ->
                             BadgeItem(
-                                modifier = Modifier.size(32.dp),
+                                modifier = Modifier.size(24.dp),
                                 badge = twitchBadge,
                             )
                         }

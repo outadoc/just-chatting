@@ -55,7 +55,7 @@ fun PollCard(
             Text(
                 modifier = Modifier.padding(bottom = 4.dp),
                 text = poll.title,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.titleLarge,
             )
 
             poll.choices.forEach { choice ->

@@ -62,7 +62,7 @@ fun PredictionCard(
             Text(
                 modifier = Modifier.padding(bottom = 4.dp),
                 text = prediction.title,
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.titleLarge,
             )
 
             prediction.outcomes.forEach { outcome ->

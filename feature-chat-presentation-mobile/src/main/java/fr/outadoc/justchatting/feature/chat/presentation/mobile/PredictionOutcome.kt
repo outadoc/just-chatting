@@ -55,13 +55,13 @@ fun PredictionOutcome(
             Column(
                 modifier = Modifier
                     .weight(1f, fill = true),
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center,
             ) {
-                    Text(
-                        text = title,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                    )
+                Text(
+                    text = title,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
 
                 LinearProgressIndicator(
                     modifier = Modifier

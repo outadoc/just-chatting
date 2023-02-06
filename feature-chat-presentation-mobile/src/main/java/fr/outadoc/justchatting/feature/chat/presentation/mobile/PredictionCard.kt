@@ -75,12 +75,12 @@ fun PredictionCard(
                     totalVotes = totalPointsSpent,
                     color = ensureColorIsAccessible(
                         foreground = outcome.color.parseHexColor(),
-                        background = MaterialTheme.colorScheme.surface
+                        background = MaterialTheme.colorScheme.surface,
                     ) ?: LocalContentColor.current,
                     icon = {
                         badges.firstOrNull { badge ->
                             badge.id == outcome.badge.id &&
-                                    badge.version == outcome.badge.version
+                                badge.version == outcome.badge.version
                         }?.let { twitchBadge ->
                             BadgeItem(
                                 modifier = Modifier.size(32.dp),

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,7 +20,39 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatEntryPreviewProvider
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
+import fr.outadoc.justchatting.utils.ui.AppTheme
+import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import kotlinx.collections.immutable.toPersistentHashMap
+
+
+@ThemePreviews
+@Composable
+fun HighlightedMessagePreview(
+    @PreviewParameter(ChatEntryPreviewProvider::class) message: ChatEvent.Message,
+) {
+    val inlineBadges = previewBadges
+        .associateWith { previewTextContent() }
+        .toPersistentHashMap()
+
+    AppTheme {
+        ChatMessage(
+            message = message,
+            inlineContent = inlineBadges,
+            showTimestamps = true,
+            appUser = AppUser.LoggedIn(
+                id = "123",
+                login = "outadoc",
+                helixToken = "",
+            ),
+        )
+    }
+}
 
 @Composable
 fun HighlightedMessage(
@@ -37,13 +70,16 @@ fun HighlightedMessage(
                 .fillMaxHeight(),
         )
 
-        Column {
-            Card(
-                modifier = Modifier
-                    .padding(vertical = 4.dp)
-                    .fillMaxWidth(),
-                shape = RectangleShape,
-            ) {
+        Card(
+            modifier = Modifier
+                .padding(vertical = 4.dp)
+                .fillMaxWidth(),
+            shape = RectangleShape,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer
+            )
+        ) {
+            Column {
                 header?.let { header ->
                     Row(
                         modifier = Modifier.padding(4.dp),

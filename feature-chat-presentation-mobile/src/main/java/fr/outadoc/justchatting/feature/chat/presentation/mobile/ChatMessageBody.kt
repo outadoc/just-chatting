@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import android.util.Patterns
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
@@ -46,6 +47,7 @@ fun ChatMessageBody(
     inlineContent: ImmutableMap<String, InlineTextContent>,
     appUser: AppUser,
     backgroundHint: Color,
+    richEmbed: ChatEvent.RichEmbed?,
 ) {
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
@@ -120,6 +122,15 @@ fun ChatMessageBody(
             lineHeight = emoteSize,
             style = MaterialTheme.typography.bodyMedium,
         )
+
+        AnimatedVisibility(visible = richEmbed != null) {
+            if (richEmbed != null) {
+                ChatRichEmbed(
+                    modifier = Modifier.padding(top = 4.dp),
+                    richEmbed = richEmbed,
+                )
+            }
+        }
     }
 }
 

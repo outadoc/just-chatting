@@ -30,7 +30,6 @@ import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import kotlinx.collections.immutable.toPersistentHashMap
 
-
 @ThemePreviews
 @Composable
 fun HighlightedMessagePreview(
@@ -76,8 +75,8 @@ fun HighlightedMessage(
                 .fillMaxWidth(),
             shape = RectangleShape,
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer
-            )
+                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
+            ),
         ) {
             Column {
                 header?.let { header ->

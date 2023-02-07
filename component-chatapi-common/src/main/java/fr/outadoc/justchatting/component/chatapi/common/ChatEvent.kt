@@ -93,4 +93,14 @@ sealed interface ChatEvent {
     data class PredictionUpdate(
         val prediction: Prediction,
     ) : ChatEvent
+
+    @Immutable
+    data class RichEmbed(
+        val messageId: String,
+        val title: String,
+        val requestUrl: String,
+        val thumbnailUrl: String,
+        val authorName: String,
+        val channelName: String?,
+    ) : ChatEvent
 }

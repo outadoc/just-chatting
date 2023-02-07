@@ -21,6 +21,7 @@ fun ChatMessageBodyOrCensored(
     removedContent: ImmutableList<ChatEvent.RemoveContent> = persistentListOf(),
     appUser: AppUser,
     backgroundHint: Color,
+    richEmbed: ChatEvent.RichEmbed? = null,
 ) {
     val shouldCensor: Boolean =
         removedContent
@@ -37,6 +38,7 @@ fun ChatMessageBodyOrCensored(
             inlineContent = inlineContent,
             appUser = appUser,
             backgroundHint = backgroundHint,
+            richEmbed = richEmbed,
         )
     } else {
         ChatMessageBody(
@@ -45,6 +47,7 @@ fun ChatMessageBodyOrCensored(
             inlineContent = inlineContent,
             appUser = appUser,
             backgroundHint = backgroundHint,
+            richEmbed = richEmbed,
         )
     }
 }

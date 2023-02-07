@@ -23,6 +23,7 @@ import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.toPersistentHashMap
 
 @ThemePreviews
@@ -52,8 +53,9 @@ fun ChatMessagePreview(
 fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatEvent.Message,
-    inlineContent: ImmutableMap<String, InlineTextContent>,
+    inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),
     removedContent: ImmutableList<ChatEvent.RemoveContent> = persistentListOf(),
+    richEmbed: ChatEvent.RichEmbed? = null,
     showTimestamps: Boolean,
     background: Color = Color.Transparent,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
@@ -94,6 +96,7 @@ fun ChatMessage(
                             appUser = appUser,
                             backgroundHint = backgroundHint,
                             removedContent = removedContent,
+                            richEmbed = richEmbed,
                         )
                     }
                 }
@@ -112,6 +115,7 @@ fun ChatMessage(
                         appUser = appUser,
                         backgroundHint = backgroundHint,
                         removedContent = removedContent,
+                        richEmbed = richEmbed,
                     )
                 }
             }

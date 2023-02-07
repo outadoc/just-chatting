@@ -23,6 +23,7 @@
     <string name="prediction_status_progress">Prediction in progress</string>
     <string name="prediction_status_points">%s points spent</string>
     <string name="prediction_status_winner_cd">Winning outcome</string>
+    <string name="richEmbed_author_title">Clipped by %s</string>
     <string name="room_emote">Emote</string>
     <string name="room_followers">Followers</string>
     <string name="room_followers_min">Followers %s</string>

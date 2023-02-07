@@ -13,6 +13,7 @@ import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.broadca
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.channelpoints.PubSubChannelPointsPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.poll.PubSubPollPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.prediction.PubSubPredictionPlugin
+import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.richembed.PubSubRichEmbedPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.viewercount.PubSubViewerCountPlugin
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource
@@ -57,6 +58,7 @@ val chatModule = module {
     single { PubSubPredictionPlugin(get()) }
     single { PubSubBroadcastSettingsPlugin(get()) }
     single { PubSubViewerCountPlugin(get()) }
+    single { PubSubRichEmbedPlugin(get()) }
 
     single {
         PubSubPluginsProvider {
@@ -66,6 +68,7 @@ val chatModule = module {
                 get<PubSubPredictionPlugin>(),
                 get<PubSubBroadcastSettingsPlugin>(),
                 get<PubSubViewerCountPlugin>(),
+                get<PubSubRichEmbedPlugin>(),
             )
         }
     }

@@ -97,6 +97,7 @@ class ChatViewModel(
         data class RemoveContent(val removedContent: ChatEvent.RemoveContent) : Action()
         data class UpdatePoll(val poll: Poll) : Action()
         data class UpdatePrediction(val prediction: Prediction) : Action()
+        data class AddRichEmbed(val richEmbed: ChatEvent.RichEmbed) : Action()
         data class UpdateStreamMetadata(
             val viewerCount: Int? = null,
             val streamTitle: String? = null,
@@ -123,6 +124,7 @@ class ChatViewModel(
             val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,
             val pickableEmotes: ImmutableList<EmoteSetItem> = persistentListOf(),
+            val richEmbeds: PersistentMap<String, ChatEvent.RichEmbed> = persistentMapOf(),
             val recentEmotes: List<RecentEmote> = emptyList(),
             val userState: ChatEvent.UserState = ChatEvent.UserState(),
             val roomState: RoomState = RoomState(),
@@ -271,6 +273,10 @@ class ChatViewModel(
                                     viewerCount = command.viewerCount,
                                 )
                             }
+
+                            is ChatEvent.RichEmbed -> {
+                                Action.AddRichEmbed(command)
+                            }
                         }
                     }
                     .filterNotNull()
@@ -384,6 +390,7 @@ class ChatViewModel(
             is Action.UpdatePoll -> reduce(state)
             is Action.UpdatePrediction -> reduce(state)
             is Action.UpdateStreamMetadata -> reduce(state)
+            is Action.AddRichEmbed -> reduce(state)
             is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
             is Action.LoadStreamDetails -> reduce(state)
@@ -598,6 +605,16 @@ class ChatViewModel(
                 title = streamTitle ?: state.stream.title,
                 gameName = gameName ?: state.stream.gameName,
                 viewerCount = viewerCount ?: state.stream.viewerCount,
+            ),
+        )
+    }
+
+    private fun Action.AddRichEmbed.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(
+            richEmbeds = state.richEmbeds.put(
+                key = richEmbed.messageId,
+                value = richEmbed,
             ),
         )
     }

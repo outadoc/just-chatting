@@ -74,9 +74,6 @@ fun HighlightedMessage(
                 .padding(vertical = 4.dp)
                 .fillMaxWidth(),
             shape = RectangleShape,
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.tertiaryContainer,
-            ),
         ) {
             Column {
                 header?.let { header ->

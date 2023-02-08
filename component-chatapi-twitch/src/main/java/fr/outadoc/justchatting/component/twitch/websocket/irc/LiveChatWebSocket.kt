@@ -113,7 +113,9 @@ class LiveChatWebSocket private constructor(
                     _connectionStatus.update { status -> status.copy(isAlive = false) }
                 }
 
-                delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                if (isActive) {
+                    delayWithJitter(1.seconds, maxJitter = 3.seconds)
+                }
             }
         }
     }

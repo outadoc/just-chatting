@@ -147,13 +147,9 @@ class ChatConnectionService : Service() {
         startForeground(ONGOING_NOTIFICATION_ID, notification)
     }
 
-    override fun onLowMemory() {
-        super.onLowMemory()
-        connectionPool.dispose()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
+        connectionPool.dispose()
         job.cancel()
     }
 }

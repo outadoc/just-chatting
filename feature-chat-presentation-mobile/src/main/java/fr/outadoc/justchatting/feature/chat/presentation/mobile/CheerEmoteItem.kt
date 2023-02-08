@@ -3,8 +3,8 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -31,12 +31,10 @@ fun CheerEmoteItem(
         )
 
         Text(
-            modifier = Modifier.padding(
-                bottom = 1.dp,
-            ),
             text = emote.bitsValue?.formatNumber() ?: "",
             color = emote.colorHex?.parseHexColor() ?: LocalContentColor.current,
             fontWeight = FontWeight.Bold,
+            style = MaterialTheme.typography.labelSmall,
         )
     }
 }

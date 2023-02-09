@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.Badge
@@ -29,10 +31,16 @@ import kotlin.time.Duration.Companion.minutes
 fun PredictionCard(
     modifier: Modifier = Modifier,
     prediction: Prediction,
+    color: Color = MaterialTheme.colorScheme.secondaryContainer,
     badges: ImmutableList<TwitchBadge> = persistentListOf(),
 ) {
-    Card(modifier = modifier) {
-        Column(modifier = Modifier.padding(8.dp)) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = color
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
             val status = when (prediction.status) {
                 Prediction.Status.Active -> R.string.prediction_status_progress
                 Prediction.Status.Locked -> R.string.prediction_status_locked
@@ -68,7 +76,7 @@ fun PredictionCard(
             prediction.outcomes.forEach { outcome ->
                 PredictionOutcome(
                     modifier = Modifier
-                        .padding(vertical = 4.dp)
+                        .padding(vertical = 8.dp)
                         .fillMaxWidth(),
                     title = outcome.title,
                     votes = outcome.totalPoints,
@@ -84,7 +92,7 @@ fun PredictionCard(
                     icon = {
                         badges.firstOrNull { badge ->
                             badge.id == outcome.badge.id &&
-                                badge.version == outcome.badge.version
+                                    badge.version == outcome.badge.version
                         }?.let { twitchBadge ->
                             BadgeItem(
                                 modifier = Modifier.size(24.dp),

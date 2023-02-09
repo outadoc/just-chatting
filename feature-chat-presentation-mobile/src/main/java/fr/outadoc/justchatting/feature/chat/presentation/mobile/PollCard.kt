@@ -4,10 +4,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.Poll
@@ -21,10 +23,16 @@ import kotlin.time.Duration.Companion.seconds
 @Composable
 fun PollCard(
     modifier: Modifier = Modifier,
+    color: Color = MaterialTheme.colorScheme.secondaryContainer,
     poll: Poll,
 ) {
-    Card(modifier = modifier) {
-        Column(modifier = Modifier.padding(8.dp)) {
+    Card(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
+            containerColor = color
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
             val winningChoice: Poll.Choice? =
                 if (poll.status == Poll.Status.Completed) {
                     poll.choices.maxBy { choice -> choice.votes.total }

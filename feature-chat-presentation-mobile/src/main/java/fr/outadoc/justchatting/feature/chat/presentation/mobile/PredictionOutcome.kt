@@ -70,7 +70,7 @@ fun PredictionOutcome(
                         .clip(MaterialTheme.shapes.medium)
                         .height(8.dp),
                     color = color,
-                    trackColor = MaterialTheme.colorScheme.outline,
+                    trackColor = MaterialTheme.colorScheme.outlineVariant,
                     progress = ratio,
                 )
             }

@@ -76,6 +76,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class ChatViewModel(
@@ -757,6 +758,62 @@ class ChatViewModel(
                     ),
                     predictionWindow = 2.minutes,
                     winningOutcome = null,
+                ),
+            ),
+        )
+
+        actions.emit(
+            Action.UpdatePoll(
+                poll = Poll(
+                    pollId = "0c64f437-7481-46a3-9d80-2834cc415dfc",
+                    title = "ANTOINE GAGNE ?",
+                    status = Poll.Status.Active,
+                    startedAt = Instant.parse("2023-02-08T20:34:35.839478452Z"),
+                    endedAt = null,
+                    choices = listOf(
+                        Poll.Choice(
+                            choiceId = "1",
+                            title = "Étoiles",
+                            votes = Poll.Votes(
+                                total = 12345,
+                                bits = 123,
+                                channelPoints = 50,
+                                base = 1412,
+                            ),
+                            totalVoters = 1000,
+                        ),
+                        Poll.Choice(
+                            choiceId = "1",
+                            title = "AntoineDaniel",
+                            votes = Poll.Votes(
+                                total = 102345,
+                                bits = 123,
+                                channelPoints = 50,
+                                base = 1412,
+                            ),
+                            totalVoters = 1000,
+                        ),
+                        Poll.Choice(
+                            choiceId = "1",
+                            title = "HortyUnderscore",
+                            votes = Poll.Votes(
+                                total = 52450,
+                                bits = 123,
+                                channelPoints = 50,
+                                base = 1412,
+                            ),
+                            totalVoters = 1000,
+                        ),
+                    ),
+                    duration = 3.minutes,
+                    remainingDuration = 53.seconds,
+                    totalVoters = 133143,
+                    votes = Poll.Votes(
+                        total = 134356,
+                        bits = 1311,
+                        channelPoints = 2345,
+                        base = 757,
+                    ),
                 ),
             ),
         )

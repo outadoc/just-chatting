@@ -73,10 +73,14 @@ fun PredictionCard(
                     title = outcome.title,
                     votes = outcome.totalPoints,
                     totalVotes = totalPointsSpent,
-                    color = ensureColorIsAccessible(
-                        foreground = outcome.color.parseHexColor(),
-                        background = MaterialTheme.colorScheme.surface,
-                    ) ?: LocalContentColor.current,
+                    color = outcome.color.parseHexColor()
+                        ?.let { color ->
+                            ensureColorIsAccessible(
+                                foreground = color,
+                                background = MaterialTheme.colorScheme.surface,
+                            )
+                        }
+                        ?: LocalContentColor.current,
                     icon = {
                         badges.firstOrNull { badge ->
                             badge.id == outcome.badge.id &&

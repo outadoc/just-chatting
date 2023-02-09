@@ -7,6 +7,7 @@ import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.Emote
@@ -74,6 +75,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class ChatViewModel(
@@ -720,6 +722,41 @@ class ChatViewModel(
                 text = "${textBefore}$text $textAfter",
                 selection = TextRange(
                     index = textBefore.length + text.length + 1,
+                ),
+            ),
+        )
+    }
+
+    private suspend fun emitTestEvents() {
+        actions.emit(
+            Action.UpdatePrediction(
+                prediction = Prediction(
+                    id = "0c64f437-7481-46a3-9d80-2834cc415dfc",
+                    title = "ANTOINE GAGNE ?",
+                    status = Prediction.Status.Active,
+                    createdAt = Instant.parse("2023-02-08T20:34:35.839478452Z"),
+                    endedAt = null,
+                    lockedAt = null,
+                    outcomes = listOf(
+                        Prediction.Outcome(
+                            id = "1df7ac61-7912-4c82-89d3-d7781c0c182b",
+                            title = "OUI",
+                            color = "#1e69ff",
+                            totalPoints = 0,
+                            totalUsers = 0,
+                            badge = Badge(id = "predictions", version = "blue-1"),
+                        ),
+                        Prediction.Outcome(
+                            id = "a6225650-401b-4874-83aa-839f747d5f55",
+                            title = "NON",
+                            color = "#e0008e",
+                            totalPoints = 0,
+                            totalUsers = 0,
+                            badge = Badge(id = "predictions", version = "pink-2"),
+                        ),
+                    ),
+                    predictionWindow = 2.minutes,
+                    winningOutcome = null,
                 ),
             ),
         )

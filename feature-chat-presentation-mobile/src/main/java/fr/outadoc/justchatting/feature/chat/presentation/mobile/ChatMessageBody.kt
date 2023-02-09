@@ -148,9 +148,9 @@ fun ChatEvent.Message.Body.toAnnotatedString(
     val randomChatColors = integerArrayResource(R.array.randomChatColors).map { Color(it) }
 
     val color = remember(color) {
-        color?.let { color ->
+        color?.parseHexColor()?.let { color ->
             ensureColorIsAccessible(
-                foreground = color.parseHexColor(),
+                foreground = color,
                 background = backgroundHint,
             )
         } ?: randomChatColors.random(

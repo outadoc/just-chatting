@@ -100,5 +100,9 @@ private fun xyzToColor(x: Double, y: Double, z: Double) = Color(ColorUtils.XYZTo
 val Color.isLight: Boolean
     get() = luminance() > 0.5
 
-fun String.parseHexColor(): Color =
-    Color(android.graphics.Color.parseColor(this))
+fun String.parseHexColor(): Color? =
+    try {
+        Color(android.graphics.Color.parseColor(this))
+    } catch (e: IllegalArgumentException) {
+        null
+    }

@@ -29,8 +29,8 @@ fun PollCard(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = color
-        )
+            containerColor = color,
+        ),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             val winningChoice: Poll.Choice? =

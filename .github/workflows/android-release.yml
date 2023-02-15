@@ -55,7 +55,7 @@ jobs:
           path: app/build/outputs/bundle/release/app-release.aab
 
       - name: Publish release build to internal track
-        uses: r0adkll/upload-google-play@cd131e853c2a6961aabb2bd30b7870c8770b5820
+        uses: r0adkll/upload-google-play@70c7397e868b00eccd390222f492ab3e30520d09
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_INTERNAL_APP_SHARING }}
           packageName: fr.outadoc.justchatting

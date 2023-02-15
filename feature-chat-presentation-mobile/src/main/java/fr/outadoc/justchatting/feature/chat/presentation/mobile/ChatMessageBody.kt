@@ -2,8 +2,8 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import android.util.Patterns
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -38,7 +38,6 @@ import fr.outadoc.justchatting.utils.ui.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
-import kotlinx.coroutines.coroutineScope
 import kotlin.random.Random
 
 @Composable
@@ -86,32 +85,28 @@ fun ChatMessageBody(
         Text(
             modifier = Modifier
                 .pointerInput(annotatedString) {
-                    forEachGesture {
-                        coroutineScope {
-                            awaitPointerEventScope {
-                                // Wait for tap
-                                awaitFirstDown().also { down ->
-                                    // Check that text has been laid out (it should be)
-                                    val layoutRes = layoutResult.value ?: return@also
+                    awaitEachGesture {
+                        // Wait for tap
+                        awaitFirstDown().also { down ->
+                            // Check that text has been laid out (it should be)
+                            val layoutRes = layoutResult.value ?: return@also
 
-                                    val position = layoutRes.getOffsetForPosition(down.position)
-                                    val urlAnnotation =
-                                        annotatedString
-                                            .getStringAnnotations(position, position)
-                                            .firstOrNull { it.tag == UrlAnnotationTag }
+                            val position = layoutRes.getOffsetForPosition(down.position)
+                            val urlAnnotation =
+                                annotatedString
+                                    .getStringAnnotations(position, position)
+                                    .firstOrNull { it.tag == UrlAnnotationTag }
 
-                                    if (urlAnnotation != null) {
-                                        // Prevent parent components from getting the event,
-                                        // we're dealing with it
-                                        down.consume()
+                            if (urlAnnotation != null) {
+                                // Prevent parent components from getting the event,
+                                // we're dealing with it
+                                down.consume()
 
-                                        // Wait for the user to stop clicking
-                                        waitForUpOrCancellation()?.also { up ->
-                                            // Tap on a link was successful, call onClick
-                                            up.consume()
-                                            uriHandler.openUri(urlAnnotation.item)
-                                        }
-                                    }
+                                // Wait for the user to stop clicking
+                                waitForUpOrCancellation()?.also { up ->
+                                    // Tap on a link was successful, call onClick
+                                    up.consume()
+                                    uriHandler.openUri(urlAnnotation.item)
                                 }
                             }
                         }

@@ -4,7 +4,7 @@ android = "7.4.1"
 coil = "2.2.2"
 compose = "2023.02.00-beta01"
 emoji = "1.2.0"
-kotlin = "1.8.0"
+kotlin = "1.8.10"
 ktor = "2.2.3"
 lifecycle = "2.5.1"
 room = "2.5.0"
@@ -16,7 +16,7 @@ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "1.8.0-1.0.9" }
+ksp = { id = "com.google.devtools.ksp", version = "1.8.10-1.0.9" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.1" }
 spotless = { id = "com.diffplug.spotless", version = "6.15.0" }
 

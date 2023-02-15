@@ -2,10 +2,10 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:base"],
   "packageRules": [{
-    "groupName": "kotlin",
-    "matchPackagePrefixes": [
-      "org.jetbrains.kotlin:",
-      "com.google.devtools.ksp:"
+    "groupName": "kotlin-monorepo",
+    "matchSourceUrls": [
+      "https://github.com/JetBrains/kotlin",
+      "https://github.com/google/ksp"
     ]
   }],
   "semanticCommits": "enabled"

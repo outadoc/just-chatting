@@ -92,6 +92,7 @@ fun ChatInputPreviewReplying() {
 @Composable
 fun ChatInput(
     modifier: Modifier = Modifier,
+    appUserId: String? = null,
     message: TextFieldValue = TextFieldValue(),
     autoCompleteItems: List<AutoCompleteItem> = emptyList(),
     replyingTo: ChatEvent.Message? = null,
@@ -118,7 +119,9 @@ fun ChatInput(
             ) {
                 InReplyToMessage(
                     modifier = Modifier.weight(1f),
+                    appUserId = appUserId,
                     userName = replyingTo?.body?.userName.orEmpty(),
+                    userId = replyingTo?.body?.userId.orEmpty(),
                     message = replyingTo?.body?.message.orEmpty(),
                 )
 

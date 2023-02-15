@@ -13,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -25,7 +26,11 @@ import androidx.compose.ui.unit.dp
 fun InReplyToMessage(
     modifier: Modifier = Modifier,
     userName: String,
+    userId: String,
     message: String,
+    appUserId: String? = null,
+    mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
+    mentionColor: Color = MaterialTheme.colorScheme.background,
 ) {
     CompositionLocalProvider(
         LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f),
@@ -45,7 +50,14 @@ fun InReplyToMessage(
 
             Text(
                 text = buildAnnotatedString {
-                    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+                    withStyle(
+                        SpanStyle(fontWeight = FontWeight.Bold) +
+                            getMentionStyle(
+                                mentioned = userId == appUserId,
+                                mentionBackground = mentionBackground,
+                                mentionColor = mentionColor,
+                            ),
+                    ) {
                         append("@$userName")
                     }
 

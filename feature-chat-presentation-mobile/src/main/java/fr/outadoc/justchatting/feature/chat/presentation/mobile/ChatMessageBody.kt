@@ -77,7 +77,9 @@ fun ChatMessageBody(
         body.inReplyTo?.let { inReplyTo ->
             InReplyToMessage(
                 modifier = Modifier.padding(bottom = 8.dp),
+                appUserId = appUser.id,
                 userName = inReplyTo.userName,
+                userId = inReplyTo.userId,
                 message = inReplyTo.message,
             )
         }
@@ -208,16 +210,13 @@ fun ChatEvent.Message.Body.toAnnotatedString(
                                 tag = UrlAnnotationTag,
                                 annotation = username.createChannelDeeplink().toString(),
                             ) {
-                                if (username == appUser.login) {
-                                    withStyle(
-                                        SpanStyle(
-                                            background = mentionBackground,
-                                            color = mentionColor,
-                                        ),
-                                    ) {
-                                        append(word)
-                                    }
-                                } else {
+                                withStyle(
+                                    getMentionStyle(
+                                        mentioned = username == appUser.login,
+                                        mentionBackground = mentionBackground,
+                                        mentionColor = mentionColor,
+                                    ),
+                                ) {
                                     append(word)
                                 }
                             }

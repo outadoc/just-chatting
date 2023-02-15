@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.integerArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
@@ -182,7 +183,15 @@ fun ChatEvent.Message.Body.toAnnotatedString(
                 append(" ($userLogin)")
             }
 
-            append(if (isAction) " " else ": ")
+            append(
+                stringResource(
+                    if (isAction) {
+                        R.string.chat_message_actionSeparator
+                    } else {
+                        R.string.chat_message_standardSeparator
+                    },
+                ),
+            )
         }
 
         message

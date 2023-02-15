@@ -7,6 +7,8 @@
     <string name="chat_input_hint">Send a message</string>
     <string name="chat_input_replyClear">Stop replying to this message</string>
     <string name="chat_input_send_cd">Send</string>
+    <string name="chat_message_actionSeparator">&#160;</string>
+    <string name="chat_message_standardSeparator">:&#160;</string>
     <string name="chat_message_removedByModeration"><![CDATA[
     <message removed by moderation>
     ]]></string>

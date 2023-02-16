@@ -1,18 +1,31 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.LocalContentColor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.Prediction
@@ -27,6 +40,7 @@ import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.minutes
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PredictionCard(
     modifier: Modifier = Modifier,
@@ -34,8 +48,11 @@ fun PredictionCard(
     color: Color = MaterialTheme.colorScheme.secondaryContainer,
     badges: ImmutableList<TwitchBadge> = persistentListOf(),
 ) {
+    var isExpanded: Boolean by remember { mutableStateOf(false) }
+
     Card(
         modifier = modifier,
+        onClick = { isExpanded = !isExpanded },
         colors = CardDefaults.cardColors(
             containerColor = color,
         ),
@@ -52,55 +69,84 @@ fun PredictionCard(
             val totalPointsSpent: Int =
                 prediction.outcomes.sumOf { outcome -> outcome.totalPoints }
 
-            Text(
-                modifier = Modifier.padding(bottom = 4.dp),
-                text = buildString {
-                    append(stringResource(status))
-                    append(" · ")
-                    append(
-                        stringResource(
-                            R.string.prediction_status_points,
-                            totalPointsSpent.formatNumber(),
-                        ),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(
+                    modifier = Modifier.weight(1f, fill = true),
+                ) {
+                    Text(
+                        modifier = Modifier.padding(bottom = 4.dp),
+                        text = buildString {
+                            append(stringResource(status))
+                            append(" · ")
+                            append(
+                                stringResource(
+                                    R.string.prediction_status_points,
+                                    totalPointsSpent.formatNumber(),
+                                ),
+                            )
+                        },
+                        style = MaterialTheme.typography.titleSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                     )
-                },
-                style = MaterialTheme.typography.titleSmall,
-            )
 
-            Text(
-                modifier = Modifier.padding(bottom = 4.dp),
-                text = prediction.title,
-                style = MaterialTheme.typography.titleLarge,
-            )
+                    Text(
+                        modifier = Modifier.padding(bottom = 4.dp),
+                        text = prediction.title,
+                        style = MaterialTheme.typography.titleLarge,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
 
-            prediction.outcomes.forEach { outcome ->
-                PredictionOutcome(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxWidth(),
-                    title = outcome.title,
-                    votes = outcome.totalPoints,
-                    totalVotes = totalPointsSpent,
-                    color = outcome.color.parseHexColor()
-                        ?.let { color ->
-                            ensureColorIsAccessible(
-                                foreground = color,
-                                background = MaterialTheme.colorScheme.surface,
-                            )
-                        }
-                        ?: LocalContentColor.current,
-                    icon = {
-                        badges.firstOrNull { badge ->
-                            badge.id == outcome.badge.id &&
-                                badge.version == outcome.badge.version
-                        }?.let { twitchBadge ->
-                            BadgeItem(
-                                modifier = Modifier.size(24.dp),
-                                badge = twitchBadge,
-                            )
-                        }
-                    },
-                )
+                if (isExpanded) {
+                    Icon(
+                        Icons.Default.ArrowDropUp,
+                        contentDescription = stringResource(R.string.prediction_collapse_action),
+                    )
+                } else {
+                    Icon(
+                        Icons.Default.ArrowDropDown,
+                        contentDescription = stringResource(R.string.prediction_expand_action),
+                    )
+                }
+            }
+
+            AnimatedVisibility(visible = isExpanded) {
+                Column {
+                    prediction.outcomes.forEach { outcome ->
+                        PredictionOutcome(
+                            modifier = Modifier
+                                .padding(vertical = 8.dp)
+                                .fillMaxWidth(),
+                            title = outcome.title,
+                            votes = outcome.totalPoints,
+                            totalVotes = totalPointsSpent,
+                            color = outcome.color.parseHexColor()
+                                ?.let { color ->
+                                    ensureColorIsAccessible(
+                                        foreground = color,
+                                        background = MaterialTheme.colorScheme.surface,
+                                    )
+                                }
+                                ?: LocalContentColor.current,
+                            icon = {
+                                badges
+                                    .firstOrNull { badge ->
+                                        badge.id == outcome.badge.id && badge.version == outcome.badge.version
+                                    }
+                                    ?.let { twitchBadge ->
+                                        BadgeItem(
+                                            modifier = Modifier.size(24.dp),
+                                            badge = twitchBadge,
+                                        )
+                                    }
+                            },
+                        )
+                    }
+                }
             }
         }
     }

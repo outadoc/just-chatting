@@ -20,6 +20,8 @@
     <string name="poll_status_progress">Sondage en cours</string>
     <string name="poll_status_voterCount">%s votant·e·s</string>
     <string name="poll_status_winner_cd">Choix gagnant</string>
+    <string name="prediction_collapse_action">Refermer la prédiction</string>
+    <string name="prediction_expand_action">Développer la prédiction</string>
     <string name="prediction_status_ended">Les résultats sont là !</string>
     <string name="prediction_status_locked">En attente des résultats</string>
     <string name="prediction_status_progress">Prédiction en cours</string>

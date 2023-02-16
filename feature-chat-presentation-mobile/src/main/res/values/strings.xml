@@ -20,6 +20,8 @@
     <string name="poll_status_progress">Poll in progress</string>
     <string name="poll_status_voterCount">%s voters</string>
     <string name="poll_status_winner_cd">Winning choice</string>
+    <string name="prediction_collapse_action">Collapse prediction</string>
+    <string name="prediction_expand_action">Expand prediction</string>
     <string name="prediction_status_ended">Results are in!</string>
     <string name="prediction_status_locked">Waiting for the results</string>
     <string name="prediction_status_progress">Prediction in progress</string>

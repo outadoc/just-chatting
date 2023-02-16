@@ -16,6 +16,8 @@
     <string name="created_at">Créé le %s</string>
     <string name="followers">%s followers</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
+    <string name="poll_collapse_action">Refermer le sondage</string>
+    <string name="poll_expand_action">Développer le sondage</string>
     <string name="poll_status_ended">Sondage terminé</string>
     <string name="poll_status_progress">Sondage en cours</string>
     <string name="poll_status_voterCount">%s votant·e·s</string>

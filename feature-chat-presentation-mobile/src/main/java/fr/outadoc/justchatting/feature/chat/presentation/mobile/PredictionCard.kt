@@ -94,7 +94,6 @@ fun PredictionCard(
                     )
 
                     Text(
-                        modifier = Modifier.padding(bottom = 4.dp),
                         text = prediction.title,
                         style = MaterialTheme.typography.titleLarge,
                         overflow = TextOverflow.Ellipsis,
@@ -115,7 +114,9 @@ fun PredictionCard(
             }
 
             AnimatedVisibility(visible = isExpanded) {
-                Column {
+                Column(
+                    modifier = Modifier.padding(top = 4.dp),
+                ) {
                     prediction.outcomes.forEach { outcome ->
                         PredictionOutcome(
                             modifier = Modifier

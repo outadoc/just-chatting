@@ -84,7 +84,6 @@ fun PollCard(
                     )
 
                     Text(
-                        modifier = Modifier.padding(bottom = 4.dp),
                         text = poll.title,
                         style = MaterialTheme.typography.titleLarge,
                     )
@@ -104,7 +103,9 @@ fun PollCard(
             }
 
             AnimatedVisibility(visible = isExpanded) {
-                Column {
+                Column(
+                    modifier = Modifier.padding(top = 4.dp),
+                ) {
                     poll.choices.forEach { choice ->
                         PollChoice(
                             modifier = Modifier

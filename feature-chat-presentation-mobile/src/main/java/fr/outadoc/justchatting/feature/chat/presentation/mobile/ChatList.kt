@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.Poll
+import fr.outadoc.justchatting.component.chatapi.common.Prediction
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.OngoingEvents
@@ -40,6 +41,9 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.toPersistentHashMap
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -60,6 +64,7 @@ fun ChatList(
     ongoingEvents: OngoingEvents,
     appUser: AppUser,
     insets: PaddingValues,
+    clock: Clock = Clock.System,
 ) {
     val inlinesEmotes: PersistentMap<String, InlineTextContent> =
         remember(emotes) {
@@ -139,13 +144,15 @@ fun ChatList(
                     }
                 }
 
-                val poll = ongoingEvents.poll
-                AnimatedVisibility(
-                    visible = poll != null,
+                val poll: Poll? = ongoingEvents.poll
+                val pollEnd: Instant? = poll?.endedAt
+
+                IntervalCheckVisibility(
+                    visible = { poll != null && (pollEnd == null || clock.now() > pollEnd + 1.minutes) },
                     enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
                     exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
                 ) {
-                    if (poll != null && poll.status != Poll.Status.Archived) {
+                    if (poll != null) {
                         PollCard(
                             modifier = Modifier.fillMaxWidth(),
                             poll = poll,
@@ -153,9 +160,11 @@ fun ChatList(
                     }
                 }
 
-                val prediction = ongoingEvents.prediction
-                AnimatedVisibility(
-                    visible = prediction != null,
+                val prediction: Prediction? = ongoingEvents.prediction
+                val predictionEnd: Instant? = prediction?.endedAt
+
+                IntervalCheckVisibility(
+                    visible = { prediction != null && (predictionEnd == null || clock.now() > predictionEnd + 1.minutes) },
                     enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
                     exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
                 ) {

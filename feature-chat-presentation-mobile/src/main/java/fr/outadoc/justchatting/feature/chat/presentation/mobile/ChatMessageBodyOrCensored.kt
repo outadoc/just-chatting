@@ -4,7 +4,6 @@ import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import kotlinx.collections.immutable.ImmutableList
@@ -29,25 +28,16 @@ fun ChatMessageBodyOrCensored(
             .filter { rule -> rule.matchingMessageId == null || rule.matchingMessageId == body.messageId }
             .any { rule -> rule.matchingUserId == null || rule.matchingUserId == body.userId }
 
-    if (shouldCensor) {
-        ChatMessageBody(
-            modifier = modifier,
-            body = body.copy(
-                message = stringResource(R.string.chat_message_removedByModeration),
-            ),
-            inlineContent = inlineContent,
-            appUser = appUser,
-            backgroundHint = backgroundHint,
-            richEmbed = richEmbed,
-        )
-    } else {
-        ChatMessageBody(
-            modifier = modifier,
-            body = body,
-            inlineContent = inlineContent,
-            appUser = appUser,
-            backgroundHint = backgroundHint,
-            richEmbed = richEmbed,
-        )
-    }
+    ChatMessageBody(
+        modifier = modifier,
+        body = if (shouldCensor) {
+            body.copy(message = body.message?.length?.let { size -> "█".repeat(size) })
+        } else {
+            body
+        },
+        inlineContent = inlineContent,
+        appUser = appUser,
+        backgroundHint = backgroundHint,
+        richEmbed = richEmbed,
+    )
 }

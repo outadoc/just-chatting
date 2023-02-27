@@ -9,9 +9,6 @@
     <string name="chat_input_send_cd">Send</string>
     <string name="chat_message_actionSeparator">&#160;</string>
     <string name="chat_message_standardSeparator">:&#160;</string>
-    <string name="chat_message_removedByModeration"><![CDATA[
-    <message removed by moderation>
-    ]]></string>
     <string name="connectionLost_error">Reconnecting to chat…</string>
     <string name="created_at">Created at %s</string>
     <string name="followers">%s followers</string>

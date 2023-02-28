@@ -148,7 +148,7 @@ fun ChatList(
                 val pollEnd: Instant? = poll?.endedAt
 
                 IntervalCheckVisibility(
-                    visible = { poll != null && (pollEnd == null || clock.now() > pollEnd + 1.minutes) },
+                    visible = { poll != null && (pollEnd == null || clock.now() < pollEnd + 1.minutes) },
                     enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
                     exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
                 ) {
@@ -164,7 +164,7 @@ fun ChatList(
                 val predictionEnd: Instant? = prediction?.endedAt
 
                 IntervalCheckVisibility(
-                    visible = { prediction != null && (predictionEnd == null || clock.now() > predictionEnd + 1.minutes) },
+                    visible = { prediction != null && (predictionEnd == null || clock.now() < predictionEnd + 1.minutes) },
                     enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
                     exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
                 ) {

@@ -11,6 +11,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
@@ -23,9 +24,9 @@ fun IntervalCheckVisibility(
 ) {
     var isVisible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
-        while (true) {
-            delay(1.seconds)
+        while (isActive) {
             isVisible = visible()
+            delay(1.seconds)
         }
     }
 

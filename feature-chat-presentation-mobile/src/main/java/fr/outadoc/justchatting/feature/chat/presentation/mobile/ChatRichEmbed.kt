@@ -62,6 +62,7 @@ fun ChatRichEmbed(
                     text = title,
                     style = MaterialTheme.typography.titleSmall,
                     overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                 )
 
                 Text(
@@ -71,6 +72,7 @@ fun ChatRichEmbed(
                     ),
                     style = MaterialTheme.typography.bodySmall,
                     overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
                 )
             }
         }

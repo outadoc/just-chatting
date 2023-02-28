@@ -36,10 +36,7 @@ fun ChannelChatScreen(channelLogin: String) {
     val density = LocalDensity.current.density
     val uriHandler = LocalUriHandler.current
 
-    val isDarkTheme = MaterialTheme.colorScheme.isDark
-
     val user = (state as? ChatViewModel.State.Chatting)?.user
-    val channelBranding: ChannelBranding = rememberChannelBranding(user)
 
     var isEmotePickerOpen by remember { mutableStateOf(false) }
 
@@ -64,43 +61,45 @@ fun ChannelChatScreen(channelLogin: String) {
 
     val canOpenInBubble = canOpenInBubble()
 
-    ChannelChatScreenContent(
-        state = state,
-        inputState = inputState,
-        channelLogin = channelLogin,
-        channelBranding = channelBranding,
-        isEmotePickerOpen = isEmotePickerOpen,
-        showTimestamps = prefs.showTimestamps,
-        onWatchLiveClicked = {
-            uriHandler.openUri(channelLogin.createChannelExternalLink().toString())
-        },
-        onMessageChange = viewModel::onMessageInputChanged,
-        onToggleEmotePicker = {
-            isEmotePickerOpen = !isEmotePickerOpen
-        },
-        onEmoteClick = { emote ->
-            viewModel.appendEmote(emote, autocomplete = true)
-        },
-        onChatterClick = { chatter ->
-            viewModel.appendChatter(chatter, autocomplete = true)
-        },
-        onClearReplyingTo = {
-            viewModel.onReplyToMessage(null)
-        },
-        onOpenBubbleClicked = {
-            if (canOpenInBubble && user != null) {
-                notifier.notify(
-                    context = context,
-                    user = user,
+    ImagePaletteThemeOverlay(url = user?.profileImageUrl) {
+        val isDarkTheme = MaterialTheme.colorScheme.isDark
+        ChannelChatScreenContent(
+            state = state,
+            inputState = inputState,
+            channelLogin = channelLogin,
+            isEmotePickerOpen = isEmotePickerOpen,
+            showTimestamps = prefs.showTimestamps,
+            onWatchLiveClicked = {
+                uriHandler.openUri(channelLogin.createChannelExternalLink().toString())
+            },
+            onMessageChange = viewModel::onMessageInputChanged,
+            onToggleEmotePicker = {
+                isEmotePickerOpen = !isEmotePickerOpen
+            },
+            onEmoteClick = { emote ->
+                viewModel.appendEmote(emote, autocomplete = true)
+            },
+            onChatterClick = { chatter ->
+                viewModel.appendChatter(chatter, autocomplete = true)
+            },
+            onClearReplyingTo = {
+                viewModel.onReplyToMessage(null)
+            },
+            onOpenBubbleClicked = {
+                if (canOpenInBubble && user != null) {
+                    notifier.notify(
+                        context = context,
+                        user = user,
+                    )
+                }
+            },
+            onSubmit = {
+                viewModel.submit(
+                    screenDensity = density,
+                    isDarkTheme = isDarkTheme,
                 )
-            }
-        },
-        onSubmit = {
-            viewModel.submit(
-                screenDensity = density,
-                isDarkTheme = isDarkTheme,
-            )
-        },
-        onReplyToMessage = viewModel::onReplyToMessage,
-    )
+            },
+            onReplyToMessage = viewModel::onReplyToMessage,
+        )
+    }
 }

@@ -10,7 +10,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -20,6 +19,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.Compress
@@ -46,12 +46,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.utils.core.formatNumber
@@ -70,7 +71,6 @@ fun ChatTopAppBar(
     channelLogin: String,
     user: User?,
     stream: Stream?,
-    channelBranding: ChannelBranding,
     onWatchLiveClicked: () -> Unit,
     onOpenBubbleClicked: () -> Unit,
 ) {
@@ -78,8 +78,6 @@ fun ChatTopAppBar(
 
     ExpandedTopAppBar(
         modifier = modifier,
-        contentColor = channelBranding.contentColor,
-        backgroundColor = channelBranding.backgroundColor,
         title = {
             Column {
                 Text(
@@ -102,19 +100,20 @@ fun ChatTopAppBar(
         },
         navigationIcon = {
             AnimatedVisibility(
-                visible = channelBranding.logo != null,
+                visible = user?.profileImageUrl != null,
                 enter = fadeIn() + slideInHorizontally(),
                 exit = slideOutHorizontally() + fadeOut(),
             ) {
-                channelBranding.logo?.let { logo ->
+                user?.profileImageUrl?.let { imageUrl ->
                     IconButton(
                         modifier = Modifier
                             .size(56.dp)
                             .padding(horizontal = 8.dp),
                         onClick = { showStreamInfo = !showStreamInfo },
                     ) {
-                        Image(
-                            bitmap = logo.asImageBitmap(),
+                        AsyncImage(
+                            modifier = Modifier.clip(CircleShape),
+                            model = imageUrl,
                             contentDescription = stringResource(R.string.stream_info),
                         )
                     }

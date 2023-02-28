@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -53,20 +52,18 @@ fun ChannelChatScreenLoadingPreview() {
             state = ChatViewModel.State.Initial,
             inputState = ChatViewModel.InputState(),
             channelLogin = "outadoc",
-            channelBranding = rememberChannelBranding(user = null),
             showTimestamps = true,
         )
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun ChannelChatScreenContent(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     inputState: ChatViewModel.InputState,
     channelLogin: String,
-    channelBranding: ChannelBranding,
     isEmotePickerOpen: Boolean = false,
     showTimestamps: Boolean,
     onWatchLiveClicked: () -> Unit = {},
@@ -108,7 +105,6 @@ fun ChannelChatScreenContent(
                 channelLogin = channelLogin,
                 user = user,
                 stream = stream,
-                channelBranding = channelBranding,
                 onWatchLiveClicked = onWatchLiveClicked,
                 onOpenBubbleClicked = onOpenBubbleClicked,
             )

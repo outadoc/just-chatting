@@ -103,7 +103,12 @@ class LoggedInChatWebSocket(
                 if (isNetworkAvailable) {
                     logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
                     _connectionStatus.update { status -> status.copy(isAlive = true) }
-                    listen()
+
+                    try {
+                        listen()
+                    } catch (e: Exception) {
+                        logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
+                    }
                 } else {
                     logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
                     _connectionStatus.update { status -> status.copy(isAlive = false) }
@@ -118,40 +123,36 @@ class LoggedInChatWebSocket(
 
     private suspend fun listen() {
         httpClient.webSocket(ENDPOINT) {
-            try {
-                logDebug<LoggedInChatWebSocket> { "Socket open, logging in" }
+            logDebug<LoggedInChatWebSocket> { "Socket open, logging in" }
 
-                val prefs = preferencesRepository.currentPreferences.first()
-                send("PASS oauth:${prefs.appUser.helixToken}")
-                send("NICK ${prefs.appUser.login}")
-                send("CAP REQ :twitch.tv/tags twitch.tv/commands")
-                send("JOIN #$channelLogin")
+            val prefs = preferencesRepository.currentPreferences.first()
+            send("PASS oauth:${prefs.appUser.helixToken}")
+            send("NICK ${prefs.appUser.login}")
+            send("CAP REQ :twitch.tv/tags twitch.tv/commands")
+            send("JOIN #$channelLogin")
 
-                launch {
-                    messagesToSend.collect { message ->
-                        if (isActive) {
-                            logDebug<LoggedInChatWebSocket> { "Sending PRIMSG: $message" }
-                            send(message)
-                            logDebug<LoggedInChatWebSocket> { "Sent message" }
-                        }
+            launch {
+                messagesToSend.collect { message ->
+                    if (isActive) {
+                        logDebug<LoggedInChatWebSocket> { "Sending PRIMSG: $message" }
+                        send(message)
+                        logDebug<LoggedInChatWebSocket> { "Sent message" }
                     }
                 }
+            }
 
-                // Receive messages
-                while (isActive) {
-                    when (val received = incoming.receive()) {
-                        is Frame.Text -> {
-                            received.readText()
-                                .lines()
-                                .filter { it.isNotBlank() }
-                                .forEach { line -> handleMessage(line) }
-                        }
-
-                        else -> {}
+            // Receive messages
+            while (isActive) {
+                when (val received = incoming.receive()) {
+                    is Frame.Text -> {
+                        received.readText()
+                            .lines()
+                            .filter { it.isNotBlank() }
+                            .forEach { line -> handleMessage(line) }
                     }
+
+                    else -> {}
                 }
-            } catch (e: Exception) {
-                logError<LoggedInChatWebSocket>(e) { "Socket was closed" }
             }
         }
     }

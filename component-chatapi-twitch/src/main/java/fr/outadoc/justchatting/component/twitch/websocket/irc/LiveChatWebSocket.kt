@@ -107,7 +107,12 @@ class LiveChatWebSocket private constructor(
                 if (isNetworkAvailable) {
                     logDebug<LiveChatWebSocket> { "Network is available, listening" }
                     _connectionStatus.update { status -> status.copy(isAlive = true) }
-                    listen()
+
+                    try {
+                        listen()
+                    } catch (e: Exception) {
+                        logError<LiveChatWebSocket>(e) { "Socket was closed" }
+                    }
                 } else {
                     logDebug<LiveChatWebSocket> { "Network is out, delay and retry" }
                     _connectionStatus.update { status -> status.copy(isAlive = false) }
@@ -122,37 +127,33 @@ class LiveChatWebSocket private constructor(
 
     private suspend fun listen() {
         httpClient.webSocket(ENDPOINT) {
-            try {
-                logDebug<LiveChatWebSocket> { "Socket open, saying hello" }
+            logDebug<LiveChatWebSocket> { "Socket open, saying hello" }
 
-                // random number between 1000 and 9999
-                send("NICK justinfan${Random.nextInt(1000, 10_000)}")
-                send("CAP REQ :twitch.tv/tags twitch.tv/commands")
-                send("JOIN #$channelLogin")
+            // random number between 1000 and 9999
+            send("NICK justinfan${Random.nextInt(1000, 10_000)}")
+            send("CAP REQ :twitch.tv/tags twitch.tv/commands")
+            send("JOIN #$channelLogin")
 
-                _flow.emit(
-                    ChatEvent.Message.Highlighted(
-                        header = context.getString(R.string.chat_join, channelLogin),
-                        body = null,
-                        timestamp = clock.now(),
-                    ),
-                )
+            _flow.emit(
+                ChatEvent.Message.Highlighted(
+                    header = context.getString(R.string.chat_join, channelLogin),
+                    body = null,
+                    timestamp = clock.now(),
+                ),
+            )
 
-                // Receive messages
-                while (isActive) {
-                    when (val received = incoming.receive()) {
-                        is Frame.Text -> {
-                            received.readText()
-                                .lines()
-                                .filter { it.isNotBlank() }
-                                .forEach { line -> handleMessage(line) }
-                        }
-
-                        else -> {}
+            // Receive messages
+            while (isActive) {
+                when (val received = incoming.receive()) {
+                    is Frame.Text -> {
+                        received.readText()
+                            .lines()
+                            .filter { it.isNotBlank() }
+                            .forEach { line -> handleMessage(line) }
                     }
+
+                    else -> {}
                 }
-            } catch (e: Exception) {
-                logError<LiveChatWebSocket>(e) { "Socket was closed" }
             }
         }
     }

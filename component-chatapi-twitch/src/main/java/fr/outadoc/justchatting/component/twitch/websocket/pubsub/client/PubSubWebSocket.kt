@@ -93,7 +93,12 @@ class PubSubWebSocket(
                 if (isNetworkAvailable) {
                     logDebug<PubSubWebSocket> { "Network is available, listening" }
                     _connectionStatus.update { status -> status.copy(isAlive = true) }
-                    listen()
+
+                    try {
+                        listen()
+                    } catch (e: Exception) {
+                        logError<PubSubWebSocket>(e) { "Socket was closed" }
+                    }
                 } else {
                     logDebug<PubSubWebSocket> { "Network is out, delay and retry" }
                     _connectionStatus.update { status -> status.copy(isAlive = false) }
@@ -108,41 +113,37 @@ class PubSubWebSocket(
 
     private suspend fun listen() {
         httpClient.webSocket(ENDPOINT) {
-            try {
-                val helixToken: String =
-                    preferencesRepository.currentPreferences.first().appUser.helixToken
-                        ?: error("User is not authenticated")
+            val helixToken: String =
+                preferencesRepository.currentPreferences.first().appUser.helixToken
+                    ?: error("User is not authenticated")
 
-                logDebug<PubSubWebSocket> { "Socket open, sending the LISTEN message" }
+            logDebug<PubSubWebSocket> { "Socket open, sending the LISTEN message" }
 
-                // Tell the server what we want to receive
-                sendSerialized<PubSubClientMessage>(
-                    PubSubClientMessage.Listen(
-                        data = PubSubClientMessage.Listen.Data(
-                            topics = pubSubPluginsProvider.get()
-                                .map { plugin -> plugin.getTopic(channelId) },
-                            authToken = helixToken,
-                        ),
+            // Tell the server what we want to receive
+            sendSerialized<PubSubClientMessage>(
+                PubSubClientMessage.Listen(
+                    data = PubSubClientMessage.Listen.Data(
+                        topics = pubSubPluginsProvider.get()
+                            .map { plugin -> plugin.getTopic(channelId) },
+                        authToken = helixToken,
                     ),
-                )
+                ),
+            )
 
-                logDebug<PubSubWebSocket> { "Sent LISTEN message" }
+            logDebug<PubSubWebSocket> { "Sent LISTEN message" }
 
-                // Send PING from time to time
-                launch {
-                    while (isActive) {
-                        logDebug<PubSubWebSocket> { "Sending PING" }
-                        sendSerialized(PubSubClientMessage.Ping)
-                        delayWithJitter(4.minutes, maxJitter = 30.seconds)
-                    }
-                }
-
-                // Receive messages
+            // Send PING from time to time
+            launch {
                 while (isActive) {
-                    handleMessage(receiveDeserialized())
+                    logDebug<PubSubWebSocket> { "Sending PING" }
+                    sendSerialized(PubSubClientMessage.Ping)
+                    delayWithJitter(4.minutes, maxJitter = 30.seconds)
                 }
-            } catch (e: Exception) {
-                logError<PubSubWebSocket>(e) { "Socket was closed" }
+            }
+
+            // Receive messages
+            while (isActive) {
+                handleMessage(receiveDeserialized())
             }
         }
     }

@@ -148,7 +148,8 @@ fun ChannelChatScreenContent(
                                 },
                             )
                             .fillMaxWidth(),
-                        canSubmit = state is ChatViewModel.State.Chatting,
+                        isSubmitVisible = state is ChatViewModel.State.Chatting,
+                        isSubmitEnabled = state is ChatViewModel.State.Chatting && !state.connectionStatus.preventSendingMessages,
                         message = inputState.inputMessage,
                         autoCompleteItems = inputState.autoCompleteItems,
                         replyingTo = inputState.replyingTo,

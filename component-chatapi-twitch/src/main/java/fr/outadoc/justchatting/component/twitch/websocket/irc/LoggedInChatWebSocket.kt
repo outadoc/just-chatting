@@ -102,7 +102,12 @@ class LoggedInChatWebSocket(
             while (isActive) {
                 if (isNetworkAvailable) {
                     logDebug<LoggedInChatWebSocket> { "Network is available, listening" }
-                    _connectionStatus.update { status -> status.copy(isAlive = true) }
+                    _connectionStatus.update { status ->
+                        status.copy(
+                            isAlive = true,
+                            preventSendingMessages = false,
+                        )
+                    }
 
                     try {
                         listen()
@@ -111,7 +116,12 @@ class LoggedInChatWebSocket(
                     }
                 } else {
                     logDebug<LoggedInChatWebSocket> { "Network is out, delay and retry" }
-                    _connectionStatus.update { status -> status.copy(isAlive = false) }
+                    _connectionStatus.update { status ->
+                        status.copy(
+                            isAlive = false,
+                            preventSendingMessages = true,
+                        )
+                    }
                 }
 
                 if (isActive) {

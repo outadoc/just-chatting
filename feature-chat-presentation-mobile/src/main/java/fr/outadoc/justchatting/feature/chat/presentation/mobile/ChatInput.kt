@@ -3,8 +3,10 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -12,8 +14,8 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material.icons.filled.Send
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -102,7 +104,8 @@ fun ChatInput(
     onToggleEmotePicker: () -> Unit = {},
     onClearReplyingTo: () -> Unit = {},
     onSubmit: () -> Unit = {},
-    canSubmit: Boolean = true,
+    isSubmitVisible: Boolean = true,
+    isSubmitEnabled: Boolean = true,
 ) {
     val haptic = LocalHapticFeedback.current
 
@@ -155,8 +158,12 @@ fun ChatInput(
                     onSubmit = onSubmit,
                 )
 
-                AnimatedVisibility(visible = canSubmit && message.text.isNotEmpty()) {
-                    FloatingActionButton(
+                AnimatedVisibility(visible = isSubmitVisible && message.text.isNotEmpty()) {
+                    Button(
+                        modifier = Modifier.size(56.0.dp),
+                        contentPadding = PaddingValues(4.dp),
+                        enabled = isSubmitEnabled,
+                        shape = MaterialTheme.shapes.large,
                         onClick = {
                             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                             onSubmit()

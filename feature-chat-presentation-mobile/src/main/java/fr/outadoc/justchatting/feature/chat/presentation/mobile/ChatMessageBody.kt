@@ -35,6 +35,7 @@ import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.ui.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
@@ -204,7 +205,7 @@ fun ChatEvent.Message.Body.toAnnotatedString(
             ?.forEach { word ->
                 val mentionedChatter: Chatter? =
                     knownChatters.firstOrNull { chatter ->
-                        chatter.matches(word.removePrefix("@"))
+                        chatter.matches(word.removePrefix(ChatPrefixConstants.ChatterPrefix.toString()))
                     }
 
                 when {
@@ -267,7 +268,7 @@ private fun AnnotatedString.Builder.appendMention(
                     mentionColor = mentionColor,
                 ),
             ) {
-                append('@')
+                append(ChatPrefixConstants.ChatterPrefix)
                 append(chatter.displayName)
             }
         }

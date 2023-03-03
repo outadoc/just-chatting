@@ -315,27 +315,11 @@ class ChatViewModel(
                             .takeLastWhile { it != ' ' }
                     }
                     .mapLatest { word ->
-                        if (word.isBlank()) {
-                            emptyList()
-                        } else {
-                            val emoteItems = allEmotesMap.mapNotNull { emote ->
-                                if (emote.key.contains(word, ignoreCase = true)) {
-                                    AutoCompleteItem.Emote(emote.value)
-                                } else {
-                                    null
-                                }
-                            }
-
-                            val chatterItems = chatters.mapNotNull { chatter ->
-                                if (chatter.contains(word)) {
-                                    AutoCompleteItem.User(chatter)
-                                } else {
-                                    null
-                                }
-                            }
-
-                            emoteItems + chatterItems
-                        }
+                        filterForAutocomplete(
+                            filter = word,
+                            allEmotesMap = allEmotesMap,
+                            chatters = chatters,
+                        )
                     }
                     .flowOn(Dispatchers.Default)
             }
@@ -345,6 +329,50 @@ class ChatViewModel(
                 )
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun filterForAutocomplete(
+        filter: CharSequence,
+        allEmotesMap: ImmutableMap<String, Emote>,
+        chatters: PersistentSet<Chatter>,
+    ): List<AutoCompleteItem> {
+        val cleanFilter: CharSequence = filter
+            .removePrefix(ChatPrefixConstants.ChatterPrefix.toString())
+            .removePrefix(ChatPrefixConstants.EmotePrefix.toString())
+
+        if (cleanFilter.isBlank()) return emptyList()
+
+        val prefix: Char? = filter
+            .firstOrNull()
+            ?.takeIf { filter != cleanFilter }
+
+        val emoteItems: List<AutoCompleteItem.Emote> =
+            if (prefix == null || prefix == ChatPrefixConstants.EmotePrefix) {
+                allEmotesMap.mapNotNull { emote ->
+                    if (emote.key.contains(cleanFilter, ignoreCase = true)) {
+                        AutoCompleteItem.Emote(emote.value)
+                    } else {
+                        null
+                    }
+                }
+            } else {
+                emptyList()
+            }
+
+        val chatterItems: List<AutoCompleteItem.User> =
+            if (prefix == null || prefix == ChatPrefixConstants.ChatterPrefix) {
+                chatters.mapNotNull { chatter ->
+                    if (chatter.contains(cleanFilter)) {
+                        AutoCompleteItem.User(chatter)
+                    } else {
+                        null
+                    }
+                }
+            } else {
+                emptyList()
+            }
+
+        return emoteItems + chatterItems
     }
 
     fun loadChat(channelLogin: String) {

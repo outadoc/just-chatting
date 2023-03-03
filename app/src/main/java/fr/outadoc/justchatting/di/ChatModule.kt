@@ -29,15 +29,17 @@ import fr.outadoc.justchatting.feature.chat.domain.AggregateChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
+import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatNotifierImpl
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val chatModule = module {
 
-    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get()) }
 
     single<ChatNotifier> { ChatNotifierImpl() }
+    single { FilterAutocompleteItemsUseCase() }
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get(), get(), get()) }

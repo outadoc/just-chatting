@@ -55,5 +55,7 @@ dependencies {
     implementation(libs.ktor.io)
     implementation(libs.okio)
 
+    testImplementation(libs.junit)
+
     coreLibraryDesugaring(libs.desugar)
 }

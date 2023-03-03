@@ -29,6 +29,7 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.Poll
 import fr.outadoc.justchatting.component.chatapi.common.Prediction
@@ -40,6 +41,7 @@ import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentMap
+import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
@@ -54,6 +56,7 @@ fun ChatList(
     cheerEmotes: ImmutableMap<String, Emote>,
     badges: ImmutableList<TwitchBadge>,
     removedContent: ImmutableList<ChatEvent.RemoveContent>,
+    knownChatters: PersistentSet<Chatter>,
     richEmbeds: ImmutableMap<String, ChatEvent.RichEmbed>,
     showTimestamps: Boolean,
     isDisconnected: Boolean,
@@ -224,6 +227,7 @@ fun ChatList(
                     message = item,
                     inlineContent = inlineContent,
                     removedContent = removedContent,
+                    knownChatters = knownChatters,
                     richEmbed = item.body?.messageId?.let { messageId -> richEmbeds[messageId] },
                     showTimestamps = showTimestamps,
                     background = background,

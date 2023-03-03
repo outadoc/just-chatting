@@ -34,9 +34,9 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
-import fr.outadoc.justchatting.feature.chat.presentation.Chatter
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
@@ -81,9 +81,11 @@ fun ChatInputPreviewReplying() {
                 body = ChatEvent.Message.Body(
                     message = "Lorem ipsum dolor sit amet?",
                     messageId = "",
-                    userId = "",
-                    userName = "AntoineDaniel",
-                    userLogin = "",
+                    chatter = Chatter(
+                        id = "",
+                        displayName = "AntoineDaniel",
+                        login = "",
+                    ),
                 ),
                 timestamp = Instant.parse("2022-01-01T00:00:00.00Z"),
             ),
@@ -110,29 +112,31 @@ fun ChatInput(
     val haptic = LocalHapticFeedback.current
 
     Column {
-        AnimatedVisibility(visible = replyingTo?.body != null) {
-            Row(
-                modifier = Modifier.padding(
-                    top = 2.dp,
-                    start = 8.dp,
-                    end = 8.dp,
-                ),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                InReplyToMessage(
-                    modifier = Modifier.weight(1f),
-                    appUserId = appUserId,
-                    userName = replyingTo?.body?.userName.orEmpty(),
-                    userId = replyingTo?.body?.userId.orEmpty(),
-                    message = replyingTo?.body?.message.orEmpty(),
-                )
-
-                HapticIconButton(onClick = onClearReplyingTo) {
-                    Icon(
-                        Icons.Default.Clear,
-                        contentDescription = stringResource(R.string.chat_input_replyClear),
+        val replyingToMessage = replyingTo?.body
+        AnimatedVisibility(visible = replyingToMessage != null) {
+            if (replyingToMessage != null) {
+                Row(
+                    modifier = Modifier.padding(
+                        top = 2.dp,
+                        start = 8.dp,
+                        end = 8.dp,
+                    ),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    InReplyToMessage(
+                        modifier = Modifier.weight(1f),
+                        appUserId = appUserId,
+                        chatter = replyingToMessage.chatter,
+                        message = replyingToMessage.message.orEmpty(),
                     )
+
+                    HapticIconButton(onClick = onClearReplyingTo) {
+                        Icon(
+                            Icons.Default.Clear,
+                            contentDescription = stringResource(R.string.chat_input_replyClear),
+                        )
+                    }
                 }
             }
         }

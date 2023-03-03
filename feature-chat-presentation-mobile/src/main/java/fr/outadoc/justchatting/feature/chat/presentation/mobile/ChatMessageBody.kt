@@ -33,10 +33,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.ui.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
+import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlin.random.Random
@@ -46,6 +48,7 @@ fun ChatMessageBody(
     modifier: Modifier = Modifier,
     body: ChatEvent.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
+    knownChatters: PersistentSet<Chatter>,
     appUser: AppUser,
     backgroundHint: Color,
     richEmbed: ChatEvent.RichEmbed?,
@@ -71,6 +74,7 @@ fun ChatMessageBody(
     val annotatedString = body.toAnnotatedString(
         appUser = appUser,
         inlineContent = fullInlineContent,
+        knownChatters = knownChatters,
         backgroundHint = backgroundHint,
     )
 
@@ -79,8 +83,7 @@ fun ChatMessageBody(
             InReplyToMessage(
                 modifier = Modifier.padding(bottom = 8.dp),
                 appUserId = appUser.id,
-                userName = inReplyTo.userName,
-                userId = inReplyTo.userId,
+                chatter = inReplyTo.chatter,
                 message = inReplyTo.message,
             )
         }
@@ -98,7 +101,7 @@ fun ChatMessageBody(
                             val urlAnnotation =
                                 annotatedString
                                     .getStringAnnotations(position, position)
-                                    .firstOrNull { it.tag == UrlAnnotationTag }
+                                    .firstOrNull { it.tag == URL_ANNOTATION_TAG }
 
                             if (urlAnnotation != null) {
                                 // Prevent parent components from getting the event,
@@ -141,6 +144,7 @@ fun ChatMessageBody(
 fun ChatEvent.Message.Body.toAnnotatedString(
     appUser: AppUser,
     inlineContent: ImmutableMap<String, InlineTextContent>,
+    knownChatters: PersistentSet<Chatter>,
     urlColor: Color = MaterialTheme.colorScheme.primary,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
@@ -155,7 +159,7 @@ fun ChatEvent.Message.Body.toAnnotatedString(
                 background = backgroundHint,
             )
         } ?: randomChatColors.random(
-            Random(userName.hashCode()),
+            Random(chatter.hashCode()),
         )
     }
 
@@ -172,15 +176,15 @@ fun ChatEvent.Message.Body.toAnnotatedString(
         withStyle(SpanStyle(color = color)) {
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 withAnnotation(
-                    tag = UrlAnnotationTag,
-                    annotation = userName.createChannelDeeplink().toString(),
+                    tag = URL_ANNOTATION_TAG,
+                    annotation = chatter.login.createChannelDeeplink().toString(),
                 ) {
-                    append(userName)
+                    append(chatter.displayName)
                 }
             }
 
-            if (!asciiEncoder.canEncode(userName)) {
-                append(" ($userLogin)")
+            if (chatter.hasLocalizedDisplayName) {
+                append(" (${chatter.login})")
             }
 
             append(
@@ -195,41 +199,26 @@ fun ChatEvent.Message.Body.toAnnotatedString(
         }
 
         message
-            ?.let { message ->
-                inReplyTo?.let { inReplyTo ->
-                    message.removePrefix("@${inReplyTo.userName} ")
-                } ?: message
-            }
+            ?.stripReplyMention(inReplyTo)
             ?.split(' ')
             ?.forEach { word ->
-                when {
-                    word.matches(urlRegex) -> {
-                        val url = if (word.startsWith("http")) word else "https://$word"
-                        withStyle(SpanStyle(color = urlColor)) {
-                            withAnnotation(tag = UrlAnnotationTag, annotation = url) {
-                                append(word)
-                            }
-                        }
+                val mentionedChatter: Chatter? =
+                    knownChatters.firstOrNull { chatter ->
+                        chatter.matches(word.removePrefix("@"))
                     }
 
-                    word.startsWith('@') -> {
-                        val username = word.removePrefix("@")
-                        withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-                            withAnnotation(
-                                tag = UrlAnnotationTag,
-                                annotation = username.createChannelDeeplink().toString(),
-                            ) {
-                                withStyle(
-                                    getMentionStyle(
-                                        mentioned = username == appUser.login,
-                                        mentionBackground = mentionBackground,
-                                        mentionColor = mentionColor,
-                                    ),
-                                ) {
-                                    append(word)
-                                }
-                            }
-                        }
+                when {
+                    word.matches(urlRegex) -> {
+                        appendUrl(url = word, urlColor = urlColor)
+                    }
+
+                    mentionedChatter != null -> {
+                        appendMention(
+                            chatter = mentionedChatter,
+                            appUser = appUser,
+                            mentionBackground = mentionBackground,
+                            mentionColor = mentionColor,
+                        )
                     }
 
                     word in inlineContent -> {
@@ -249,10 +238,48 @@ fun ChatEvent.Message.Body.toAnnotatedString(
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
+private fun AnnotatedString.Builder.appendUrl(url: String, urlColor: Color) {
+    val cleanUrl = if (url.startsWith("http")) url else "https://$url"
+    withStyle(SpanStyle(color = urlColor)) {
+        withAnnotation(tag = URL_ANNOTATION_TAG, annotation = cleanUrl) {
+            append(cleanUrl)
+        }
+    }
+}
+
+@OptIn(ExperimentalTextApi::class)
+private fun AnnotatedString.Builder.appendMention(
+    chatter: Chatter,
+    appUser: AppUser,
+    mentionBackground: Color,
+    mentionColor: Color,
+) {
+    withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
+        withAnnotation(
+            tag = URL_ANNOTATION_TAG,
+            annotation = chatter.login.createChannelDeeplink().toString(),
+        ) {
+            withStyle(
+                getMentionStyle(
+                    mentioned = chatter.login == appUser.login,
+                    mentionBackground = mentionBackground,
+                    mentionColor = mentionColor,
+                ),
+            ) {
+                append('@')
+                append(chatter.displayName)
+            }
+        }
+    }
+}
+
+private fun String.stripReplyMention(inReplyTo: ChatEvent.Message.Body.InReplyTo?): String {
+    return inReplyTo?.let { replyTo -> removePrefix("@${replyTo.chatter.displayName} ") } ?: this
+}
+
 private val Badge.inlineContentId: String
     get() = "badge_${id}_$version"
 
 private val urlRegex = Patterns.WEB_URL.toRegex()
-private const val UrlAnnotationTag = "URL"
-
-private val asciiEncoder = Charsets.US_ASCII.newEncoder()
+private const val URL_ANNOTATION_TAG = "URL"

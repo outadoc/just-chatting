@@ -61,6 +61,7 @@ fun ChatListContainer(
             cheerEmotes = state.cheerEmotes,
             badges = state.globalBadges.addAll(state.channelBadges),
             removedContent = state.removedContent,
+            knownChatters = state.chatters,
             richEmbeds = state.richEmbeds,
             roomState = state.roomState,
             showTimestamps = showTimestamps,

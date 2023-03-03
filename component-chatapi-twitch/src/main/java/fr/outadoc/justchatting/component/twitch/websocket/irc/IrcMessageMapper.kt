@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.component.twitch.websocket.irc
 import android.content.Context
 import androidx.annotation.DrawableRes
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import kotlinx.collections.immutable.toImmutableList
@@ -36,9 +37,11 @@ class IrcMessageMapper(private val context: Context) {
                         body = ChatEvent.Message.Body(
                             message = userMessage.message.orEmpty(),
                             messageId = userMessage.id,
-                            userId = userMessage.userId,
-                            userName = userMessage.userName,
-                            userLogin = userMessage.userLogin,
+                            chatter = Chatter(
+                                id = userMessage.userId,
+                                displayName = userMessage.userName,
+                                login = userMessage.userLogin,
+                            ),
                             isAction = userMessage.isAction,
                             color = userMessage.color,
                             embeddedEmotes = userMessage.embeddedEmotes.orEmpty().toImmutableList(),
@@ -77,9 +80,11 @@ class IrcMessageMapper(private val context: Context) {
                 val body = ChatEvent.Message.Body(
                     message = message,
                     messageId = id,
-                    userId = userId,
-                    userName = userName,
-                    userLogin = userLogin,
+                    chatter = Chatter(
+                        id = userId,
+                        displayName = userName,
+                        login = userLogin,
+                    ),
                     isAction = isAction,
                     color = color,
                     embeddedEmotes = embeddedEmotes.orEmpty().toImmutableList(),
@@ -87,10 +92,12 @@ class IrcMessageMapper(private val context: Context) {
                     inReplyTo = inReplyTo?.let {
                         ChatEvent.Message.Body.InReplyTo(
                             id = inReplyTo.id,
-                            userName = inReplyTo.userName,
                             message = inReplyTo.message,
-                            userId = inReplyTo.userId,
-                            userLogin = inReplyTo.userLogin,
+                            chatter = Chatter(
+                                id = inReplyTo.id,
+                                login = inReplyTo.userLogin,
+                                displayName = inReplyTo.userName,
+                            ),
                         )
                     },
                 )

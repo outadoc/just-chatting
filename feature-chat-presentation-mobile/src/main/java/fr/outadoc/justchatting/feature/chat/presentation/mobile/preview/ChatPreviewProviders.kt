@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.R
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
@@ -15,9 +16,11 @@ private val simpleEntries = sequence {
     yield(
         ChatEvent.Message.Simple(
             body = ChatEvent.Message.Body(
-                userName = "Hiccoz",
-                userId = "68552712",
-                userLogin = "hiccoz",
+                chatter = Chatter(
+                    displayName = "Hiccoz",
+                    id = "68552712",
+                    login = "hiccoz",
+                ),
                 message = "feur",
                 messageId = "b43bd9e5-ec6e-47fe-a5da-c3213540fe06",
                 isAction = false,
@@ -36,9 +39,11 @@ private val simpleEntries = sequence {
     yield(
         ChatEvent.Message.Simple(
             body = ChatEvent.Message.Body(
-                userName = "컬러히에",
-                userId = "232421548",
-                userLogin = "kolorye",
+                chatter = Chatter(
+                    displayName = "컬러히에",
+                    id = "232421548",
+                    login = "kolorye",
+                ),
                 message = "@djessy728 il avait dit quand mathieu avait sortit sa vidéo après longtemps qu'ils n'étaient plus en contact plus que ça, donc j'imagine que non",
                 messageId = "4b3f4db7-5956-4ade-adba-ed282c22eb50",
                 isAction = false,
@@ -47,9 +52,11 @@ private val simpleEntries = sequence {
                 badges = persistentListOf(),
                 inReplyTo = ChatEvent.Message.Body.InReplyTo(
                     id = "4d0a8518-9bc5-44a6-8249-c2ed9122f987",
-                    userId = "221570322",
-                    userName = "djessy728",
-                    userLogin = "djessy728",
+                    chatter = Chatter(
+                        id = "221570322",
+                        displayName = "djessy728",
+                        login = "djessy728",
+                    ),
                     message = "Salut Antoine, est tu encore en contact avec Mathieu? Et penses tu streamer un peu avec lui?",
                 ),
             ),
@@ -62,9 +69,11 @@ private val highlightedEntries = sequence {
     yield(
         ChatEvent.Message.Highlighted(
             body = ChatEvent.Message.Body(
-                userName = "clo_chette_",
-                userId = "672551946",
-                userLogin = "clo_chette_",
+                chatter = Chatter(
+                    id = "672551946",
+                    displayName = "clo_chette_",
+                    login = "clo_chette_",
+                ),
                 message = "Top 1 on y croit",
                 messageId = "9431957c-0185-4de8-91a6-d1734b733d90",
                 isAction = false,

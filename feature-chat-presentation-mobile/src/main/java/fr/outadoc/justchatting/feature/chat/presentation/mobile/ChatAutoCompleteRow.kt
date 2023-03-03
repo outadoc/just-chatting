@@ -7,9 +7,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
-import fr.outadoc.justchatting.feature.chat.presentation.Chatter
 import fr.outadoc.justchatting.utils.ui.AppTheme
 
 @Preview
@@ -17,8 +17,20 @@ import fr.outadoc.justchatting.utils.ui.AppTheme
 fun ChatAutoCompleteRowPreview() {
     AppTheme {
         val items = listOf(
-            AutoCompleteItem.User(Chatter("BagheraJones")),
-            AutoCompleteItem.User(Chatter("HortyUnderscore")),
+            AutoCompleteItem.User(
+                Chatter(
+                    id = "1",
+                    displayName = "BagheraJones",
+                    login = "bagherajones",
+                ),
+            ),
+            AutoCompleteItem.User(
+                Chatter(
+                    id = "2",
+                    displayName = "HortyUnderscore",
+                    login = "hortyunderscore",
+                ),
+            ),
         )
 
         ChatAutoCompleteRow(

@@ -120,8 +120,8 @@ val Map<String, String?>.targetUserId: String?
 val Map<String, String?>.systemMsg: String?
     get() = this["system-msg"]?.takeUnless { it.isEmpty() }
 
-val Map<String, String?>.userId: String?
-    get() = this["user-id"]?.takeUnless { it.isEmpty() }
+val Map<String, String?>.userId: String
+    get() = this["user-id"]!!
 
 private fun String.splitAndMakeMap(
     split: String,

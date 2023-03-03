@@ -32,9 +32,7 @@ sealed interface ChatEvent {
         data class Body(
             val messageId: String?,
             val message: String?,
-            val userId: String?,
-            val userName: String,
-            val userLogin: String,
+            val chatter: Chatter,
             val isAction: Boolean = false,
             val color: String? = null,
             val embeddedEmotes: ImmutableList<Emote> = persistentListOf(),
@@ -45,9 +43,7 @@ sealed interface ChatEvent {
             data class InReplyTo(
                 val id: String,
                 val message: String,
-                val userId: String,
-                val userLogin: String,
-                val userName: String,
+                val chatter: Chatter,
             )
         }
     }

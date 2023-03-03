@@ -12,7 +12,7 @@ sealed interface IrcEvent {
 
         data class ChatMessage(
             val id: String?,
-            val userId: String?,
+            val userId: String,
             val userLogin: String,
             val userName: String,
             val message: String?,

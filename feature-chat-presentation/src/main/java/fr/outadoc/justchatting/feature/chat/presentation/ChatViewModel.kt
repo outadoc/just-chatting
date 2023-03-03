@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
@@ -37,6 +38,7 @@ import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.PersistentSet
+import kotlinx.collections.immutable.persistentHashSetOf
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.persistentSetOf
@@ -122,7 +124,7 @@ class ChatViewModel(
             val stream: Stream? = null,
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val chatMessages: PersistentList<ChatEvent.Message> = persistentListOf(),
-            val chatters: PersistentSet<Chatter> = persistentSetOf(),
+            val chatters: PersistentSet<Chatter> = persistentHashSetOf(),
             val cheerEmotes: PersistentMap<String, Emote> = persistentMapOf(),
             val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,
@@ -325,7 +327,7 @@ class ChatViewModel(
                             }
 
                             val chatterItems = chatters.mapNotNull { chatter ->
-                                if (chatter.name.contains(word, ignoreCase = true)) {
+                                if (chatter.contains(word)) {
                                     AutoCompleteItem.User(chatter)
                                 } else {
                                     null
@@ -403,13 +405,22 @@ class ChatViewModel(
     private suspend fun Action.LoadChat.reduce(state: State): State {
         if (state is State.Chatting && state.user.login == channelLogin) return state
 
-        val prefs = preferencesRepository.currentPreferences.first()
-        return State.Chatting(
-            user = twitchRepository.loadUsersByLogin(logins = listOf(channelLogin))
+        val prefs: AppPreferences = preferencesRepository.currentPreferences.first()
+        val channelUser: User =
+            twitchRepository.loadUsersByLogin(logins = listOf(channelLogin))
                 ?.firstOrNull()
-                ?: error("User not loaded"),
+                ?: error("User not loaded")
+
+        return State.Chatting(
+            user = channelUser,
             appUser = prefs.appUser as AppUser.LoggedIn,
-            chatters = persistentSetOf(Chatter(channelLogin)),
+            chatters = persistentSetOf(
+                Chatter(
+                    id = channelUser.id,
+                    login = channelUser.login,
+                    displayName = channelUser.displayName,
+                ),
+            ),
             maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
         )
     }
@@ -505,14 +516,13 @@ class ChatViewModel(
         // Note that this is the last message we've sent
         val lastSentMessageInstant: Instant? =
             messages.lastOrNull { message ->
-                message.body?.userId != null && message.body?.userId == state.appUser.id
+                message.body != null && message.body?.chatter?.id == state.appUser.id
             }?.timestamp
 
         // Remember names of chatters
         val newChatters: PersistentSet<Chatter> =
             messages.asSequence()
-                .mapNotNull { message -> message.body?.userName }
-                .map { userName -> Chatter(userName) }
+                .mapNotNull { message -> message.body?.chatter }
                 .toPersistentSet()
 
         val newMessages: PersistentList<ChatEvent> =
@@ -687,7 +697,7 @@ class ChatViewModel(
     private fun InputAction.AppendChatter.reduce(inputState: InputState): InputState {
         return appendTextToInput(
             inputState = inputState,
-            text = chatter.name,
+            text = chatter.displayName,
             replaceLastWord = autocomplete,
         )
     }

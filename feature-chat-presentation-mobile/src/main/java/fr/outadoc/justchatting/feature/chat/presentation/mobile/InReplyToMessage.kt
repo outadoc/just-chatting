@@ -21,12 +21,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import fr.outadoc.justchatting.component.chatapi.common.Chatter
 
 @Composable
 fun InReplyToMessage(
     modifier: Modifier = Modifier,
-    userName: String,
-    userId: String,
+    chatter: Chatter,
     message: String,
     appUserId: String? = null,
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
@@ -53,12 +53,12 @@ fun InReplyToMessage(
                     withStyle(
                         SpanStyle(fontWeight = FontWeight.Bold) +
                             getMentionStyle(
-                                mentioned = userId == appUserId,
+                                mentioned = chatter.id == appUserId,
                                 mentionBackground = mentionBackground,
                                 mentionColor = mentionColor,
                             ),
                     ) {
-                        append("@$userName")
+                        append("@${chatter.displayName}")
                     }
 
                     append(": $message")

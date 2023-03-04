@@ -67,7 +67,7 @@ val Map<String, String?>.customRewardId: String?
     get() = this["custom-reward-id"]?.takeUnless { it.isEmpty() }
 
 val Map<String, String?>.displayName: String?
-    get() = this["display-name"]?.takeUnless { it.isEmpty() }
+    get() = this["display-name"]?.trim()?.takeUnless { it.isEmpty() }
 
 val Map<String, String?>.emoteSets: List<String>?
     get() = this["emote-sets"]?.split(",")?.dropLastWhile { it.isEmpty() }

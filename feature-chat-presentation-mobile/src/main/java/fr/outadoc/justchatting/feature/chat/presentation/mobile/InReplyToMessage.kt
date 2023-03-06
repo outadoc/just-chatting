@@ -22,6 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
+import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 
 @Composable
 fun InReplyToMessage(
@@ -52,16 +53,18 @@ fun InReplyToMessage(
                 text = buildAnnotatedString {
                     withStyle(
                         SpanStyle(fontWeight = FontWeight.Bold) +
-                            getMentionStyle(
-                                mentioned = chatter.id == appUserId,
-                                mentionBackground = mentionBackground,
-                                mentionColor = mentionColor,
-                            ),
+                                getMentionStyle(
+                                    mentioned = chatter.id == appUserId,
+                                    mentionBackground = mentionBackground,
+                                    mentionColor = mentionColor,
+                                ),
                     ) {
-                        append("@${chatter.displayName}")
+                        append(ChatPrefixConstants.ChatterPrefix)
+                        append(chatter.displayName)
                     }
 
-                    append(": $message")
+                    append(stringResource(R.string.chat_message_standardSeparator))
+                    append(message)
                 },
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 2,

@@ -23,7 +23,7 @@ fun IntervalCheckVisibility(
     content: @Composable () -> Unit,
 ) {
     var isVisible by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(visible) {
         while (isActive) {
             isVisible = visible()
             delay(1.seconds)

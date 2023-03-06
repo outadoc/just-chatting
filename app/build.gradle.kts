@@ -22,6 +22,12 @@ android {
         versionCode = (findProperty("externalVersionCode") as String?)?.toInt() ?: 99
         versionName = (findProperty("externalVersionName") as String?) ?: "SNAPSHOT"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField(
+            type = "boolean",
+            name = "ENABLE_LOGGING",
+            value = "true"
+        )
     }
 
     signingConfigs {
@@ -68,6 +74,12 @@ android {
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
+            )
+
+            buildConfigField(
+                type = "boolean",
+                name = "ENABLE_LOGGING",
+                value = hasProperty("enableLogging").toString()
             )
         }
     }

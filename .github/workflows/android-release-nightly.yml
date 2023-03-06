@@ -44,6 +44,7 @@ jobs:
             "-PreleaseKeystorePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}"
             "-PexternalVersionName=nightly-${{ steps.date.outputs.date }}-${{ github.sha }}"
             "-PexternalVersionCode=${{ steps.version.outputs.version }}"
+            "-PenableLogging=true"
 
       - name: Upload app bundle to GitHub
         uses: actions/upload-artifact@v3.1.2

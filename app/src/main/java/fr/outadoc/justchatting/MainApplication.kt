@@ -19,7 +19,7 @@ class MainApplication : Application(), ImageLoaderFactory {
     override fun onCreate() {
         super.onCreate()
 
-        if (buildType != BuildType.Release) {
+        if (BuildConfig.ENABLE_LOGGING) {
             Logger.logStrategy = AndroidLogStrategy
         }
 
@@ -48,7 +48,7 @@ class MainApplication : Application(), ImageLoaderFactory {
                 }
             }
             .apply {
-                if (BuildConfig.DEBUG) {
+                if (BuildConfig.ENABLE_LOGGING) {
                     logger(DebugLogger())
                 }
             }

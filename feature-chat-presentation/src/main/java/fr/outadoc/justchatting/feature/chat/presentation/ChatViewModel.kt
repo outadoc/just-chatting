@@ -682,7 +682,7 @@ class ChatViewModel(
     private fun InputAction.AppendChatter.reduce(inputState: InputState): InputState {
         return appendTextToInput(
             inputState = inputState,
-            text = chatter.displayName,
+            text = "${ChatPrefixConstants.ChatterPrefix}${chatter.displayName}",
             replaceLastWord = autocomplete,
         )
     }

@@ -241,10 +241,10 @@ fun ChatEvent.Message.Body.toAnnotatedString(
 
 @OptIn(ExperimentalTextApi::class)
 private fun AnnotatedString.Builder.appendUrl(url: String, urlColor: Color) {
-    val cleanUrl = if (url.startsWith("http")) url else "https://$url"
+    val validUrl: String = if (url.startsWith("http")) url else "https://$url"
     withStyle(SpanStyle(color = urlColor)) {
-        withAnnotation(tag = URL_ANNOTATION_TAG, annotation = cleanUrl) {
-            append(cleanUrl)
+        withAnnotation(tag = URL_ANNOTATION_TAG, annotation = validUrl) {
+            append(url)
         }
     }
 }

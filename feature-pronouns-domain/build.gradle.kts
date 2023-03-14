@@ -4,10 +4,11 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
-    namespace = "fr.outadoc.justchatting.feature.chat.presentation"
+    namespace = "fr.outadoc.justchatting.feature.pronouns.data"
     compileSdkVersion = "android-33"
 
     defaultConfig {
@@ -29,36 +30,18 @@ android {
 }
 
 dependencies {
-    api(project(":feature-chat-domain"))
+    api(project(":feature-pronouns-data"))
 
-    implementation(project(":feature-pronouns-domain"))
-    implementation(project(":feature-pronouns-presentation"))
-
+    implementation(project(":utils-logging"))
+    implementation(project(":utils-core"))
     implementation(project(":component-chatapi-common"))
-    implementation(project(":component-chatapi-domain"))
     implementation(project(":component-preferences-domain"))
 
-    implementation(project(":utils-core"))
-    implementation(project(":utils-ui"))
-    implementation(project(":utils-logging"))
-
-    implementation(platform(libs.compose.bom))
-
-    implementation(libs.androidx.annotation)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.coil.core)
-    implementation(libs.compose.runtime.core)
-    implementation(libs.compose.ui.core)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)
-    implementation(libs.koin.android)
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.ktor.client.core)
-    implementation(libs.ktor.io)
-    implementation(libs.okio)
-
-    testImplementation(libs.junit)
 
     coreLibraryDesugaring(libs.desugar)
 }

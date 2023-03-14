@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
+import fr.outadoc.justchatting.component.chatapi.common.Pronoun
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -20,6 +21,7 @@ fun ChatMessageBodyOrCensored(
     body: ChatEvent.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     knownChatters: PersistentSet<Chatter>,
+    pronouns: ImmutableMap<Chatter, Pronoun>,
     removedContent: ImmutableList<ChatEvent.RemoveContent> = persistentListOf(),
     appUser: AppUser,
     backgroundHint: Color,
@@ -40,6 +42,7 @@ fun ChatMessageBodyOrCensored(
         },
         inlineContent = inlineContent,
         knownChatters = knownChatters,
+        pronouns = pronouns,
         appUser = appUser,
         backgroundHint = backgroundHint,
         richEmbed = richEmbed,

@@ -31,9 +31,11 @@ import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
+import fr.outadoc.justchatting.component.chatapi.common.Pronoun
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
@@ -50,6 +52,7 @@ fun ChatMessageBody(
     body: ChatEvent.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     knownChatters: PersistentSet<Chatter>,
+    pronouns: ImmutableMap<Chatter, Pronoun>,
     appUser: AppUser,
     backgroundHint: Color,
     richEmbed: ChatEvent.RichEmbed?,
@@ -76,6 +79,7 @@ fun ChatMessageBody(
         appUser = appUser,
         inlineContent = fullInlineContent,
         knownChatters = knownChatters,
+        pronouns = pronouns,
         backgroundHint = backgroundHint,
     )
 
@@ -146,12 +150,14 @@ fun ChatEvent.Message.Body.toAnnotatedString(
     appUser: AppUser,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     knownChatters: PersistentSet<Chatter>,
+    pronouns: ImmutableMap<Chatter, Pronoun>,
     urlColor: Color = MaterialTheme.colorScheme.primary,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
     mentionColor: Color = MaterialTheme.colorScheme.background,
 ): AnnotatedString {
     val randomChatColors = integerArrayResource(R.array.randomChatColors).map { Color(it) }
+    val pronoun: String? = pronouns[chatter]?.displayPronoun
 
     val color = remember(color) {
         color?.parseHexColor()?.let { color ->
@@ -165,6 +171,12 @@ fun ChatEvent.Message.Body.toAnnotatedString(
     }
 
     return buildAnnotatedString {
+        if (pronoun != null) {
+            withStyle(SpanStyle(fontSize = 0.8.em)) {
+                append("($pronoun) ")
+            }
+        }
+
         badges.forEach { badge ->
             appendInlineContent(
                 id = badge.inlineContentId,

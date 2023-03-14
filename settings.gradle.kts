@@ -41,6 +41,10 @@ include(":feature-mainnavigation-presentation-mobile")
 include(":feature-preferences-presentation")
 include(":feature-preferences-presentation-mobile")
 
+include(":feature-pronouns-data")
+include(":feature-pronouns-domain")
+include(":feature-pronouns-presentation")
+
 include(":component-deeplink")
 
 include(":component-preferences-domain")

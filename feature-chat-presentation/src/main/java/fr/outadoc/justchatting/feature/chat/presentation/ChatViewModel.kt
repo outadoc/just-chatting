@@ -15,6 +15,7 @@ import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
 import fr.outadoc.justchatting.component.chatapi.common.Poll
 import fr.outadoc.justchatting.component.chatapi.common.Prediction
+import fr.outadoc.justchatting.component.chatapi.common.Pronoun
 import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
@@ -27,6 +28,7 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
+import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import fr.outadoc.justchatting.utils.core.asStringOrRes
 import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.core.isOdd
@@ -82,13 +84,14 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
 class ChatViewModel(
+    private val clock: Clock,
     private val twitchRepository: TwitchRepository,
     private val emotesRepository: EmotesRepository,
     private val chatConnectionPool: ChatConnectionPool,
     private val preferencesRepository: PreferenceRepository,
-    private val clock: Clock,
     private val emoteListSourcesProvider: EmoteListSourcesProvider,
     private val filterAutocompleteItemsUseCase: FilterAutocompleteItemsUseCase,
+    private val pronounsRepository: PronounsRepository,
 ) : ViewModel() {
 
     private val defaultScope = viewModelScope + CoroutineName("defaultScope")
@@ -112,6 +115,7 @@ class ChatViewModel(
 
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
+        data class UpdateChatterPronouns(val pronouns: Map<Chatter, Pronoun>) : Action()
         object LoadStreamDetails : Action()
     }
 
@@ -126,6 +130,7 @@ class ChatViewModel(
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val chatMessages: PersistentList<ChatEvent.Message> = persistentListOf(),
             val chatters: PersistentSet<Chatter> = persistentHashSetOf(),
+            val pronouns: PersistentMap<Chatter, Pronoun> = persistentMapOf(),
             val cheerEmotes: PersistentMap<String, Emote> = persistentMapOf(),
             val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,
@@ -303,6 +308,14 @@ class ChatViewModel(
             .launchIn(defaultScope)
 
         state.filterIsInstance<State.Chatting>()
+            .map { state -> state.chatters - state.pronouns.keys }
+            .distinctUntilChanged()
+            .debounce(3.seconds)
+            .map { chatters -> pronounsRepository.fillPronounsFor(chatters) }
+            .onEach { pronouns -> actions.emit(Action.UpdateChatterPronouns(pronouns)) }
+            .launchIn(defaultScope)
+
+        state.filterIsInstance<State.Chatting>()
             .distinctUntilChanged()
             .map { state -> state.allEmotesMap to state.chatters }
             .distinctUntilChanged()
@@ -380,6 +393,7 @@ class ChatViewModel(
             is Action.UpdatePoll -> reduce(state)
             is Action.UpdatePrediction -> reduce(state)
             is Action.UpdateStreamMetadata -> reduce(state)
+            is Action.UpdateChatterPronouns -> reduce(state)
             is Action.AddRichEmbed -> reduce(state)
             is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
@@ -614,6 +628,13 @@ class ChatViewModel(
                 key = richEmbed.messageId,
                 value = richEmbed,
             ),
+        )
+    }
+
+    private fun Action.UpdateChatterPronouns.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(
+            pronouns = state.pronouns.putAll(pronouns),
         )
     }
 

@@ -125,6 +125,7 @@ dependencies {
     implementation(project(":feature-chat-presentation-mobile"))
     implementation(project(":feature-home-presentation-mobile"))
     implementation(project(":feature-preferences-presentation-mobile"))
+    implementation(project(":feature-pronouns-domain"))
 
     implementation(project(":component-chatapi-domain"))
     implementation(project(":component-chatapi-common"))

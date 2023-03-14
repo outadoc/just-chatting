@@ -33,6 +33,7 @@ import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.Poll
 import fr.outadoc.justchatting.component.chatapi.common.Prediction
+import fr.outadoc.justchatting.component.chatapi.common.Pronoun
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.OngoingEvents
@@ -57,6 +58,7 @@ fun ChatList(
     badges: ImmutableList<TwitchBadge>,
     removedContent: ImmutableList<ChatEvent.RemoveContent>,
     knownChatters: PersistentSet<Chatter>,
+    pronouns: ImmutableMap<Chatter, Pronoun>,
     richEmbeds: ImmutableMap<String, ChatEvent.RichEmbed>,
     showTimestamps: Boolean,
     isDisconnected: Boolean,
@@ -228,6 +230,7 @@ fun ChatList(
                     inlineContent = inlineContent,
                     removedContent = removedContent,
                     knownChatters = knownChatters,
+                    pronouns = pronouns,
                     richEmbed = item.body?.messageId?.let { messageId -> richEmbeds[messageId] },
                     showTimestamps = showTimestamps,
                     background = background,

@@ -31,12 +31,15 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatNotifierImpl
+import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
+import fr.outadoc.justchatting.feature.pronouns.domain.DefaultPronounsRepository
+import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val chatModule = module {
 
-    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
 
     single<ChatNotifier> { ChatNotifierImpl() }
     single { FilterAutocompleteItemsUseCase() }
@@ -84,6 +87,8 @@ val chatModule = module {
     single { get<AppDatabase>().recentEmotes() }
 
     single { RecentMessagesRepository(get(), get()) }
+    single { AlejoPronounsApi(get()) }
+    single<PronounsRepository> { DefaultPronounsRepository(get()) }
 
     single { ChannelBttvEmotesSource(get()) }
     single { ChannelFfzEmotesSource(get()) }

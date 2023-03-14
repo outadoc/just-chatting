@@ -22,7 +22,10 @@ fun ChatScreen(
             ?.chatMessages
             .isNullOrEmpty()
 
-    Crossfade(targetState = hasMessages) { showPlaceholder ->
+    Crossfade(
+        targetState = hasMessages,
+        label = "Chat list placeholder loader",
+    ) { showPlaceholder ->
         when {
             showPlaceholder -> {
                 ChatListPlaceholder(

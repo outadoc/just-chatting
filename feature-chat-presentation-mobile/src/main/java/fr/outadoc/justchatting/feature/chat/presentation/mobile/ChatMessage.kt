@@ -15,6 +15,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
+import fr.outadoc.justchatting.component.chatapi.common.Pronoun
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatEntryPreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
@@ -59,6 +60,7 @@ fun ChatMessage(
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),
     removedContent: ImmutableList<ChatEvent.RemoveContent> = persistentListOf(),
     knownChatters: PersistentSet<Chatter> = persistentSetOf(),
+    pronouns: ImmutableMap<Chatter, Pronoun> = persistentMapOf(),
     richEmbed: ChatEvent.RichEmbed? = null,
     showTimestamps: Boolean,
     background: Color = Color.Transparent,
@@ -98,6 +100,7 @@ fun ChatMessage(
                             body = data,
                             inlineContent = inlineContent,
                             knownChatters = knownChatters,
+                            pronouns = pronouns,
                             appUser = appUser,
                             backgroundHint = backgroundHint,
                             removedContent = removedContent,
@@ -121,6 +124,7 @@ fun ChatMessage(
                         backgroundHint = backgroundHint,
                         removedContent = removedContent,
                         knownChatters = knownChatters,
+                        pronouns = pronouns,
                         richEmbed = richEmbed,
                     )
                 }

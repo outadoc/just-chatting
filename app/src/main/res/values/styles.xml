@@ -24,8 +24,4 @@
 
     <style name="Theme.App" parent="Theme.App.Light" />
 
-    <style name="Theme.App.Chat">
-        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
-    </style>
-
 </resources>

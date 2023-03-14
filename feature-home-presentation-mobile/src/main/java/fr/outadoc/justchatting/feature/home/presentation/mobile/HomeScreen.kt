@@ -46,7 +46,10 @@ fun HomeScreen(
         selectedTab = selectedTab,
         onSelectedTabChange = { selectedTab = it },
         topBar = {
-            Crossfade(targetState = selectedTab) { tab ->
+            Crossfade(
+                targetState = selectedTab,
+                label = "Top app bar",
+            ) { tab ->
                 when (tab) {
                     Tab.Search -> {
                         SearchTopAppBar(
@@ -71,6 +74,7 @@ fun HomeScreen(
             Crossfade(
                 modifier = Modifier.padding(insets),
                 targetState = selectedTab,
+                label = "Page contents",
             ) { tab ->
                 when (tab) {
                     Tab.Live -> {

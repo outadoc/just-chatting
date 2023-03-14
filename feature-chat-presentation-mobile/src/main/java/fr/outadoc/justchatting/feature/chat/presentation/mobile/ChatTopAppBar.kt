@@ -310,6 +310,7 @@ fun ExpandedTopAppBar(
     val appBarContainerColor by animateColorAsState(
         targetValue = backgroundColor,
         animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "Container color",
     )
 
     Surface(

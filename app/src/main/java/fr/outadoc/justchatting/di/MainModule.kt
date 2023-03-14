@@ -35,7 +35,7 @@ import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.core.scope.Scope
 import org.koin.dsl.module
-import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 val mainModule = module {
     single<Clock> { Clock.System }
@@ -98,9 +98,10 @@ private fun Scope.baseHttpClient(
         expectSuccess = true
 
         engine {
-            requestTimeout = 1.minutes.inWholeMilliseconds
+            requestTimeout = 30.seconds.inWholeMilliseconds
+
             endpoint {
-                connectTimeout = 1.minutes.inWholeMilliseconds
+                connectTimeout = 10.seconds.inWholeMilliseconds
             }
         }
 

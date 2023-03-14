@@ -31,12 +31,14 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
-import java.io.IOException
+import kotlinx.datetime.Instant
+import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 /**
@@ -69,13 +71,19 @@ class LoggedInChatWebSocket(
     )
     override val commandFlow: Flow<ChatEvent> = _flow
 
-    private val messagesToSend = MutableSharedFlow<String>()
+    private data class QueuedMessage(
+        val authoringTime: Instant,
+        val rawMessage: String,
+    )
+
+    private val messageToSend: MutableStateFlow<QueuedMessage?> = MutableStateFlow(null)
+    private val messageMaxRetryTimeout: Duration = 10.seconds
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(
             ConnectionStatus(
                 isAlive = false,
-                preventSendingMessages = false,
+                preventSendingMessages = true,
                 registeredListeners = 0,
             ),
         )
@@ -136,19 +144,44 @@ class LoggedInChatWebSocket(
             logDebug<LoggedInChatWebSocket> { "Socket open, logging in" }
 
             val prefs = preferencesRepository.currentPreferences.first()
+
             send("PASS oauth:${prefs.appUser.helixToken}")
             send("NICK ${prefs.appUser.login}")
             send("CAP REQ :twitch.tv/tags twitch.tv/commands")
             send("JOIN #$channelLogin")
 
             launch {
-                messagesToSend.collect { message ->
-                    if (isActive) {
-                        logDebug<LoggedInChatWebSocket> { "Sending PRIMSG: $message" }
-                        send(message)
-                        logDebug<LoggedInChatWebSocket> { "Sent message" }
+                messageToSend
+                    .filterNotNull()
+                    .collect { message ->
+                        if (isActive) {
+                            val shouldAttemptToSend: Boolean =
+                                clock.now() < message.authoringTime + messageMaxRetryTimeout
+
+                            if (shouldAttemptToSend) {
+                                logDebug<LoggedInChatWebSocket> { "Sending PRIVMSG: ${message.rawMessage}" }
+
+                                // Try sending message
+                                send(message.rawMessage)
+
+                                logDebug<LoggedInChatWebSocket> { "Sent message" }
+                            } else {
+                                // We've been trying to send this message for a while now, give up
+                                logError<LoggedInChatWebSocket> { "Timeout while trying to send message: $message" }
+
+                                _flow.emit(
+                                    ChatEvent.Message.Highlighted(
+                                        header = context.getString(R.string.chat_send_msg_error),
+                                        body = null,
+                                        timestamp = clock.now(),
+                                    ),
+                                )
+                            }
+
+                            // Remove message from the queue, if we sent it successfully or cleared it from the queue
+                            this@LoggedInChatWebSocket.messageToSend.value = null
+                        }
                     }
-                }
             }
 
             // Receive messages
@@ -205,26 +238,17 @@ class LoggedInChatWebSocket(
 
     override fun send(message: CharSequence, inReplyToId: String?) {
         scope.launch {
-            try {
-                val inReplyToPrefix = inReplyToId?.let { id -> "@reply-parent-msg-id=$id " } ?: ""
-                val privMsg = "${inReplyToPrefix}PRIVMSG #$channelLogin :$message"
+            val inReplyToPrefix = inReplyToId?.let { id -> "@reply-parent-msg-id=$id " } ?: ""
+            val privMsg = "${inReplyToPrefix}PRIVMSG #$channelLogin :$message"
 
-                logDebug<LoggedInChatWebSocket> { "Queuing message to #$channelLogin, in reply to $inReplyToId: $message" }
+            logDebug<LoggedInChatWebSocket> { "Queuing message to #$channelLogin, in reply to $inReplyToId: $message" }
 
-                messagesToSend.emit(privMsg)
-            } catch (e: IOException) {
-                logError<LoggedInChatWebSocket>(e) { "Error sending message" }
-                _flow.emit(
-                    ChatEvent.Message.Highlighted(
-                        header = context.getString(
-                            R.string.chat_send_msg_error,
-                            e.toString(),
-                        ),
-                        body = null,
-                        timestamp = clock.now(),
-                    ),
-                )
-            }
+            messageToSend.emit(
+                QueuedMessage(
+                    authoringTime = clock.now(),
+                    rawMessage = privMsg,
+                ),
+            )
         }
     }
 

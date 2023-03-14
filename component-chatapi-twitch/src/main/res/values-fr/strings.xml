@@ -10,7 +10,7 @@
     <string name="chat_join">Connecté·e à %s</string>
     <string name="chat_replyingTo">En réponse à</string>
     <string name="chat_replyTo">Répondre à ce message</string>
-    <string name="chat_send_msg_error">Erreur lors de l\'envoi du message - %s</string>
+    <string name="chat_send_msg_error">Erreur lors de l\'envoi du message</string>
     <string name="chat_timeout">%1$s a été mis·e au silence pendant %2$s</string>
 
     <plurals name="user_redeemed">

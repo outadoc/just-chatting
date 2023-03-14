@@ -53,11 +53,11 @@ fun InReplyToMessage(
                 text = buildAnnotatedString {
                     withStyle(
                         SpanStyle(fontWeight = FontWeight.Bold) +
-                                getMentionStyle(
-                                    mentioned = chatter.id == appUserId,
-                                    mentionBackground = mentionBackground,
-                                    mentionColor = mentionColor,
-                                ),
+                            getMentionStyle(
+                                mentioned = chatter.id == appUserId,
+                                mentionBackground = mentionBackground,
+                                mentionColor = mentionColor,
+                            ),
                     ) {
                         append(ChatPrefixConstants.ChatterPrefix)
                         append(chatter.displayName)

@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.pronouns.domain
 
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Pronoun
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronoun
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.data.UserPronounResponse
@@ -11,12 +12,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 class DefaultPronounsRepository(
     private val alejoPronounsApi: AlejoPronounsApi,
+    private val preferenceRepository: PreferenceRepository,
 ) : PronounsRepository {
 
     private var _pronounCache: Map<String, AlejoPronoun>? = null
@@ -26,6 +29,10 @@ class DefaultPronounsRepository(
 
     override suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun> =
         coroutineScope {
+            if (!preferenceRepository.currentPreferences.first().enablePronouns) {
+                return@coroutineScope emptyMap()
+            }
+
             withContext(Dispatchers.IO) {
                 cacheMutex.withLock {
                     if (_pronounCache == null) {

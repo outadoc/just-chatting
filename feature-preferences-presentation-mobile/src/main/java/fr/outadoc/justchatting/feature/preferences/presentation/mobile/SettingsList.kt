@@ -151,6 +151,40 @@ fun SettingsList(
         item {
             SettingsSwitch(
                 modifier = Modifier.padding(itemInsets),
+                checked = appPreferences.enablePronouns,
+                onCheckedChange = { checked ->
+                    onAppPreferencesChange(appPreferences.copy(enablePronouns = checked))
+                },
+                title = {
+                    Text(stringResource(R.string.settings_thirdparty_pronouns_title))
+                },
+                subtitle = {
+                    Text(stringResource(R.string.settings_thirdparty_pronouns_subtitle))
+                },
+            )
+        }
+
+        item {
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
+        }
+
+        item {
+            val pronounsUrl = stringResource(id = R.string.app_pronouns_url)
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = { uriHandler.openUri(pronounsUrl) },
+                onClickLabel = stringResource(id = R.string.settings_thirdparty_pronouns_set_cd),
+                title = { Text(text = stringResource(id = R.string.settings_thirdparty_pronouns_set_title)) },
+            )
+        }
+
+        item {
+            Divider(modifier = Modifier.padding(vertical = 4.dp))
+        }
+
+        item {
+            SettingsSwitch(
+                modifier = Modifier.padding(itemInsets),
                 checked = appPreferences.enableBttvEmotes,
                 onCheckedChange = { checked ->
                     onAppPreferencesChange(appPreferences.copy(enableBttvEmotes = checked))

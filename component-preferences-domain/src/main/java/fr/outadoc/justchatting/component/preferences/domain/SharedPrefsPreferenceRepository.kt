@@ -35,6 +35,7 @@ class SharedPrefsPreferenceRepository(
             enableBttvEmotes = this[THIRDPARTY_ENABLE_BTTV] ?: defaultPreferences.enableBttvEmotes,
             enableFfzEmotes = this[THIRDPARTY_ENABLE_FFZ] ?: defaultPreferences.enableFfzEmotes,
             enableStvEmotes = this[THIRDPARTY_ENABLE_STV] ?: defaultPreferences.enableStvEmotes,
+            enablePronouns = this[THIRDPARTY_ENABLE_PRONOUNS] ?: defaultPreferences.enablePronouns,
             appUser = this.parseUser(),
         )
     }
@@ -50,6 +51,7 @@ class SharedPrefsPreferenceRepository(
         prefs[THIRDPARTY_ENABLE_BTTV] = enableBttvEmotes
         prefs[THIRDPARTY_ENABLE_FFZ] = enableFfzEmotes
         prefs[THIRDPARTY_ENABLE_STV] = enableStvEmotes
+        prefs[THIRDPARTY_ENABLE_PRONOUNS] = enablePronouns
     }
 
     private fun Preferences.parseUser(): AppUser {
@@ -79,12 +81,12 @@ class SharedPrefsPreferenceRepository(
         val USER_LOGIN = stringPreferencesKey("username")
         val USER_TOKEN = stringPreferencesKey("token")
 
-        val CHAT_ANIMATED_EMOTES = booleanPreferencesKey("animatedGifEmotes")
         val CHAT_ACCESSIBILITY_TIMESTAMPS = booleanPreferencesKey("chat_timestamps")
 
         val THIRDPARTY_ENABLE_RECENT = booleanPreferencesKey("thirdparty_enable_recent")
         val THIRDPARTY_ENABLE_BTTV = booleanPreferencesKey("thirdparty_enable_bttv")
         val THIRDPARTY_ENABLE_FFZ = booleanPreferencesKey("thirdparty_enable_ffz")
         val THIRDPARTY_ENABLE_STV = booleanPreferencesKey("thirdparty_enable_stv")
+        val THIRDPARTY_ENABLE_PRONOUNS = booleanPreferencesKey("thirdparty_enable_pronouns")
     }
 }

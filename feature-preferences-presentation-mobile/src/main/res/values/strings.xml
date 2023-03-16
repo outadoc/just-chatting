@@ -35,6 +35,10 @@
     <string name="settings_thirdparty_bttv_subtitle">Fetch and display BetterTTV emotes, using data provided by betterttv.net.</string>
     <string name="settings_thirdparty_ffz_title">FrankerFaceZ Emotes</string>
     <string name="settings_thirdparty_ffz_subtitle">Fetch and display FrankerFaceZ emotes, using data provided by betterttv.net.</string>
+    <string name="settings_thirdparty_pronouns_title">User pronouns</string>
+    <string name="settings_thirdparty_pronouns_subtitle">Fetch and display each user\'s preferred pronouns, using data provided by pronouns.alejo.io.</string>
+    <string name="settings_thirdparty_pronouns_set_title">Set your own pronouns</string>
+    <string name="settings_thirdparty_pronouns_set_cd">Open pronouns.alejo.io in browser</string>
     <string name="settings_thirdparty_stv_title">7TV Emotes</string>
     <string name="settings_thirdparty_stv_subtitle">Fetch and display 7TV emotes, using data provided by 7tv.app.</string>
     <string name="yes">Yes</string>

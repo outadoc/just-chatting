@@ -35,6 +35,10 @@
     <string name="settings_thirdparty_bttv_subtitle">Récupérer et afficher les émotes BetterTTV, grâce aux données de betterttv.net.</string>
     <string name="settings_thirdparty_ffz_title">Émotes FrankerFaceZ</string>
     <string name="settings_thirdparty_ffz_subtitle">Récupérer et afficher les émotes FrankerFaceZ, grâce aux données de betterttv.net.</string>
+    <string name="settings_thirdparty_pronouns_title">Pronoms utilisateur</string>
+    <string name="settings_thirdparty_pronouns_subtitle">Récupérer et afficher les pronoms préférés des utilisateur·rice·s, grâce aux données de pronouns.alejo.io.</string>
+    <string name="settings_thirdparty_pronouns_set_title">Renseignez vos propres pronoms</string>
+    <string name="settings_thirdparty_pronouns_set_cd">Ouvrir pronouns.alejo.io dans le navigateur</string>
     <string name="settings_thirdparty_stv_title">Émotes 7TV</string>
     <string name="settings_thirdparty_stv_subtitle">Récupérer et afficher les émotes 7TV, grâce aux données de 7tv.app.</string>
     <string name="yes">Oui</string>

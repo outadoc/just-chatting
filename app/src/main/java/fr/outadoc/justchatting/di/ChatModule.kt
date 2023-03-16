@@ -88,7 +88,7 @@ val chatModule = module {
 
     single { RecentMessagesRepository(get(), get()) }
     single { AlejoPronounsApi(get()) }
-    single<PronounsRepository> { DefaultPronounsRepository(get()) }
+    single<PronounsRepository> { DefaultPronounsRepository(get(), get()) }
 
     single { ChannelBttvEmotesSource(get()) }
     single { ChannelFfzEmotesSource(get()) }

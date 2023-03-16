@@ -7,9 +7,10 @@ data class AppPreferences(
     val enableFfzEmotes: Boolean = true,
     val enableStvEmotes: Boolean = true,
     val enableBttvEmotes: Boolean = true,
+    val enablePronouns: Boolean = true,
 ) {
     object Defaults {
-        val ChatBufferLimit = 1_000
-        val RecentChatLimit = 500
+        const val ChatBufferLimit = 1_000
+        const val RecentChatLimit = 500
     }
 }

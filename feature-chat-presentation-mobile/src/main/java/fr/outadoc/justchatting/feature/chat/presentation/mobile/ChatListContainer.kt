@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
+import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 import kotlinx.coroutines.launch
 
 @Composable
@@ -62,7 +63,7 @@ fun ChatListContainer(
             badges = state.globalBadges.addAll(state.channelBadges),
             removedContent = state.removedContent,
             knownChatters = state.chatters,
-            pronouns = state.pronouns,
+            pronouns = state.pronouns.filterValuesNotNull(),
             richEmbeds = state.richEmbeds,
             roomState = state.roomState,
             showTimestamps = showTimestamps,

@@ -29,6 +29,7 @@ android {
 
 dependencies {
     implementation(libs.kotlinx.datetime)
+    implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
 
     coreLibraryDesugaring(libs.desugar)

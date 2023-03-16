@@ -115,7 +115,7 @@ class ChatViewModel(
 
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
-        data class UpdateChatterPronouns(val pronouns: Map<Chatter, Pronoun>) : Action()
+        data class UpdateChatterPronouns(val pronouns: Map<Chatter, Pronoun?>) : Action()
         object LoadStreamDetails : Action()
     }
 
@@ -130,7 +130,7 @@ class ChatViewModel(
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val chatMessages: PersistentList<ChatEvent.Message> = persistentListOf(),
             val chatters: PersistentSet<Chatter> = persistentHashSetOf(),
-            val pronouns: PersistentMap<Chatter, Pronoun> = persistentMapOf(),
+            val pronouns: PersistentMap<Chatter, Pronoun?> = persistentMapOf(),
             val cheerEmotes: PersistentMap<String, Emote> = persistentMapOf(),
             val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,

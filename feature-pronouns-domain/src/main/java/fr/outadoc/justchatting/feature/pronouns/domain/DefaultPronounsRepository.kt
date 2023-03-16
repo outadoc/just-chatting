@@ -6,7 +6,6 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronoun
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.data.UserPronounResponse
-import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -27,7 +26,7 @@ class DefaultPronounsRepository(
 
     private val cacheMutex = Mutex()
 
-    override suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun> =
+    override suspend fun fillPronounsFor(chatters: Set<Chatter>): Map<Chatter, Pronoun?> =
         coroutineScope {
             if (!preferenceRepository.currentPreferences.first().enablePronouns) {
                 return@coroutineScope emptyMap()
@@ -45,7 +44,6 @@ class DefaultPronounsRepository(
                 chatters.map { chatter -> async { chatter to getPronounFor(chatter) } }
                     .awaitAll()
                     .toMap()
-                    .filterValuesNotNull()
             }
         }
 

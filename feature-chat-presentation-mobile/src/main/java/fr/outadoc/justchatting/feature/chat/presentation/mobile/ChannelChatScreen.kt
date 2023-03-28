@@ -61,7 +61,9 @@ fun ChannelChatScreen(channelLogin: String) {
 
     val canOpenInBubble = canOpenInBubble()
 
-    ImagePaletteThemeOverlay(url = user?.profileImageUrl) {
+    MaterialTheme(
+        colorScheme = dynamicImageColorScheme(url = user?.profileImageUrl),
+    ) {
         val isDarkTheme = MaterialTheme.colorScheme.isDark
         ChannelChatScreenContent(
             state = state,

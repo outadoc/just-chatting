@@ -24,10 +24,10 @@ import fr.outadoc.justchatting.utils.ui.isDark
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 @Composable
-fun ImagePaletteThemeOverlay(
+fun dynamicImageColorScheme(
     url: String?,
-    content: @Composable () -> Unit,
-) {
+    parentScheme: ColorScheme = MaterialTheme.colorScheme,
+): ColorScheme {
     val context = LocalContext.current
     var sourceColor: Color? by remember { mutableStateOf(null) }
 
@@ -44,20 +44,13 @@ fun ImagePaletteThemeOverlay(
         sourceColor = logo?.getSourceColor()
     }
 
-    val currentSourceColor = sourceColor
-    if (currentSourceColor != null) {
-        MaterialTheme(
-            colorScheme = if (MaterialTheme.colorScheme.isDark) {
-                darkSchemeFromColor(currentSourceColor)
-            } else {
-                lightSchemeFromColor(currentSourceColor)
-            },
-        ) {
-            content()
+    return sourceColor?.let { currentSourceColor ->
+        if (parentScheme.isDark) {
+            darkSchemeFromColor(currentSourceColor)
+        } else {
+            lightSchemeFromColor(currentSourceColor)
         }
-    } else {
-        content()
-    }
+    } ?: parentScheme
 }
 
 @SuppressLint("RestrictedApi")

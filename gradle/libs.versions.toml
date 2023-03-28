@@ -32,7 +32,7 @@ androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
 androidx-core = "androidx.core:core-ktx:1.9.0"
 androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.0.0"
 androidx-emoji2-core = { module = "androidx.emoji2:emoji2", version.ref = "emoji" }
-androidx-fragment = "androidx.fragment:fragment-ktx:1.5.5"
+androidx-fragment = "androidx.fragment:fragment-ktx:1.5.6"
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "lifecycle" }
 androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }

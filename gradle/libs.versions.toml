@@ -7,7 +7,7 @@ emoji = "1.2.0"
 kotlin = "1.8.10"
 ktor = "2.2.4"
 lifecycle = "2.6.1"
-room = "2.5.0"
+room = "2.5.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }

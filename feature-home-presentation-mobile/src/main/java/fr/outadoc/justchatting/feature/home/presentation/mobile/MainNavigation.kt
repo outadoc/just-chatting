@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LiveTv
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -75,7 +74,6 @@ fun MainNavigation(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CompactNavigation(
     modifier: Modifier = Modifier,
@@ -142,7 +140,6 @@ fun CompactNavigation(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MediumNavigation(
     modifier: Modifier = Modifier,
@@ -234,7 +231,6 @@ fun MediumNavigation(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpandedNavigation(
     modifier: Modifier = Modifier,

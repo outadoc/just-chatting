@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.home.presentation.mobile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -84,7 +85,8 @@ fun UserItem(
             modifier = Modifier
                 .padding(end = 8.dp)
                 .size(56.dp)
-                .clip(MaterialTheme.shapes.medium),
+                .clip(MaterialTheme.shapes.medium)
+                .background(MaterialTheme.colorScheme.surface),
             model = remoteImageModel(profileImageURL),
             contentDescription = null,
         )

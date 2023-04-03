@@ -28,6 +28,7 @@ class MainApplication : Application(), ImageLoaderFactory {
 
     override fun newImageLoader(): ImageLoader =
         ImageLoader.Builder(this)
+            .crossfade(true)
             .memoryCache {
                 MemoryCache.Builder(applicationContext)
                     .maxSizePercent(0.25)

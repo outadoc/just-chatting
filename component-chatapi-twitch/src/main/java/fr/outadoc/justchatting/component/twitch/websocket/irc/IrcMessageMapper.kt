@@ -37,10 +37,28 @@ class IrcMessageMapper(private val context: Context) {
                 )
             }
 
+            is IrcEvent.Message.HighlightedMessage -> {
+                ChatEvent.Message.Highlighted(
+                    timestamp = timestamp,
+                    header = context.getString(R.string.irc_msgid_highlighted_message),
+                    headerIconResId = R.drawable.ic_sparkles,
+                    body = userMessage.map(),
+                )
+            }
+
+            is IrcEvent.Message.Announcement -> {
+                ChatEvent.Message.Highlighted(
+                    timestamp = timestamp,
+                    header = context.getString(R.string.irc_msgid_announcement),
+                    headerIconResId = R.drawable.ic_campaign,
+                    body = userMessage.map(),
+                )
+            }
+
             is IrcEvent.Message.UserNotice -> when (userMessage) {
                 null -> {
                     ChatEvent.Message.Highlighted(
-                        header = getLabelForUserNotice(msgId) ?: systemMsg,
+                        header = systemMsg,
                         headerIconResId = getIconForMessageId(msgId),
                         body = null,
                         timestamp = timestamp,
@@ -49,35 +67,16 @@ class IrcMessageMapper(private val context: Context) {
 
                 else -> {
                     ChatEvent.Message.Highlighted(
-                        header = getLabelForUserNotice(msgId) ?: systemMsg,
+                        header = systemMsg,
                         headerIconResId = getIconForMessageId(msgId),
-                        body = ChatEvent.Message.Body(
-                            message = userMessage.message.orEmpty(),
-                            messageId = userMessage.id,
-                            chatter = Chatter(
-                                id = userMessage.userId,
-                                displayName = userMessage.userName,
-                                login = userMessage.userLogin,
-                            ),
-                            isAction = userMessage.isAction,
-                            color = userMessage.color,
-                            embeddedEmotes = userMessage.embeddedEmotes.orEmpty()
-                                .toImmutableList(),
-                            badges = userMessage.badges.orEmpty().toImmutableList(),
-                            inReplyTo = null,
-                        ),
+                        body = userMessage.map(),
                         timestamp = timestamp,
                     )
                 }
             }
 
             is IrcEvent.Message.ChatMessage -> {
-                val msgId = msgId
                 val (header, icon) = when {
-                    msgId != null -> {
-                        getLabelForUserNotice(msgId) to getIconForMessageId(msgId)
-                    }
-
                     isFirstMessageByUser -> {
                         context.getString(R.string.chat_first) to R.drawable.ic_wave
                     }
@@ -91,46 +90,48 @@ class IrcMessageMapper(private val context: Context) {
                     }
                 }
 
-                val body = ChatEvent.Message.Body(
-                    message = message,
-                    messageId = id,
-                    chatter = Chatter(
-                        id = userId,
-                        displayName = userName,
-                        login = userLogin,
-                    ),
-                    isAction = isAction,
-                    color = color,
-                    embeddedEmotes = embeddedEmotes.orEmpty().toImmutableList(),
-                    badges = badges.orEmpty().toImmutableList(),
-                    inReplyTo = inReplyTo?.let {
-                        ChatEvent.Message.Body.InReplyTo(
-                            id = inReplyTo.id,
-                            message = inReplyTo.message,
-                            chatter = Chatter(
-                                id = inReplyTo.id,
-                                login = inReplyTo.userLogin,
-                                displayName = inReplyTo.userName,
-                            ),
-                        )
-                    },
-                )
-
                 if (header != null) {
                     ChatEvent.Message.Highlighted(
                         header = header,
                         headerIconResId = icon,
-                        body = body,
+                        body = map(),
                         timestamp = timestamp,
                     )
                 } else {
                     ChatEvent.Message.Simple(
-                        body = body,
+                        body = map(),
                         timestamp = timestamp,
                     )
                 }
             }
         }
+    }
+
+    private fun IrcEvent.Message.ChatMessage.map(): ChatEvent.Message.Body {
+        return ChatEvent.Message.Body(
+            message = message.orEmpty(),
+            messageId = id,
+            chatter = Chatter(
+                id = userId,
+                displayName = userName,
+                login = userLogin,
+            ),
+            isAction = isAction,
+            color = color,
+            embeddedEmotes = embeddedEmotes.orEmpty().toImmutableList(),
+            badges = badges.orEmpty().toImmutableList(),
+            inReplyTo = inReplyTo?.let {
+                ChatEvent.Message.Body.InReplyTo(
+                    id = inReplyTo.id,
+                    message = inReplyTo.message,
+                    chatter = Chatter(
+                        id = inReplyTo.id,
+                        login = inReplyTo.userLogin,
+                        displayName = inReplyTo.userName,
+                    ),
+                )
+            },
+        )
     }
 
     fun mapOptional(command: IrcEvent): ChatEvent? {
@@ -167,19 +168,9 @@ class IrcMessageMapper(private val context: Context) {
         }
     }
 
-    private fun getLabelForUserNotice(messageId: String?): String? {
-        return when (messageId) {
-            "highlighted-message" -> context.getString(R.string.irc_msgid_highlighted_message)
-            "announcement" -> context.getString(R.string.irc_msgid_announcement)
-            else -> null
-        }
-    }
-
     @DrawableRes
     private fun getIconForMessageId(messageId: String?): Int? {
         return when (messageId) {
-            "highlighted-message" -> R.drawable.ic_sparkles
-            "announcement" -> R.drawable.ic_campaign
             "resub", "sub", "primepaidupgrade" -> R.drawable.ic_star
             "submysterygift", "subgift" -> R.drawable.ic_redeem
             else -> null

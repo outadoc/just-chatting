@@ -24,7 +24,6 @@ sealed interface IrcEvent {
             val timestamp: Instant,
             val rewardId: String?,
             val inReplyTo: InReplyTo?,
-            val msgId: String?,
         ) : Message {
 
             @Immutable
@@ -48,6 +47,16 @@ sealed interface IrcEvent {
             val timestamp: Instant,
             val userDisplayName: String,
             val raidersCount: Int,
+        ) : Message
+
+        data class Announcement(
+            val timestamp: Instant,
+            val userMessage: ChatMessage,
+        ) : Message
+
+        data class HighlightedMessage(
+            val timestamp: Instant,
+            val userMessage: ChatMessage,
         ) : Message
 
         data class Notice(

@@ -51,7 +51,6 @@ class TwitchIrcCommandParserTest {
                 timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
                 rewardId = null,
                 inReplyTo = null,
-                msgId = null,
             )
         }
     }
@@ -83,7 +82,6 @@ class TwitchIrcCommandParserTest {
                 timestamp = Instant.parse("2022-07-08T16:47:29.487Z"),
                 rewardId = null,
                 inReplyTo = null,
-                msgId = null,
             )
         }
     }
@@ -128,7 +126,6 @@ class TwitchIrcCommandParserTest {
                     timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
                     rewardId = null,
                     inReplyTo = null,
-                    msgId = "resub",
                 ),
             )
         }
@@ -138,9 +135,8 @@ class TwitchIrcCommandParserTest {
     fun `Parse announcement USERNOTICE`() = test {
         input { "@badge-info=subscriber/11;badges=moderator/1,subscriber/3009;color=#8A2BE2;display-name=pepitipepibot;emotes=;flags=;id=54b4d931-8db5-47ad-b6e7-6687cdbbb8ec;login=pepitipepibot;mod=1;msg-id=announcement;room-id=402890635;subscriber=1;system-msg=;tmi-sent-ts=1657301015335;user-id=651859616;user-type=mod :tmi.twitch.tv USERNOTICE #pelerine :LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !" }
         expected {
-            IrcEvent.Message.UserNotice(
+            IrcEvent.Message.Announcement(
                 timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
-                msgId = "announcement",
                 userMessage = IrcEvent.Message.ChatMessage(
                     id = "54b4d931-8db5-47ad-b6e7-6687cdbbb8ec",
                     userId = "651859616",
@@ -162,9 +158,7 @@ class TwitchIrcCommandParserTest {
                     timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
                     rewardId = null,
                     inReplyTo = null,
-                    msgId = "announcement",
                 ),
-                systemMsg = null,
             )
         }
     }
@@ -310,7 +304,6 @@ class TwitchIrcCommandParserTest {
                     userId = "108193474",
                     userLogin = "brankhorst",
                 ),
-                msgId = null,
             )
         }
     }
@@ -319,30 +312,32 @@ class TwitchIrcCommandParserTest {
     fun `Parse highlighted message`() = test {
         input { "@badge-info=subscriber/21;badges=subscriber/18,premium/1;color=#FF0000;display-name=FlorianPremier;emotes=;first-msg=0;flags=;id=68d0ad7e-7743-4b51-b8fd-3d995eb17fd5;mod=0;msg-id=highlighted-message;returning-chatter=0;room-id=135468063;subscriber=1;tmi-sent-ts=1661452379625;turbo=0;user-id=137824138;user-type= :florianpremier!florianpremier@florianpremier.tmi.twitch.tv PRIVMSG #antoinedaniel :vive l'argent" }
         expected {
-            IrcEvent.Message.ChatMessage(
-                id = "68d0ad7e-7743-4b51-b8fd-3d995eb17fd5",
-                userId = "137824138",
-                userLogin = "florianpremier",
-                userName = "FlorianPremier",
-                message = "vive l'argent",
-                color = "#FF0000",
-                isAction = false,
-                embeddedEmotes = emptyList(),
-                badges = listOf(
-                    Badge(
-                        id = "subscriber",
-                        version = "18",
-                    ),
-                    Badge(
-                        id = "premium",
-                        version = "1",
-                    ),
-                ),
-                isFirstMessageByUser = false,
+            IrcEvent.Message.HighlightedMessage(
                 timestamp = Instant.parse("2022-08-25T18:32:59.625Z"),
-                rewardId = null,
-                inReplyTo = null,
-                msgId = "highlighted-message",
+                userMessage = IrcEvent.Message.ChatMessage(
+                    id = "68d0ad7e-7743-4b51-b8fd-3d995eb17fd5",
+                    timestamp = Instant.parse("2022-08-25T18:32:59.625Z"),
+                    userId = "137824138",
+                    userLogin = "florianpremier",
+                    userName = "FlorianPremier",
+                    message = "vive l'argent",
+                    color = "#FF0000",
+                    isAction = false,
+                    embeddedEmotes = emptyList(),
+                    badges = listOf(
+                        Badge(
+                            id = "subscriber",
+                            version = "18",
+                        ),
+                        Badge(
+                            id = "premium",
+                            version = "1",
+                        ),
+                    ),
+                    isFirstMessageByUser = false,
+                    rewardId = null,
+                    inReplyTo = null,
+                ),
             )
         }
     }

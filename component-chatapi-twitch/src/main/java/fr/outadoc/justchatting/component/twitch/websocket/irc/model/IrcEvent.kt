@@ -21,7 +21,6 @@ sealed interface IrcEvent {
             val embeddedEmotes: List<Emote>?,
             val badges: List<Badge>?,
             val isFirst: Boolean = false,
-            val systemMsg: String?,
             val timestamp: Instant,
             val rewardId: String?,
             val inReplyTo: InReplyTo?,

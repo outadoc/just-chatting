@@ -49,7 +49,6 @@ class TwitchIrcCommandParserTest {
                 ),
                 isFirst = false,
                 timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
-                systemMsg = null,
                 rewardId = null,
                 inReplyTo = null,
                 msgId = null,
@@ -82,7 +81,6 @@ class TwitchIrcCommandParserTest {
                 ),
                 isFirst = false,
                 timestamp = Instant.parse("2022-07-08T16:47:29.487Z"),
-                systemMsg = null,
                 rewardId = null,
                 inReplyTo = null,
                 msgId = null,
@@ -105,7 +103,6 @@ class TwitchIrcCommandParserTest {
                     userName = "Frfun",
                     message = "coxPet pat pat le requin moumou4Content",
                     color = "#FFFFFF",
-                    systemMsg = "Frfun subscribed with Prime. They've subscribed for 41 months, currently on a 40 month streak!",
                     isAction = false,
                     embeddedEmotes = listOf(
                         ChatEmote(
@@ -130,8 +127,8 @@ class TwitchIrcCommandParserTest {
                     isFirst = false,
                     timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
                     rewardId = null,
-                    msgId = "resub",
                     inReplyTo = null,
+                    msgId = "resub",
                 ),
             )
         }
@@ -149,6 +146,7 @@ class TwitchIrcCommandParserTest {
                     userId = "651859616",
                     userLogin = "pepitipepibot",
                     userName = "pepitipepibot",
+                    message = "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !",
                     color = "#8A2BE2",
                     embeddedEmotes = emptyList(),
                     badges = listOf(
@@ -162,11 +160,9 @@ class TwitchIrcCommandParserTest {
                         ),
                     ),
                     timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
-                    message = "LEZGONGUE LA MIXTAPE ELLE EST LAAAAAAAA : https://open.spotify.com/album/0X9kU5VLUmXoi6Hk6ou3PP?si=85JnJJSARpqCJ_ugsGNVhQ !! Pepe a 2 track : Dig dig deep deep & Light you up !",
-                    msgId = "announcement",
-                    systemMsg = null,
                     rewardId = null,
                     inReplyTo = null,
+                    msgId = "announcement",
                 ),
                 systemMsg = null,
             )
@@ -306,7 +302,6 @@ class TwitchIrcCommandParserTest {
                 embeddedEmotes = emptyList(),
                 badges = emptyList(),
                 isFirst = false,
-                systemMsg = null,
                 timestamp = Instant.parse("2022-08-23T19:01:58.667Z"),
                 rewardId = null,
                 inReplyTo = IrcEvent.Message.ChatMessage.InReplyTo(
@@ -345,11 +340,10 @@ class TwitchIrcCommandParserTest {
                     ),
                 ),
                 isFirst = false,
-                systemMsg = null,
                 timestamp = Instant.parse("2022-08-25T18:32:59.625Z"),
                 rewardId = null,
-                msgId = "highlighted-message",
                 inReplyTo = null,
+                msgId = "highlighted-message",
             )
         }
     }

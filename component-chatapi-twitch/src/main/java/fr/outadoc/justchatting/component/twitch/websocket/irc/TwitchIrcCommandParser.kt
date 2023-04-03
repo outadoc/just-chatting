@@ -48,16 +48,15 @@ class TwitchIrcCommandParser(private val clock: Clock) {
             userLogin = ircMessage.tags.login ?: privateMessage.source.nick,
             userName = ircMessage.tags.displayName ?: privateMessage.source.nick,
             message = message,
-            isAction = actionGroups != null,
             color = ircMessage.tags.color,
-            rewardId = ircMessage.tags.customRewardId,
-            isFirst = ircMessage.tags.firstMsg,
+            isAction = actionGroups != null,
             embeddedEmotes = ircMessage.tags.parseEmotes(message),
             badges = ircMessage.tags.parseBadges(),
+            isFirst = ircMessage.tags.firstMsg,
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
+            rewardId = ircMessage.tags.customRewardId,
             inReplyTo = ircMessage.tags.parseParentMessage(),
             msgId = ircMessage.tags.messageId,
-            systemMsg = ircMessage.tags.systemMsg,
         )
     }
 

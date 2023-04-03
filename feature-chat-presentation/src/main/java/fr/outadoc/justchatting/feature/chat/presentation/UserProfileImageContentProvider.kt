@@ -5,22 +5,19 @@ import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.ParcelFileDescriptor
+import coil.imageLoader
+import coil.request.ImageRequest
+import coil.request.ImageResult
+import coil.transform.CircleCropTransformation
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.utils.logging.logDebug
 import io.ktor.client.HttpClient
-import io.ktor.client.request.request
-import io.ktor.client.request.url
-import io.ktor.client.statement.HttpResponse
-import io.ktor.client.statement.bodyAsChannel
-import io.ktor.http.HttpMethod
-import io.ktor.utils.io.jvm.javaio.toInputStream
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import okio.buffer
-import okio.sink
-import okio.source
 import org.koin.android.ext.android.inject
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -55,6 +52,9 @@ class UserProfileImageContentProvider : ContentProvider() {
             throw FileNotFoundException("Wrong file mode, only read-only ('r') is supported, got $mode.")
         }
 
+        val context: Context =
+            context ?: error("Context was null when in openFile")
+
         val segments = uri.pathSegments.toList()
         return when (segments.getOrNull(0)) {
             PATH_LOGIN -> {
@@ -68,22 +68,23 @@ class UserProfileImageContentProvider : ContentProvider() {
                             ?.profileImageUrl
                             ?: throw FileNotFoundException("Could not retrieve user info from Twitch API.")
 
-                    val response: HttpResponse =
-                        httpClient.request {
-                            method = HttpMethod.Get
-                            url(profileImageUrl)
-                        }
+                    val response: ImageResult =
+                        context.imageLoader.execute(
+                            ImageRequest.Builder(context)
+                                .data(profileImageUrl)
+                                .transformations(CircleCropTransformation())
+                                .build()
+                        )
 
+                    val bitmap: Bitmap = (response.drawable as? BitmapDrawable)?.bitmap
+                        ?: error("Empty bitmap received from Coil")
+
+                    // Create a socket pair, one for writing the bitmap and the other for reading it back
                     val (inSocket, outSocket) = ParcelFileDescriptor.createSocketPair()
 
-                    response.bodyAsChannel().toInputStream().source().use { source ->
-                        FileOutputStream(outSocket.fileDescriptor)
-                            .sink()
-                            .buffer()
-                            .use { sink ->
-                                sink.writeAll(source)
-                            }
-                    }
+                    // Write resulting bitmap to output stream
+                    val os = FileOutputStream(outSocket.fileDescriptor)
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 0, os)
 
                     ParcelFileDescriptor.fromFd(inSocket.fd)
                 }

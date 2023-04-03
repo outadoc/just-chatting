@@ -21,6 +21,7 @@ import androidx.paging.compose.items
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.presentation.FollowedStreamsViewModel
 import fr.outadoc.justchatting.utils.ui.plus
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.toInstant
 import org.koin.androidx.compose.getViewModel
 
@@ -74,7 +75,7 @@ fun LiveChannelsList(
                             gameName = item.gameName,
                             startedAt = item.startedAt?.toInstant(),
                             profileImageURL = item.profileImageURL,
-                            tags = item.tags,
+                            tags = item.tags.toImmutableList(),
                             onClick = { onItemClick(item) },
                         )
                     } else {

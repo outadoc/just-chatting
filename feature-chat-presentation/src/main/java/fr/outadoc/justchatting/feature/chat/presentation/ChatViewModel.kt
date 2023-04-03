@@ -119,10 +119,10 @@ class ChatViewModel(
         object LoadStreamDetails : Action()
     }
 
+    @Immutable
     sealed class State {
         object Initial : State()
 
-        @Immutable
         data class Chatting(
             val user: User,
             val appUser: AppUser,
@@ -197,6 +197,7 @@ class ChatViewModel(
         data class Submit(val screenDensity: Float, val isDarkTheme: Boolean) : InputAction()
     }
 
+    @Immutable
     data class InputState(
         val inputMessage: TextFieldValue = TextFieldValue(),
         val replyingTo: ChatEvent.Message? = null,

@@ -73,7 +73,7 @@ class UserProfileImageContentProvider : ContentProvider() {
                             ImageRequest.Builder(context)
                                 .data(profileImageUrl)
                                 .transformations(CircleCropTransformation())
-                                .build()
+                                .build(),
                         )
 
                     val bitmap: Bitmap = (response.drawable as? BitmapDrawable)?.bitmap

@@ -26,6 +26,7 @@ import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toInstant
@@ -42,7 +43,7 @@ fun LiveStreamPreview() {
             viewerCount = 5_305,
             startedAt = "2022-01-01T13:45:04.00Z".toInstant(),
             profileImageURL = null,
-            tags = listOf(
+            tags = persistentListOf(
                 "French",
                 "Test",
                 "Sponsored",
@@ -81,7 +82,7 @@ fun LiveStreamCard(
     gameName: String? = null,
     startedAt: Instant? = null,
     profileImageURL: String? = null,
-    tags: List<String> = persistentListOf(),
+    tags: ImmutableList<String> = persistentListOf(),
     onClick: () -> Unit = {},
 ) {
     Card(
@@ -111,7 +112,7 @@ fun LiveStream(
     gameName: String?,
     startedAt: Instant?,
     profileImageURL: String?,
-    tags: List<String>,
+    tags: ImmutableList<String>,
 ) {
     Row(
         modifier = modifier,

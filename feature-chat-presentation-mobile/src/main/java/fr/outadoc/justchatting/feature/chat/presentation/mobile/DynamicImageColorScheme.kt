@@ -8,6 +8,7 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -17,17 +18,21 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import coil.imageLoader
 import coil.request.ImageRequest
+import com.google.android.material.color.DynamicColors
 import com.google.android.material.color.utilities.QuantizerCelebi
 import com.google.android.material.color.utilities.Scheme
 import com.google.android.material.color.utilities.Score
+import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.ui.isDark
 import kotlinx.coroutines.suspendCancellableCoroutine
 
+@Stable
 @Composable
 fun dynamicImageColorScheme(
     url: String?,
     parentScheme: ColorScheme = MaterialTheme.colorScheme,
 ): ColorScheme {
+    logDebug<DynamicColors> { "Composing…" }
     val context = LocalContext.current
     var sourceColor: Color? by remember { mutableStateOf(null) }
 

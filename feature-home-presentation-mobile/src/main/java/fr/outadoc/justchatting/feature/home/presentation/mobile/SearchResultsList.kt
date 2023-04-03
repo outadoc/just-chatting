@@ -23,6 +23,7 @@ import androidx.paging.compose.items
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.utils.ui.plus
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -72,7 +73,7 @@ fun SearchResultsList(
                             modifier = Modifier.fillMaxWidth(),
                             displayName = item.broadcasterDisplayName,
                             profileImageURL = item.profileImageURL,
-                            tags = item.tags,
+                            tags = item.tags.toImmutableList(),
                             onClick = { onItemClick(item) },
                         )
                     } else {

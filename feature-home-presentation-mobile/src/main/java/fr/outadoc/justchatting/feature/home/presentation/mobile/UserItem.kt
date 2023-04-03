@@ -25,6 +25,8 @@ import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.formatTime
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toInstant
 
@@ -39,7 +41,7 @@ fun UserItemPreview() {
             displayName = "Maghla",
             followedAt = "2022-01-01T13:45:04.00Z".toInstant(),
             profileImageURL = null,
-            tags = listOf("French", "ASMR"),
+            tags = persistentListOf("French", "ASMR"),
         )
     }
 }
@@ -51,7 +53,7 @@ fun UserItemCard(
     displayName: String? = null,
     followedAt: Instant? = null,
     profileImageURL: String? = null,
-    tags: List<String> = emptyList(),
+    tags: ImmutableList<String> = persistentListOf(),
     onClick: () -> Unit = {},
 ) {
     Card(
@@ -75,7 +77,7 @@ fun UserItem(
     displayName: String?,
     followedAt: Instant?,
     profileImageURL: String?,
-    tags: List<String>,
+    tags: ImmutableList<String>,
 ) {
     Row(
         modifier = modifier,

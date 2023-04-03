@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="chat_first">First time chat</string>
-    <string name="chat_reward">Channel point redemption</string>
     <string name="chat_ban">%s has been permanently banned</string>
     <string name="chat_clear">Chat has been cleared by a moderator</string>
     <string name="chat_clearmsg">Message deleted from %1$s\: %2$s</string>
+    <string name="chat_disconnect">Disconnected from %1$s</string>
+    <string name="chat_first">First time chat</string>
     <string name="chat_header_recent">Recent</string>
     <string name="chat_join">Connected to %s</string>
-    <string name="chat_replyingTo">In reply to</string>
+    <string name="chat_raid_header">%1$s raided with %2$s!</string>
     <string name="chat_replyTo">Reply to this message</string>
+    <string name="chat_replyingTo">In reply to</string>
+    <string name="chat_reward">Channel point redemption</string>
     <string name="chat_send_msg_error">Timeout while trying to send message</string>
     <string name="chat_timeout">%1$s has been timed out for %2$s</string>
-    <string name="chat_disconnect">Disconnected from %1$s</string>
 
     <plurals name="user_redeemed">
         <item quantity="one">%1$s redeemed %2$s for %3$,d point</item>

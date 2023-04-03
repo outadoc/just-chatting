@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="chat_first">Premier message</string>
-    <string name="chat_reward">Échange de points de chaîne</string>
     <string name="chat_ban">%s a été banni·e définitivement</string>
     <string name="chat_clear">Le tchat a été effacé par un·e modérateur·rice</string>
     <string name="chat_clearmsg">Message supprimé de %1$s\: %2$s</string>
     <string name="chat_disconnect">Déconnecté·e de %1$s</string>
+    <string name="chat_first">Premier message</string>
     <string name="chat_header_recent">Récentes</string>
     <string name="chat_join">Connecté·e à %s</string>
-    <string name="chat_replyingTo">En réponse à</string>
+    <string name="chat_raid_header">%1$s a raid la chaîne avec %2$s !</string>
     <string name="chat_replyTo">Répondre à ce message</string>
+    <string name="chat_replyingTo">En réponse à</string>
+    <string name="chat_reward">Échange de points de chaîne</string>
     <string name="chat_send_msg_error">Erreur lors de l\'envoi du message</string>
     <string name="chat_timeout">%1$s a été mis·e au silence pendant %2$s</string>
 

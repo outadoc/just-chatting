@@ -20,6 +20,23 @@ class IrcMessageMapper(private val context: Context) {
                 )
             }
 
+            is IrcEvent.Message.IncomingRaid -> {
+                ChatEvent.Message.Highlighted(
+                    timestamp = timestamp,
+                    header = context.getString(
+                        R.string.chat_raid_header,
+                        userDisplayName,
+                        context.resources.getQuantityString(
+                            R.plurals.viewers,
+                            raidersCount,
+                            raidersCount,
+                        ),
+                    ),
+                    headerIconResId = null,
+                    body = null,
+                )
+            }
+
             is IrcEvent.Message.UserNotice -> when (userMessage) {
                 null -> {
                     ChatEvent.Message.Highlighted(
@@ -61,7 +78,7 @@ class IrcMessageMapper(private val context: Context) {
                         getLabelForUserNotice(msgId) to getIconForMessageId(msgId)
                     }
 
-                    isFirst -> {
+                    isFirstMessageByUser -> {
                         context.getString(R.string.chat_first) to R.drawable.ic_wave
                     }
 

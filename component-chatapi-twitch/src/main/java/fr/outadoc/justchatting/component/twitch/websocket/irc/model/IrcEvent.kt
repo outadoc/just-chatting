@@ -20,7 +20,7 @@ sealed interface IrcEvent {
             val isAction: Boolean = false,
             val embeddedEmotes: List<Emote>?,
             val badges: List<Badge>?,
-            val isFirst: Boolean = false,
+            val isFirstMessageByUser: Boolean = false,
             val timestamp: Instant,
             val rewardId: String?,
             val inReplyTo: InReplyTo?,
@@ -42,6 +42,12 @@ sealed interface IrcEvent {
             val timestamp: Instant,
             val userMessage: ChatMessage?,
             val msgId: String?,
+        ) : Message
+
+        data class IncomingRaid(
+            val timestamp: Instant,
+            val userDisplayName: String,
+            val raidersCount: Int,
         ) : Message
 
         data class Notice(

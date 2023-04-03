@@ -47,7 +47,7 @@ class TwitchIrcCommandParserTest {
                         version = "1",
                     ),
                 ),
-                isFirst = false,
+                isFirstMessageByUser = false,
                 timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
                 rewardId = null,
                 inReplyTo = null,
@@ -79,7 +79,7 @@ class TwitchIrcCommandParserTest {
                         version = "3009",
                     ),
                 ),
-                isFirst = false,
+                isFirstMessageByUser = false,
                 timestamp = Instant.parse("2022-07-08T16:47:29.487Z"),
                 rewardId = null,
                 inReplyTo = null,
@@ -124,7 +124,7 @@ class TwitchIrcCommandParserTest {
                             version = "1000",
                         ),
                     ),
-                    isFirst = false,
+                    isFirstMessageByUser = false,
                     timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
                     rewardId = null,
                     inReplyTo = null,
@@ -173,11 +173,10 @@ class TwitchIrcCommandParserTest {
     fun `Parse raid USERNOTICE`() = test {
         input { "@badge-info=;badges=hype-train/2;color=#C8C8C8;display-name=maxent__;emotes=;flags=;historical=1;id=5bca8513-e6b2-455b-a898-1cc7d3bf5332;login=maxent__;mod=0;msg-id=raid;msg-param-displayName=maxent__;msg-param-login=maxent__;msg-param-profileImageURL=https://static-cdn.jtvnw.net/jtv_user_pictures/12a5e085-db37-4e5d-b59a-77eb9f6dd8a2-profile_image-70x70.png;msg-param-viewerCount=3;rm-received-ts=1657303912918;room-id=402890635;subscriber=0;system-msg=3\\sraiders\\sfrom\\smaxent__\\shave\\sjoined!;tmi-sent-ts=1657303912832;user-id=563254735;user-type= :tmi.twitch.tv USERNOTICE #pelerine\n" }
         expected {
-            IrcEvent.Message.UserNotice(
-                systemMsg = "3 raiders from maxent__ have joined!",
+            IrcEvent.Message.IncomingRaid(
                 timestamp = Instant.parse("2022-07-08T18:11:52.832Z"),
-                msgId = "raid",
-                userMessage = null,
+                raidersCount = 3,
+                userDisplayName = "maxent__",
             )
         }
     }
@@ -301,7 +300,7 @@ class TwitchIrcCommandParserTest {
                 isAction = false,
                 embeddedEmotes = emptyList(),
                 badges = emptyList(),
-                isFirst = false,
+                isFirstMessageByUser = false,
                 timestamp = Instant.parse("2022-08-23T19:01:58.667Z"),
                 rewardId = null,
                 inReplyTo = IrcEvent.Message.ChatMessage.InReplyTo(
@@ -339,7 +338,7 @@ class TwitchIrcCommandParserTest {
                         version = "1",
                     ),
                 ),
-                isFirst = false,
+                isFirstMessageByUser = false,
                 timestamp = Instant.parse("2022-08-25T18:32:59.625Z"),
                 rewardId = null,
                 inReplyTo = null,

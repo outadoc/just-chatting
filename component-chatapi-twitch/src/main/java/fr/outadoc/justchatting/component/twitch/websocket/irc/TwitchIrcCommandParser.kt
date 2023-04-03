@@ -52,7 +52,7 @@ class TwitchIrcCommandParser(private val clock: Clock) {
             isAction = actionGroups != null,
             embeddedEmotes = ircMessage.tags.parseEmotes(message),
             badges = ircMessage.tags.parseBadges(),
-            isFirst = ircMessage.tags.firstMsg,
+            isFirstMessageByUser = ircMessage.tags.firstMsg,
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             rewardId = ircMessage.tags.customRewardId,
             inReplyTo = ircMessage.tags.parseParentMessage(),
@@ -60,13 +60,26 @@ class TwitchIrcCommandParser(private val clock: Clock) {
         )
     }
 
-    private fun parseUserNotice(ircMessage: IrcMessage): IrcEvent.Message.UserNotice {
-        return IrcEvent.Message.UserNotice(
-            systemMsg = ircMessage.tags.systemMsg,
-            timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
-            userMessage = parseMessage(ircMessage),
-            msgId = ircMessage.tags.messageId,
-        )
+    private fun parseUserNotice(ircMessage: IrcMessage): IrcEvent.Message? {
+        val timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
+        return when (ircMessage.tags.messageId) {
+            "raid" -> {
+                IrcEvent.Message.IncomingRaid(
+                    timestamp = timestamp,
+                    userDisplayName = ircMessage.tags.displayName ?: return null,
+                    raidersCount = ircMessage.tags.raidersCount ?: return null,
+                )
+            }
+
+            else -> {
+                IrcEvent.Message.UserNotice(
+                    timestamp = timestamp,
+                    systemMsg = ircMessage.tags.systemMsg,
+                    userMessage = parseMessage(ircMessage),
+                    msgId = ircMessage.tags.messageId,
+                )
+            }
+        }
     }
 
     private fun parseClearMessage(ircMessage: IrcMessage): IrcEvent {

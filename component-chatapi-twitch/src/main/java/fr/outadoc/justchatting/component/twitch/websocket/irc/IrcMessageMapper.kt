@@ -14,8 +14,7 @@ class IrcMessageMapper(private val context: Context) {
         when (this) {
             is IrcEvent.Message.Notice -> {
                 ChatEvent.Message.Highlighted(
-                    header = messageId?.getNoticeString(context = context, message = message)
-                        ?: message,
+                    header = getLabelForNotice(messageId = messageId, message = message) ?: message,
                     body = null,
                     timestamp = timestamp,
                 )
@@ -24,7 +23,7 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.UserNotice -> when (userMessage) {
                 null -> {
                     ChatEvent.Message.Highlighted(
-                        header = getLabelForMessageId(msgId) ?: systemMsg,
+                        header = getLabelForUserNotice(msgId) ?: systemMsg,
                         headerIconResId = getIconForMessageId(msgId),
                         body = null,
                         timestamp = timestamp,
@@ -33,7 +32,7 @@ class IrcMessageMapper(private val context: Context) {
 
                 else -> {
                     ChatEvent.Message.Highlighted(
-                        header = getLabelForMessageId(msgId) ?: systemMsg,
+                        header = getLabelForUserNotice(msgId) ?: systemMsg,
                         headerIconResId = getIconForMessageId(msgId),
                         body = ChatEvent.Message.Body(
                             message = userMessage.message.orEmpty(),
@@ -59,7 +58,7 @@ class IrcMessageMapper(private val context: Context) {
                 val msgId = msgId
                 val (header, icon) = when {
                     msgId != null -> {
-                        getLabelForMessageId(msgId) to getIconForMessageId(msgId)
+                        getLabelForUserNotice(msgId) to getIconForMessageId(msgId)
                     }
 
                     isFirst -> {
@@ -151,7 +150,7 @@ class IrcMessageMapper(private val context: Context) {
         }
     }
 
-    private fun getLabelForMessageId(messageId: String?): String? {
+    private fun getLabelForUserNotice(messageId: String?): String? {
         return when (messageId) {
             "highlighted-message" -> context.getString(R.string.irc_msgid_highlighted_message)
             "announcement" -> context.getString(R.string.irc_msgid_announcement)
@@ -170,8 +169,8 @@ class IrcMessageMapper(private val context: Context) {
         }
     }
 
-    private fun String.getNoticeString(context: Context, message: String?): String? {
-        return when (this) {
+    private fun getLabelForNotice(messageId: String?, message: String?): String? {
+        return when (messageId) {
             "already_banned" -> context.getString(
                 R.string.irc_notice_already_banned,
                 message?.substringBefore(" is already banned", "") ?: "",

@@ -24,9 +24,15 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.key.Key
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.key
+import androidx.compose.ui.input.key.onPreviewKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -105,6 +111,7 @@ fun ChatInput(
     onMessageChange: (TextFieldValue) -> Unit = {},
     onToggleEmotePicker: () -> Unit = {},
     onClearReplyingTo: () -> Unit = {},
+    onTriggerAutoComplete: () -> Unit = {},
     onSubmit: () -> Unit = {},
     isSubmitVisible: Boolean = true,
     isSubmitEnabled: Boolean = true,
@@ -159,6 +166,7 @@ fun ChatInput(
                     message = message,
                     onMessageChange = onMessageChange,
                     onToggleEmotePicker = onToggleEmotePicker,
+                    onTriggerAutoComplete = onTriggerAutoComplete,
                     onSubmit = onSubmit,
                 )
 
@@ -184,17 +192,37 @@ fun ChatInput(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun ChatTextField(
     modifier: Modifier = Modifier,
     message: TextFieldValue,
     onMessageChange: (TextFieldValue) -> Unit,
     onToggleEmotePicker: () -> Unit,
+    onTriggerAutoComplete: () -> Unit,
     onSubmit: () -> Unit,
 ) {
     TextField(
-        modifier = modifier,
+        modifier = modifier
+            .onPreviewKeyEvent { event ->
+                if (event.type == KeyEventType.KeyDown) {
+                    when (event.key) {
+                        Key.Tab -> {
+                            onTriggerAutoComplete()
+                            true
+                        }
+
+                        Key.Enter -> {
+                            onSubmit()
+                            true
+                        }
+
+                        else -> false
+                    }
+                } else {
+                    false
+                }
+            },
         value = message,
         singleLine = false,
         onValueChange = onMessageChange,

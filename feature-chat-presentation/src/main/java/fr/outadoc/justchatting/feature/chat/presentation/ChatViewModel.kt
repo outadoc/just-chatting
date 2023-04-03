@@ -364,6 +364,26 @@ class ChatViewModel(
         }
     }
 
+    fun onTriggerAutoComplete() {
+        inputScope.launch {
+            when (val firstItem = inputState.value.autoCompleteItems.firstOrNull()) {
+                is AutoCompleteItem.Emote -> {
+                    inputActions.emit(
+                        InputAction.AppendEmote(emote = firstItem.emote, autocomplete = true),
+                    )
+                }
+
+                is AutoCompleteItem.User -> {
+                    inputActions.emit(
+                        InputAction.AppendChatter(chatter = firstItem.chatter, autocomplete = true),
+                    )
+                }
+
+                null -> {}
+            }
+        }
+    }
+
     fun appendEmote(emote: Emote, autocomplete: Boolean) {
         defaultScope.launch {
             inputActions.emit(InputAction.AppendEmote(emote, autocomplete))

@@ -95,6 +95,9 @@ fun ChannelChatScreen(channelLogin: String) {
                     )
                 }
             },
+            onTriggerAutoComplete = {
+                viewModel.onTriggerAutoComplete()
+            },
             onSubmit = {
                 viewModel.submit(
                     screenDensity = density,

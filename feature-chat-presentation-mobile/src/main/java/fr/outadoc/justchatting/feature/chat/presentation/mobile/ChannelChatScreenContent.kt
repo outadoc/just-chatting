@@ -73,6 +73,7 @@ fun ChannelChatScreenContent(
     onChatterClick: (Chatter) -> Unit = {},
     onClearReplyingTo: () -> Unit = {},
     onOpenBubbleClicked: () -> Unit = {},
+    onTriggerAutoComplete: () -> Unit = {},
     onSubmit: () -> Unit = {},
     onReplyToMessage: (ChatEvent.Message) -> Unit = {},
 ) {
@@ -163,6 +164,7 @@ fun ChannelChatScreenContent(
                             }
                             onToggleEmotePicker()
                         },
+                        onTriggerAutoComplete = onTriggerAutoComplete,
                         onClearReplyingTo = onClearReplyingTo,
                         onSubmit = onSubmit,
                     )

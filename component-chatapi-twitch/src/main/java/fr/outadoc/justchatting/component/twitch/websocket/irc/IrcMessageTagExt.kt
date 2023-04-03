@@ -72,6 +72,33 @@ val Map<String, String?>.displayName: String?
 val Map<String, String?>.raidersCount: Int?
     get() = this["msg-param-viewerCount"]?.toIntOrNull()
 
+val Map<String, String?>.multiMonthDuration: Int?
+    get() = this["msg-param-multimonth-duration"]?.toIntOrNull()?.coerceAtLeast(1)
+
+val Map<String, String?>.giftCumulativeMonths: Int?
+    get() = this["msg-param-months"]?.toIntOrNull()
+
+val Map<String, String?>.giftMonths: Int?
+    get() = this["msg-param-gift-months"]?.toIntOrNull()
+
+val Map<String, String?>.cumulativeMonths: Int?
+    get() = this["msg-param-cumulative-months"]?.toIntOrNull()
+
+val Map<String, String?>.streakMonths: Int?
+    get() = this["msg-param-streak-months"]?.toIntOrNull()
+
+val Map<String, String?>.subscriptionPlan: String?
+    get() = this["msg-param-sub-plan"]?.takeUnless { it.isEmpty() }
+
+val Map<String, String?>.recipientDisplayName: String?
+    get() = this["msg-param-recipient-display-name"]?.takeUnless { it.isEmpty() }
+
+val Map<String, String?>.massGiftCount: Int?
+    get() = this["msg-param-mass-gift-count"]?.toIntOrNull()
+
+val Map<String, String?>.totalChannelGiftCount: Int?
+    get() = this["msg-param-sender-count"]?.toIntOrNull()
+
 val Map<String, String?>.emoteSets: List<String>?
     get() = this["emote-sets"]?.split(",")?.dropLastWhile { it.isEmpty() }
 

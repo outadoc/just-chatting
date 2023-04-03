@@ -66,6 +66,39 @@ class TwitchIrcCommandParser(private val clock: Clock) {
                 )
             }
 
+            "resub" -> {
+                IrcEvent.Message.Subscription(
+                    timestamp = timestamp,
+                    userDisplayName = ircMessage.tags.displayName ?: return null,
+                    subscriptionPlan = ircMessage.tags.subscriptionPlan ?: return null,
+                    months = ircMessage.tags.multiMonthDuration ?: 1,
+                    streakMonths = ircMessage.tags.streakMonths ?: 0,
+                    cumulativeMonths = ircMessage.tags.cumulativeMonths ?: 0,
+                    userMessage = parseMessage(ircMessage),
+                )
+            }
+
+            "submysterygift" -> {
+                IrcEvent.Message.MassSubscriptionGift(
+                    timestamp = timestamp,
+                    userDisplayName = ircMessage.tags.displayName ?: return null,
+                    subscriptionPlan = ircMessage.tags.subscriptionPlan ?: return null,
+                    giftCount = ircMessage.tags.massGiftCount ?: return null,
+                    totalChannelGiftCount = ircMessage.tags.totalChannelGiftCount ?: return null,
+                )
+            }
+
+            "subgift" -> {
+                IrcEvent.Message.SubscriptionGift(
+                    timestamp = timestamp,
+                    userDisplayName = ircMessage.tags.displayName ?: return null,
+                    subscriptionPlan = ircMessage.tags.subscriptionPlan ?: return null,
+                    months = ircMessage.tags.giftMonths ?: 1,
+                    cumulativeMonths = ircMessage.tags.giftCumulativeMonths ?: 0,
+                    recipientDisplayName = ircMessage.tags.recipientDisplayName ?: return null,
+                )
+            }
+
             else -> {
                 IrcEvent.Message.UserNotice(
                     timestamp = timestamp,

@@ -87,13 +87,45 @@ class TwitchIrcCommandParserTest {
     }
 
     @Test
+    fun `Parse mass sub gift USERNOTICE`() = test {
+        input { "@badge-info=subscriber/32;badges=subscriber/2024,premium/1;color=#0000FF;display-name=ke_osiris;emotes=;flags=;id=336cdf6c-d132-41c4-9107-a232f406bebf;login=ke_osiris;mod=0;msg-id=submysterygift;msg-param-mass-gift-count=32;msg-param-origin-id=fe\\sb9\\s35\\s54\\sb5\\s01\\s71\\sd3\\sa8\\sdd\\sfb\\sb1\\s47\\s5f\\s42\\sd1\\s60\\se4\\s97\\sce;msg-param-sender-count=1688;msg-param-sub-plan=1000;room-id=135468063;subscriber=1;system-msg=ke_osiris\\sis\\sgifting\\s32\\sTier\\s1\\sSubs\\sto\\sAntoineDaniel's\\scommunity!\\sThey've\\sgifted\\sa\\stotal\\sof\\s1688\\sin\\sthe\\schannel!;tmi-sent-ts=1680550916919;user-id=563989746;user-type= :tmi.twitch.tv USERNOTICE #antoinedaniel" }
+        expected {
+            IrcEvent.Message.MassSubscriptionGift(
+                timestamp = Instant.parse("2023-04-03T19:41:56.919Z"),
+                userDisplayName = "ke_osiris",
+                giftCount = 32,
+                totalChannelGiftCount = 1688,
+                subscriptionPlan = "1000",
+            )
+        }
+    }
+
+    @Test
     fun `Parse sub gift USERNOTICE`() = test {
+        input { "@badge-info=subscriber/32;badges=subscriber/2024,premium/1;color=#0000FF;display-name=ke_osiris;emotes=;flags=;id=628c1219-96bc-4b26-8336-d1b8ee1a2f2a;login=ke_osiris;mod=0;msg-id=subgift;msg-param-gift-months=1;msg-param-months=6;msg-param-origin-id=fe\\sb9\\s35\\s54\\sb5\\s01\\s71\\sd3\\sa8\\sdd\\sfb\\sb1\\s47\\s5f\\s42\\sd1\\s60\\se4\\s97\\sce;msg-param-recipient-display-name=gCalim;msg-param-recipient-id=106041293;msg-param-recipient-user-name=gcalim;msg-param-sender-count=0;msg-param-sub-plan-name=Channel\\sSubscription\\s(antoinedaniellive);msg-param-sub-plan=1000;room-id=135468063;subscriber=1;system-msg=ke_osiris\\sgifted\\sa\\sTier\\s1\\ssub\\sto\\sgCalim!;tmi-sent-ts=1680550917690;user-id=563989746;user-type= :tmi.twitch.tv USERNOTICE #antoinedaniel" }
+        expected {
+            IrcEvent.Message.SubscriptionGift(
+                timestamp = Instant.parse("2023-04-03T19:41:57.690Z"),
+                userDisplayName = "ke_osiris",
+                subscriptionPlan = "1000",
+                recipientDisplayName = "gCalim",
+                months = 1,
+                cumulativeMonths = 6,
+            )
+        }
+    }
+
+    @Test
+    fun `Parse Prime sub USERNOTICE`() = test {
         input { "@badge-info=subscriber/41;badges=subscriber/36,bits/1000;color=#FFFFFF;display-name=Frfun;emotes=emotesv2_53f30305e78246aea4bc24d299dd09e7:0-5/emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8:25-38;flags=;id=4c5a38ff-6bb3-4cad-a555-dc8a736cfc38;login=frfun;mod=0;msg-id=resub;msg-param-cumulative-months=41;msg-param-months=0;msg-param-multimonth-duration=0;msg-param-multimonth-tenure=0;msg-param-should-share-streak=1;msg-param-streak-months=40;msg-param-sub-plan-name=Channel\\sSubscription\\s(maghla);msg-param-sub-plan=Prime;msg-param-was-gifted=false;room-id=131215608;subscriber=1;system-msg=Frfun\\ssubscribed\\swith\\sPrime.\\sThey've\\ssubscribed\\sfor\\s41\\smonths,\\scurrently\\son\\sa\\s40\\smonth\\sstreak!;tmi-sent-ts=1657298959852;user-id=99037844;user-type= :tmi.twitch.tv USERNOTICE #maghla :coxPet pat pat le requin moumou4Content" }
         expected {
-            IrcEvent.Message.UserNotice(
-                systemMsg = "Frfun subscribed with Prime. They've subscribed for 41 months, currently on a 40 month streak!",
+            IrcEvent.Message.Subscription(
                 timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
-                msgId = "resub",
+                userDisplayName = "Frfun",
+                months = 1,
+                streakMonths = 40,
+                cumulativeMonths = 41,
+                subscriptionPlan = "Prime",
                 userMessage = IrcEvent.Message.ChatMessage(
                     id = "4c5a38ff-6bb3-4cad-a555-dc8a736cfc38",
                     userId = "99037844",

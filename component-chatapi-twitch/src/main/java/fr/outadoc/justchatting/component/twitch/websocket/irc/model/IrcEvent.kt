@@ -54,6 +54,33 @@ sealed interface IrcEvent {
             val userMessage: ChatMessage,
         ) : Message
 
+        data class Subscription(
+            val timestamp: Instant,
+            val userDisplayName: String,
+            val months: Int,
+            val streakMonths: Int,
+            val cumulativeMonths: Int,
+            val subscriptionPlan: String,
+            val userMessage: ChatMessage?,
+        ) : Message
+
+        data class SubscriptionGift(
+            val timestamp: Instant,
+            val userDisplayName: String,
+            val recipientDisplayName: String,
+            val months: Int,
+            val cumulativeMonths: Int,
+            val subscriptionPlan: String,
+        ) : Message
+
+        data class MassSubscriptionGift(
+            val timestamp: Instant,
+            val userDisplayName: String,
+            val giftCount: Int,
+            val totalChannelGiftCount: Int,
+            val subscriptionPlan: String,
+        ) : Message
+
         data class HighlightedMessage(
             val timestamp: Instant,
             val userMessage: ChatMessage,

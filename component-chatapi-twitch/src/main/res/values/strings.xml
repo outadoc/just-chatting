@@ -12,6 +12,17 @@
     <string name="chat_replyingTo">In reply to</string>
     <string name="chat_reward">Channel point redemption</string>
     <string name="chat_send_msg_error">Timeout while trying to send message</string>
+    <string name="chat_sub_tier1">at Tier 1</string>
+    <string name="chat_sub_tier2">at Tier 2</string>
+    <string name="chat_sub_tier3">at Tier 3</string>
+    <string name="chat_sub_prime">with Prime</string>
+    <string name="chat_sub_header_withDuration">%1$s subscribed %2$s! They\'ve subscribed for %3$s.</string>
+    <string name="chat_sub_header_withDurationAndStreak">%1$s subscribed %2$s. They\'ve subscribed for %3$s, currently on a %4$s streak!</string>
+    <string name="chat_subGift_header">%1$s gifted a %2$s sub to %3$s! They\'ve subscribed for %4$s.</string>
+    <string name="chat_subGift_tier1">Tier 1</string>
+    <string name="chat_subGift_tier2">Tier 2</string>
+    <string name="chat_subGift_tier3">Tier 3</string>
+    <string name="chat_massSubGift_header">%1$s is gifting %2$s %3$s subs to the community!. They\'ve gifted a total of %4$s subs in the channel.</string>
     <string name="chat_timeout">%1$s has been timed out for %2$s</string>
 
     <plurals name="user_redeemed">

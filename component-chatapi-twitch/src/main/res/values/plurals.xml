@@ -4,4 +4,9 @@
         <item quantity="one">%s viewer</item>
         <item quantity="other">%s viewers</item>
     </plurals>
+
+    <plurals name="months">
+        <item quantity="one">%s month</item>
+        <item quantity="other">%s months</item>
+    </plurals>
 </resources>

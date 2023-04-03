@@ -1,11 +1,11 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
 import android.content.Context
-import androidx.annotation.DrawableRes
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
+import fr.outadoc.justchatting.utils.core.formatNumber
 import kotlinx.collections.immutable.toImmutableList
 
 class IrcMessageMapper(private val context: Context) {
@@ -55,11 +55,81 @@ class IrcMessageMapper(private val context: Context) {
                 )
             }
 
+            is IrcEvent.Message.Subscription -> {
+                ChatEvent.Message.Highlighted(
+                    timestamp = timestamp,
+                    body = userMessage?.map(),
+                    headerIconResId = R.drawable.ic_star,
+                    header = when (streakMonths) {
+                        0 -> context.getString(
+                            R.string.chat_sub_header_withDuration,
+                            userDisplayName,
+                            parseSubscriptionTier(subscriptionPlan),
+                            context.resources.getQuantityString(
+                                R.plurals.months,
+                                cumulativeMonths,
+                                cumulativeMonths.formatNumber(),
+                            ),
+                        )
+
+                        else -> context.getString(
+                            R.string.chat_sub_header_withDurationAndStreak,
+                            userDisplayName,
+                            parseSubscriptionTier(subscriptionPlan),
+                            context.resources.getQuantityString(
+                                R.plurals.months,
+                                cumulativeMonths,
+                                cumulativeMonths.formatNumber(),
+                            ),
+                            context.resources.getQuantityString(
+                                R.plurals.months,
+                                streakMonths,
+                                streakMonths.formatNumber(),
+                            ),
+                        )
+                    },
+                )
+            }
+
+            is IrcEvent.Message.MassSubscriptionGift -> {
+                ChatEvent.Message.Highlighted(
+                    timestamp = timestamp,
+                    header = context.getString(
+                        R.string.chat_massSubGift_header,
+                        userDisplayName,
+                        giftCount.formatNumber(),
+                        parseGiftSubscriptionTier(subscriptionPlan),
+                        totalChannelGiftCount.formatNumber(),
+                    ),
+                    headerIconResId = R.drawable.ic_redeem,
+                    body = null,
+                )
+            }
+
+            is IrcEvent.Message.SubscriptionGift -> {
+                ChatEvent.Message.Highlighted(
+                    timestamp = timestamp,
+                    header = context.getString(
+                        R.string.chat_subGift_header,
+                        userDisplayName,
+                        parseSubscriptionTier(subscriptionPlan),
+                        recipientDisplayName,
+                        context.resources.getQuantityString(
+                            R.plurals.months,
+                            cumulativeMonths,
+                            cumulativeMonths.formatNumber(),
+                        ),
+                    ),
+                    headerIconResId = R.drawable.ic_redeem,
+                    body = null,
+                )
+            }
+
             is IrcEvent.Message.UserNotice -> when (userMessage) {
                 null -> {
                     ChatEvent.Message.Highlighted(
                         header = systemMsg,
-                        headerIconResId = getIconForMessageId(msgId),
+                        headerIconResId = null,
                         body = null,
                         timestamp = timestamp,
                     )
@@ -68,7 +138,7 @@ class IrcMessageMapper(private val context: Context) {
                 else -> {
                     ChatEvent.Message.Highlighted(
                         header = systemMsg,
-                        headerIconResId = getIconForMessageId(msgId),
+                        headerIconResId = null,
                         body = userMessage.map(),
                         timestamp = timestamp,
                     )
@@ -104,6 +174,25 @@ class IrcMessageMapper(private val context: Context) {
                     )
                 }
             }
+        }
+    }
+
+    private fun parseSubscriptionTier(planId: String): String {
+        return when (planId) {
+            SUB_T1 -> context.getString(R.string.chat_sub_tier1)
+            SUB_T2 -> context.getString(R.string.chat_sub_tier2)
+            SUB_T3 -> context.getString(R.string.chat_sub_tier3)
+            SUB_PRIME -> context.getString(R.string.chat_sub_prime)
+            else -> planId
+        }
+    }
+
+    private fun parseGiftSubscriptionTier(planId: String): String {
+        return when (planId) {
+            SUB_T1 -> context.getString(R.string.chat_subGift_tier1)
+            SUB_T2 -> context.getString(R.string.chat_subGift_tier2)
+            SUB_T3 -> context.getString(R.string.chat_subGift_tier3)
+            else -> planId
         }
     }
 
@@ -164,15 +253,6 @@ class IrcMessageMapper(private val context: Context) {
                 }
             }
 
-            else -> null
-        }
-    }
-
-    @DrawableRes
-    private fun getIconForMessageId(messageId: String?): Int? {
-        return when (messageId) {
-            "resub", "sub", "primepaidupgrade" -> R.drawable.ic_star
-            "submysterygift", "subgift" -> R.drawable.ic_redeem
             else -> null
         }
     }
@@ -620,5 +700,12 @@ class IrcMessageMapper(private val context: Context) {
             "whisper_restricted_recipient" -> context.getString(R.string.irc_notice_whisper_restricted_recipient)
             else -> null
         }
+    }
+
+    private companion object {
+        const val SUB_T1 = "1000"
+        const val SUB_T2 = "2000"
+        const val SUB_T3 = "3000"
+        const val SUB_PRIME = "Prime"
     }
 }

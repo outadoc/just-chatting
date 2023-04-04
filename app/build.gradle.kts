@@ -28,6 +28,12 @@ android {
             name = "ENABLE_LOGGING",
             value = "true"
         )
+
+        buildConfigField(
+            type = "boolean",
+            name = "ENABLE_MOCK_IRC_ENDPOINT",
+            value = findProperty("enableMockIrcEndpoint") as String
+        )
     }
 
     signingConfigs {

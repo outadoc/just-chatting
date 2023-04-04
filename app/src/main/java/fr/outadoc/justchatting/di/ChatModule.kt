@@ -1,11 +1,13 @@
 package fr.outadoc.justchatting.di
 
+import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
 import fr.outadoc.justchatting.component.twitch.websocket.irc.IrcMessageMapper
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LoggedInChatWebSocket
+import fr.outadoc.justchatting.component.twitch.websocket.irc.MockChatWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.PubSubWebSocket
@@ -46,15 +48,23 @@ val chatModule = module {
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get(), get(), get()) }
+    single { MockChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
     single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
 
     single {
         ChatCommandHandlerFactoriesProvider {
-            listOf(
-                get<LiveChatWebSocket.Factory>(),
-                get<LoggedInChatWebSocket.Factory>(),
-                get<PubSubWebSocket.Factory>(),
-            )
+            if (BuildConfig.ENABLE_MOCK_IRC_ENDPOINT) {
+                listOf(
+                    get<MockChatWebSocket.Factory>(),
+                    get<PubSubWebSocket.Factory>(),
+                )
+            } else {
+                listOf(
+                    get<LiveChatWebSocket.Factory>(),
+                    get<LoggedInChatWebSocket.Factory>(),
+                    get<PubSubWebSocket.Factory>(),
+                )
+            }
         }
     }
 

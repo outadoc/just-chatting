@@ -66,7 +66,7 @@ class TwitchIrcCommandParser(private val clock: Clock) {
                 )
             }
 
-            "resub" -> {
+            "sub", "resub" -> {
                 IrcEvent.Message.Subscription(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,

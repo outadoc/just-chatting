@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.component.chatapi.common
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
@@ -24,7 +25,7 @@ sealed interface ChatEvent {
         data class Highlighted(
             override val timestamp: Instant,
             val title: String,
-            val titleIconResId: Int? = null,
+            val titleIcon: ImageVector? = null,
             val subtitle: String?,
             override val body: Body?,
         ) : Message()

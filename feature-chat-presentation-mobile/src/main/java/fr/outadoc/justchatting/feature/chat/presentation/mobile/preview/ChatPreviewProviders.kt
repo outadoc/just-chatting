@@ -1,9 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.R
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 
@@ -70,7 +71,7 @@ private val highlightedEntries = sequence {
         ChatEvent.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664398268452),
             title = "clo_chette_",
-            titleIconResId = R.drawable.ic_star,
+            titleIcon = Icons.Default.Star,
             subtitle = "subscribed at Tier 1. They've subscribed for 18 months!",
             body = ChatEvent.Message.Body(
                 chatter = Chatter(
@@ -93,7 +94,7 @@ private val highlightedEntries = sequence {
         ChatEvent.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
             title = "This room is now in followers-only mode.",
-            titleIconResId = null,
+            titleIcon = null,
             subtitle = null,
             body = null,
         ),

@@ -91,7 +91,7 @@ fun ChatMessage(
             is ChatEvent.Message.Highlighted -> {
                 HighlightedMessage(
                     title = message.title,
-                    titleIconResId = message.titleIconResId,
+                    titleIcon = message.titleIcon,
                     subtitle = message.subtitle,
                 ) {
                     message.body?.let { data ->

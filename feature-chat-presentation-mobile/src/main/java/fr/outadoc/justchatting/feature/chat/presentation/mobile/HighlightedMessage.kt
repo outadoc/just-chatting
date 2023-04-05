@@ -20,7 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
@@ -60,7 +60,7 @@ fun HighlightedMessagePreview(
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
     title: String,
-    titleIconResId: Int?,
+    titleIcon: ImageVector?,
     subtitle: String?,
     iconSize: Dp = 20.dp,
     data: @Composable () -> Unit,
@@ -86,12 +86,12 @@ fun HighlightedMessage(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    if (titleIconResId != null) {
+                    if (titleIcon != null) {
                         Icon(
                             modifier = Modifier
                                 .size(iconSize)
                                 .padding(end = 4.dp),
-                            painter = painterResource(id = titleIconResId),
+                            imageVector = titleIcon,
                             contentDescription = null,
                         )
                     }
@@ -107,7 +107,7 @@ fun HighlightedMessage(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    if (titleIconResId != null) {
+                    if (titleIcon != null) {
                         Spacer(
                             modifier = Modifier
                                 .size(iconSize)

@@ -1,6 +1,8 @@
 package fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.channelpoints
 
 import android.content.Context
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Toll
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.component.twitch.R
@@ -30,7 +32,7 @@ class PubSubChannelPointsPlugin(
                             message.data.redemption.reward.title,
                             message.data.redemption.reward.cost,
                         ),
-                        titleIconResId = R.drawable.ic_toll,
+                        titleIcon = Icons.Default.Toll,
                         subtitle = null,
                         body = null,
                     ),

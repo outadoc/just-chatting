@@ -56,7 +56,6 @@ val chatModule = module {
             if (BuildConfig.ENABLE_MOCK_IRC_ENDPOINT) {
                 listOf(
                     get<MockChatWebSocket.Factory>(),
-                    get<PubSubWebSocket.Factory>(),
                 )
             } else {
                 listOf(

@@ -92,6 +92,7 @@ fun ChatMessage(
                 HighlightedMessage(
                     title = message.title,
                     titleIconResId = message.titleIconResId,
+                    subtitle = message.subtitle,
                 ) {
                     message.body?.let { data ->
                         ChatMessageBodyOrCensored(

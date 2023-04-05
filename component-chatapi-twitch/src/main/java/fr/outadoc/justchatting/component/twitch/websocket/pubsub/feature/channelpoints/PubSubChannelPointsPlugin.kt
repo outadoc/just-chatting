@@ -22,6 +22,7 @@ class PubSubChannelPointsPlugin(
             is PubSubRewardMessage.Redeemed -> {
                 listOf(
                     ChatEvent.Message.Highlighted(
+                        timestamp = message.data.redemption.redeemedAt ?: clock.now(),
                         title = context.resources.getQuantityString(
                             R.plurals.user_redeemed,
                             message.data.redemption.reward.cost,
@@ -30,8 +31,8 @@ class PubSubChannelPointsPlugin(
                             message.data.redemption.reward.cost,
                         ),
                         titleIconResId = R.drawable.ic_toll,
+                        subtitle = null,
                         body = null,
-                        timestamp = message.data.redemption.redeemedAt ?: clock.now(),
                     ),
                 )
             }

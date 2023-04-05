@@ -7,7 +7,7 @@
     <string name="chat_first">Premier message</string>
     <string name="chat_header_recent">Récentes</string>
     <string name="chat_join">Connecté·e à %s</string>
-    <string name="chat_raid_header">%1$s a raid la chaîne avec %2$s !</string>
+    <string name="chat_raid_header">a raid la chaîne avec %1$s !</string>
     <string name="chat_replyTo">Répondre à ce message</string>
     <string name="chat_replyingTo">En réponse à</string>
     <string name="chat_reward">Échange de points de chaîne</string>
@@ -16,13 +16,13 @@
     <string name="chat_sub_tier2">de niveau 2</string>
     <string name="chat_sub_tier3">de niveau 3</string>
     <string name="chat_sub_prime">avec Prime</string>
-    <string name="chat_sub_header_withDuration">%1$s a pris un abonnement %2$s ! Iel est abonné·e depuis %3$s.</string>
-    <string name="chat_sub_header_withDurationAndStreak">%1$s a pris un abonnement %2$s. Iel est abonné·e depuis %3$s, sur une série de %4$s consécutifs !</string>
+    <string name="chat_sub_header_withDuration">a pris un abonnement %1$s ! Iel est abonné·e depuis %2$s.</string>
+    <string name="chat_sub_header_withDurationAndStreak">a pris un abonnement %1$s. Iel est abonné·e depuis %2$s, sur une série de %3$s consécutifs !</string>
     <string name="chat_subGift_tier1">de niveau 1</string>
     <string name="chat_subGift_tier2">de niveau 2</string>
     <string name="chat_subGift_tier3">de niveau 3</string>
-    <string name="chat_subGift_header">%1$s offre un abonnement %2$s à %3$s ! Iel est abonné·e depuis %4$s.</string>
-    <string name="chat_massSubGift_header">%1$s offre %2$s abonnements %3$s à la communauté ! Iel a offert un total de %4$s abonnements sur cette chaîne.</string>
+    <string name="chat_subGift_header">offre un abonnement %1$s à %2$s ! Iel est abonné·e depuis %3$s.</string>
+    <string name="chat_massSubGift_header">offre %1$s abonnements %2$s à la communauté ! Iel a offert un total de %3$s abonnements sur cette chaîne.</string>
     <string name="chat_timeout">%1$s a été mis·e au silence pendant %2$s</string>
 
     <plurals name="user_redeemed">

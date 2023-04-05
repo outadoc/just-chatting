@@ -68,6 +68,10 @@ private val simpleEntries = sequence {
 private val highlightedEntries = sequence {
     yield(
         ChatEvent.Message.Highlighted(
+            timestamp = Instant.fromEpochMilliseconds(1664398268452),
+            title = "clo_chette_",
+            titleIconResId = R.drawable.ic_star,
+            subtitle = "subscribed at Tier 1. They've subscribed for 18 months!",
             body = ChatEvent.Message.Body(
                 chatter = Chatter(
                     id = "672551946",
@@ -82,18 +86,16 @@ private val highlightedEntries = sequence {
                 badges = persistentListOf(),
                 inReplyTo = null,
             ),
-            timestamp = Instant.fromEpochMilliseconds(1664398268452),
-            title = "clo_chette_ subscribed at Tier 1. They've subscribed for 18 months!",
-            titleIconResId = R.drawable.ic_star,
         ),
     )
 
     yield(
         ChatEvent.Message.Highlighted(
+            timestamp = Instant.fromEpochMilliseconds(1664400523912),
             title = "This room is now in followers-only mode.",
             titleIconResId = null,
+            subtitle = null,
             body = null,
-            timestamp = Instant.fromEpochMilliseconds(1664400523912),
         ),
     )
 }

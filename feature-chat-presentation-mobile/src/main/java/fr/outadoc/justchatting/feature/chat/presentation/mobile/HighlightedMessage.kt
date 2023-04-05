@@ -5,10 +5,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -21,6 +23,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.preferences.data.AppUser
@@ -56,8 +59,10 @@ fun HighlightedMessagePreview(
 @Composable
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
-    title: String?,
+    title: String,
     titleIconResId: Int?,
+    subtitle: String?,
+    iconSize: Dp = 20.dp,
     data: @Composable () -> Unit,
 ) {
     Row(modifier = modifier.height(IntrinsicSize.Min)) {
@@ -75,25 +80,45 @@ fun HighlightedMessage(
                 .fillMaxWidth(),
             shape = RectangleShape,
         ) {
-            Column {
-                title?.let { header ->
-                    Row(
-                        modifier = Modifier.padding(4.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        titleIconResId?.let { resId ->
-                            Icon(
-                                modifier = Modifier.padding(end = 4.dp),
-                                painter = painterResource(id = resId),
-                                contentDescription = null,
-                            )
-                        }
+            Column(
+                modifier = Modifier.padding(4.dp),
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (titleIconResId != null) {
+                        Icon(
+                            modifier = Modifier
+                                .size(iconSize)
+                                .padding(end = 4.dp),
+                            painter = painterResource(id = titleIconResId),
+                            contentDescription = null,
+                        )
+                    }
 
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.titleSmall,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    if (titleIconResId != null) {
+                        Spacer(
+                            modifier = Modifier
+                                .size(iconSize)
+                                .padding(end = 4.dp),
+                        )
+                    }
+
+                    subtitle?.let {
                         Text(
-                            text = header,
-                            style = MaterialTheme.typography.titleSmall,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis
+                            text = subtitle,
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
                 }

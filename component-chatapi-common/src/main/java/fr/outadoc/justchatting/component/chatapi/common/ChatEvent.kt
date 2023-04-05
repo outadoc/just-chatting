@@ -22,10 +22,11 @@ sealed interface ChatEvent {
 
         @Immutable
         data class Highlighted(
+            override val timestamp: Instant,
             val title: String,
             val titleIconResId: Int? = null,
+            val subtitle: String?,
             override val body: Body?,
-            override val timestamp: Instant,
         ) : Message()
 
         @Immutable

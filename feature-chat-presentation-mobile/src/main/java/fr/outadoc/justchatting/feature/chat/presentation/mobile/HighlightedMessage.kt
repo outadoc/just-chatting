@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
@@ -55,8 +56,8 @@ fun HighlightedMessagePreview(
 @Composable
 fun HighlightedMessage(
     modifier: Modifier = Modifier,
-    header: String?,
-    headerIconResId: Int?,
+    title: String?,
+    titleIconResId: Int?,
     data: @Composable () -> Unit,
 ) {
     Row(modifier = modifier.height(IntrinsicSize.Min)) {
@@ -75,12 +76,12 @@ fun HighlightedMessage(
             shape = RectangleShape,
         ) {
             Column {
-                header?.let { header ->
+                title?.let { header ->
                     Row(
                         modifier = Modifier.padding(4.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        headerIconResId?.let { resId ->
+                        titleIconResId?.let { resId ->
                             Icon(
                                 modifier = Modifier.padding(end = 4.dp),
                                 painter = painterResource(id = resId),
@@ -91,6 +92,8 @@ fun HighlightedMessage(
                         Text(
                             text = header,
                             style = MaterialTheme.typography.titleSmall,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }

@@ -103,7 +103,7 @@ class TwitchIrcCommandParser(private val clock: Clock) {
                 IrcEvent.Message.UserNotice(
                     timestamp = timestamp,
                     msgId = ircMessage.tags.messageId,
-                    systemMsg = ircMessage.tags.systemMsg,
+                    systemMsg = ircMessage.tags.systemMsg ?: return null,
                     userMessage = parseMessage(ircMessage),
                 )
             }

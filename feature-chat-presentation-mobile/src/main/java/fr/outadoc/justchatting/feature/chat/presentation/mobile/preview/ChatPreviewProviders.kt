@@ -83,15 +83,15 @@ private val highlightedEntries = sequence {
                 inReplyTo = null,
             ),
             timestamp = Instant.fromEpochMilliseconds(1664398268452),
-            header = "clo_chette_ subscribed at Tier 1. They've subscribed for 18 months!",
-            headerIconResId = R.drawable.ic_star,
+            title = "clo_chette_ subscribed at Tier 1. They've subscribed for 18 months!",
+            titleIconResId = R.drawable.ic_star,
         ),
     )
 
     yield(
         ChatEvent.Message.Highlighted(
-            header = "This room is now in followers-only mode.",
-            headerIconResId = null,
+            title = "This room is now in followers-only mode.",
+            titleIconResId = null,
             body = null,
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
         ),

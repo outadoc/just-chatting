@@ -136,7 +136,7 @@ class LiveChatWebSocket private constructor(
 
             _flow.emit(
                 ChatEvent.Message.Highlighted(
-                    header = context.getString(R.string.chat_join, channelLogin),
+                    title = context.getString(R.string.chat_join, channelLogin),
                     body = null,
                     timestamp = clock.now(),
                 ),

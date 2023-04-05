@@ -144,7 +144,7 @@ class MockChatWebSocket private constructor(
 
             _flow.emit(
                 ChatEvent.Message.Highlighted(
-                    header = context.getString(R.string.chat_join, channelLogin),
+                    title = context.getString(R.string.chat_join, channelLogin),
                     body = null,
                     timestamp = clock.now(),
                 ),
@@ -171,7 +171,7 @@ class MockChatWebSocket private constructor(
 
                                 _flow.emit(
                                     ChatEvent.Message.Highlighted(
-                                        header = context.getString(R.string.chat_send_msg_error),
+                                        title = context.getString(R.string.chat_send_msg_error),
                                         body = null,
                                         timestamp = clock.now(),
                                     ),

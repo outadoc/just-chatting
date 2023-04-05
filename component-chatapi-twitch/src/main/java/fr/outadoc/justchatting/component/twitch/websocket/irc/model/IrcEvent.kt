@@ -37,7 +37,7 @@ sealed interface IrcEvent {
         }
 
         data class UserNotice(
-            val systemMsg: String?,
+            val systemMsg: String,
             val timestamp: Instant,
             val userMessage: ChatMessage?,
             val msgId: String?,
@@ -87,7 +87,7 @@ sealed interface IrcEvent {
         ) : Message
 
         data class Notice(
-            val message: String?,
+            val message: String,
             val timestamp: Instant,
             val messageId: String?,
         ) : Message

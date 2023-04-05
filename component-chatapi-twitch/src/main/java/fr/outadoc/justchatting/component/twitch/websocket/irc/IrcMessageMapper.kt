@@ -14,7 +14,7 @@ class IrcMessageMapper(private val context: Context) {
         when (this) {
             is IrcEvent.Message.Notice -> {
                 ChatEvent.Message.Highlighted(
-                    header = getLabelForNotice(messageId = messageId, message = message) ?: message,
+                    title = getLabelForNotice(messageId = messageId, message = message) ?: message,
                     body = null,
                     timestamp = timestamp,
                 )
@@ -23,7 +23,7 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.IncomingRaid -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    header = context.getString(
+                    title = context.getString(
                         R.string.chat_raid_header,
                         userDisplayName,
                         context.resources.getQuantityString(
@@ -32,7 +32,7 @@ class IrcMessageMapper(private val context: Context) {
                             raidersCount,
                         ),
                     ),
-                    headerIconResId = null,
+                    titleIconResId = null,
                     body = null,
                 )
             }
@@ -40,8 +40,8 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.HighlightedMessage -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    header = context.getString(R.string.irc_msgid_highlighted_message),
-                    headerIconResId = R.drawable.ic_sparkles,
+                    title = context.getString(R.string.irc_msgid_highlighted_message),
+                    titleIconResId = R.drawable.ic_sparkles,
                     body = userMessage.map(),
                 )
             }
@@ -49,8 +49,8 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.Announcement -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    header = context.getString(R.string.irc_msgid_announcement),
-                    headerIconResId = R.drawable.ic_campaign,
+                    title = context.getString(R.string.irc_msgid_announcement),
+                    titleIconResId = R.drawable.ic_campaign,
                     body = userMessage.map(),
                 )
             }
@@ -59,8 +59,8 @@ class IrcMessageMapper(private val context: Context) {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     body = userMessage?.map(),
-                    headerIconResId = R.drawable.ic_star,
-                    header = when (streakMonths) {
+                    titleIconResId = R.drawable.ic_star,
+                    title = when (streakMonths) {
                         0 -> context.getString(
                             R.string.chat_sub_header_withDuration,
                             userDisplayName,
@@ -94,14 +94,14 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.MassSubscriptionGift -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    header = context.getString(
+                    title = context.getString(
                         R.string.chat_massSubGift_header,
                         userDisplayName,
                         giftCount.formatNumber(),
                         parseGiftSubscriptionTier(subscriptionPlan),
                         totalChannelGiftCount.formatNumber(),
                     ),
-                    headerIconResId = R.drawable.ic_redeem,
+                    titleIconResId = R.drawable.ic_redeem,
                     body = null,
                 )
             }
@@ -109,7 +109,7 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.SubscriptionGift -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    header = context.getString(
+                    title = context.getString(
                         R.string.chat_subGift_header,
                         userDisplayName,
                         parseSubscriptionTier(subscriptionPlan),
@@ -120,7 +120,7 @@ class IrcMessageMapper(private val context: Context) {
                             cumulativeMonths.formatNumber(),
                         ),
                     ),
-                    headerIconResId = R.drawable.ic_redeem,
+                    titleIconResId = R.drawable.ic_redeem,
                     body = null,
                 )
             }
@@ -128,8 +128,8 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.UserNotice -> when (userMessage) {
                 null -> {
                     ChatEvent.Message.Highlighted(
-                        header = systemMsg,
-                        headerIconResId = null,
+                        title = systemMsg,
+                        titleIconResId = null,
                         body = null,
                         timestamp = timestamp,
                     )
@@ -137,8 +137,8 @@ class IrcMessageMapper(private val context: Context) {
 
                 else -> {
                     ChatEvent.Message.Highlighted(
-                        header = systemMsg,
-                        headerIconResId = null,
+                        title = systemMsg,
+                        titleIconResId = null,
                         body = userMessage.map(),
                         timestamp = timestamp,
                     )
@@ -162,8 +162,8 @@ class IrcMessageMapper(private val context: Context) {
 
                 if (header != null) {
                     ChatEvent.Message.Highlighted(
-                        header = header,
-                        headerIconResId = icon,
+                        title = header,
+                        titleIconResId = icon,
                         body = map(),
                         timestamp = timestamp,
                     )
@@ -230,13 +230,13 @@ class IrcMessageMapper(private val context: Context) {
                     if (command.duration == null) {
                         ChatEvent.Message.Highlighted(
                             timestamp = command.timestamp,
-                            header = context.getString(R.string.chat_ban, command.targetUserLogin),
+                            title = context.getString(R.string.chat_ban, command.targetUserLogin),
                             body = null,
                         )
                     } else {
                         ChatEvent.Message.Highlighted(
                             timestamp = command.timestamp,
-                            header = context.getString(
+                            title = context.getString(
                                 R.string.chat_timeout,
                                 command.targetUserLogin,
                                 command.duration,
@@ -247,7 +247,7 @@ class IrcMessageMapper(private val context: Context) {
                 } else {
                     ChatEvent.Message.Highlighted(
                         timestamp = command.timestamp,
-                        header = context.getString(R.string.chat_clear),
+                        title = context.getString(R.string.chat_clear),
                         body = null,
                     )
                 }

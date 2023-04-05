@@ -22,8 +22,8 @@ sealed interface ChatEvent {
 
         @Immutable
         data class Highlighted(
-            val header: String?,
-            val headerIconResId: Int? = null,
+            val title: String,
+            val titleIconResId: Int? = null,
             override val body: Body?,
             override val timestamp: Instant,
         ) : Message()

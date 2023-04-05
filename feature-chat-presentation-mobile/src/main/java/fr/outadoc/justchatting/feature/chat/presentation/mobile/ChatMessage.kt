@@ -90,8 +90,8 @@ fun ChatMessage(
         when (message) {
             is ChatEvent.Message.Highlighted -> {
                 HighlightedMessage(
-                    header = message.header,
-                    headerIconResId = message.headerIconResId,
+                    title = message.title,
+                    titleIconResId = message.titleIconResId,
                 ) {
                     message.body?.let { data ->
                         ChatMessageBodyOrCensored(

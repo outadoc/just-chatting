@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material3.Surface
@@ -52,13 +53,18 @@ fun RedactableChatMessageBody(
 
     var overrideRedaction: Boolean by remember { mutableStateOf(false) }
 
+    val blurRadius by animateDpAsState(
+        if (overrideRedaction) 0.dp else 6.dp,
+        label = "redaction radius",
+    )
+
     ChatMessageBody(
         modifier = modifier
             .then(
                 if (shouldRedactContents) {
                     Modifier
                         .blur(
-                            radius = if (overrideRedaction) 0.dp else 6.dp,
+                            radius = blurRadius,
                             edgeTreatment = BlurredEdgeTreatment.Unbounded,
                         )
                         .pointerInput(Unit) {

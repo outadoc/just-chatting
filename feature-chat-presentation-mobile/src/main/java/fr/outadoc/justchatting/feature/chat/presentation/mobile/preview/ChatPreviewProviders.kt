@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
@@ -97,6 +98,29 @@ private val highlightedEntries = sequence {
             titleIcon = null,
             subtitle = null,
             body = null,
+        ),
+    )
+
+    yield(
+        ChatEvent.Message.Highlighted(
+            timestamp = Instant.fromEpochMilliseconds(1664400523912),
+            title = "First message",
+            titleIcon = Icons.Default.WavingHand,
+            subtitle = null,
+            body = ChatEvent.Message.Body(
+                chatter = Chatter(
+                    id = "0",
+                    displayName = "Ravencheese",
+                    login = "ravencheese",
+                ),
+                message = "Lezgooooo",
+                messageId = "9431957c-0185-4de8-91a6-d1734b733d90",
+                isAction = false,
+                color = "#8a2be2",
+                embeddedEmotes = persistentListOf(),
+                badges = persistentListOf(),
+                inReplyTo = null,
+            ),
         ),
     )
 }

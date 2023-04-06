@@ -104,18 +104,18 @@ fun HighlightedMessage(
                     )
                 }
 
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    if (titleIcon != null) {
-                        Spacer(
-                            modifier = Modifier
-                                .size(iconSize)
-                                .padding(end = 4.dp),
-                        )
-                    }
+                subtitle?.let {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        if (titleIcon != null) {
+                            Spacer(
+                                modifier = Modifier
+                                    .size(iconSize)
+                                    .padding(end = 4.dp),
+                            )
+                        }
 
-                    subtitle?.let {
                         Text(
                             text = subtitle,
                             style = MaterialTheme.typography.bodyMedium,

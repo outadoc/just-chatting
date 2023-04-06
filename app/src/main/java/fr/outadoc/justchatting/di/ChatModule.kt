@@ -87,6 +87,7 @@ val chatModule = module {
                 get<PubSubBroadcastSettingsPlugin>(),
                 get<PubSubViewerCountPlugin>(),
                 get<PubSubRichEmbedPlugin>(),
+                get<PubSubPinnedMessagePlugin>(),
                 get<PubSubRaidPlugin>(),
             )
         }

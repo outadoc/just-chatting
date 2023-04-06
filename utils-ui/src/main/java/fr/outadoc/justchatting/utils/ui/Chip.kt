@@ -26,7 +26,7 @@ fun LabelChip(
             .border(
                 width = 1.dp,
                 color = color,
-                shape = MaterialTheme.shapes.large,
+                shape = MaterialTheme.shapes.small,
             )
             .padding(
                 vertical = 4.dp,

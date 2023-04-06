@@ -67,7 +67,7 @@ fun ChatList(
     onReplyToMessage: (ChatEvent.Message) -> Unit,
     roomState: RoomState,
     ongoingEvents: OngoingEvents,
-    appUser: AppUser,
+    appUser: AppUser.LoggedIn,
     insets: PaddingValues,
     clock: Clock = Clock.System,
 ) {

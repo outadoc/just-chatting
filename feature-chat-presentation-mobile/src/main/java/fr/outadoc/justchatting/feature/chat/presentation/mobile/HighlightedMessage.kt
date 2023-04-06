@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatEntryPreviewProvider
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
@@ -36,7 +36,7 @@ import kotlinx.collections.immutable.toPersistentHashMap
 @ThemePreviews
 @Composable
 fun HighlightedMessagePreview(
-    @PreviewParameter(ChatEntryPreviewProvider::class) message: ChatEvent.Message,
+    @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatEvent.Message,
 ) {
     val inlineBadges = previewBadges
         .associateWith { previewTextContent() }

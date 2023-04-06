@@ -125,9 +125,15 @@ private val highlightedEntries = sequence {
     )
 }
 
-class ChatEntryPreviewProvider : PreviewParameterProvider<ChatEvent> {
-    override val values: Sequence<ChatEvent> = sequence {
+class ChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message> {
+    override val values: Sequence<ChatEvent.Message> = sequence {
         yieldAll(simpleEntries)
         yieldAll(highlightedEntries)
+    }
+}
+
+class SimpleChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message.Simple> {
+    override val values: Sequence<ChatEvent.Message.Simple> = sequence {
+        yieldAll(simpleEntries)
     }
 }

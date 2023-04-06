@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material3.LocalContentColor
@@ -17,7 +18,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Pronoun
 import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatEntryPreviewProvider
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
@@ -33,7 +34,7 @@ import kotlinx.collections.immutable.toPersistentHashMap
 @ThemePreviews
 @Composable
 fun ChatMessagePreview(
-    @PreviewParameter(ChatEntryPreviewProvider::class) message: ChatEvent.Message,
+    @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatEvent.Message,
 ) {
     val inlineBadges = previewBadges
         .associateWith { previewTextContent() }
@@ -65,7 +66,7 @@ fun ChatMessage(
     showTimestamps: Boolean,
     background: Color = Color.Transparent,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
-    appUser: AppUser,
+    appUser: AppUser.LoggedIn,
 ) {
     val timestamp = message.timestamp
         .formatTimestamp()
@@ -95,8 +96,10 @@ fun ChatMessage(
                     subtitle = message.subtitle,
                 ) {
                     message.body?.let { data ->
-                        ChatMessageBodyOrCensored(
-                            modifier = Modifier.padding(4.dp),
+                        RedactableChatMessageBody(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp),
                             timestamp = message.timestamp,
                             body = data,
                             inlineContent = inlineContent,
@@ -113,11 +116,13 @@ fun ChatMessage(
 
             is ChatEvent.Message.Simple -> {
                 SimpleMessage {
-                    ChatMessageBodyOrCensored(
-                        modifier = Modifier.padding(
-                            horizontal = 4.dp,
-                            vertical = 6.dp,
-                        ),
+                    RedactableChatMessageBody(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                horizontal = 4.dp,
+                                vertical = 6.dp,
+                            ),
                         timestamp = message.timestamp,
                         body = message.body,
                         inlineContent = inlineContent,

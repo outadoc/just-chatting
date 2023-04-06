@@ -125,7 +125,7 @@ class ChatViewModel(
 
         data class Chatting(
             val user: User,
-            val appUser: AppUser,
+            val appUser: AppUser.LoggedIn,
             val stream: Stream? = null,
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val chatMessages: PersistentList<ChatEvent.Message> = persistentListOf(),

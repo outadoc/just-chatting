@@ -278,7 +278,7 @@ fun SettingsList(
                 onClickLabel = null,
                 title = {
                     CompositionLocalProvider(
-                        LocalContentColor provides MaterialTheme.colorScheme.error
+                        LocalContentColor provides MaterialTheme.colorScheme.error,
                     ) {
                         Text(text = stringResource(R.string.settings_account_logout_action))
                     }

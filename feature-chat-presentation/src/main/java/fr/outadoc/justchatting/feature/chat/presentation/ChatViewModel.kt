@@ -13,9 +13,11 @@ import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
+import fr.outadoc.justchatting.component.chatapi.common.PinnedMessage
 import fr.outadoc.justchatting.component.chatapi.common.Poll
 import fr.outadoc.justchatting.component.chatapi.common.Prediction
 import fr.outadoc.justchatting.component.chatapi.common.Pronoun
+import fr.outadoc.justchatting.component.chatapi.common.Raid
 import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
@@ -106,6 +108,8 @@ class ChatViewModel(
         data class RemoveContent(val removedContent: ChatEvent.RemoveContent) : Action()
         data class UpdatePoll(val poll: Poll) : Action()
         data class UpdatePrediction(val prediction: Prediction) : Action()
+        data class UpdateRaidAnnouncement(val raid: Raid) : Action()
+        data class UpdatePinnedMessage(val pinnedMessage: PinnedMessage?) : Action()
         data class AddRichEmbed(val richEmbed: ChatEvent.RichEmbed) : Action()
         data class UpdateStreamMetadata(
             val viewerCount: Int? = null,
@@ -289,6 +293,18 @@ class ChatViewModel(
                             is ChatEvent.RichEmbed -> {
                                 Action.AddRichEmbed(command)
                             }
+
+                            is ChatEvent.RaidUpdate -> {
+                                Action.UpdateRaidAnnouncement(
+                                    raid = command.raid,
+                                )
+                            }
+
+                            is ChatEvent.PinnedMessageUpdate -> {
+                                Action.UpdatePinnedMessage(
+                                    pinnedMessage = command.pinnedMessage,
+                                )
+                            }
                         }
                     }
                     .filterNotNull()
@@ -419,6 +435,8 @@ class ChatViewModel(
             is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
             is Action.LoadStreamDetails -> reduce(state)
+            is Action.UpdateRaidAnnouncement -> reduce(state)
+            is Action.UpdatePinnedMessage -> reduce(state)
         }
     }
 
@@ -657,6 +675,16 @@ class ChatViewModel(
         return state.copy(
             pronouns = state.pronouns.putAll(pronouns),
         )
+    }
+
+    private fun Action.UpdatePinnedMessage.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state
+    }
+
+    private fun Action.UpdateRaidAnnouncement.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state
     }
 
     private suspend fun InputAction.reduce(state: InputState): InputState {

@@ -13,8 +13,10 @@ import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessa
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.PubSubWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.broadcastsettingsupdate.PubSubBroadcastSettingsPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.channelpoints.PubSubChannelPointsPlugin
+import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.pinnedmessage.PubSubPinnedMessagePlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.poll.PubSubPollPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.prediction.PubSubPredictionPlugin
+import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.raid.PubSubRaidPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.richembed.PubSubRichEmbedPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.viewercount.PubSubViewerCountPlugin
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
@@ -67,12 +69,14 @@ val chatModule = module {
         }
     }
 
+    single { PubSubBroadcastSettingsPlugin(get()) }
     single { PubSubChannelPointsPlugin(get(), get(), get()) }
+    single { PubSubPinnedMessagePlugin(get()) }
     single { PubSubPollPlugin(get()) }
     single { PubSubPredictionPlugin(get()) }
-    single { PubSubBroadcastSettingsPlugin(get()) }
-    single { PubSubViewerCountPlugin(get()) }
+    single { PubSubRaidPlugin(get()) }
     single { PubSubRichEmbedPlugin(get()) }
+    single { PubSubViewerCountPlugin(get()) }
 
     single {
         PubSubPluginsProvider {
@@ -83,6 +87,7 @@ val chatModule = module {
                 get<PubSubBroadcastSettingsPlugin>(),
                 get<PubSubViewerCountPlugin>(),
                 get<PubSubRichEmbedPlugin>(),
+                get<PubSubRaidPlugin>(),
             )
         }
     }

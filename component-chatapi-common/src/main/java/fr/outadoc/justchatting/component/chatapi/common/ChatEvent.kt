@@ -93,6 +93,16 @@ sealed interface ChatEvent {
     ) : ChatEvent
 
     @Immutable
+    data class RaidUpdate(
+        val raid: Raid,
+    ) : ChatEvent
+
+    @Immutable
+    data class PinnedMessageUpdate(
+        val pinnedMessage: PinnedMessage?,
+    ) : ChatEvent
+
+    @Immutable
     data class RichEmbed(
         val messageId: String,
         val title: String,

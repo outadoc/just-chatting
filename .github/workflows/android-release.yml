@@ -1,15 +1,21 @@
 name: Release new version
 
 on:
-  release:
-    types: [ published ]
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
     environment: release
+
     concurrency:
       group: deploy-to-store
+
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v3
         with:
@@ -27,13 +33,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Get tag version name
-        id: tag
-        uses: frabert/replace-string-action@cfa94ab0520558c86227623a272f9a5d244181c9
-        with:
-          pattern: "^v(.+)$"
-          string: ${{ github.ref_name }}
-          replace-with: "$1"
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y.%m.%d')"
 
       - name: Compute unique version code
         id: version
@@ -43,10 +45,11 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: |
-            bundleRelease 
+            bundleRelease
             "-PreleaseKeystorePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}"
-            "-PexternalVersionName=${{ steps.tag.outputs.replaced }}"
+            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
             "-PexternalVersionCode=${{ steps.version.outputs.version }}"
+            "-PenableLogging=true"
 
       - name: Upload app bundle to GitHub
         uses: actions/upload-artifact@v3.1.2
@@ -54,7 +57,7 @@ jobs:
           name: apk
           path: app/build/outputs/bundle/release/app-release.aab
 
-      - name: Publish release build to internal track
+      - name: Publish nightly build to internal track
         uses: r0adkll/upload-google-play@70c7397e868b00eccd390222f492ab3e30520d09
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_INTERNAL_APP_SHARING }}
@@ -63,3 +66,12 @@ jobs:
           track: internal
           mappingFile: app/build/outputs/mapping/release/mapping.txt
           status: completed
+
+      - name: Create GitHub release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          tag: "v${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
+          commit: main
+          makeLatest: true
+          generateReleaseNotes: true
+          artifacts: app/build/outputs/bundle/release/app-release.aab

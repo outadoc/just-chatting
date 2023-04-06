@@ -2,11 +2,12 @@ package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
 import android.os.Build
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -97,10 +98,6 @@ fun SettingsList(
         }
 
         item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
-        }
-
-        item {
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = onOpenAccessibilityPreferences,
@@ -115,7 +112,7 @@ fun SettingsList(
         }
 
         item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
         }
 
         item {
@@ -145,10 +142,6 @@ fun SettingsList(
         }
 
         item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
-        }
-
-        item {
             SettingsSwitch(
                 modifier = Modifier.padding(itemInsets),
                 checked = appPreferences.enablePronouns,
@@ -165,10 +158,6 @@ fun SettingsList(
         }
 
         item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
-        }
-
-        item {
             val pronounsUrl = stringResource(id = R.string.app_pronouns_url)
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
@@ -176,10 +165,6 @@ fun SettingsList(
                 onClickLabel = stringResource(id = R.string.settings_thirdparty_pronouns_set_cd),
                 title = { Text(text = stringResource(id = R.string.settings_thirdparty_pronouns_set_title)) },
             )
-        }
-
-        item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
         }
 
         item {
@@ -199,10 +184,6 @@ fun SettingsList(
         }
 
         item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
-        }
-
-        item {
             SettingsSwitch(
                 modifier = Modifier.padding(itemInsets),
                 checked = appPreferences.enableFfzEmotes,
@@ -216,10 +197,6 @@ fun SettingsList(
                     Text(stringResource(R.string.settings_thirdparty_ffz_subtitle))
                 },
             )
-        }
-
-        item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
         }
 
         item {
@@ -239,7 +216,7 @@ fun SettingsList(
         }
 
         item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
         }
 
         item {
@@ -277,7 +254,7 @@ fun SettingsList(
         }
 
         item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
         }
 
         item {
@@ -333,7 +310,7 @@ fun SettingsList(
         }
 
         item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
         }
 
         item {
@@ -401,7 +378,7 @@ fun SettingsList(
         }
 
         item {
-            Divider(modifier = Modifier.padding(vertical = 4.dp))
+            Spacer(modifier = Modifier.height(4.dp))
         }
 
         item {

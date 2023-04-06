@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -274,7 +277,11 @@ fun SettingsList(
                 onClick = { showLogoutDialog = true },
                 onClickLabel = null,
                 title = {
-                    Text(text = stringResource(R.string.settings_account_logout_action))
+                    CompositionLocalProvider(
+                        LocalContentColor provides MaterialTheme.colorScheme.error
+                    ) {
+                        Text(text = stringResource(R.string.settings_account_logout_action))
+                    }
                 },
             )
 

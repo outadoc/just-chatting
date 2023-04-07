@@ -679,12 +679,20 @@ class ChatViewModel(
 
     private fun Action.UpdatePinnedMessage.reduce(state: State): State {
         if (state !is State.Chatting) return state
-        return state
+        return state.copy(
+            ongoingEvents = state.ongoingEvents.copy(
+                pinnedMessage = pinnedMessage,
+            ),
+        )
     }
 
     private fun Action.UpdateRaidAnnouncement.reduce(state: State): State {
         if (state !is State.Chatting) return state
-        return state
+        return state.copy(
+            ongoingEvents = state.ongoingEvents.copy(
+                outgoingRaid = raid,
+            ),
+        )
     }
 
     private suspend fun InputAction.reduce(state: InputState): InputState {

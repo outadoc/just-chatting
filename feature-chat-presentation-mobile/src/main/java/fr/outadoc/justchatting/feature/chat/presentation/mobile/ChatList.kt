@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.component.chatapi.common.PinnedMessage
 import fr.outadoc.justchatting.component.chatapi.common.Poll
 import fr.outadoc.justchatting.component.chatapi.common.Prediction
 import fr.outadoc.justchatting.component.chatapi.common.Pronoun
@@ -146,6 +147,22 @@ fun ChatList(
                         color = MaterialTheme.colorScheme.errorContainer,
                     ) {
                         Text(text = stringResource(R.string.connectionLost_error))
+                    }
+                }
+
+                val pinnedMessage: PinnedMessage? = ongoingEvents.pinnedMessage
+                val pinnedMessageEnd: Instant? = pinnedMessage?.message?.endsAt
+
+                IntervalCheckVisibility(
+                    visible = { pinnedMessage != null && (pinnedMessageEnd == null || clock.now() < pinnedMessageEnd + 1.minutes) },
+                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
+                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
+                ) {
+                    if (pinnedMessage != null) {
+                        PinnedMessageCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            pinnedMessage = pinnedMessage,
+                        )
                     }
                 }
 

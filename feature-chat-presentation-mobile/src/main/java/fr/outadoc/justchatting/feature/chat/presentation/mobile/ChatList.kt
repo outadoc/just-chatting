@@ -31,7 +31,6 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
-import fr.outadoc.justchatting.component.chatapi.common.PinnedMessage
 import fr.outadoc.justchatting.component.chatapi.common.Poll
 import fr.outadoc.justchatting.component.chatapi.common.Prediction
 import fr.outadoc.justchatting.component.chatapi.common.Pronoun
@@ -150,8 +149,8 @@ fun ChatList(
                     }
                 }
 
-                val pinnedMessage: PinnedMessage? = ongoingEvents.pinnedMessage
-                val pinnedMessageEnd: Instant? = pinnedMessage?.message?.endsAt
+                val pinnedMessage: OngoingEvents.PinnedMessage? = ongoingEvents.pinnedMessage
+                val pinnedMessageEnd: Instant? = pinnedMessage?.endsAt
 
                 IntervalCheckVisibility(
                     visible = { pinnedMessage != null && (pinnedMessageEnd == null || clock.now() < pinnedMessageEnd + 1.minutes) },
@@ -161,7 +160,11 @@ fun ChatList(
                     if (pinnedMessage != null) {
                         PinnedMessageCard(
                             modifier = Modifier.fillMaxWidth(),
-                            pinnedMessage = pinnedMessage,
+                            message = pinnedMessage.message,
+                            inlineContent = inlineContent,
+                            removedContent = removedContent,
+                            knownChatters = knownChatters,
+                            appUser = appUser,
                         )
                     }
                 }

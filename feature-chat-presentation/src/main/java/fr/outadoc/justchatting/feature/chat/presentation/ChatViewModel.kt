@@ -679,9 +679,30 @@ class ChatViewModel(
 
     private fun Action.UpdatePinnedMessage.reduce(state: State): State {
         if (state !is State.Chatting) return state
+
+        if (pinnedMessage == null) {
+            return state.copy(
+                ongoingEvents = state.ongoingEvents.copy(
+                    pinnedMessage = null,
+                ),
+            )
+        }
+
+        val matchingMessage: ChatEvent.Message =
+            state.chatMessages.findLast { message ->
+                message.body?.messageId == pinnedMessage.message.messageId
+            } ?: return state.copy(
+                ongoingEvents = state.ongoingEvents.copy(
+                    pinnedMessage = null,
+                ),
+            )
+
         return state.copy(
             ongoingEvents = state.ongoingEvents.copy(
-                pinnedMessage = pinnedMessage,
+                pinnedMessage = OngoingEvents.PinnedMessage(
+                    message = matchingMessage,
+                    endsAt = pinnedMessage.message.endsAt,
+                ),
             ),
         )
     }

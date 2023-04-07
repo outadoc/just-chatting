@@ -1,6 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -79,6 +83,8 @@ fun ChatListContainer(
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.BottomCenter),
             visible = wasListScrolledByUser,
+            enter = fadeIn() + expandVertically(expandFrom = Alignment.Bottom),
+            exit = shrinkVertically(shrinkTowards = Alignment.Bottom) + fadeOut(),
         ) {
             FloatingActionButton(
                 modifier = Modifier

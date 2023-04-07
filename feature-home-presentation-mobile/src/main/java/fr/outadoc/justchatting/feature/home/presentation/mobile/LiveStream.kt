@@ -192,7 +192,10 @@ fun LiveStream(
                     horizontalArrangement = Arrangement.spacedBy(4.dp),
                 ) {
                     tags.forEach { tag ->
-                        StreamTagChip(tag = tag)
+                        StreamTagChip(
+                            modifier = Modifier.padding(vertical = 2.dp),
+                            tag = tag,
+                        )
                     }
                 }
             }

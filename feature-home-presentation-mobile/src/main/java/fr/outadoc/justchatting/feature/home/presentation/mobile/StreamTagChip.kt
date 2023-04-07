@@ -12,6 +12,10 @@ fun StreamTagChip(
     modifier: Modifier = Modifier,
 ) {
     LabelChip(modifier = modifier) {
-        Text(tag, overflow = TextOverflow.Ellipsis)
+        Text(
+            tag,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+        )
     }
 }

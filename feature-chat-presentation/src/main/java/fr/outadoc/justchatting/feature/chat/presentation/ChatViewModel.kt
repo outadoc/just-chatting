@@ -108,7 +108,7 @@ class ChatViewModel(
         data class RemoveContent(val removedContent: ChatEvent.RemoveContent) : Action()
         data class UpdatePoll(val poll: Poll) : Action()
         data class UpdatePrediction(val prediction: Prediction) : Action()
-        data class UpdateRaidAnnouncement(val raid: Raid) : Action()
+        data class UpdateRaidAnnouncement(val raid: Raid?) : Action()
         data class UpdatePinnedMessage(val pinnedMessage: PinnedMessage?) : Action()
         data class AddRichEmbed(val richEmbed: ChatEvent.RichEmbed) : Action()
         data class UpdateStreamMetadata(

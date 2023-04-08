@@ -21,6 +21,10 @@ internal sealed class PubSubRaidMessage {
     ) : PubSubRaidMessage()
 
     @Serializable
+    @SerialName("raid_cancel_v2")
+    object Cancel : PubSubRaidMessage()
+
+    @Serializable
     data class Raid(
         @SerialName("id")
         val raidId: String,

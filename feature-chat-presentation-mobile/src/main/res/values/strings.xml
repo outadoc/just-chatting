@@ -26,6 +26,11 @@
     <string name="prediction_status_progress">Prediction in progress</string>
     <string name="prediction_status_points">%s points spent</string>
     <string name="prediction_status_winner_cd">Winning outcome</string>
+    <string name="raid_go_action">Join the raid</string>
+    <string name="raid_go_message">Everybody join %1$s!</string>
+    <string name="raid_go_title">Raid has begun</string>
+    <string name="raid_prepare_message">%1$s will be raided by %2$s</string>
+    <string name="raid_prepare_title">Preparing raid</string>
     <string name="richEmbed_author_title">Clipped by %s</string>
     <string name="room_emote">Emote</string>
     <string name="room_followers">Followers</string>

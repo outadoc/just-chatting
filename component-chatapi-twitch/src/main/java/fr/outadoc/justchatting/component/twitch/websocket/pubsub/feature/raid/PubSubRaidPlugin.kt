@@ -12,22 +12,10 @@ class PubSubRaidPlugin(
     override fun getTopic(channelId: String): String =
         "raid.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> =
-        when (val message = json.decodeFromString<PubSubRaidMessage>(payload)) {
-            is PubSubRaidMessage.Update -> {
-                listOf(
-                    ChatEvent.RaidUpdate(
-                        raid = message.raid.map(),
-                    ),
-                )
-            }
-
-            is PubSubRaidMessage.Go -> {
-                listOf(
-                    ChatEvent.RaidUpdate(
-                        raid = message.raid.map(),
-                    ),
-                )
-            }
-        }
+    override fun parseMessage(payload: String): List<ChatEvent> {
+        val message = json.decodeFromString<PubSubRaidMessage>(payload)
+        return listOf(
+            ChatEvent.RaidUpdate(raid = message.map()),
+        )
+    }
 }

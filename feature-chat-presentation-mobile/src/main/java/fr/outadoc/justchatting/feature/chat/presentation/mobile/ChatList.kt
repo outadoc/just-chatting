@@ -1,16 +1,8 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,10 +10,8 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -31,8 +21,6 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
-import fr.outadoc.justchatting.component.chatapi.common.Poll
-import fr.outadoc.justchatting.component.chatapi.common.Prediction
 import fr.outadoc.justchatting.component.chatapi.common.Pronoun
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.preferences.data.AppUser
@@ -45,8 +33,6 @@ import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
-import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -116,92 +102,19 @@ fun ChatList(
         ),
     ) {
         stickyHeader {
-            Column(
+            ChatEvents(
                 modifier = Modifier.padding(horizontal = 6.dp),
-                verticalArrangement = Arrangement.spacedBy(6.dp),
-            ) {
-                Spacer(
-                    modifier = Modifier.padding(
-                        top = insets.calculateTopPadding(),
-                    ),
-                )
-                AnimatedVisibility(
-                    visible = roomState != RoomState.Default,
-                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
-                ) {
-                    RoomStateBanner(
-                        modifier = Modifier.fillMaxWidth(),
-                        roomState = roomState,
-                    )
-                }
-
-                AnimatedVisibility(
-                    visible = isDisconnected,
-                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
-                ) {
-                    SlimSnackbar(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.errorContainer,
-                    ) {
-                        Text(text = stringResource(R.string.connectionLost_error))
-                    }
-                }
-
-                val pinnedMessage: OngoingEvents.PinnedMessage? = ongoingEvents.pinnedMessage
-                val pinnedMessageEnd: Instant? = pinnedMessage?.endsAt
-
-                IntervalCheckVisibility(
-                    visible = { pinnedMessage != null && (pinnedMessageEnd == null || clock.now() < pinnedMessageEnd + 1.minutes) },
-                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
-                ) {
-                    if (pinnedMessage != null) {
-                        PinnedMessageCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            message = pinnedMessage.message,
-                            inlineContent = inlineContent,
-                            removedContent = removedContent,
-                            knownChatters = knownChatters,
-                            appUser = appUser,
-                        )
-                    }
-                }
-
-                val poll: Poll? = ongoingEvents.poll
-                val pollEnd: Instant? = poll?.endedAt
-
-                IntervalCheckVisibility(
-                    visible = { poll != null && (pollEnd == null || clock.now() < pollEnd + 1.minutes) },
-                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
-                ) {
-                    if (poll != null) {
-                        PollCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            poll = poll,
-                        )
-                    }
-                }
-
-                val prediction: Prediction? = ongoingEvents.prediction
-                val predictionEnd: Instant? = prediction?.endedAt
-
-                IntervalCheckVisibility(
-                    visible = { prediction != null && (predictionEnd == null || clock.now() < predictionEnd + 1.minutes) },
-                    enter = fadeIn() + expandVertically(expandFrom = Alignment.Top),
-                    exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
-                ) {
-                    if (prediction != null) {
-                        PredictionCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            prediction = prediction,
-                            badges = badges,
-                        )
-                    }
-                }
-            }
+                insets = insets,
+                roomState = roomState,
+                isDisconnected = isDisconnected,
+                ongoingEvents = ongoingEvents,
+                clock = clock,
+                inlineContent = inlineContent,
+                removedContent = removedContent,
+                knownChatters = knownChatters,
+                appUser = appUser,
+                badges = badges,
+            )
         }
 
         itemsIndexed(

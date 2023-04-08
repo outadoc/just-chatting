@@ -94,7 +94,7 @@ sealed interface ChatEvent {
 
     @Immutable
     data class RaidUpdate(
-        val raid: Raid,
+        val raid: Raid?,
     ) : ChatEvent
 
     @Immutable

@@ -59,6 +59,13 @@ class TwitchIrcCommandParser(private val clock: Clock) {
                 )
             }
 
+            "unraid" -> {
+                IrcEvent.Message.CancelledRaid(
+                    timestamp = timestamp,
+                    userDisplayName = ircMessage.tags.displayName ?: return null,
+                )
+            }
+
             "announcement" -> {
                 IrcEvent.Message.Announcement(
                     timestamp = timestamp,

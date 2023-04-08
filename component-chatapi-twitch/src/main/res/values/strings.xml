@@ -24,6 +24,7 @@
     <string name="chat_subGift_tier3">Tier 3</string>
     <string name="chat_massSubGift_header">is gifting %1$s %2$s subs to the community! They\'ve gifted a total of %3$s subs in the channel.</string>
     <string name="chat_timeout">%1$s has been timed out for %2$s</string>
+    <string name="chat_unraid_subtitle">has cancelled the raid</string>
 
     <plurals name="user_redeemed">
         <item quantity="one">%1$s redeemed %2$s for %3$,d point</item>

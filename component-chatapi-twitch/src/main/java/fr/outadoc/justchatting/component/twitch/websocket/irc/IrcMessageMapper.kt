@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CallReceived
 import androidx.compose.material.icons.filled.Campaign
+import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Highlight
 import androidx.compose.material.icons.filled.Redeem
 import androidx.compose.material.icons.filled.Star
@@ -47,6 +48,16 @@ class IrcMessageMapper(private val context: Context) {
                             raidersCount,
                         ),
                     ),
+                    body = null,
+                )
+            }
+
+            is IrcEvent.Message.CancelledRaid -> {
+                ChatEvent.Message.Highlighted(
+                    timestamp = timestamp,
+                    title = userDisplayName,
+                    titleIcon = Icons.Default.Cancel,
+                    subtitle = context.getString(R.string.chat_unraid_subtitle),
                     body = null,
                 )
             }

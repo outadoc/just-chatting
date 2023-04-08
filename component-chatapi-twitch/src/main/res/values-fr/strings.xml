@@ -24,6 +24,7 @@
     <string name="chat_subGift_header">offre un abonnement %1$s à %2$s ! Iel est abonné·e depuis %3$s.</string>
     <string name="chat_massSubGift_header">offre %1$s abonnements %2$s à la communauté ! Iel a offert un total de %3$s abonnements sur cette chaîne.</string>
     <string name="chat_timeout">%1$s a été mis·e au silence pendant %2$s</string>
+    <string name="chat_unraid_subtitle">a annulé le raid</string>
 
     <plurals name="user_redeemed">
         <item quantity="one">%1$s a obtenu %2$s pour %3$,d point</item>

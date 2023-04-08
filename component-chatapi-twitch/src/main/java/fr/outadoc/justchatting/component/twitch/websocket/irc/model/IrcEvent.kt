@@ -49,6 +49,11 @@ sealed interface IrcEvent {
             val raidersCount: Int,
         ) : Message
 
+        data class CancelledRaid(
+            val timestamp: Instant,
+            val userDisplayName: String,
+        ) : Message
+
         data class Announcement(
             val timestamp: Instant,
             val userMessage: ChatMessage,

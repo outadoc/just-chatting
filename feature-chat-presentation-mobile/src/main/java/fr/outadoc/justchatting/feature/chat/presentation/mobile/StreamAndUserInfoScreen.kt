@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -21,21 +20,8 @@ fun StreamAndUserInfoScreen(
         viewModel.loadFromLogin(userLogin)
     }
 
-    Crossfade(
-        targetState = state,
-        label = "bottom sheet state changes",
-    ) { currentState ->
-        when (currentState) {
-            StreamAndUserInfoViewModel.State.Initial -> {}
-            is StreamAndUserInfoViewModel.State.Loading -> {}
-            is StreamAndUserInfoViewModel.State.Error -> {}
-            is StreamAndUserInfoViewModel.State.Loaded -> {
-                StreamAndUserInfo(
-                    modifier = modifier,
-                    user = currentState.user,
-                    stream = currentState.stream,
-                )
-            }
-        }
-    }
+    StreamAndUserInfoState(
+        modifier = modifier,
+        state = state,
+    )
 }

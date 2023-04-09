@@ -11,6 +11,7 @@
     <string name="chat_message_standardSeparator">:&#160;</string>
     <string name="connectionLost_error">Reconnecting to chat…</string>
     <string name="created_at">Created on %s</string>
+    <string name="info_loadError">An error occurred while loading user details.</string>
     <string name="menu_item_openInBubble">Open in bubble</string>
     <string name="poll_collapse_action">Collapse poll</string>
     <string name="poll_expand_action">Expand poll</string>

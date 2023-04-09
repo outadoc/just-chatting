@@ -12,6 +12,7 @@
     <string name="connectionLost_error">Reconnexion au tchat…</string>
     <string name="created_at">Créé le %s</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
+    <string name="info_loadError">Une erreur est survenue durant le chargement des détails de l\'utilisateur·rice.</string>
     <string name="poll_collapse_action">Refermer le sondage</string>
     <string name="poll_expand_action">Développer le sondage</string>
     <string name="poll_status_ended">Sondage terminé</string>

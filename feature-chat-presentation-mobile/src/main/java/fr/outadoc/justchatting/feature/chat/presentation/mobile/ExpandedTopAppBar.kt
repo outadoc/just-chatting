@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.WindowInsets
@@ -31,6 +32,7 @@ fun ExpandedTopAppBar(
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     contentColor: Color = LocalContentColor.current,
     scrollBehavior: TopAppBarScrollBehavior? = null,
+    onClick: (() -> Unit)? = null,
     secondRow: @Composable () -> Unit = {},
 ) {
     val appBarContainerColor by animateColorAsState(
@@ -46,6 +48,11 @@ fun ExpandedTopAppBar(
     ) {
         Column {
             TopAppBar(
+                modifier = if (onClick != null) {
+                    Modifier.clickable(onClick = onClick)
+                } else {
+                    Modifier
+                },
                 title = title,
                 navigationIcon = navigationIcon,
                 actions = actions,

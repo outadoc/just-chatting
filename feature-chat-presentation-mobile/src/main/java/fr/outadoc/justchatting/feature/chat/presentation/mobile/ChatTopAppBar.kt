@@ -1,9 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -11,57 +8,32 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.Compress
-import androidx.compose.material.icons.filled.Start
-import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.LiveTv
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.utils.core.formatNumber
-import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.canOpenInBubble
-import fr.outadoc.justchatting.utils.ui.formatTime
-import fr.outadoc.justchatting.utils.ui.formatTimestamp
-import kotlinx.datetime.toInstant
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -155,170 +127,4 @@ fun ChatTopAppBar(
             }
         },
     )
-}
-
-@ThemePreviews
-@Composable
-fun StreamInfoPreviewFull() {
-    AppTheme {
-        StreamInfo(
-            user = User(
-                id = "",
-                login = "",
-                displayName = "",
-                createdAt = "2022-01-01T00:00:00.00Z",
-            ),
-            stream = Stream(
-                title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
-                gameName = "",
-                startedAt = "2022-09-01T00:00:00.00Z",
-                viewerCount = 10_000,
-                tags = listOf(
-                    "French",
-                ),
-            ),
-        )
-    }
-}
-
-@ThemePreviews
-@Composable
-fun StreamInfoPreviewOffline() {
-    AppTheme {
-        StreamInfo(
-            user = User(
-                id = "",
-                login = "",
-                displayName = "",
-                createdAt = "2022-01-01T00:00:00.00Z",
-            ),
-            stream = null,
-        )
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-fun StreamInfo(
-    modifier: Modifier = Modifier,
-    user: User?,
-    stream: Stream?,
-) {
-    Column(
-        modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
-    ) {
-        stream?.title?.let { title ->
-            Text(text = title)
-        }
-
-        val tags = stream?.tags
-        if (!tags.isNullOrEmpty()) {
-            FlowRow(
-                modifier = Modifier.padding(top = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                tags.forEach { tag ->
-                    StreamTagChip(
-                        modifier = Modifier.padding(vertical = 2.dp),
-                        tag = tag,
-                    )
-                }
-            }
-        }
-
-        stream?.viewerCount?.let { viewerCount ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
-                    imageVector = Icons.Default.Visibility,
-                    contentDescription = null,
-                )
-                Text(
-                    text = pluralStringResource(
-                        R.plurals.viewers,
-                        viewerCount,
-                        viewerCount.formatNumber(),
-                    ),
-                )
-            }
-        }
-
-        val startedAt = stream?.startedAt?.toInstant()?.formatTimestamp()
-        if (startedAt != null) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
-                    imageVector = Icons.Default.Start,
-                    contentDescription = null,
-                )
-                Text(text = stringResource(R.string.uptime, startedAt))
-            }
-        }
-
-        val createdAt = user?.createdAt?.toInstant()?.formatTime()
-        if (createdAt != null) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
-                    imageVector = Icons.Default.Cake,
-                    contentDescription = null,
-                )
-                Text(
-                    text = stringResource(R.string.created_at, createdAt),
-                )
-            }
-        }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun ExpandedTopAppBar(
-    title: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-    navigationIcon: @Composable () -> Unit = {},
-    actions: @Composable RowScope.() -> Unit = {},
-    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    backgroundColor: Color = MaterialTheme.colorScheme.surface,
-    contentColor: Color = LocalContentColor.current,
-    scrollBehavior: TopAppBarScrollBehavior? = null,
-    secondRow: @Composable () -> Unit = {},
-) {
-    val appBarContainerColor by animateColorAsState(
-        targetValue = backgroundColor,
-        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
-        label = "Container color",
-    )
-
-    Surface(
-        modifier = modifier,
-        color = appBarContainerColor,
-        contentColor = contentColor,
-    ) {
-        Column {
-            TopAppBar(
-                title = title,
-                navigationIcon = navigationIcon,
-                actions = actions,
-                windowInsets = windowInsets,
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = backgroundColor,
-                    titleContentColor = contentColor,
-                    actionIconContentColor = contentColor,
-                ),
-                scrollBehavior = scrollBehavior,
-            )
-
-            CompositionLocalProvider(LocalTextStyle provides MaterialTheme.typography.bodyMedium) {
-                secondRow()
-            }
-        }
-    }
 }

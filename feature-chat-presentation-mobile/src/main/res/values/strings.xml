@@ -10,7 +10,7 @@
     <string name="chat_message_actionSeparator">&#160;</string>
     <string name="chat_message_standardSeparator">:&#160;</string>
     <string name="connectionLost_error">Reconnecting to chat…</string>
-    <string name="created_at">Created at %s</string>
+    <string name="created_at">Created on %s</string>
     <string name="menu_item_openInBubble">Open in bubble</string>
     <string name="poll_collapse_action">Collapse poll</string>
     <string name="poll_expand_action">Expand poll</string>
@@ -39,6 +39,6 @@
     <string name="room_unique">Unique</string>
     <string name="scroll_down">Scroll down</string>
     <string name="stream_info">Stream Info</string>
-    <string name="uptime">%s uptime</string>
+    <string name="uptime">Live since %s</string>
     <string name="watch_live">Watch live</string>
 </resources>

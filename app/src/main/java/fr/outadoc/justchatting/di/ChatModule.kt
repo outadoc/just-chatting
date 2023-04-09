@@ -34,6 +34,7 @@ import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
+import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatNotifierImpl
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.DefaultPronounsRepository
@@ -44,6 +45,7 @@ import org.koin.dsl.module
 val chatModule = module {
 
     viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { StreamAndUserInfoViewModel(get()) }
 
     single<ChatNotifier> { ChatNotifierImpl() }
     single { FilterAutocompleteItemsUseCase() }

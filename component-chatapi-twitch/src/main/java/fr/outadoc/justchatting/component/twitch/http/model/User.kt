@@ -15,9 +15,9 @@ data class User(
     @SerialName("display_name")
     val displayName: String,
     @SerialName("description")
-    val description: String? = null,
+    val description: String,
     @SerialName("profile_image_url")
     val profileImageUrl: String? = null,
     @SerialName("created_at")
-    val createdAt: String? = null,
+    val createdAt: String,
 ) : Parcelable

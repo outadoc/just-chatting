@@ -44,6 +44,7 @@ fun RedactableChatMessageBody(
     appUser: AppUser.LoggedIn,
     backgroundHint: Color,
     richEmbed: ChatEvent.RichEmbed? = null,
+    onShowUserInfoForLogin: (String) -> Unit = {},
 ) {
     val shouldRedactContents: Boolean =
         removedContent
@@ -90,6 +91,7 @@ fun RedactableChatMessageBody(
         appUser = appUser,
         backgroundHint = backgroundHint,
         richEmbed = richEmbed,
+        onShowUserInfoForLogin = onShowUserInfoForLogin,
     )
 }
 

@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,6 +23,7 @@ import fr.outadoc.justchatting.utils.ui.isDark
 import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelChatScreen(channelLogin: String) {
     val viewModel: ChatViewModel = getViewModel()
@@ -105,6 +107,8 @@ fun ChannelChatScreen(channelLogin: String) {
                 )
             },
             onReplyToMessage = viewModel::onReplyToMessage,
+            onDismissUserInfo = viewModel::onDismissUserInfo,
+            onShowUserInfoForLogin = viewModel::onShowUserInfo,
         )
     }
 }

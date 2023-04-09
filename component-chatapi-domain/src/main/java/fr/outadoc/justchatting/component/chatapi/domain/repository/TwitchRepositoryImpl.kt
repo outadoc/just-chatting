@@ -166,9 +166,9 @@ class TwitchRepositoryImpl(
             }
         }
 
-    override suspend fun loadStreamWithUser(channelId: String): Stream? =
+    override suspend fun loadStream(userId: String): Stream? =
         withContext(Dispatchers.IO) {
-            helix.getStreams(ids = listOf(channelId))
+            helix.getStreams(ids = listOf(userId))
                 .data
                 .firstOrNull()
                 ?.let { stream ->
@@ -177,9 +177,7 @@ class TwitchRepositoryImpl(
                         userId = stream.userId,
                         userLogin = stream.userLogin,
                         userName = stream.userName,
-                        gameId = stream.gameId,
                         gameName = stream.gameName,
-                        type = stream.type,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
                         startedAt = stream.startedAt,

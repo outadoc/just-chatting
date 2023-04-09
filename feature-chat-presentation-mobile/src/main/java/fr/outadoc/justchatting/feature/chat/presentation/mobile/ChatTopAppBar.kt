@@ -1,10 +1,8 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
@@ -19,11 +17,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,11 +41,8 @@ fun ChatTopAppBar(
     onWatchLiveClicked: () -> Unit,
     onOpenBubbleClicked: () -> Unit,
 ) {
-    var showStreamInfo by remember { mutableStateOf(false) }
-
-    ExpandedTopAppBar(
+    TopAppBar(
         modifier = modifier,
-        onClick = { showStreamInfo = !showStreamInfo },
         title = {
             Column {
                 Text(
@@ -89,7 +81,7 @@ fun ChatTopAppBar(
                                 .clip(MaterialTheme.shapes.medium)
                                 .background(MaterialTheme.colorScheme.surfaceVariant),
                             model = imageUrl,
-                            contentDescription = stringResource(R.string.stream_info),
+                            contentDescription = null,
                         )
                     }
                 }
@@ -111,21 +103,6 @@ fun ChatTopAppBar(
                         contentDescription = stringResource(R.string.menu_item_openInBubble),
                     )
                 }
-            }
-        },
-        secondRow = {
-            AnimatedVisibility(
-                visible = showStreamInfo,
-                enter = fadeIn() + expandVertically(),
-                exit = shrinkVertically() + fadeOut(),
-            ) {
-                StreamInfo(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 8.dp),
-                    user = user,
-                    stream = stream,
-                )
             }
         },
     )

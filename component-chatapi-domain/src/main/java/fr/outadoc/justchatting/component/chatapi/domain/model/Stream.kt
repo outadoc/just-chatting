@@ -6,16 +6,14 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Stream(
-    val id: String? = null,
-    val userId: String? = null,
-    val userLogin: String? = null,
-    val userName: String? = null,
-    val gameId: String? = null,
+    val id: String,
+    val userId: String,
+    val userLogin: String,
+    val userName: String,
     val gameName: String? = null,
-    val type: String? = null,
-    val title: String? = null,
-    val viewerCount: Int? = null,
-    val startedAt: String? = null,
+    val title: String,
+    val viewerCount: Int,
+    val startedAt: String,
     val profileImageURL: String? = null,
     val tags: List<String> = persistentListOf(),
 ) : Parcelable

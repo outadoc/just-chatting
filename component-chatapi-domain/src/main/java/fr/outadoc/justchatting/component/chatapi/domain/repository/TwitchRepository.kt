@@ -13,7 +13,7 @@ interface TwitchRepository {
     suspend fun loadSearchChannels(query: String): Flow<PagingData<ChannelSearch>>
     suspend fun loadFollowedStreams(): Flow<PagingData<Stream>>
     suspend fun loadFollowedChannels(): Flow<PagingData<Follow>>
-    suspend fun loadStreamWithUser(channelId: String): Stream?
+    suspend fun loadStream(userId: String): Stream?
     suspend fun loadUsersById(ids: List<String>): List<User>?
     suspend fun loadUsersByLogin(logins: List<String>): List<User>?
     suspend fun loadCheerEmotes(userId: String): List<Emote>

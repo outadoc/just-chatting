@@ -9,25 +9,21 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Stream(
     @SerialName("id")
-    val id: String? = null,
+    val id: String,
     @SerialName("user_id")
-    val userId: String? = null,
+    val userId: String,
     @SerialName("user_login")
-    val userLogin: String? = null,
+    val userLogin: String,
     @SerialName("user_name")
-    val userName: String? = null,
-    @SerialName("game_id")
-    val gameId: String? = null,
+    val userName: String,
     @SerialName("game_name")
     val gameName: String? = null,
-    @SerialName("type")
-    val type: String? = null,
     @SerialName("title")
-    val title: String? = null,
+    val title: String,
     @SerialName("viewer_count")
-    val viewerCount: Int? = null,
+    val viewerCount: Int,
     @SerialName("started_at")
-    val startedAt: String? = null,
+    val startedAt: String,
     @SerialName("tags")
     val tags: List<String> = emptyList(),
 ) : Parcelable

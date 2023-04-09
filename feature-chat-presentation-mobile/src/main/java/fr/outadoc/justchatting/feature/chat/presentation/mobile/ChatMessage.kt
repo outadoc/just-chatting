@@ -67,6 +67,7 @@ fun ChatMessage(
     background: Color = Color.Transparent,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
     appUser: AppUser.LoggedIn,
+    onShowUserInfoForLogin: (String) -> Unit = {},
 ) {
     val timestamp = message.timestamp
         .formatTimestamp()
@@ -109,6 +110,7 @@ fun ChatMessage(
                             backgroundHint = backgroundHint,
                             removedContent = removedContent,
                             richEmbed = richEmbed,
+                            onShowUserInfoForLogin = onShowUserInfoForLogin,
                         )
                     }
                 }
@@ -132,6 +134,7 @@ fun ChatMessage(
                         knownChatters = knownChatters,
                         pronouns = pronouns,
                         richEmbed = richEmbed,
+                        onShowUserInfoForLogin = onShowUserInfoForLogin,
                     )
                 }
             }

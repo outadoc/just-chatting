@@ -121,6 +121,7 @@ class ChatViewModel(
         data class LoadChat(val channelLogin: String) : Action()
         data class UpdateChatterPronouns(val pronouns: Map<Chatter, Pronoun?>) : Action()
         object LoadStreamDetails : Action()
+        data class ShowUserInfo(val userLogin: String?) : Action()
     }
 
     @Immutable
@@ -147,6 +148,7 @@ class ChatViewModel(
             val removedContent: PersistentList<ChatEvent.RemoveContent> = persistentListOf(),
             val connectionStatus: ConnectionStatus = ConnectionStatus(),
             val maxAdapterCount: Int,
+            val showInfoForUserLogin: String? = null,
         ) : State() {
 
             val allEmotesMap: ImmutableMap<String, Emote>
@@ -368,6 +370,18 @@ class ChatViewModel(
         }
     }
 
+    fun onShowUserInfo(userLogin: String) {
+        defaultScope.launch {
+            actions.emit(Action.ShowUserInfo(userLogin = userLogin))
+        }
+    }
+
+    fun onDismissUserInfo() {
+        defaultScope.launch {
+            actions.emit(Action.ShowUserInfo(userLogin = null))
+        }
+    }
+
     fun onReplyToMessage(entry: ChatEvent.Message?) {
         inputScope.launch {
             inputActions.emit(InputAction.ReplyToMessage(entry))
@@ -437,6 +451,7 @@ class ChatViewModel(
             is Action.LoadStreamDetails -> reduce(state)
             is Action.UpdateRaidAnnouncement -> reduce(state)
             is Action.UpdatePinnedMessage -> reduce(state)
+            is Action.ShowUserInfo -> reduce(state)
         }
     }
 
@@ -467,7 +482,7 @@ class ChatViewModel(
     private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return state.copy(
-            stream = twitchRepository.loadStreamWithUser(channelId = state.user.id),
+            stream = twitchRepository.loadStream(userId = state.user.id),
         )
     }
 
@@ -713,6 +728,13 @@ class ChatViewModel(
             ongoingEvents = state.ongoingEvents.copy(
                 outgoingRaid = raid,
             ),
+        )
+    }
+
+    private fun Action.ShowUserInfo.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(
+            showInfoForUserLogin = userLogin,
         )
     }
 

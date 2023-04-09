@@ -5,6 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -15,8 +16,11 @@ import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -33,6 +37,7 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -57,7 +62,7 @@ fun ChannelChatScreenLoadingPreview() {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelChatScreenContent(
     modifier: Modifier = Modifier,
@@ -76,6 +81,8 @@ fun ChannelChatScreenContent(
     onTriggerAutoComplete: () -> Unit = {},
     onSubmit: () -> Unit = {},
     onReplyToMessage: (ChatEvent.Message) -> Unit = {},
+    onDismissUserInfo: () -> Unit = {},
+    onShowUserInfoForLogin: (String) -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val clipboard = LocalClipboardManager.current
@@ -103,6 +110,11 @@ fun ChannelChatScreenContent(
         ),
         topBar = {
             ChatTopAppBar(
+                modifier = Modifier
+                    .clickable(
+                        onClick = { onShowUserInfoForLogin(channelLogin) },
+                        onClickLabel = stringResource(R.string.stream_info),
+                    ),
                 channelLogin = channelLogin,
                 user = user,
                 stream = stream,
@@ -123,6 +135,7 @@ fun ChannelChatScreenContent(
                     }
                 },
                 onReplyToMessage = onReplyToMessage,
+                onShowUserInfoForLogin = onShowUserInfoForLogin,
                 insets = insets,
             )
         },
@@ -201,4 +214,27 @@ fun ChannelChatScreenContent(
             }
         },
     )
+
+    val userInfoBottomSheetState = rememberModalBottomSheetState()
+
+    val showInfoForUserLogin: String? =
+        (state as? ChatViewModel.State.Chatting)?.showInfoForUserLogin
+
+    if (showInfoForUserLogin != null) {
+        ModalBottomSheet(
+            onDismissRequest = { onDismissUserInfo() },
+            sheetState = userInfoBottomSheetState,
+        ) {
+            StreamAndUserInfoScreen(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = 24.dp,
+                        end = 24.dp,
+                        bottom = 24.dp,
+                    ),
+                userLogin = showInfoForUserLogin,
+            )
+        }
+    }
 }

@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Cake
+import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material.icons.filled.Start
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material3.Icon
@@ -20,11 +20,7 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
-import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.utils.core.formatNumber
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
-import fr.outadoc.justchatting.utils.ui.formatTime
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import kotlinx.datetime.toInstant
 
@@ -32,19 +28,65 @@ import kotlinx.datetime.toInstant
 @Composable
 fun StreamInfo(
     modifier: Modifier = Modifier,
-    user: User?,
-    stream: Stream?,
+    stream: Stream,
 ) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        stream?.title?.let { title ->
-            Text(text = title)
+        Text(text = stream.title)
+
+        stream.gameName
+            .takeUnless { it.isNullOrEmpty() }
+            ?.let { gameName ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(end = 8.dp),
+                        imageVector = Icons.Default.Gamepad,
+                        contentDescription = null,
+                    )
+
+                    Text(text = gameName)
+                }
+            }
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(end = 8.dp),
+                imageVector = Icons.Default.Visibility,
+                contentDescription = null,
+            )
+
+            Text(
+                text = pluralStringResource(
+                    R.plurals.viewers,
+                    stream.viewerCount,
+                    stream.viewerCount.formatNumber(),
+                ),
+            )
         }
 
-        val tags = stream?.tags
-        if (!tags.isNullOrEmpty()) {
+        val startedAt = stream.startedAt.toInstant().formatTimestamp()
+        if (startedAt != null) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp),
+                    imageVector = Icons.Default.Start,
+                    contentDescription = null,
+                )
+
+                Text(text = stringResource(R.string.uptime, startedAt))
+            }
+        }
+
+        val tags = stream.tags
+        if (tags.isNotEmpty()) {
             FlowRow(
                 modifier = Modifier.padding(top = 4.dp),
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -57,94 +99,5 @@ fun StreamInfo(
                 }
             }
         }
-
-        stream?.viewerCount?.let { viewerCount ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
-                    imageVector = Icons.Default.Visibility,
-                    contentDescription = null,
-                )
-                Text(
-                    text = pluralStringResource(
-                        R.plurals.viewers,
-                        viewerCount,
-                        viewerCount.formatNumber(),
-                    ),
-                )
-            }
-        }
-
-        val startedAt = stream?.startedAt?.toInstant()?.formatTimestamp()
-        if (startedAt != null) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
-                    imageVector = Icons.Default.Start,
-                    contentDescription = null,
-                )
-                Text(text = stringResource(R.string.uptime, startedAt))
-            }
-        }
-
-        val createdAt = user?.createdAt?.toInstant()?.formatTime()
-        if (createdAt != null) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
-                    imageVector = Icons.Default.Cake,
-                    contentDescription = null,
-                )
-                Text(
-                    text = stringResource(R.string.created_at, createdAt),
-                )
-            }
-        }
-    }
-}
-
-@ThemePreviews
-@Composable
-fun StreamInfoPreviewFull() {
-    AppTheme {
-        StreamInfo(
-            user = User(
-                id = "",
-                login = "",
-                displayName = "",
-                createdAt = "2022-01-01T00:00:00.00Z",
-            ),
-            stream = Stream(
-                title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
-                gameName = "",
-                startedAt = "2022-09-01T00:00:00.00Z",
-                viewerCount = 10_000,
-                tags = listOf(
-                    "French",
-                ),
-            ),
-        )
-    }
-}
-
-@ThemePreviews
-@Composable
-fun StreamInfoPreviewOffline() {
-    AppTheme {
-        StreamInfo(
-            user = User(
-                id = "",
-                login = "",
-                displayName = "",
-                createdAt = "2022-01-01T00:00:00.00Z",
-            ),
-            stream = null,
-        )
     }
 }

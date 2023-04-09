@@ -56,6 +56,7 @@ fun ChatMessageBody(
     appUser: AppUser,
     backgroundHint: Color,
     richEmbed: ChatEvent.RichEmbed?,
+    onShowUserInfoForLogin: (String) -> Unit = {},
 ) {
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
@@ -103,23 +104,28 @@ fun ChatMessageBody(
                             val layoutRes = layoutResult.value ?: return@also
 
                             val position = layoutRes.getOffsetForPosition(down.position)
-                            val urlAnnotation =
-                                annotatedString
-                                    .getStringAnnotations(position, position)
-                                    .firstOrNull { it.tag == URL_ANNOTATION_TAG }
 
-                            if (urlAnnotation != null) {
-                                // Prevent parent components from getting the event,
-                                // we're dealing with it
-                                down.consume()
+                            annotatedString
+                                .getStringAnnotations(position, position)
+                                .forEach { annotation ->
+                                    when (annotation.tag) {
+                                        URL_ANNOTATION_TAG -> {
+                                            down.consume()
+                                            waitForUpOrCancellation()?.also { up ->
+                                                up.consume()
+                                                uriHandler.openUri(annotation.item)
+                                            }
+                                        }
 
-                                // Wait for the user to stop clicking
-                                waitForUpOrCancellation()?.also { up ->
-                                    // Tap on a link was successful, call onClick
-                                    up.consume()
-                                    uriHandler.openUri(urlAnnotation.item)
+                                        CHATTER_LOGIN_ANNOTATION_TAG -> {
+                                            down.consume()
+                                            waitForUpOrCancellation()?.also { up ->
+                                                up.consume()
+                                                onShowUserInfoForLogin(annotation.item)
+                                            }
+                                        }
+                                    }
                                 }
-                            }
                         }
                     }
                 },
@@ -189,8 +195,8 @@ fun ChatEvent.Message.Body.toAnnotatedString(
         withStyle(SpanStyle(color = color)) {
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 withAnnotation(
-                    tag = URL_ANNOTATION_TAG,
-                    annotation = chatter.login.createChannelDeeplink().toString(),
+                    tag = CHATTER_LOGIN_ANNOTATION_TAG,
+                    annotation = chatter.login,
                 ) {
                     append(chatter.displayName)
                 }
@@ -270,8 +276,8 @@ private fun AnnotatedString.Builder.appendMention(
 ) {
     withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
         withAnnotation(
-            tag = URL_ANNOTATION_TAG,
-            annotation = chatter.login.createChannelDeeplink().toString(),
+            tag = CHATTER_LOGIN_ANNOTATION_TAG,
+            annotation = chatter.login,
         ) {
             withStyle(
                 getMentionStyle(
@@ -295,4 +301,6 @@ private val Badge.inlineContentId: String
     get() = "badge_${id}_$version"
 
 private val urlRegex = Patterns.WEB_URL.toRegex()
+
 private const val URL_ANNOTATION_TAG = "URL"
+private const val CHATTER_LOGIN_ANNOTATION_TAG = "CHATTER_LOGIN"

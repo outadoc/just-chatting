@@ -154,9 +154,7 @@ class TwitchRepositoryImpl(
                             displayName = user.displayName,
                             description = user.description,
                             profileImageUrl = user.profileImageUrl,
-                            offlineImageUrl = user.offlineImageUrl,
                             createdAt = user.createdAt,
-                            followersCount = user.followersCount,
                         )
                     }
 
@@ -199,9 +197,7 @@ class TwitchRepositoryImpl(
                     displayName = user.displayName,
                     description = user.description,
                     profileImageUrl = user.profileImageUrl,
-                    offlineImageUrl = user.offlineImageUrl,
                     createdAt = user.createdAt,
-                    followersCount = user.followersCount,
                 )
             }
         }
@@ -215,9 +211,7 @@ class TwitchRepositoryImpl(
                     displayName = user.displayName,
                     description = user.description,
                     profileImageUrl = user.profileImageUrl,
-                    offlineImageUrl = user.offlineImageUrl,
                     createdAt = user.createdAt,
-                    followersCount = user.followersCount,
                 )
             }
         }

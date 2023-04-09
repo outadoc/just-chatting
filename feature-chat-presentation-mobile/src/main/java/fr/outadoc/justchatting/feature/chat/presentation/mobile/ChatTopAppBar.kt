@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cake
 import androidx.compose.material.icons.filled.Compress
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Start
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.outlined.LiveTv
@@ -167,7 +166,6 @@ fun StreamInfoPreviewFull() {
                 id = "",
                 login = "",
                 displayName = "",
-                followersCount = 50,
                 createdAt = "2022-01-01T00:00:00.00Z",
             ),
             stream = Stream(
@@ -192,7 +190,6 @@ fun StreamInfoPreviewOffline() {
                 id = "",
                 login = "",
                 displayName = "",
-                followersCount = 50,
                 createdAt = "2022-01-01T00:00:00.00Z",
             ),
             stream = null,
@@ -260,24 +257,6 @@ fun StreamInfo(
                     contentDescription = null,
                 )
                 Text(text = stringResource(R.string.uptime, startedAt))
-            }
-        }
-
-        user?.followersCount?.let { followersCount ->
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
-                    imageVector = Icons.Default.Favorite,
-                    contentDescription = null,
-                )
-                Text(
-                    text = stringResource(
-                        R.string.followers,
-                        followersCount.formatNumber(),
-                    ),
-                )
             }
         }
 

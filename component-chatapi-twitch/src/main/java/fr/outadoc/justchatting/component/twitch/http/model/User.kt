@@ -18,10 +18,6 @@ data class User(
     val description: String? = null,
     @SerialName("profile_image_url")
     val profileImageUrl: String? = null,
-    @SerialName("offline_image_url")
-    val offlineImageUrl: String? = null,
     @SerialName("created_at")
     val createdAt: String? = null,
-    @SerialName("followers_count")
-    val followersCount: Int? = null,
 ) : Parcelable

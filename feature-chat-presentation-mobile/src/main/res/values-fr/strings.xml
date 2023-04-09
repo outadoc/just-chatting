@@ -11,7 +11,6 @@
     <string name="chat_message_standardSeparator">&#160;:&#160;</string>
     <string name="connectionLost_error">Reconnexion au tchat…</string>
     <string name="created_at">Créé le %s</string>
-    <string name="followers">%s followers</string>
     <string name="menu_item_openInBubble">Ouvrir dans une bulle</string>
     <string name="poll_collapse_action">Refermer le sondage</string>
     <string name="poll_expand_action">Développer le sondage</string>

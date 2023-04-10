@@ -18,6 +18,7 @@
     <string name="chat_sub_prime">with Prime</string>
     <string name="chat_sub_header_withDuration">subscribed %1$s! They\'ve subscribed for %2$s.</string>
     <string name="chat_sub_header_withDurationAndStreak">subscribed %1$s. They\'ve subscribed for %2$s, currently on a %3$s streak!</string>
+    <string name="chat_subConversion_header">converted to a %1$s subscription!</string>
     <string name="chat_subGift_header">gifted a %1$s sub to %2$s! They\'ve subscribed for %3$s.</string>
     <string name="chat_subGift_tier1">Tier 1</string>
     <string name="chat_subGift_tier2">Tier 2</string>

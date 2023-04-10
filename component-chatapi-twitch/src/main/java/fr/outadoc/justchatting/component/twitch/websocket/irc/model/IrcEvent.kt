@@ -69,6 +69,13 @@ sealed interface IrcEvent {
             val userMessage: ChatMessage?,
         ) : Message
 
+        data class SubscriptionConversion(
+            val timestamp: Instant,
+            val userDisplayName: String,
+            val subscriptionPlan: String,
+            val userMessage: ChatMessage?,
+        ) : Message
+
         data class SubscriptionGift(
             val timestamp: Instant,
             val userDisplayName: String,

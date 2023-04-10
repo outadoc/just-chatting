@@ -85,6 +85,15 @@ class TwitchIrcCommandParser(private val clock: Clock) {
                 )
             }
 
+            "giftpaidupgrade", "primepaidupgrade" -> {
+                IrcEvent.Message.SubscriptionConversion(
+                    timestamp = timestamp,
+                    userDisplayName = ircMessage.tags.displayName ?: return null,
+                    subscriptionPlan = ircMessage.tags.subscriptionPlan ?: return null,
+                    userMessage = parseMessage(ircMessage),
+                )
+            }
+
             "submysterygift" -> {
                 IrcEvent.Message.MassSubscriptionGift(
                     timestamp = timestamp,

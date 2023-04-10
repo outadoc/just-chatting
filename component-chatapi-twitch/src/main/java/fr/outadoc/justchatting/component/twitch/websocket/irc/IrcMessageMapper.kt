@@ -120,6 +120,19 @@ class IrcMessageMapper(private val context: Context) {
                 )
             }
 
+            is IrcEvent.Message.SubscriptionConversion -> {
+                ChatEvent.Message.Highlighted(
+                    timestamp = timestamp,
+                    title = userDisplayName,
+                    titleIcon = Icons.Filled.Star,
+                    subtitle = context.getString(
+                        R.string.chat_subConversion_header,
+                        parseSubscriptionTierWithArticle(subscriptionPlan),
+                    ),
+                    body = userMessage?.map(),
+                )
+            }
+
             is IrcEvent.Message.MassSubscriptionGift -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
@@ -128,7 +141,7 @@ class IrcMessageMapper(private val context: Context) {
                     subtitle = context.getString(
                         R.string.chat_massSubGift_header,
                         giftCount.formatNumber(),
-                        parseGiftSubscriptionTier(subscriptionPlan),
+                        parseSubscriptionTierWithArticle(subscriptionPlan),
                         totalChannelGiftCount.formatNumber(),
                     ),
                     body = null,
@@ -219,7 +232,7 @@ class IrcMessageMapper(private val context: Context) {
         }
     }
 
-    private fun parseGiftSubscriptionTier(planId: String): String {
+    private fun parseSubscriptionTierWithArticle(planId: String): String {
         return when (planId) {
             SUB_T1 -> context.getString(R.string.chat_subGift_tier1)
             SUB_T2 -> context.getString(R.string.chat_subGift_tier2)

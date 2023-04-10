@@ -116,6 +116,19 @@ class TwitchIrcCommandParserTest {
     }
 
     @Test
+    fun `Parse prime conversion USERNOTICE`() = test {
+        input { "@badge-info=subscriber/23;badges=subscriber/18,no_video/1;color=#FF0000;display-name=PG59LeRetour;emotes=;flags=;id=510b998a-57e8-42aa-bbad-65d39107b768;login=pg59leretour;mod=0;msg-id=primepaidupgrade;msg-param-sub-plan=1000;room-id=50597026;subscriber=1;system-msg=PG59LeRetour\\sconverted\\sfrom\\sa\\sPrime\\ssub\\sto\\sa\\sTier\\s1\\ssub!;tmi-sent-ts=1681118321678;user-id=90950483;user-type= :tmi.twitch.tv USERNOTICE #ponce" }
+        expected {
+            IrcEvent.Message.SubscriptionConversion(
+                timestamp = Instant.parse("2023-04-10T09:18:41.678Z"),
+                userDisplayName = "PG59LeRetour",
+                subscriptionPlan = "1000",
+                userMessage = null,
+            )
+        }
+    }
+
+    @Test
     fun `Parse Prime sub USERNOTICE`() = test {
         input { "@badge-info=subscriber/41;badges=subscriber/36,bits/1000;color=#FFFFFF;display-name=Frfun;emotes=emotesv2_53f30305e78246aea4bc24d299dd09e7:0-5/emotesv2_f6bd60f5f3ef490aa4e40c7ee792c8c8:25-38;flags=;id=4c5a38ff-6bb3-4cad-a555-dc8a736cfc38;login=frfun;mod=0;msg-id=resub;msg-param-cumulative-months=41;msg-param-months=0;msg-param-multimonth-duration=0;msg-param-multimonth-tenure=0;msg-param-should-share-streak=1;msg-param-streak-months=40;msg-param-sub-plan-name=Channel\\sSubscription\\s(maghla);msg-param-sub-plan=Prime;msg-param-was-gifted=false;room-id=131215608;subscriber=1;system-msg=Frfun\\ssubscribed\\swith\\sPrime.\\sThey've\\ssubscribed\\sfor\\s41\\smonths,\\scurrently\\son\\sa\\s40\\smonth\\sstreak!;tmi-sent-ts=1657298959852;user-id=99037844;user-type= :tmi.twitch.tv USERNOTICE #maghla :coxPet pat pat le requin moumou4Content" }
         expected {

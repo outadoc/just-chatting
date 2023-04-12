@@ -31,6 +31,14 @@ sealed interface ChatEvent {
         ) : Message()
 
         @Immutable
+        data class Notice(
+            override val timestamp: Instant,
+            val text: String,
+        ) : Message() {
+            override val body: Body? = null
+        }
+
+        @Immutable
         data class Body(
             val messageId: String?,
             val message: String?,

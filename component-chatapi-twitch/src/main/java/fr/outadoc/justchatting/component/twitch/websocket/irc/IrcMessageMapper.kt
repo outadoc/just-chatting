@@ -24,14 +24,12 @@ class IrcMessageMapper(private val context: Context) {
     fun mapMessage(ircEvent: IrcEvent.Message): ChatEvent = with(ircEvent) {
         when (this) {
             is IrcEvent.Message.Notice -> {
-                ChatEvent.Message.Highlighted(
+                ChatEvent.Message.Notice(
                     timestamp = timestamp,
-                    title = getLabelForNotice(
+                    text = getLabelForNotice(
                         messageId = messageId,
                         message = message,
                     ) ?: message,
-                    subtitle = null,
-                    body = null,
                 )
             }
 

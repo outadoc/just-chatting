@@ -91,7 +91,7 @@ fun ChatMessage(
 
         when (message) {
             is ChatEvent.Message.Highlighted -> {
-                HighlightedMessage(
+                UserNoticeMessage(
                     title = message.title,
                     titleIcon = message.titleIcon,
                     subtitle = message.subtitle,
@@ -114,6 +114,12 @@ fun ChatMessage(
                         )
                     }
                 }
+            }
+
+            is ChatEvent.Message.Notice -> {
+                NoticeMessage(
+                    text = message.text,
+                )
             }
 
             is ChatEvent.Message.Simple -> {

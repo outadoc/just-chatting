@@ -125,6 +125,7 @@ fun ChatList(
                 when (item) {
                     is ChatEvent.Message.Highlighted -> 1
                     is ChatEvent.Message.Simple -> 2
+                    is ChatEvent.Message.Notice -> 3
                 }
             },
         ) { index, item ->

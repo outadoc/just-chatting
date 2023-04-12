@@ -94,16 +94,6 @@ private val highlightedEntries = sequence {
     yield(
         ChatEvent.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
-            title = "This room is now in followers-only mode.",
-            titleIcon = null,
-            subtitle = null,
-            body = null,
-        ),
-    )
-
-    yield(
-        ChatEvent.Message.Highlighted(
-            timestamp = Instant.fromEpochMilliseconds(1664400523912),
             title = "First message",
             titleIcon = Icons.Default.WavingHand,
             subtitle = null,
@@ -125,9 +115,26 @@ private val highlightedEntries = sequence {
     )
 }
 
+private val noticeEntries = sequence {
+    yield(
+        ChatEvent.Message.Notice(
+            timestamp = Instant.fromEpochMilliseconds(1664400523912),
+            text = "This room is now in followers-only mode.",
+        ),
+    )
+
+    yield(
+        ChatEvent.Message.Notice(
+            timestamp = Instant.fromEpochMilliseconds(1664400523912),
+            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+        ),
+    )
+}
+
 class ChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message> {
     override val values: Sequence<ChatEvent.Message> = sequence {
         yieldAll(simpleEntries)
+        yieldAll(noticeEntries)
         yieldAll(highlightedEntries)
     }
 }
@@ -135,5 +142,11 @@ class ChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message> {
 class SimpleChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message.Simple> {
     override val values: Sequence<ChatEvent.Message.Simple> = sequence {
         yieldAll(simpleEntries)
+    }
+}
+
+class NoticeMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message.Notice> {
+    override val values: Sequence<ChatEvent.Message.Notice> = sequence {
+        yieldAll(noticeEntries)
     }
 }

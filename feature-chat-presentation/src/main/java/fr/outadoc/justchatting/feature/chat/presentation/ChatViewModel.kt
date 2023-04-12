@@ -251,11 +251,7 @@ class ChatViewModel(
                 result.commandFlow
                     .map { command ->
                         when (command) {
-                            is ChatEvent.Message.Highlighted -> {
-                                Action.AddMessages(listOf(command))
-                            }
-
-                            is ChatEvent.Message.Simple -> {
+                            is ChatEvent.Message -> {
                                 Action.AddMessages(listOf(command))
                             }
 

@@ -21,7 +21,7 @@ import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(
+fun MainRouter(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onChannelClick: (login: String) -> Unit,

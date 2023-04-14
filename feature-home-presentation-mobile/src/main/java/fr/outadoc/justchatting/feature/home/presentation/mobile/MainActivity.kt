@@ -21,7 +21,7 @@ import androidx.emoji2.text.DefaultEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.lifecycleScope
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
-import fr.outadoc.justchatting.feature.home.presentation.MainViewModel
+import fr.outadoc.justchatting.feature.home.presentation.MainRouterViewModel
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.toast
 import kotlinx.coroutines.flow.collectLatest
@@ -30,7 +30,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
 
-    private val viewModel: MainViewModel by viewModel()
+    private val viewModel: MainRouterViewModel by viewModel()
 
     @OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,11 +55,11 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.events.collectLatest { event ->
                 when (event) {
-                    is MainViewModel.Event.ViewChannel -> {
+                    is MainRouterViewModel.Event.ViewChannel -> {
                         viewChannel(event.login)
                     }
 
-                    is MainViewModel.Event.OpenInBrowser -> {
+                    is MainRouterViewModel.Event.OpenInBrowser -> {
                         val intent = CustomTabsIntent.Builder().build()
                         intent.launchUrl(this@MainActivity, event.uri)
                     }
@@ -82,8 +82,8 @@ class MainActivity : AppCompatActivity() {
             label = "Login state animation"
         ) { currentState ->
             when (currentState) {
-                is MainViewModel.State.Loading -> {}
-                is MainViewModel.State.LoggedOut -> {
+                is MainRouterViewModel.State.Loading -> {}
+                is MainRouterViewModel.State.LoggedOut -> {
                     LaunchedEffect(currentState) {
                         if (currentState.causedByTokenExpiration) {
                             toast(R.string.token_expired)
@@ -97,8 +97,8 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
 
-                is MainViewModel.State.LoggedIn -> {
-                    HomeScreen(
+                is MainRouterViewModel.State.LoggedIn -> {
+                    MainRouter(
                         sizeClass = sizeClass,
                         onChannelClick = { login ->
                             viewChannel(login)

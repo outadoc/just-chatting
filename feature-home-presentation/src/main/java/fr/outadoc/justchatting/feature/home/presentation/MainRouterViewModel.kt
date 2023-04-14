@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class MainViewModel(
+class MainRouterViewModel(
     private val authRepository: AuthRepository,
     private val preferencesRepository: PreferenceRepository,
     private val deeplinkParser: DeeplinkParser,
@@ -133,7 +133,7 @@ class MainViewModel(
             }
 
             null -> {
-                logError<MainViewModel> { "Invalid deeplink: $data" }
+                logError<MainRouterViewModel> { "Invalid deeplink: $data" }
             }
         }
     }

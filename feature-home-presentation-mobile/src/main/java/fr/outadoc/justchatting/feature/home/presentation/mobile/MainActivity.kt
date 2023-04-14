@@ -77,7 +77,10 @@ class MainActivity : AppCompatActivity() {
     @Composable
     private fun App(sizeClass: WindowSizeClass) {
         val state by viewModel.state.collectAsState()
-        Crossfade(targetState = state) { currentState ->
+        Crossfade(
+            targetState = state,
+            label = "Login state animation"
+        ) { currentState ->
             when (currentState) {
                 is MainViewModel.State.Loading -> {}
                 is MainViewModel.State.LoggedOut -> {

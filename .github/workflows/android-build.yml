@@ -73,7 +73,7 @@ jobs:
           body-includes: Download from Play Store
 
       - name: Update status comment
-        uses: peter-evans/create-or-update-comment@v2
+        uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}

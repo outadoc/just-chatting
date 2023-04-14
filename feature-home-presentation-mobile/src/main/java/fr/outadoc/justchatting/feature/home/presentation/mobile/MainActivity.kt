@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         val state by viewModel.state.collectAsState()
         Crossfade(
             targetState = state,
-            label = "Login state animation"
+            label = "Login state animation",
         ) { currentState ->
             when (currentState) {
                 is MainRouterViewModel.State.Loading -> {}

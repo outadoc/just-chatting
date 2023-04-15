@@ -5,7 +5,6 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,7 +17,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.zIndex
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainRouter(
     modifier: Modifier = Modifier,
@@ -56,6 +54,7 @@ fun MainRouter(
                     modifier = Modifier
                         .fillMaxWidth(),
                     onChannelClick = onChannelClick,
+                    sizeClass = sizeClass,
                 )
             }
         },

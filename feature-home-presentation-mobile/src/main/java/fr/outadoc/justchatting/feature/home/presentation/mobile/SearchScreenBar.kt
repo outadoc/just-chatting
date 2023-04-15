@@ -6,10 +6,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.windowsizeclass.WindowHeightSizeClass
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,14 +24,96 @@ import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-@OptIn(ExperimentalMaterial3Api::class)
 fun SearchScreenBar(
     modifier: Modifier = Modifier,
     onChannelClick: (login: String) -> Unit,
+    sizeClass: WindowSizeClass,
 ) {
     val viewModel = getViewModel<ChannelSearchViewModel>()
     val state by viewModel.state.collectAsState()
 
+    when (sizeClass.heightSizeClass) {
+        WindowHeightSizeClass.Compact,
+        WindowHeightSizeClass.Medium,
+        -> {
+            FullHeightSearchBar(
+                state = state,
+                modifier = modifier,
+                viewModel = viewModel,
+                onChannelClick = onChannelClick,
+            )
+        }
+
+        WindowHeightSizeClass.Expanded -> {
+            CompactSearchBar(
+                modifier = modifier,
+                state = state,
+                viewModel = viewModel,
+                onChannelClick = onChannelClick,
+            )
+        }
+    }
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun CompactSearchBar(
+    modifier: Modifier,
+    state: ChannelSearchViewModel.State,
+    viewModel: ChannelSearchViewModel,
+    onChannelClick: (login: String) -> Unit,
+) {
+    DockedSearchBar(
+        modifier = modifier.padding(16.dp),
+        query = state.query,
+        onQueryChange = viewModel::onQueryChange,
+        onSearch = {},
+        active = state.isActive,
+        onActiveChange = viewModel::onActiveChange,
+        placeholder = { Text(stringResource(R.string.search_hint)) },
+        leadingIcon = (
+            @Composable {
+                AnimatedVisibility(visible = state.isActive) {
+                    HapticIconButton(onClick = viewModel::onDismiss) {
+                        Icon(
+                            Icons.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.all_goBack),
+                        )
+                    }
+                }
+            }
+            ).takeIf { state.isActive },
+        trailingIcon = {
+            AnimatedVisibility(visible = state.query.isNotEmpty()) {
+                HapticIconButton(onClick = viewModel::onClear) {
+                    Icon(
+                        Icons.Filled.Cancel,
+                        contentDescription = stringResource(R.string.search_clear_cd),
+                    )
+                }
+            }
+        },
+        content = {
+            SearchResultsList(
+                onItemClick = { stream ->
+                    stream.broadcasterLogin?.let { login ->
+                        onChannelClick(login)
+                    }
+                },
+                viewModel = viewModel,
+            )
+        },
+    )
+}
+
+@Composable
+@OptIn(ExperimentalMaterial3Api::class)
+private fun FullHeightSearchBar(
+    state: ChannelSearchViewModel.State,
+    modifier: Modifier,
+    viewModel: ChannelSearchViewModel,
+    onChannelClick: (login: String) -> Unit,
+) {
     val padding by animateDpAsState(
         targetValue = if (state.isActive) 0.dp else 16.dp,
         label = "inner padding",

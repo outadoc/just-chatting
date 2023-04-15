@@ -8,7 +8,7 @@ data class FollowResponse(
     @SerialName("total")
     val total: Int,
     @SerialName("data")
-    val data: List<Follow>,
+    val data: List<ChannelFollow>,
     @SerialName("pagination")
     val pagination: Pagination,
 )

@@ -5,8 +5,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
-import fr.outadoc.justchatting.component.chatapi.domain.model.Follow
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.FollowedChannelsDataSource
@@ -112,7 +112,7 @@ class TwitchRepositoryImpl(
             }
         }
 
-    override suspend fun loadFollowedChannels(): Flow<PagingData<Follow>> {
+    override suspend fun loadFollowedChannels(): Flow<PagingData<ChannelFollow>> {
         val prefs = preferencesRepository.currentPreferences.first()
         val pager = Pager(
             config = PagingConfig(
@@ -136,11 +136,11 @@ class TwitchRepositoryImpl(
         }
     }
 
-    private suspend fun mapFollowsWithUserProfileImages(follows: Collection<Follow>): Collection<Follow> =
+    private suspend fun mapFollowsWithUserProfileImages(follows: Collection<ChannelFollow>): Collection<ChannelFollow> =
         with(follows) {
             val results: List<User> =
                 filter { follow -> follow.profileImageURL == null }
-                    .mapNotNull { follow -> follow.toId }
+                    .mapNotNull { follow -> follow.userId }
                     .chunked(size = 100)
                     .flatMap { idsToUpdate ->
                         helix.getUsersById(ids = idsToUpdate)
@@ -159,7 +159,7 @@ class TwitchRepositoryImpl(
                     }
 
             return map { follow ->
-                val userInfo = results.firstOrNull { user -> user.id == follow.toId }
+                val userInfo = results.firstOrNull { user -> user.id == follow.userId }
                 follow.copy(
                     profileImageURL = userInfo?.profileImageUrl,
                 )

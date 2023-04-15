@@ -26,7 +26,6 @@ interface HelixApi {
     suspend fun getFollowedChannels(
         userId: String?,
         limit: Int,
-        before: String? = null,
         after: String? = null,
     ): FollowResponse
 

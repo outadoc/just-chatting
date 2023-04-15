@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import fr.outadoc.justchatting.component.chatapi.domain.model.Follow
+import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +20,7 @@ class FollowedChannelsViewModel(
     private val _load = MutableStateFlow(0)
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val pagingData: Flow<PagingData<Follow>> =
+    val pagingData: Flow<PagingData<ChannelFollow>> =
         _load.flatMapLatest { repository.loadFollowedChannels() }
             .cachedIn(viewModelScope)
 

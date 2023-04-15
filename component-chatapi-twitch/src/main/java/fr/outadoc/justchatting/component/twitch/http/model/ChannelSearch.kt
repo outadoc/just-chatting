@@ -13,9 +13,9 @@ data class ChannelSearch(
     @SerialName("title")
     val title: String? = null,
     @SerialName("broadcaster_login")
-    val broadcasterLogin: String? = null,
+    val userLogin: String? = null,
     @SerialName("display_name")
-    val broadcasterDisplayName: String? = null,
+    val userDisplayName: String? = null,
     @SerialName("broadcaster_language")
     val broadcasterLanguage: String? = null,
     @SerialName("game_id")

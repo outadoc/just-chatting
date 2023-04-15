@@ -18,7 +18,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import fr.outadoc.justchatting.component.chatapi.domain.model.Follow
+import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.utils.ui.plus
 import kotlinx.datetime.toInstant
@@ -29,10 +29,10 @@ import org.koin.androidx.compose.getViewModel
 fun FollowedChannelsList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    onItemClick: (Follow) -> Unit,
+    onItemClick: (ChannelFollow) -> Unit,
 ) {
     val viewModel: FollowedChannelsViewModel = getViewModel()
-    val items: LazyPagingItems<Follow> = viewModel.pagingData.collectAsLazyPagingItems()
+    val items: LazyPagingItems<ChannelFollow> = viewModel.pagingData.collectAsLazyPagingItems()
     val isRefreshing = items.loadState.refresh is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
@@ -68,11 +68,11 @@ fun FollowedChannelsList(
                     }
                 }
             } else {
-                items(items) { item: Follow? ->
+                items(items) { item: ChannelFollow? ->
                     if (item != null) {
                         UserItemCard(
                             modifier = Modifier.fillMaxWidth(),
-                            displayName = item.toName,
+                            displayName = item.userDisplayName,
                             profileImageURL = item.profileImageURL,
                             followedAt = item.followedAt?.toInstant(),
                             onClick = { onItemClick(item) },

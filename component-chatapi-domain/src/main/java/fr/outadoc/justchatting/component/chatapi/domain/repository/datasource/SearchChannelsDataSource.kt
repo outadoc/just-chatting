@@ -35,8 +35,8 @@ class SearchChannelsDataSource(
                         ChannelSearch(
                             id = search.id,
                             title = search.title,
-                            broadcasterLogin = search.broadcasterLogin,
-                            broadcasterDisplayName = search.broadcasterDisplayName,
+                            broadcasterLogin = search.userLogin,
+                            broadcasterDisplayName = search.userDisplayName,
                             broadcasterLanguage = search.broadcasterLanguage,
                             gameId = search.gameId,
                             gameName = search.gameName,

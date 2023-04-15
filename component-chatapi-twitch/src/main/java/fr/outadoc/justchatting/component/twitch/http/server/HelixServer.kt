@@ -88,15 +88,13 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
     override suspend fun getFollowedChannels(
         userId: String?,
         limit: Int,
-        before: String?,
         after: String?,
     ): FollowResponse {
         return client.get {
             url {
-                path("users/follows")
-                parameter("from_id", userId)
+                path("channels/followed")
+                parameter("user_id", userId)
                 parameter("first", limit)
-                before?.let { parameter("before", before) }
                 after?.let { parameter("after", after) }
             }
         }.body()

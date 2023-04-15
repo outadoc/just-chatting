@@ -1,11 +1,13 @@
 package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.DockedSearchBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -71,18 +73,29 @@ private fun CompactSearchBar(
         active = state.isActive,
         onActiveChange = viewModel::onActiveChange,
         placeholder = { Text(stringResource(R.string.search_hint)) },
-        leadingIcon = (
-            @Composable {
-                AnimatedVisibility(visible = state.isActive) {
-                    HapticIconButton(onClick = viewModel::onDismiss) {
+        leadingIcon = {
+            Crossfade(
+                targetState = state.isActive,
+                label = "search leading icon",
+            ) { isActive ->
+                HapticIconButton(
+                    onClick = viewModel::onDismiss,
+                    enabled = isActive,
+                ) {
+                    if (isActive) {
                         Icon(
                             Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.all_goBack),
                         )
+                    } else {
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = null,
+                        )
                     }
                 }
             }
-            ).takeIf { state.isActive },
+        },
         trailingIcon = {
             AnimatedVisibility(visible = state.query.isNotEmpty()) {
                 HapticIconButton(onClick = viewModel::onClear) {
@@ -127,18 +140,29 @@ private fun FullHeightSearchBar(
         active = state.isActive,
         onActiveChange = viewModel::onActiveChange,
         placeholder = { Text(stringResource(R.string.search_hint)) },
-        leadingIcon = (
-            @Composable {
-                AnimatedVisibility(visible = state.isActive) {
-                    HapticIconButton(onClick = viewModel::onDismiss) {
+        leadingIcon = {
+            Crossfade(
+                targetState = state.isActive,
+                label = "search leading icon",
+            ) { isActive ->
+                HapticIconButton(
+                    onClick = viewModel::onDismiss,
+                    enabled = isActive,
+                ) {
+                    if (isActive) {
                         Icon(
                             Icons.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.all_goBack),
                         )
+                    } else {
+                        Icon(
+                            Icons.Filled.Search,
+                            contentDescription = null,
+                        )
                     }
                 }
             }
-            ).takeIf { state.isActive },
+        },
         trailingIcon = {
             AnimatedVisibility(visible = state.query.isNotEmpty()) {
                 HapticIconButton(onClick = viewModel::onClear) {

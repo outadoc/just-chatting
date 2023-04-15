@@ -2,22 +2,21 @@ package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
+import androidx.compose.ui.semantics.isContainer
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.zIndex
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
-import org.koin.androidx.compose.getViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,8 +29,6 @@ fun MainRouter(
     onOpenAccessibilityPreferences: () -> Unit,
 ) {
     var selectedTab by remember { mutableStateOf(DefaultTab) }
-    val searchViewModel = getViewModel<ChannelSearchViewModel>()
-    val searchState by searchViewModel.state.collectAsState()
 
     BackHandler(
         enabled = selectedTab != DefaultTab,
@@ -46,28 +43,20 @@ fun MainRouter(
         selectedTab = selectedTab,
         onSelectedTabChange = { selectedTab = it },
         topBar = {
-            Crossfade(
-                targetState = selectedTab,
-                label = "Top app bar",
-            ) { tab ->
-                when (tab) {
-                    Tab.Search -> {
-                        SearchTopAppBar(
-                            modifier = modifier,
-                            query = searchState.query,
-                            onQueryChange = { newQuery ->
-                                searchViewModel.onQueryChange(newQuery)
-                            },
-                        )
-                    }
-
-                    else -> {
-                        TopAppBar(
-                            modifier = modifier,
-                            title = { Text(stringResource(R.string.app_name)) },
-                        )
-                    }
-                }
+            // Talkback focus order sorts based on x and y position before considering z-index. The
+            // extra Box with semantics and fillMaxWidth is a workaround to get the search bar to focus
+            // before the content.
+            Box(
+                Modifier
+                    .semantics { isContainer = true }
+                    .zIndex(1f)
+                    .fillMaxWidth(),
+            ) {
+                SearchScreenBar(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    onChannelClick = onChannelClick,
+                )
             }
         },
         content = { insets ->
@@ -92,17 +81,6 @@ fun MainRouter(
                                     onChannelClick(login)
                                 }
                             },
-                        )
-                    }
-
-                    Tab.Search -> {
-                        SearchResultsList(
-                            onItemClick = { stream ->
-                                stream.broadcasterLogin?.let { login ->
-                                    onChannelClick(login)
-                                }
-                            },
-                            viewModel = searchViewModel,
                         )
                     }
 

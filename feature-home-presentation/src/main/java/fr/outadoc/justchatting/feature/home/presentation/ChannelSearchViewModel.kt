@@ -22,7 +22,10 @@ class ChannelSearchViewModel(
     private val repository: TwitchRepository,
 ) : ViewModel() {
 
-    data class State(val query: String = "")
+    data class State(
+        val query: String = "",
+        val isActive: Boolean = false,
+    )
 
     private val _state = MutableStateFlow(State())
     val state = _state.asStateFlow()
@@ -31,13 +34,29 @@ class ChannelSearchViewModel(
     val pagingData: Flow<PagingData<ChannelSearch>> =
         state.mapNotNull { state -> state.query }
             .distinctUntilChanged()
-            .debounce(0.5.seconds)
+            .debounce(0.3.seconds)
             .flatMapLatest { query -> repository.loadSearchChannels(query) }
             .cachedIn(viewModelScope)
 
     fun onQueryChange(query: String) {
         _state.update { state ->
             state.copy(query = query)
+        }
+    }
+
+    fun onActiveChange(isActive: Boolean) {
+        _state.update { state ->
+            state.copy(isActive = isActive)
+        }
+    }
+
+    fun onDismiss() {
+        _state.value = State()
+    }
+
+    fun onClear() {
+        _state.update { state ->
+            state.copy(query = "")
         }
     }
 }

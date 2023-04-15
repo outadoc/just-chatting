@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LiveTv
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -112,18 +111,6 @@ fun CompactNavigation(
                 )
 
                 NavigationBarItem(
-                    selected = selectedTab == Tab.Search,
-                    label = { Text(stringResource(R.string.search)) },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = { onSelectedTabChange(Tab.Search) },
-                )
-
-                NavigationBarItem(
                     selected = selectedTab == Tab.Settings,
                     label = { Text(stringResource(R.string.settings)) },
                     icon = {
@@ -187,22 +174,6 @@ fun MediumNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Tab.Followed) },
-                )
-
-                NavigationRailItem(
-                    selected = selectedTab == Tab.Search,
-                    label = {
-                        AnimatedVisibility(visible = selectedTab == Tab.Search) {
-                            Text(stringResource(R.string.search))
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = { onSelectedTabChange(Tab.Search) },
                 )
 
                 NavigationRailItem(
@@ -272,19 +243,6 @@ fun ExpandedNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Tab.Followed) },
-                )
-
-                NavigationDrawerItem(
-                    modifier = Modifier.padding(4.dp),
-                    selected = selectedTab == Tab.Search,
-                    label = { Text(stringResource(R.string.search)) },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Default.Search,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = { onSelectedTabChange(Tab.Search) },
                 )
 
                 NavigationDrawerItem(

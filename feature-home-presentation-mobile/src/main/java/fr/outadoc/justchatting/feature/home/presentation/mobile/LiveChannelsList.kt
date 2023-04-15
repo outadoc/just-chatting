@@ -49,8 +49,12 @@ fun LiveChannelsList(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            contentPadding = insets + PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = insets + PaddingValues(
+                start = 16.dp,
+                end = 16.dp,
+                bottom = 16.dp,
+            ),
         ) {
             if (items.itemCount == 0) {
                 if (!isRefreshing) {

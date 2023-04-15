@@ -77,7 +77,7 @@ fun LiveChannelsList(
                             userName = item.userName,
                             viewerCount = item.viewerCount,
                             gameName = item.gameName,
-                            startedAt = item.startedAt?.toInstant(),
+                            startedAt = item.startedAt.toInstant(),
                             profileImageURL = item.profileImageURL,
                             tags = item.tags.toImmutableList(),
                             onClick = { onItemClick(item) },

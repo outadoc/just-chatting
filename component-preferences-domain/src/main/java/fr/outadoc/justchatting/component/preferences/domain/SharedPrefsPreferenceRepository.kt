@@ -29,7 +29,8 @@ class SharedPrefsPreferenceRepository(
 
     private fun Preferences.read(): AppPreferences {
         return AppPreferences(
-            showTimestamps = this[CHAT_ACCESSIBILITY_TIMESTAMPS] ?: defaultPreferences.showTimestamps,
+            showTimestamps = this[CHAT_ACCESSIBILITY_TIMESTAMPS]
+                ?: defaultPreferences.showTimestamps,
             enableRecentMessages = this[THIRDPARTY_ENABLE_RECENT]
                 ?: defaultPreferences.enableRecentMessages,
             enableBttvEmotes = this[THIRDPARTY_ENABLE_BTTV] ?: defaultPreferences.enableBttvEmotes,

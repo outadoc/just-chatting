@@ -61,6 +61,9 @@ fun ChannelChatScreen(channelLogin: String) {
         },
     )
 
+    // Update task description
+    UpdateTaskDescriptionForUser(user)
+
     val canOpenInBubble = canOpenInBubble()
 
     MaterialTheme(

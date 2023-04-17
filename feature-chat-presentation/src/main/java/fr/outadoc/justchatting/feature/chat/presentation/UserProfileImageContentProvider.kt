@@ -70,7 +70,7 @@ class UserProfileImageContentProvider : ContentProvider() {
                         context.imageLoader.execute(
                             ImageRequest.Builder(context)
                                 .data(profileImageUrl)
-                                .size(width = 128, height = 128)
+                                .size(128)
                                 .transformations(CircleCropTransformation())
                                 .build(),
                         )

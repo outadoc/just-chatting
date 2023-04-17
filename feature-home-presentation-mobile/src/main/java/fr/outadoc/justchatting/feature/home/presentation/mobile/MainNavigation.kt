@@ -216,7 +216,10 @@ fun ExpandedNavigation(
             PermanentDrawerSheet(
                 modifier = Modifier
                     .width(240.dp)
-                    .padding(vertical = 16.dp)
+                    .padding(
+                        vertical = 32.dp,
+                        horizontal = 8.dp
+                    )
                     .systemBarsPadding(),
             ) {
                 NavigationDrawerItem(

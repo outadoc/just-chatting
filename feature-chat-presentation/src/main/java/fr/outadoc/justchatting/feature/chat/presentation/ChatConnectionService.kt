@@ -9,7 +9,7 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
-import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
+import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.utils.logging.logInfo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +50,7 @@ class ChatConnectionService : Service() {
 
     private val chatNotifier: ChatNotifier by inject()
 
-    private val connectionPool: ChatConnectionPool by inject()
+    private val connectionPool: ChatRepository by inject()
 
     private lateinit var job: Job
     private val coroutineScope: CoroutineScope

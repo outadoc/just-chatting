@@ -29,7 +29,7 @@ import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
-import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
+import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import fr.outadoc.justchatting.utils.core.asStringOrRes
 import fr.outadoc.justchatting.utils.core.flatListOf
@@ -89,7 +89,7 @@ class ChatViewModel(
     private val clock: Clock,
     private val twitchRepository: TwitchRepository,
     private val emotesRepository: EmotesRepository,
-    private val chatConnectionPool: ChatConnectionPool,
+    private val chatRepository: ChatRepository,
     private val preferencesRepository: PreferenceRepository,
     private val emoteListSourcesProvider: EmoteListSourcesProvider,
     private val filterAutocompleteItemsUseCase: FilterAutocompleteItemsUseCase,
@@ -246,7 +246,7 @@ class ChatViewModel(
         state.filterIsInstance<State.Chatting>()
             .map { state -> state.user }
             .distinctUntilChanged()
-            .map { user -> chatConnectionPool.start(user.id, user.login) }
+            .map { user -> chatRepository.start(user.id, user.login) }
             .onEach { result ->
                 result.commandFlow
                     .map { command ->
@@ -752,7 +752,7 @@ class ChatViewModel(
         defaultScope.launch {
             val currentTime = clock.now().toEpochMilliseconds()
 
-            chatConnectionPool.sendMessage(
+            chatRepository.sendMessage(
                 channelId = state.user.id,
                 message = inputState.inputMessage.text,
                 inReplyToId = inputState.replyingTo?.body?.messageId,

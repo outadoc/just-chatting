@@ -30,7 +30,8 @@ import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalFfzEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalStvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalTwitchEmotesSource
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatEventHandler
-import fr.outadoc.justchatting.feature.chat.domain.ChatConnectionPool
+import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
+import fr.outadoc.justchatting.feature.chat.domain.DefaultChatRepository
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
@@ -96,7 +97,7 @@ val chatModule = module {
     }
 
     single { AggregateChatEventHandler.Factory(get()) }
-    single { ChatConnectionPool(get()) }
+    single<ChatRepository> { DefaultChatRepository(get()) }
 
     single { TwitchIrcCommandParser(get()) }
     single { IrcMessageMapper(get()) }

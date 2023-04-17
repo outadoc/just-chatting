@@ -23,7 +23,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SearchScreenBar(
@@ -31,7 +31,7 @@ fun SearchScreenBar(
     onChannelClick: (login: String) -> Unit,
     sizeClass: WindowSizeClass,
 ) {
-    val viewModel = getViewModel<ChannelSearchViewModel>()
+    val viewModel = koinViewModel<ChannelSearchViewModel>()
     val state by viewModel.state.collectAsState()
 
     when (sizeClass.heightSizeClass) {

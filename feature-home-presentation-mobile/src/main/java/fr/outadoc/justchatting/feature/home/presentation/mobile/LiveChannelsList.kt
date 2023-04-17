@@ -23,7 +23,7 @@ import fr.outadoc.justchatting.feature.home.presentation.FollowedStreamsViewMode
 import fr.outadoc.justchatting.utils.ui.plus
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.toInstant
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -32,7 +32,7 @@ fun LiveChannelsList(
     insets: PaddingValues = PaddingValues(),
     onItemClick: (Stream) -> Unit,
 ) {
-    val viewModel: FollowedStreamsViewModel = getViewModel()
+    val viewModel: FollowedStreamsViewModel = koinViewModel()
     val items: LazyPagingItems<Stream> = viewModel.pagingData.collectAsLazyPagingItems()
     val isRefreshing = items.loadState.refresh is LoadState.Loading
 

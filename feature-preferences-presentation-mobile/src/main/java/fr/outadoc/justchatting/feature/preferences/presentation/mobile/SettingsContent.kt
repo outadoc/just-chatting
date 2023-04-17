@@ -10,8 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
-import org.koin.androidx.compose.get
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @Composable
 fun SettingsContent(
@@ -20,7 +20,7 @@ fun SettingsContent(
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
 ) {
-    val viewModel: SettingsViewModel = getViewModel()
+    val viewModel: SettingsViewModel = koinViewModel()
     val appPreferences by viewModel.appPreferences.collectAsState()
 
     val context = LocalContext.current
@@ -54,7 +54,7 @@ fun SettingsContent(
         onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
         onLogoutClick = viewModel::logout,
         onShareLogsClick = viewModel::onShareLogsClick,
-        readDependencies = get(),
+        readDependencies = koinInject(),
         itemInsets = PaddingValues(horizontal = 16.dp),
         versionName = context.applicationVersionName.orEmpty(),
     )

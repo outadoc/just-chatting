@@ -6,7 +6,7 @@ import android.graphics.drawable.BitmapDrawable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
-import coil.Coil
+import coil.imageLoader
 import coil.request.ImageRequest
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 
@@ -29,7 +29,7 @@ fun UpdateTaskDescriptionForUser(user: User?) {
                 }
                 .build()
 
-            Coil.imageLoader(context).enqueue(request)
+            context.imageLoader.enqueue(request)
         }
     }
 }

@@ -24,7 +24,9 @@ class ChatActivity : AppCompatActivity() {
 
                 val adjacentFlag: Int =
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT
+                        // TODO only enable this on larger screens
+                        // Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT
+                        0
                     } else {
                         0
                     }

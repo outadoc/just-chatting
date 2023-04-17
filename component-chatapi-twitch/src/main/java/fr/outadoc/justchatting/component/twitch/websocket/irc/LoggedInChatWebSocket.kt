@@ -102,6 +102,10 @@ class LoggedInChatWebSocket(
     }
 
     override fun start() {
+        if (socketJob?.isActive == true) {
+            return
+        }
+
         socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
             logDebug<LoggedInChatWebSocket> { "Starting job" }
 

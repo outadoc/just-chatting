@@ -84,6 +84,10 @@ class PubSubWebSocket(
     }
 
     override fun start() {
+        if (socketJob?.isActive == true) {
+            return
+        }
+
         socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
             logDebug<PubSubWebSocket> { "Starting job" }
 

@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.domain
 
+import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +36,18 @@ class DefaultChatRepository(
         }
         .distinctUntilChanged()
 
-    override fun start(channelId: String, channelLogin: String): HandlerResult {
+    override fun getChatEventFlow(channelId: String, channelLogin: String): Flow<ChatEvent> {
+        return getOrCreateEventHandler(channelId, channelLogin).commandFlow
+    }
+
+    override fun getConnectionStatusFlow(
+        channelId: String,
+        channelLogin: String,
+    ): Flow<ConnectionStatus> {
+        return getOrCreateEventHandler(channelId, channelLogin).connectionStatus
+    }
+
+    private fun getOrCreateEventHandler(channelId: String, channelLogin: String): ChatEventHandler {
         val handler: ChatEventHandler = handlers.value[channelId]
             ?: factory.create(
                 channelId = channelId,
@@ -49,10 +61,11 @@ class DefaultChatRepository(
             current + (channelId to handler)
         }
 
-        return HandlerResult(
-            commandFlow = handler.commandFlow,
-            connectionStatus = handler.connectionStatus,
-        )
+        return handler
+    }
+
+    override fun start(channelId: String, channelLogin: String) {
+        getOrCreateEventHandler(channelId, channelLogin).start()
     }
 
     override fun stop(channelId: String) {

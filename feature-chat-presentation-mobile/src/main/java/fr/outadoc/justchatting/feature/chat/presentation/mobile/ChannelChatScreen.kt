@@ -30,6 +30,7 @@ fun ChannelChatScreen(channelLogin: String) {
 
     val preferencesRepository: PreferenceRepository = koinInject()
     val notifier: ChatNotifier = koinInject()
+
     val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
     val context = LocalContext.current
@@ -49,6 +50,7 @@ fun ChannelChatScreen(channelLogin: String) {
     }
 
     OnLifecycleEvent(
+        onResume = viewModel::onResume,
         onPause = {
             if (user != null) {
                 notifier.notify(

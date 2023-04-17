@@ -246,9 +246,8 @@ class ChatViewModel(
         state.filterIsInstance<State.Chatting>()
             .map { state -> state.user }
             .distinctUntilChanged()
-            .map { user -> chatRepository.start(user.id, user.login) }
-            .onEach { result ->
-                result.commandFlow
+            .onEach { user ->
+                chatRepository.getChatEventFlow(user.id, user.login)
                     .map { command ->
                         when (command) {
                             is ChatEvent.Message -> {
@@ -309,10 +308,12 @@ class ChatViewModel(
                     .onEach { action -> actions.emit(action) }
                     .launchIn(defaultScope)
 
-                result.connectionStatus
+                chatRepository.getConnectionStatusFlow(user.id, user.login)
                     .map { status -> Action.ChangeConnectionStatus(status) }
                     .onEach { action -> actions.emit(action) }
                     .launchIn(defaultScope)
+
+                chatRepository.start(user.id, user.login)
             }
             .launchIn(defaultScope)
 
@@ -358,6 +359,12 @@ class ChatViewModel(
                 )
             }
             .launchIn(viewModelScope)
+    }
+
+    fun onResume() {
+        (state.value as? State.Chatting)?.user?.let { user ->
+            chatRepository.start(user.id, user.login)
+        }
     }
 
     fun loadChat(channelLogin: String) {

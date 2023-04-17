@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
@@ -20,7 +21,15 @@ class ChatActivity : AppCompatActivity() {
             return Intent(context, ChatActivity::class.java).apply {
                 data = channelLogin.createChannelDeeplink()
                 action = Intent.ACTION_VIEW
-                flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
+
+                val adjacentFlag: Int =
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT
+                    } else {
+                        0
+                    }
+
+                flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT or adjacentFlag
 
                 putExtra(CHANNEL_LOGIN, channelLogin)
             }

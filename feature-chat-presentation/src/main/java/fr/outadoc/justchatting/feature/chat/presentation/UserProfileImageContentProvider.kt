@@ -15,7 +15,6 @@ import coil.request.ImageResult
 import coil.transform.CircleCropTransformation
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.utils.logging.logDebug
-import io.ktor.client.HttpClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
@@ -39,7 +38,6 @@ class UserProfileImageContentProvider : ContentProvider() {
     }
 
     private val apiRepository by inject<TwitchRepository>()
-    private val httpClient by inject<HttpClient>()
 
     override fun onCreate(): Boolean {
         return true

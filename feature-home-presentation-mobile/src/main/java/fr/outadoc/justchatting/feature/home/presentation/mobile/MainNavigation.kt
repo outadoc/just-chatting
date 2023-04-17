@@ -217,8 +217,8 @@ fun ExpandedNavigation(
                 modifier = Modifier
                     .width(240.dp)
                     .padding(
-                        vertical = 32.dp,
-                        horizontal = 8.dp
+                        vertical = 20.dp,
+                        horizontal = 8.dp,
                     )
                     .systemBarsPadding(),
             ) {

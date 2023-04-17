@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.activity.compose.BackHandler
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,18 +19,17 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.ui.canOpenInBubble
 import fr.outadoc.justchatting.utils.ui.isDark
-import org.koin.androidx.compose.get
 import org.koin.androidx.compose.getViewModel
+import org.koin.compose.koinInject
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelChatScreen(channelLogin: String) {
     val viewModel: ChatViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
     val inputState by viewModel.inputState.collectAsState()
 
-    val preferencesRepository: PreferenceRepository = get()
-    val notifier: ChatNotifier = get()
+    val preferencesRepository: PreferenceRepository = koinInject()
+    val notifier: ChatNotifier = koinInject()
     val prefs by preferencesRepository.currentPreferences.collectAsState(initial = AppPreferences())
 
     val context = LocalContext.current

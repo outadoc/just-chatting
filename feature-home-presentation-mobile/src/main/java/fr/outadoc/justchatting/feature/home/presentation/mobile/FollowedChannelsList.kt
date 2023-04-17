@@ -22,7 +22,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.utils.ui.plus
 import kotlinx.datetime.toInstant
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -31,7 +31,7 @@ fun FollowedChannelsList(
     insets: PaddingValues = PaddingValues(),
     onItemClick: (ChannelFollow) -> Unit,
 ) {
-    val viewModel: FollowedChannelsViewModel = getViewModel()
+    val viewModel: FollowedChannelsViewModel = koinViewModel()
     val items: LazyPagingItems<ChannelFollow> = viewModel.pagingData.collectAsLazyPagingItems()
     val isRefreshing = items.loadState.refresh is LoadState.Loading
 

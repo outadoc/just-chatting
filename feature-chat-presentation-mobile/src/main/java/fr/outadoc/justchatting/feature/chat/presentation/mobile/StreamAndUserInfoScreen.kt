@@ -6,14 +6,14 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
-import org.koin.androidx.compose.getViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun StreamAndUserInfoScreen(
     modifier: Modifier = Modifier,
     userLogin: String,
 ) {
-    val viewModel: StreamAndUserInfoViewModel = getViewModel()
+    val viewModel: StreamAndUserInfoViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
 
     LaunchedEffect(userLogin) {

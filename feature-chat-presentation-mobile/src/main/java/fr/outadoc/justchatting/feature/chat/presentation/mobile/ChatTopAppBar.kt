@@ -28,8 +28,10 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
+import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.utils.ui.canOpenInBubble
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +43,8 @@ fun ChatTopAppBar(
     onWatchLiveClicked: () -> Unit,
     onOpenBubbleClicked: () -> Unit,
 ) {
+    val notifier: ChatNotifier = koinInject()
+
     TopAppBar(
         modifier = modifier,
         title = {
@@ -96,7 +100,7 @@ fun ChatTopAppBar(
                 )
             }
 
-            if (canOpenInBubble()) {
+            if (canOpenInBubble() && notifier.supportsBackgroundChatService) {
                 HapticIconButton(onClick = { onOpenBubbleClicked() }) {
                     Icon(
                         imageVector = Icons.Default.Compress,

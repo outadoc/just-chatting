@@ -24,12 +24,14 @@ import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
 
-class ChatNotifierImpl : ChatNotifier {
+class DefaultChatNotifier : ChatNotifier {
 
     companion object {
         private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
         private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
     }
+
+    override val supportsBackgroundChatService: Boolean = true
 
     private fun notificationIdFor(channelId: String) = channelId.hashCode()
 
@@ -80,7 +82,7 @@ class ChatNotifierImpl : ChatNotifier {
             }
 
             else -> {
-                logError<ChatNotifierImpl> { "Notifications permission not granted (code: $notificationsPermissionCheck)" }
+                logError<DefaultChatNotifier> { "Notifications permission not granted (code: $notificationsPermissionCheck)" }
             }
         }
     }

@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CallReceived
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Highlight
 import androidx.compose.material.icons.filled.Redeem
 import androidx.compose.material.icons.filled.Star
@@ -269,32 +270,31 @@ class IrcMessageMapper(private val context: Context) {
     fun mapOptional(command: IrcEvent): ChatEvent? {
         return when (command) {
             is IrcEvent.Command.ClearChat -> {
-                if (command.targetUserId != null) {
+                if (command.targetUserLogin != null) {
                     if (command.duration == null) {
                         ChatEvent.Message.Highlighted(
                             timestamp = command.timestamp,
-                            title = context.getString(R.string.chat_ban, command.targetUserLogin),
-                            subtitle = null,
+                            title = command.targetUserLogin,
+                            titleIcon = Icons.Default.Gavel,
+                            subtitle = context.getString(R.string.chat_ban),
                             body = null,
                         )
                     } else {
                         ChatEvent.Message.Highlighted(
                             timestamp = command.timestamp,
-                            title = context.getString(
+                            title = command.targetUserLogin,
+                            titleIcon = Icons.Default.Gavel,
+                            subtitle = context.getString(
                                 R.string.chat_timeout,
-                                command.targetUserLogin,
                                 command.duration,
                             ),
-                            subtitle = null,
                             body = null,
                         )
                     }
                 } else {
-                    ChatEvent.Message.Highlighted(
+                    ChatEvent.Message.Notice(
                         timestamp = command.timestamp,
-                        title = context.getString(R.string.chat_clear),
-                        subtitle = null,
-                        body = null,
+                        text = context.getString(R.string.chat_clear),
                     )
                 }
             }

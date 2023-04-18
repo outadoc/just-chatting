@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="chat_ban">%s a été banni·e définitivement</string>
+    <string name="chat_ban">a été banni·e définitivement</string>
     <string name="chat_clear">Le tchat a été effacé par un·e modérateur·rice</string>
     <string name="chat_clearmsg">Message supprimé de %1$s\: %2$s</string>
     <string name="chat_disconnect">Déconnecté·e de %1$s</string>
@@ -24,7 +24,7 @@
     <string name="chat_subGift_tier3">de niveau 3</string>
     <string name="chat_subGift_header">offre un abonnement %1$s à %2$s ! Iel est abonné·e depuis %3$s.</string>
     <string name="chat_massSubGift_header">offre %1$s abonnements %2$s à la communauté ! Iel a offert un total de %3$s abonnements sur cette chaîne.</string>
-    <string name="chat_timeout">%1$s a été mis·e au silence pendant %2$s</string>
+    <string name="chat_timeout">a été mis·e au silence pendant %1$s</string>
     <string name="chat_unraid_subtitle">a annulé le raid</string>
 
     <plurals name="user_redeemed">

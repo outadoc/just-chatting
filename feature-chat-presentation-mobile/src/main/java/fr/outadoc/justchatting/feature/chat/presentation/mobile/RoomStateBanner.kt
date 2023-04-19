@@ -3,8 +3,10 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
+import fr.outadoc.justchatting.utils.ui.format
 import kotlin.time.Duration
 
 @Composable
@@ -24,7 +26,7 @@ fun RoomStateBanner(
                         Duration.ZERO -> stringResource(R.string.room_followers)
                         else -> stringResource(
                             R.string.room_followers_min,
-                            minFollowDuration.toString(),
+                            minFollowDuration.format(LocalContext.current),
                         )
                     },
                 )
@@ -38,7 +40,7 @@ fun RoomStateBanner(
                 Text(
                     text = stringResource(
                         R.string.room_slow,
-                        slowModeDuration.toString(),
+                        slowModeDuration.format(LocalContext.current),
                     ),
                 )
             }

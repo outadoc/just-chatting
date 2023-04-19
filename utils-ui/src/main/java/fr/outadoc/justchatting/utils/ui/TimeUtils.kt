@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.utils.ui
 
+import android.content.Context
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaInstant
 import kotlinx.datetime.toLocalDateTime
 import java.util.Date
+import kotlin.time.Duration
 
 @Composable
 fun Instant.formatTimestamp(): String? {
@@ -42,5 +44,25 @@ fun Instant.formatTime(
                 DateUtils.FORMAT_SHOW_DATE
             },
         )
+    }
+}
+
+fun Duration.format(context: Context): String = buildString {
+    toComponents { days, hours, minutes, seconds, _ ->
+        days.takeIf { it > 0 }?.let {
+            append(context.resources.getString(R.string.duration_days, it))
+        }
+
+        hours.takeIf { it > 0 }?.let {
+            append(context.resources.getString(R.string.duration_hours, it))
+        }
+
+        minutes.takeIf { it > 0 }?.let {
+            append(context.resources.getString(R.string.duration_minutes, it))
+        }
+
+        seconds.takeIf { it > 0 }?.let {
+            append(context.resources.getString(R.string.duration_seconds, it))
+        }
     }
 }

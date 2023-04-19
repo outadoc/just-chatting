@@ -32,6 +32,7 @@ android {
 dependencies {
     implementation(project(":utils-core"))
     implementation(project(":utils-logging"))
+    implementation(project(":utils-ui"))
 
     implementation(project(":component-chatapi-common"))
     implementation(project(":component-preferences-domain"))

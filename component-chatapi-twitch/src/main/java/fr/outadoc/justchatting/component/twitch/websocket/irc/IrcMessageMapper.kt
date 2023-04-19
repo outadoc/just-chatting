@@ -18,6 +18,7 @@ import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.utils.core.formatNumber
+import fr.outadoc.justchatting.utils.ui.format
 import kotlinx.collections.immutable.toImmutableList
 
 class IrcMessageMapper(private val context: Context) {
@@ -286,7 +287,7 @@ class IrcMessageMapper(private val context: Context) {
                             titleIcon = Icons.Default.Gavel,
                             subtitle = context.getString(
                                 R.string.chat_timeout,
-                                command.duration,
+                                command.duration.format(context),
                             ),
                             body = null,
                         )

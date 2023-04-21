@@ -69,25 +69,31 @@ fun ChatMessage(
     appUser: AppUser.LoggedIn,
     onShowUserInfoForLogin: (String) -> Unit = {},
 ) {
-    val timestamp = message.timestamp
-        .formatTimestamp()
-        ?.takeIf { showTimestamps }
+    val shouldRedactContents: Boolean =
+        removedContent
+            .filter { rule -> rule.upUntil > message.timestamp }
+            .filter { rule -> rule.matchingMessageId == null || rule.matchingMessageId == message.body?.messageId }
+            .any { rule -> rule.matchingUserId == null || rule.matchingUserId == message.body?.chatter?.id }
 
     Row(
         modifier = modifier
+            .redactable(redact = shouldRedactContents)
             .background(MaterialTheme.colorScheme.surface)
             .background(background)
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (timestamp != null) {
-            Text(
-                modifier = Modifier.padding(4.dp),
-                text = timestamp,
-                color = LocalContentColor.current.copy(alpha = 0.8f),
-                style = MaterialTheme.typography.bodySmall,
-            )
-        }
+        message.timestamp
+            .formatTimestamp()
+            ?.takeIf { showTimestamps }
+            ?.let { timestamp ->
+                Text(
+                    modifier = Modifier.padding(4.dp),
+                    text = timestamp,
+                    color = LocalContentColor.current.copy(alpha = 0.8f),
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
 
         when (message) {
             is ChatEvent.Message.Highlighted -> {
@@ -97,18 +103,16 @@ fun ChatMessage(
                     subtitle = message.subtitle,
                 ) {
                     message.body?.let { data ->
-                        RedactableChatMessageBody(
+                        ChatMessageBody(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(4.dp),
-                            timestamp = message.timestamp,
                             body = data,
                             inlineContent = inlineContent,
                             knownChatters = knownChatters,
                             pronouns = pronouns,
                             appUser = appUser,
                             backgroundHint = backgroundHint,
-                            removedContent = removedContent,
                             richEmbed = richEmbed,
                             onShowUserInfoForLogin = onShowUserInfoForLogin,
                         )
@@ -124,19 +128,17 @@ fun ChatMessage(
 
             is ChatEvent.Message.Simple -> {
                 SimpleMessage {
-                    RedactableChatMessageBody(
+                    ChatMessageBody(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
                                 horizontal = 4.dp,
                                 vertical = 6.dp,
                             ),
-                        timestamp = message.timestamp,
                         body = message.body,
                         inlineContent = inlineContent,
                         appUser = appUser,
                         backgroundHint = backgroundHint,
-                        removedContent = removedContent,
                         knownChatters = knownChatters,
                         pronouns = pronouns,
                         richEmbed = richEmbed,

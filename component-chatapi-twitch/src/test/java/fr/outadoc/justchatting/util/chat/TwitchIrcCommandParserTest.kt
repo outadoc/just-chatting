@@ -116,6 +116,18 @@ class TwitchIrcCommandParserTest {
     }
 
     @Test
+    fun `Parse pay forward USERNOTICE`() = test {
+        input { "@badge-info=;badges=bits/100;color=#D2691E;display-name=FichierPDF;emotes=;flags=;id=5afe1c23-a512-4122-b80f-85000ac130bd;login=fichierpdf;mod=0;msg-id=communitypayforward;msg-param-prior-gifter-anonymous=false;msg-param-prior-gifter-display-name=Hipairion;msg-param-prior-gifter-id=590747111;msg-param-prior-gifter-user-name=hipairion;room-id=135468063;subscriber=1;system-msg=FichierPDF\\sis\\spaying\\sforward\\sthe\\sGift\\sthey\\sgot\\sfrom\\sHipairion\\sto\\sthe\\scommunity!;tmi-sent-ts=1682099586016;user-id=31950715;user-type= :tmi.twitch.tv USERNOTICE #antoinedaniel" }
+        expected {
+            IrcEvent.Message.GiftPayForward(
+                timestamp = Instant.parse("2023-04-21T17:53:06.016Z"),
+                userDisplayName = "FichierPDF",
+                priorGifterDisplayName = "Hipairion",
+            )
+        }
+    }
+
+    @Test
     fun `Parse prime conversion USERNOTICE`() = test {
         input { "@badge-info=subscriber/23;badges=subscriber/18,no_video/1;color=#FF0000;display-name=PG59LeRetour;emotes=;flags=;id=510b998a-57e8-42aa-bbad-65d39107b768;login=pg59leretour;mod=0;msg-id=primepaidupgrade;msg-param-sub-plan=1000;room-id=50597026;subscriber=1;system-msg=PG59LeRetour\\sconverted\\sfrom\\sa\\sPrime\\ssub\\sto\\sa\\sTier\\s1\\ssub!;tmi-sent-ts=1681118321678;user-id=90950483;user-type= :tmi.twitch.tv USERNOTICE #ponce" }
         expected {

@@ -85,6 +85,12 @@ sealed interface IrcEvent {
             val subscriptionPlan: String,
         ) : Message
 
+        data class GiftPayForward(
+            val timestamp: Instant,
+            val userDisplayName: String,
+            val priorGifterDisplayName: String?,
+        ) : Message
+
         data class MassSubscriptionGift(
             val timestamp: Instant,
             val userDisplayName: String,

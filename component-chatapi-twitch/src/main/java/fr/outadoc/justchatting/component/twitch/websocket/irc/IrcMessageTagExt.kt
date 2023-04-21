@@ -93,6 +93,12 @@ val Map<String, String?>.subscriptionPlan: String?
 val Map<String, String?>.recipientDisplayName: String?
     get() = this["msg-param-recipient-display-name"]?.takeUnless { it.isEmpty() }
 
+val Map<String, String?>.priorGifterDisplayName: String?
+    get() = this["msg-param-prior-gifter-display-name"]?.takeUnless { it.isEmpty() }
+
+val Map<String, String?>.priorGifterAnonymous: Boolean
+    get() = this["msg-param-prior-gifter-anonymous"] == "true"
+
 val Map<String, String?>.massGiftCount: Int?
     get() = this["msg-param-mass-gift-count"]?.toIntOrNull()
 

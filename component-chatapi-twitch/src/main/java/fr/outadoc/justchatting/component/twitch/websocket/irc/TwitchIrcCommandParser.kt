@@ -115,6 +115,15 @@ class TwitchIrcCommandParser(private val clock: Clock) {
                 )
             }
 
+            "communitypayforward" -> {
+                IrcEvent.Message.GiftPayForward(
+                    timestamp = timestamp,
+                    userDisplayName = ircMessage.tags.displayName ?: return null,
+                    priorGifterDisplayName = ircMessage.tags.priorGifterDisplayName
+                        ?.takeUnless { ircMessage.tags.priorGifterAnonymous },
+                )
+            }
+
             else -> {
                 IrcEvent.Message.UserNotice(
                     timestamp = timestamp,

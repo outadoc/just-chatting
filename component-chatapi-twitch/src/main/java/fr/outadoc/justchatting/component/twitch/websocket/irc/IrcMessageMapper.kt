@@ -5,6 +5,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CallReceived
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Cancel
+import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Highlight
 import androidx.compose.material.icons.filled.Redeem
@@ -167,26 +168,32 @@ class IrcMessageMapper(private val context: Context) {
                 )
             }
 
-            is IrcEvent.Message.UserNotice -> when (userMessage) {
-                null -> {
-                    ChatEvent.Message.Highlighted(
-                        timestamp = timestamp,
-                        title = systemMsg,
-                        titleIcon = null,
-                        subtitle = null,
-                        body = null,
-                    )
-                }
+            is IrcEvent.Message.GiftPayForward -> {
+                ChatEvent.Message.Highlighted(
+                    timestamp = timestamp,
+                    title = userDisplayName,
+                    titleIcon = Icons.Default.FastForward,
+                    subtitle = when (priorGifterDisplayName) {
+                        null -> context.getString(R.string.chat_subGift_payForwardAnonymous)
+                        else -> {
+                            context.getString(
+                                R.string.chat_subGift_payForward,
+                                priorGifterDisplayName,
+                            )
+                        }
+                    },
+                    body = null,
+                )
+            }
 
-                else -> {
-                    ChatEvent.Message.Highlighted(
-                        timestamp = timestamp,
-                        title = systemMsg,
-                        titleIcon = null,
-                        subtitle = null,
-                        body = userMessage.map(),
-                    )
-                }
+            is IrcEvent.Message.UserNotice -> {
+                ChatEvent.Message.Highlighted(
+                    timestamp = timestamp,
+                    title = systemMsg,
+                    titleIcon = null,
+                    subtitle = null,
+                    body = userMessage?.map(),
+                )
             }
 
             is IrcEvent.Message.ChatMessage -> {

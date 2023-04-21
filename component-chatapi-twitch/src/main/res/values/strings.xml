@@ -20,6 +20,8 @@
     <string name="chat_sub_header_withDurationAndStreak">subscribed %1$s. They\'ve subscribed for %2$s, currently on a %3$s streak!</string>
     <string name="chat_subConversion_header">converted to a %1$s subscription!</string>
     <string name="chat_subGift_header">gifted a %1$s sub to %2$s! They\'ve subscribed for %3$s.</string>
+    <string name="chat_subGift_payForward">is paying forward the gift they got from %1$s to the community!</string>
+    <string name="chat_subGift_payForwardAnonymous">is paying forward the gift they got to the community!</string>
     <string name="chat_subGift_tier1">Tier 1</string>
     <string name="chat_subGift_tier2">Tier 2</string>
     <string name="chat_subGift_tier3">Tier 3</string>

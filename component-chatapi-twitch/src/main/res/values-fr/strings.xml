@@ -19,6 +19,8 @@
     <string name="chat_sub_header_withDuration">a pris un abonnement %1$s ! Iel est abonné·e depuis %2$s.</string>
     <string name="chat_sub_header_withDurationAndStreak">a pris un abonnement %1$s. Iel est abonné·e depuis %2$s, sur une série de %3$s consécutifs !</string>
     <string name="chat_subConversion_header">a converti son abonnement en abonnement %1$s !</string>
+    <string name="chat_subGift_payForward">transmet le cadeau qu\'iel a reçu de %1$s à la communauté !</string>
+    <string name="chat_subGift_payForwardAnonymous">transmet le cadeau qu\'iel a reçu à la communauté !</string>
     <string name="chat_subGift_tier1">de niveau 1</string>
     <string name="chat_subGift_tier2">de niveau 2</string>
     <string name="chat_subGift_tier3">de niveau 3</string>

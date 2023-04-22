@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.presentation
+package fr.outadoc.justchatting.feature.chat.data
 
 import android.content.ContentProvider
 import android.content.ContentResolver

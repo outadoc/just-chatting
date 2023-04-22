@@ -91,7 +91,7 @@
         </provider>
 
         <provider
-            android:name=".feature.chat.presentation.UserProfileImageContentProvider"
+            android:name=".feature.chat.data.UserProfileImageContentProvider"
             android:authorities="${applicationId}.user-image-provider"
             android:exported="true"
             android:grantUriPermissions="true"

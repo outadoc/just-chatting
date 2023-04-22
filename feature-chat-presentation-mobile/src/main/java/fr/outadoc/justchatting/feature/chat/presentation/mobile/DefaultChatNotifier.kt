@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresPermission
@@ -13,12 +12,10 @@ import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
-import androidx.core.content.pm.ShortcutInfoCompat
-import androidx.core.content.pm.ShortcutManagerCompat
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
+import fr.outadoc.justchatting.feature.chat.data.emotes.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
-import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.logging.logError
@@ -41,23 +38,6 @@ class DefaultChatNotifier : ChatNotifier {
 
         createGenericBubbleChannelIfNeeded(context) ?: return
 
-        val person: Person =
-            Person.Builder()
-                .setKey(user.id)
-                .setName(user.displayName)
-                .setIcon(user.getProfileImageIcon(context))
-                .build()
-
-        createShortcutForChannel(
-            context = context,
-            intent = ChatActivity.createIntent(
-                context = context,
-                channelLogin = user.login,
-            ),
-            user = user,
-            person = person,
-        )
-
         if (Build.VERSION.SDK_INT >= 26) {
             context.startForegroundService(
                 ChatConnectionService.createStartIntent(context),
@@ -77,7 +57,6 @@ class DefaultChatNotifier : ChatNotifier {
                 createNotificationForUser(
                     context = context,
                     user = user,
-                    person = person,
                 )
             }
 
@@ -85,41 +64,6 @@ class DefaultChatNotifier : ChatNotifier {
                 logError<DefaultChatNotifier> { "Notifications permission not granted (code: $notificationsPermissionCheck)" }
             }
         }
-    }
-
-    private fun createShortcutForChannel(
-        context: Context,
-        intent: Intent,
-        user: User,
-        person: Person,
-    ) {
-        val maxShortcutCount = ShortcutManagerCompat.getMaxShortcutCountPerActivity(context)
-        val currentShortcuts = ShortcutManagerCompat.getDynamicShortcuts(context)
-        val alreadyPublished = currentShortcuts.any { it.id == user.id }
-
-        if (currentShortcuts.size >= maxShortcutCount && !alreadyPublished) {
-            val oldest = currentShortcuts
-                .filterNot { it.id == user.id }
-                .minByOrNull { shortcut -> shortcut.lastChangedTimestamp }
-
-            oldest?.let { shortcut ->
-                ShortcutManagerCompat.removeDynamicShortcuts(context, listOf(shortcut.id))
-            }
-        }
-
-        ShortcutManagerCompat.addDynamicShortcuts(
-            context,
-            listOf(
-                ShortcutInfoCompat.Builder(context, user.id)
-                    .setIntent(intent)
-                    .setLongLived(true)
-                    .setIcon(user.getProfileImageIcon(context))
-                    .setShortLabel(user.displayName)
-                    .setPerson(person)
-                    .setIsConversation()
-                    .build(),
-            ),
-        )
     }
 
     private fun createGenericBubbleChannelIfNeeded(context: Context): NotificationChannelCompat? {
@@ -138,9 +82,15 @@ class DefaultChatNotifier : ChatNotifier {
     }
 
     @RequiresPermission("android.permission.POST_NOTIFICATIONS")
-    private fun createNotificationForUser(context: Context, user: User, person: Person) {
+    private fun createNotificationForUser(context: Context, user: User) {
         val nm = NotificationManagerCompat.from(context)
         val intent = ChatActivity.createIntent(context, user.login)
+
+        val person = Person.Builder()
+            .setKey(user.id)
+            .setName(user.displayName)
+            .setIcon(user.getProfileImageIcon(context))
+            .build()
 
         nm.notify(
             notificationIdFor(user.id),

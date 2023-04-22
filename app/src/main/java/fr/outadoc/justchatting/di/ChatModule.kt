@@ -35,9 +35,11 @@ import fr.outadoc.justchatting.feature.chat.domain.AggregateChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.DefaultChatRepository
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
+import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.DefaultChatNotifier
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.MobileCreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.NoOpChatNotifier
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.DefaultPronounsRepository
@@ -47,7 +49,7 @@ import org.koin.dsl.module
 
 val chatModule = module {
 
-    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { StreamAndUserInfoViewModel(get()) }
 
     single {
@@ -59,6 +61,7 @@ val chatModule = module {
     }
 
     single { FilterAutocompleteItemsUseCase() }
+    single<CreateShortcutForChannelUseCase> { MobileCreateShortcutForChannelUseCase(get()) }
 
     single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get(), get(), get()) }

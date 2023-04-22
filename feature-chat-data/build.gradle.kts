@@ -39,8 +39,11 @@ dependencies {
 
     implementation(platform(libs.compose.bom))
 
+    implementation(libs.androidx.core)
+    implementation(libs.coil.core)
     implementation(libs.compose.runtime.core)
     implementation(libs.irc)
+    implementation(libs.koin.android)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.kotlinx.coroutines)
     implementation(libs.kotlinx.datetime)

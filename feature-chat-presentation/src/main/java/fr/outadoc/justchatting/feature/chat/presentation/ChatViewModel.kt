@@ -94,6 +94,7 @@ class ChatViewModel(
     private val emoteListSourcesProvider: EmoteListSourcesProvider,
     private val filterAutocompleteItemsUseCase: FilterAutocompleteItemsUseCase,
     private val pronounsRepository: PronounsRepository,
+    private val createShortcutForChannel: CreateShortcutForChannelUseCase,
 ) : ViewModel() {
 
     private val defaultScope = viewModelScope + CoroutineName("defaultScope")
@@ -466,6 +467,8 @@ class ChatViewModel(
             twitchRepository.loadUsersByLogin(logins = listOf(channelLogin))
                 ?.firstOrNull()
                 ?: error("User not loaded")
+
+        createShortcutForChannel(channelUser)
 
         return State.Chatting(
             user = channelUser,

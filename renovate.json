@@ -3,6 +3,9 @@
   "extends": ["config:base"],
   "packageRules": [{
     "groupName": "kotlin-monorepo",
+    "matchPackageNames": [
+      "composeOptions"
+    ],
     "matchSourceUrls": [
       "https://github.com/JetBrains/kotlin",
       "https://github.com/google/ksp"

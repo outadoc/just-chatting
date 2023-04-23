@@ -1,7 +1,5 @@
 package fr.outadoc.justchatting.di
 
-import android.content.Context
-import android.content.pm.PackageManager
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPluginsProvider
@@ -34,13 +32,13 @@ import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalTwitchEmotesSource
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.DefaultChatRepository
+import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.DefaultChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.MobileCreateShortcutForChannelUseCase
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.NoOpChatNotifier
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.DefaultPronounsRepository
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
@@ -52,13 +50,7 @@ val chatModule = module {
     viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { StreamAndUserInfoViewModel(get()) }
 
-    single {
-        if (get<Context>().packageManager.hasSystemFeature(PackageManager.FEATURE_PC)) {
-            NoOpChatNotifier()
-        } else {
-            DefaultChatNotifier(get())
-        }
-    }
+    single<ChatNotifier> { DefaultChatNotifier(get()) }
 
     single { FilterAutocompleteItemsUseCase() }
     single<CreateShortcutForChannelUseCase> { MobileCreateShortcutForChannelUseCase(get()) }

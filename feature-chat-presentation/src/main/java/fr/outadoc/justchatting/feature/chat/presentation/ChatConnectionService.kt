@@ -9,6 +9,7 @@ import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.app.RemoteInput
+import androidx.core.net.toUri
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.utils.logging.logInfo
 import kotlinx.coroutines.CoroutineScope
@@ -23,27 +24,26 @@ class ChatConnectionService : Service() {
         private const val ONGOING_NOTIFICATION_ID = 457542
         private const val ONGOING_NOTIFICATION_CHANNEL_ID = "background_channel"
 
-        private const val ACTION_STOP = "ACTION_STOP"
-        private const val ACTION_REPLY = "ACTION_REPLY"
+        private const val ACTION_STOP = "stop"
+        private const val ACTION_REPLY = "reply"
 
-        private const val EXTRA_CHANNEL_ID = "EXTRA_CHANNEL_ID"
         private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
 
         fun createStartIntent(context: Context): Intent {
-            return Intent(context, ChatConnectionService::class.java)
+            return Intent(context, ChatConnectionService::class.java).apply {
+                data = "ccs://start".toUri()
+            }
         }
 
         fun createStopIntent(context: Context, channelId: String): Intent {
             return Intent(context, ChatConnectionService::class.java).apply {
-                action = ACTION_STOP
-                putExtra(EXTRA_CHANNEL_ID, channelId)
+                data = "ccs://stop/?userId=$channelId".toUri()
             }
         }
 
         fun createReplyIntent(context: Context, channelId: String): Intent {
             return Intent(context, ChatConnectionService::class.java).apply {
-                action = ACTION_REPLY
-                putExtra(EXTRA_CHANNEL_ID, channelId)
+                data = "ccs://reply/?userId=$channelId".toUri()
             }
         }
     }
@@ -86,33 +86,39 @@ class ChatConnectionService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        logInfo<ChatConnectionService> { "Received intent $intent" }
+        logInfo<ChatConnectionService> { "Received intent $intent with data=${intent?.data}" }
 
         postForegroundNotification()
 
-        val channelId = intent?.getStringExtra(EXTRA_CHANNEL_ID)
-        if (channelId != null) {
-            when (intent.action) {
-                ACTION_REPLY -> {
-                    val quickReplyResult: CharSequence? =
-                        RemoteInput.getResultsFromIntent(intent)
-                            ?.getCharSequence(KEY_QUICK_REPLY_TEXT)
+        val action: String? = intent?.data?.authority
+        val userId: String? = intent?.data?.getQueryParameter("userId")
 
-                    if (quickReplyResult != null) {
-                        connectionPool.sendMessage(
-                            channelId = channelId,
-                            message = quickReplyResult,
-                        )
-                    }
+        logInfo<ChatConnectionService> { "action=$action, userId=$userId" }
+
+        when (action) {
+            ACTION_REPLY -> {
+                val quickReplyResult: CharSequence? =
+                    RemoteInput.getResultsFromIntent(intent)
+                        ?.getCharSequence(KEY_QUICK_REPLY_TEXT)
+
+                logInfo<ChatConnectionService> { "Replying to $userId's chat with reply: $quickReplyResult" }
+
+                if (userId != null && quickReplyResult != null) {
+                    connectionPool.sendMessage(
+                        channelId = userId,
+                        message = quickReplyResult,
+                    )
                 }
+            }
 
-                ACTION_STOP -> {
-                    logInfo<ChatConnectionService> { "Stopping thread for $channelId" }
+            ACTION_STOP -> {
+                logInfo<ChatConnectionService> { "Stopping thread for $userId" }
 
-                    connectionPool.stop(channelId)
+                if (userId != null) {
+                    connectionPool.stop(userId)
                     chatNotifier.dismissNotification(
                         context = this,
-                        channelId = channelId,
+                        channelId = userId,
                     )
                 }
             }

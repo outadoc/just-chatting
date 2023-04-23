@@ -1,15 +1,17 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
-  "packageRules": [{
-    "groupName": "kotlin-monorepo",
-    "matchPackageNames": [
-      "composeOptions"
-    ],
-    "matchSourceUrls": [
-      "https://github.com/JetBrains/kotlin",
-      "https://github.com/google/ksp"
-    ]
-  }],
+  "extends": [
+    "config:base"
+  ],
+  "packageRules": [
+    {
+      "groupName": "kotlin-monorepo",
+      "matchPackagePatterns": [
+        "^org.jetbrains.kotlin",
+        "^com.google.devtools.ksp",
+        "^androidx.compose.compiler"
+      ]
+    }
+  ],
   "semanticCommits": "enabled"
 }

@@ -54,7 +54,7 @@ val mainModule = module {
 
             install(Auth) {
                 bearer {
-                    val getToken: suspend () -> BearerTokens? = {
+                    loadTokens {
                         val preferenceRepository = get<PreferenceRepository>()
                         val user: AppUser = preferenceRepository.currentPreferences.first().appUser
                         user.helixToken?.let { token ->
@@ -62,8 +62,12 @@ val mainModule = module {
                         }
                     }
 
-                    loadTokens { getToken() }
-                    refreshTokens { getToken() }
+                    refreshTokens {
+                        get<PreferenceRepository>().updatePreferences { current ->
+                            current.copy(appUser = AppUser.NotLoggedIn)
+                        }
+                        null
+                    }
                 }
             }
         }

@@ -89,50 +89,6 @@ fun SettingsList(
         item {
             SettingsHeader(
                 modifier = Modifier
-                    .padding(itemInsets)
-                    .padding(top = 8.dp),
-            ) {
-                Text(stringResource(R.string.settings_accessibility_header))
-            }
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.showTimestamps,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(showTimestamps = checked))
-                },
-                title = {
-                    Text(stringResource(R.string.settings_accessibility_timestamps_title))
-                },
-                subtitle = {
-                    Text(stringResource(R.string.settings_accessibility_timestamps_subtitle))
-                },
-            )
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = onOpenAccessibilityPreferences,
-                onClickLabel = stringResource(R.string.settings_accessibility_animations_action),
-                title = {
-                    Text(stringResource(R.string.settings_accessibility_animations_title))
-                },
-                subtitle = {
-                    Text(stringResource(R.string.settings_accessibility_animations_subtitle))
-                },
-            )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
@@ -305,6 +261,56 @@ fun SettingsList(
                     },
                 )
             }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+
+        item {
+            SettingsHeader(
+                modifier = Modifier
+                    .padding(itemInsets)
+                    .padding(top = 8.dp),
+            ) {
+                Text(stringResource(R.string.settings_accessibility_header))
+            }
+        }
+
+        item {
+            SettingsSwitch(
+                modifier = Modifier.padding(itemInsets),
+                checked = appPreferences.showTimestamps,
+                onCheckedChange = { checked ->
+                    onAppPreferencesChange(appPreferences.copy(showTimestamps = checked))
+                },
+                title = {
+                    Text(stringResource(R.string.settings_accessibility_timestamps_title))
+                },
+                subtitle = {
+                    Text(stringResource(R.string.settings_accessibility_timestamps_subtitle))
+                },
+            )
+        }
+
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = onOpenAccessibilityPreferences,
+                onClickLabel = stringResource(R.string.settings_accessibility_animations_action),
+                title = {
+                    Text(stringResource(R.string.settings_accessibility_animations_title))
+                },
+                subtitle = {
+                    Text(stringResource(R.string.settings_accessibility_animations_subtitle))
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.OpenInNew,
+                        contentDescription = null,
+                    )
+                },
+            )
         }
 
         item {

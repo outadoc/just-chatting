@@ -106,10 +106,14 @@ class DefaultChatNotifier : ChatNotifier {
                 .setAutoCancel(false)
                 .setOngoing(true)
                 .addAction(
-                    R.drawable.ic_close,
-                    context.getString(R.string.notification_action_disconnect),
-                    ChatConnectionService.createStopIntent(context, channelId = user.id)
-                        .toPendingForegroundServiceIntent(context),
+                    NotificationCompat.Action.Builder(
+                        R.drawable.ic_close,
+                        context.getString(R.string.notification_action_disconnect),
+                        ChatConnectionService.createStopIntent(context, channelId = user.id)
+                            .toPendingForegroundServiceIntent(context),
+                    )
+                        .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_ARCHIVE)
+                        .build(),
                 )
                 .addAction(
                     NotificationCompat.Action.Builder(
@@ -118,6 +122,7 @@ class DefaultChatNotifier : ChatNotifier {
                         ChatConnectionService.createReplyIntent(context, channelId = user.id)
                             .toPendingForegroundServiceIntent(context, mutable = true),
                     )
+                        .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
                         .addRemoteInput(
                             RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
                                 .setLabel(context.getString(R.string.notification_action_reply_hint))

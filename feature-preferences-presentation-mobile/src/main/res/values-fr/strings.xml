@@ -28,7 +28,7 @@
     <string name="settings_notifications_enable_subtitle">Si activé, les sessions de tchat resteront ouvertes en arrière-plan, et seront accessibles depuis des bulles sur les appareils compatibles.</string>
     <string name="settings_notifications_enable_title">Notifications persistantes (Expérimental)</string>
     <string name="settings_notifications_header">Notifications</string>
-    <string name="settings_notifications_openNotificationsSettings">Préferences de notification</string>
+    <string name="settings_notifications_openNotificationsSettings">Préférences de notification</string>
     <string name="settings_notifications_openBubbleSettings">Préférences des bulles de conversation</string>
     <string name="settings_thirdparty_header">Intégrations tierces</string>
     <string name="settings_thirdparty_recent_title">Messages récents</string>

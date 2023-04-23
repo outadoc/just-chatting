@@ -52,8 +52,9 @@ class MainRouterViewModel(
                     is AppUser.NotLoggedIn -> State.LoggedOut()
                     is AppUser.NotValidated -> {
                         try {
-                            val userInfo: ValidationResponse = authRepository.validate()
-                                ?: throw InvalidClientIdException()
+                            val userInfo: ValidationResponse =
+                                authRepository.validate(appUser.helixToken)
+                                    ?: throw InvalidClientIdException()
 
                             val validatedUser = AppUser.LoggedIn(
                                 id = userInfo.userId,

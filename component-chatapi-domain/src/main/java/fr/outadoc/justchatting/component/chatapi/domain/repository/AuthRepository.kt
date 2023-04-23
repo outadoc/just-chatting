@@ -13,9 +13,9 @@ class AuthRepository(
     private val preferencesRepository: PreferenceRepository,
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
-    suspend fun validate(): ValidationResponse? =
+    suspend fun validate(token: String): ValidationResponse? =
         withContext(Dispatchers.IO) {
-            api.validateToken()?.let { response ->
+            api.validateToken(token)?.let { response ->
                 ValidationResponse(
                     clientId = response.clientId,
                     login = response.login,

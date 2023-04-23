@@ -1,9 +1,8 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material.icons.Icons
@@ -50,9 +49,9 @@ fun PinnedMessageCard(
     knownChatters: PersistentSet<Chatter> = persistentSetOf(),
 ) {
     var isExpanded: Boolean by remember { mutableStateOf(false) }
-    val maxMessageHeight by animateDpAsState(
-        targetValue = if (isExpanded) 512.dp else 96.dp,
-        label = "expanded message height",
+    val maxLines by animateIntAsState(
+        targetValue = if (isExpanded) Int.MAX_VALUE else 2,
+        label = "message max lines",
     )
 
     Card(
@@ -64,20 +63,20 @@ fun PinnedMessageCard(
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(8.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ChatMessage(
                 modifier = Modifier
-                    .weight(1f, fill = true)
-                    .heightIn(max = maxMessageHeight),
+                    .weight(1f, fill = true),
                 message = message,
                 inlineContent = inlineContent,
                 removedContent = removedContent,
                 knownChatters = knownChatters,
                 background = color,
                 appUser = appUser,
+                maxLines = maxLines,
                 showTimestamps = false,
             )
 

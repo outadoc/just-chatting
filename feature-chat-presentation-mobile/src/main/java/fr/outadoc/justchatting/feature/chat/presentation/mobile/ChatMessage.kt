@@ -67,6 +67,7 @@ fun ChatMessage(
     background: Color = Color.Transparent,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
     appUser: AppUser.LoggedIn,
+    maxLines: Int = Int.MAX_VALUE,
     onShowUserInfoForLogin: (String) -> Unit = {},
 ) {
     val shouldRedactContents: Boolean =
@@ -114,6 +115,7 @@ fun ChatMessage(
                             appUser = appUser,
                             backgroundHint = backgroundHint,
                             richEmbed = richEmbed,
+                            maxLines = maxLines,
                             onShowUserInfoForLogin = onShowUserInfoForLogin,
                         )
                     }
@@ -142,6 +144,7 @@ fun ChatMessage(
                         knownChatters = knownChatters,
                         pronouns = pronouns,
                         richEmbed = richEmbed,
+                        maxLines = maxLines,
                         onShowUserInfoForLogin = onShowUserInfoForLogin,
                     )
                 }

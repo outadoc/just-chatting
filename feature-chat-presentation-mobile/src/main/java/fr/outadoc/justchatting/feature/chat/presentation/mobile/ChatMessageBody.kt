@@ -28,6 +28,7 @@ import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.Hyphens
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
@@ -56,6 +57,7 @@ fun ChatMessageBody(
     appUser: AppUser,
     backgroundHint: Color,
     richEmbed: ChatEvent.RichEmbed?,
+    maxLines: Int = Int.MAX_VALUE,
     onShowUserInfoForLogin: (String) -> Unit = {},
 ) {
     val uriHandler = LocalUriHandler.current
@@ -133,6 +135,8 @@ fun ChatMessageBody(
             text = annotatedString,
             inlineContent = fullInlineContent,
             lineHeight = emoteSize,
+            maxLines = maxLines,
+            overflow = TextOverflow.Ellipsis,
             style = MaterialTheme.typography.bodyMedium.copy(
                 hyphens = Hyphens.Auto,
             ),

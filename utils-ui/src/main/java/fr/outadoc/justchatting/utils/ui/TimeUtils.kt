@@ -47,22 +47,23 @@ fun Instant.formatTime(
     }
 }
 
-fun Duration.format(context: Context): String = buildString {
-    toComponents { days, hours, minutes, seconds, _ ->
-        days.takeIf { it > 0 }?.let {
-            append(context.resources.getString(R.string.duration_days, it))
-        }
+fun Duration.format(context: Context): String =
+    sequence {
+        toComponents { days, hours, minutes, seconds, _ ->
+            days.takeIf { it > 0 }?.let {
+                yield(context.resources.getString(R.string.duration_days, it))
+            }
 
-        hours.takeIf { it > 0 }?.let {
-            append(context.resources.getString(R.string.duration_hours, it))
-        }
+            hours.takeIf { it > 0 }?.let {
+                yield(context.resources.getString(R.string.duration_hours, it))
+            }
 
-        minutes.takeIf { it > 0 }?.let {
-            append(context.resources.getString(R.string.duration_minutes, it))
-        }
+            minutes.takeIf { it > 0 }?.let {
+                yield(context.resources.getString(R.string.duration_minutes, it))
+            }
 
-        seconds.takeIf { it > 0 }?.let {
-            append(context.resources.getString(R.string.duration_seconds, it))
+            seconds.takeIf { it > 0 }?.let {
+                yield(context.resources.getString(R.string.duration_seconds, it))
+            }
         }
-    }
-}
+    }.joinToString(" ")

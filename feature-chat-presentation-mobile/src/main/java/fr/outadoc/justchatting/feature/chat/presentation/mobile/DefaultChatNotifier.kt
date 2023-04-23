@@ -13,7 +13,7 @@ import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.feature.chat.data.emotes.getProfileImageIcon
+import fr.outadoc.justchatting.feature.chat.data.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent

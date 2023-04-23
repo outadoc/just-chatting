@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.emotes
+package fr.outadoc.justchatting.feature.chat.data
 
 import android.content.Context
 import androidx.core.graphics.drawable.IconCompat

@@ -5,7 +5,7 @@ import androidx.core.app.Person
 import androidx.core.content.pm.ShortcutInfoCompat
 import androidx.core.content.pm.ShortcutManagerCompat
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.feature.chat.data.emotes.getProfileImageIcon
+import fr.outadoc.justchatting.feature.chat.data.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 
 class MobileCreateShortcutForChannelUseCase(

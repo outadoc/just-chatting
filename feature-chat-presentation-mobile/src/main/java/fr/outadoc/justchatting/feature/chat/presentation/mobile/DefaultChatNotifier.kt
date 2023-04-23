@@ -13,7 +13,6 @@ import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.chat.data.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
@@ -24,7 +23,6 @@ import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
 
 class DefaultChatNotifier(
     private val context: Context,
-    private val preferenceRepository: PreferenceRepository,
 ) : ChatNotifier {
 
     companion object {

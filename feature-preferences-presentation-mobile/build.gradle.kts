@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines)
     implementation(libs.compose.foundation)
     implementation(libs.compose.material.core3)
+    implementation(libs.compose.material.icons)
     implementation(libs.compose.ui.core)
     implementation(libs.compose.ui.tooling)
     implementation(libs.kotlinx.datetime)

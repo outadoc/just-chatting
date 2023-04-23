@@ -7,7 +7,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.OpenInNew
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -175,6 +179,12 @@ fun SettingsList(
                 onClick = { uriHandler.openUri(pronounsUrl) },
                 onClickLabel = stringResource(id = R.string.settings_thirdparty_pronouns_set_cd),
                 title = { Text(text = stringResource(id = R.string.settings_thirdparty_pronouns_set_title)) },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.OpenInNew,
+                        contentDescription = null,
+                    )
+                },
             )
         }
 
@@ -269,6 +279,12 @@ fun SettingsList(
                 title = {
                     Text(text = stringResource(R.string.settings_notifications_openNotificationsSettings))
                 },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.OpenInNew,
+                        contentDescription = null,
+                    )
+                },
             )
         }
 
@@ -280,6 +296,12 @@ fun SettingsList(
                     onClickLabel = stringResource(R.string.settings_notifications_openBubbleSettings),
                     title = {
                         Text(text = stringResource(R.string.settings_notifications_openBubbleSettings))
+                    },
+                    trailingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.OpenInNew,
+                            contentDescription = null,
+                        )
                     },
                 )
             }
@@ -384,6 +406,12 @@ fun SettingsList(
                 onClickLabel = stringResource(id = R.string.settings_about_repo_cd),
                 title = { Text(text = stringResource(id = R.string.settings_about_repo_title)) },
                 subtitle = { Text(text = stringResource(id = R.string.app_repo_name)) },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.OpenInNew,
+                        contentDescription = null,
+                    )
+                },
             )
         }
 
@@ -412,6 +440,12 @@ fun SettingsList(
                 title = { Text(text = stringResource(R.string.settings_logs_title)) },
                 onClick = onShareLogsClick,
                 subtitle = { Text(text = stringResource(R.string.settings_logs_subtitle)) },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = null,
+                    )
+                },
             )
         }
 
@@ -443,6 +477,14 @@ fun SettingsList(
                 subtitle = {
                     dependency.moduleLicense?.let { license ->
                         Text(text = license)
+                    }
+                },
+                trailingIcon = {
+                    if (dependency.moduleUrl != null) {
+                        Icon(
+                            imageVector = Icons.Default.OpenInNew,
+                            contentDescription = null,
+                        )
                     }
                 },
             )

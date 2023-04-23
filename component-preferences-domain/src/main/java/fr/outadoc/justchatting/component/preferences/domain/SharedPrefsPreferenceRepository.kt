@@ -42,9 +42,25 @@ class SharedPrefsPreferenceRepository(
     }
 
     private fun AppPreferences.writeTo(prefs: MutablePreferences) {
-        prefs[USER_ID] = appUser.id ?: ""
-        prefs[USER_LOGIN] = appUser.login ?: ""
-        prefs[USER_TOKEN] = appUser.helixToken ?: ""
+        when (val user = appUser) {
+            is AppUser.LoggedIn -> {
+                prefs[USER_ID] = user.userId
+                prefs[USER_LOGIN] = user.userLogin
+                prefs[USER_TOKEN] = user.token
+            }
+
+            AppUser.NotLoggedIn -> {
+                prefs[USER_ID] = ""
+                prefs[USER_LOGIN] = ""
+                prefs[USER_TOKEN] = ""
+            }
+
+            is AppUser.NotValidated -> {
+                prefs[USER_ID] = ""
+                prefs[USER_LOGIN] = ""
+                prefs[USER_TOKEN] = user.token
+            }
+        }
 
         prefs[CHAT_ACCESSIBILITY_TIMESTAMPS] = showTimestamps
 
@@ -56,20 +72,20 @@ class SharedPrefsPreferenceRepository(
     }
 
     private fun Preferences.parseUser(): AppUser {
-        val id = this[USER_ID]
-        val login = this[USER_LOGIN]
-        val helixToken = this[USER_TOKEN]
+        val userId = this[USER_ID]
+        val userLogin = this[USER_LOGIN]
+        val token = this[USER_TOKEN]
 
-        return if (helixToken != null) {
-            if (!id.isNullOrEmpty() && !login.isNullOrEmpty()) {
+        return if (token != null) {
+            if (!userId.isNullOrEmpty() && !userLogin.isNullOrEmpty()) {
                 AppUser.LoggedIn(
-                    id = id,
-                    login = login,
-                    helixToken = helixToken,
+                    userId = userId,
+                    userLogin = userLogin,
+                    token = token,
                 )
             } else {
                 AppUser.NotValidated(
-                    helixToken = helixToken,
+                    token = token,
                 )
             }
         } else {

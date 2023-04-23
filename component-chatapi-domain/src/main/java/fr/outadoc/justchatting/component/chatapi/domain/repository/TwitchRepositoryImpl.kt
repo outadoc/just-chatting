@@ -12,11 +12,13 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.FollowedChannelsDataSource
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.FollowedStreamsDataSource
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.SearchChannelsDataSource
+import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.utils.map
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
@@ -68,7 +70,10 @@ class TwitchRepositoryImpl(
         }
 
     override suspend fun loadFollowedStreams(): Flow<PagingData<Stream>> {
-        val prefs = preferencesRepository.currentPreferences.first()
+        val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser
+
+        if (appUser !is AppUser.LoggedIn) return emptyFlow()
+
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 30,
@@ -78,7 +83,7 @@ class TwitchRepositoryImpl(
             ),
             pagingSourceFactory = {
                 FollowedStreamsDataSource(
-                    userId = prefs.appUser.id,
+                    userId = appUser.userId,
                     helixApi = helix,
                 )
             },
@@ -113,7 +118,10 @@ class TwitchRepositoryImpl(
         }
 
     override suspend fun loadFollowedChannels(): Flow<PagingData<ChannelFollow>> {
-        val prefs = preferencesRepository.currentPreferences.first()
+        val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser
+
+        if (appUser !is AppUser.LoggedIn) return emptyFlow()
+
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 40,
@@ -123,7 +131,7 @@ class TwitchRepositoryImpl(
             ),
             pagingSourceFactory = {
                 FollowedChannelsDataSource(
-                    userId = prefs.appUser.id,
+                    userId = appUser.userId,
                     helixApi = helix,
                 )
             },

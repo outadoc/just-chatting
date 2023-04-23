@@ -48,9 +48,9 @@ fun UserNoticeMessagePreview(
             inlineContent = inlineBadges,
             showTimestamps = true,
             appUser = AppUser.LoggedIn(
-                id = "123",
-                login = "outadoc",
-                helixToken = "",
+                userId = "123",
+                userLogin = "outadoc",
+                token = "",
             ),
         )
     }

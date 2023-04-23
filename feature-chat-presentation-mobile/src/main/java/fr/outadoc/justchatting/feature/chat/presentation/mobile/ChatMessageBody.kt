@@ -54,7 +54,7 @@ fun ChatMessageBody(
     inlineContent: ImmutableMap<String, InlineTextContent>,
     knownChatters: PersistentSet<Chatter>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
-    appUser: AppUser,
+    appUser: AppUser.LoggedIn,
     backgroundHint: Color,
     richEmbed: ChatEvent.RichEmbed?,
     maxLines: Int = Int.MAX_VALUE,
@@ -90,7 +90,7 @@ fun ChatMessageBody(
         body.inReplyTo?.let { inReplyTo ->
             InReplyToMessage(
                 modifier = Modifier.padding(bottom = 8.dp),
-                appUserId = appUser.id,
+                appUserId = appUser.userId,
                 chatter = inReplyTo.chatter,
                 message = inReplyTo.message,
             )
@@ -157,7 +157,7 @@ fun ChatMessageBody(
 @Composable
 @OptIn(ExperimentalTextApi::class)
 fun ChatEvent.Message.Body.toAnnotatedString(
-    appUser: AppUser,
+    appUser: AppUser.LoggedIn,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     knownChatters: PersistentSet<Chatter>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
@@ -274,7 +274,7 @@ private fun AnnotatedString.Builder.appendUrl(url: String, urlColor: Color) {
 @OptIn(ExperimentalTextApi::class)
 private fun AnnotatedString.Builder.appendMention(
     chatter: Chatter,
-    appUser: AppUser,
+    appUser: AppUser.LoggedIn,
     mentionBackground: Color,
     mentionColor: Color,
 ) {
@@ -285,7 +285,7 @@ private fun AnnotatedString.Builder.appendMention(
         ) {
             withStyle(
                 getMentionStyle(
-                    mentioned = chatter.login == appUser.login,
+                    mentioned = chatter.login == appUser.userLogin,
                     mentionBackground = mentionBackground,
                     mentionColor = mentionColor,
                 ),

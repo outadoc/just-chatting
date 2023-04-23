@@ -5,6 +5,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
+import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.R
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
@@ -147,10 +148,14 @@ class LoggedInChatWebSocket(
         httpClient.webSocket(ENDPOINT) {
             logDebug<LoggedInChatWebSocket> { "Socket open, logging in" }
 
-            val prefs = preferencesRepository.currentPreferences.first()
+            val appUser = preferencesRepository
+                .currentPreferences.first()
+                .appUser
 
-            send("PASS oauth:${prefs.appUser.helixToken}")
-            send("NICK ${prefs.appUser.login}")
+            if (appUser !is AppUser.LoggedIn) return@webSocket
+
+            send("PASS oauth:${appUser.token}")
+            send("NICK ${appUser.userLogin}")
             send("CAP REQ :twitch.tv/tags twitch.tv/commands")
             send("JOIN #$channelLogin")
 

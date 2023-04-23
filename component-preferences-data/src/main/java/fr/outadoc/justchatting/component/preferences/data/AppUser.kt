@@ -2,26 +2,15 @@ package fr.outadoc.justchatting.component.preferences.data
 
 sealed class AppUser {
 
-    abstract val id: String?
-    abstract val login: String?
-    abstract val helixToken: String?
-
     data class LoggedIn(
-        override val id: String,
-        override val login: String,
-        override val helixToken: String,
+        val userId: String,
+        val userLogin: String,
+        val token: String,
     ) : AppUser()
 
     data class NotValidated(
-        override val helixToken: String,
-    ) : AppUser() {
-        override val id: String? = null
-        override val login: String? = null
-    }
+        val token: String,
+    ) : AppUser()
 
-    object NotLoggedIn : AppUser() {
-        override val id: String? = null
-        override val login: String? = null
-        override val helixToken: String? = null
-    }
+    object NotLoggedIn : AppUser()
 }

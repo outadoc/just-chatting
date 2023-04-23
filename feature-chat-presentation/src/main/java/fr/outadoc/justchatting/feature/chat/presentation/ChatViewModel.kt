@@ -575,7 +575,7 @@ class ChatViewModel(
         // Note that this is the last message we've sent
         val lastSentMessageInstant: Instant? =
             messages.lastOrNull { message ->
-                message.body != null && message.body?.chatter?.id == state.appUser.id
+                message.body != null && message.body?.chatter?.id == state.appUser.userId
             }?.timestamp
 
         // Remember names of chatters

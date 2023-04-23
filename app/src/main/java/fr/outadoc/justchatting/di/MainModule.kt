@@ -55,14 +55,26 @@ val mainModule = module {
             install(Auth) {
                 bearer {
                     loadTokens {
-                        get<PreferenceRepository>()
+                        val appUser = get<PreferenceRepository>()
                             .currentPreferences.first()
                             .appUser
-                            .helixToken?.let { token ->
-                            BearerTokens(
-                                accessToken = token,
-                                refreshToken = "",
-                            )
+
+                        when (appUser) {
+                            is AppUser.LoggedIn -> {
+                                BearerTokens(
+                                    accessToken = appUser.token,
+                                    refreshToken = "",
+                                )
+                            }
+
+                            is AppUser.NotValidated -> {
+                                BearerTokens(
+                                    accessToken = appUser.token,
+                                    refreshToken = "",
+                                )
+                            }
+
+                            is AppUser.NotLoggedIn -> null
                         }
                     }
 

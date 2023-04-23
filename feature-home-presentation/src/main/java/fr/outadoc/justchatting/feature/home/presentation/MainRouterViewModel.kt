@@ -53,13 +53,13 @@ class MainRouterViewModel(
                     is AppUser.NotValidated -> {
                         try {
                             val userInfo: ValidationResponse =
-                                authRepository.validate(appUser.helixToken)
+                                authRepository.validate(appUser.token)
                                     ?: throw InvalidClientIdException()
 
                             val validatedUser = AppUser.LoggedIn(
-                                id = userInfo.userId,
-                                login = userInfo.login,
-                                helixToken = appUser.helixToken,
+                                userId = userInfo.userId,
+                                userLogin = userInfo.login,
+                                token = appUser.token,
                             )
 
                             if (userInfo.clientId != oAuthAppCredentials.clientId) {
@@ -121,7 +121,7 @@ class MainRouterViewModel(
                 preferencesRepository.updatePreferences { prefs ->
                     prefs.copy(
                         appUser = AppUser.NotValidated(
-                            helixToken = deeplink.token,
+                            token = deeplink.token,
                         ),
                     )
                 }

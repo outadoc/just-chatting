@@ -104,9 +104,9 @@ fun PinnedMessageCardPreview(
         PinnedMessageCard(
             message = message,
             appUser = AppUser.LoggedIn(
-                id = "",
-                login = "",
-                helixToken = "",
+                userId = "",
+                userLogin = "",
+                token = "",
             ),
         )
     }

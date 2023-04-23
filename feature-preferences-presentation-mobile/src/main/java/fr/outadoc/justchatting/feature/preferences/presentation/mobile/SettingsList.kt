@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
+import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.presentation.Dependency
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.utils.ui.AppTheme
@@ -65,6 +66,8 @@ fun SettingsList(
 ) {
     val uriHandler = LocalUriHandler.current
     var deps: List<Dependency> by remember { mutableStateOf(emptyList()) }
+
+    val appUser = appPreferences.appUser
 
     LaunchedEffect(readDependencies) {
         deps = readDependencies()
@@ -270,49 +273,51 @@ fun SettingsList(
             }
         }
 
-        item {
-            var showLogoutDialog by remember { mutableStateOf(false) }
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { showLogoutDialog = true },
-                onClickLabel = null,
-                title = {
-                    CompositionLocalProvider(
-                        LocalContentColor provides MaterialTheme.colorScheme.error,
-                    ) {
-                        Text(text = stringResource(R.string.settings_account_logout_action))
-                    }
-                },
-            )
-
-            if (showLogoutDialog) {
-                AlertDialog(
-                    onDismissRequest = { showLogoutDialog = false },
-                    title = { Text(text = stringResource(R.string.logout_title)) },
-                    text = {
-                        Text(
-                            text = stringResource(
-                                R.string.logout_msg,
-                                appPreferences.appUser.login ?: "",
-                            ),
-                        )
-                    },
-                    dismissButton = {
-                        TextButton(onClick = { showLogoutDialog = false }) {
-                            Text(text = stringResource(R.string.no))
-                        }
-                    },
-                    confirmButton = {
-                        TextButton(
-                            onClick = {
-                                onLogoutClick()
-                                showLogoutDialog = false
-                            },
+        if (appUser is AppUser.LoggedIn) {
+            item {
+                var showLogoutDialog by remember { mutableStateOf(false) }
+                SettingsText(
+                    modifier = Modifier.padding(itemInsets),
+                    onClick = { showLogoutDialog = true },
+                    onClickLabel = null,
+                    title = {
+                        CompositionLocalProvider(
+                            LocalContentColor provides MaterialTheme.colorScheme.error,
                         ) {
-                            Text(text = stringResource(R.string.yes))
+                            Text(text = stringResource(R.string.settings_account_logout_action))
                         }
                     },
                 )
+
+                if (showLogoutDialog) {
+                    AlertDialog(
+                        onDismissRequest = { showLogoutDialog = false },
+                        title = { Text(text = stringResource(R.string.logout_title)) },
+                        text = {
+                            Text(
+                                text = stringResource(
+                                    R.string.logout_msg,
+                                    appUser.userLogin,
+                                ),
+                            )
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { showLogoutDialog = false }) {
+                                Text(text = stringResource(R.string.no))
+                            }
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    onLogoutClick()
+                                    showLogoutDialog = false
+                                },
+                            ) {
+                                Text(text = stringResource(R.string.yes))
+                            }
+                        },
+                    )
+                }
             }
         }
 

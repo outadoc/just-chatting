@@ -5,6 +5,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPluginsProvider
+import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.model.PubSubClientMessage
@@ -117,9 +118,11 @@ class PubSubWebSocket(
 
     private suspend fun listen() {
         httpClient.webSocket(ENDPOINT) {
-            val helixToken: String =
-                preferencesRepository.currentPreferences.first().appUser.helixToken
-                    ?: error("User is not authenticated")
+            val appUser = preferencesRepository
+                .currentPreferences.first()
+                .appUser
+
+            if (appUser !is AppUser.LoggedIn) return@webSocket
 
             logDebug<PubSubWebSocket> { "Socket open, sending the LISTEN message" }
 
@@ -129,7 +132,7 @@ class PubSubWebSocket(
                     data = PubSubClientMessage.Listen.Data(
                         topics = pubSubPluginsProvider.get()
                             .map { plugin -> plugin.getTopic(channelId) },
-                        authToken = helixToken,
+                        authToken = appUser.token,
                     ),
                 ),
             )

@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.io.IOException
@@ -46,16 +45,12 @@ class SettingsViewModel(
 
     fun logout() {
         viewModelScope.launch {
-            val currentUser = preferenceRepository.currentPreferences.first().appUser
             preferenceRepository.updatePreferences { current ->
                 current.copy(appUser = AppUser.NotLoggedIn)
             }
 
             try {
-                val token = currentUser.helixToken
-                if (!token.isNullOrBlank()) {
-                    authRepository.revokeToken()
-                }
+                authRepository.revokeToken()
             } catch (e: Exception) {
                 e.printStackTrace()
             }

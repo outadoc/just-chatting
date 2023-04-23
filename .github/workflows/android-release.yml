@@ -50,7 +50,7 @@ jobs:
             "-PreleaseKeystorePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}"
             "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
             "-PexternalVersionCode=${{ steps.version.outputs.version }}"
-            "-PenableLogging=true"
+            "-PenableLogging=false"
 
       - name: Upload app bundle to GitHub
         uses: actions/upload-artifact@v3.1.2

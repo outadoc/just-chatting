@@ -64,7 +64,10 @@ fun ChannelChatScreen(channelLogin: String) {
     // Update task description
     UpdateTaskDescriptionForUser(user)
 
-    val canOpenInBubble = canOpenInBubble() && notifier.supportsBackgroundChatService
+    val canOpenInBubble: Boolean =
+        prefs.enableNotifications &&
+            canOpenInBubble() &&
+            notifier.areNotificationsEnabled
 
     MaterialTheme(
         colorScheme = dynamicImageColorScheme(url = user?.profileImageUrl),

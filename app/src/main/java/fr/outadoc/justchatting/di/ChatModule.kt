@@ -56,7 +56,7 @@ val chatModule = module {
         if (get<Context>().packageManager.hasSystemFeature(PackageManager.FEATURE_PC)) {
             NoOpChatNotifier()
         } else {
-            DefaultChatNotifier()
+            DefaultChatNotifier(get())
         }
     }
 

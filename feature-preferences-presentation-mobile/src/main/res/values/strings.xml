@@ -25,6 +25,8 @@
     <string name="settings_accessibility_timestamps_subtitle">Show the time at which messages were sent.</string>
     <string name="settings_logs_title">Share logs</string>
     <string name="settings_logs_subtitle">Dump recent logs and share them for debugging purposes.</string>
+    <string name="settings_notifications_enable_subtitle">When enabled, chat sessions will keep running in the background, and be available through bubbles on supported devices.</string>
+    <string name="settings_notifications_enable_title">Persistent notifications (Experimental)</string>
     <string name="settings_notifications_header">Notifications</string>
     <string name="settings_notifications_openNotificationsSettings">Notification settings</string>
     <string name="settings_notifications_openBubbleSettings">Chat bubble settings</string>

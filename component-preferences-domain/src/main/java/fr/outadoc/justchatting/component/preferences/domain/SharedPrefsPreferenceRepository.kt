@@ -37,6 +37,7 @@ class SharedPrefsPreferenceRepository(
             enableFfzEmotes = this[THIRDPARTY_ENABLE_FFZ] ?: defaultPreferences.enableFfzEmotes,
             enableStvEmotes = this[THIRDPARTY_ENABLE_STV] ?: defaultPreferences.enableStvEmotes,
             enablePronouns = this[THIRDPARTY_ENABLE_PRONOUNS] ?: defaultPreferences.enablePronouns,
+            enableNotifications = this[ENABLE_NOTIFICATIONS] ?: defaultPreferences.enableNotifications,
             appUser = this.parseUser(),
         )
     }
@@ -63,6 +64,8 @@ class SharedPrefsPreferenceRepository(
         }
 
         prefs[CHAT_ACCESSIBILITY_TIMESTAMPS] = showTimestamps
+
+        prefs[ENABLE_NOTIFICATIONS] = enableNotifications
 
         prefs[THIRDPARTY_ENABLE_RECENT] = enableRecentMessages
         prefs[THIRDPARTY_ENABLE_BTTV] = enableBttvEmotes
@@ -99,6 +102,8 @@ class SharedPrefsPreferenceRepository(
         val USER_TOKEN = stringPreferencesKey("token")
 
         val CHAT_ACCESSIBILITY_TIMESTAMPS = booleanPreferencesKey("chat_timestamps")
+
+        val ENABLE_NOTIFICATIONS = booleanPreferencesKey("notifications_enable")
 
         val THIRDPARTY_ENABLE_RECENT = booleanPreferencesKey("thirdparty_enable_recent")
         val THIRDPARTY_ENABLE_BTTV = booleanPreferencesKey("thirdparty_enable_bttv")

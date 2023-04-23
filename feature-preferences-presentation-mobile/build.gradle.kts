@@ -45,6 +45,7 @@ dependencies {
 
     implementation(platform(libs.compose.bom))
 
+    implementation(libs.accompanist.permissions)
     implementation(libs.compose.ui.core)
     implementation(libs.koin.compose)
     implementation(libs.kotlinx.collections.immutable)

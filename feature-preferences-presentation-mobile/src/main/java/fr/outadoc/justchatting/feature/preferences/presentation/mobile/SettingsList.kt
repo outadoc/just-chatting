@@ -23,6 +23,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionState
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.presentation.Dependency
@@ -49,6 +53,7 @@ fun SettingsListPreview() {
     }
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun SettingsList(
     modifier: Modifier = Modifier,
@@ -233,6 +238,27 @@ fun SettingsList(
             ) {
                 Text(stringResource(R.string.settings_notifications_header))
             }
+        }
+
+        item {
+            val notificationPermissionState: PermissionState =
+                rememberPermissionState("android.permission.POST_NOTIFICATIONS")
+
+            SettingsSwitch(
+                modifier = Modifier.padding(itemInsets),
+                title = { Text(text = stringResource(R.string.settings_notifications_enable_title)) },
+                subtitle = { Text(text = stringResource(R.string.settings_notifications_enable_subtitle)) },
+                checked = notificationPermissionState.status.isGranted && appPreferences.enableNotifications,
+                onCheckedChange = { checked ->
+                    if (checked) {
+                        notificationPermissionState.launchPermissionRequest()
+                    }
+
+                    onAppPreferencesChange(
+                        appPreferences.copy(enableNotifications = checked),
+                    )
+                },
+            )
         }
 
         item {

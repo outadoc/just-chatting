@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 
 class NoOpChatNotifier : ChatNotifier {
 
-    override val supportsBackgroundChatService: Boolean = false
+    override val areNotificationsEnabled: Boolean = false
 
     override fun notify(context: Context, user: User) {}
 

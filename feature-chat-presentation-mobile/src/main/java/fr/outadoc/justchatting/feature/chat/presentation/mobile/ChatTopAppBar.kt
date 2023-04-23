@@ -100,7 +100,7 @@ fun ChatTopAppBar(
                 )
             }
 
-            if (canOpenInBubble() && notifier.supportsBackgroundChatService) {
+            if (canOpenInBubble() && notifier.areNotificationsEnabled) {
                 HapticIconButton(onClick = { onOpenBubbleClicked() }) {
                     Icon(
                         imageVector = Icons.Default.Compress,

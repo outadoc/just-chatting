@@ -13,6 +13,7 @@ import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.chat.data.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
@@ -21,23 +22,48 @@ import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
 
-class DefaultChatNotifier : ChatNotifier {
+class DefaultChatNotifier(
+    private val context: Context,
+    private val preferenceRepository: PreferenceRepository,
+) : ChatNotifier {
 
     companion object {
         private const val NOTIFICATION_CHANNEL_ID = "channel_bubble"
         private const val KEY_QUICK_REPLY_TEXT = "quick_reply"
     }
 
-    override val supportsBackgroundChatService: Boolean = true
+    override val areNotificationsEnabled: Boolean
+        get() {
+            val notificationsPermissionCheck: Int =
+                ContextCompat.checkSelfPermission(context, "android.permission.POST_NOTIFICATIONS")
 
-    private fun notificationIdFor(channelId: String) = channelId.hashCode()
+            return when (notificationsPermissionCheck) {
+                PackageManager.PERMISSION_GRANTED -> true
+
+                else -> {
+                    logError<DefaultChatNotifier> {
+                        "Notifications permission not granted (code: $notificationsPermissionCheck)"
+                    }
+                    false
+                }
+            }
+        }
 
     override fun notify(context: Context, user: User) {
         // Don't post a new notification if already in a bubble
         if ((context as? Activity)?.isLaunchedFromBubbleCompat == true) return
 
-        createGenericBubbleChannelIfNeeded(context) ?: return
+        if (areNotificationsEnabled) {
+            startForegroundService(context)
 
+            createGenericBubbleChannelIfNeeded(context) ?: return
+
+            // noinspection MissingPermission
+            createNotificationForUser(context, user)
+        }
+    }
+
+    private fun startForegroundService(context: Context) {
         if (Build.VERSION.SDK_INT >= 26) {
             context.startForegroundService(
                 ChatConnectionService.createStartIntent(context),
@@ -46,23 +72,6 @@ class DefaultChatNotifier : ChatNotifier {
             context.startService(
                 ChatConnectionService.createStartIntent(context),
             )
-        }
-
-        val notificationsPermissionCheck: Int =
-            ContextCompat.checkSelfPermission(context, "android.permission.POST_NOTIFICATIONS")
-
-        when (notificationsPermissionCheck) {
-            PackageManager.PERMISSION_GRANTED -> {
-                // noinspection MissingPermission
-                createNotificationForUser(
-                    context = context,
-                    user = user,
-                )
-            }
-
-            else -> {
-                logError<DefaultChatNotifier> { "Notifications permission not granted (code: $notificationsPermissionCheck)" }
-            }
         }
     }
 
@@ -159,4 +168,6 @@ class DefaultChatNotifier : ChatNotifier {
         NotificationManagerCompat.from(context)
             .cancel(notificationIdFor(channelId))
     }
+
+    private fun notificationIdFor(channelId: String) = channelId.hashCode()
 }

@@ -62,13 +62,7 @@ fun MainRouter(
 
                     Tab.Settings -> {
                         TopAppBar(
-                            title = {
-                                Text(
-                                    stringResource(
-                                        fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.settings,
-                                    ),
-                                )
-                            },
+                            title = { Text(stringResource(R.string.settings)) },
                         )
                     }
                 }

@@ -85,9 +85,7 @@ private fun CompactSearchBar(
                     if (isActive) {
                         Icon(
                             Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(
-                                fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.all_goBack,
-                            ),
+                            contentDescription = stringResource(R.string.all_goBack),
                         )
                     } else {
                         Icon(
@@ -154,9 +152,7 @@ private fun FullHeightSearchBar(
                     if (isActive) {
                         Icon(
                             Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(
-                                fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.all_goBack,
-                            ),
+                            contentDescription = stringResource(R.string.all_goBack),
                         )
                     } else {
                         Icon(

@@ -112,13 +112,7 @@ fun CompactNavigation(
 
                 NavigationBarItem(
                     selected = selectedTab == Tab.Settings,
-                    label = {
-                        Text(
-                            stringResource(
-                                fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.settings,
-                            ),
-                        )
-                    },
+                    label = { Text(stringResource(R.string.settings)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Settings,
@@ -186,11 +180,7 @@ fun MediumNavigation(
                     selected = selectedTab == Tab.Settings,
                     label = {
                         AnimatedVisibility(visible = selectedTab == Tab.Settings) {
-                            Text(
-                                stringResource(
-                                    fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.settings,
-                                ),
-                            )
+                            Text(stringResource(R.string.settings))
                         }
                     },
                     icon = {
@@ -261,13 +251,7 @@ fun ExpandedNavigation(
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Settings,
-                    label = {
-                        Text(
-                            stringResource(
-                                fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.settings,
-                            ),
-                        )
-                    },
+                    label = { Text(stringResource(R.string.settings)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Settings,

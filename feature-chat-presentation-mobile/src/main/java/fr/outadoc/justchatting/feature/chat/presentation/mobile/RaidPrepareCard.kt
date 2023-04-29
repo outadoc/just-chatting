@@ -71,7 +71,7 @@ fun RaidPrepareCard(
                         id = R.string.raid_prepare_message,
                         raid.targetDisplayName,
                         pluralStringResource(
-                            id = fr.outadoc.justchatting.component.twitch.R.plurals.viewers,
+                            id = R.plurals.viewers,
                             count = raid.viewerCount,
                             raid.viewerCount.formatNumber(),
                         ),

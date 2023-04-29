@@ -46,7 +46,9 @@ fun InReplyToMessage(
                     .alignByBaseline()
                     .padding(end = 4.dp, top = 1.dp),
                 imageVector = Icons.Default.Reply,
-                contentDescription = stringResource(R.string.chat_replyingTo),
+                contentDescription = stringResource(
+                    fr.outadoc.justchatting.component.twitch.R.string.chat_replyingTo,
+                ),
             )
 
             Text(

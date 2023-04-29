@@ -811,13 +811,6 @@
     "moduleUrl": "https://github.com/square/okio/"
   },
   {
-    "moduleLicense": "Apache 2.0",
-    "moduleVersion": "0.6.0",
-    "moduleName": "com.squareup:kotlinpoet",
-    "moduleLicenseUrl": "http://www.apache.org/licenses/LICENSE-2.0.txt",
-    "moduleUrl": "http://github.com/square/kotlinpoet/"
-  },
-  {
     "moduleVersion": "2023.03.00",
     "moduleName": "dev.chrisbanes.compose:compose-bom"
   },

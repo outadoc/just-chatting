@@ -35,7 +35,7 @@ internal sealed class PubSubRaidMessage {
         @SerialName("target_display_name")
         val targetDisplayName: String,
         @SerialName("target_profile_image")
-        val targetProfileImageUrl: String?,
+        val targetProfileImageUrlTemplate: String?,
         @SerialName("transition_jitter_seconds")
         val transitionJitterSeconds: Int,
         @SerialName("force_raid_now_seconds")

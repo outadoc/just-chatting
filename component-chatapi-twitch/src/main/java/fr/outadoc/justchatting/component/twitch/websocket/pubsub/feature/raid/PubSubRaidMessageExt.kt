@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.raid
 import fr.outadoc.justchatting.component.chatapi.common.Raid
 
 internal fun PubSubRaidMessage.map(): Raid? {
+    val imageDimensions = "70x70"
     return when (this) {
         PubSubRaidMessage.Cancel -> null
 
@@ -10,7 +11,7 @@ internal fun PubSubRaidMessage.map(): Raid? {
             targetId = raid.targetId,
             targetLogin = raid.targetLogin,
             targetDisplayName = raid.targetDisplayName,
-            targetProfileImageUrl = raid.targetProfileImageUrl,
+            targetProfileImageUrl = raid.targetProfileImageUrlTemplate?.format(imageDimensions),
             viewerCount = raid.viewerCount,
         )
 
@@ -18,7 +19,7 @@ internal fun PubSubRaidMessage.map(): Raid? {
             targetId = raid.targetId,
             targetLogin = raid.targetLogin,
             targetDisplayName = raid.targetDisplayName,
-            targetProfileImageUrl = raid.targetProfileImageUrl,
+            targetProfileImageUrl = raid.targetProfileImageUrlTemplate?.format(imageDimensions),
             viewerCount = raid.viewerCount,
         )
     }

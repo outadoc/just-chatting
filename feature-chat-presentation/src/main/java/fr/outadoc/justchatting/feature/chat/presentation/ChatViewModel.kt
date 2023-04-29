@@ -164,7 +164,7 @@ class ChatViewModel(
             val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
                 get() = flatListOf(
                     EmoteSetItem.Header(
-                        title = R.string.chat_header_recent.asStringOrRes(),
+                        title = fr.outadoc.justchatting.component.twitch.R.string.chat_header_recent.asStringOrRes(),
                         source = null,
                     ),
                     recentEmotes

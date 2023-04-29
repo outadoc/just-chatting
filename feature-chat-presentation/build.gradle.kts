@@ -12,7 +12,6 @@ android {
 
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -36,6 +35,7 @@ dependencies {
 
     implementation(project(":component-chatapi-common"))
     implementation(project(":component-chatapi-domain"))
+    implementation(project(":component-chatapi-twitch"))
     implementation(project(":component-preferences-domain"))
 
     implementation(project(":utils-core"))

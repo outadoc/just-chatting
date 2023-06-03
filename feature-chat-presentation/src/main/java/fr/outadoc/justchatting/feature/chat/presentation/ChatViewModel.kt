@@ -7,7 +7,6 @@ import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
@@ -64,6 +63,7 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
@@ -81,7 +81,6 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
@@ -851,93 +850,6 @@ class ChatViewModel(
     }
 
     private suspend fun emitTestEvents() {
-        actions.emit(
-            Action.UpdatePrediction(
-                prediction = Prediction(
-                    id = "0c64f437-7481-46a3-9d80-2834cc415dfc",
-                    title = "ANTOINE GAGNE ?",
-                    status = Prediction.Status.Active,
-                    createdAt = Instant.parse("2023-02-08T20:34:35.839478452Z"),
-                    endedAt = null,
-                    lockedAt = null,
-                    outcomes = listOf(
-                        Prediction.Outcome(
-                            id = "1df7ac61-7912-4c82-89d3-d7781c0c182b",
-                            title = "OUI",
-                            color = "#1e69ff",
-                            totalPoints = 50,
-                            totalUsers = 0,
-                            badge = Badge(id = "predictions", version = "blue-1"),
-                        ),
-                        Prediction.Outcome(
-                            id = "a6225650-401b-4874-83aa-839f747d5f55",
-                            title = "NON",
-                            color = "#e0008e",
-                            totalPoints = 100,
-                            totalUsers = 0,
-                            badge = Badge(id = "predictions", version = "pink-2"),
-                        ),
-                    ),
-                    predictionWindow = 2.minutes,
-                    winningOutcome = null,
-                ),
-            ),
-        )
-
-        actions.emit(
-            Action.UpdatePoll(
-                poll = Poll(
-                    pollId = "0c64f437-7481-46a3-9d80-2834cc415dfc",
-                    title = "ANTOINE GAGNE ?",
-                    status = Poll.Status.Active,
-                    startedAt = Instant.parse("2023-02-08T20:34:35.839478452Z"),
-                    endedAt = null,
-                    choices = listOf(
-                        Poll.Choice(
-                            choiceId = "1",
-                            title = "Étoiles",
-                            votes = Poll.Votes(
-                                total = 12345,
-                                bits = 123,
-                                channelPoints = 50,
-                                base = 1412,
-                            ),
-                            totalVoters = 1000,
-                        ),
-                        Poll.Choice(
-                            choiceId = "1",
-                            title = "AntoineDaniel",
-                            votes = Poll.Votes(
-                                total = 102345,
-                                bits = 123,
-                                channelPoints = 50,
-                                base = 1412,
-                            ),
-                            totalVoters = 1000,
-                        ),
-                        Poll.Choice(
-                            choiceId = "1",
-                            title = "HortyUnderscore",
-                            votes = Poll.Votes(
-                                total = 52450,
-                                bits = 123,
-                                channelPoints = 50,
-                                base = 1412,
-                            ),
-                            totalVoters = 1000,
-                        ),
-                    ),
-                    duration = 3.minutes,
-                    remainingDuration = 53.seconds,
-                    totalVoters = 133143,
-                    votes = Poll.Votes(
-                        total = 134356,
-                        bits = 1311,
-                        channelPoints = 2345,
-                        base = 757,
-                    ),
-                ),
-            ),
-        )
+        actions.emitAll(TestEvents.events)
     }
 }

@@ -1,8 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:base"
-  ],
+  "extends": ["config:base"],
   "packageRules": [
     {
       "groupName": "kotlin-monorepo",
@@ -13,11 +11,11 @@
       ]
     },
     {
+      "automerge": true,
       "matchUpdateTypes": [
         "minor",
         "patch"
-      ],
-      "automerge": true
+      ]
     }
   ],
   "semanticCommits": "enabled"

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="chat_header_recent">Recent</string>
+    <string name="chat_replyTo">Reply to this message</string>
+    <string name="chat_replyingTo">In reply to</string>
     <string name="notification_action_disconnect">Disconnect</string>
     <string name="notification_action_reply">Reply</string>
     <string name="notification_action_reply_hint">Reply in chat…</string>

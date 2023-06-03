@@ -137,7 +137,7 @@ fun ChatList(
                 }
 
             val canBeRepliedTo = item.body?.messageId != null
-            val replyToActionCd = stringResource(R.string.chat_replyTo)
+            val replyToActionCd = stringResource(fr.outadoc.justchatting.feature.chat.presentation.R.string.chat_replyTo)
 
             SwipeToReply(
                 onDismiss = { onReplyToMessage(item) },

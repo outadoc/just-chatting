@@ -63,7 +63,7 @@ fun StreamInfo(
 
             Text(
                 text = pluralStringResource(
-                    R.plurals.viewers,
+                    fr.outadoc.justchatting.component.twitch.R.plurals.viewers,
                     stream.viewerCount,
                     stream.viewerCount.formatNumber(),
                 ),

@@ -50,7 +50,7 @@ fun PinnedMessageCard(
 ) {
     var isExpanded: Boolean by remember { mutableStateOf(false) }
     val maxLines by animateIntAsState(
-        targetValue = if (isExpanded) Int.MAX_VALUE else 2,
+        targetValue = if (isExpanded) 24 else 2,
         label = "message max lines",
     )
 

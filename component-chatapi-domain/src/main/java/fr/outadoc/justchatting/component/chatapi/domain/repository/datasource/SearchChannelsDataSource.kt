@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.http.model.ChannelSearchResponse
+import fr.outadoc.justchatting.utils.logging.logError
 
 class SearchChannelsDataSource(
     private val query: String,
@@ -63,6 +64,7 @@ class SearchChannelsDataSource(
                 itemsAfter = itemsAfter,
             )
         } catch (e: Exception) {
+            logError<SearchChannelsDataSource>(e) { "Error while fetching followed streams" }
             LoadResult.Error(e)
         }
     }

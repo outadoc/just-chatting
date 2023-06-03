@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.http.model.StreamsResponse
+import fr.outadoc.justchatting.utils.logging.logError
 
 class FollowedStreamsDataSource(
     private val userId: String?,
@@ -51,6 +52,7 @@ class FollowedStreamsDataSource(
                 itemsAfter = itemsAfter,
             )
         } catch (e: Exception) {
+            logError<FollowedStreamsDataSource>(e) { "Error while fetching followed streams" }
             LoadResult.Error(e)
         }
     }

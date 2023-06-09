@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.component.twitch.http.model.CheerEmotesResponse
 import fr.outadoc.justchatting.component.twitch.http.model.EmoteSetResponse
 import fr.outadoc.justchatting.component.twitch.http.model.FollowResponse
 import fr.outadoc.justchatting.component.twitch.http.model.StreamsResponse
+import fr.outadoc.justchatting.component.twitch.http.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.component.twitch.http.model.UsersResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -119,4 +120,15 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
             }
         }.body()
     }
+
+    override suspend fun getGlobalBadges(): TwitchBadgesResponse =
+        client.get { url { path("chat/badges/global") } }.body()
+
+    override suspend fun getChannelBadges(channelId: String): TwitchBadgesResponse =
+        client.get {
+            url {
+                path("chat/badges")
+                parameter("broadcaster_id", channelId)
+            }
+        }.body()
 }

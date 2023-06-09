@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
 
 @Immutable
 data class TwitchBadge(
-    val id: String,
+    val setId: String,
     val title: String? = null,
     val version: String,
     val urls: EmoteUrls,

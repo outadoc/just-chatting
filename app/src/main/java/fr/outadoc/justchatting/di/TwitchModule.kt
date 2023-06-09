@@ -9,12 +9,10 @@ import fr.outadoc.justchatting.component.twitch.http.api.BttvEmotesApi
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.http.api.IdApi
 import fr.outadoc.justchatting.component.twitch.http.api.StvEmotesApi
-import fr.outadoc.justchatting.component.twitch.http.api.TwitchBadgesApi
 import fr.outadoc.justchatting.component.twitch.http.server.BttvEmotesServer
 import fr.outadoc.justchatting.component.twitch.http.server.HelixServer
 import fr.outadoc.justchatting.component.twitch.http.server.IdServer
 import fr.outadoc.justchatting.component.twitch.http.server.StvEmotesServer
-import fr.outadoc.justchatting.component.twitch.http.server.TwitchBadgesServer
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesServer
 import kotlinx.serialization.json.Json
@@ -42,7 +40,6 @@ val twitchModule = module {
 
     single<IdApi> { IdServer(get(named("twitch"))) }
     single<HelixApi> { HelixServer(get(named("twitch"))) }
-    single<TwitchBadgesApi> { TwitchBadgesServer(get()) }
     single<BttvEmotesApi> { BttvEmotesServer(get()) }
     single<StvEmotesApi> { StvEmotesServer(get()) }
     single<RecentMessagesApi> { RecentMessagesServer(get()) }

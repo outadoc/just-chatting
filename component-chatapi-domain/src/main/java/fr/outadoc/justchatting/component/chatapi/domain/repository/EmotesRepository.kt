@@ -8,8 +8,8 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.http.api.BttvEmotesApi
+import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.http.api.StvEmotesApi
-import fr.outadoc.justchatting.component.twitch.http.api.TwitchBadgesApi
 import fr.outadoc.justchatting.component.twitch.utils.map
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class EmotesRepository(
-    private val twitchBadgesApi: TwitchBadgesApi,
+    private val helixApi: HelixApi,
     private val stvEmotesApi: StvEmotesApi,
     private val bttvEmotesApi: BttvEmotesApi,
     private val recentEmotes: RecentEmotesDao,
@@ -26,13 +26,13 @@ class EmotesRepository(
 ) {
     suspend fun loadGlobalBadges(): List<TwitchBadge> =
         withContext(Dispatchers.IO) {
-            twitchBadgesApi.getGlobalBadges()
+            helixApi.getGlobalBadges()
                 .badgeSets
-                .flatMap { (setName, set) ->
-                    set.versions.map { (versionName, version) ->
+                .flatMap { set ->
+                    set.versions.map { version ->
                         TwitchBadge(
-                            id = setName,
-                            version = versionName,
+                            setId = set.setId,
+                            version = version.id,
                             urls = EmoteUrls(
                                 mapOf(
                                     1f to version.image1x,
@@ -47,13 +47,13 @@ class EmotesRepository(
 
     suspend fun loadChannelBadges(channelId: String): List<TwitchBadge> =
         withContext(Dispatchers.IO) {
-            twitchBadgesApi.getChannelBadges(channelId)
+            helixApi.getChannelBadges(channelId)
                 .badgeSets
-                .flatMap { (setName, set) ->
-                    set.versions.map { (versionName, version) ->
+                .flatMap { set ->
+                    set.versions.map { version ->
                         TwitchBadge(
-                            id = setName,
-                            version = versionName,
+                            setId = set.setId,
+                            version = version.id,
                             urls = EmoteUrls(
                                 mapOf(
                                     1f to version.image1x,

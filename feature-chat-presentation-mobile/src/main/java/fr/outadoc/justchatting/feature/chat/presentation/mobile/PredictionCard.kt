@@ -136,7 +136,7 @@ fun PredictionCard(
                             icon = {
                                 badges
                                     .firstOrNull { badge ->
-                                        badge.id == outcome.badge.id && badge.version == outcome.badge.version
+                                        badge.setId == outcome.badge.id && badge.version == outcome.badge.version
                                     }
                                     ?.let { twitchBadge ->
                                         BadgeItem(

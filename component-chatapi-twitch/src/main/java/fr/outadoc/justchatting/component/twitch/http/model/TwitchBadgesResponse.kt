@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class TwitchBadgesResponse(
-    @SerialName("badge_sets")
-    val badgeSets: Map<String, TwitchBadgeSet>,
+    @SerialName("data")
+    val badgeSets: List<TwitchBadgeSet>,
 )

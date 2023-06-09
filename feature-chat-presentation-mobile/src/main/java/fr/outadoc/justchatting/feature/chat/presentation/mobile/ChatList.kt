@@ -178,4 +178,4 @@ fun ChatList(
 }
 
 private val TwitchBadge.inlineContentId: String
-    get() = "badge_${id}_$version"
+    get() = "badge_${setId}_$version"

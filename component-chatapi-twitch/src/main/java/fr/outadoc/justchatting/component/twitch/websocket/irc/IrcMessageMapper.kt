@@ -259,6 +259,19 @@ class IrcMessageMapper(private val context: Context) {
                             title = header,
                             titleIcon = Icons.Default.Money,
                             subtitle = null,
+                            level = when (paidMessageInfo.level) {
+                                "ONE" -> ChatEvent.Message.Highlighted.Level.One
+                                "TWO" -> ChatEvent.Message.Highlighted.Level.Two
+                                "THREE" -> ChatEvent.Message.Highlighted.Level.Three
+                                "FOUR" -> ChatEvent.Message.Highlighted.Level.Four
+                                "FIVE" -> ChatEvent.Message.Highlighted.Level.Five
+                                "SIX" -> ChatEvent.Message.Highlighted.Level.Six
+                                "SEVEN" -> ChatEvent.Message.Highlighted.Level.Seven
+                                "EIGHT" -> ChatEvent.Message.Highlighted.Level.Eight
+                                "NINE" -> ChatEvent.Message.Highlighted.Level.Nine
+                                "TEN" -> ChatEvent.Message.Highlighted.Level.Ten
+                                else -> ChatEvent.Message.Highlighted.Level.Base
+                            }
                         )
                     }
 

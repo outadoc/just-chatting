@@ -32,11 +32,23 @@ sealed interface ChatEvent {
                 val title: String,
                 val titleIcon: ImageVector? = null,
                 val subtitle: String?,
-                val level: Level = Level.Normal,
+                val level: Level = Level.Base,
             )
 
             @Immutable
-            enum class Level { Normal, }
+            enum class Level {
+                Base,
+                One,
+                Two,
+                Three,
+                Four,
+                Five,
+                Six,
+                Seven,
+                Eight,
+                Nine,
+                Ten,
+            }
         }
 
         @Immutable

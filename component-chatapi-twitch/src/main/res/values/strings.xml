@@ -6,6 +6,7 @@
     <string name="chat_disconnect">Disconnected from %1$s</string>
     <string name="chat_first">First time chat</string>
     <string name="chat_join">Connected to %s</string>
+    <string name="chat_paidMessage">Boosted for %1$s</string>
     <string name="chat_raid_header">raided with %1$s!</string>
     <string name="chat_reward">Channel point redemption</string>
     <string name="chat_send_msg_error">Timeout while trying to send message</string>

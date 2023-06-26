@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -71,9 +72,11 @@ private val highlightedEntries = sequence {
     yield(
         ChatEvent.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664398268452),
-            title = "clo_chette_",
-            titleIcon = Icons.Default.Star,
-            subtitle = "subscribed at Tier 1. They've subscribed for 18 months!",
+            metadata = ChatEvent.Message.Highlighted.Metadata(
+                title = "clo_chette_",
+                titleIcon = Icons.Default.Star,
+                subtitle = "subscribed at Tier 1. They've subscribed for 18 months!",
+            ),
             body = ChatEvent.Message.Body(
                 chatter = Chatter(
                     id = "672551946",
@@ -94,9 +97,11 @@ private val highlightedEntries = sequence {
     yield(
         ChatEvent.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
-            title = "First message",
-            titleIcon = Icons.Default.WavingHand,
-            subtitle = null,
+            metadata = ChatEvent.Message.Highlighted.Metadata(
+                title = "First message",
+                titleIcon = Icons.Default.WavingHand,
+                subtitle = null,
+            ),
             body = ChatEvent.Message.Body(
                 chatter = Chatter(
                     id = "0",
@@ -110,6 +115,30 @@ private val highlightedEntries = sequence {
                 embeddedEmotes = persistentListOf(),
                 badges = persistentListOf(),
                 inReplyTo = null,
+            ),
+        ),
+    )
+}
+
+private val paidEntries = sequence {
+    yield(
+        ChatEvent.Message.Highlighted(
+            timestamp = Instant.parse("2023-06-26T17:53:11.208Z"),
+            metadata = ChatEvent.Message.Highlighted.Metadata(
+                title = "Boosted for $1",
+                titleIcon = Icons.Default.Money,
+                subtitle = null,
+            ),
+            body = ChatEvent.Message.Body(
+                messageId = "e63c83f4-4f4c-44fb-b62d-b1003599e61a",
+                chatter = Chatter(
+                    id = "43868596",
+                    login = "atyby",
+                    displayName = "Atyby",
+                ),
+                message = "Everybody.",
+                color = "#34BEED",
+                isAction = false,
             ),
         ),
     )
@@ -136,6 +165,7 @@ class ChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message> {
         yieldAll(simpleEntries)
         yieldAll(noticeEntries)
         yieldAll(highlightedEntries)
+        yieldAll(paidEntries)
     }
 }
 

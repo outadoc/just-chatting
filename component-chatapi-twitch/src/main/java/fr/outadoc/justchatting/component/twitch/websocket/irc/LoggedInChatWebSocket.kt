@@ -181,8 +181,10 @@ class LoggedInChatWebSocket(
                                 _flow.emit(
                                     ChatEvent.Message.Highlighted(
                                         timestamp = clock.now(),
-                                        title = context.getString(R.string.chat_send_msg_error),
-                                        subtitle = null,
+                                        metadata = ChatEvent.Message.Highlighted.Metadata(
+                                            title = context.getString(R.string.chat_send_msg_error),
+                                            subtitle = null,
+                                        ),
                                         body = null,
                                     ),
                                 )

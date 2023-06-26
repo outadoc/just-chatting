@@ -8,6 +8,7 @@ import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Highlight
+import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Redeem
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Toll
@@ -22,6 +23,7 @@ import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.format
 import kotlinx.collections.immutable.toImmutableList
 import java.math.BigDecimal
+import java.text.NumberFormat
 import java.util.Currency
 
 class IrcMessageMapper(private val context: Context) {
@@ -41,14 +43,16 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.IncomingRaid -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    title = userDisplayName,
-                    titleIcon = Icons.Default.CallReceived,
-                    subtitle = context.getString(
-                        R.string.chat_raid_header,
-                        context.resources.getQuantityString(
-                            R.plurals.viewers,
-                            raidersCount,
-                            raidersCount,
+                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                        title = userDisplayName,
+                        titleIcon = Icons.Default.CallReceived,
+                        subtitle = context.getString(
+                            R.string.chat_raid_header,
+                            context.resources.getQuantityString(
+                                R.plurals.viewers,
+                                raidersCount,
+                                raidersCount,
+                            ),
                         ),
                     ),
                     body = null,
@@ -58,9 +62,11 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.CancelledRaid -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    title = userDisplayName,
-                    titleIcon = Icons.Default.Cancel,
-                    subtitle = context.getString(R.string.chat_unraid_subtitle),
+                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                        title = userDisplayName,
+                        titleIcon = Icons.Default.Cancel,
+                        subtitle = context.getString(R.string.chat_unraid_subtitle),
+                    ),
                     body = null,
                 )
             }
@@ -68,9 +74,11 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.HighlightedMessage -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    title = context.getString(R.string.irc_msgid_highlighted_message),
-                    titleIcon = Icons.Default.Highlight,
-                    subtitle = null,
+                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                        title = context.getString(R.string.irc_msgid_highlighted_message),
+                        titleIcon = Icons.Default.Highlight,
+                        subtitle = null,
+                    ),
                     body = userMessage.map(),
                 )
             }
@@ -78,9 +86,11 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.Announcement -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    title = context.getString(R.string.irc_msgid_announcement),
-                    titleIcon = Icons.Default.Campaign,
-                    subtitle = null,
+                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                        title = context.getString(R.string.irc_msgid_announcement),
+                        titleIcon = Icons.Default.Campaign,
+                        subtitle = null,
+                    ),
                     body = userMessage.map(),
                 )
             }
@@ -88,37 +98,39 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.Subscription -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    title = userDisplayName,
-                    titleIcon = when (subscriptionPlan) {
-                        SUB_PRIME -> Icons.Outlined.Star
-                        else -> Icons.Filled.Star
-                    },
-                    subtitle = when (streakMonths) {
-                        0 -> context.getString(
-                            R.string.chat_sub_header_withDuration,
-                            parseSubscriptionTier(subscriptionPlan),
-                            context.resources.getQuantityString(
-                                R.plurals.months,
-                                cumulativeMonths,
-                                cumulativeMonths.formatNumber(),
-                            ),
-                        )
+                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                        title = userDisplayName,
+                        titleIcon = when (subscriptionPlan) {
+                            SUB_PRIME -> Icons.Outlined.Star
+                            else -> Icons.Filled.Star
+                        },
+                        subtitle = when (streakMonths) {
+                            0 -> context.getString(
+                                R.string.chat_sub_header_withDuration,
+                                parseSubscriptionTier(subscriptionPlan),
+                                context.resources.getQuantityString(
+                                    R.plurals.months,
+                                    cumulativeMonths,
+                                    cumulativeMonths.formatNumber(),
+                                ),
+                            )
 
-                        else -> context.getString(
-                            R.string.chat_sub_header_withDurationAndStreak,
-                            parseSubscriptionTier(subscriptionPlan),
-                            context.resources.getQuantityString(
-                                R.plurals.months,
-                                cumulativeMonths,
-                                cumulativeMonths.formatNumber(),
-                            ),
-                            context.resources.getQuantityString(
-                                R.plurals.months,
-                                streakMonths,
-                                streakMonths.formatNumber(),
-                            ),
-                        )
-                    },
+                            else -> context.getString(
+                                R.string.chat_sub_header_withDurationAndStreak,
+                                parseSubscriptionTier(subscriptionPlan),
+                                context.resources.getQuantityString(
+                                    R.plurals.months,
+                                    cumulativeMonths,
+                                    cumulativeMonths.formatNumber(),
+                                ),
+                                context.resources.getQuantityString(
+                                    R.plurals.months,
+                                    streakMonths,
+                                    streakMonths.formatNumber(),
+                                ),
+                            )
+                        },
+                    ),
                     body = userMessage?.map(),
                 )
             }
@@ -126,11 +138,13 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.SubscriptionConversion -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    title = userDisplayName,
-                    titleIcon = Icons.Filled.Star,
-                    subtitle = context.getString(
-                        R.string.chat_subConversion_header,
-                        parseSubscriptionTierWithArticle(subscriptionPlan),
+                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                        title = userDisplayName,
+                        titleIcon = Icons.Filled.Star,
+                        subtitle = context.getString(
+                            R.string.chat_subConversion_header,
+                            parseSubscriptionTierWithArticle(subscriptionPlan),
+                        ),
                     ),
                     body = userMessage?.map(),
                 )
@@ -139,13 +153,15 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.MassSubscriptionGift -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    title = userDisplayName,
-                    titleIcon = Icons.Default.VolunteerActivism,
-                    subtitle = context.getString(
-                        R.string.chat_massSubGift_header,
-                        giftCount.formatNumber(),
-                        parseSubscriptionTierWithArticle(subscriptionPlan),
-                        totalChannelGiftCount.formatNumber(),
+                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                        title = userDisplayName,
+                        titleIcon = Icons.Default.VolunteerActivism,
+                        subtitle = context.getString(
+                            R.string.chat_massSubGift_header,
+                            giftCount.formatNumber(),
+                            parseSubscriptionTierWithArticle(subscriptionPlan),
+                            totalChannelGiftCount.formatNumber(),
+                        ),
                     ),
                     body = null,
                 )
@@ -154,36 +170,40 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.SubscriptionGift -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    title = userDisplayName,
-                    titleIcon = Icons.Default.Redeem,
-                    subtitle = context.getString(
-                        R.string.chat_subGift_header,
-                        parseSubscriptionTier(subscriptionPlan),
-                        recipientDisplayName,
-                        context.resources.getQuantityString(
-                            R.plurals.months,
-                            cumulativeMonths,
-                            cumulativeMonths.formatNumber(),
+                    body = null,
+                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                        title = userDisplayName,
+                        titleIcon = Icons.Default.Redeem,
+                        subtitle = context.getString(
+                            R.string.chat_subGift_header,
+                            parseSubscriptionTier(subscriptionPlan),
+                            recipientDisplayName,
+                            context.resources.getQuantityString(
+                                R.plurals.months,
+                                cumulativeMonths,
+                                cumulativeMonths.formatNumber(),
+                            ),
                         ),
                     ),
-                    body = null,
                 )
             }
 
             is IrcEvent.Message.GiftPayForward -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    title = userDisplayName,
-                    titleIcon = Icons.Default.FastForward,
-                    subtitle = when (priorGifterDisplayName) {
-                        null -> context.getString(R.string.chat_subGift_payForwardAnonymous)
-                        else -> {
-                            context.getString(
-                                R.string.chat_subGift_payForward,
-                                priorGifterDisplayName,
-                            )
-                        }
-                    },
+                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                        title = userDisplayName,
+                        titleIcon = Icons.Default.FastForward,
+                        subtitle = when (priorGifterDisplayName) {
+                            null -> context.getString(R.string.chat_subGift_payForwardAnonymous)
+                            else -> {
+                                context.getString(
+                                    R.string.chat_subGift_payForward,
+                                    priorGifterDisplayName,
+                                )
+                            }
+                        },
+                    ),
                     body = null,
                 )
             }
@@ -191,35 +211,67 @@ class IrcMessageMapper(private val context: Context) {
             is IrcEvent.Message.UserNotice -> {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
-                    title = systemMsg,
-                    titleIcon = null,
-                    subtitle = null,
                     body = userMessage?.map(),
+                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                        title = systemMsg,
+                        titleIcon = null,
+                        subtitle = null,
+                    ),
                 )
             }
 
             is IrcEvent.Message.ChatMessage -> {
-                val (header, icon) = when {
+                val metadata = when {
                     isFirstMessageByUser -> {
-                        context.getString(R.string.chat_first) to Icons.Default.WavingHand
+                        ChatEvent.Message.Highlighted.Metadata(
+                            title = context.getString(R.string.chat_first),
+                            titleIcon = Icons.Default.WavingHand,
+                            subtitle = null,
+                        )
                     }
 
                     rewardId != null -> {
-                        context.getString(R.string.chat_reward) to Icons.Default.Toll
+                        ChatEvent.Message.Highlighted.Metadata(
+                            title = context.getString(R.string.chat_reward),
+                            titleIcon = Icons.Default.Toll,
+                            subtitle = null,
+                        )
+                    }
+
+                    paidMessageInfo != null -> {
+                        val currency = Currency.getInstance(paidMessageInfo.currency)
+                        val amount = BigDecimal.valueOf(
+                            paidMessageInfo.amount,
+                            paidMessageInfo.exponent,
+                        )
+
+                        val formattedAmount =
+                            NumberFormat.getCurrencyInstance()
+                                .apply { this.currency = currency }
+                                .format(amount)
+
+                        val header = context.getString(
+                            R.string.chat_paidMessage,
+                            formattedAmount,
+                        )
+
+                        ChatEvent.Message.Highlighted.Metadata(
+                            title = header,
+                            titleIcon = Icons.Default.Money,
+                            subtitle = null,
+                        )
                     }
 
                     else -> {
-                        null to null
+                        null
                     }
                 }
 
-                if (header != null) {
+                if (metadata != null) {
                     ChatEvent.Message.Highlighted(
                         timestamp = timestamp,
-                        title = header,
-                        titleIcon = icon,
-                        subtitle = null,
                         body = map(),
+                        metadata = metadata,
                     )
                 } else {
                     ChatEvent.Message.Simple(
@@ -274,14 +326,6 @@ class IrcMessageMapper(private val context: Context) {
                     ),
                 )
             },
-            paidMessageInfo = paidMessageInfo?.let { info ->
-                ChatEvent.Message.Body.PaidMessageInfo(
-                    amount = BigDecimal.valueOf(info.amount, info.exponent),
-                    currency = Currency.getInstance(info.currency),
-                    isSystemMessage = info.isSystemMessage,
-                    level = info.level,
-                )
-            },
         )
     }
 
@@ -292,19 +336,23 @@ class IrcMessageMapper(private val context: Context) {
                     if (command.duration == null) {
                         ChatEvent.Message.Highlighted(
                             timestamp = command.timestamp,
-                            title = command.targetUserLogin,
-                            titleIcon = Icons.Default.Gavel,
-                            subtitle = context.getString(R.string.chat_ban),
+                            metadata = ChatEvent.Message.Highlighted.Metadata(
+                                title = command.targetUserLogin,
+                                titleIcon = Icons.Default.Gavel,
+                                subtitle = context.getString(R.string.chat_ban),
+                            ),
                             body = null,
                         )
                     } else {
                         ChatEvent.Message.Highlighted(
                             timestamp = command.timestamp,
-                            title = command.targetUserLogin,
-                            titleIcon = Icons.Default.Gavel,
-                            subtitle = context.getString(
-                                R.string.chat_timeout,
-                                command.duration.format(context),
+                            metadata = ChatEvent.Message.Highlighted.Metadata(
+                                title = command.targetUserLogin,
+                                titleIcon = Icons.Default.Gavel,
+                                subtitle = context.getString(
+                                    R.string.chat_timeout,
+                                    command.duration.format(context),
+                                ),
                             ),
                             body = null,
                         )

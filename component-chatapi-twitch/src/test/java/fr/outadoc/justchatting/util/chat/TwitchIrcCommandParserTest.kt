@@ -434,7 +434,6 @@ class TwitchIrcCommandParserTest {
                 inReplyTo = null,
                 paidMessageInfo = IrcEvent.Message.ChatMessage.PaidMessageInfo(
                     amount = 600,
-                    canonicalAmount = 600,
                     currency = "EUR",
                     exponent = 2,
                     isSystemMessage = false,

@@ -7,7 +7,6 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.component.twitch.R
 import kotlinx.datetime.Clock
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class PubSubChannelPointsPlugin(
@@ -25,15 +24,17 @@ class PubSubChannelPointsPlugin(
                 listOf(
                     ChatEvent.Message.Highlighted(
                         timestamp = message.data.redemption.redeemedAt ?: clock.now(),
-                        title = context.resources.getQuantityString(
-                            R.plurals.user_redeemed,
-                            message.data.redemption.reward.cost,
-                            message.data.redemption.user.displayName,
-                            message.data.redemption.reward.title,
-                            message.data.redemption.reward.cost,
+                        metadata = ChatEvent.Message.Highlighted.Metadata(
+                            title = context.resources.getQuantityString(
+                                R.plurals.user_redeemed,
+                                message.data.redemption.reward.cost,
+                                message.data.redemption.user.displayName,
+                                message.data.redemption.reward.title,
+                                message.data.redemption.reward.cost,
+                            ),
+                            titleIcon = Icons.Default.Toll,
+                            subtitle = null,
                         ),
-                        titleIcon = Icons.Default.Toll,
-                        subtitle = null,
                         body = null,
                     ),
                 )

@@ -99,9 +99,9 @@ fun ChatMessage(
         when (message) {
             is ChatEvent.Message.Highlighted -> {
                 UserNoticeMessage(
-                    title = message.title,
-                    titleIcon = message.titleIcon,
-                    subtitle = message.subtitle,
+                    title = message.metadata.title,
+                    titleIcon = message.metadata.titleIcon,
+                    subtitle = message.metadata.subtitle,
                 ) {
                     message.body?.let { data ->
                         ChatMessageBody(

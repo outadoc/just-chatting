@@ -5,6 +5,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
+import java.math.BigDecimal
+import java.util.Currency
 import kotlin.time.Duration
 
 @Immutable
@@ -48,12 +50,21 @@ sealed interface ChatEvent {
             val embeddedEmotes: ImmutableList<Emote> = persistentListOf(),
             val badges: ImmutableList<Badge> = persistentListOf(),
             val inReplyTo: InReplyTo? = null,
+            val paidMessageInfo: PaidMessageInfo? = null,
         ) {
             @Immutable
             data class InReplyTo(
                 val id: String,
                 val message: String,
                 val chatter: Chatter,
+            )
+
+            @Immutable
+            data class PaidMessageInfo(
+                val amount: BigDecimal,
+                val currency: Currency,
+                val isSystemMessage: Boolean,
+                val level: String,
             )
         }
     }

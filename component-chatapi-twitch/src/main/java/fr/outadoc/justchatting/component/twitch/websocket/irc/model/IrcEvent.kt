@@ -24,6 +24,7 @@ sealed interface IrcEvent {
             val timestamp: Instant,
             val rewardId: String?,
             val inReplyTo: InReplyTo?,
+            val paidMessageInfo: PaidMessageInfo?,
         ) : Message {
 
             @Immutable
@@ -33,6 +34,15 @@ sealed interface IrcEvent {
                 val message: String,
                 val userId: String,
                 val userLogin: String,
+            )
+
+            @Immutable
+            data class PaidMessageInfo(
+                val amount: Long,
+                val currency: String,
+                val exponent: Int,
+                val isSystemMessage: Boolean,
+                val level: String,
             )
         }
 

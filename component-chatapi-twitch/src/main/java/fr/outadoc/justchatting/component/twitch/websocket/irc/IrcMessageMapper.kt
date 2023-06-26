@@ -21,6 +21,8 @@ import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.format
 import kotlinx.collections.immutable.toImmutableList
+import java.math.BigDecimal
+import java.util.Currency
 
 class IrcMessageMapper(private val context: Context) {
 
@@ -270,6 +272,14 @@ class IrcMessageMapper(private val context: Context) {
                         login = inReplyTo.userLogin,
                         displayName = inReplyTo.userName,
                     ),
+                )
+            },
+            paidMessageInfo = paidMessageInfo?.let { info ->
+                ChatEvent.Message.Body.PaidMessageInfo(
+                    amount = BigDecimal.valueOf(info.amount, info.exponent),
+                    currency = Currency.getInstance(info.currency),
+                    isSystemMessage = info.isSystemMessage,
+                    level = info.level,
                 )
             },
         )

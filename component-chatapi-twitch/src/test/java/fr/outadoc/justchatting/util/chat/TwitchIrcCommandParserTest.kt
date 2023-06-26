@@ -51,6 +51,7 @@ class TwitchIrcCommandParserTest {
                 timestamp = Instant.parse("2017-10-05T23:36:12.675Z"),
                 rewardId = null,
                 inReplyTo = null,
+                paidMessageInfo = null,
             )
         }
     }
@@ -82,6 +83,7 @@ class TwitchIrcCommandParserTest {
                 timestamp = Instant.parse("2022-07-08T16:47:29.487Z"),
                 rewardId = null,
                 inReplyTo = null,
+                paidMessageInfo = null,
             )
         }
     }
@@ -183,6 +185,7 @@ class TwitchIrcCommandParserTest {
                     timestamp = Instant.parse("2022-07-08T16:49:19.852Z"),
                     rewardId = null,
                     inReplyTo = null,
+                    paidMessageInfo = null,
                 ),
             )
         }
@@ -215,6 +218,7 @@ class TwitchIrcCommandParserTest {
                     timestamp = Instant.parse("2022-07-08T17:23:35.335Z"),
                     rewardId = null,
                     inReplyTo = null,
+                    paidMessageInfo = null,
                 ),
             )
         }
@@ -361,6 +365,7 @@ class TwitchIrcCommandParserTest {
                     userId = "108193474",
                     userLogin = "brankhorst",
                 ),
+                paidMessageInfo = null,
             )
         }
     }
@@ -394,6 +399,46 @@ class TwitchIrcCommandParserTest {
                     isFirstMessageByUser = false,
                     rewardId = null,
                     inReplyTo = null,
+                    paidMessageInfo = null,
+                ),
+            )
+        }
+    }
+
+    @Test
+    fun `Parse paid message`() = test {
+        input { "@badge-info=subscriber/25;badges=subscriber/24,sub-gifter/5;color=#34BEED;display-name=Atyby;emotes=;first-msg=0;flags=;id=e63c83f4-4f4c-44fb-b62d-b1003599e61a;mod=0;pinned-chat-paid-amount=600;pinned-chat-paid-canonical-amount=600;pinned-chat-paid-currency=EUR;pinned-chat-paid-exponent=2;pinned-chat-paid-is-system-message=0;pinned-chat-paid-level=TWO;returning-chatter=0;room-id=135468063;subscriber=1;tmi-sent-ts=1687801991208;turbo=0;user-id=43868596;user-type= :atyby!atyby@atyby.tmi.twitch.tv PRIVMSG #antoinedaniel :Everybody." }
+        expected {
+            IrcEvent.Message.ChatMessage(
+                id = "e63c83f4-4f4c-44fb-b62d-b1003599e61a",
+                timestamp = Instant.parse("2023-06-26T17:53:11.208Z"),
+                userId = "43868596",
+                userLogin = "atyby",
+                userName = "Atyby",
+                message = "Everybody.",
+                color = "#34BEED",
+                isAction = false,
+                embeddedEmotes = emptyList(),
+                badges = listOf(
+                    Badge(
+                        id = "subscriber",
+                        version = "24",
+                    ),
+                    Badge(
+                        id = "sub-gifter",
+                        version = "5",
+                    ),
+                ),
+                isFirstMessageByUser = false,
+                rewardId = null,
+                inReplyTo = null,
+                paidMessageInfo = IrcEvent.Message.ChatMessage.PaidMessageInfo(
+                    amount = 600,
+                    canonicalAmount = 600,
+                    currency = "EUR",
+                    exponent = 2,
+                    isSystemMessage = false,
+                    level = "TWO",
                 ),
             )
         }

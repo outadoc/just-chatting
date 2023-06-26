@@ -2,13 +2,13 @@ package fr.outadoc.justchatting.component.twitch.websocket.irc
 
 import android.content.Context
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.CallReceived
 import androidx.compose.material.icons.filled.Campaign
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.FastForward
 import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Highlight
-import androidx.compose.material.icons.filled.Money
 import androidx.compose.material.icons.filled.Redeem
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.Toll
@@ -257,7 +257,7 @@ class IrcMessageMapper(private val context: Context) {
 
                         ChatEvent.Message.Highlighted.Metadata(
                             title = header,
-                            titleIcon = Icons.Default.Money,
+                            titleIcon = Icons.Default.Bolt,
                             subtitle = null,
                             level = when (paidMessageInfo.level) {
                                 "ONE" -> ChatEvent.Message.Highlighted.Level.One
@@ -271,7 +271,7 @@ class IrcMessageMapper(private val context: Context) {
                                 "NINE" -> ChatEvent.Message.Highlighted.Level.Nine
                                 "TEN" -> ChatEvent.Message.Highlighted.Level.Ten
                                 else -> ChatEvent.Message.Highlighted.Level.Base
-                            }
+                            },
                         )
                     }
 

@@ -1,25 +1,17 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -62,69 +54,58 @@ fun UserNoticeMessage(
     title: String,
     titleIcon: ImageVector?,
     subtitle: String?,
+    level: ChatEvent.Message.Highlighted.Level,
     iconSize: Dp = 20.dp,
     data: @Composable () -> Unit,
 ) {
-    Row(modifier = modifier.height(IntrinsicSize.Min)) {
-        Box(
-            modifier = Modifier
-                .padding(vertical = 4.dp)
-                .background(MaterialTheme.colorScheme.primary)
-                .width(4.dp)
-                .fillMaxHeight(),
-        )
-
-        Card(
-            modifier = Modifier
-                .padding(vertical = 4.dp)
-                .fillMaxWidth(),
-            shape = RectangleShape,
+    HighlightedMessageCard(
+        modifier = modifier.fillMaxWidth(),
+        level = level,
+    ) {
+        Column(
+            modifier = Modifier.padding(4.dp),
         ) {
-            Column(
-                modifier = Modifier.padding(4.dp),
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
             ) {
+                if (titleIcon != null) {
+                    Icon(
+                        modifier = Modifier
+                            .size(iconSize)
+                            .padding(end = 4.dp),
+                        imageVector = titleIcon,
+                        contentDescription = null,
+                    )
+                }
+
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleSmall,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+
+            subtitle?.let {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (titleIcon != null) {
-                        Icon(
+                        Spacer(
                             modifier = Modifier
                                 .size(iconSize)
                                 .padding(end = 4.dp),
-                            imageVector = titleIcon,
-                            contentDescription = null,
                         )
                     }
 
                     Text(
-                        text = title,
-                        style = MaterialTheme.typography.titleSmall,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodyMedium,
                     )
                 }
-
-                subtitle?.let {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        if (titleIcon != null) {
-                            Spacer(
-                                modifier = Modifier
-                                    .size(iconSize)
-                                    .padding(end = 4.dp),
-                            )
-                        }
-
-                        Text(
-                            text = subtitle,
-                            style = MaterialTheme.typography.bodyMedium,
-                        )
-                    }
-                }
             }
-
-            data()
         }
+
+        data()
     }
 }

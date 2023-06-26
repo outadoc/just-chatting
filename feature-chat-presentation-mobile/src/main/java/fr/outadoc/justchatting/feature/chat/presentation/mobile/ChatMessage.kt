@@ -102,6 +102,7 @@ fun ChatMessage(
                     title = message.metadata.title,
                     titleIcon = message.metadata.titleIcon,
                     subtitle = message.metadata.subtitle,
+                    level = message.metadata.level,
                 ) {
                     message.body?.let { data ->
                         ChatMessageBody(

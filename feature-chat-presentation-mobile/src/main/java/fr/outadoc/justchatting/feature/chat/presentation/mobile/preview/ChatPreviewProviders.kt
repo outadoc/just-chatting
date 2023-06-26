@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Money
+import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -126,8 +126,9 @@ private val paidEntries = sequence {
             timestamp = Instant.parse("2023-06-26T17:53:11.208Z"),
             metadata = ChatEvent.Message.Highlighted.Metadata(
                 title = "Boosted for $1",
-                titleIcon = Icons.Default.Money,
+                titleIcon = Icons.Default.Bolt,
                 subtitle = null,
+                level = ChatEvent.Message.Highlighted.Level.Eight,
             ),
             body = ChatEvent.Message.Body(
                 messageId = "e63c83f4-4f4c-44fb-b62d-b1003599e61a",

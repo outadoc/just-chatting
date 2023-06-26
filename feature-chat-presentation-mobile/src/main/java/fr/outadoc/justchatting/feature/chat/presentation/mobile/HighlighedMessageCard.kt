@@ -9,9 +9,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
@@ -22,6 +24,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent.Message.Highli
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.HighlightLevelPreviewProvider
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import fr.outadoc.justchatting.utils.ui.isDark
 
 @Composable
 fun HighlightedMessageCard(
@@ -43,20 +46,22 @@ fun HighlightedMessageCard(
         Level.Ten -> Color(0xffc90216)
     }
 
-    Row(modifier = Modifier.height(IntrinsicSize.Min)) {
-        Box(
-            modifier = Modifier
-                .padding(vertical = 4.dp)
-                .background(color ?: MaterialTheme.colorScheme.primary)
-                .width(4.dp)
-                .fillMaxHeight(),
-        )
+    MaterialTheme(colorScheme = singleSourceColorScheme(color)) {
+        Row(modifier = Modifier.height(IntrinsicSize.Min)) {
+            Box(
+                modifier = Modifier
+                    .padding(vertical = 4.dp)
+                    .background(color ?: MaterialTheme.colorScheme.primary)
+                    .width(4.dp)
+                    .fillMaxHeight(),
+            )
 
-        Card(
-            modifier = modifier.padding(vertical = 4.dp),
-            shape = RectangleShape,
-        ) {
-            content()
+            Card(
+                modifier = modifier.padding(vertical = 4.dp),
+                shape = RectangleShape,
+            ) {
+                content()
+            }
         }
     }
 }
@@ -77,4 +82,19 @@ fun HighlightLevelPreview(
             )
         }
     }
+}
+
+@Stable
+@Composable
+fun singleSourceColorScheme(
+    color: Color?,
+    parentScheme: ColorScheme = MaterialTheme.colorScheme,
+): ColorScheme {
+    return color?.let { currentSourceColor ->
+        if (parentScheme.isDark) {
+            darkSchemeFromColor(currentSourceColor)
+        } else {
+            lightSchemeFromColor(currentSourceColor)
+        }
+    } ?: parentScheme
 }

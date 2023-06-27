@@ -106,13 +106,13 @@ android {
         buildConfigField(
             type = "boolean",
             name = "ENABLE_LOGGING",
-            value = "true"
+            value = "true",
         )
 
         buildConfigField(
             type = "boolean",
             name = "ENABLE_MOCK_IRC_ENDPOINT",
-            value = findProperty("enableMockIrcEndpoint") as String
+            value = findProperty("enableMockIrcEndpoint") as String,
         )
     }
 
@@ -148,7 +148,7 @@ android {
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
 
@@ -159,13 +159,13 @@ android {
 
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
 
             buildConfigField(
                 type = "boolean",
                 name = "ENABLE_LOGGING",
-                value = hasProperty("enableLogging").toString()
+                value = hasProperty("enableLogging").toString(),
             )
         }
     }

@@ -1,14 +1,94 @@
-@file:Suppress("UnstableApiUsage")
-
 import com.github.jk1.license.render.JsonReportRenderer
 
 plugins {
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spotless)
     alias(libs.plugins.licenseReport)
+}
+
+kotlin {
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":feature-chat-presentation-mobile"))
+                implementation(project(":feature-home-presentation-mobile"))
+                implementation(project(":feature-preferences-presentation-mobile"))
+                implementation(project(":feature-pronouns-domain"))
+
+                implementation(project(":component-chatapi-domain"))
+                implementation(project(":component-chatapi-common"))
+                implementation(project(":component-chatapi-twitch"))
+                implementation(project(":component-chatapi-db"))
+                implementation(project(":component-deeplink"))
+                implementation(project(":component-preferences-domain"))
+
+                implementation(project(":utils-core"))
+                implementation(project(":utils-ui"))
+                implementation(project(":utils-logging"))
+            }
+        }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.accompanist.systemuicontroller)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.androidx.appcompat)
+                implementation(libs.androidx.browser)
+                implementation(libs.androidx.constraintlayout)
+                implementation(libs.androidx.core)
+                implementation(libs.androidx.core)
+                implementation(libs.androidx.datastore.preferences)
+                implementation(libs.androidx.emoji2.core)
+                implementation(libs.androidx.fragment)
+                implementation(libs.androidx.lifecycle.common)
+                implementation(libs.androidx.lifecycle.livedata)
+                implementation(libs.androidx.lifecycle.process)
+                implementation(libs.androidx.lifecycle.viewmodel)
+                implementation(libs.androidx.paging.runtime)
+                implementation(libs.androidx.paging.compose)
+                implementation(libs.androidx.palette)
+                implementation(libs.androidx.splashscreen)
+                implementation(libs.coil.compose)
+                implementation(libs.coil.core)
+                implementation(libs.coil.gif)
+                implementation(libs.compose.foundation)
+                implementation(libs.compose.material.core2)
+                implementation(libs.compose.material.core3)
+                implementation(libs.compose.material.icons)
+                implementation(libs.compose.material.windowSizeClass)
+                implementation(libs.compose.runtime.livedata)
+                implementation(libs.compose.ui.core)
+                implementation(libs.compose.ui.tooling)
+                implementation(libs.koin.android)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.core)
+                implementation(libs.kotlinx.collections.immutable)
+                implementation(libs.kotlinx.coroutines)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.client.auth)
+                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.client.websockets)
+                implementation(libs.ktor.contentNegociation)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.serialization)
+                implementation(libs.material.core)
+                implementation(libs.okio)
+            }
+        }
+    }
 }
 
 android {
@@ -103,10 +183,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 
 licenseReport {
@@ -121,72 +197,6 @@ tasks.named("generateLicenseReport") {
 
 dependencies {
     implementation(platform(libs.kotlin.bom))
-
-    implementation(project(":feature-chat-presentation-mobile"))
-    implementation(project(":feature-home-presentation-mobile"))
-    implementation(project(":feature-preferences-presentation-mobile"))
-    implementation(project(":feature-pronouns-domain"))
-
-    implementation(project(":component-chatapi-domain"))
-    implementation(project(":component-chatapi-common"))
-    implementation(project(":component-chatapi-twitch"))
-    implementation(project(":component-chatapi-db"))
-    implementation(project(":component-deeplink"))
-    implementation(project(":component-preferences-domain"))
-
-    implementation(project(":utils-core"))
-    implementation(project(":utils-ui"))
-    implementation(project(":utils-logging"))
-
     implementation(platform(libs.compose.bom))
-
-    implementation(libs.accompanist.systemuicontroller)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.browser)
-    implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.core)
-    implementation(libs.androidx.core)
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.emoji2.core)
-    implementation(libs.androidx.fragment)
-    implementation(libs.androidx.lifecycle.common)
-    implementation(libs.androidx.lifecycle.livedata)
-    implementation(libs.androidx.lifecycle.process)
-    implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.androidx.paging.runtime)
-    implementation(libs.androidx.paging.compose)
-    implementation(libs.androidx.palette)
-    implementation(libs.androidx.splashscreen)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.core)
-    implementation(libs.coil.gif)
-    implementation(libs.compose.foundation)
-    implementation(libs.compose.material.core2)
-    implementation(libs.compose.material.core3)
-    implementation(libs.compose.material.icons)
-    implementation(libs.compose.material.windowSizeClass)
-    implementation(libs.compose.runtime.livedata)
-    implementation(libs.compose.ui.core)
-    implementation(libs.compose.ui.tooling)
-    implementation(libs.koin.android)
-    implementation(libs.koin.compose)
-    implementation(libs.koin.core)
-    implementation(libs.kotlinx.collections.immutable)
-    implementation(libs.kotlinx.coroutines)
-    implementation(libs.kotlinx.datetime)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.ktor.client.auth)
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
-    implementation(libs.ktor.client.websockets)
-    implementation(libs.ktor.contentNegociation)
-    implementation(libs.ktor.logging)
-    implementation(libs.ktor.serialization)
-    implementation(libs.material.core)
-    implementation(libs.okio)
-
-    // debugImplementation(libs.leakcanary)
-
     coreLibraryDesugaring(libs.desugar)
 }

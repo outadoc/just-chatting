@@ -1,9 +1,43 @@
-@file:Suppress("UnstableApiUsage")
-
 plugins {
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
+}
+
+kotlin {
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                api(project(":feature-preferences-presentation"))
+                implementation(project(":utils-ui"))
+                implementation(project(":component-preferences-data"))
+            }
+        }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.accompanist.permissions)
+                implementation(libs.compose.ui.core)
+                implementation(libs.koin.compose)
+                implementation(libs.kotlinx.collections.immutable)
+                implementation(libs.kotlinx.coroutines)
+                implementation(libs.compose.foundation)
+                implementation(libs.compose.material.core3)
+                implementation(libs.compose.material.icons)
+                implementation(libs.compose.ui.core)
+                implementation(libs.compose.ui.tooling)
+                implementation(libs.kotlinx.datetime)
+            }
+        }
+    }
 }
 
 android {
@@ -29,33 +63,9 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 
 dependencies {
-    api(project(":feature-preferences-presentation"))
-
-    implementation(project(":utils-ui"))
-
-    implementation(project(":component-preferences-data"))
-
     implementation(platform(libs.compose.bom))
-
-    implementation(libs.accompanist.permissions)
-    implementation(libs.compose.ui.core)
-    implementation(libs.koin.compose)
-    implementation(libs.kotlinx.collections.immutable)
-    implementation(libs.kotlinx.coroutines)
-    implementation(libs.compose.foundation)
-    implementation(libs.compose.material.core3)
-    implementation(libs.compose.material.icons)
-    implementation(libs.compose.ui.core)
-    implementation(libs.compose.ui.tooling)
-    implementation(libs.kotlinx.datetime)
-
-
     coreLibraryDesugaring(libs.desugar)
 }

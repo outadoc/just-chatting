@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 pluginManagement {
     repositories {
         gradlePluginPortal()
@@ -34,9 +32,6 @@ include(":feature-chat-presentation-mobile")
 
 include(":feature-home-presentation")
 include(":feature-home-presentation-mobile")
-
-include(":feature-mainnavigation-presentation")
-include(":feature-mainnavigation-presentation-mobile")
 
 include(":feature-preferences-presentation")
 include(":feature-preferences-presentation-mobile")

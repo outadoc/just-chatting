@@ -1,10 +1,38 @@
-@file:Suppress("UnstableApiUsage")
-
 plugins {
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
+}
+
+kotlin {
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":utils-core"))
+                implementation(project(":utils-logging"))
+            }
+        }
+
+        val androidMain by getting {
+            dependencies {
+                api(libs.androidx.room.core)
+                implementation(libs.androidx.room.runtime)
+                implementation(libs.compose.runtime.core)
+                implementation(libs.irc)
+                implementation(libs.kotlinx.collections.immutable)
+                implementation(libs.kotlinx.datetime)
+            }
+        }
+    }
 }
 
 android {
@@ -22,10 +50,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 
 ksp {
@@ -34,19 +58,7 @@ ksp {
 }
 
 dependencies {
-    implementation(project(":utils-core"))
-    implementation(project(":utils-logging"))
-
     implementation(platform(libs.compose.bom))
-
-    api(libs.androidx.room.core)
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.compose.runtime.core)
-    implementation(libs.irc)
-    implementation(libs.kotlinx.collections.immutable)
-    implementation(libs.kotlinx.datetime)
-
     ksp(libs.androidx.room.compiler)
-
     coreLibraryDesugaring(libs.desugar)
 }

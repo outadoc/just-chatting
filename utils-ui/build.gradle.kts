@@ -1,8 +1,36 @@
-@file:Suppress("UnstableApiUsage")
-
 plugins {
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+}
+
+kotlin {
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":utils-core"))
+            }
+        }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.androidx.palette)
+                implementation(libs.coil.core)
+                implementation(libs.compose.foundation)
+                implementation(libs.compose.material.core3)
+                implementation(libs.compose.ui.core)
+                implementation(libs.compose.ui.tooling)
+                implementation(libs.kotlinx.datetime)
+            }
+        }
+    }
 }
 
 android {
@@ -21,10 +49,6 @@ android {
         isCoreLibraryDesugaringEnabled = true
     }
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
     buildFeatures {
         compose = true
     }
@@ -35,17 +59,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":utils-core"))
-
     implementation(platform(libs.compose.bom))
-
-    implementation(libs.androidx.palette)
-    implementation(libs.coil.core)
-    implementation(libs.compose.foundation)
-    implementation(libs.compose.material.core3)
-    implementation(libs.compose.ui.core)
-    implementation(libs.compose.ui.tooling)
-    implementation(libs.kotlinx.datetime)
-
     coreLibraryDesugaring(libs.desugar)
 }

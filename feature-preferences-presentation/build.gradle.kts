@@ -1,9 +1,40 @@
-@file:Suppress("UnstableApiUsage")
-
 plugins {
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
+}
+
+kotlin {
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(project(":utils-logging"))
+
+                implementation(project(":component-preferences-data"))
+                implementation(project(":component-preferences-domain"))
+                implementation(project(":component-chatapi-domain"))
+            }
+        }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(libs.androidx.core)
+                implementation(libs.androidx.lifecycle.viewmodel)
+                implementation(libs.kotlinx.collections.immutable)
+                implementation(libs.kotlinx.coroutines)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.okio)
+            }
+        }
+    }
 }
 
 android {
@@ -21,25 +52,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
-
-    kotlinOptions {
-        jvmTarget = "17"
-    }
 }
 
 dependencies {
-    implementation(libs.androidx.core)
-    implementation(libs.androidx.lifecycle.viewmodel)
-    implementation(libs.kotlinx.collections.immutable)
-    implementation(libs.kotlinx.coroutines)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.okio)
-
-    implementation(project(":utils-logging"))
-
-    implementation(project(":component-preferences-data"))
-    implementation(project(":component-preferences-domain"))
-    implementation(project(":component-chatapi-domain"))
-
     coreLibraryDesugaring(libs.desugar)
 }

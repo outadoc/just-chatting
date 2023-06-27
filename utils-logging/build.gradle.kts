@@ -1,8 +1,26 @@
-@file:Suppress("UnstableApiUsage")
-
 plugins {
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+}
+
+kotlin {
+    android {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {}
+        }
+
+        val androidMain by getting {
+            dependencies {}
+        }
+    }
 }
 
 android {
@@ -20,12 +38,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+}
 
-    kotlinOptions {
-        jvmTarget = "17"
-    }
-
-    dependencies {
-        coreLibraryDesugaring(libs.desugar)
-    }
+dependencies {
+    coreLibraryDesugaring(libs.desugar)
 }

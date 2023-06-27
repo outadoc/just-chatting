@@ -5,6 +5,7 @@ plugins {
 }
 
 kotlin {
+    ios()
     android {
         compilations.all {
             kotlinOptions {
@@ -17,12 +18,12 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(project(":component-preferences-data"))
+                implementation(libs.kotlinx.coroutines)
             }
         }
 
         val androidMain by getting {
             dependencies {
-                implementation(libs.kotlinx.coroutines)
                 implementation(libs.androidx.datastore.preferences)
             }
         }

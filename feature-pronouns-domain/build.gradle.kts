@@ -23,17 +23,17 @@ kotlin {
                 implementation(project(":utils-core"))
                 implementation(project(":component-chatapi-common"))
                 implementation(project(":component-preferences-domain"))
-            }
-        }
 
-        val androidMain by getting {
-            dependencies {
                 implementation(libs.kotlinx.collections.immutable)
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.core)
             }
+        }
+
+        val androidMain by getting {
+            dependencies {}
         }
     }
 }

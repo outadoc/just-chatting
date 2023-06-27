@@ -7,7 +7,6 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
@@ -38,7 +37,6 @@ include(":feature-preferences-presentation-mobile")
 
 include(":feature-pronouns-data")
 include(":feature-pronouns-domain")
-include(":feature-pronouns-presentation")
 
 include(":component-deeplink")
 

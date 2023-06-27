@@ -19,7 +19,6 @@ kotlin {
                 api(project(":feature-chat-domain"))
 
                 implementation(project(":feature-pronouns-domain"))
-                implementation(project(":feature-pronouns-presentation"))
 
                 implementation(project(":component-chatapi-common"))
                 implementation(project(":component-chatapi-domain"))

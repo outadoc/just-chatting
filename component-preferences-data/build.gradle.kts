@@ -5,6 +5,7 @@ plugins {
 }
 
 kotlin {
+    ios()
     android {
         compilations.all {
             kotlinOptions {

@@ -33,6 +33,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
@@ -41,6 +42,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
@@ -71,6 +73,7 @@ class LiveChatWebSocket private constructor(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
+
     override val commandFlow: Flow<ChatEvent> = _flow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
@@ -84,6 +87,7 @@ class LiveChatWebSocket private constructor(
 
     override val connectionStatus = _connectionStatus.asStateFlow()
 
+    private var lastMessageReceivedAt: Instant? = null
     private var isNetworkAvailable: Boolean = false
     private var socketJob: Job? = null
 
@@ -105,12 +109,12 @@ class LiveChatWebSocket private constructor(
 
             _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
 
-            loadRecentMessages()
-
             while (isActive) {
                 if (isNetworkAvailable) {
                     logDebug<LiveChatWebSocket> { "Network is available, listening" }
                     _connectionStatus.update { status -> status.copy(isAlive = true) }
+
+                    loadRecentMessages()
 
                     try {
                         listen()
@@ -174,6 +178,9 @@ class LiveChatWebSocket private constructor(
             }
 
             is IrcEvent.Message -> {
+                // Remember time of last message so that we can restore lost messages after a connection loss
+                lastMessageReceivedAt = command.timestamp
+
                 _flow.emit(mapper.mapMessage(command))
             }
 
@@ -250,6 +257,10 @@ class LiveChatWebSocket private constructor(
                     )
                     .asFlow()
                     .filterIsInstance<IrcEvent.Message>()
+                    .dropWhile { event ->
+                        // Drop messages that were received before the last message we received
+                        event.timestamp < (lastMessageReceivedAt ?: Instant.DISTANT_PAST)
+                    }
                     .mapNotNull { event -> mapper.mapMessage(event) },
             )
         } catch (e: Exception) {

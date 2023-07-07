@@ -10,7 +10,10 @@ sealed interface IrcEvent {
 
     sealed interface Message : IrcEvent {
 
+        abstract val timestamp: Instant
+
         data class ChatMessage(
+            override val timestamp: Instant,
             val id: String?,
             val userId: String,
             val userLogin: String,
@@ -21,7 +24,6 @@ sealed interface IrcEvent {
             val embeddedEmotes: List<Emote>?,
             val badges: List<Badge>?,
             val isFirstMessageByUser: Boolean = false,
-            val timestamp: Instant,
             val rewardId: String?,
             val inReplyTo: InReplyTo?,
             val paidMessageInfo: PaidMessageInfo?,
@@ -47,30 +49,30 @@ sealed interface IrcEvent {
         }
 
         data class UserNotice(
+            override val timestamp: Instant,
             val systemMsg: String,
-            val timestamp: Instant,
             val userMessage: ChatMessage?,
             val msgId: String?,
         ) : Message
 
         data class IncomingRaid(
-            val timestamp: Instant,
+            override val timestamp: Instant,
             val userDisplayName: String,
             val raidersCount: Int,
         ) : Message
 
         data class CancelledRaid(
-            val timestamp: Instant,
+            override val timestamp: Instant,
             val userDisplayName: String,
         ) : Message
 
         data class Announcement(
-            val timestamp: Instant,
+            override val timestamp: Instant,
             val userMessage: ChatMessage,
         ) : Message
 
         data class Subscription(
-            val timestamp: Instant,
+            override val timestamp: Instant,
             val userDisplayName: String,
             val months: Int,
             val streakMonths: Int,
@@ -80,14 +82,14 @@ sealed interface IrcEvent {
         ) : Message
 
         data class SubscriptionConversion(
-            val timestamp: Instant,
+            override val timestamp: Instant,
             val userDisplayName: String,
             val subscriptionPlan: String,
             val userMessage: ChatMessage?,
         ) : Message
 
         data class SubscriptionGift(
-            val timestamp: Instant,
+            override val timestamp: Instant,
             val userDisplayName: String,
             val recipientDisplayName: String,
             val months: Int,
@@ -96,13 +98,13 @@ sealed interface IrcEvent {
         ) : Message
 
         data class GiftPayForward(
-            val timestamp: Instant,
+            override val timestamp: Instant,
             val userDisplayName: String,
             val priorGifterDisplayName: String?,
         ) : Message
 
         data class MassSubscriptionGift(
-            val timestamp: Instant,
+            override val timestamp: Instant,
             val userDisplayName: String,
             val giftCount: Int,
             val totalChannelGiftCount: Int,
@@ -110,13 +112,13 @@ sealed interface IrcEvent {
         ) : Message
 
         data class HighlightedMessage(
-            val timestamp: Instant,
+            override val timestamp: Instant,
             val userMessage: ChatMessage,
         ) : Message
 
         data class Notice(
+            override val timestamp: Instant,
             val message: String,
-            val timestamp: Instant,
             val messageId: String?,
         ) : Message
     }

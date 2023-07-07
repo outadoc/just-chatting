@@ -13,6 +13,7 @@ import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.utils.logging.logError
 import io.ktor.client.plugins.ClientRequestException
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,6 +21,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 class MainRouterViewModel(
     private val authRepository: AuthRepository,
@@ -125,6 +127,9 @@ class MainRouterViewModel(
                         ),
                     )
                 }
+
+                // Artificial delay to ensure Ktor has time to get the memo about the new token
+                delay(1.seconds)
             }
 
             is Deeplink.ViewChannel -> {

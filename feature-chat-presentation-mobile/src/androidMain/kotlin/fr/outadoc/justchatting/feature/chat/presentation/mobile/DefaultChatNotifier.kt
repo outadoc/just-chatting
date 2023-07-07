@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.annotation.RequiresPermission
 import androidx.core.app.NotificationChannelCompat
 import androidx.core.app.NotificationCompat
@@ -53,24 +52,10 @@ class DefaultChatNotifier(
         if ((context as? Activity)?.isLaunchedFromBubbleCompat == true) return
 
         if (areNotificationsEnabled) {
-            startForegroundService(context)
-
             createGenericBubbleChannelIfNeeded(context) ?: return
 
             // noinspection MissingPermission
             createNotificationForUser(context, user)
-        }
-    }
-
-    private fun startForegroundService(context: Context) {
-        if (Build.VERSION.SDK_INT >= 26) {
-            context.startForegroundService(
-                ChatConnectionService.createStartIntent(context),
-            )
-        } else {
-            context.startService(
-                ChatConnectionService.createStartIntent(context),
-            )
         }
     }
 
@@ -115,16 +100,6 @@ class DefaultChatNotifier(
                 .setOngoing(true)
                 .addAction(
                     NotificationCompat.Action.Builder(
-                        R.drawable.ic_close,
-                        context.getString(R.string.notification_action_disconnect),
-                        ChatConnectionService.createStopIntent(context, channelId = user.id)
-                            .toPendingForegroundServiceIntent(context),
-                    )
-                        .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_ARCHIVE)
-                        .build(),
-                )
-                .addAction(
-                    NotificationCompat.Action.Builder(
                         R.drawable.ic_reply,
                         context.getString(R.string.notification_action_reply),
                         ChatConnectionService.createReplyIntent(context, channelId = user.id)
@@ -145,10 +120,6 @@ class DefaultChatNotifier(
                     )
                         .setAutoExpandBubble(false)
                         .setSuppressNotification(false)
-                        .setDeleteIntent(
-                            ChatConnectionService.createStopIntent(context, channelId = user.id)
-                                .toPendingForegroundServiceIntent(context),
-                        )
                         .build(),
                 )
                 .setStyle(

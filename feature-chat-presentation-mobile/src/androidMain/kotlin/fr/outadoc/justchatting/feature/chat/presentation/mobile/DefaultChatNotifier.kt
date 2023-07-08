@@ -97,7 +97,6 @@ class DefaultChatNotifier(
                 .setShortcutId(user.id)
                 .addPerson(person)
                 .setAutoCancel(false)
-                .setOngoing(true)
                 .addAction(
                     NotificationCompat.Action.Builder(
                         R.drawable.ic_reply,
@@ -119,7 +118,7 @@ class DefaultChatNotifier(
                         user.getProfileImageIcon(context),
                     )
                         .setAutoExpandBubble(false)
-                        .setSuppressNotification(false)
+                        .setSuppressNotification(true)
                         .build(),
                 )
                 .setStyle(

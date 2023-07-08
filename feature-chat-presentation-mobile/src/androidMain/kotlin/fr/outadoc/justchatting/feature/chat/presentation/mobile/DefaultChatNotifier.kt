@@ -117,6 +117,9 @@ class DefaultChatNotifier(
                         intent.toPendingActivityIntent(context, mutable = true),
                         user.getProfileImageIcon(context),
                     )
+                        .setDesiredHeightResId(
+                            fr.outadoc.justchatting.feature.chat.presentation.mobile.R.dimen.height_bubbleWindow
+                        )
                         .setAutoExpandBubble(false)
                         .setSuppressNotification(true)
                         .build(),

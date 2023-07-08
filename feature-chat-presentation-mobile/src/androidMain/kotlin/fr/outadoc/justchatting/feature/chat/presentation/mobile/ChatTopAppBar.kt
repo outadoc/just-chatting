@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Compress
+import androidx.compose.material.icons.filled.PictureInPictureAlt
 import androidx.compose.material.icons.outlined.LiveTv
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -103,7 +104,7 @@ fun ChatTopAppBar(
             if (canOpenInBubble() && notifier.areNotificationsEnabled) {
                 HapticIconButton(onClick = { onOpenBubbleClicked() }) {
                     Icon(
-                        imageVector = Icons.Default.Compress,
+                        imageVector = Icons.Default.PictureInPictureAlt,
                         contentDescription = stringResource(R.string.menu_item_openInBubble),
                     )
                 }

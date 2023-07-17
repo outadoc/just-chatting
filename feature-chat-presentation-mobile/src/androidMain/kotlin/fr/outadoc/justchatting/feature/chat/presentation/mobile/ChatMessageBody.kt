@@ -232,10 +232,20 @@ fun ChatEvent.Message.Body.toAnnotatedString(
 
                 when {
                     word.matches(urlRegex) -> {
+                        // This is a URL
                         appendUrl(url = word, urlColor = urlColor)
                     }
 
+                    word in inlineContent -> {
+                        // This is an emote
+                        appendInlineContent(
+                            id = word,
+                            alternateText = word,
+                        )
+                    }
+
                     mentionedChatter != null -> {
+                        // This is a user mention
                         appendMention(
                             chatter = mentionedChatter,
                             appUser = appUser,
@@ -244,14 +254,8 @@ fun ChatEvent.Message.Body.toAnnotatedString(
                         )
                     }
 
-                    word in inlineContent -> {
-                        appendInlineContent(
-                            id = word,
-                            alternateText = word,
-                        )
-                    }
-
                     else -> {
+                        // Just a normal word living in a normal world
                         append(word)
                     }
                 }

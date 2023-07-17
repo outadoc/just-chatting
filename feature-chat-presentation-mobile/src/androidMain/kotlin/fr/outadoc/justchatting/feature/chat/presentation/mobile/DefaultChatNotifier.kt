@@ -118,7 +118,7 @@ class DefaultChatNotifier(
                         user.getProfileImageIcon(context),
                     )
                         .setDesiredHeightResId(
-                            fr.outadoc.justchatting.feature.chat.presentation.mobile.R.dimen.height_bubbleWindow
+                            fr.outadoc.justchatting.feature.chat.presentation.mobile.R.dimen.height_bubbleWindow,
                         )
                         .setAutoExpandBubble(false)
                         .setSuppressNotification(true)

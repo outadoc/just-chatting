@@ -32,11 +32,14 @@ class DefaultChatNotifier(
 
     override val areNotificationsEnabled: Boolean
         get() {
+            val nm = NotificationManagerCompat.from(context)
             val notificationsPermissionCheck: Int =
                 ContextCompat.checkSelfPermission(context, "android.permission.POST_NOTIFICATIONS")
 
             return when (notificationsPermissionCheck) {
-                PackageManager.PERMISSION_GRANTED -> true
+                PackageManager.PERMISSION_GRANTED -> {
+                    nm.areNotificationsEnabled()
+                }
 
                 else -> {
                     logError<DefaultChatNotifier> {

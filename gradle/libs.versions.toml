@@ -37,7 +37,7 @@ androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common-java
 androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
-androidx-paging-runtime = "androidx.paging:paging-runtime-ktx:3.1.1"
+androidx-paging-runtime = "androidx.paging:paging-runtime-ktx:3.2.0"
 androidx-paging-compose = "androidx.paging:paging-compose:1.0.0-alpha20"
 androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }

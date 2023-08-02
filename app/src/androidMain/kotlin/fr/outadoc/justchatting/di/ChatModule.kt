@@ -50,7 +50,7 @@ val chatModule = module {
     viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { StreamAndUserInfoViewModel(get()) }
 
-    single<ChatNotifier> { DefaultChatNotifier(get()) }
+    single<ChatNotifier> { DefaultChatNotifier(get(), get()) }
 
     single { FilterAutocompleteItemsUseCase() }
     single<CreateShortcutForChannelUseCase> { MobileCreateShortcutForChannelUseCase(get()) }

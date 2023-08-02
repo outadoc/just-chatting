@@ -12,6 +12,8 @@ import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
+import fr.outadoc.justchatting.component.preferences.data.AppPreferences
+import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.chat.data.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
@@ -20,9 +22,12 @@ import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class DefaultChatNotifier(
     private val context: Context,
+    private val preferenceRepository: PreferenceRepository,
 ) : ChatNotifier {
 
     companion object {
@@ -36,9 +41,12 @@ class DefaultChatNotifier(
             val notificationsPermissionCheck: Int =
                 ContextCompat.checkSelfPermission(context, "android.permission.POST_NOTIFICATIONS")
 
+            val currentPrefs: AppPreferences =
+                runBlocking { preferenceRepository.currentPreferences.first() }
+
             return when (notificationsPermissionCheck) {
                 PackageManager.PERMISSION_GRANTED -> {
-                    nm.areNotificationsEnabled()
+                    nm.areNotificationsEnabled() && currentPrefs.enableNotifications
                 }
 
                 else -> {

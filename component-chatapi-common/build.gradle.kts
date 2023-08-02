@@ -7,7 +7,7 @@ plugins {
 
 kotlin {
     ios()
-    android {
+    androidTarget {
         compilations.all {
             kotlinOptions {
                 jvmTarget = "17"

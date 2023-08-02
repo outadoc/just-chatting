@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.utils.ui.plus
@@ -68,7 +67,8 @@ fun FollowedChannelsList(
                     }
                 }
             } else {
-                items(items) { item: ChannelFollow? ->
+                items(items.itemCount) { index ->
+                    val item: ChannelFollow? = items[index]
                     if (item != null) {
                         UserItemCard(
                             modifier = Modifier.fillMaxWidth(),

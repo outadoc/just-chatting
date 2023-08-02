@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -24,8 +24,6 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                api(libs.androidx.room.core)
-                implementation(libs.androidx.room.runtime)
                 implementation(libs.compose.runtime.core)
                 implementation(libs.irc)
                 implementation(libs.kotlinx.collections.immutable)
@@ -52,13 +50,17 @@ android {
     }
 }
 
-ksp {
-    arg("room.schemaLocation", "$projectDir/schemas")
-    arg("room.incremental", "true")
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("fr.outadoc.justchatting.component.chatapi.db")
+        }
+    }
 }
 
 dependencies {
     implementation(platform(libs.compose.bom))
-    ksp(libs.androidx.room.compiler)
     coreLibraryDesugaring(libs.desugar)
+    implementation(libs.sqldelight.coroutines)
+    implementation(libs.koin.core)
 }

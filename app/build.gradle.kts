@@ -86,6 +86,7 @@ kotlin {
                 implementation(libs.ktor.serialization)
                 implementation(libs.material.core)
                 implementation(libs.okio)
+                implementation(libs.sqldelight.android.driver)
             }
         }
     }

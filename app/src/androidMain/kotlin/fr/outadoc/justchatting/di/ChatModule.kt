@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.di
 import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPluginsProvider
-import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
 import fr.outadoc.justchatting.component.twitch.websocket.irc.IrcMessageMapper
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LoggedInChatWebSocket
@@ -105,8 +104,6 @@ val chatModule = module {
 
     single { TwitchIrcCommandParser(get()) }
     single { IrcMessageMapper(get()) }
-
-    single { get<AppDatabase>().recentEmotes() }
 
     single { RecentMessagesRepository(get(), get()) }
     single { AlejoPronounsApi(get()) }

@@ -25,8 +25,6 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                implementation(libs.androidx.room.core)
-                implementation(libs.androidx.room.runtime)
                 implementation(libs.compose.runtime.core)
                 implementation(libs.compose.ui.core)
                 implementation(libs.irc)

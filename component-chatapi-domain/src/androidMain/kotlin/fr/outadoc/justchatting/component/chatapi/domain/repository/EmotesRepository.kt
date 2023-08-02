@@ -2,8 +2,8 @@ package fr.outadoc.justchatting.component.chatapi.domain.repository
 
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
-import fr.outadoc.justchatting.component.chatapi.db.MaxRecentEmotes
-import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
+import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesRepository
+import fr.outadoc.justchatting.component.chatapi.db.Recent_emotes
 import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
@@ -21,7 +21,7 @@ class EmotesRepository(
     private val helixApi: HelixApi,
     private val stvEmotesApi: StvEmotesApi,
     private val bttvEmotesApi: BttvEmotesApi,
-    private val recentEmotes: RecentEmotesDao,
+    private val recentEmotes: RecentEmotesRepository,
     private val preferencesRepository: PreferenceRepository,
 ) {
     suspend fun loadGlobalBadges(): List<TwitchBadge> =
@@ -132,27 +132,19 @@ class EmotesRepository(
                 RecentEmote(
                     name = emote.name,
                     url = emote.url,
-                    usedAt = emote.usedAt,
+                    usedAt = emote.used_at,
                 )
             }
         }
 
     suspend fun insertRecentEmotes(emotes: Collection<RecentEmote>) =
         withContext(Dispatchers.IO) {
-            val listSize: Int = emotes.size
-            val list: Collection<RecentEmote> =
-                if (listSize <= MaxRecentEmotes) {
-                    emotes
-                } else {
-                    emotes.toList().subList(listSize - MaxRecentEmotes, listSize)
-                }
-
-            recentEmotes.ensureMaxSizeAndInsert(
-                list.map { emote ->
-                    fr.outadoc.justchatting.component.chatapi.db.RecentEmote(
+            recentEmotes.insertAll(
+                emotes.map { emote ->
+                    Recent_emotes(
                         name = emote.name,
                         url = emote.url,
-                        usedAt = emote.usedAt,
+                        used_at = emote.usedAt,
                     )
                 },
             )

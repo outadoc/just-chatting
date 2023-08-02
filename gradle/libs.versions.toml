@@ -9,7 +9,7 @@ kotlin = "1.9.0"
 ktor = "2.3.3"
 lifecycle = "2.6.1"
 paging = "3.2.0"
-room = "2.5.2"
+sqldelight = "2.0.0"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
@@ -20,6 +20,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 ksp = { id = "com.google.devtools.ksp", version = "1.9.0-1.0.13" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.5" }
 spotless = { id = "com.diffplug.spotless", version = "6.20.0" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
 [libraries]
 accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
@@ -41,9 +42,6 @@ androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmode
 androidx-paging-runtime = { module = "androidx.paging:paging-runtime-ktx", version.ref = "paging" }
 androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
 androidx-palette = "androidx.palette:palette:1.0.0"
-androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
-androidx-room-core = { module = "androidx.room:room-ktx", version.ref = "room" }
-androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
@@ -81,3 +79,5 @@ ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", versi
 leakcanary = "com.squareup.leakcanary:leakcanary-android:2.12"
 material-core = "com.google.android.material:material:1.9.0"
 okio = "com.squareup.okio:okio:3.5.0"
+sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }

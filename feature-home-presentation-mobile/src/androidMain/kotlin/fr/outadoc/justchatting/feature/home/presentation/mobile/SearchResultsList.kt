@@ -19,7 +19,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.utils.ui.plus
@@ -67,7 +66,8 @@ fun SearchResultsList(
                     }
                 }
             } else {
-                items(items) { item: ChannelSearch? ->
+                items(items.itemCount) { index ->
+                    val item: ChannelSearch? = items[index]
                     if (item != null) {
                         UserItemCard(
                             modifier = Modifier.fillMaxWidth(),

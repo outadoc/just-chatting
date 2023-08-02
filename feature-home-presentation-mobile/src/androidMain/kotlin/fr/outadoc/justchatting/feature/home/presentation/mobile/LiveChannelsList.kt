@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.presentation.FollowedStreamsViewModel
 import fr.outadoc.justchatting.utils.ui.plus
@@ -69,7 +68,8 @@ fun LiveChannelsList(
                     }
                 }
             } else {
-                items(items) { item: Stream? ->
+                items(items.itemCount) { index ->
+                    val item: Stream? = items[index]
                     if (item != null) {
                         LiveStreamCard(
                             modifier = Modifier.fillMaxWidth(),

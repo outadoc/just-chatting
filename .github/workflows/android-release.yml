@@ -69,7 +69,7 @@ jobs:
           status: completed
 
       - name: Create GitHub release
-        uses: ncipollo/release-action@v1.12.0
+        uses: ncipollo/release-action@v1.13.0
         with:
           tag: "v${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
           commit: main

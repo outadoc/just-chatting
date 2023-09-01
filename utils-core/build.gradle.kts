@@ -31,7 +31,7 @@ kotlin {
 
 android {
     namespace = "fr.outadoc.justchatting.utils.core"
-    compileSdkVersion = "android-33"
+    compileSdkVersion = "android-34"
 
     defaultConfig {
         minSdk = 21

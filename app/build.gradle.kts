@@ -94,7 +94,7 @@ kotlin {
 
 android {
     namespace = "fr.outadoc.justchatting"
-    compileSdkVersion = "android-33"
+    compileSdkVersion = "android-34"
 
     defaultConfig {
         applicationId = "fr.outadoc.justchatting"

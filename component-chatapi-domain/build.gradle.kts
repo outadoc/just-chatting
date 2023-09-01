@@ -41,7 +41,7 @@ kotlin {
 
 android {
     namespace = "fr.outadoc.justchatting.component.chatapi.domain"
-    compileSdkVersion = "android-33"
+    compileSdkVersion = "android-34"
 
     defaultConfig {
         minSdk = 21

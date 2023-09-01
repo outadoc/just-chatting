@@ -5,9 +5,10 @@
     {
       "groupName": "kotlin-monorepo",
       "matchPackagePatterns": [
-        "^org.jetbrains.kotlin",
+        "^androidx.compose.compiler",
         "^com.google.devtools.ksp",
-        "^androidx.compose.compiler"
+        "^org.jetbrains.compose",
+        "^org.jetbrains.kotlin"
       ]
     },
     {

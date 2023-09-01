@@ -3,9 +3,9 @@ accompanist = "0.32.0"
 android = "8.1.1"
 coil = "2.4.0"
 compose = "2023.03.00"
-composeCompiler = "1.5.3"
+composeMultiplatform = "1.5.0"
 emoji = "1.4.0"
-kotlin = "1.9.10"
+kotlin = "1.9.0"
 ktor = "2.3.4"
 lifecycle = "2.6.1"
 paging = "3.2.0"
@@ -14,6 +14,7 @@ sqldelight = "2.0.0"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
+compose = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
@@ -47,7 +48,6 @@ coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-gif = { module = "io.coil-kt:coil-gif", version.ref = "coil" }
 compose-bom = { module = "dev.chrisbanes.compose:compose-bom", version.ref = "compose" }
-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "composeCompiler" }
 compose-foundation = { module = "androidx.compose.foundation:foundation" }
 compose-material-core2 = { module = "androidx.compose.material:material" }
 compose-material-core3 = { module = "androidx.compose.material3:material3" }

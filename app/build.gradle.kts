@@ -7,6 +7,7 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spotless)
     alias(libs.plugins.licenseReport)
+    alias(libs.plugins.compose)
 }
 
 kotlin {
@@ -169,14 +170,6 @@ android {
                 value = hasProperty("enableLogging").toString(),
             )
         }
-    }
-
-    buildFeatures {
-        compose = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.composeCompiler.get()
     }
 
     compileOptions {

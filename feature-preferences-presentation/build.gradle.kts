@@ -25,6 +25,7 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.androidx.core)
                 implementation(libs.androidx.lifecycle.viewmodel)

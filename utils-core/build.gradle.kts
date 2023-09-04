@@ -19,11 +19,13 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.collections.immutable)
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.moko.resources.core)
             }
         }
     }

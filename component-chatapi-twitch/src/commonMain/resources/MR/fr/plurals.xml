@@ -11,4 +11,10 @@
         <item quantity="other">%s mois</item>
         <item quantity="many">%s de mois</item>
     </plurals>
+
+    <plurals name="user_redeemed">
+        <item quantity="one">%1$s a obtenu %2$s pour %3$,d point</item>
+        <item quantity="other">%1$s a obtenu %2$s pour %3$,d points</item>
+        <item quantity="many">%1$s a obtenu %2$s pour %3$,d de points</item>
+    </plurals>
 </resources>

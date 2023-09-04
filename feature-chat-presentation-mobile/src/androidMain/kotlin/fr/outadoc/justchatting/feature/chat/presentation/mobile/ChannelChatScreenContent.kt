@@ -37,10 +37,10 @@ import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
@@ -113,7 +113,7 @@ fun ChannelChatScreenContent(
                 modifier = Modifier
                     .clickable(
                         onClick = { onShowUserInfoForLogin(channelLogin) },
-                        onClickLabel = stringResource(R.string.stream_info),
+                        onClickLabel = stringResource(MR.strings.stream_info),
                     ),
                 channelLogin = channelLogin,
                 user = user,
@@ -131,7 +131,7 @@ fun ChannelChatScreenContent(
                     item.body?.message?.let { rawMessage ->
                         clipboard.setText(AnnotatedString(rawMessage))
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        context.shortToast(R.string.chat_copiedToClipboard)
+                        context.shortToast(MR.strings.chat_copiedToClipboard.resourceId)
                     }
                 },
                 onReplyToMessage = onReplyToMessage,

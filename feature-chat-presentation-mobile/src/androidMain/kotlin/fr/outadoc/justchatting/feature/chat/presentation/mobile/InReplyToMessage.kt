@@ -14,13 +14,13 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 
@@ -46,7 +46,7 @@ fun InReplyToMessage(
                     .alignByBaseline()
                     .padding(end = 4.dp, top = 1.dp),
                 imageVector = Icons.Default.Reply,
-                contentDescription = stringResource(fr.outadoc.justchatting.feature.chat.presentation.R.string.chat_replyingTo),
+                contentDescription = stringResource(fr.outadoc.justchatting.feature.chat.presentation.MR.strings.chat_replyingTo),
             )
 
             Text(
@@ -63,7 +63,7 @@ fun InReplyToMessage(
                         append(chatter.displayName)
                     }
 
-                    append(stringResource(R.string.chat_message_standardSeparator))
+                    append(stringResource(MR.strings.chat_message_standardSeparator))
                     append(message)
                 },
                 style = MaterialTheme.typography.bodySmall,

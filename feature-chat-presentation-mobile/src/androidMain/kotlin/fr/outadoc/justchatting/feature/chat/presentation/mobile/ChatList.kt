@@ -13,11 +13,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
@@ -137,7 +137,7 @@ fun ChatList(
                 }
 
             val canBeRepliedTo = item.body?.messageId != null
-            val replyToActionCd = stringResource(fr.outadoc.justchatting.feature.chat.presentation.R.string.chat_replyTo)
+            val replyToActionCd = stringResource(fr.outadoc.justchatting.feature.chat.presentation.MR.strings.chat_replyTo)
 
             SwipeToReply(
                 onDismiss = { onReplyToMessage(item) },
@@ -149,7 +149,7 @@ fun ChatList(
                         .combinedClickable(
                             onClick = {},
                             onLongClick = { onMessageLongClick(item) },
-                            onLongClickLabel = stringResource(R.string.chat_copyToClipboard),
+                            onLongClickLabel = stringResource(MR.strings.chat_copyToClipboard),
                         )
                         .semantics {
                             if (canBeRepliedTo) {

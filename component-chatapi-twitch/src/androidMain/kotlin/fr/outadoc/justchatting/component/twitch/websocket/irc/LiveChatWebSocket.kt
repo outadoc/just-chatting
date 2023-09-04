@@ -1,13 +1,14 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
 import android.content.Context
+import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.component.twitch.R
+import fr.outadoc.justchatting.component.twitch.MR
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesRepository
@@ -146,7 +147,9 @@ class LiveChatWebSocket private constructor(
                 ChatEvent.Message.Highlighted(
                     timestamp = clock.now(),
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = context.getString(R.string.chat_join, channelLogin),
+                        title = MR.strings.chat_join
+                            .format(channelLogin)
+                            .toString(context),
                         subtitle = null,
                     ),
                     body = null,

@@ -86,7 +86,7 @@ class MainActivity : AppCompatActivity() {
                 is MainRouterViewModel.State.LoggedOut -> {
                     LaunchedEffect(currentState) {
                         if (currentState.causedByTokenExpiration) {
-                            toast(R.string.token_expired)
+                            toast(MR.strings.token_expired.resourceId)
                         }
                     }
 

@@ -22,10 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
@@ -96,7 +96,7 @@ fun ChatTopAppBar(
                 Icon(
                     modifier = Modifier.padding(bottom = 3.dp),
                     imageVector = Icons.Outlined.LiveTv,
-                    contentDescription = stringResource(R.string.watch_live),
+                    contentDescription = stringResource(MR.strings.watch_live),
                 )
             }
 
@@ -104,7 +104,7 @@ fun ChatTopAppBar(
                 HapticIconButton(onClick = { onOpenBubbleClicked() }) {
                     Icon(
                         imageVector = Icons.Default.PictureInPictureAlt,
-                        contentDescription = stringResource(R.string.menu_item_openInBubble),
+                        contentDescription = stringResource(MR.strings.menu_item_openInBubble),
                     )
                 }
             }

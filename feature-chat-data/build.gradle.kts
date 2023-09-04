@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -28,6 +29,7 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.androidx.core)
                 implementation(libs.coil.core)
@@ -39,9 +41,15 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.core)
+                implementation(libs.moko.resources.core)
+                implementation(libs.moko.resources.compose)
             }
         }
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "fr.outadoc.justchatting.feature.chat.data"
 }
 
 android {

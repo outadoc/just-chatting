@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -27,6 +28,7 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.compose.material.icons)
                 implementation(libs.compose.runtime.core)
@@ -35,6 +37,8 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.core)
+                implementation(libs.moko.resources.core)
+                implementation(libs.moko.resources.compose)
             }
         }
 
@@ -44,6 +48,10 @@ kotlin {
             }
         }
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "fr.outadoc.justchatting.component.twitch"
 }
 
 android {

@@ -9,4 +9,9 @@
         <item quantity="one">%s month</item>
         <item quantity="other">%s months</item>
     </plurals>
+
+    <plurals name="user_redeemed">
+        <item quantity="one">%1$s redeemed %2$s for %3$,d point</item>
+        <item quantity="other">%1$s redeemed %2$s for %3$,d points</item>
+    </plurals>
 </resources>

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.compose)
+    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -28,6 +29,7 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.accompanist.placeholder)
                 implementation(libs.androidx.activity.compose)
@@ -48,9 +50,15 @@ kotlin {
                 implementation(libs.compose.ui.core)
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.kotlinx.datetime)
+                implementation(libs.moko.resources.core)
+                implementation(libs.moko.resources.compose)
             }
         }
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "fr.outadoc.justchatting.feature.home.presentation.mobile"
 }
 
 android {

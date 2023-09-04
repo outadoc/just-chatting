@@ -22,8 +22,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.Poll
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme
@@ -57,8 +57,8 @@ fun PollCard(
                 }
 
             val status = when (poll.status) {
-                Poll.Status.Active -> R.string.poll_status_progress
-                Poll.Status.Completed, Poll.Status.Archived -> R.string.poll_status_ended
+                Poll.Status.Active -> MR.strings.poll_status_progress
+                Poll.Status.Completed, Poll.Status.Archived -> MR.strings.poll_status_ended
             }
 
             Row(
@@ -75,7 +75,7 @@ fun PollCard(
                             append(" · ")
                             append(
                                 stringResource(
-                                    R.string.poll_status_voterCount,
+                                    MR.strings.poll_status_voterCount,
                                     poll.totalVoters.formatNumber(),
                                 ),
                             )
@@ -92,12 +92,12 @@ fun PollCard(
                 if (isExpanded) {
                     Icon(
                         Icons.Default.ArrowDropUp,
-                        contentDescription = stringResource(R.string.poll_collapse_action),
+                        contentDescription = stringResource(MR.strings.poll_collapse_action),
                     )
                 } else {
                     Icon(
                         Icons.Default.ArrowDropDown,
-                        contentDescription = stringResource(R.string.poll_expand_action),
+                        contentDescription = stringResource(MR.strings.poll_expand_action),
                     )
                 }
             }

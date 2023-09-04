@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.integerArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.ExperimentalTextApi
 import androidx.compose.ui.text.SpanStyle
@@ -33,6 +32,7 @@ import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
@@ -213,9 +213,9 @@ fun ChatEvent.Message.Body.toAnnotatedString(
             append(
                 stringResource(
                     if (isAction) {
-                        R.string.chat_message_actionSeparator
+                        MR.strings.chat_message_actionSeparator
                     } else {
-                        R.string.chat_message_standardSeparator
+                        MR.strings.chat_message_standardSeparator
                     },
                 ),
             )

@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.compose)
+    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -21,6 +22,7 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.androidx.palette)
                 implementation(libs.coil.core)
@@ -29,9 +31,15 @@ kotlin {
                 implementation(libs.compose.ui.core)
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.kotlinx.datetime)
+                implementation(libs.moko.resources.core)
+                implementation(libs.moko.resources.compose)
             }
         }
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "fr.outadoc.justchatting.utils.ui"
 }
 
 android {

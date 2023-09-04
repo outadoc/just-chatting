@@ -8,6 +8,7 @@ emoji = "1.4.0"
 kotlin = "1.9.0"
 ktor = "2.3.4"
 lifecycle = "2.6.1"
+moko = "0.23.0"
 paging = "3.2.0"
 sqldelight = "2.0.0"
 
@@ -20,6 +21,7 @@ kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref =
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version = "1.9.10-1.0.13" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.5" }
+moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
 spotless = { id = "com.diffplug.spotless", version = "6.21.0" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
@@ -78,6 +80,8 @@ ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
 leakcanary = "com.squareup.leakcanary:leakcanary-android:2.12"
 material-core = "com.google.android.material:material:1.9.0"
+moko-resources-core = { module = "dev.icerock.moko:resources", version.ref = "moko" }
+moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko" }
 okio = "com.squareup.okio:okio:3.5.0"
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }

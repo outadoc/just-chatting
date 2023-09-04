@@ -1,13 +1,12 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
-import android.content.Context
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.component.twitch.R
+import fr.outadoc.justchatting.component.twitch.MR
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -54,7 +53,6 @@ class LoggedInChatWebSocket(
     networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val clock: Clock,
-    private val context: Context,
     private val parser: TwitchIrcCommandParser,
     private val mapper: IrcMessageMapper,
     private val httpClient: HttpClient,
@@ -182,7 +180,7 @@ class LoggedInChatWebSocket(
                                     ChatEvent.Message.Highlighted(
                                         timestamp = clock.now(),
                                         metadata = ChatEvent.Message.Highlighted.Metadata(
-                                            title = context.getString(R.string.chat_send_msg_error),
+                                            title = MR.strings.chat_send_msg_error.toString(),
                                             subtitle = null,
                                         ),
                                         body = null,
@@ -271,7 +269,6 @@ class LoggedInChatWebSocket(
         private val mapper: IrcMessageMapper,
         private val preferencesRepository: PreferenceRepository,
         private val httpClient: HttpClient,
-        private val context: Context,
     ) : ChatCommandHandlerFactory {
 
         override fun create(
@@ -280,14 +277,13 @@ class LoggedInChatWebSocket(
             channelId: String,
         ): LoggedInChatWebSocket {
             return LoggedInChatWebSocket(
-                clock = clock,
                 networkStateObserver = networkStateObserver,
                 scope = scope,
+                clock = clock,
                 parser = parser,
                 mapper = mapper,
                 httpClient = httpClient,
                 preferencesRepository = preferencesRepository,
-                context = context,
                 channelLogin = channelLogin,
             )
         }

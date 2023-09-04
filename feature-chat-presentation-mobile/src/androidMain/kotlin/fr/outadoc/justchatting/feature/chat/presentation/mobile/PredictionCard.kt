@@ -24,9 +24,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.Prediction
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
@@ -59,11 +59,11 @@ fun PredictionCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             val status = when (prediction.status) {
-                Prediction.Status.Active -> R.string.prediction_status_progress
-                Prediction.Status.Locked -> R.string.prediction_status_locked
+                Prediction.Status.Active -> MR.strings.prediction_status_progress
+                Prediction.Status.Locked -> MR.strings.prediction_status_locked
                 Prediction.Status.ResolvePending,
                 Prediction.Status.Resolved,
-                -> R.string.prediction_status_ended
+                -> MR.strings.prediction_status_ended
             }
 
             val totalPointsSpent: Int =
@@ -83,7 +83,7 @@ fun PredictionCard(
                             append(" · ")
                             append(
                                 stringResource(
-                                    R.string.prediction_status_points,
+                                    MR.strings.prediction_status_points,
                                     totalPointsSpent.formatNumber(),
                                 ),
                             )
@@ -103,12 +103,12 @@ fun PredictionCard(
                 if (isExpanded) {
                     Icon(
                         Icons.Default.ArrowDropUp,
-                        contentDescription = stringResource(R.string.prediction_collapse_action),
+                        contentDescription = stringResource(MR.strings.prediction_collapse_action),
                     )
                 } else {
                     Icon(
                         Icons.Default.ArrowDropDown,
-                        contentDescription = stringResource(R.string.prediction_expand_action),
+                        contentDescription = stringResource(MR.strings.prediction_expand_action),
                     )
                 }
             }

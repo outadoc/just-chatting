@@ -6,6 +6,7 @@ import android.text.format.DateUtils
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
+import dev.icerock.moko.resources.format
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -51,19 +52,19 @@ fun Duration.format(context: Context): String =
     sequence {
         toComponents { days, hours, minutes, seconds, _ ->
             days.takeIf { it > 0 }?.let {
-                yield(context.resources.getString(R.string.duration_days, it))
+                yield(MR.strings.duration_days.format(it).toString(context))
             }
 
             hours.takeIf { it > 0 }?.let {
-                yield(context.resources.getString(R.string.duration_hours, it))
+                yield(MR.strings.duration_hours.format(it).toString(context))
             }
 
             minutes.takeIf { it > 0 }?.let {
-                yield(context.resources.getString(R.string.duration_minutes, it))
+                yield(MR.strings.duration_minutes.format(it).toString(context))
             }
 
             seconds.takeIf { it > 0 }?.let {
-                yield(context.resources.getString(R.string.duration_seconds, it))
+                yield(MR.strings.duration_seconds.format(it).toString(context))
             }
         }
     }.joinToString(" ")

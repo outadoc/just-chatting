@@ -3,9 +3,10 @@ package fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.channe
 import android.content.Context
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Toll
+import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin
-import fr.outadoc.justchatting.component.twitch.R
+import fr.outadoc.justchatting.component.twitch.MR
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
@@ -25,13 +26,14 @@ class PubSubChannelPointsPlugin(
                     ChatEvent.Message.Highlighted(
                         timestamp = message.data.redemption.redeemedAt ?: clock.now(),
                         metadata = ChatEvent.Message.Highlighted.Metadata(
-                            title = context.resources.getQuantityString(
-                                R.plurals.user_redeemed,
-                                message.data.redemption.reward.cost,
-                                message.data.redemption.user.displayName,
-                                message.data.redemption.reward.title,
-                                message.data.redemption.reward.cost,
-                            ),
+                            title = MR.plurals.user_redeemed
+                                .format(
+                                    number = message.data.redemption.reward.cost,
+                                    message.data.redemption.user.displayName,
+                                    message.data.redemption.reward.title,
+                                    message.data.redemption.reward.cost,
+                                )
+                                .toString(context),
                             titleIcon = Icons.Default.Toll,
                             subtitle = null,
                         ),

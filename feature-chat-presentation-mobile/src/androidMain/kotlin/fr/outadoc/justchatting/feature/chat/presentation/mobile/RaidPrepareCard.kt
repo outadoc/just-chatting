@@ -16,11 +16,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import dev.icerock.moko.resources.compose.stringResource
+import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.Raid
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme
@@ -58,9 +59,7 @@ fun RaidPrepareCard(
                 modifier = Modifier.weight(1f, fill = true),
             ) {
                 Text(
-                    text = stringResource(
-                        id = R.string.raid_prepare_title,
-                    ),
+                    text = stringResource(MR.strings.raid_prepare_title),
                     style = MaterialTheme.typography.titleLarge,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
@@ -68,13 +67,12 @@ fun RaidPrepareCard(
 
                 Text(
                     text = stringResource(
-                        id = R.string.raid_prepare_message,
+                        MR.strings.raid_prepare_message,
                         raid.targetDisplayName,
-                        pluralStringResource(
-                            id = fr.outadoc.justchatting.component.twitch.R.plurals.viewers,
-                            count = raid.viewerCount,
+                        fr.outadoc.justchatting.component.twitch.MR.plurals.viewers.format(
+                            number = raid.viewerCount,
                             raid.viewerCount.formatNumber(),
-                        ),
+                        ).toString(LocalContext.current),
                     ),
                     style = MaterialTheme.typography.bodyMedium,
                 )

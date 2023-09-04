@@ -18,10 +18,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
@@ -67,7 +67,7 @@ fun ChatRichEmbed(
 
                 Text(
                     text = stringResource(
-                        id = R.string.richEmbed_author_title,
+                        MR.strings.richEmbed_author_title,
                         authorName,
                     ),
                     style = MaterialTheme.typography.bodySmall,

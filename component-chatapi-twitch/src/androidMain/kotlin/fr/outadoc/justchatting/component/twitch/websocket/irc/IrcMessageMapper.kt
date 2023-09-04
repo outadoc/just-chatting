@@ -15,9 +15,10 @@ import androidx.compose.material.icons.filled.Toll
 import androidx.compose.material.icons.filled.VolunteerActivism
 import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.material.icons.outlined.Star
+import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.twitch.R
+import fr.outadoc.justchatting.component.twitch.MR
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.format
@@ -46,14 +47,14 @@ class IrcMessageMapper(private val context: Context) {
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName,
                         titleIcon = Icons.Default.CallReceived,
-                        subtitle = context.getString(
-                            R.string.chat_raid_header,
-                            context.resources.getQuantityString(
-                                R.plurals.viewers,
-                                raidersCount,
-                                raidersCount,
-                            ),
-                        ),
+                        subtitle = MR.strings.chat_raid_header
+                            .format(
+                                MR.plurals.viewers.format(
+                                    number = raidersCount,
+                                    raidersCount,
+                                ),
+                            )
+                            .toString(context),
                     ),
                     body = null,
                 )
@@ -65,7 +66,7 @@ class IrcMessageMapper(private val context: Context) {
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName,
                         titleIcon = Icons.Default.Cancel,
-                        subtitle = context.getString(R.string.chat_unraid_subtitle),
+                        subtitle = MR.strings.chat_unraid_subtitle.getString(context),
                     ),
                     body = null,
                 )
@@ -75,7 +76,7 @@ class IrcMessageMapper(private val context: Context) {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = context.getString(R.string.irc_msgid_highlighted_message),
+                        title = MR.strings.irc_msgid_highlighted_message.getString(context),
                         titleIcon = Icons.Default.Highlight,
                         subtitle = null,
                     ),
@@ -87,7 +88,7 @@ class IrcMessageMapper(private val context: Context) {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = context.getString(R.string.irc_msgid_announcement),
+                        title = MR.strings.irc_msgid_announcement.getString(context),
                         titleIcon = Icons.Default.Campaign,
                         subtitle = null,
                     ),
@@ -105,30 +106,31 @@ class IrcMessageMapper(private val context: Context) {
                             else -> Icons.Filled.Star
                         },
                         subtitle = when (streakMonths) {
-                            0 -> context.getString(
-                                R.string.chat_sub_header_withDuration,
-                                parseSubscriptionTier(subscriptionPlan),
-                                context.resources.getQuantityString(
-                                    R.plurals.months,
-                                    cumulativeMonths,
-                                    cumulativeMonths.formatNumber(),
-                                ),
-                            )
+                            0 -> {
+                                MR.strings.chat_sub_header_withDuration
+                                    .format(
+                                        parseSubscriptionTier(subscriptionPlan),
+                                        MR.plurals.months.format(
+                                            number = cumulativeMonths,
+                                            cumulativeMonths.formatNumber(),
+                                        ).toString(context),
+                                    )
+                                    .toString(context)
+                            }
 
-                            else -> context.getString(
-                                R.string.chat_sub_header_withDurationAndStreak,
-                                parseSubscriptionTier(subscriptionPlan),
-                                context.resources.getQuantityString(
-                                    R.plurals.months,
-                                    cumulativeMonths,
-                                    cumulativeMonths.formatNumber(),
-                                ),
-                                context.resources.getQuantityString(
-                                    R.plurals.months,
-                                    streakMonths,
-                                    streakMonths.formatNumber(),
-                                ),
-                            )
+                            else -> {
+                                MR.strings.chat_sub_header_withDurationAndStreak.format(
+                                    parseSubscriptionTier(subscriptionPlan),
+                                    MR.plurals.months.format(
+                                        number = cumulativeMonths,
+                                        cumulativeMonths.formatNumber(),
+                                    ).toString(context),
+                                    MR.plurals.months.format(
+                                        number = streakMonths,
+                                        streakMonths.formatNumber(),
+                                    ).toString(context),
+                                ).toString(context)
+                            }
                         },
                     ),
                     body = userMessage?.map(),
@@ -141,10 +143,9 @@ class IrcMessageMapper(private val context: Context) {
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName,
                         titleIcon = Icons.Filled.Star,
-                        subtitle = context.getString(
-                            R.string.chat_subConversion_header,
-                            parseSubscriptionTierWithArticle(subscriptionPlan),
-                        ),
+                        subtitle = MR.strings.chat_subConversion_header
+                            .format(parseSubscriptionTierWithArticle(subscriptionPlan))
+                            .toString(context),
                     ),
                     body = userMessage?.map(),
                 )
@@ -156,12 +157,13 @@ class IrcMessageMapper(private val context: Context) {
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName,
                         titleIcon = Icons.Default.VolunteerActivism,
-                        subtitle = context.getString(
-                            R.string.chat_massSubGift_header,
-                            giftCount.formatNumber(),
-                            parseSubscriptionTierWithArticle(subscriptionPlan),
-                            totalChannelGiftCount.formatNumber(),
-                        ),
+                        subtitle = MR.strings.chat_massSubGift_header
+                            .format(
+                                giftCount.formatNumber(),
+                                parseSubscriptionTierWithArticle(subscriptionPlan),
+                                totalChannelGiftCount.formatNumber(),
+                            )
+                            .toString(context),
                     ),
                     body = null,
                 )
@@ -174,16 +176,16 @@ class IrcMessageMapper(private val context: Context) {
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName,
                         titleIcon = Icons.Default.Redeem,
-                        subtitle = context.getString(
-                            R.string.chat_subGift_header,
-                            parseSubscriptionTier(subscriptionPlan),
-                            recipientDisplayName,
-                            context.resources.getQuantityString(
-                                R.plurals.months,
-                                cumulativeMonths,
-                                cumulativeMonths.formatNumber(),
-                            ),
-                        ),
+                        subtitle = MR.strings.chat_subGift_header
+                            .format(
+                                parseSubscriptionTier(subscriptionPlan),
+                                recipientDisplayName,
+                                MR.plurals.months.format(
+                                    number = cumulativeMonths,
+                                    cumulativeMonths.formatNumber(),
+                                ).toString(context),
+                            )
+                            .toString(context),
                     ),
                 )
             }
@@ -195,12 +197,11 @@ class IrcMessageMapper(private val context: Context) {
                         title = userDisplayName,
                         titleIcon = Icons.Default.FastForward,
                         subtitle = when (priorGifterDisplayName) {
-                            null -> context.getString(R.string.chat_subGift_payForwardAnonymous)
+                            null -> MR.strings.chat_subGift_payForwardAnonymous.getString(context)
                             else -> {
-                                context.getString(
-                                    R.string.chat_subGift_payForward,
-                                    priorGifterDisplayName,
-                                )
+                                MR.strings.chat_subGift_payForward
+                                    .format(priorGifterDisplayName)
+                                    .toString(context)
                             }
                         },
                     ),
@@ -224,7 +225,7 @@ class IrcMessageMapper(private val context: Context) {
                 val metadata = when {
                     isFirstMessageByUser -> {
                         ChatEvent.Message.Highlighted.Metadata(
-                            title = context.getString(R.string.chat_first),
+                            title = MR.strings.chat_first.getString(context),
                             titleIcon = Icons.Default.WavingHand,
                             subtitle = null,
                         )
@@ -232,7 +233,7 @@ class IrcMessageMapper(private val context: Context) {
 
                     rewardId != null -> {
                         ChatEvent.Message.Highlighted.Metadata(
-                            title = context.getString(R.string.chat_reward),
+                            title = MR.strings.chat_reward.getString(context),
                             titleIcon = Icons.Default.Toll,
                             subtitle = null,
                         )
@@ -250,10 +251,10 @@ class IrcMessageMapper(private val context: Context) {
                                 .apply { this.currency = currency }
                                 .format(amount)
 
-                        val header = context.getString(
-                            R.string.chat_paidMessage,
-                            formattedAmount,
-                        )
+                        val header: String =
+                            MR.strings.chat_paidMessage
+                                .format(formattedAmount)
+                                .toString(context)
 
                         ChatEvent.Message.Highlighted.Metadata(
                             title = header,
@@ -298,19 +299,19 @@ class IrcMessageMapper(private val context: Context) {
 
     private fun parseSubscriptionTier(planId: String): String {
         return when (planId) {
-            SUB_T1 -> context.getString(R.string.chat_sub_tier1)
-            SUB_T2 -> context.getString(R.string.chat_sub_tier2)
-            SUB_T3 -> context.getString(R.string.chat_sub_tier3)
-            SUB_PRIME -> context.getString(R.string.chat_sub_prime)
+            SUB_T1 -> MR.strings.chat_sub_tier1.getString(context)
+            SUB_T2 -> MR.strings.chat_sub_tier2.getString(context)
+            SUB_T3 -> MR.strings.chat_sub_tier3.getString(context)
+            SUB_PRIME -> MR.strings.chat_sub_prime.getString(context)
             else -> planId
         }
     }
 
     private fun parseSubscriptionTierWithArticle(planId: String): String {
         return when (planId) {
-            SUB_T1 -> context.getString(R.string.chat_subGift_tier1)
-            SUB_T2 -> context.getString(R.string.chat_subGift_tier2)
-            SUB_T3 -> context.getString(R.string.chat_subGift_tier3)
+            SUB_T1 -> MR.strings.chat_subGift_tier1.getString(context)
+            SUB_T2 -> MR.strings.chat_subGift_tier2.getString(context)
+            SUB_T3 -> MR.strings.chat_subGift_tier3.getString(context)
             else -> planId
         }
     }
@@ -352,7 +353,7 @@ class IrcMessageMapper(private val context: Context) {
                             metadata = ChatEvent.Message.Highlighted.Metadata(
                                 title = command.targetUserLogin,
                                 titleIcon = Icons.Default.Gavel,
-                                subtitle = context.getString(R.string.chat_ban),
+                                subtitle = MR.strings.chat_ban.getString(context),
                             ),
                             body = null,
                         )
@@ -362,10 +363,9 @@ class IrcMessageMapper(private val context: Context) {
                             metadata = ChatEvent.Message.Highlighted.Metadata(
                                 title = command.targetUserLogin,
                                 titleIcon = Icons.Default.Gavel,
-                                subtitle = context.getString(
-                                    R.string.chat_timeout,
-                                    command.duration.format(context),
-                                ),
+                                subtitle = MR.strings.chat_timeout
+                                    .format(command.duration.format(context))
+                                    .toString(context),
                             ),
                             body = null,
                         )
@@ -373,7 +373,7 @@ class IrcMessageMapper(private val context: Context) {
                 } else {
                     ChatEvent.Message.Notice(
                         timestamp = command.timestamp,
-                        text = context.getString(R.string.chat_clear),
+                        text = MR.strings.chat_clear.getString(context),
                     )
                 }
             }
@@ -384,446 +384,815 @@ class IrcMessageMapper(private val context: Context) {
 
     private fun getLabelForNotice(messageId: String?, message: String?): String? {
         return when (messageId) {
-            "already_banned" -> context.getString(
-                R.string.irc_notice_already_banned,
-                message?.substringBefore(" is already banned", "") ?: "",
-            )
+            "already_banned" -> {
+                MR.strings.irc_notice_already_banned
+                    .format(
+                        message?.substringBefore(" is already banned", "") ?: "",
+                    )
+                    .toString(context)
+            }
 
-            "already_emote_only_off" -> context.getString(R.string.irc_notice_already_emote_only_off)
-            "already_emote_only_on" -> context.getString(R.string.irc_notice_already_emote_only_on)
-            "already_followers_off" -> context.getString(R.string.irc_notice_already_followers_off)
-            "already_followers_on" -> context.getString(
-                R.string.irc_notice_already_followers_on,
-                message?.substringAfter("is already in ", "")
-                    ?.substringBefore(" followers-only mode", "") ?: "",
-            )
+            "already_emote_only_off" -> {
+                MR.strings.irc_notice_already_emote_only_off.getString(context)
+            }
 
-            "already_r9k_off" -> context.getString(R.string.irc_notice_already_r9k_off)
-            "already_r9k_on" -> context.getString(R.string.irc_notice_already_r9k_on)
-            "already_slow_off" -> context.getString(R.string.irc_notice_already_slow_off)
-            "already_slow_on" -> context.getString(
-                R.string.irc_notice_already_slow_on,
-                message?.substringAfter("is already in ", "")?.substringBefore("-second slow", "")
-                    ?: "",
-            )
+            "already_emote_only_on" -> {
+                MR.strings.irc_notice_already_emote_only_on.getString(context)
+            }
 
-            "already_subs_off" -> context.getString(R.string.irc_notice_already_subs_off)
-            "already_subs_on" -> context.getString(R.string.irc_notice_already_subs_on)
-            "autohost_receive" -> context.getString(
-                R.string.irc_notice_autohost_receive,
-                message?.substringBefore(" is now auto hosting", "") ?: "",
-                message?.substringAfter("you for up to ", "")?.substringBefore(" viewers", "")
-                    ?: "",
-            )
+            "already_followers_off" -> {
+                MR.strings.irc_notice_already_followers_off.getString(context)
+            }
 
-            "bad_ban_admin" -> context.getString(
-                R.string.irc_notice_bad_ban_admin,
-                message?.substringAfter("cannot ban admin", "")
-                    ?.substringBefore(". Please email", "") ?: "",
-            )
+            "already_followers_on" -> {
+                MR.strings.irc_notice_already_followers_on.format(
+                    message?.substringAfter("is already in ", "")
+                        ?.substringBefore(" followers-only mode", "") ?: "",
+                ).toString(context)
+            }
 
-            "bad_ban_anon" -> context.getString(R.string.irc_notice_bad_ban_anon)
-            "bad_ban_broadcaster" -> context.getString(R.string.irc_notice_bad_ban_broadcaster)
-            "bad_ban_mod" -> context.getString(
-                R.string.irc_notice_bad_ban_mod,
-                message?.substringAfter("cannot ban moderator", "")
-                    ?.substringBefore(" unless you are", "") ?: "",
-            )
+            "already_r9k_off" -> {
+                MR.strings.irc_notice_already_r9k_off.getString(context)
+            }
 
-            "bad_ban_self" -> context.getString(R.string.irc_notice_bad_ban_self)
-            "bad_ban_staff" -> context.getString(
-                R.string.irc_notice_bad_ban_staff,
-                message?.substringAfter("cannot ban staff", "")
-                    ?.substringBefore(". Please email", "") ?: "",
-            )
+            "already_r9k_on" -> {
+                MR.strings.irc_notice_already_r9k_on.getString(context)
+            }
 
-            "bad_commercial_error" -> context.getString(R.string.irc_notice_bad_commercial_error)
-            "bad_delete_message_broadcaster" -> context.getString(R.string.irc_notice_bad_delete_message_broadcaster)
-            "bad_delete_message_mod" -> context.getString(
-                R.string.irc_notice_bad_delete_message_mod,
-                message?.substringAfter("from another moderator ", "")?.substringBeforeLast(".", "")
-                    ?: "",
-            )
+            "already_slow_off" -> {
+                MR.strings.irc_notice_already_slow_off.getString(context)
+            }
 
-            "bad_host_error" -> context.getString(
-                R.string.irc_notice_bad_host_error,
-                message?.substringAfter("a problem hosting ", "")
-                    ?.substringBefore(". Please try", "") ?: "",
-            )
+            "already_slow_on" -> {
+                MR.strings.irc_notice_already_slow_on.format(
+                    message?.substringAfter("is already in ", "")
+                        ?.substringBefore("-second slow", "")
+                        ?: "",
+                ).toString(context)
+            }
 
-            "bad_host_hosting" -> context.getString(
-                R.string.irc_notice_bad_host_hosting,
-                message?.substringAfter("is already hosting ", "")?.substringBeforeLast(".", "")
-                    ?: "",
-            )
+            "already_subs_off" -> {
+                MR.strings.irc_notice_already_subs_off.getString(context)
+            }
 
-            "bad_host_rate_exceeded" -> context.getString(
-                R.string.irc_notice_bad_host_rate_exceeded,
-                message?.substringAfter("changed more than ", "")
-                    ?.substringBefore(" times every half", "") ?: "",
-            )
+            "already_subs_on" -> {
+                MR.strings.irc_notice_already_subs_on.getString(context)
+            }
 
-            "bad_host_rejected" -> context.getString(R.string.irc_notice_bad_host_rejected)
-            "bad_host_self" -> context.getString(R.string.irc_notice_bad_host_self)
-            "bad_mod_banned" -> context.getString(
-                R.string.irc_notice_bad_mod_banned,
-                message?.substringBefore(" is banned", "") ?: "",
-            )
+            "autohost_receive" -> {
+                MR.strings.irc_notice_autohost_receive.format(
+                    message?.substringBefore(" is now auto hosting", "") ?: "",
+                    message?.substringAfter("you for up to ", "")?.substringBefore(" viewers", "")
+                        ?: "",
+                ).toString(context)
+            }
 
-            "bad_mod_mod" -> context.getString(
-                R.string.irc_notice_bad_mod_mod,
-                message?.substringBefore(" is already", "") ?: "",
-            )
+            "bad_ban_admin" -> {
+                MR.strings.irc_notice_bad_ban_admin.format(
+                    message?.substringAfter("cannot ban admin", "")
+                        ?.substringBefore(". Please email", "") ?: "",
+                ).toString(context)
+            }
 
-            "bad_slow_duration" -> context.getString(
-                R.string.irc_notice_bad_slow_duration,
-                message?.substringAfter("to more than ", "")?.substringBefore(" seconds.", "")
-                    ?: "",
-            )
+            "bad_ban_anon" -> {
+                MR.strings.irc_notice_bad_ban_anon.getString(context)
+            }
 
-            "bad_timeout_admin" -> context.getString(
-                R.string.irc_notice_bad_timeout_admin,
-                message?.substringAfter("cannot timeout admin ", "")
-                    ?.substringBefore(". Please email", "") ?: "",
-            )
+            "bad_ban_broadcaster" -> {
+                MR.strings.irc_notice_bad_ban_broadcaster.getString(context)
+            }
 
-            "bad_timeout_anon" -> context.getString(R.string.irc_notice_bad_timeout_anon)
-            "bad_timeout_broadcaster" -> context.getString(R.string.irc_notice_bad_timeout_broadcaster)
-            "bad_timeout_duration" -> context.getString(
-                R.string.irc_notice_bad_timeout_duration,
-                message?.substringAfter("for more than ", "")?.substringBeforeLast(".", "") ?: "",
-            )
+            "bad_ban_mod" -> {
+                MR.strings.irc_notice_bad_ban_mod.format(
+                    message?.substringAfter("cannot ban moderator", "")
+                        ?.substringBefore(" unless you are", "") ?: "",
+                ).toString(context)
+            }
 
-            "bad_timeout_mod" -> context.getString(
-                R.string.irc_notice_bad_timeout_mod,
-                message?.substringAfter("cannot timeout moderator ", "")
-                    ?.substringBefore(" unless you are", "") ?: "",
-            )
+            "bad_ban_self" -> {
+                MR.strings.irc_notice_bad_ban_self.getString(context)
+            }
 
-            "bad_timeout_self" -> context.getString(R.string.irc_notice_bad_timeout_self)
-            "bad_timeout_staff" -> context.getString(
-                R.string.irc_notice_bad_timeout_staff,
-                message?.substringAfter("cannot timeout staff ", "")
-                    ?.substringBefore(". Please email", "") ?: "",
-            )
+            "bad_ban_staff" -> {
+                MR.strings.irc_notice_bad_ban_staff.format(
+                    message?.substringAfter("cannot ban staff", "")
+                        ?.substringBefore(". Please email", "") ?: "",
+                ).toString(context)
+            }
 
-            "bad_unban_no_ban" -> context.getString(
-                R.string.irc_notice_bad_unban_no_ban,
-                message?.substringBefore(" is not banned", "") ?: "",
-            )
+            "bad_commercial_error" -> {
+                MR.strings.irc_notice_bad_commercial_error.getString(context)
+            }
 
-            "bad_unhost_error" -> context.getString(R.string.irc_notice_bad_unhost_error)
-            "bad_unmod_mod" -> context.getString(
-                R.string.irc_notice_bad_unmod_mod,
-                message?.substringBefore(" is not a", "") ?: "",
-            )
+            "bad_delete_message_broadcaster" -> {
+                MR.strings.irc_notice_bad_delete_message_broadcaster.getString(context)
+            }
 
-            "bad_vip_grantee_banned" -> context.getString(
-                R.string.irc_notice_bad_vip_grantee_banned,
-                message?.substringBefore(" is banned in", "") ?: "",
-            )
+            "bad_delete_message_mod" -> {
+                MR.strings.irc_notice_bad_delete_message_mod.format(
+                    message?.substringAfter("from another moderator ", "")
+                        ?.substringBeforeLast(".", "")
+                        ?: "",
+                ).toString(context)
+            }
 
-            "bad_vip_grantee_already_vip" -> context.getString(
-                R.string.irc_notice_bad_vip_grantee_already_vip,
-                message?.substringBefore(" is already a", "") ?: "",
-            )
+            "bad_host_error" -> {
+                MR.strings.irc_notice_bad_host_error.format(
+                    message?.substringAfter("a problem hosting ", "")
+                        ?.substringBefore(". Please try", "") ?: "",
+                ).toString(context)
+            }
 
-            "bad_vip_max_vips_reached" -> context.getString(R.string.irc_notice_bad_vip_max_vips_reached)
-            "bad_vip_achievement_incomplete" -> context.getString(R.string.irc_notice_bad_vip_achievement_incomplete)
-            "bad_unvip_grantee_not_vip" -> context.getString(
-                R.string.irc_notice_bad_unvip_grantee_not_vip,
-                message?.substringBefore(" is not a", "") ?: "",
-            )
+            "bad_host_hosting" -> {
+                MR.strings.irc_notice_bad_host_hosting.format(
+                    message?.substringAfter("is already hosting ", "")?.substringBeforeLast(".", "")
+                        ?: "",
+                ).toString(context)
+            }
 
-            "ban_success" -> context.getString(
-                R.string.irc_notice_ban_success,
-                message?.substringBefore(" is now banned", "") ?: "",
-            )
+            "bad_host_rate_exceeded" -> {
+                MR.strings.irc_notice_bad_host_rate_exceeded.format(
+                    message?.substringAfter("changed more than ", "")
+                        ?.substringBefore(" times every half", "") ?: "",
+                ).toString(context)
+            }
 
-            "cmds_available" -> context.getString(
-                R.string.irc_notice_cmds_available,
-                message?.substringAfter("details): ", "")?.substringBefore(" More help:", "") ?: "",
-            )
+            "bad_host_rejected" -> {
+                MR.strings.irc_notice_bad_host_rejected.getString(context)
+            }
 
-            "color_changed" -> context.getString(R.string.irc_notice_color_changed)
-            "commercial_success" -> context.getString(
-                R.string.irc_notice_commercial_success,
-                message?.substringAfter("Initiating ", "")
-                    ?.substringBefore(" second commercial break.", "") ?: "",
-            )
+            "bad_host_self" -> {
+                MR.strings.irc_notice_bad_host_self.getString(context)
+            }
 
-            "delete_message_success" -> context.getString(
-                R.string.irc_notice_delete_message_success,
-                message?.substringAfter("The message from ", "")
-                    ?.substringBefore(" is now deleted.", "") ?: "",
-            )
+            "bad_mod_banned" -> {
+                MR.strings.irc_notice_bad_mod_banned.format(
+                    message?.substringBefore(" is banned", "") ?: "",
+                ).toString(context)
+            }
 
-            "delete_staff_message_success" -> context.getString(
-                R.string.irc_notice_delete_staff_message_success,
-                message?.substringAfter("message from staff ", "")
-                    ?.substringBefore(". Please email", "") ?: "",
-            )
+            "bad_mod_mod" -> {
+                MR.strings.irc_notice_bad_mod_mod.format(
+                    message?.substringBefore(" is already", "") ?: "",
+                ).toString(context)
+            }
 
-            "emote_only_off" -> context.getString(R.string.irc_notice_emote_only_off)
-            "emote_only_on" -> context.getString(R.string.irc_notice_emote_only_on)
-            "followers_off" -> context.getString(R.string.irc_notice_followers_off)
-            "followers_on" -> context.getString(
-                R.string.irc_notice_followers_on,
-                message?.substringAfter("is now in ", "")
-                    ?.substringBefore(" followers-only mode", "") ?: "",
-            )
+            "bad_slow_duration" -> {
+                MR.strings.irc_notice_bad_slow_duration.format(
+                    message?.substringAfter("to more than ", "")?.substringBefore(" seconds.", "")
+                        ?: "",
+                ).toString(context)
+            }
 
-            "followers_on_zero" -> context.getString(R.string.irc_notice_followers_on_zero)
-            "host_off" -> context.getString(R.string.irc_notice_host_off)
-            "host_on" -> context.getString(
-                R.string.irc_notice_host_on,
-                message?.substringAfter("Now hosting ", "")?.substringBeforeLast(".", "") ?: "",
-            )
+            "bad_timeout_admin" -> {
+                MR.strings.irc_notice_bad_timeout_admin.format(
+                    message?.substringAfter("cannot timeout admin ", "")
+                        ?.substringBefore(". Please email", "") ?: "",
+                ).toString(context)
+            }
 
-            "host_receive" -> context.getString(
-                R.string.irc_notice_host_receive,
-                message?.substringBefore(" is now hosting", "") ?: "",
-                message?.substringAfter("you for up to ", "")?.substringBefore(" viewers", "")
-                    ?: "",
-            )
+            "bad_timeout_anon" -> {
+                MR.strings.irc_notice_bad_timeout_anon.getString(context)
+            }
 
-            "host_receive_no_count" -> context.getString(
-                R.string.irc_notice_host_receive_no_count,
-                message?.substringBefore(" is now hosting", "") ?: "",
-            )
+            "bad_timeout_broadcaster" -> {
+                MR.strings.irc_notice_bad_timeout_broadcaster.getString(context)
+            }
 
-            "host_target_went_offline" -> context.getString(
-                R.string.irc_notice_host_target_went_offline,
-                message?.substringBefore(" has gone offline", "") ?: "",
-            )
+            "bad_timeout_duration" -> {
+                MR.strings.irc_notice_bad_timeout_duration.format(
+                    message?.substringAfter("for more than ", "")?.substringBeforeLast(".", "")
+                        ?: "",
+                ).toString(context)
+            }
 
-            "hosts_remaining" -> context.getString(
-                R.string.irc_notice_hosts_remaining,
-                message?.substringBefore(" host commands", "") ?: "",
-            )
+            "bad_timeout_mod" -> {
+                MR.strings.irc_notice_bad_timeout_mod.format(
+                    message?.substringAfter("cannot timeout moderator ", "")
+                        ?.substringBefore(" unless you are", "") ?: "",
+                ).toString(context)
+            }
 
-            "invalid_user" -> context.getString(
-                R.string.irc_notice_invalid_user,
-                message?.substringAfter("Invalid username: ", "") ?: "",
-            )
+            "bad_timeout_self" -> {
+                MR.strings.irc_notice_bad_timeout_self.getString(context)
+            }
 
-            "mod_success" -> context.getString(
-                R.string.irc_notice_mod_success,
-                message?.substringAfter("You have added ", "")
-                    ?.substringBefore(" as a moderator", "") ?: "",
-            )
+            "bad_timeout_staff" -> {
+                MR.strings.irc_notice_bad_timeout_staff.format(
+                    message?.substringAfter("cannot timeout staff ", "")
+                        ?.substringBefore(". Please email", "") ?: "",
+                ).toString(context)
+            }
 
-            "msg_banned" -> context.getString(
-                R.string.irc_notice_msg_banned,
-                message?.substringAfter("from talking in ", "")?.substringBeforeLast(".", "") ?: "",
-            )
+            "bad_unban_no_ban" -> {
+                MR.strings.irc_notice_bad_unban_no_ban.format(
+                    message?.substringBefore(" is not banned", "") ?: "",
+                ).toString(context)
+            }
 
-            "msg_bad_characters" -> context.getString(R.string.irc_notice_msg_bad_characters)
-            "msg_channel_blocked" -> context.getString(R.string.irc_notice_msg_channel_blocked)
-            "msg_channel_suspended" -> context.getString(R.string.irc_notice_msg_channel_suspended)
-            "msg_duplicate" -> context.getString(R.string.irc_notice_msg_duplicate)
-            "msg_emoteonly" -> context.getString(R.string.irc_notice_msg_emoteonly)
-            "msg_followersonly" -> context.getString(
-                R.string.irc_notice_msg_followersonly,
-                message?.substringAfter("This room is in ", "")
-                    ?.substringBefore(" followers-only mode", "") ?: "",
-                message?.substringAfter("Follow ", "")?.substringBefore(" to join", "") ?: "",
-            )
+            "bad_unhost_error" -> {
+                MR.strings.irc_notice_bad_unhost_error.getString(context)
+            }
 
-            "msg_followersonly_followed" -> context.getString(
-                R.string.irc_notice_msg_followersonly_followed,
-                message?.substringAfter("This room is in ", "")
-                    ?.substringBefore(" followers-only mode", "") ?: "",
-                message?.substringAfter("following for ", "")?.substringBefore(". Continue", "")
-                    ?: "",
-            )
+            "bad_unmod_mod" -> {
+                MR.strings.irc_notice_bad_unmod_mod.format(
+                    message?.substringBefore(" is not a", "") ?: "",
+                ).toString(context)
+            }
 
-            "msg_followersonly_zero" -> context.getString(
-                R.string.irc_notice_msg_followersonly_zero,
-                message?.substringAfter(". Follow ", "")?.substringBefore(" to join the", "") ?: "",
-            )
+            "bad_vip_grantee_banned" -> {
+                MR.strings.irc_notice_bad_vip_grantee_banned.format(
+                    message?.substringBefore(" is banned in", "") ?: "",
+                ).toString(context)
+            }
 
-            "msg_r9k" -> context.getString(R.string.irc_notice_msg_r9k)
-            "msg_ratelimit" -> context.getString(R.string.irc_notice_msg_ratelimit)
-            "msg_rejected" -> context.getString(R.string.irc_notice_msg_rejected)
-            "msg_rejected_mandatory" -> context.getString(R.string.irc_notice_msg_rejected_mandatory)
-            "msg_slowmode" -> context.getString(
-                R.string.irc_notice_msg_slowmode,
-                message?.substringAfter("talk again in ", "")?.substringBefore(" seconds.", "")
-                    ?: "",
-            )
+            "bad_vip_grantee_already_vip" -> {
+                MR.strings.irc_notice_bad_vip_grantee_already_vip.format(
+                    message?.substringBefore(" is already a", "") ?: "",
+                ).toString(context)
+            }
 
-            "msg_subsonly" -> context.getString(
-                R.string.irc_notice_msg_subsonly,
-                message?.substringAfter("/products/", "")?.substringBefore("/ticket?ref", "") ?: "",
-            )
+            "bad_vip_max_vips_reached" -> {
+                MR.strings.irc_notice_bad_vip_max_vips_reached.getString(context)
+            }
 
-            "msg_suspended" -> context.getString(R.string.irc_notice_msg_suspended)
-            "msg_timedout" -> context.getString(
-                R.string.irc_notice_msg_timedout,
-                message?.substringAfter("timed out for ", "")?.substringBefore(" more seconds.", "")
-                    ?: "",
-            )
+            "bad_vip_achievement_incomplete" -> {
+                MR.strings.irc_notice_bad_vip_achievement_incomplete.getString(context)
+            }
 
-            "msg_verified_email" -> context.getString(R.string.irc_notice_msg_verified_email)
-            "no_help" -> context.getString(R.string.irc_notice_no_help)
-            "no_mods" -> context.getString(R.string.irc_notice_no_mods)
-            "no_vips" -> context.getString(R.string.irc_notice_no_vips)
-            "not_hosting" -> context.getString(R.string.irc_notice_not_hosting)
-            "no_permission" -> context.getString(R.string.irc_notice_no_permission)
-            "r9k_off" -> context.getString(R.string.irc_notice_r9k_off)
-            "r9k_on" -> context.getString(R.string.irc_notice_r9k_on)
-            "raid_error_already_raiding" -> context.getString(R.string.irc_notice_raid_error_already_raiding)
-            "raid_error_forbidden" -> context.getString(R.string.irc_notice_raid_error_forbidden)
-            "raid_error_self" -> context.getString(R.string.irc_notice_raid_error_self)
-            "raid_error_too_many_viewers" -> context.getString(R.string.irc_notice_raid_error_too_many_viewers)
-            "raid_error_unexpected" -> context.getString(
-                R.string.irc_notice_raid_error_unexpected,
-                message?.substringAfter("a problem raiding ", "")
-                    ?.substringBefore(". Please try", "") ?: "",
-            )
+            "bad_unvip_grantee_not_vip" -> {
+                MR.strings.irc_notice_bad_unvip_grantee_not_vip.format(
+                    message?.substringBefore(" is not a", "") ?: "",
+                ).toString(context)
+            }
 
-            "raid_notice_mature" -> context.getString(R.string.irc_notice_raid_notice_mature)
-            "raid_notice_restricted_chat" -> context.getString(R.string.irc_notice_raid_notice_restricted_chat)
-            "room_mods" -> context.getString(
-                R.string.irc_notice_room_mods,
-                message?.substringAfter("this channel are: ", "") ?: "",
-            )
+            "ban_success" -> {
+                MR.strings.irc_notice_ban_success.format(
+                    message?.substringBefore(" is now banned", "") ?: "",
+                ).toString(context)
+            }
 
-            "slow_off" -> context.getString(R.string.irc_notice_slow_off)
-            "slow_on" -> context.getString(
-                R.string.irc_notice_slow_on,
-                message?.substringAfter("send messages every ", "")
-                    ?.substringBefore(" seconds.", "") ?: "",
-            )
+            "cmds_available" -> {
+                MR.strings.irc_notice_cmds_available.format(
+                    message?.substringAfter("details): ", "")?.substringBefore(" More help:", "")
+                        ?: "",
+                ).toString(context)
+            }
 
-            "subs_off" -> context.getString(R.string.irc_notice_subs_off)
-            "subs_on" -> context.getString(R.string.irc_notice_subs_on)
-            "timeout_no_timeout" -> context.getString(
-                R.string.irc_notice_timeout_no_timeout,
-                message?.substringBefore(" is not timed", "") ?: "",
-            )
+            "color_changed" -> {
+                MR.strings.irc_notice_color_changed.getString(context)
+            }
 
-            "timeout_success" -> context.getString(
-                R.string.irc_notice_timeout_success,
-                message?.substringBefore(" has been", "") ?: "",
-                message?.substringAfter("timed out for ", "")?.substringBeforeLast(".", "") ?: "",
-            )
+            "commercial_success" -> {
+                MR.strings.irc_notice_commercial_success.format(
+                    message?.substringAfter("Initiating ", "")
+                        ?.substringBefore(" second commercial break.", "") ?: "",
+                ).toString(context)
+            }
 
-            "tos_ban" -> context.getString(
-                R.string.irc_notice_tos_ban,
-                message?.substringAfter("has closed channel ", "")
-                    ?.substringBefore(" due to Terms", "") ?: "",
-            )
+            "delete_message_success" -> {
+                MR.strings.irc_notice_delete_message_success.format(
+                    message?.substringAfter("The message from ", "")
+                        ?.substringBefore(" is now deleted.", "") ?: "",
+                ).toString(context)
+            }
 
-            "turbo_only_color" -> context.getString(
-                R.string.irc_notice_turbo_only_color,
-                message?.substringAfter("following instead: ", "") ?: "",
-            )
+            "delete_staff_message_success" -> {
+                MR.strings.irc_notice_delete_staff_message_success.format(
+                    message?.substringAfter("message from staff ", "")
+                        ?.substringBefore(". Please email", "") ?: "",
+                ).toString(context)
+            }
 
-            "unavailable_command" -> context.getString(
-                R.string.irc_notice_unavailable_command,
-                message?.substringAfter("Sorry, “", "")?.substringBefore("” is not available", "")
-                    ?: "",
-            )
+            "emote_only_off" -> {
+                MR.strings.irc_notice_emote_only_off.getString(context)
+            }
 
-            "unban_success" -> context.getString(
-                R.string.irc_notice_unban_success,
-                message?.substringBefore(" is no longer", "") ?: "",
-            )
+            "emote_only_on" -> {
+                MR.strings.irc_notice_emote_only_on.getString(context)
+            }
 
-            "unmod_success" -> context.getString(
-                R.string.irc_notice_unmod_success,
-                message?.substringAfter("You have removed ", "")
-                    ?.substringBefore(" as a moderator", "") ?: "",
-            )
+            "followers_off" -> {
+                MR.strings.irc_notice_followers_off.getString(context)
+            }
 
-            "unraid_error_no_active_raid" -> context.getString(R.string.irc_notice_unraid_error_no_active_raid)
-            "unraid_error_unexpected" -> context.getString(R.string.irc_notice_unraid_error_unexpected)
-            "unraid_success" -> context.getString(R.string.irc_notice_unraid_success)
-            "unrecognized_cmd" -> context.getString(
-                R.string.irc_notice_unrecognized_cmd,
-                message?.substringAfter("Unrecognized command: ", "") ?: "",
-            )
+            "followers_on" -> {
+                MR.strings.irc_notice_followers_on.format(
+                    message?.substringAfter("is now in ", "")
+                        ?.substringBefore(" followers-only mode", "") ?: "",
+                ).toString(context)
+            }
 
-            "untimeout_banned" -> context.getString(
-                R.string.irc_notice_untimeout_banned,
-                message?.substringBefore(" is permanently banned", "") ?: "",
-            )
+            "followers_on_zero" -> {
+                MR.strings.irc_notice_followers_on_zero.getString(context)
+            }
 
-            "untimeout_success" -> context.getString(
-                R.string.irc_notice_untimeout_success,
-                message?.substringBefore(" is no longer", "") ?: "",
-            )
+            "host_off" -> {
+                MR.strings.irc_notice_host_off.getString(context)
+            }
 
-            "unvip_success" -> context.getString(
-                R.string.irc_notice_unvip_success,
-                message?.substringAfter("You have removed ", "")?.substringBefore(" as a VIP", "")
-                    ?: "",
-            )
+            "host_on" -> {
+                MR.strings.irc_notice_host_on.format(
+                    message?.substringAfter("Now hosting ", "")?.substringBeforeLast(".", "") ?: "",
+                ).toString(context)
+            }
 
-            "usage_ban" -> context.getString(R.string.irc_notice_usage_ban)
-            "usage_clear" -> context.getString(R.string.irc_notice_usage_clear)
-            "usage_color" -> context.getString(
-                R.string.irc_notice_usage_color,
-                message?.substringAfter("following: ", "")?.substringBeforeLast(".", "") ?: "",
-            )
+            "host_receive" -> {
+                MR.strings.irc_notice_host_receive.format(
+                    message?.substringBefore(" is now hosting", "") ?: "",
+                    message?.substringAfter("you for up to ", "")?.substringBefore(" viewers", "")
+                        ?: "",
+                ).toString(context)
+            }
 
-            "usage_commercial" -> context.getString(R.string.irc_notice_usage_commercial)
-            "usage_disconnect" -> context.getString(R.string.irc_notice_usage_disconnect)
-            "usage_delete" -> context.getString(R.string.irc_notice_usage_delete)
-            "usage_emote_only_off" -> context.getString(R.string.irc_notice_usage_emote_only_off)
-            "usage_emote_only_on" -> context.getString(R.string.irc_notice_usage_emote_only_on)
-            "usage_followers_off" -> context.getString(R.string.irc_notice_usage_followers_off)
-            "usage_followers_on" -> context.getString(R.string.irc_notice_usage_followers_on)
-            "usage_help" -> context.getString(R.string.irc_notice_usage_help)
-            "usage_host" -> context.getString(R.string.irc_notice_usage_host)
-            "usage_marker" -> context.getString(R.string.irc_notice_usage_marker)
-            "usage_me" -> context.getString(R.string.irc_notice_usage_me)
-            "usage_mod" -> context.getString(R.string.irc_notice_usage_mod)
-            "usage_mods" -> context.getString(R.string.irc_notice_usage_mods)
-            "usage_r9k_off" -> context.getString(R.string.irc_notice_usage_r9k_off)
-            "usage_r9k_on" -> context.getString(R.string.irc_notice_usage_r9k_on)
-            "usage_raid" -> context.getString(R.string.irc_notice_usage_raid)
-            "usage_slow_off" -> context.getString(R.string.irc_notice_usage_slow_off)
-            "usage_slow_on" -> context.getString(
-                R.string.irc_notice_usage_slow_on,
-                message?.substringAfter("default=", "")?.substringBefore(")", "") ?: "",
-            )
+            "host_receive_no_count" -> {
+                MR.strings.irc_notice_host_receive_no_count.format(
+                    message?.substringBefore(" is now hosting", "") ?: "",
+                ).toString(context)
+            }
 
-            "usage_subs_off" -> context.getString(R.string.irc_notice_usage_subs_off)
-            "usage_subs_on" -> context.getString(R.string.irc_notice_usage_subs_on)
-            "usage_timeout" -> context.getString(R.string.irc_notice_usage_timeout)
-            "usage_unban" -> context.getString(R.string.irc_notice_usage_unban)
-            "usage_unhost" -> context.getString(R.string.irc_notice_usage_unhost)
-            "usage_unmod" -> context.getString(R.string.irc_notice_usage_unmod)
-            "usage_unraid" -> context.getString(R.string.irc_notice_usage_unraid)
-            "usage_untimeout" -> context.getString(R.string.irc_notice_usage_untimeout)
-            "usage_unvip" -> context.getString(R.string.irc_notice_usage_unvip)
-            "usage_user" -> context.getString(R.string.irc_notice_usage_user)
-            "usage_vip" -> context.getString(R.string.irc_notice_usage_vip)
-            "usage_vips" -> context.getString(R.string.irc_notice_usage_vips)
-            "usage_whisper" -> context.getString(R.string.irc_notice_usage_whisper)
-            "vip_success" -> context.getString(
-                R.string.irc_notice_vip_success,
-                message?.substringAfter("You have added ", "")?.substringBeforeLast(" as a vip", "")
-                    ?: "",
-            )
+            "host_target_went_offline" -> {
+                MR.strings.irc_notice_host_target_went_offline.format(
+                    message?.substringBefore(" has gone offline", "") ?: "",
+                ).toString(context)
+            }
 
-            "vips_success" -> context.getString(
-                R.string.irc_notice_vips_success,
-                message?.substringAfter("channel are: ", "")?.substringBeforeLast(".", "") ?: "",
-            )
+            "hosts_remaining" -> {
+                MR.strings.irc_notice_hosts_remaining.format(
+                    message?.substringBefore(" host commands", "") ?: "",
+                ).toString(context)
+            }
 
-            "whisper_banned" -> context.getString(R.string.irc_notice_whisper_banned)
-            "whisper_banned_recipient" -> context.getString(R.string.irc_notice_whisper_banned_recipient)
-            "whisper_invalid_login" -> context.getString(R.string.irc_notice_whisper_invalid_login)
-            "whisper_invalid_self" -> context.getString(R.string.irc_notice_whisper_invalid_self)
-            "whisper_limit_per_min" -> context.getString(R.string.irc_notice_whisper_limit_per_min)
-            "whisper_limit_per_sec" -> context.getString(R.string.irc_notice_whisper_limit_per_sec)
-            "whisper_restricted" -> context.getString(R.string.irc_notice_whisper_restricted)
-            "whisper_restricted_recipient" -> context.getString(R.string.irc_notice_whisper_restricted_recipient)
-            else -> null
+            "invalid_user" -> {
+                MR.strings.irc_notice_invalid_user.format(
+                    message?.substringAfter("Invalid username: ", "") ?: "",
+                ).toString(context)
+            }
+
+            "mod_success" -> {
+                MR.strings.irc_notice_mod_success.format(
+                    message?.substringAfter("You have added ", "")
+                        ?.substringBefore(" as a moderator", "") ?: "",
+                ).toString(context)
+            }
+
+            "msg_banned" -> {
+                MR.strings.irc_notice_msg_banned.format(
+                    message?.substringAfter("from talking in ", "")?.substringBeforeLast(".", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "msg_bad_characters" -> {
+                MR.strings.irc_notice_msg_bad_characters.getString(context)
+            }
+
+            "msg_channel_blocked" -> {
+                MR.strings.irc_notice_msg_channel_blocked.getString(context)
+            }
+
+            "msg_channel_suspended" -> {
+                MR.strings.irc_notice_msg_channel_suspended.getString(context)
+            }
+
+            "msg_duplicate" -> {
+                MR.strings.irc_notice_msg_duplicate.getString(context)
+            }
+
+            "msg_emoteonly" -> {
+                MR.strings.irc_notice_msg_emoteonly.getString(context)
+            }
+
+            "msg_followersonly" -> {
+                MR.strings.irc_notice_msg_followersonly.format(
+                    message?.substringAfter("This room is in ", "")
+                        ?.substringBefore(" followers-only mode", "") ?: "",
+                    message?.substringAfter("Follow ", "")?.substringBefore(" to join", "") ?: "",
+                ).toString(context)
+            }
+
+            "msg_followersonly_followed" -> {
+                MR.strings.irc_notice_msg_followersonly_followed.format(
+                    message?.substringAfter("This room is in ", "")
+                        ?.substringBefore(" followers-only mode", "") ?: "",
+                    message?.substringAfter("following for ", "")?.substringBefore(". Continue", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "msg_followersonly_zero" -> {
+                MR.strings.irc_notice_msg_followersonly_zero.format(
+                    message?.substringAfter(". Follow ", "")?.substringBefore(" to join the", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "msg_r9k" -> {
+                MR.strings.irc_notice_msg_r9k.getString(context)
+            }
+
+            "msg_ratelimit" -> {
+                MR.strings.irc_notice_msg_ratelimit.getString(context)
+            }
+
+            "msg_rejected" -> {
+                MR.strings.irc_notice_msg_rejected.getString(context)
+            }
+
+            "msg_rejected_mandatory" -> {
+                MR.strings.irc_notice_msg_rejected_mandatory.getString(context)
+            }
+
+            "msg_slowmode" -> {
+                MR.strings.irc_notice_msg_slowmode.format(
+                    message?.substringAfter("talk again in ", "")?.substringBefore(" seconds.", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "msg_subsonly" -> {
+                MR.strings.irc_notice_msg_subsonly.format(
+                    message?.substringAfter("/products/", "")?.substringBefore("/ticket?ref", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "msg_suspended" -> {
+                MR.strings.irc_notice_msg_suspended.getString(context)
+            }
+
+            "msg_timedout" -> {
+                MR.strings.irc_notice_msg_timedout.format(
+                    message?.substringAfter("timed out for ", "")
+                        ?.substringBefore(" more seconds.", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "msg_verified_email" -> {
+                MR.strings.irc_notice_msg_verified_email.getString(context)
+            }
+
+            "no_help" -> {
+                MR.strings.irc_notice_no_help.getString(context)
+            }
+
+            "no_mods" -> {
+                MR.strings.irc_notice_no_mods.getString(context)
+            }
+
+            "no_vips" -> {
+                MR.strings.irc_notice_no_vips.getString(context)
+            }
+
+            "not_hosting" -> {
+                MR.strings.irc_notice_not_hosting.getString(context)
+            }
+
+            "no_permission" -> {
+                MR.strings.irc_notice_no_permission.getString(context)
+            }
+
+            "r9k_off" -> {
+                MR.strings.irc_notice_r9k_off.getString(context)
+            }
+
+            "r9k_on" -> {
+                MR.strings.irc_notice_r9k_on.getString(context)
+            }
+
+            "raid_error_already_raiding" -> {
+                MR.strings.irc_notice_raid_error_already_raiding.getString(context)
+            }
+
+            "raid_error_forbidden" -> {
+                MR.strings.irc_notice_raid_error_forbidden.getString(context)
+            }
+
+            "raid_error_self" -> {
+                MR.strings.irc_notice_raid_error_self.getString(context)
+            }
+
+            "raid_error_too_many_viewers" -> {
+                MR.strings.irc_notice_raid_error_too_many_viewers.getString(context)
+            }
+
+            "raid_error_unexpected" -> {
+                MR.strings.irc_notice_raid_error_unexpected.format(
+                    message?.substringAfter("a problem raiding ", "")
+                        ?.substringBefore(". Please try", "") ?: "",
+                ).toString(context)
+            }
+
+            "raid_notice_mature" -> {
+                MR.strings.irc_notice_raid_notice_mature.getString(context)
+            }
+
+            "raid_notice_restricted_chat" -> {
+                MR.strings.irc_notice_raid_notice_restricted_chat.getString(context)
+            }
+
+            "room_mods" -> {
+                MR.strings.irc_notice_room_mods.format(
+                    message?.substringAfter("this channel are: ", "") ?: "",
+                ).toString(context)
+            }
+
+            "slow_off" -> {
+                MR.strings.irc_notice_slow_off.getString(context)
+            }
+
+            "slow_on" -> {
+                MR.strings.irc_notice_slow_on.format(
+                    message?.substringAfter("send messages every ", "")
+                        ?.substringBefore(" seconds.", "") ?: "",
+                ).toString(context)
+            }
+
+            "subs_off" -> {
+                MR.strings.irc_notice_subs_off.getString(context)
+            }
+
+            "subs_on" -> {
+                MR.strings.irc_notice_subs_on.getString(context)
+            }
+
+            "timeout_no_timeout" -> {
+                MR.strings.irc_notice_timeout_no_timeout.format(
+                    message?.substringBefore(" is not timed", "") ?: "",
+                ).toString(context)
+            }
+
+            "timeout_success" -> {
+                MR.strings.irc_notice_timeout_success.format(
+                    message?.substringBefore(" has been", "") ?: "",
+                    message?.substringAfter("timed out for ", "")?.substringBeforeLast(".", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "tos_ban" -> {
+                MR.strings.irc_notice_tos_ban.format(
+                    message?.substringAfter("has closed channel ", "")
+                        ?.substringBefore(" due to Terms", "") ?: "",
+                ).toString(context)
+            }
+
+            "turbo_only_color" -> {
+                MR.strings.irc_notice_turbo_only_color.format(
+                    message?.substringAfter("following instead: ", "") ?: "",
+                ).toString(context)
+            }
+
+            "unavailable_command" -> {
+                MR.strings.irc_notice_unavailable_command.format(
+                    message?.substringAfter("Sorry, “", "")
+                        ?.substringBefore("” is not available", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "unban_success" -> {
+                MR.strings.irc_notice_unban_success.format(
+                    message?.substringBefore(" is no longer", "") ?: "",
+                ).toString(context)
+            }
+
+            "unmod_success" -> {
+                MR.strings.irc_notice_unmod_success.format(
+                    message?.substringAfter("You have removed ", "")
+                        ?.substringBefore(" as a moderator", "") ?: "",
+                ).toString(context)
+            }
+
+            "unraid_error_no_active_raid" -> {
+                MR.strings.irc_notice_unraid_error_no_active_raid.getString(context)
+            }
+
+            "unraid_error_unexpected" -> {
+                MR.strings.irc_notice_unraid_error_unexpected.getString(context)
+            }
+
+            "unraid_success" -> {
+                MR.strings.irc_notice_unraid_success.getString(context)
+            }
+
+            "unrecognized_cmd" -> {
+                MR.strings.irc_notice_unrecognized_cmd.format(
+                    message?.substringAfter("Unrecognized command: ", "") ?: "",
+                ).toString(context)
+            }
+
+            "untimeout_banned" -> {
+                MR.strings.irc_notice_untimeout_banned.format(
+                    message?.substringBefore(" is permanently banned", "") ?: "",
+                ).toString(context)
+            }
+
+            "untimeout_success" -> {
+                MR.strings.irc_notice_untimeout_success.format(
+                    message?.substringBefore(" is no longer", "") ?: "",
+                ).toString(context)
+            }
+
+            "unvip_success" -> {
+                MR.strings.irc_notice_unvip_success.format(
+                    message?.substringAfter("You have removed ", "")
+                        ?.substringBefore(" as a VIP", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "usage_ban" -> {
+                MR.strings.irc_notice_usage_ban.getString(context)
+            }
+
+            "usage_clear" -> {
+                MR.strings.irc_notice_usage_clear.getString(context)
+            }
+
+            "usage_color" -> {
+                MR.strings.irc_notice_usage_color.format(
+                    message?.substringAfter("following: ", "")?.substringBeforeLast(".", "") ?: "",
+                ).toString(context)
+            }
+
+            "usage_commercial" -> {
+                MR.strings.irc_notice_usage_commercial.getString(context)
+            }
+
+            "usage_disconnect" -> {
+                MR.strings.irc_notice_usage_disconnect.getString(context)
+            }
+
+            "usage_delete" -> {
+                MR.strings.irc_notice_usage_delete.getString(context)
+            }
+
+            "usage_emote_only_off" -> {
+                MR.strings.irc_notice_usage_emote_only_off.getString(context)
+            }
+
+            "usage_emote_only_on" -> {
+                MR.strings.irc_notice_usage_emote_only_on.getString(context)
+            }
+
+            "usage_followers_off" -> {
+                MR.strings.irc_notice_usage_followers_off.getString(context)
+            }
+
+            "usage_followers_on" -> {
+                MR.strings.irc_notice_usage_followers_on.getString(context)
+            }
+
+            "usage_help" -> {
+                MR.strings.irc_notice_usage_help.getString(context)
+            }
+
+            "usage_host" -> {
+                MR.strings.irc_notice_usage_host.getString(context)
+            }
+
+            "usage_marker" -> {
+                MR.strings.irc_notice_usage_marker.getString(context)
+            }
+
+            "usage_me" -> {
+                MR.strings.irc_notice_usage_me.getString(context)
+            }
+
+            "usage_mod" -> {
+                MR.strings.irc_notice_usage_mod.getString(context)
+            }
+
+            "usage_mods" -> {
+                MR.strings.irc_notice_usage_mods.getString(context)
+            }
+
+            "usage_r9k_off" -> {
+                MR.strings.irc_notice_usage_r9k_off.getString(context)
+            }
+
+            "usage_r9k_on" -> {
+                MR.strings.irc_notice_usage_r9k_on.getString(context)
+            }
+
+            "usage_raid" -> {
+                MR.strings.irc_notice_usage_raid.getString(context)
+            }
+
+            "usage_slow_off" -> {
+                MR.strings.irc_notice_usage_slow_off.getString(context)
+            }
+
+            "usage_slow_on" -> {
+                MR.strings.irc_notice_usage_slow_on.format(
+                    message?.substringAfter("default=", "")?.substringBefore(")", "") ?: "",
+                ).toString(context)
+            }
+
+            "usage_subs_off" -> {
+                MR.strings.irc_notice_usage_subs_off.getString(context)
+            }
+
+            "usage_subs_on" -> {
+                MR.strings.irc_notice_usage_subs_on.getString(context)
+            }
+
+            "usage_timeout" -> {
+                MR.strings.irc_notice_usage_timeout.getString(context)
+            }
+
+            "usage_unban" -> {
+                MR.strings.irc_notice_usage_unban.getString(context)
+            }
+
+            "usage_unhost" -> {
+                MR.strings.irc_notice_usage_unhost.getString(context)
+            }
+
+            "usage_unmod" -> {
+                MR.strings.irc_notice_usage_unmod.getString(context)
+            }
+
+            "usage_unraid" -> {
+                MR.strings.irc_notice_usage_unraid.getString(context)
+            }
+
+            "usage_untimeout" -> {
+                MR.strings.irc_notice_usage_untimeout.getString(context)
+            }
+
+            "usage_unvip" -> {
+                MR.strings.irc_notice_usage_unvip.getString(context)
+            }
+
+            "usage_user" -> {
+                MR.strings.irc_notice_usage_user.getString(context)
+            }
+
+            "usage_vip" -> {
+                MR.strings.irc_notice_usage_vip.getString(context)
+            }
+
+            "usage_vips" -> {
+                MR.strings.irc_notice_usage_vips.getString(context)
+            }
+
+            "usage_whisper" -> {
+                MR.strings.irc_notice_usage_whisper.getString(context)
+            }
+
+            "vip_success" -> {
+                MR.strings.irc_notice_vip_success.format(
+                    message?.substringAfter("You have added ", "")
+                        ?.substringBeforeLast(" as a vip", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "vips_success" -> {
+                MR.strings.irc_notice_vips_success.format(
+                    message?.substringAfter("channel are: ", "")?.substringBeforeLast(".", "")
+                        ?: "",
+                ).toString(context)
+            }
+
+            "whisper_banned" -> {
+                MR.strings.irc_notice_whisper_banned.getString(context)
+            }
+
+            "whisper_banned_recipient" -> {
+                MR.strings.irc_notice_whisper_banned_recipient.getString(context)
+            }
+
+            "whisper_invalid_login" -> {
+                MR.strings.irc_notice_whisper_invalid_login.getString(context)
+            }
+
+            "whisper_invalid_self" -> {
+                MR.strings.irc_notice_whisper_invalid_self.getString(context)
+            }
+
+            "whisper_limit_per_min" -> {
+                MR.strings.irc_notice_whisper_limit_per_min.getString(context)
+            }
+
+            "whisper_limit_per_sec" -> {
+                MR.strings.irc_notice_whisper_limit_per_sec.getString(context)
+            }
+
+            "whisper_restricted" -> {
+                MR.strings.irc_notice_whisper_restricted.getString(context)
+            }
+
+            "whisper_restricted_recipient" -> {
+                MR.strings.irc_notice_whisper_restricted_recipient.getString(context)
+            }
+
+            else -> {
+                null
+            }
         }
     }
 

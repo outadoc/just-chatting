@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name" translatable="false">Just Chatting</string>
     <string name="channels">Followed</string>
     <string name="followed_at">Following since %s</string>
     <string name="live">Live</string>

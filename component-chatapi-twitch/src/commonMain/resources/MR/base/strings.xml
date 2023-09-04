@@ -27,11 +27,6 @@
     <string name="chat_timeout">has been timed out for %1$s</string>
     <string name="chat_unraid_subtitle">has cancelled the raid</string>
 
-    <plurals name="user_redeemed">
-        <item quantity="one">%1$s redeemed %2$s for %3$,d point</item>
-        <item quantity="other">%1$s redeemed %2$s for %3$,d points</item>
-    </plurals>
-
     <string name="irc_msgid_announcement">Announcement</string>
     <string name="irc_msgid_highlighted_message">Highlighted message</string>
     <string name="irc_notice_already_banned">%s is already banned in this channel.</string>

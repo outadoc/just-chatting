@@ -17,8 +17,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Poll
@@ -78,7 +78,7 @@ fun ChatEvents(
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.errorContainer,
             ) {
-                Text(text = stringResource(R.string.connectionLost_error))
+                Text(text = stringResource(MR.strings.connectionLost_error))
             }
         }
 

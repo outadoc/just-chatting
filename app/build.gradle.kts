@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.spotless)
     alias(libs.plugins.licenseReport)
     alias(libs.plugins.compose)
+    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -41,6 +42,7 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.accompanist.systemuicontroller)
                 implementation(libs.androidx.activity.compose)
@@ -86,11 +88,17 @@ kotlin {
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.serialization)
                 implementation(libs.material.core)
+                implementation(libs.moko.resources.core)
+                implementation(libs.moko.resources.compose)
                 implementation(libs.okio)
                 implementation(libs.sqldelight.android.driver)
             }
         }
     }
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "fr.outadoc.justchatting"
 }
 
 android {

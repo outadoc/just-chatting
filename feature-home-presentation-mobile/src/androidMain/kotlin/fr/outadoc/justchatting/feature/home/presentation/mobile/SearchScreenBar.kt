@@ -19,8 +19,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import org.koin.androidx.compose.koinViewModel
@@ -72,7 +72,7 @@ private fun CompactSearchBar(
         onSearch = {},
         active = state.isActive,
         onActiveChange = viewModel::onActiveChange,
-        placeholder = { Text(stringResource(R.string.search_hint)) },
+        placeholder = { Text(stringResource(MR.strings.search_hint)) },
         leadingIcon = {
             Crossfade(
                 targetState = state.isActive,
@@ -85,7 +85,7 @@ private fun CompactSearchBar(
                     if (isActive) {
                         Icon(
                             Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.all_goBack),
+                            contentDescription = stringResource(fr.outadoc.justchatting.feature.preferences.presentation.mobile.MR.strings.all_goBack),
                         )
                     } else {
                         Icon(
@@ -101,7 +101,7 @@ private fun CompactSearchBar(
                 HapticIconButton(onClick = viewModel::onClear) {
                     Icon(
                         Icons.Filled.Cancel,
-                        contentDescription = stringResource(R.string.search_clear_cd),
+                        contentDescription = stringResource(MR.strings.search_clear_cd),
                     )
                 }
             }
@@ -139,7 +139,7 @@ private fun FullHeightSearchBar(
         onSearch = {},
         active = state.isActive,
         onActiveChange = viewModel::onActiveChange,
-        placeholder = { Text(stringResource(R.string.search_hint)) },
+        placeholder = { Text(stringResource(MR.strings.search_hint)) },
         leadingIcon = {
             Crossfade(
                 targetState = state.isActive,
@@ -152,7 +152,7 @@ private fun FullHeightSearchBar(
                     if (isActive) {
                         Icon(
                             Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.all_goBack),
+                            contentDescription = stringResource(fr.outadoc.justchatting.feature.preferences.presentation.mobile.MR.strings.all_goBack),
                         )
                     } else {
                         Icon(
@@ -168,7 +168,7 @@ private fun FullHeightSearchBar(
                 HapticIconButton(onClick = viewModel::onClear) {
                     Icon(
                         Icons.Filled.Cancel,
-                        contentDescription = stringResource(R.string.search_clear_cd),
+                        contentDescription = stringResource(MR.strings.search_clear_cd),
                     )
                 }
             }

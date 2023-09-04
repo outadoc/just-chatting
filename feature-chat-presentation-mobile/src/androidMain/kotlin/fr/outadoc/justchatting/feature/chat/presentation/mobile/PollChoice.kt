@@ -16,10 +16,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.utils.core.formatPercent
 import fr.outadoc.justchatting.utils.ui.customColors
 
@@ -64,7 +64,7 @@ fun PollChoice(
                     Icon(
                         modifier = Modifier.padding(end = 8.dp),
                         imageVector = Icons.Default.CheckCircle,
-                        contentDescription = stringResource(R.string.poll_status_winner_cd),
+                        contentDescription = stringResource(MR.strings.poll_status_winner_cd),
                     )
                 }
 

@@ -29,6 +29,7 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.androidx.annotation)
                 implementation(libs.androidx.appcompat)

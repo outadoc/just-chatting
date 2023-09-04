@@ -28,6 +28,7 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.androidx.paging.runtime)
                 implementation(libs.compose.runtime.core)

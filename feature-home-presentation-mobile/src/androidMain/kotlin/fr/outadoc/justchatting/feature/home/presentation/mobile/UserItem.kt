@@ -17,10 +17,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
@@ -107,7 +107,7 @@ fun UserItem(
                 ?.formatTime()
                 ?.let { followedAt ->
                     Text(
-                        text = stringResource(R.string.followed_at, followedAt),
+                        text = stringResource(MR.strings.followed_at, followedAt),
                         style = MaterialTheme.typography.labelMedium,
                     )
                 }

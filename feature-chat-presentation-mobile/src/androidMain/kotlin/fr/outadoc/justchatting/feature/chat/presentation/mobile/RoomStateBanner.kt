@@ -4,7 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.utils.ui.format
 import kotlin.time.Duration
@@ -17,15 +17,15 @@ fun RoomStateBanner(
     SlimSnackbar(modifier = modifier) {
         with(roomState) {
             if (isEmoteOnly) {
-                Text(text = stringResource(R.string.room_emote))
+                Text(text = stringResource(MR.strings.room_emote))
             }
 
             if (!minFollowDuration.isNegative()) {
                 Text(
                     text = when (minFollowDuration) {
-                        Duration.ZERO -> stringResource(R.string.room_followers)
+                        Duration.ZERO -> stringResource(MR.strings.room_followers)
                         else -> stringResource(
-                            R.string.room_followers_min,
+                            MR.strings.room_followers_min,
                             minFollowDuration.format(LocalContext.current),
                         )
                     },
@@ -33,20 +33,20 @@ fun RoomStateBanner(
             }
 
             if (uniqueMessagesOnly) {
-                Text(text = stringResource(R.string.room_unique))
+                Text(text = stringResource(MR.strings.room_unique))
             }
 
             if (slowModeDuration.isPositive()) {
                 Text(
                     text = stringResource(
-                        R.string.room_slow,
+                        MR.strings.room_slow,
                         slowModeDuration.format(LocalContext.current),
                     ),
                 )
             }
 
             if (isSubOnly) {
-                Text(text = stringResource(R.string.room_subs))
+                Text(text = stringResource(MR.strings.room_subs))
             }
         }
     }

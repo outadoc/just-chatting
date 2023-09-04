@@ -27,12 +27,6 @@
     <string name="chat_timeout">a été mis·e au silence pendant %1$s</string>
     <string name="chat_unraid_subtitle">a annulé le raid</string>
 
-    <plurals name="user_redeemed">
-        <item quantity="one">%1$s a obtenu %2$s pour %3$,d point</item>
-        <item quantity="other">%1$s a obtenu %2$s pour %3$,d points</item>
-        <item quantity="many">%1$s a obtenu %2$s pour %3$,d de points</item>
-    </plurals>
-
     <string name="irc_msgid_announcement">Annonce</string>
     <string name="irc_msgid_highlighted_message">Message en surbrillance</string>
     <string name="irc_notice_already_banned">%s est déjà interdit·e sur cette chaîne.</string>

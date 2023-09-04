@@ -24,6 +24,7 @@ kotlin {
         }
 
         val androidMain by getting {
+            dependsOn(commonMain)
             dependencies {
                 implementation(libs.compose.runtime.core)
                 implementation(libs.compose.ui.core)

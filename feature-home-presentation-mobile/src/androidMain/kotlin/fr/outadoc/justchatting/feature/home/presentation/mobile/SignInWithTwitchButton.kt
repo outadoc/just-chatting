@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 private val TwitchBrandColor = Color(0xFF7718AD)
@@ -44,7 +44,7 @@ fun SignInWithTwitchButton(
         Spacer(Modifier.size(ButtonDefaults.IconSpacing))
 
         Text(
-            text = stringResource(R.string.onboarding_login_action),
+            text = stringResource(MR.strings.onboarding_login_action),
             style = MaterialTheme.typography.bodyLarge,
         )
     }

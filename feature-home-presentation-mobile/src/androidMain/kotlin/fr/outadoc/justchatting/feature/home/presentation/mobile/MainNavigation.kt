@@ -28,8 +28,8 @@ import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
 fun MainNavigation(
@@ -88,7 +88,7 @@ fun CompactNavigation(
             NavigationBar {
                 NavigationBarItem(
                     selected = selectedTab == Tab.Live,
-                    label = { Text(stringResource(R.string.live)) },
+                    label = { Text(stringResource(MR.strings.live)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.LiveTv,
@@ -100,7 +100,7 @@ fun CompactNavigation(
 
                 NavigationBarItem(
                     selected = selectedTab == Tab.Followed,
-                    label = { Text(stringResource(R.string.channels)) },
+                    label = { Text(stringResource(MR.strings.channels)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
@@ -112,7 +112,7 @@ fun CompactNavigation(
 
                 NavigationBarItem(
                     selected = selectedTab == Tab.Settings,
-                    label = { Text(stringResource(fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.settings)) },
+                    label = { Text(stringResource(fr.outadoc.justchatting.feature.preferences.presentation.mobile.MR.strings.settings)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Settings,
@@ -148,7 +148,7 @@ fun MediumNavigation(
                     selected = selectedTab == Tab.Live,
                     label = {
                         AnimatedVisibility(visible = selectedTab == Tab.Live) {
-                            Text(stringResource(R.string.live))
+                            Text(stringResource(MR.strings.live))
                         }
                     },
                     icon = {
@@ -164,7 +164,7 @@ fun MediumNavigation(
                     selected = selectedTab == Tab.Followed,
                     label = {
                         AnimatedVisibility(visible = selectedTab == Tab.Followed) {
-                            Text(stringResource(R.string.channels))
+                            Text(stringResource(MR.strings.channels))
                         }
                     },
                     icon = {
@@ -180,7 +180,7 @@ fun MediumNavigation(
                     selected = selectedTab == Tab.Settings,
                     label = {
                         AnimatedVisibility(visible = selectedTab == Tab.Settings) {
-                            Text(stringResource(fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.settings))
+                            Text(stringResource(fr.outadoc.justchatting.feature.preferences.presentation.mobile.MR.strings.settings))
                         }
                     },
                     icon = {
@@ -225,7 +225,7 @@ fun ExpandedNavigation(
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Live,
-                    label = { Text(stringResource(R.string.live)) },
+                    label = { Text(stringResource(MR.strings.live)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.LiveTv,
@@ -238,7 +238,7 @@ fun ExpandedNavigation(
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Followed,
-                    label = { Text(stringResource(R.string.channels)) },
+                    label = { Text(stringResource(MR.strings.channels)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
@@ -251,7 +251,7 @@ fun ExpandedNavigation(
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Settings,
-                    label = { Text(stringResource(fr.outadoc.justchatting.feature.preferences.presentation.mobile.R.string.settings)) },
+                    label = { Text(stringResource(fr.outadoc.justchatting.feature.preferences.presentation.mobile.MR.strings.settings)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Settings,

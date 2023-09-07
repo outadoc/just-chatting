@@ -34,7 +34,7 @@ androidx-annotation = "androidx.annotation:annotation:1.6.0"
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 androidx-browser = "androidx.browser:browser:1.6.0"
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
-androidx-core = "androidx.core:core-ktx:1.10.1"
+androidx-core = "androidx.core:core-ktx:1.12.0"
 androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.0.0"
 androidx-emoji2-core = { module = "androidx.emoji2:emoji2", version.ref = "emoji" }
 androidx-fragment = "androidx.fragment:fragment-ktx:1.6.1"

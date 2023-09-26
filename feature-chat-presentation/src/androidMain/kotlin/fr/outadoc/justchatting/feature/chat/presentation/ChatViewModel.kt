@@ -322,6 +322,7 @@ class ChatViewModel(
                         )
                     }
             }
+            .distinctUntilChanged()
             .onEach { (recentEmotes, allEmotesMap) ->
                 val action = Action.ChangeRecentEmotes(
                     recentEmotes = recentEmotes

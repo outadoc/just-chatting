@@ -16,7 +16,12 @@ class FilterAutocompleteItemsUseCase {
             .removePrefix(ChatPrefixConstants.ChatterPrefix.toString())
             .removePrefix(ChatPrefixConstants.EmotePrefix.toString())
 
-        if (cleanFilter.isBlank()) return emptyList()
+        if (cleanFilter.isBlank()) {
+            // If nothing has been typed, just show all emotes!
+            return allEmotesMap.mapNotNull { emote ->
+                AutoCompleteItem.Emote(emote.value)
+            }
+        }
 
         val prefix: Char? = filter
             .firstOrNull()

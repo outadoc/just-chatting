@@ -9,6 +9,7 @@ class FilterAutocompleteItemsUseCase {
 
     operator fun invoke(
         filter: CharSequence,
+        recentEmotes: List<Emote>,
         allEmotesMap: ImmutableMap<String, Emote>,
         chatters: PersistentSet<Chatter>,
     ): List<AutoCompleteItem> {
@@ -28,9 +29,15 @@ class FilterAutocompleteItemsUseCase {
                     }
                 }
 
-                else -> {
-                    allEmotesMap.mapNotNull { emote ->
+                ChatPrefixConstants.EmotePrefix -> {
+                    allEmotesMap.map { emote ->
                         AutoCompleteItem.Emote(emote.value)
+                    }
+                }
+
+                else -> {
+                    recentEmotes.map { emote ->
+                        AutoCompleteItem.Emote(emote)
                     }
                 }
             }

@@ -101,7 +101,7 @@ class ChatViewModel(
 
     sealed class Action {
         data class AddMessages(val messages: List<ChatEvent.Message>) : Action()
-        data class ChangeRecentEmotes(val recentEmotes: List<RecentEmote>) : Action()
+        data class ChangeRecentEmotes(val recentEmotes: List<Emote>) : Action()
         data class ChangeRoomState(val delta: ChatEvent.RoomStateDelta) : Action()
         data class ChangeConnectionStatus(val connectionStatus: ConnectionStatus) : Action()
         data class ChangeUserState(val userState: ChatEvent.UserState) : Action()
@@ -141,7 +141,7 @@ class ChatViewModel(
             val lastSentMessageInstant: Instant? = null,
             val pickableEmotes: ImmutableList<EmoteSetItem> = persistentListOf(),
             val richEmbeds: PersistentMap<String, ChatEvent.RichEmbed> = persistentMapOf(),
-            val recentEmotes: List<RecentEmote> = emptyList(),
+            val recentEmotes: List<Emote> = emptyList(),
             val userState: ChatEvent.UserState = ChatEvent.UserState(),
             val roomState: RoomState = RoomState(),
             val ongoingEvents: OngoingEvents = OngoingEvents(),
@@ -168,14 +168,7 @@ class ChatViewModel(
                     ),
                     recentEmotes
                         .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                        .map { recentEmote ->
-                            EmoteSetItem.Emote(
-                                Emote(
-                                    name = recentEmote.name,
-                                    urls = EmoteUrls(recentEmote.url),
-                                ),
-                            )
-                        },
+                        .map { recentEmote -> EmoteSetItem.Emote(recentEmote) },
                 )
                     .plus(pickableEmotes)
                     .toImmutableList()
@@ -318,9 +311,31 @@ class ChatViewModel(
             .launchIn(defaultScope)
 
         state.filterIsInstance<State.Chatting>()
-            .distinctUntilChanged { _, _ -> true }
-            .flatMapLatest { emotesRepository.loadRecentEmotes() }
-            .onEach { recentEmotes -> actions.emit(Action.ChangeRecentEmotes(recentEmotes)) }
+            .map { state -> state.allEmotesMap }
+            .distinctUntilChanged()
+            .flatMapLatest { allEmotesMap ->
+                emotesRepository.loadRecentEmotes()
+                    .map { recentEmotes ->
+                        Pair(
+                            recentEmotes,
+                            allEmotesMap,
+                        )
+                    }
+            }
+            .onEach { (recentEmotes, allEmotesMap) ->
+                val action = Action.ChangeRecentEmotes(
+                    recentEmotes = recentEmotes
+                        .filter { recentEmote -> recentEmote.name in allEmotesMap }
+                        .map { recentEmote ->
+                            Emote(
+                                name = recentEmote.name,
+                                urls = EmoteUrls(recentEmote.url),
+                            )
+                        },
+                )
+
+                actions.emit(action)
+            }
             .launchIn(defaultScope)
 
         state.filterIsInstance<State.Chatting>()
@@ -333,9 +348,15 @@ class ChatViewModel(
 
         state.filterIsInstance<State.Chatting>()
             .distinctUntilChanged()
-            .map { state -> state.allEmotesMap to state.chatters }
+            .map { state ->
+                Triple(
+                    state.allEmotesMap,
+                    state.chatters,
+                    state.recentEmotes,
+                )
+            }
             .distinctUntilChanged()
-            .flatMapLatest { (allEmotesMap, chatters) ->
+            .flatMapLatest { (allEmotesMap, chatters, recentEmotes) ->
                 inputState
                     .map { inputState -> inputState.inputMessage }
                     .distinctUntilChanged()
@@ -348,6 +369,7 @@ class ChatViewModel(
                         filterAutocompleteItemsUseCase(
                             filter = word,
                             allEmotesMap = allEmotesMap,
+                            recentEmotes = recentEmotes,
                             chatters = chatters,
                         )
                     }

@@ -12,6 +12,11 @@ class FilterAutocompleteItemsUseCaseTest {
 
     private val instance = FilterAutocompleteItemsUseCase()
 
+    private val recentEmotes = listOf(
+        Emote(name = "htyLuv", urls = EmoteUrls("")),
+        Emote(name = "htyKnuk", urls = EmoteUrls("")),
+    )
+
     private val mockEmotes = persistentMapOf(
         "ḧtyLaser" to Emote(name = "htyLaser", urls = EmoteUrls("")),
         "ponceFAB" to Emote(name = "ponceFAB", urls = EmoteUrls("")),
@@ -25,26 +30,24 @@ class FilterAutocompleteItemsUseCaseTest {
     )
 
     @Test
-    fun `When parsing an empty string, all emotes are returned`() {
+    fun `When parsing an empty string, recent emotes are returned`() {
         assertEquals(
             listOf(
-                AutoCompleteItem.Emote(Emote(name = "htyLaser", urls = EmoteUrls(""))),
-                AutoCompleteItem.Emote(Emote(name = "ponceFAB", urls = EmoteUrls(""))),
-                AutoCompleteItem.Emote(Emote(name = "bgrLoutre", urls = EmoteUrls(""))),
+                AutoCompleteItem.Emote(Emote(name = "htyLuv", urls = EmoteUrls(""))),
+                AutoCompleteItem.Emote(Emote(name = "htyKnuk", urls = EmoteUrls(""))),
             ),
-            instance(filter = "", mockEmotes, mockChatters),
+            instance(filter = "", recentEmotes, mockEmotes, mockChatters),
         )
     }
 
     @Test
-    fun `When parsing a blank string, all emotes are returned`() {
+    fun `When parsing a blank string, recent emotes are returned`() {
         assertEquals(
             listOf(
-                AutoCompleteItem.Emote(Emote(name = "htyLaser", urls = EmoteUrls(""))),
-                AutoCompleteItem.Emote(Emote(name = "ponceFAB", urls = EmoteUrls(""))),
-                AutoCompleteItem.Emote(Emote(name = "bgrLoutre", urls = EmoteUrls(""))),
+                AutoCompleteItem.Emote(Emote(name = "htyLuv", urls = EmoteUrls(""))),
+                AutoCompleteItem.Emote(Emote(name = "htyKnuk", urls = EmoteUrls(""))),
             ),
-            instance(filter = "   ", mockEmotes, mockChatters),
+            instance(filter = "   ", recentEmotes, mockEmotes, mockChatters),
         )
     }
 
@@ -56,7 +59,7 @@ class FilterAutocompleteItemsUseCaseTest {
                 AutoCompleteItem.Emote(Emote(name = "ponceFAB", urls = EmoteUrls(""))),
                 AutoCompleteItem.Emote(Emote(name = "bgrLoutre", urls = EmoteUrls(""))),
             ),
-            instance(filter = ":", mockEmotes, mockChatters),
+            instance(filter = ":", recentEmotes, mockEmotes, mockChatters),
         )
     }
 
@@ -66,9 +69,15 @@ class FilterAutocompleteItemsUseCaseTest {
             listOf(
                 AutoCompleteItem.User(Chatter(id = "1", login = "ultia", displayName = "Ultia")),
                 AutoCompleteItem.User(Chatter(id = "2", login = "ponce", displayName = "Ponce")),
-                AutoCompleteItem.User(Chatter(id = "3", login = "rivenzi", displayName = "Rivenzi")),
+                AutoCompleteItem.User(
+                    Chatter(
+                        id = "3",
+                        login = "rivenzi",
+                        displayName = "Rivenzi",
+                    ),
+                ),
             ),
-            instance(filter = "@", mockEmotes, mockChatters),
+            instance(filter = "@", recentEmotes, mockEmotes, mockChatters),
         )
     }
 
@@ -79,7 +88,7 @@ class FilterAutocompleteItemsUseCaseTest {
                 AutoCompleteItem.Emote(Emote(name = "ponceFAB", urls = EmoteUrls(""))),
                 AutoCompleteItem.User(Chatter(id = "2", login = "ponce", displayName = "Ponce")),
             ),
-            instance(filter = "ponce", mockEmotes, mockChatters),
+            instance(filter = "ponce", recentEmotes, mockEmotes, mockChatters),
         )
     }
 
@@ -89,7 +98,7 @@ class FilterAutocompleteItemsUseCaseTest {
             listOf(
                 AutoCompleteItem.Emote(Emote(name = "ponceFAB", urls = EmoteUrls(""))),
             ),
-            instance(filter = ":ponce", mockEmotes, mockChatters),
+            instance(filter = ":ponce", recentEmotes, mockEmotes, mockChatters),
         )
     }
 
@@ -99,7 +108,7 @@ class FilterAutocompleteItemsUseCaseTest {
             listOf(
                 AutoCompleteItem.User(Chatter(id = "2", login = "ponce", displayName = "Ponce")),
             ),
-            instance(filter = "@ponce", mockEmotes, mockChatters),
+            instance(filter = "@ponce", recentEmotes, mockEmotes, mockChatters),
         )
     }
 
@@ -111,7 +120,7 @@ class FilterAutocompleteItemsUseCaseTest {
                 AutoCompleteItem.Emote(Emote(name = "ponceFAB", urls = EmoteUrls(""))),
                 AutoCompleteItem.User(Chatter(id = "1", login = "ultia", displayName = "Ultia")),
             ),
-            instance(filter = "a", mockEmotes, mockChatters),
+            instance(filter = "a", recentEmotes, mockEmotes, mockChatters),
         )
     }
 }

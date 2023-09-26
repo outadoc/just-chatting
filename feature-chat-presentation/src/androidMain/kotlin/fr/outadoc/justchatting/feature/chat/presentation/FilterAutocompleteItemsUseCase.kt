@@ -16,11 +16,25 @@ class FilterAutocompleteItemsUseCase {
             .removePrefix(ChatPrefixConstants.ChatterPrefix.toString())
             .removePrefix(ChatPrefixConstants.EmotePrefix.toString())
 
-        if (cleanFilter.isBlank()) return emptyList()
-
         val prefix: Char? = filter
             .firstOrNull()
             ?.takeIf { filter != cleanFilter }
+
+        if (cleanFilter.isBlank()) {
+            return when (prefix) {
+                ChatPrefixConstants.ChatterPrefix -> {
+                    chatters.map { chatter ->
+                        AutoCompleteItem.User(chatter)
+                    }
+                }
+
+                else -> {
+                    allEmotesMap.mapNotNull { emote ->
+                        AutoCompleteItem.Emote(emote.value)
+                    }
+                }
+            }
+        }
 
         val emoteItems: List<AutoCompleteItem.Emote> =
             if (prefix == null || prefix == ChatPrefixConstants.EmotePrefix) {

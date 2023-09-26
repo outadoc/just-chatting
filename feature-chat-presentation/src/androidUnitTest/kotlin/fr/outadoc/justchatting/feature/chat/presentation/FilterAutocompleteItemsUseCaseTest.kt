@@ -25,30 +25,49 @@ class FilterAutocompleteItemsUseCaseTest {
     )
 
     @Test
-    fun `When parsing an empty string, nothing is returned`() {
+    fun `When parsing an empty string, all emotes are returned`() {
         assertEquals(
-            emptyList<AutoCompleteItem>(),
+            listOf(
+                AutoCompleteItem.Emote(Emote(name = "htyLaser", urls = EmoteUrls(""))),
+                AutoCompleteItem.Emote(Emote(name = "ponceFAB", urls = EmoteUrls(""))),
+                AutoCompleteItem.Emote(Emote(name = "bgrLoutre", urls = EmoteUrls(""))),
+            ),
             instance(filter = "", mockEmotes, mockChatters),
         )
     }
 
     @Test
-    fun `When parsing a blank string, nothing is returned`() {
+    fun `When parsing a blank string, all emotes are returned`() {
         assertEquals(
-            emptyList<AutoCompleteItem>(),
+            listOf(
+                AutoCompleteItem.Emote(Emote(name = "htyLaser", urls = EmoteUrls(""))),
+                AutoCompleteItem.Emote(Emote(name = "ponceFAB", urls = EmoteUrls(""))),
+                AutoCompleteItem.Emote(Emote(name = "bgrLoutre", urls = EmoteUrls(""))),
+            ),
             instance(filter = "   ", mockEmotes, mockChatters),
         )
     }
 
     @Test
-    fun `When parsing a string with only a prefix, nothing is returned`() {
+    fun `When parsing a string with only an emote prefix, all emotes are returned`() {
         assertEquals(
-            emptyList<AutoCompleteItem>(),
+            listOf(
+                AutoCompleteItem.Emote(Emote(name = "htyLaser", urls = EmoteUrls(""))),
+                AutoCompleteItem.Emote(Emote(name = "ponceFAB", urls = EmoteUrls(""))),
+                AutoCompleteItem.Emote(Emote(name = "bgrLoutre", urls = EmoteUrls(""))),
+            ),
             instance(filter = ":", mockEmotes, mockChatters),
         )
+    }
 
+    @Test
+    fun `When parsing a string with only a chatter prefix, all chatters are returned`() {
         assertEquals(
-            emptyList<AutoCompleteItem>(),
+            listOf(
+                AutoCompleteItem.User(Chatter(id = "1", login = "ultia", displayName = "Ultia")),
+                AutoCompleteItem.User(Chatter(id = "2", login = "ponce", displayName = "Ponce")),
+                AutoCompleteItem.User(Chatter(id = "3", login = "rivenzi", displayName = "Rivenzi")),
+            ),
             instance(filter = "@", mockEmotes, mockChatters),
         )
     }

@@ -15,7 +15,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -117,14 +116,14 @@ fun ChatInput(
     onSubmit: () -> Unit = {},
     isSubmitVisible: Boolean = true,
     isSubmitEnabled: Boolean = true,
-    contentPadding: Dp = 0.dp
+    contentPadding: Dp = 0.dp,
 ) {
     val haptic = LocalHapticFeedback.current
 
     Column(
         modifier = modifier.padding(
-            bottom = contentPadding
-        )
+            bottom = contentPadding,
+        ),
     ) {
         val replyingToMessage = replyingTo?.body
         AnimatedVisibility(visible = replyingToMessage != null) {
@@ -169,7 +168,7 @@ fun ChatInput(
                     onEmoteClick = onEmoteClick,
                     items = autoCompleteItems,
                     contentPadding = PaddingValues(
-                        horizontal = contentPadding
+                        horizontal = contentPadding,
                     ),
                 )
             }

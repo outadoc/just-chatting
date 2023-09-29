@@ -61,7 +61,7 @@ fun AutoCompleteItemPreviewSimple() {
     AppTheme {
         SuggestionChip(
             onClick = {},
-            clickLabel = "Lorem ipsum"
+            clickLabel = "Lorem ipsum",
         ) {
             Text("Lorem ipsum")
         }
@@ -74,7 +74,7 @@ fun AutoCompleteItemPreviewIcon() {
     AppTheme {
         SuggestionChip(
             onClick = {},
-            clickLabel = "Lorem ipsum"
+            clickLabel = "Lorem ipsum",
         ) {
             Icon(Icons.Default.Person, contentDescription = null)
         }
@@ -109,7 +109,7 @@ fun SuggestionChip(
         ) {
             CompositionLocalProvider(
                 LocalTextStyle provides MaterialTheme.typography.labelLarge,
-                content = content
+                content = content,
             )
         }
     }

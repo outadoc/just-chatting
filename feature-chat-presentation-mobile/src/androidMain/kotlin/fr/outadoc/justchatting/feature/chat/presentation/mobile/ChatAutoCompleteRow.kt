@@ -56,9 +56,9 @@ fun ChatAutoCompleteRow(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(
             space = 8.dp,
-            alignment = Alignment.Start
+            alignment = Alignment.Start,
         ),
-        contentPadding = contentPadding
+        contentPadding = contentPadding,
     ) {
         items(
             items = items,

@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Mood
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -121,43 +122,48 @@ fun ChatInput(
 
     Column(
         modifier = modifier.padding(
-            vertical = contentPadding
+            bottom = contentPadding
         )
     ) {
         val replyingToMessage = replyingTo?.body
         AnimatedVisibility(visible = replyingToMessage != null) {
             if (replyingToMessage != null) {
-                Row(
-                    modifier = Modifier
-                        .padding(
-                            start = contentPadding,
-                            end = contentPadding,
-                        ),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    InReplyToMessage(
-                        modifier = Modifier.weight(1f),
-                        appUserId = appUserId,
-                        chatter = replyingToMessage.chatter,
-                        message = replyingToMessage.message.orEmpty(),
-                    )
-
-                    HapticIconButton(onClick = onClearReplyingTo) {
-                        Icon(
-                            Icons.Default.Clear,
-                            contentDescription = stringResource(MR.strings.chat_input_replyClear),
+                Column {
+                    Row(
+                        modifier = Modifier
+                            .padding(
+                                start = contentPadding,
+                                end = contentPadding,
+                            ),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        InReplyToMessage(
+                            modifier = Modifier.weight(1f),
+                            appUserId = appUserId,
+                            chatter = replyingToMessage.chatter,
+                            message = replyingToMessage.message.orEmpty(),
                         )
+
+                        HapticIconButton(onClick = onClearReplyingTo) {
+                            Icon(
+                                Icons.Default.Clear,
+                                contentDescription = stringResource(MR.strings.chat_input_replyClear),
+                            )
+                        }
                     }
+
+                    Divider()
                 }
             }
         }
 
-        Column(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
+        Column {
             AnimatedVisibility(visible = autoCompleteItems.isNotEmpty()) {
                 ChatAutoCompleteRow(
+                    modifier = Modifier.padding(
+                        top = 8.dp,
+                    ),
                     onChatterClick = onChatterClick,
                     onEmoteClick = onEmoteClick,
                     items = autoCompleteItems,
@@ -169,7 +175,9 @@ fun ChatInput(
 
             Row(
                 modifier = Modifier.padding(
-                    horizontal = contentPadding
+                    top = 8.dp,
+                    start = contentPadding,
+                    end = contentPadding,
                 ),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,

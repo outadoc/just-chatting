@@ -1,16 +1,22 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChipDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
@@ -80,15 +86,10 @@ fun AutoCompleteItemContent(
 ) {
     val haptic = LocalHapticFeedback.current
 
-    ElevatedSuggestionChip(
-        modifier = modifier,
-        colors = SuggestionChipDefaults.elevatedSuggestionChipColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ),
-        onClick = {
-            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            onClick()
-        },
-        label = content,
+    Box(
+        modifier = Modifier
+            .background(Color.Red)
+            .height(32.dp)
+            .width(64.dp)
     )
 }

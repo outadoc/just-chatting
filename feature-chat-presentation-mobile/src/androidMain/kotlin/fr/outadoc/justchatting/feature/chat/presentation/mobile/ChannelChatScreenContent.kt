@@ -153,7 +153,6 @@ fun ChannelChatScreenContent(
                     ChatInput(
                         modifier = Modifier
                             .focusRequester(inputFocusRequester)
-                            .padding(8.dp)
                             .then(
                                 if (!isEmotePickerOpen) {
                                     Modifier.navigationBarsPadding()
@@ -180,6 +179,7 @@ fun ChannelChatScreenContent(
                         onTriggerAutoComplete = onTriggerAutoComplete,
                         onClearReplyingTo = onClearReplyingTo,
                         onSubmit = onSubmit,
+                        contentPadding = 8.dp,
                     )
                 }
 

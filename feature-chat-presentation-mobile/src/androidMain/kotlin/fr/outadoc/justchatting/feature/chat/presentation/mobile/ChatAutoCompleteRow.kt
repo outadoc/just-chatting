@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -49,10 +50,15 @@ fun ChatAutoCompleteRow(
     onChatterClick: (Chatter) -> Unit,
     onEmoteClick: (Emote) -> Unit,
     items: List<AutoCompleteItem>,
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
     LazyRow(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(8.dp, alignment = Alignment.Start),
+        horizontalArrangement = Arrangement.spacedBy(
+            space = 8.dp,
+            alignment = Alignment.Start,
+        ),
+        contentPadding = contentPadding,
     ) {
         items(
             items = items,

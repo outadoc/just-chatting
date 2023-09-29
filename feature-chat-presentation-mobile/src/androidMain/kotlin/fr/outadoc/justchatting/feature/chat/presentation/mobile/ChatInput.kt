@@ -19,12 +19,12 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -37,6 +37,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
@@ -115,49 +116,69 @@ fun ChatInput(
     onSubmit: () -> Unit = {},
     isSubmitVisible: Boolean = true,
     isSubmitEnabled: Boolean = true,
+    contentPadding: Dp = 0.dp,
 ) {
     val haptic = LocalHapticFeedback.current
 
-    Column {
+    Column(
+        modifier = modifier.padding(
+            bottom = contentPadding,
+        ),
+    ) {
         val replyingToMessage = replyingTo?.body
         AnimatedVisibility(visible = replyingToMessage != null) {
             if (replyingToMessage != null) {
-                Row(
-                    modifier = Modifier.padding(
-                        top = 2.dp,
-                        start = 8.dp,
-                        end = 8.dp,
-                    ),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically,
+                Surface(
+                    color = MaterialTheme.colorScheme.secondaryContainer,
                 ) {
-                    InReplyToMessage(
-                        modifier = Modifier.weight(1f),
-                        appUserId = appUserId,
-                        chatter = replyingToMessage.chatter,
-                        message = replyingToMessage.message.orEmpty(),
-                    )
-
-                    HapticIconButton(onClick = onClearReplyingTo) {
-                        Icon(
-                            Icons.Default.Clear,
-                            contentDescription = stringResource(MR.strings.chat_input_replyClear),
+                    Row(
+                        modifier = Modifier
+                            .padding(
+                                start = contentPadding,
+                                end = contentPadding,
+                            ),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        InReplyToMessage(
+                            modifier = Modifier.weight(1f),
+                            appUserId = appUserId,
+                            chatter = replyingToMessage.chatter,
+                            message = replyingToMessage.message.orEmpty(),
                         )
+
+                        HapticIconButton(onClick = onClearReplyingTo) {
+                            Icon(
+                                Icons.Default.Clear,
+                                contentDescription = stringResource(MR.strings.chat_input_replyClear),
+                            )
+                        }
                     }
                 }
             }
         }
 
-        Column(modifier = modifier) {
+        Column {
             AnimatedVisibility(visible = autoCompleteItems.isNotEmpty()) {
                 ChatAutoCompleteRow(
+                    modifier = Modifier.padding(
+                        top = 8.dp,
+                    ),
                     onChatterClick = onChatterClick,
                     onEmoteClick = onEmoteClick,
                     items = autoCompleteItems,
+                    contentPadding = PaddingValues(
+                        horizontal = contentPadding,
+                    ),
                 )
             }
 
             Row(
+                modifier = Modifier.padding(
+                    top = 8.dp,
+                    start = contentPadding,
+                    end = contentPadding,
+                ),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
@@ -192,7 +213,7 @@ fun ChatInput(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatTextField(
     modifier: Modifier = Modifier,

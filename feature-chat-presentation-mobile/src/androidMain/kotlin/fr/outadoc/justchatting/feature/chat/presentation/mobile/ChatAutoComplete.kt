@@ -1,18 +1,24 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SuggestionChipDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
@@ -25,16 +31,12 @@ fun AutoCompleteEmoteItem(
     onClick: () -> Unit,
     emote: Emote,
 ) {
-    AutoCompleteItemContent(
-        modifier = modifier,
+    SuggestionChip(
+        modifier = modifier.width(48.dp),
         onClick = onClick,
+        clickLabel = emote.name,
     ) {
-        EmoteItem(
-            modifier = Modifier
-                .size(32.dp)
-                .padding(4.dp),
-            emote = emote,
-        )
+        EmoteItem(emote = emote)
     }
 }
 
@@ -44,9 +46,10 @@ fun AutoCompleteUserItem(
     onClick: () -> Unit,
     chatter: Chatter,
 ) {
-    AutoCompleteItemContent(
+    SuggestionChip(
         modifier = modifier,
         onClick = onClick,
+        clickLabel = chatter.displayName,
     ) {
         Text(text = "@${chatter.displayName}")
     }
@@ -56,7 +59,10 @@ fun AutoCompleteUserItem(
 @Composable
 fun AutoCompleteItemPreviewSimple() {
     AppTheme {
-        AutoCompleteItemContent(onClick = {}) {
+        SuggestionChip(
+            onClick = {},
+            clickLabel = "Lorem ipsum",
+        ) {
             Text("Lorem ipsum")
         }
     }
@@ -66,29 +72,45 @@ fun AutoCompleteItemPreviewSimple() {
 @Composable
 fun AutoCompleteItemPreviewIcon() {
     AppTheme {
-        AutoCompleteItemContent(onClick = {}) {
+        SuggestionChip(
+            onClick = {},
+            clickLabel = "Lorem ipsum",
+        ) {
             Icon(Icons.Default.Person, contentDescription = null)
         }
     }
 }
 
 @Composable
-fun AutoCompleteItemContent(
+fun SuggestionChip(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
+    clickLabel: String,
     content: @Composable () -> Unit,
 ) {
     val haptic = LocalHapticFeedback.current
-
-    ElevatedSuggestionChip(
-        modifier = modifier,
-        colors = SuggestionChipDefaults.elevatedSuggestionChipColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-        ),
-        onClick = {
-            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            onClick()
-        },
-        label = content,
-    )
+    Surface(
+        modifier = modifier
+            .height(32.dp)
+            .clickable(
+                role = Role.Button,
+                onClickLabel = clickLabel,
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onClick()
+                },
+            ),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        shape = MaterialTheme.shapes.small,
+    ) {
+        Row(
+            modifier = Modifier.padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.labelLarge,
+                content = content,
+            )
+        }
+    }
 }

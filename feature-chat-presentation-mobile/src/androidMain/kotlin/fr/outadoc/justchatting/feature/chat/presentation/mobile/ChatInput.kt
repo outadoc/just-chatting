@@ -128,10 +128,11 @@ fun ChatInput(
         AnimatedVisibility(visible = replyingToMessage != null) {
             if (replyingToMessage != null) {
                 Row(
-                    modifier = Modifier.padding(
-                        start = contentPadding,
-                        end = contentPadding,
-                    ),
+                    modifier = Modifier
+                        .padding(
+                            start = contentPadding,
+                            end = contentPadding,
+                        ),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {

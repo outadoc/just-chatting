@@ -82,6 +82,6 @@ leakcanary = "com.squareup.leakcanary:leakcanary-android:2.12"
 material-core = "com.google.android.material:material:1.9.0"
 moko-resources-core = { module = "dev.icerock.moko:resources", version.ref = "moko" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko" }
-okio = "com.squareup.okio:okio:3.5.0"
+okio = "com.squareup.okio:okio:3.6.0"
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }

@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.di
 
-import androidx.core.net.toUri
+import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesRepository
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
@@ -30,7 +30,7 @@ val twitchModule = module {
     single {
         OAuthAppCredentials(
             clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
-            redirectUri = "https://just-chatting.app/auth/callback.html".toUri(),
+            redirectUri = Uri.Companion.parse("https://just-chatting.app/auth/callback.html"),
         )
     }
 

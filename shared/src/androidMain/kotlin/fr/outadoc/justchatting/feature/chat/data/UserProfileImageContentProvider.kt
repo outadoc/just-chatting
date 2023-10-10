@@ -7,12 +7,12 @@ import android.content.Context
 import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.ParcelFileDescriptor
 import coil.imageLoader
 import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.transform.CircleCropTransformation
-import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.coroutines.Dispatchers

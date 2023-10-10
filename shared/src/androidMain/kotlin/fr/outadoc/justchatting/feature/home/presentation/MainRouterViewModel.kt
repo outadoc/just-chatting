@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eygraber.uri.Uri
@@ -103,7 +102,7 @@ class MainRouterViewModel(
         )
 
         val helixAuthUrl: Uri =
-            "https://id.twitch.tv/oauth2/authorize".toUri()
+            Uri.parse("https://id.twitch.tv/oauth2/authorize")
                 .buildUpon()
                 .appendQueryParameter("response_type", "token")
                 .appendQueryParameter("client_id", oAuthAppCredentials.clientId)

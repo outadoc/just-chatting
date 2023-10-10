@@ -20,6 +20,8 @@ import androidx.core.view.WindowCompat
 import androidx.emoji2.text.DefaultEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.lifecycleScope
+import com.eygraber.uri.toAndroidUri
+import com.eygraber.uri.toUri
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.home.presentation.MainRouterViewModel
 import fr.outadoc.justchatting.shared.MR
@@ -48,7 +50,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         if (savedInstanceState == null) {
-            intent.data?.let { data ->
+            intent.data?.toUri()?.let { data ->
                 viewModel.onReceiveIntent(data)
             }
         }
@@ -62,7 +64,7 @@ class MainActivity : AppCompatActivity() {
 
                     is MainRouterViewModel.Event.OpenInBrowser -> {
                         val intent = CustomTabsIntent.Builder().build()
-                        intent.launchUrl(this@MainActivity, event.uri)
+                        intent.launchUrl(this@MainActivity, event.uri.toAndroidUri())
                     }
                 }
             }
@@ -123,7 +125,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?.data?.let { data ->
+        intent?.data?.toUri()?.let { data ->
             viewModel.onReceiveIntent(data)
         }
     }

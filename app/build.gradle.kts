@@ -23,6 +23,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                implementation(project(":shared"))
+
                 implementation(project(":feature-chat-presentation-mobile"))
                 implementation(project(":feature-home-presentation-mobile"))
                 implementation(project(":feature-preferences-presentation-mobile"))

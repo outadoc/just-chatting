@@ -18,6 +18,7 @@ dependencyResolutionManagement {
 rootProject.name = "just-chatting"
 
 include(":app")
+include(":shared")
 
 include(":utils-core")
 include(":utils-ui")

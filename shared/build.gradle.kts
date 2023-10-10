@@ -61,6 +61,12 @@ kotlin {
                 implementation(libs.moko.resources.core)
                 implementation(libs.moko.resources.compose)
             }
+
+            val androidUnitTest by getting {
+                dependencies {
+                    implementation(libs.junit)
+                }
+            }
         }
     }
 }

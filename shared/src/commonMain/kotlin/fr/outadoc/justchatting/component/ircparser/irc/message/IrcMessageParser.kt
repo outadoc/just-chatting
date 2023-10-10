@@ -1,3 +1,9 @@
+/**
+ * Copyright 2018 WillowChat project.
+ * This file is distributed under the ISC license.
+ * https://github.com/WillowChat/Kale
+ */
+
 package fr.outadoc.justchatting.component.ircparser.irc.message
 
 import fr.outadoc.justchatting.component.ircparser.core.message.IrcMessage
@@ -9,7 +15,7 @@ interface IIrcMessageParser {
 
 object IrcMessageParser : IIrcMessageParser {
 
-    val MAX_LINE_LENGTH = 8192
+    private const val MAX_LINE_LENGTH = 8192
 
     override fun parse(line: String): IrcMessage? {
         if (line.length > MAX_LINE_LENGTH || line.isBlank()) {

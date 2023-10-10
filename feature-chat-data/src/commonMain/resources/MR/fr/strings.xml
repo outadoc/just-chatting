@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="chat_source_bttv">BetterTTV</string>
-    <string name="chat_source_ffz">FrankerFaceZ</string>
-    <string name="chat_source_stv">7TV</string>
-    <string name="chat_source_twitch">Twitch</string>
-</resources>

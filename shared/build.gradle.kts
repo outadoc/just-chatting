@@ -58,12 +58,17 @@ kotlin {
                 implementation(libs.material.core)
                 implementation(libs.moko.resources.compose)
             }
+        }
 
-            val androidUnitTest by getting {
-                dependencies {
-                    implementation(libs.junit)
-                }
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.junit)
             }
+        }
+
+        val iosMain by getting {
+            dependsOn(commonMain)
+            dependencies {}
         }
     }
 }

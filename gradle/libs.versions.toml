@@ -9,7 +9,7 @@ kotlin = "1.9.10"
 ktor = "2.3.5"
 lifecycle = "2.6.2"
 moko = "0.23.0"
-paging = "3.2.1"
+paging = "3.3.0-alpha02-0.4.0"
 sqldelight = "2.0.0"
 
 [plugins]
@@ -42,8 +42,8 @@ androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common-java
 androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
-androidx-paging-runtime = { module = "androidx.paging:paging-runtime-ktx", version.ref = "paging" }
-androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging" }
+androidx-paging-runtime = { module = "app.cash.paging:paging-common", version.ref = "paging" }
+androidx-paging-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "paging" }
 androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }

@@ -20,7 +20,6 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(libs.irc)
                 implementation(libs.androidx.paging.compose)
                 implementation(libs.androidx.paging.runtime)
                 implementation(libs.kotlinx.collections.immutable)

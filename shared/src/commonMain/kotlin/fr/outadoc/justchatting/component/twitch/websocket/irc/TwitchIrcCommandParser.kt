@@ -1,10 +1,9 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
-import chat.willow.kale.core.message.IrcMessage
-import chat.willow.kale.irc.message.IrcMessageParser
-import chat.willow.kale.irc.message.rfc1459.NoticeMessage
-import chat.willow.kale.irc.message.rfc1459.PingMessage
-import chat.willow.kale.irc.message.rfc1459.PrivMsgMessage
+import fr.outadoc.justchatting.component.ircparser.core.message.IrcMessage
+import fr.outadoc.justchatting.component.ircparser.irc.message.IrcMessageParser
+import fr.outadoc.justchatting.component.ircparser.irc.message.rfc1459.NoticeMessage
+import fr.outadoc.justchatting.component.ircparser.irc.message.rfc1459.PrivMsgMessage
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.utils.logging.logWarning
 import kotlinx.datetime.Clock
@@ -14,9 +13,9 @@ class TwitchIrcCommandParser(private val clock: Clock) {
     fun parse(message: String): IrcEvent? {
         val ircMessage = IrcMessageParser.parse(message)
         val parsedMessage = when (ircMessage?.command) {
-            PingMessage.command -> IrcEvent.Command.Ping
-            PrivMsgMessage.command -> parsePrivateMsg(ircMessage)
-            NoticeMessage.command -> parseNotice(ircMessage)
+            "PING" -> IrcEvent.Command.Ping
+            "PRIVMSG" -> parsePrivateMsg(ircMessage)
+            "NOTICE" -> parseNotice(ircMessage)
             "USERNOTICE" -> parseUserNotice(ircMessage)
             "USERSTATE" -> parseUserState(ircMessage)
             "CLEARMSG" -> parseClearMessage(ircMessage)

@@ -1,7 +1,5 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.chatapi.domain.model.ValidationResponse
@@ -10,6 +8,7 @@ import fr.outadoc.justchatting.component.deeplink.Deeplink
 import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.utils.logging.logError
 import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.delay

@@ -1,10 +1,9 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
+import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

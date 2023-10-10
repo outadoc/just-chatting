@@ -22,6 +22,7 @@ kotlin {
             dependencies {
                 implementation(libs.irc)
                 implementation(libs.androidx.paging.compose)
+                implementation(libs.androidx.paging.runtime)
                 implementation(libs.kotlinx.collections.immutable)
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.datetime)
@@ -43,7 +44,6 @@ kotlin {
                 implementation(libs.androidx.browser)
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.emoji2.core)
-                implementation(libs.androidx.paging.runtime)
                 implementation(libs.androidx.palette)
                 implementation(libs.androidx.splashscreen)
                 implementation(libs.coil.compose)

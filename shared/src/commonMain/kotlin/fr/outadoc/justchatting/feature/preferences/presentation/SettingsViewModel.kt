@@ -1,12 +1,11 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -15,7 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.io.IOException
 
 class SettingsViewModel(
     private val preferenceRepository: PreferenceRepository,
@@ -62,7 +60,7 @@ class SettingsViewModel(
             try {
                 val file: Uri = logRepository.dumpLogs()
                 _events.emit(Event.ShareLogs(uri = file))
-            } catch (e: IOException) {
+            } catch (e: Exception) {
                 logError<SettingsViewModel>(e) { "Error while reading logs" }
             }
         }

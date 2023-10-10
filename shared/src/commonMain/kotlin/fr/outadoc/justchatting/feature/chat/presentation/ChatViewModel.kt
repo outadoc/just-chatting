@@ -5,8 +5,6 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.input.getTextAfterSelection
 import androidx.compose.ui.text.input.getTextBeforeSelection
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
@@ -30,6 +28,7 @@ import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
+import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.asStringOrRes
 import fr.outadoc.justchatting.utils.core.flatListOf

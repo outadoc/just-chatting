@@ -22,7 +22,7 @@ internal sealed class PubSubRaidMessage {
 
     @Serializable
     @SerialName("raid_cancel_v2")
-    object Cancel : PubSubRaidMessage()
+    data object Cancel : PubSubRaidMessage()
 
     @Serializable
     data class Raid(

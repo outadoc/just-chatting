@@ -33,7 +33,7 @@ class MainRouterViewModel(
     private class InvalidClientIdException : Exception()
 
     sealed class State {
-        object Loading : State()
+        data object Loading : State()
         data class LoggedOut(
             val causedByTokenExpiration: Boolean = false,
         ) : State()

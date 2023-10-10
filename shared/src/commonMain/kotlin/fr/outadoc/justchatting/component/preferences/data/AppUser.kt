@@ -12,5 +12,5 @@ sealed class AppUser {
         val token: String,
     ) : AppUser()
 
-    object NotLoggedIn : AppUser()
+    data object NotLoggedIn : AppUser()
 }

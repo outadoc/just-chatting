@@ -125,7 +125,7 @@ sealed interface IrcEvent {
 
     sealed interface Command : IrcEvent {
 
-        object Ping : Command
+        data object Ping : Command
 
         data class RoomStateDelta(
             val isEmoteOnly: Boolean? = null,

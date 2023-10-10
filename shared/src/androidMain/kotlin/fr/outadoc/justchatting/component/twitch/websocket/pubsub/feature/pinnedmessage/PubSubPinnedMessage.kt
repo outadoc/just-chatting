@@ -58,9 +58,9 @@ internal sealed class PubSubPinnedMessage {
 
     @Serializable
     @SerialName("update-message")
-    object Update : PubSubPinnedMessage()
+    data object Update : PubSubPinnedMessage()
 
     @Serializable
     @SerialName("unpin-message")
-    object Unpin : PubSubPinnedMessage()
+    data object Unpin : PubSubPinnedMessage()
 }

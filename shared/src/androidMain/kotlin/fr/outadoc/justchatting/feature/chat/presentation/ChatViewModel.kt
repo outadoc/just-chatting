@@ -121,13 +121,13 @@ class ChatViewModel(
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
         data class UpdateChatterPronouns(val pronouns: Map<Chatter, Pronoun?>) : Action()
-        object LoadStreamDetails : Action()
+        data object LoadStreamDetails : Action()
         data class ShowUserInfo(val userLogin: String?) : Action()
     }
 
     @Immutable
     sealed class State {
-        object Initial : State()
+        data object Initial : State()
 
         data class Chatting(
             val user: User,

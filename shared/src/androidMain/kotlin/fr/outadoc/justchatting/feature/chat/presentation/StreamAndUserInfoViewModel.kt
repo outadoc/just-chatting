@@ -15,7 +15,7 @@ class StreamAndUserInfoViewModel(
 ) : ViewModel() {
 
     sealed class State {
-        object Initial : State()
+        data object Initial : State()
 
         data class Loading(
             val userLogin: String,

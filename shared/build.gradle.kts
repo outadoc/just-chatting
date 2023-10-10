@@ -2,8 +2,10 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose)
     alias(libs.plugins.moko.resources)
+    alias(libs.plugins.sqldelight)
 }
 
 kotlin {
@@ -17,29 +19,44 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
-            dependencies {}
+            dependencies {
+                implementation(libs.irc)
+                implementation(libs.androidx.paging.compose)
+                implementation(libs.kotlinx.collections.immutable)
+                implementation(libs.kotlinx.coroutines)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.client.core)
+            }
         }
 
         val androidMain by getting {
             dependsOn(commonMain)
             dependencies {
+                implementation(libs.accompanist.permissions)
                 implementation(libs.accompanist.placeholder)
                 implementation(libs.accompanist.systemuicontroller)
                 implementation(libs.androidx.activity.compose)
                 implementation(libs.androidx.appcompat)
+                implementation(libs.androidx.browser)
+                implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.emoji2.core)
+                implementation(libs.androidx.paging.runtime)
                 implementation(libs.androidx.palette)
                 implementation(libs.androidx.splashscreen)
                 implementation(libs.coil.compose)
                 implementation(libs.compose.material.core2)
                 implementation(libs.compose.material.core3)
                 implementation(libs.compose.material.icons)
+                implementation(libs.compose.material.windowSizeClass)
                 implementation(libs.compose.ui.core)
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.koin.compose)
                 implementation(libs.kotlinx.collections.immutable)
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.client.core)
                 implementation(libs.material.core)
                 implementation(libs.moko.resources.core)
                 implementation(libs.moko.resources.compose)
@@ -69,7 +86,17 @@ android {
     }
 }
 
+sqldelight {
+    databases {
+        create("AppDatabase") {
+            packageName.set("fr.outadoc.justchatting.component.chatapi.db")
+        }
+    }
+}
+
 dependencies {
     implementation(platform(libs.compose.bom))
     coreLibraryDesugaring(libs.desugar)
+    implementation(libs.sqldelight.coroutines)
+    implementation(libs.koin.core)
 }

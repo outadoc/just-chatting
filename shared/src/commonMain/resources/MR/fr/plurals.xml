@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <plurals name="viewers">
+        <item quantity="one">%s spectateur</item>
+        <item quantity="other">%s spectateur·rice·s</item>
+        <item quantity="many">%s de spectateur·rice·s</item>
+    </plurals>
+
+    <plurals name="months">
+        <item quantity="one">%s mois</item>
+        <item quantity="other">%s mois</item>
+        <item quantity="many">%s de mois</item>
+    </plurals>
+
+    <plurals name="user_redeemed">
+        <item quantity="one">%1$s a obtenu %2$s pour %3$,d point</item>
+        <item quantity="other">%1$s a obtenu %2$s pour %3$,d points</item>
+        <item quantity="many">%1$s a obtenu %2$s pour %3$,d de points</item>
+    </plurals>
+</resources>

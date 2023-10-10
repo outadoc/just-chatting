@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="randomChatColors">
+        <item>@color/chatUserColor0</item>
+        <item>@color/chatUserColor1</item>
+        <item>@color/chatUserColor2</item>
+        <item>@color/chatUserColor3</item>
+        <item>@color/chatUserColor4</item>
+        <item>@color/chatUserColor5</item>
+        <item>@color/chatUserColor6</item>
+        <item>@color/chatUserColor7</item>
+        <item>@color/chatUserColor8</item>
+        <item>@color/chatUserColor9</item>
+        <item>@color/chatUserColor10</item>
+        <item>@color/chatUserColor11</item>
+        <item>@color/chatUserColor12</item>
+        <item>@color/chatUserColor13</item>
+        <item>@color/chatUserColor14</item>
+    </array>
+
+</resources>

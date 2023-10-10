@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.component.deeplink
 
-import android.net.Uri
+import com.eygraber.uri.Uri
 
 object DeeplinkDefinitions {
     val ViewChannel: Uri = Uri.parse("justchatting://channel")

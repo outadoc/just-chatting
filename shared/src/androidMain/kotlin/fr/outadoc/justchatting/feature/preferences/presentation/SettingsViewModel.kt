@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
-import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser

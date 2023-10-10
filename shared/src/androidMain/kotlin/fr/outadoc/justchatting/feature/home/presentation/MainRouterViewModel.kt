@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
-import android.net.Uri
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.chatapi.domain.model.ValidationResponse
 import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository

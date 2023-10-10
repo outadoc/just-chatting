@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
 import android.content.Context
-import android.net.Uri
 import androidx.core.content.FileProvider
+import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.shared.R
 import okio.Path
 

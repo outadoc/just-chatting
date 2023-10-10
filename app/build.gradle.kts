@@ -24,22 +24,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":shared"))
-
-                implementation(project(":feature-chat-presentation-mobile"))
-                implementation(project(":feature-home-presentation-mobile"))
-                implementation(project(":feature-preferences-presentation-mobile"))
-                implementation(project(":feature-pronouns-domain"))
-
-                implementation(project(":component-chatapi-domain"))
-                implementation(project(":component-chatapi-common"))
-                implementation(project(":component-chatapi-twitch"))
-                implementation(project(":component-chatapi-db"))
-                implementation(project(":component-deeplink"))
-                implementation(project(":component-preferences-domain"))
-
-                implementation(project(":utils-core"))
-                implementation(project(":utils-ui"))
-                implementation(project(":utils-logging"))
             }
         }
 

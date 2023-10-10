@@ -35,9 +35,9 @@ sealed class PubSubServerMessage {
 
     @Serializable
     @SerialName("PONG")
-    object Pong : PubSubServerMessage()
+    data object Pong : PubSubServerMessage()
 
     @Serializable
     @SerialName("RECONNECT")
-    object Reconnect : PubSubServerMessage()
+    data object Reconnect : PubSubServerMessage()
 }

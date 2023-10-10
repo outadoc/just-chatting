@@ -27,6 +27,8 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.core)
+                implementation(libs.moko.resources.core)
+                implementation(libs.uri.kmp)
             }
         }
 
@@ -52,13 +54,7 @@ kotlin {
                 implementation(libs.compose.ui.core)
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.koin.compose)
-                implementation(libs.kotlinx.collections.immutable)
-                implementation(libs.kotlinx.coroutines)
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.ktor.client.core)
                 implementation(libs.material.core)
-                implementation(libs.moko.resources.core)
                 implementation(libs.moko.resources.compose)
             }
 

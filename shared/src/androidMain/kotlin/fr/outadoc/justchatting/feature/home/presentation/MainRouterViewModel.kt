@@ -1,9 +1,8 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
-import android.net.Uri
-import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.chatapi.domain.model.ValidationResponse
 import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
@@ -33,7 +32,7 @@ class MainRouterViewModel(
     private class InvalidClientIdException : Exception()
 
     sealed class State {
-        object Loading : State()
+        data object Loading : State()
         data class LoggedOut(
             val causedByTokenExpiration: Boolean = false,
         ) : State()
@@ -103,7 +102,7 @@ class MainRouterViewModel(
         )
 
         val helixAuthUrl: Uri =
-            "https://id.twitch.tv/oauth2/authorize".toUri()
+            Uri.parse("https://id.twitch.tv/oauth2/authorize")
                 .buildUpon()
                 .appendQueryParameter("response_type", "token")
                 .appendQueryParameter("client_id", oAuthAppCredentials.clientId)

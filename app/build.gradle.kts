@@ -78,6 +78,7 @@ kotlin {
                 implementation(libs.moko.resources.compose)
                 implementation(libs.okio)
                 implementation(libs.sqldelight.android.driver)
+                implementation(libs.uri.kmp)
             }
         }
     }

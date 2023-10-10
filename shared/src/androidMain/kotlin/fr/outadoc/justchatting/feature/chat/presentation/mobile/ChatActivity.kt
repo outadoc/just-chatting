@@ -9,6 +9,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.emoji2.text.DefaultEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
+import com.eygraber.uri.toAndroidUri
 import fr.outadoc.justchatting.utils.ui.AppTheme
 
 class ChatActivity : AppCompatActivity() {
@@ -18,7 +19,7 @@ class ChatActivity : AppCompatActivity() {
 
         fun createIntent(context: Context, channelLogin: String): Intent {
             return Intent(context, ChatActivity::class.java).apply {
-                data = channelLogin.createChannelDeeplink()
+                data = channelLogin.createChannelDeeplink().toAndroidUri()
                 action = Intent.ACTION_VIEW
                 flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
 

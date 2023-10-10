@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
 import android.content.Context
-import android.net.Uri
+import com.eygraber.uri.Uri
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okio.BufferedSource

@@ -9,6 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.eygraber.uri.toAndroidUri
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -31,7 +32,7 @@ fun SettingsContent(
                     val sendIntent: Intent =
                         Intent().apply {
                             action = Intent.ACTION_SEND
-                            putExtra(Intent.EXTRA_STREAM, event.uri)
+                            putExtra(Intent.EXTRA_STREAM, event.uri.toAndroidUri())
                             type = "application/gzip"
                         }
 

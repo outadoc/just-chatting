@@ -26,5 +26,5 @@ sealed class PubSubClientMessage {
 
     @Serializable
     @SerialName("PING")
-    object Ping : PubSubClientMessage()
+    data object Ping : PubSubClientMessage()
 }

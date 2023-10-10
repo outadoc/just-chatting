@@ -13,8 +13,8 @@ class NetworkStateObserver(
     private val connectivityManager: ConnectivityManager,
 ) {
     sealed class NetworkState {
-        object Available : NetworkState()
-        object Unavailable : NetworkState()
+        data object Available : NetworkState()
+        data object Unavailable : NetworkState()
     }
 
     val state: Flow<NetworkState> = callbackFlow {

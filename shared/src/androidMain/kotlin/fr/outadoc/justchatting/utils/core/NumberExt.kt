@@ -6,7 +6,7 @@ import io.fluidsonic.currency.toPlatform
 import java.text.NumberFormat
 import java.util.Locale
 
-fun Float.formatPercent(): String =
+actual fun Float.formatPercent(): String =
     NumberFormat.getPercentInstance(Locale.getDefault()).format(this)
 
 actual fun Int.formatNumber(): String = "%,d".format(this)

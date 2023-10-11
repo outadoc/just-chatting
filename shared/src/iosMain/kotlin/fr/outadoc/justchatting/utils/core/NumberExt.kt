@@ -7,8 +7,15 @@ import platform.Foundation.NSNumber
 import platform.Foundation.NSNumberFormatter
 import platform.Foundation.NSNumberFormatterCurrencyStyle
 import platform.Foundation.NSNumberFormatterDecimalStyle
+import platform.Foundation.NSNumberFormatterPercentStyle
 import platform.Foundation.currentLocale
 import platform.Foundation.localeIdentifier
+
+actual fun Float.formatPercent(): String =
+    NSNumberFormatter.localizedStringFromNumber(
+        NSNumber(this),
+        NSNumberFormatterPercentStyle,
+    )
 
 actual fun Int.formatNumber(): String =
     NSNumberFormatter.localizedStringFromNumber(

@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.component.chatapi.db.inject
+package fr.outadoc.justchatting.di
 
 import app.cash.sqldelight.db.SqlDriver
 import fr.outadoc.justchatting.component.chatapi.db.AppDatabase

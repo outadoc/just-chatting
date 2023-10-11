@@ -66,8 +66,8 @@ fun ChannelChatScreen(channelLogin: String) {
 
     val canOpenInBubble: Boolean =
         prefs.enableNotifications &&
-                canOpenInBubble() &&
-                notifier.areNotificationsEnabled
+            canOpenInBubble() &&
+            notifier.areNotificationsEnabled
 
     MaterialTheme(
         colorScheme = dynamicImageColorScheme(url = user?.profileImageUrl),
@@ -87,8 +87,8 @@ fun ChannelChatScreen(channelLogin: String) {
                     message = textFieldValue.text,
                     selectionRange = IntRange(
                         start = textFieldValue.selection.start,
-                        endInclusive = textFieldValue.selection.end
-                    )
+                        endInclusive = textFieldValue.selection.end,
+                    ),
                 )
             },
             onToggleEmotePicker = {

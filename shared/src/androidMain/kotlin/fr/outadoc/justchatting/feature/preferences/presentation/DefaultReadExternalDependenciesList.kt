@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.feature.preferences.presentation
 
 import android.content.Context
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json

@@ -5,13 +5,13 @@ import kotlin.reflect.KClass
 object Logger {
 
     var logStrategy: LogStrategy = NoopLogStrategy
-    
+
     enum class Level(val value: String) {
         Verbose("VERBOSE"),
         Debug("DEBUG"),
         Info("INFO"),
         Warning("WARN"),
-        Error("ERROR")
+        Error("ERROR"),
     }
 
     fun <T : Any> v(clazz: KClass<T>, content: () -> String) {

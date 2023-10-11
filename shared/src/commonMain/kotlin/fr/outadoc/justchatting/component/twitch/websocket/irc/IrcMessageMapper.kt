@@ -361,7 +361,6 @@ class IrcMessageMapper {
                     .format(
                         message?.substringBefore(" is already banned", "") ?: "",
                     )
-
             }
 
             "already_emote_only_off" -> {

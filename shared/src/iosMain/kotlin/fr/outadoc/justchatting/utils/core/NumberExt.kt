@@ -13,7 +13,7 @@ import platform.Foundation.localeIdentifier
 actual fun Int.formatNumber(): String =
     NSNumberFormatter.localizedStringFromNumber(
         NSNumber(this),
-        NSNumberFormatterDecimalStyle
+        NSNumberFormatterDecimalStyle,
     )
 
 actual fun BigDecimal.formatCurrency(currency: Currency): String {
@@ -22,7 +22,7 @@ actual fun BigDecimal.formatCurrency(currency: Currency): String {
     val formatter = NSNumberFormatter().apply {
         numberStyle = NSNumberFormatterCurrencyStyle
         locale = NSLocale(
-            localeIdentifier = "${currentLocale}@currency=${currency.code}"
+            localeIdentifier = "$currentLocale@currency=${currency.code}",
         )
     }
     return formatter.stringFromNumber(amount)

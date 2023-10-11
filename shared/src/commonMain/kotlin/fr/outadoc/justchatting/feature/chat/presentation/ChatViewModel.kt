@@ -362,7 +362,7 @@ class ChatViewModel(
                     .map { inputState ->
                         inputState.message.substring(
                             startIndex = 0,
-                            endIndex = inputState.selectionRange.first
+                            endIndex = inputState.selectionRange.first,
                         )
                             .takeLastWhile { it != ' ' }
                     }
@@ -420,7 +420,7 @@ class ChatViewModel(
                 InputAction.ChangeMessageInput(
                     message = message,
                     selectionRange = selectionRange,
-                )
+                ),
             )
         }
     }

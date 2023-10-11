@@ -44,6 +44,7 @@ kotlin {
                 implementation(libs.moko.resources.core)
                 implementation(libs.sqldelight.coroutines)
                 implementation(libs.uri.kmp)
+                implementation(libs.unicode.codepoints)
             }
         }
 

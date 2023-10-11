@@ -86,4 +86,5 @@ moko-resources-compose = { module = "dev.icerock.moko:resources-compose", versio
 okio = "com.squareup.okio:okio:3.6.0"
 sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+unicode-codepoints = "de.cketti.unicode:kotlin-codepoints:0.6.1"
 uri-kmp = "com.eygraber:uri-kmp:0.0.15"

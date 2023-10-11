@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
+import de.cketti.codepoints.offsetByCodePoints
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEmote
 import fr.outadoc.justchatting.component.chatapi.common.Emote

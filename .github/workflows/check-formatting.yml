@@ -1,11 +1,11 @@
-name: Build iOS app
+name: Check formatting
 
 on:
   pull_request:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -24,12 +24,7 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Build iOS targets
+      - name: Check formatting
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: iosX64Binaries
-
-      - name: Run iOS unit tests
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: iosX64Test
+          arguments: spotlessCheck

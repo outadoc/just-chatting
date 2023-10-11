@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.component.chatapi.common
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.vector.ImageVector
 import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
@@ -31,7 +30,7 @@ sealed interface ChatEvent {
 
             data class Metadata(
                 val title: StringDesc,
-                val titleIcon: ImageVector? = null,
+                val titleIcon: Icon? = null,
                 val subtitle: StringDesc?,
                 val level: Level = Level.Base,
             )

@@ -15,8 +15,8 @@ import androidx.compose.material.icons.filled.VolunteerActivism
 import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.material.icons.outlined.Star
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
-import dev.icerock.moko.resources.desc.Raw
 import dev.icerock.moko.resources.desc.StringDesc
+import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
@@ -34,10 +34,8 @@ class IrcMessageMapper {
             is IrcEvent.Message.Notice -> {
                 ChatEvent.Message.Notice(
                     timestamp = timestamp,
-                    text = getLabelForNotice(
-                        messageId = messageId,
-                        message = message,
-                    ) ?: message,
+                    text = getLabelForNotice(messageId = messageId, message = message)
+                        ?: message.desc(),
                 )
             }
 
@@ -45,7 +43,7 @@ class IrcMessageMapper {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = userDisplayName,
+                        title = userDisplayName.desc(),
                         titleIcon = Icons.Default.CallReceived,
                         subtitle = MR.strings.chat_raid_header
                             .format(
@@ -63,9 +61,9 @@ class IrcMessageMapper {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = userDisplayName,
+                        title = userDisplayName.desc(),
                         titleIcon = Icons.Default.Cancel,
-                        subtitle = MR.strings.chat_unraid_subtitle,
+                        subtitle = MR.strings.chat_unraid_subtitle.desc(),
                     ),
                     body = null,
                 )
@@ -75,7 +73,7 @@ class IrcMessageMapper {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = MR.strings.irc_msgid_highlighted_message,
+                        title = MR.strings.irc_msgid_highlighted_message.desc(),
                         titleIcon = Icons.Default.Highlight,
                         subtitle = null,
                     ),
@@ -87,7 +85,7 @@ class IrcMessageMapper {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = MR.strings.irc_msgid_announcement,
+                        title = MR.strings.irc_msgid_announcement.desc(),
                         titleIcon = Icons.Default.Campaign,
                         subtitle = null,
                     ),
@@ -99,7 +97,7 @@ class IrcMessageMapper {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = StringDesc.Raw(userDisplayName),
+                        title = userDisplayName.desc(),
                         titleIcon = when (subscriptionPlan) {
                             SUB_PRIME -> Icons.Outlined.Star
                             else -> Icons.Filled.Star
@@ -139,7 +137,7 @@ class IrcMessageMapper {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = userDisplayName,
+                        title = userDisplayName.desc(),
                         titleIcon = Icons.Filled.Star,
                         subtitle = MR.strings.chat_subConversion_header
                             .format(parseSubscriptionTierWithArticle(subscriptionPlan)),
@@ -152,7 +150,7 @@ class IrcMessageMapper {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = userDisplayName,
+                        title = userDisplayName.desc(),
                         titleIcon = Icons.Default.VolunteerActivism,
                         subtitle = MR.strings.chat_massSubGift_header
                             .format(
@@ -170,7 +168,7 @@ class IrcMessageMapper {
                     timestamp = timestamp,
                     body = null,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = userDisplayName,
+                        title = userDisplayName.desc(),
                         titleIcon = Icons.Default.Redeem,
                         subtitle = MR.strings.chat_subGift_header
                             .format(
@@ -189,14 +187,15 @@ class IrcMessageMapper {
                 ChatEvent.Message.Highlighted(
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = userDisplayName,
+                        title = userDisplayName.desc(),
                         titleIcon = Icons.Default.FastForward,
                         subtitle = when (priorGifterDisplayName) {
-                            null -> MR.strings.chat_subGift_payForwardAnonymous
-                            else -> {
-                                MR.strings.chat_subGift_payForward
-                                    .format(priorGifterDisplayName)
+                            null -> {
+                                MR.strings.chat_subGift_payForwardAnonymous.desc()
+                            }
 
+                            else -> {
+                                MR.strings.chat_subGift_payForward.format(priorGifterDisplayName)
                             }
                         },
                     ),
@@ -209,7 +208,7 @@ class IrcMessageMapper {
                     timestamp = timestamp,
                     body = userMessage?.map(),
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = systemMsg,
+                        title = systemMsg.desc(),
                         titleIcon = null,
                         subtitle = null,
                     ),
@@ -220,7 +219,7 @@ class IrcMessageMapper {
                 val metadata = when {
                     isFirstMessageByUser -> {
                         ChatEvent.Message.Highlighted.Metadata(
-                            title = MR.strings.chat_first,
+                            title = MR.strings.chat_first.desc(),
                             titleIcon = Icons.Default.WavingHand,
                             subtitle = null,
                         )
@@ -228,7 +227,7 @@ class IrcMessageMapper {
 
                     rewardId != null -> {
                         ChatEvent.Message.Highlighted.Metadata(
-                            title = MR.strings.chat_reward,
+                            title = MR.strings.chat_reward.desc(),
                             titleIcon = Icons.Default.Toll,
                             subtitle = null,
                         )
@@ -242,10 +241,10 @@ class IrcMessageMapper {
                         )
 
                         val formattedAmount = amount.formatCurrency(currency)
-                        val header: String = MR.strings.chat_paidMessage.format(formattedAmount)
+                        val header = MR.strings.chat_paidMessage.format(formattedAmount)
 
                         ChatEvent.Message.Highlighted.Metadata(
-                            title = StringDesc.Raw(header),
+                            title = header,
                             titleIcon = Icons.Default.Bolt,
                             subtitle = null,
                             level = when (paidMessageInfo.level) {
@@ -287,20 +286,20 @@ class IrcMessageMapper {
 
     private fun parseSubscriptionTier(planId: String): StringDesc {
         return when (planId) {
-            SUB_T1 -> MR.strings.chat_sub_tier1
-            SUB_T2 -> MR.strings.chat_sub_tier2
-            SUB_T3 -> MR.strings.chat_sub_tier3
-            SUB_PRIME -> MR.strings.chat_sub_prime
-            else -> StringDesc.Raw(planId)
+            SUB_T1 -> MR.strings.chat_sub_tier1.desc()
+            SUB_T2 -> MR.strings.chat_sub_tier2.desc()
+            SUB_T3 -> MR.strings.chat_sub_tier3.desc()
+            SUB_PRIME -> MR.strings.chat_sub_prime.desc()
+            else -> planId.desc()
         }
     }
 
     private fun parseSubscriptionTierWithArticle(planId: String): StringDesc {
         return when (planId) {
-            SUB_T1 -> MR.strings.chat_subGift_tier1
-            SUB_T2 -> MR.strings.chat_subGift_tier2
-            SUB_T3 -> MR.strings.chat_subGift_tier3
-            else -> StringDesc.Raw(planId)
+            SUB_T1 -> MR.strings.chat_subGift_tier1.desc()
+            SUB_T2 -> MR.strings.chat_subGift_tier2.desc()
+            SUB_T3 -> MR.strings.chat_subGift_tier3.desc()
+            else -> planId.desc()
         }
     }
 
@@ -339,9 +338,9 @@ class IrcMessageMapper {
                         ChatEvent.Message.Highlighted(
                             timestamp = command.timestamp,
                             metadata = ChatEvent.Message.Highlighted.Metadata(
-                                title = StringDesc.Raw(command.targetUserLogin),
+                                title = command.targetUserLogin.desc(),
                                 titleIcon = Icons.Default.Gavel,
-                                subtitle = MR.strings.chat_ban,
+                                subtitle = MR.strings.chat_ban.desc(),
                             ),
                             body = null,
                         )
@@ -349,10 +348,9 @@ class IrcMessageMapper {
                         ChatEvent.Message.Highlighted(
                             timestamp = command.timestamp,
                             metadata = ChatEvent.Message.Highlighted.Metadata(
-                                title = StringDesc.Raw(command.targetUserLogin),
+                                title = command.targetUserLogin.desc(),
                                 titleIcon = Icons.Default.Gavel,
-                                subtitle = MR.strings.chat_timeout
-                                    .format(command.duration),
+                                subtitle = MR.strings.chat_timeout.format(command.duration),
                             ),
                             body = null,
                         )
@@ -360,7 +358,7 @@ class IrcMessageMapper {
                 } else {
                     ChatEvent.Message.Notice(
                         timestamp = command.timestamp,
-                        text = MR.strings.chat_clear,
+                        text = MR.strings.chat_clear.desc(),
                     )
                 }
             }
@@ -380,15 +378,15 @@ class IrcMessageMapper {
             }
 
             "already_emote_only_off" -> {
-                MR.strings.irc_notice_already_emote_only_off
+                MR.strings.irc_notice_already_emote_only_off.desc()
             }
 
             "already_emote_only_on" -> {
-                MR.strings.irc_notice_already_emote_only_on
+                MR.strings.irc_notice_already_emote_only_on.desc()
             }
 
             "already_followers_off" -> {
-                MR.strings.irc_notice_already_followers_off
+                MR.strings.irc_notice_already_followers_off.desc()
             }
 
             "already_followers_on" -> {
@@ -399,15 +397,15 @@ class IrcMessageMapper {
             }
 
             "already_r9k_off" -> {
-                MR.strings.irc_notice_already_r9k_off
+                MR.strings.irc_notice_already_r9k_off.desc()
             }
 
             "already_r9k_on" -> {
-                MR.strings.irc_notice_already_r9k_on
+                MR.strings.irc_notice_already_r9k_on.desc()
             }
 
             "already_slow_off" -> {
-                MR.strings.irc_notice_already_slow_off
+                MR.strings.irc_notice_already_slow_off.desc()
             }
 
             "already_slow_on" -> {
@@ -419,11 +417,11 @@ class IrcMessageMapper {
             }
 
             "already_subs_off" -> {
-                MR.strings.irc_notice_already_subs_off
+                MR.strings.irc_notice_already_subs_off.desc()
             }
 
             "already_subs_on" -> {
-                MR.strings.irc_notice_already_subs_on
+                MR.strings.irc_notice_already_subs_on.desc()
             }
 
             "autohost_receive" -> {
@@ -442,11 +440,11 @@ class IrcMessageMapper {
             }
 
             "bad_ban_anon" -> {
-                MR.strings.irc_notice_bad_ban_anon
+                MR.strings.irc_notice_bad_ban_anon.desc()
             }
 
             "bad_ban_broadcaster" -> {
-                MR.strings.irc_notice_bad_ban_broadcaster
+                MR.strings.irc_notice_bad_ban_broadcaster.desc()
             }
 
             "bad_ban_mod" -> {
@@ -457,7 +455,7 @@ class IrcMessageMapper {
             }
 
             "bad_ban_self" -> {
-                MR.strings.irc_notice_bad_ban_self
+                MR.strings.irc_notice_bad_ban_self.desc()
             }
 
             "bad_ban_staff" -> {
@@ -468,11 +466,11 @@ class IrcMessageMapper {
             }
 
             "bad_commercial_error" -> {
-                MR.strings.irc_notice_bad_commercial_error
+                MR.strings.irc_notice_bad_commercial_error.desc()
             }
 
             "bad_delete_message_broadcaster" -> {
-                MR.strings.irc_notice_bad_delete_message_broadcaster
+                MR.strings.irc_notice_bad_delete_message_broadcaster.desc()
             }
 
             "bad_delete_message_mod" -> {
@@ -505,11 +503,11 @@ class IrcMessageMapper {
             }
 
             "bad_host_rejected" -> {
-                MR.strings.irc_notice_bad_host_rejected
+                MR.strings.irc_notice_bad_host_rejected.desc()
             }
 
             "bad_host_self" -> {
-                MR.strings.irc_notice_bad_host_self
+                MR.strings.irc_notice_bad_host_self.desc()
             }
 
             "bad_mod_banned" -> {
@@ -539,11 +537,11 @@ class IrcMessageMapper {
             }
 
             "bad_timeout_anon" -> {
-                MR.strings.irc_notice_bad_timeout_anon
+                MR.strings.irc_notice_bad_timeout_anon.desc()
             }
 
             "bad_timeout_broadcaster" -> {
-                MR.strings.irc_notice_bad_timeout_broadcaster
+                MR.strings.irc_notice_bad_timeout_broadcaster.desc()
             }
 
             "bad_timeout_duration" -> {
@@ -561,7 +559,7 @@ class IrcMessageMapper {
             }
 
             "bad_timeout_self" -> {
-                MR.strings.irc_notice_bad_timeout_self
+                MR.strings.irc_notice_bad_timeout_self.desc()
             }
 
             "bad_timeout_staff" -> {
@@ -578,7 +576,7 @@ class IrcMessageMapper {
             }
 
             "bad_unhost_error" -> {
-                MR.strings.irc_notice_bad_unhost_error
+                MR.strings.irc_notice_bad_unhost_error.desc()
             }
 
             "bad_unmod_mod" -> {
@@ -600,11 +598,11 @@ class IrcMessageMapper {
             }
 
             "bad_vip_max_vips_reached" -> {
-                MR.strings.irc_notice_bad_vip_max_vips_reached
+                MR.strings.irc_notice_bad_vip_max_vips_reached.desc()
             }
 
             "bad_vip_achievement_incomplete" -> {
-                MR.strings.irc_notice_bad_vip_achievement_incomplete
+                MR.strings.irc_notice_bad_vip_achievement_incomplete.desc()
             }
 
             "bad_unvip_grantee_not_vip" -> {
@@ -627,7 +625,7 @@ class IrcMessageMapper {
             }
 
             "color_changed" -> {
-                MR.strings.irc_notice_color_changed
+                MR.strings.irc_notice_color_changed.desc()
             }
 
             "commercial_success" -> {
@@ -652,15 +650,15 @@ class IrcMessageMapper {
             }
 
             "emote_only_off" -> {
-                MR.strings.irc_notice_emote_only_off
+                MR.strings.irc_notice_emote_only_off.desc()
             }
 
             "emote_only_on" -> {
-                MR.strings.irc_notice_emote_only_on
+                MR.strings.irc_notice_emote_only_on.desc()
             }
 
             "followers_off" -> {
-                MR.strings.irc_notice_followers_off
+                MR.strings.irc_notice_followers_off.desc()
             }
 
             "followers_on" -> {
@@ -671,11 +669,11 @@ class IrcMessageMapper {
             }
 
             "followers_on_zero" -> {
-                MR.strings.irc_notice_followers_on_zero
+                MR.strings.irc_notice_followers_on_zero.desc()
             }
 
             "host_off" -> {
-                MR.strings.irc_notice_host_off
+                MR.strings.irc_notice_host_off.desc()
             }
 
             "host_on" -> {
@@ -731,23 +729,23 @@ class IrcMessageMapper {
             }
 
             "msg_bad_characters" -> {
-                MR.strings.irc_notice_msg_bad_characters
+                MR.strings.irc_notice_msg_bad_characters.desc()
             }
 
             "msg_channel_blocked" -> {
-                MR.strings.irc_notice_msg_channel_blocked
+                MR.strings.irc_notice_msg_channel_blocked.desc()
             }
 
             "msg_channel_suspended" -> {
-                MR.strings.irc_notice_msg_channel_suspended
+                MR.strings.irc_notice_msg_channel_suspended.desc()
             }
 
             "msg_duplicate" -> {
-                MR.strings.irc_notice_msg_duplicate
+                MR.strings.irc_notice_msg_duplicate.desc()
             }
 
             "msg_emoteonly" -> {
-                MR.strings.irc_notice_msg_emoteonly
+                MR.strings.irc_notice_msg_emoteonly.desc()
             }
 
             "msg_followersonly" -> {
@@ -775,19 +773,19 @@ class IrcMessageMapper {
             }
 
             "msg_r9k" -> {
-                MR.strings.irc_notice_msg_r9k
+                MR.strings.irc_notice_msg_r9k.desc()
             }
 
             "msg_ratelimit" -> {
-                MR.strings.irc_notice_msg_ratelimit
+                MR.strings.irc_notice_msg_ratelimit.desc()
             }
 
             "msg_rejected" -> {
-                MR.strings.irc_notice_msg_rejected
+                MR.strings.irc_notice_msg_rejected.desc()
             }
 
             "msg_rejected_mandatory" -> {
-                MR.strings.irc_notice_msg_rejected_mandatory
+                MR.strings.irc_notice_msg_rejected_mandatory.desc()
             }
 
             "msg_slowmode" -> {
@@ -805,7 +803,7 @@ class IrcMessageMapper {
             }
 
             "msg_suspended" -> {
-                MR.strings.irc_notice_msg_suspended
+                MR.strings.irc_notice_msg_suspended.desc()
             }
 
             "msg_timedout" -> {
@@ -817,51 +815,51 @@ class IrcMessageMapper {
             }
 
             "msg_verified_email" -> {
-                MR.strings.irc_notice_msg_verified_email
+                MR.strings.irc_notice_msg_verified_email.desc()
             }
 
             "no_help" -> {
-                MR.strings.irc_notice_no_help
+                MR.strings.irc_notice_no_help.desc()
             }
 
             "no_mods" -> {
-                MR.strings.irc_notice_no_mods
+                MR.strings.irc_notice_no_mods.desc()
             }
 
             "no_vips" -> {
-                MR.strings.irc_notice_no_vips
+                MR.strings.irc_notice_no_vips.desc()
             }
 
             "not_hosting" -> {
-                MR.strings.irc_notice_not_hosting
+                MR.strings.irc_notice_not_hosting.desc()
             }
 
             "no_permission" -> {
-                MR.strings.irc_notice_no_permission
+                MR.strings.irc_notice_no_permission.desc()
             }
 
             "r9k_off" -> {
-                MR.strings.irc_notice_r9k_off
+                MR.strings.irc_notice_r9k_off.desc()
             }
 
             "r9k_on" -> {
-                MR.strings.irc_notice_r9k_on
+                MR.strings.irc_notice_r9k_on.desc()
             }
 
             "raid_error_already_raiding" -> {
-                MR.strings.irc_notice_raid_error_already_raiding
+                MR.strings.irc_notice_raid_error_already_raiding.desc()
             }
 
             "raid_error_forbidden" -> {
-                MR.strings.irc_notice_raid_error_forbidden
+                MR.strings.irc_notice_raid_error_forbidden.desc()
             }
 
             "raid_error_self" -> {
-                MR.strings.irc_notice_raid_error_self
+                MR.strings.irc_notice_raid_error_self.desc()
             }
 
             "raid_error_too_many_viewers" -> {
-                MR.strings.irc_notice_raid_error_too_many_viewers
+                MR.strings.irc_notice_raid_error_too_many_viewers.desc()
             }
 
             "raid_error_unexpected" -> {
@@ -872,11 +870,11 @@ class IrcMessageMapper {
             }
 
             "raid_notice_mature" -> {
-                MR.strings.irc_notice_raid_notice_mature
+                MR.strings.irc_notice_raid_notice_mature.desc()
             }
 
             "raid_notice_restricted_chat" -> {
-                MR.strings.irc_notice_raid_notice_restricted_chat
+                MR.strings.irc_notice_raid_notice_restricted_chat.desc()
             }
 
             "room_mods" -> {
@@ -886,7 +884,7 @@ class IrcMessageMapper {
             }
 
             "slow_off" -> {
-                MR.strings.irc_notice_slow_off
+                MR.strings.irc_notice_slow_off.desc()
             }
 
             "slow_on" -> {
@@ -897,11 +895,11 @@ class IrcMessageMapper {
             }
 
             "subs_off" -> {
-                MR.strings.irc_notice_subs_off
+                MR.strings.irc_notice_subs_off.desc()
             }
 
             "subs_on" -> {
-                MR.strings.irc_notice_subs_on
+                MR.strings.irc_notice_subs_on.desc()
             }
 
             "timeout_no_timeout" -> {
@@ -953,15 +951,15 @@ class IrcMessageMapper {
             }
 
             "unraid_error_no_active_raid" -> {
-                MR.strings.irc_notice_unraid_error_no_active_raid
+                MR.strings.irc_notice_unraid_error_no_active_raid.desc()
             }
 
             "unraid_error_unexpected" -> {
-                MR.strings.irc_notice_unraid_error_unexpected
+                MR.strings.irc_notice_unraid_error_unexpected.desc()
             }
 
             "unraid_success" -> {
-                MR.strings.irc_notice_unraid_success
+                MR.strings.irc_notice_unraid_success.desc()
             }
 
             "unrecognized_cmd" -> {
@@ -991,11 +989,11 @@ class IrcMessageMapper {
             }
 
             "usage_ban" -> {
-                MR.strings.irc_notice_usage_ban
+                MR.strings.irc_notice_usage_ban.desc()
             }
 
             "usage_clear" -> {
-                MR.strings.irc_notice_usage_clear
+                MR.strings.irc_notice_usage_clear.desc()
             }
 
             "usage_color" -> {
@@ -1005,71 +1003,71 @@ class IrcMessageMapper {
             }
 
             "usage_commercial" -> {
-                MR.strings.irc_notice_usage_commercial
+                MR.strings.irc_notice_usage_commercial.desc()
             }
 
             "usage_disconnect" -> {
-                MR.strings.irc_notice_usage_disconnect
+                MR.strings.irc_notice_usage_disconnect.desc()
             }
 
             "usage_delete" -> {
-                MR.strings.irc_notice_usage_delete
+                MR.strings.irc_notice_usage_delete.desc()
             }
 
             "usage_emote_only_off" -> {
-                MR.strings.irc_notice_usage_emote_only_off
+                MR.strings.irc_notice_usage_emote_only_off.desc()
             }
 
             "usage_emote_only_on" -> {
-                MR.strings.irc_notice_usage_emote_only_on
+                MR.strings.irc_notice_usage_emote_only_on.desc()
             }
 
             "usage_followers_off" -> {
-                MR.strings.irc_notice_usage_followers_off
+                MR.strings.irc_notice_usage_followers_off.desc()
             }
 
             "usage_followers_on" -> {
-                MR.strings.irc_notice_usage_followers_on
+                MR.strings.irc_notice_usage_followers_on.desc()
             }
 
             "usage_help" -> {
-                MR.strings.irc_notice_usage_help
+                MR.strings.irc_notice_usage_help.desc()
             }
 
             "usage_host" -> {
-                MR.strings.irc_notice_usage_host
+                MR.strings.irc_notice_usage_host.desc()
             }
 
             "usage_marker" -> {
-                MR.strings.irc_notice_usage_marker
+                MR.strings.irc_notice_usage_marker.desc()
             }
 
             "usage_me" -> {
-                MR.strings.irc_notice_usage_me
+                MR.strings.irc_notice_usage_me.desc()
             }
 
             "usage_mod" -> {
-                MR.strings.irc_notice_usage_mod
+                MR.strings.irc_notice_usage_mod.desc()
             }
 
             "usage_mods" -> {
-                MR.strings.irc_notice_usage_mods
+                MR.strings.irc_notice_usage_mods.desc()
             }
 
             "usage_r9k_off" -> {
-                MR.strings.irc_notice_usage_r9k_off
+                MR.strings.irc_notice_usage_r9k_off.desc()
             }
 
             "usage_r9k_on" -> {
-                MR.strings.irc_notice_usage_r9k_on
+                MR.strings.irc_notice_usage_r9k_on.desc()
             }
 
             "usage_raid" -> {
-                MR.strings.irc_notice_usage_raid
+                MR.strings.irc_notice_usage_raid.desc()
             }
 
             "usage_slow_off" -> {
-                MR.strings.irc_notice_usage_slow_off
+                MR.strings.irc_notice_usage_slow_off.desc()
             }
 
             "usage_slow_on" -> {
@@ -1079,55 +1077,55 @@ class IrcMessageMapper {
             }
 
             "usage_subs_off" -> {
-                MR.strings.irc_notice_usage_subs_off
+                MR.strings.irc_notice_usage_subs_off.desc()
             }
 
             "usage_subs_on" -> {
-                MR.strings.irc_notice_usage_subs_on
+                MR.strings.irc_notice_usage_subs_on.desc()
             }
 
             "usage_timeout" -> {
-                MR.strings.irc_notice_usage_timeout
+                MR.strings.irc_notice_usage_timeout.desc()
             }
 
             "usage_unban" -> {
-                MR.strings.irc_notice_usage_unban
+                MR.strings.irc_notice_usage_unban.desc()
             }
 
             "usage_unhost" -> {
-                MR.strings.irc_notice_usage_unhost
+                MR.strings.irc_notice_usage_unhost.desc()
             }
 
             "usage_unmod" -> {
-                MR.strings.irc_notice_usage_unmod
+                MR.strings.irc_notice_usage_unmod.desc()
             }
 
             "usage_unraid" -> {
-                MR.strings.irc_notice_usage_unraid
+                MR.strings.irc_notice_usage_unraid.desc()
             }
 
             "usage_untimeout" -> {
-                MR.strings.irc_notice_usage_untimeout
+                MR.strings.irc_notice_usage_untimeout.desc()
             }
 
             "usage_unvip" -> {
-                MR.strings.irc_notice_usage_unvip
+                MR.strings.irc_notice_usage_unvip.desc()
             }
 
             "usage_user" -> {
-                MR.strings.irc_notice_usage_user
+                MR.strings.irc_notice_usage_user.desc()
             }
 
             "usage_vip" -> {
-                MR.strings.irc_notice_usage_vip
+                MR.strings.irc_notice_usage_vip.desc()
             }
 
             "usage_vips" -> {
-                MR.strings.irc_notice_usage_vips
+                MR.strings.irc_notice_usage_vips.desc()
             }
 
             "usage_whisper" -> {
-                MR.strings.irc_notice_usage_whisper
+                MR.strings.irc_notice_usage_whisper.desc()
             }
 
             "vip_success" -> {
@@ -1146,35 +1144,35 @@ class IrcMessageMapper {
             }
 
             "whisper_banned" -> {
-                MR.strings.irc_notice_whisper_banned
+                MR.strings.irc_notice_whisper_banned.desc()
             }
 
             "whisper_banned_recipient" -> {
-                MR.strings.irc_notice_whisper_banned_recipient
+                MR.strings.irc_notice_whisper_banned_recipient.desc()
             }
 
             "whisper_invalid_login" -> {
-                MR.strings.irc_notice_whisper_invalid_login
+                MR.strings.irc_notice_whisper_invalid_login.desc()
             }
 
             "whisper_invalid_self" -> {
-                MR.strings.irc_notice_whisper_invalid_self
+                MR.strings.irc_notice_whisper_invalid_self.desc()
             }
 
             "whisper_limit_per_min" -> {
-                MR.strings.irc_notice_whisper_limit_per_min
+                MR.strings.irc_notice_whisper_limit_per_min.desc()
             }
 
             "whisper_limit_per_sec" -> {
-                MR.strings.irc_notice_whisper_limit_per_sec
+                MR.strings.irc_notice_whisper_limit_per_sec.desc()
             }
 
             "whisper_restricted" -> {
-                MR.strings.irc_notice_whisper_restricted
+                MR.strings.irc_notice_whisper_restricted.desc()
             }
 
             "whisper_restricted_recipient" -> {
-                MR.strings.irc_notice_whisper_restricted_recipient
+                MR.strings.irc_notice_whisper_restricted_recipient.desc()
             }
 
             else -> {

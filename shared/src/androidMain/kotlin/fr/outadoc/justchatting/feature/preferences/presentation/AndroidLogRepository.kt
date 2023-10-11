@@ -14,7 +14,7 @@ import okio.sink
 import okio.source
 import java.util.UUID
 
-class LogRepository(private val applicationContext: Context) {
+class AndroidLogRepository(private val applicationContext: Context) : LogRepository {
 
     private val logsPath: Path
         get() = (applicationContext.cacheDir.toOkioPath() / "logs")
@@ -25,7 +25,7 @@ class LogRepository(private val applicationContext: Context) {
         return logsPath / "$uuid.log.gz"
     }
 
-    suspend fun dumpLogs(): Uri = withContext(Dispatchers.IO) {
+    override suspend fun dumpLogs(): Uri = withContext(Dispatchers.IO) {
         val process: Process =
             Runtime.getRuntime().exec("logcat -d")
 

@@ -35,12 +35,14 @@ kotlin {
                 implementation(libs.androidx.paging.runtime)
                 implementation(libs.bignum)
                 implementation(libs.fluid.currency)
+                implementation(libs.koin.core)
                 implementation(libs.kotlinx.collections.immutable)
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.core)
                 implementation(libs.moko.resources.core)
+                implementation(libs.sqldelight.coroutines)
                 implementation(libs.uri.kmp)
             }
         }
@@ -121,6 +123,4 @@ sqldelight {
 dependencies {
     implementation(platform(libs.compose.bom))
     coreLibraryDesugaring(libs.desugar)
-    implementation(libs.sqldelight.coroutines)
-    implementation(libs.koin.core)
 }

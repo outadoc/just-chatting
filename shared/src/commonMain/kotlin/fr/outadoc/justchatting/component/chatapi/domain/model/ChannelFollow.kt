@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.component.chatapi.domain.model
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import dev.icerock.moko.parcelize.Parcelable
+import dev.icerock.moko.parcelize.Parcelize
 
 @Parcelize
 data class ChannelFollow(

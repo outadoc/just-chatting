@@ -1,8 +1,7 @@
 package fr.outadoc.justchatting.component.twitch.http.model
 
-import android.os.Parcelable
+import dev.icerock.moko.parcelize.Parcelable
 import dev.icerock.moko.parcelize.Parcelize
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

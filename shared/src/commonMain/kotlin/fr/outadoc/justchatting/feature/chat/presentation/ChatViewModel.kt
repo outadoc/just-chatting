@@ -31,6 +31,7 @@ import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.core.roundUpOddToEven
@@ -375,7 +376,7 @@ class ChatViewModel(
                             chatters = chatters,
                         )
                     }
-                    .flowOn(Dispatchers.Default)
+                    .flowOn(DispatchersProvider.Default)
             }
             .onEach { autoCompleteItems ->
                 inputActions.emit(
@@ -518,7 +519,7 @@ class ChatViewModel(
     private suspend fun Action.LoadEmotes.reduce(state: State): State {
         if (state !is State.Chatting) return state
 
-        return withContext(Dispatchers.IO) {
+        return withContext(DispatchersProvider.io) {
             val globalBadges: Deferred<PersistentList<TwitchBadge>?> =
                 async {
                     try {

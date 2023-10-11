@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.ValidationResponse
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.http.api.IdApi
-import kotlinx.coroutines.Dispatchers
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
@@ -15,7 +15,7 @@ class AuthRepository(
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
     suspend fun validate(token: String): ValidationResponse? =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             api.validateToken(token)?.let { response ->
                 ValidationResponse(
                     clientId = response.clientId,
@@ -26,7 +26,7 @@ class AuthRepository(
         }
 
     suspend fun revokeToken() {
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             val user = preferencesRepository
                 .currentPreferences.first()
                 .appUser

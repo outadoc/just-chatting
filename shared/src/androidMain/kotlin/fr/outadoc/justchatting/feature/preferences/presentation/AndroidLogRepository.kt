@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.preferences.presentation
 
 import android.content.Context
 import com.eygraber.uri.Uri
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okio.BufferedSource
@@ -25,7 +26,7 @@ class AndroidLogRepository(private val applicationContext: Context) : LogReposit
         return logsPath / "$uuid.log.gz"
     }
 
-    override suspend fun dumpLogs(): Uri = withContext(Dispatchers.IO) {
+    override suspend fun dumpLogs(): Uri = withContext(DispatchersProvider.io) {
         val process: Process =
             Runtime.getRuntime().exec("logcat -d")
 

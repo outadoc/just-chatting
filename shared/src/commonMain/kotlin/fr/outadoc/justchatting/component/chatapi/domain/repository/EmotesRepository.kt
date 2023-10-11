@@ -11,7 +11,9 @@ import fr.outadoc.justchatting.component.twitch.http.api.BttvEmotesApi
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.http.api.StvEmotesApi
 import fr.outadoc.justchatting.component.twitch.utils.map
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
@@ -25,7 +27,7 @@ class EmotesRepository(
     private val preferencesRepository: PreferenceRepository,
 ) {
     suspend fun loadGlobalBadges(): List<TwitchBadge> =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             helixApi.getGlobalBadges()
                 .badgeSets
                 .flatMap { set ->
@@ -46,7 +48,7 @@ class EmotesRepository(
         }
 
     suspend fun loadChannelBadges(channelId: String): List<TwitchBadge> =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             helixApi.getChannelBadges(channelId)
                 .badgeSets
                 .flatMap { set ->
@@ -67,7 +69,7 @@ class EmotesRepository(
         }
 
     suspend fun loadGlobalStvEmotes(): List<Emote> =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableStvEmotes) {
                 return@withContext emptyList()
             }
@@ -77,7 +79,7 @@ class EmotesRepository(
         }
 
     suspend fun loadStvEmotes(channelId: String): List<Emote> =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableStvEmotes) {
                 return@withContext emptyList()
             }
@@ -87,7 +89,7 @@ class EmotesRepository(
         }
 
     suspend fun loadGlobalBttvEmotes(): List<Emote> =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableBttvEmotes) {
                 return@withContext emptyList()
             }
@@ -97,7 +99,7 @@ class EmotesRepository(
         }
 
     suspend fun loadBttvEmotes(channelId: String): List<Emote> =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableBttvEmotes) {
                 return@withContext emptyList()
             }
@@ -107,7 +109,7 @@ class EmotesRepository(
         }
 
     suspend fun loadBttvGlobalFfzEmotes(): List<Emote> =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableFfzEmotes) {
                 return@withContext emptyList()
             }
@@ -117,7 +119,7 @@ class EmotesRepository(
         }
 
     suspend fun loadBttvFfzEmotes(channelId: String): List<Emote> =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableFfzEmotes) {
                 return@withContext emptyList()
             }
@@ -138,7 +140,7 @@ class EmotesRepository(
         }
 
     suspend fun insertRecentEmotes(emotes: Collection<RecentEmote>) =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             recentEmotes.insertAll(
                 emotes.map { emote ->
                     Recent_emotes(

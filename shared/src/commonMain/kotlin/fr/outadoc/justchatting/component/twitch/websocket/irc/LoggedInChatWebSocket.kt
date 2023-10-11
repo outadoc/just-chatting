@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
+import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactory
@@ -9,6 +10,7 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -22,7 +24,6 @@ import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
@@ -105,7 +106,7 @@ class LoggedInChatWebSocket(
             return
         }
 
-        socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
+        socketJob = scope.launch(DispatchersProvider.io + SupervisorJob()) {
             logDebug<LoggedInChatWebSocket> { "Starting job" }
 
             _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
@@ -180,7 +181,7 @@ class LoggedInChatWebSocket(
                                     ChatEvent.Message.Highlighted(
                                         timestamp = clock.now(),
                                         metadata = ChatEvent.Message.Highlighted.Metadata(
-                                            title = MR.strings.chat_send_msg_error.toString(),
+                                            title = MR.strings.chat_send_msg_error.desc(),
                                             subtitle = null,
                                         ),
                                         body = null,

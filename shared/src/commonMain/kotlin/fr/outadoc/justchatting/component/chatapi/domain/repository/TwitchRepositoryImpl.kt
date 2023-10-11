@@ -16,7 +16,9 @@ import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.utils.map
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -175,7 +177,7 @@ class TwitchRepositoryImpl(
         }
 
     override suspend fun loadStream(userId: String): Stream? =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             helix.getStreams(ids = listOf(userId))
                 .data
                 .firstOrNull()
@@ -195,7 +197,7 @@ class TwitchRepositoryImpl(
         }
 
     override suspend fun loadUsersById(ids: List<String>): List<User>? =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             helix.getUsersById(ids = ids).data?.map { user ->
                 User(
                     id = user.id,
@@ -209,7 +211,7 @@ class TwitchRepositoryImpl(
         }
 
     override suspend fun loadUsersByLogin(logins: List<String>): List<User>? =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             helix.getUsersByLogin(logins = logins).data?.map { user ->
                 User(
                     id = user.id,
@@ -223,7 +225,7 @@ class TwitchRepositoryImpl(
         }
 
     override suspend fun loadCheerEmotes(userId: String): List<Emote> =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             helix.getCheerEmotes(userId = userId)
                 .data
                 .flatMap { emote ->
@@ -234,7 +236,7 @@ class TwitchRepositoryImpl(
         }
 
     override suspend fun loadEmotesFromSet(setIds: List<String>): List<Emote> =
-        withContext(Dispatchers.IO) {
+        withContext(DispatchersProvider.io) {
             val response = helix.getEmotesFromSet(setIds = setIds)
             response.data
                 .sortedByDescending { it.setId }

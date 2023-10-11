@@ -4,12 +4,8 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 
 actual object DispatchersProvider {
-    actual val main: CoroutineDispatcher
-        get() = Dispatchers.Main
-    actual val io: CoroutineDispatcher
-        get() = Dispatchers.Default
-    actual val default: CoroutineDispatcher
-        get() = Dispatchers.Default
-    actual val unconfined: CoroutineDispatcher
-        get() = Dispatchers.Unconfined
+    actual val main: CoroutineDispatcher = Dispatchers.Main
+    actual val io: CoroutineDispatcher = Dispatchers.Default
+    actual val default: CoroutineDispatcher = Dispatchers.Default
+    actual val unconfined: CoroutineDispatcher = Dispatchers.Unconfined
 }

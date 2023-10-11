@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.component.chatapi.common
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.graphics.vector.ImageVector
+import dev.icerock.moko.resources.desc.StringDesc
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
@@ -29,9 +29,9 @@ sealed interface ChatEvent {
         ) : Message() {
 
             data class Metadata(
-                val title: String,
-                val titleIcon: ImageVector? = null,
-                val subtitle: String?,
+                val title: StringDesc,
+                val titleIcon: Icon? = null,
+                val subtitle: StringDesc?,
                 val level: Level = Level.Base,
             )
 
@@ -54,7 +54,7 @@ sealed interface ChatEvent {
         @Immutable
         data class Notice(
             override val timestamp: Instant,
-            val text: String,
+            val text: StringDesc,
         ) : Message() {
             override val body: Body? = null
         }

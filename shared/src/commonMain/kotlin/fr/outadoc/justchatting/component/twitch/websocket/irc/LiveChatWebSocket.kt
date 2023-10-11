@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
-import android.content.Context
 import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
@@ -12,6 +11,7 @@ import fr.outadoc.justchatting.component.twitch.websocket.Defaults
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -24,7 +24,6 @@ import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
@@ -56,7 +55,6 @@ import kotlin.time.Duration.Companion.seconds
 class LiveChatWebSocket private constructor(
     networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
-    private val context: Context,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
     private val mapper: IrcMessageMapper,
@@ -105,7 +103,7 @@ class LiveChatWebSocket private constructor(
             return
         }
 
-        socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
+        socketJob = scope.launch(DispatchersProvider.io + SupervisorJob()) {
             logDebug<LiveChatWebSocket> { "Starting job" }
 
             _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
@@ -147,9 +145,7 @@ class LiveChatWebSocket private constructor(
                 ChatEvent.Message.Highlighted(
                     timestamp = clock.now(),
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = MR.strings.chat_join
-                            .format(channelLogin)
-                            .toString(context),
+                        title = MR.strings.chat_join.format(channelLogin),
                         subtitle = null,
                     ),
                     body = null,
@@ -273,7 +269,6 @@ class LiveChatWebSocket private constructor(
 
     class Factory(
         private val clock: Clock,
-        private val context: Context,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
         private val mapper: IrcMessageMapper,
@@ -288,10 +283,9 @@ class LiveChatWebSocket private constructor(
             channelId: String,
         ): LiveChatWebSocket {
             return LiveChatWebSocket(
-                clock = clock,
-                context = context,
                 networkStateObserver = networkStateObserver,
                 scope = scope,
+                clock = clock,
                 parser = parser,
                 mapper = mapper,
                 httpClient = httpClient,

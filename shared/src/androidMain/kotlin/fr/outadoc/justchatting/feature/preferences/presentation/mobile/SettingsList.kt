@@ -52,7 +52,9 @@ fun SettingsListPreview() {
             onOpenAccessibilityPreferences = {},
             onLogoutClick = {},
             onShareLogsClick = {},
-            readDependencies = { emptyList() },
+            readDependencies = object : ReadExternalDependenciesList {
+                override suspend fun invoke(): List<Dependency> = emptyList()
+            },
             versionName = "1.2.3",
         )
     }

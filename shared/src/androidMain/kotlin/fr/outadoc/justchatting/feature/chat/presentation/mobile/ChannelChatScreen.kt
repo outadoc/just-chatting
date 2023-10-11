@@ -82,7 +82,15 @@ fun ChannelChatScreen(channelLogin: String) {
             onWatchLiveClicked = {
                 uriHandler.openUri(channelLogin.createChannelExternalLink().toString())
             },
-            onMessageChange = viewModel::onMessageInputChanged,
+            onMessageChange = { textFieldValue ->
+                viewModel.onMessageInputChanged(
+                    message = textFieldValue.text,
+                    selectionRange = IntRange(
+                        start = textFieldValue.selection.start,
+                        endInclusive = textFieldValue.selection.end,
+                    ),
+                )
+            },
             onToggleEmotePicker = {
                 isEmotePickerOpen = !isEmotePickerOpen
             },

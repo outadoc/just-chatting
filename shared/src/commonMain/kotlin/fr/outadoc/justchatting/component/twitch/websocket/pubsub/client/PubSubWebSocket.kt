@@ -10,6 +10,7 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.model.PubSubClientMessage
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.model.PubSubServerMessage
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -23,7 +24,6 @@ import io.ktor.websocket.CloseReason
 import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.close
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
@@ -89,7 +89,7 @@ class PubSubWebSocket(
             return
         }
 
-        socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
+        socketJob = scope.launch(DispatchersProvider.io + SupervisorJob()) {
             logDebug<PubSubWebSocket> { "Starting job" }
 
             _connectionStatus.update { status -> status.copy(registeredListeners = 1) }

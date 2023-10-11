@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.logging.FrameLogger
+import fr.outadoc.justchatting.utils.core.AndroidNetworkStateObserver
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.logging.logDebug
 import io.ktor.client.HttpClient
@@ -43,7 +44,7 @@ import kotlin.time.Duration.Companion.seconds
 val mainModule = module {
     single<Clock> { Clock.System }
     single<ConnectivityManager> { get<Context>().getSystemService()!! }
-    single { NetworkStateObserver(get()) }
+    single<NetworkStateObserver> { AndroidNetworkStateObserver(get()) }
     single { AuthRepository(get(), get(), get()) }
     single { DeeplinkParser(get()) }
 

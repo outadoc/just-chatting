@@ -1,12 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
+import fr.outadoc.justchatting.component.chatapi.common.Icon
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 
@@ -73,9 +71,9 @@ private val highlightedEntries = sequence {
         ChatEvent.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664398268452),
             metadata = ChatEvent.Message.Highlighted.Metadata(
-                title = "clo_chette_",
-                titleIcon = Icons.Default.Star,
-                subtitle = "subscribed at Tier 1. They've subscribed for 18 months!",
+                title = "clo_chette_".desc(),
+                titleIcon = Icon.Star,
+                subtitle = "subscribed at Tier 1. They've subscribed for 18 months!".desc(),
             ),
             body = ChatEvent.Message.Body(
                 chatter = Chatter(
@@ -98,8 +96,8 @@ private val highlightedEntries = sequence {
         ChatEvent.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
             metadata = ChatEvent.Message.Highlighted.Metadata(
-                title = "First message",
-                titleIcon = Icons.Default.WavingHand,
+                title = "First message".desc(),
+                titleIcon = Icon.WavingHand,
                 subtitle = null,
             ),
             body = ChatEvent.Message.Body(
@@ -125,8 +123,8 @@ private val paidEntries = sequence {
         ChatEvent.Message.Highlighted(
             timestamp = Instant.parse("2023-06-26T17:53:11.208Z"),
             metadata = ChatEvent.Message.Highlighted.Metadata(
-                title = "Boosted for $1",
-                titleIcon = Icons.Default.Bolt,
+                title = "Boosted for $1".desc(),
+                titleIcon = Icon.Bolt,
                 subtitle = null,
                 level = ChatEvent.Message.Highlighted.Level.Eight,
             ),
@@ -149,14 +147,14 @@ private val noticeEntries = sequence {
     yield(
         ChatEvent.Message.Notice(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
-            text = "This room is now in followers-only mode.",
+            text = "This room is now in followers-only mode.".desc(),
         ),
     )
 
     yield(
         ChatEvent.Message.Notice(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
-            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
+            text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.".desc(),
         ),
     )
 }

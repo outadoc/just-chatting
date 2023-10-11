@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
+import de.cketti.codepoints.offsetByCodePoints
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEmote
 import fr.outadoc.justchatting.component.chatapi.common.Emote
@@ -63,7 +64,7 @@ internal fun Map<String, String?>.parsePaidMessageInfo(): IrcEvent.Message.ChatM
             ?: this["pinned-chat-paid-canonical-amount"]?.toLongOrNull()
             ?: return null,
         currency = this["pinned-chat-paid-currency"] ?: return null,
-        exponent = this["pinned-chat-paid-exponent"]?.toIntOrNull() ?: return null,
+        exponent = this["pinned-chat-paid-exponent"]?.toLongOrNull() ?: return null,
         isSystemMessage = this["pinned-chat-paid-is-system-message"] == "1",
         level = this["pinned-chat-paid-level"] ?: return null,
     )

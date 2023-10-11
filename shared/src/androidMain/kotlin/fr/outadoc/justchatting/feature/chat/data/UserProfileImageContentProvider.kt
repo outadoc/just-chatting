@@ -14,8 +14,8 @@ import coil.request.ImageRequest
 import coil.request.ImageResult
 import coil.transform.CircleCropTransformation
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import java.io.FileNotFoundException
@@ -59,7 +59,7 @@ class UserProfileImageContentProvider : ContentProvider() {
                 val userLogin: String = segments.getOrNull(1)
                     ?: throw FileNotFoundException("User login was null.")
 
-                runBlocking(Dispatchers.IO) {
+                runBlocking(DispatchersProvider.io) {
                     val profileImageUrl: String =
                         apiRepository.loadUsersByLogin(listOf(userLogin))
                             ?.firstOrNull()

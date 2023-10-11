@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.di
 
 import android.content.Context
 import androidx.startup.Initializer
-import fr.outadoc.justchatting.component.chatapi.db.inject.dbModule
 import fr.outadoc.justchatting.utils.logging.logDebug
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger

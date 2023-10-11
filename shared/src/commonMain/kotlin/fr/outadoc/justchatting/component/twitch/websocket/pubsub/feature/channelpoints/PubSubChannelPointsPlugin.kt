@@ -1,10 +1,8 @@
 package fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.channelpoints
 
-import android.content.Context
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Toll
 import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.component.chatapi.common.Icon
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.shared.MR
 import kotlinx.datetime.Clock
@@ -13,7 +11,6 @@ import kotlinx.serialization.json.Json
 class PubSubChannelPointsPlugin(
     private val clock: Clock,
     private val json: Json,
-    private val context: Context,
 ) : PubSubPlugin<PubSubRewardMessage> {
 
     override fun getTopic(channelId: String): String =
@@ -32,9 +29,8 @@ class PubSubChannelPointsPlugin(
                                     message.data.redemption.user.displayName,
                                     message.data.redemption.reward.title,
                                     message.data.redemption.reward.cost,
-                                )
-                                .toString(context),
-                            titleIcon = Icons.Default.Toll,
+                                ),
+                            titleIcon = Icon.Toll,
                             subtitle = null,
                         ),
                         body = null,

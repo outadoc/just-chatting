@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.component.chatapi.domain.model
 
-import android.os.Parcelable
+import dev.icerock.moko.parcelize.Parcelable
+import dev.icerock.moko.parcelize.Parcelize
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ChannelSearch(

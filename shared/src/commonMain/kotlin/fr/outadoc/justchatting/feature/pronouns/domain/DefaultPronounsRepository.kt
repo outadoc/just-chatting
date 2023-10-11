@@ -6,8 +6,8 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronoun
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.data.UserPronounResponse
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -32,7 +32,7 @@ class DefaultPronounsRepository(
                 return@coroutineScope emptyMap()
             }
 
-            withContext(Dispatchers.IO) {
+            withContext(DispatchersProvider.io) {
                 cacheMutex.withLock {
                     if (_pronounCache == null) {
                         _pronounCache = alejoPronounsApi

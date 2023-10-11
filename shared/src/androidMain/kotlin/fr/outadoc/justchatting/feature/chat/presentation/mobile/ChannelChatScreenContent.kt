@@ -38,6 +38,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
@@ -164,7 +165,13 @@ fun ChannelChatScreenContent(
                             .fillMaxWidth(),
                         isSubmitVisible = state is ChatViewModel.State.Chatting,
                         isSubmitEnabled = state is ChatViewModel.State.Chatting && !state.connectionStatus.preventSendingMessages,
-                        message = inputState.inputMessage,
+                        message = TextFieldValue(
+                            text = inputState.message,
+                            selection = TextRange(
+                                start = inputState.selectionRange.first,
+                                end = inputState.selectionRange.last,
+                            ),
+                        ),
                         autoCompleteItems = inputState.autoCompleteItems,
                         replyingTo = inputState.replyingTo,
                         onEmoteClick = onEmoteClick,

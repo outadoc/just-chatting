@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
-import android.content.Context
+import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
@@ -9,6 +9,7 @@ import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -22,7 +23,6 @@ import io.ktor.websocket.readText
 import io.ktor.websocket.send
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.BufferOverflow
@@ -48,7 +48,6 @@ import kotlin.time.Duration.Companion.seconds
 class MockChatWebSocket private constructor(
     networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
-    private val context: Context,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
     private val mapper: IrcMessageMapper,
@@ -97,7 +96,7 @@ class MockChatWebSocket private constructor(
     }
 
     override fun start() {
-        socketJob = scope.launch(Dispatchers.IO + SupervisorJob()) {
+        socketJob = scope.launch(DispatchersProvider.io + SupervisorJob()) {
             logDebug<LoggedInChatWebSocket> { "Starting job" }
 
             _connectionStatus.update { status -> status.copy(registeredListeners = 1) }
@@ -147,9 +146,7 @@ class MockChatWebSocket private constructor(
                 ChatEvent.Message.Highlighted(
                     timestamp = clock.now(),
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = MR.strings.chat_join
-                            .format(channelLogin)
-                            .toString(context),
+                        title = MR.strings.chat_join.format(channelLogin),
                         subtitle = null,
                     ),
                     body = null,
@@ -179,7 +176,7 @@ class MockChatWebSocket private constructor(
                                     ChatEvent.Message.Highlighted(
                                         timestamp = clock.now(),
                                         metadata = ChatEvent.Message.Highlighted.Metadata(
-                                            title = MR.strings.chat_send_msg_error.toString(),
+                                            title = MR.strings.chat_send_msg_error.desc(),
                                             subtitle = null,
                                         ),
                                         body = null,
@@ -301,7 +298,6 @@ class MockChatWebSocket private constructor(
 
     class Factory(
         private val clock: Clock,
-        private val context: Context,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
         private val mapper: IrcMessageMapper,
@@ -316,7 +312,6 @@ class MockChatWebSocket private constructor(
             return MockChatWebSocket(
                 networkStateObserver = networkStateObserver,
                 scope = scope,
-                context = context,
                 clock = clock,
                 parser = parser,
                 mapper = mapper,

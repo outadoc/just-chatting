@@ -1,10 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.input.getTextAfterSelection
-import androidx.compose.ui.text.input.getTextBeforeSelection
+import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
@@ -30,7 +27,7 @@ import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.core.asStringOrRes
+import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.core.roundUpOddToEven
@@ -52,7 +49,6 @@ import kotlinx.collections.immutable.toPersistentList
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.CoroutineName
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.async
@@ -163,7 +159,7 @@ class ChatViewModel(
             val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
                 get() = flatListOf(
                     EmoteSetItem.Header(
-                        title = MR.strings.chat_header_recent.asStringOrRes(),
+                        title = MR.strings.chat_header_recent.desc(),
                         source = null,
                     ),
                     recentEmotes
@@ -190,7 +186,9 @@ class ChatViewModel(
     sealed class InputAction {
         data class AppendChatter(val chatter: Chatter, val autocomplete: Boolean) : InputAction()
         data class AppendEmote(val emote: Emote, val autocomplete: Boolean) : InputAction()
-        data class ChangeMessageInput(val message: TextFieldValue) : InputAction()
+        data class ChangeMessageInput(val message: String, val selectionRange: IntRange) :
+            InputAction()
+
         data class ReplyToMessage(val chatEvent: ChatEvent.Message? = null) : InputAction()
         data class UpdateAutoCompleteItems(val items: List<AutoCompleteItem>) : InputAction()
         data class Submit(val screenDensity: Float, val isDarkTheme: Boolean) : InputAction()
@@ -198,7 +196,8 @@ class ChatViewModel(
 
     @Immutable
     data class InputState(
-        val inputMessage: TextFieldValue = TextFieldValue(),
+        val message: String = "",
+        val selectionRange: IntRange = 0..0,
         val replyingTo: ChatEvent.Message? = null,
         val autoCompleteItems: List<AutoCompleteItem> = emptyList(),
     )
@@ -359,11 +358,12 @@ class ChatViewModel(
             .distinctUntilChanged()
             .flatMapLatest { (allEmotesMap, chatters, recentEmotes) ->
                 inputState
-                    .map { inputState -> inputState.inputMessage }
-                    .distinctUntilChanged()
                     .debounce(300.milliseconds)
-                    .map { message ->
-                        message.getTextBeforeSelection(message.text.length)
+                    .map { inputState ->
+                        inputState.message.substring(
+                            startIndex = 0,
+                            endIndex = inputState.selectionRange.first,
+                        )
                             .takeLastWhile { it != ' ' }
                     }
                     .mapLatest { word ->
@@ -374,7 +374,7 @@ class ChatViewModel(
                             chatters = chatters,
                         )
                     }
-                    .flowOn(Dispatchers.Default)
+                    .flowOn(DispatchersProvider.default)
             }
             .onEach { autoCompleteItems ->
                 inputActions.emit(
@@ -414,9 +414,14 @@ class ChatViewModel(
         }
     }
 
-    fun onMessageInputChanged(message: TextFieldValue) {
+    fun onMessageInputChanged(message: String, selectionRange: IntRange) {
         inputScope.launch {
-            inputActions.emit(InputAction.ChangeMessageInput(message))
+            inputActions.emit(
+                InputAction.ChangeMessageInput(
+                    message = message,
+                    selectionRange = selectionRange,
+                ),
+            )
         }
     }
 
@@ -506,7 +511,6 @@ class ChatViewModel(
         )
     }
 
-    @Suppress("UnusedReceiverParameter")
     private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return state.copy(
@@ -517,7 +521,7 @@ class ChatViewModel(
     private suspend fun Action.LoadEmotes.reduce(state: State): State {
         if (state !is State.Chatting) return state
 
-        return withContext(Dispatchers.IO) {
+        return withContext(DispatchersProvider.io) {
             val globalBadges: Deferred<PersistentList<TwitchBadge>?> =
                 async {
                     try {
@@ -778,7 +782,7 @@ class ChatViewModel(
     }
 
     private suspend fun InputAction.Submit.reduce(inputState: InputState): InputState {
-        if (inputState.inputMessage.text.isEmpty()) return inputState
+        if (inputState.message.isEmpty()) return inputState
         val state = state.value as? State.Chatting ?: return inputState
 
         defaultScope.launch {
@@ -786,13 +790,12 @@ class ChatViewModel(
 
             chatRepository.sendMessage(
                 channelId = state.user.id,
-                message = inputState.inputMessage.text,
+                message = inputState.message,
                 inReplyToId = inputState.replyingTo?.body?.messageId,
             )
 
             val usedEmotes: List<RecentEmote> =
-                inputState.inputMessage
-                    .text
+                inputState.message
                     .split(' ')
                     .mapNotNull { word ->
                         state.allEmotesMap[word]?.let { emote ->
@@ -811,13 +814,17 @@ class ChatViewModel(
         }
 
         return inputState.copy(
-            inputMessage = TextFieldValue(""),
+            message = "",
+            selectionRange = 0..0,
             replyingTo = null,
         )
     }
 
     private fun InputAction.ChangeMessageInput.reduce(inputState: InputState): InputState {
-        return inputState.copy(inputMessage = message)
+        return inputState.copy(
+            message = message,
+            selectionRange = selectionRange,
+        )
     }
 
     private fun InputAction.AppendEmote.reduce(inputState: InputState): InputState {
@@ -849,25 +856,24 @@ class ChatViewModel(
         text: String,
         replaceLastWord: Boolean,
     ): InputState {
-        val previousWord = inputState.inputMessage
-            .getTextBeforeSelection(inputState.inputMessage.text.length)
+        val previousWord = inputState.message
+            .substring(startIndex = 0, endIndex = inputState.selectionRange.first)
             .takeLastWhile { it != ' ' }
 
-        val textBefore = inputState.inputMessage
-            .getTextBeforeSelection(inputState.inputMessage.text.length)
+        val textBefore = inputState.message
+            .substring(startIndex = 0, endIndex = inputState.selectionRange.first)
             .removeSuffix(
                 if (replaceLastWord) previousWord else "",
             )
 
-        val textAfter = inputState.inputMessage
-            .getTextAfterSelection(inputState.inputMessage.text.length)
+        val textAfter = inputState.message
+            .substring(inputState.selectionRange.last)
 
         return inputState.copy(
-            inputMessage = inputState.inputMessage.copy(
-                text = "${textBefore}$text $textAfter",
-                selection = TextRange(
-                    index = textBefore.length + text.length + 1,
-                ),
+            message = "${textBefore}$text $textAfter",
+            selectionRange = IntRange(
+                start = textBefore.length + text.length + 1,
+                endInclusive = textBefore.length + text.length + 1,
             ),
         )
     }

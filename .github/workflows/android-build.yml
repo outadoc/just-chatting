@@ -2,7 +2,6 @@ name: Build Android app
 
 on:
   pull_request:
-    branches: [ main ]
 
 jobs:
   build:
@@ -32,11 +31,6 @@ jobs:
             bundleQa
             "-PexternalVersionName=pr-${{ steps.date.outputs.date }}-${{ github.event.pull_request.number }}-${{ github.sha }}"
 
-      - name: Check formatting
-        uses: gradle/gradle-build-action@v2
-        with:
-          arguments: spotlessCheck
-
       - name: Lint
         uses: gradle/gradle-build-action@v2
         with:
@@ -45,7 +39,7 @@ jobs:
       - name: Run unit tests
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: test
+          arguments: testDebugUnitTest
 
       - name: Upload app bundle to GitHub
         uses: actions/upload-artifact@v3.1.3

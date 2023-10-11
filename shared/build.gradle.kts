@@ -20,11 +20,10 @@ kotlin {
     listOf(
         iosX64(),
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "Shared"
-            isStatic = true
         }
     }
 
@@ -33,13 +32,18 @@ kotlin {
             dependencies {
                 implementation(libs.androidx.paging.compose)
                 implementation(libs.androidx.paging.runtime)
+                implementation(libs.bignum)
+                implementation(libs.fluid.currency)
+                implementation(libs.koin.core)
                 implementation(libs.kotlinx.collections.immutable)
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.core)
                 implementation(libs.moko.resources.core)
+                implementation(libs.sqldelight.coroutines)
                 implementation(libs.uri.kmp)
+                implementation(libs.unicode.codepoints)
             }
         }
 
@@ -119,6 +123,4 @@ sqldelight {
 dependencies {
     implementation(platform(libs.compose.bom))
     coreLibraryDesugaring(libs.desugar)
-    implementation(libs.sqldelight.coroutines)
-    implementation(libs.koin.core)
 }

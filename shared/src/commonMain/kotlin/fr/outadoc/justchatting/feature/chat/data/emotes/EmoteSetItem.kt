@@ -1,11 +1,11 @@
 package fr.outadoc.justchatting.feature.chat.data.emotes
 
-import fr.outadoc.justchatting.utils.core.StringOrRes
+import dev.icerock.moko.resources.desc.StringDesc
 
 sealed class EmoteSetItem {
     data class Header(
-        val title: StringOrRes?,
-        val source: StringOrRes?,
+        val title: StringDesc?,
+        val source: StringDesc?,
         val iconUrl: String? = null,
     ) : EmoteSetItem()
 

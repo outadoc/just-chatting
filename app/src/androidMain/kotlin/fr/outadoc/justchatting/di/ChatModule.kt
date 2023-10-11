@@ -54,9 +54,9 @@ val chatModule = module {
     single { FilterAutocompleteItemsUseCase() }
     single<CreateShortcutForChannelUseCase> { MobileCreateShortcutForChannelUseCase(get()) }
 
-    single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { LiveChatWebSocket.Factory(get(), get(), get(), get(), get(), get(), get()) }
     single { LoggedInChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
-    single { MockChatWebSocket.Factory(get(), get(), get(), get(), get(), get()) }
+    single { MockChatWebSocket.Factory(get(), get(), get(), get(), get()) }
     single { PubSubWebSocket.Factory(get(), get(), get(), get()) }
 
     single {
@@ -76,7 +76,7 @@ val chatModule = module {
     }
 
     single { PubSubBroadcastSettingsPlugin(get()) }
-    single { PubSubChannelPointsPlugin(get(), get(), get()) }
+    single { PubSubChannelPointsPlugin(get(), get()) }
     single { PubSubPinnedMessagePlugin(get()) }
     single { PubSubPollPlugin(get()) }
     single { PubSubPredictionPlugin(get()) }
@@ -103,7 +103,7 @@ val chatModule = module {
     single<ChatRepository> { DefaultChatRepository(get()) }
 
     single { TwitchIrcCommandParser(get()) }
-    single { IrcMessageMapper(get()) }
+    single { IrcMessageMapper() }
 
     single { RecentMessagesRepository(get(), get()) }
     single { AlejoPronounsApi(get()) }

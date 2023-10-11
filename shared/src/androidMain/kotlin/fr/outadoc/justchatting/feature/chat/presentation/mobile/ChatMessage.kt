@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.localized
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Pronoun
@@ -99,9 +100,9 @@ fun ChatMessage(
         when (message) {
             is ChatEvent.Message.Highlighted -> {
                 UserNoticeMessage(
-                    title = message.metadata.title,
-                    titleIcon = message.metadata.titleIcon,
-                    subtitle = message.metadata.subtitle,
+                    title = message.metadata.title.localized(),
+                    titleIcon = message.metadata.titleIcon?.toMaterialIcon(),
+                    subtitle = message.metadata.subtitle?.localized(),
                     level = message.metadata.level,
                 ) {
                     message.body?.let { data ->
@@ -125,7 +126,7 @@ fun ChatMessage(
 
             is ChatEvent.Message.Notice -> {
                 NoticeMessage(
-                    text = message.text,
+                    text = message.text.localized(),
                 )
             }
 

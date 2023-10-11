@@ -76,7 +76,7 @@ val chatModule = module {
     }
 
     single { PubSubBroadcastSettingsPlugin(get()) }
-    single { PubSubChannelPointsPlugin(get(), get(), get()) }
+    single { PubSubChannelPointsPlugin(get(), get()) }
     single { PubSubPinnedMessagePlugin(get()) }
     single { PubSubPollPlugin(get()) }
     single { PubSubPredictionPlugin(get()) }

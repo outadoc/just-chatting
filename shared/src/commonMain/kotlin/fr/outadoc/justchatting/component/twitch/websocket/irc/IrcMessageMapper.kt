@@ -1,25 +1,12 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Bolt
-import androidx.compose.material.icons.filled.CallReceived
-import androidx.compose.material.icons.filled.Campaign
-import androidx.compose.material.icons.filled.Cancel
-import androidx.compose.material.icons.filled.FastForward
-import androidx.compose.material.icons.filled.Gavel
-import androidx.compose.material.icons.filled.Highlight
-import androidx.compose.material.icons.filled.Redeem
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material.icons.filled.Toll
-import androidx.compose.material.icons.filled.VolunteerActivism
-import androidx.compose.material.icons.filled.WavingHand
-import androidx.compose.material.icons.outlined.Star
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
+import fr.outadoc.justchatting.component.chatapi.common.Icon
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.formatCurrency
@@ -44,7 +31,7 @@ class IrcMessageMapper {
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
-                        titleIcon = Icons.Default.CallReceived,
+                        titleIcon = Icon.CallReceived,
                         subtitle = MR.strings.chat_raid_header
                             .format(
                                 MR.plurals.viewers.format(
@@ -62,7 +49,7 @@ class IrcMessageMapper {
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
-                        titleIcon = Icons.Default.Cancel,
+                        titleIcon = Icon.Cancel,
                         subtitle = MR.strings.chat_unraid_subtitle.desc(),
                     ),
                     body = null,
@@ -74,7 +61,7 @@ class IrcMessageMapper {
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = MR.strings.irc_msgid_highlighted_message.desc(),
-                        titleIcon = Icons.Default.Highlight,
+                        titleIcon = Icon.Highlight,
                         subtitle = null,
                     ),
                     body = userMessage.map(),
@@ -86,7 +73,7 @@ class IrcMessageMapper {
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = MR.strings.irc_msgid_announcement.desc(),
-                        titleIcon = Icons.Default.Campaign,
+                        titleIcon = Icon.Campaign,
                         subtitle = null,
                     ),
                     body = userMessage.map(),
@@ -99,8 +86,8 @@ class IrcMessageMapper {
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = when (subscriptionPlan) {
-                            SUB_PRIME -> Icons.Outlined.Star
-                            else -> Icons.Filled.Star
+                            SUB_PRIME -> Icon.Star
+                            else -> Icon.Star
                         },
                         subtitle = when (streakMonths) {
                             0 -> {
@@ -138,7 +125,7 @@ class IrcMessageMapper {
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
-                        titleIcon = Icons.Filled.Star,
+                        titleIcon = Icon.Star,
                         subtitle = MR.strings.chat_subConversion_header
                             .format(parseSubscriptionTierWithArticle(subscriptionPlan)),
                     ),
@@ -151,7 +138,7 @@ class IrcMessageMapper {
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
-                        titleIcon = Icons.Default.VolunteerActivism,
+                        titleIcon = Icon.VolunteerActivism,
                         subtitle = MR.strings.chat_massSubGift_header
                             .format(
                                 giftCount.formatNumber(),
@@ -169,7 +156,7 @@ class IrcMessageMapper {
                     body = null,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
-                        titleIcon = Icons.Default.Redeem,
+                        titleIcon = Icon.Redeem,
                         subtitle = MR.strings.chat_subGift_header
                             .format(
                                 parseSubscriptionTier(subscriptionPlan),
@@ -188,7 +175,7 @@ class IrcMessageMapper {
                     timestamp = timestamp,
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
-                        titleIcon = Icons.Default.FastForward,
+                        titleIcon = Icon.FastForward,
                         subtitle = when (priorGifterDisplayName) {
                             null -> {
                                 MR.strings.chat_subGift_payForwardAnonymous.desc()
@@ -220,7 +207,7 @@ class IrcMessageMapper {
                     isFirstMessageByUser -> {
                         ChatEvent.Message.Highlighted.Metadata(
                             title = MR.strings.chat_first.desc(),
-                            titleIcon = Icons.Default.WavingHand,
+                            titleIcon = Icon.WavingHand,
                             subtitle = null,
                         )
                     }
@@ -228,7 +215,7 @@ class IrcMessageMapper {
                     rewardId != null -> {
                         ChatEvent.Message.Highlighted.Metadata(
                             title = MR.strings.chat_reward.desc(),
-                            titleIcon = Icons.Default.Toll,
+                            titleIcon = Icon.Toll,
                             subtitle = null,
                         )
                     }
@@ -245,7 +232,7 @@ class IrcMessageMapper {
 
                         ChatEvent.Message.Highlighted.Metadata(
                             title = header,
-                            titleIcon = Icons.Default.Bolt,
+                            titleIcon = Icon.Bolt,
                             subtitle = null,
                             level = when (paidMessageInfo.level) {
                                 "ONE" -> ChatEvent.Message.Highlighted.Level.One
@@ -339,7 +326,7 @@ class IrcMessageMapper {
                             timestamp = command.timestamp,
                             metadata = ChatEvent.Message.Highlighted.Metadata(
                                 title = command.targetUserLogin.desc(),
-                                titleIcon = Icons.Default.Gavel,
+                                titleIcon = Icon.Gavel,
                                 subtitle = MR.strings.chat_ban.desc(),
                             ),
                             body = null,
@@ -349,7 +336,7 @@ class IrcMessageMapper {
                             timestamp = command.timestamp,
                             metadata = ChatEvent.Message.Highlighted.Metadata(
                                 title = command.targetUserLogin.desc(),
-                                titleIcon = Icons.Default.Gavel,
+                                titleIcon = Icon.Gavel,
                                 subtitle = MR.strings.chat_timeout.format(command.duration),
                             ),
                             body = null,

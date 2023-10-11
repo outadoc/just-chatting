@@ -1,0 +1,41 @@
+name: Build iOS app
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Check formatting
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: spotlessCheck
+
+      - name: Build iOS targets
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: iosX64Binaries
+
+      - name: Run iOS unit tests
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: iosX64Test

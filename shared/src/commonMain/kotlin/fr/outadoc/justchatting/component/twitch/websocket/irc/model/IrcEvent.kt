@@ -42,7 +42,7 @@ sealed interface IrcEvent {
             data class PaidMessageInfo(
                 val amount: Long,
                 val currency: String,
-                val exponent: Int,
+                val exponent: Long,
                 val isSystemMessage: Boolean,
                 val level: String,
             )

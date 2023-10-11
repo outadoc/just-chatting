@@ -103,7 +103,7 @@ val chatModule = module {
     single<ChatRepository> { DefaultChatRepository(get()) }
 
     single { TwitchIrcCommandParser(get()) }
-    single { IrcMessageMapper(get()) }
+    single { IrcMessageMapper() }
 
     single { RecentMessagesRepository(get(), get()) }
     single { AlejoPronounsApi(get()) }

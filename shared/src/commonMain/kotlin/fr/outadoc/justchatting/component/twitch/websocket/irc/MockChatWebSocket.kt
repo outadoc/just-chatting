@@ -147,9 +147,7 @@ class MockChatWebSocket private constructor(
                 ChatEvent.Message.Highlighted(
                     timestamp = clock.now(),
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = MR.strings.chat_join
-                            .format(channelLogin)
-                            .toString(context),
+                        title = MR.strings.chat_join.format(channelLogin),
                         subtitle = null,
                     ),
                     body = null,

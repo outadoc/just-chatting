@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.3
         with:
           name: apk
-          path: app/build/outputs/bundle/qa/app-android-qa.aab
+          path: app-android/build/outputs/bundle/qa/app-android-qa.aab
 
       - name: Upload to internal app sharing
         id: publish
@@ -53,9 +53,9 @@ jobs:
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_INTERNAL_APP_SHARING }}
           packageName: fr.outadoc.justchatting
-          releaseFiles: app/build/outputs/bundle/qa/app-android-qa.aab
+          releaseFiles: app-android/build/outputs/bundle/qa/app-android-qa.aab
           track: internalsharing
-          mappingFile: app/build/outputs/mapping/release/mapping.txt
+          mappingFile: app-android/build/outputs/mapping/release/mapping.txt
           status: completed
 
       - name: Find status comment

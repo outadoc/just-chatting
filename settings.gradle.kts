@@ -16,5 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "just-chatting"
 
-include(":app")
+include(":app-android")
 include(":shared")

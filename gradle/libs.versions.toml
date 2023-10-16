@@ -30,7 +30,6 @@ accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeho
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 androidx-activity-compose = "androidx.activity:activity-compose:1.8.0"
-androidx-annotation = "androidx.annotation:annotation:1.7.0"
 androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
 androidx-browser = "androidx.browser:browser:1.6.0"
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
@@ -56,7 +55,6 @@ compose-material-core2 = { module = "androidx.compose.material:material" }
 compose-material-core3 = { module = "androidx.compose.material3:material3" }
 compose-material-icons = { module = "androidx.compose.material:material-icons-extended" }
 compose-material-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class" }
-compose-runtime-core = { module = "androidx.compose.runtime:runtime" }
 compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata" }
 compose-ui-core = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
@@ -76,15 +74,14 @@ ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
 ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 ktor-contentNegociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
-ktor-io = { module = "io.ktor:ktor-io", version.ref = "ktor" }
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-leakcanary = "com.squareup.leakcanary:leakcanary-android:2.12"
 material-core = "com.google.android.material:material:1.10.0"
 moko-resources-core = { module = "dev.icerock.moko:resources", version.ref = "moko" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko" }
 okio = "com.squareup.okio:okio:3.6.0"
-sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-driver-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
 unicode-codepoints = "de.cketti.unicode:kotlin-codepoints:0.6.1"
 uri-kmp = "com.eygraber:uri-kmp:0.0.15"

@@ -2,8 +2,9 @@ package fr.outadoc.justchatting.utils.core
 
 import com.eygraber.uri.Uri
 
-fun String.createChannelExternalLink(): Uri =
+fun createChannelExternalLink(channelLogin: String): String =
     Uri.parse("https://twitch.tv")
         .buildUpon()
-        .appendPath(this)
+        .appendPath(channelLogin)
         .build()
+        .toString()

@@ -15,13 +15,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.emoji2.text.DefaultEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.lifecycleScope
-import com.eygraber.uri.toAndroidUri
-import com.eygraber.uri.toUri
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.home.presentation.MainRouterViewModel
 import fr.outadoc.justchatting.shared.MR
@@ -50,7 +49,7 @@ class MainActivity : AppCompatActivity() {
             }
 
         if (savedInstanceState == null) {
-            intent.data?.toUri()?.let { data ->
+            intent.data?.toString()?.let { data ->
                 viewModel.onReceiveIntent(data)
             }
         }
@@ -64,7 +63,7 @@ class MainActivity : AppCompatActivity() {
 
                     is MainRouterViewModel.Event.OpenInBrowser -> {
                         val intent = CustomTabsIntent.Builder().build()
-                        intent.launchUrl(this@MainActivity, event.uri.toAndroidUri())
+                        intent.launchUrl(this@MainActivity, event.uri.toUri())
                     }
                 }
             }
@@ -125,7 +124,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
-        intent?.data?.toUri()?.let { data ->
+        intent?.data?.toString()?.let { data ->
             viewModel.onReceiveIntent(data)
         }
     }

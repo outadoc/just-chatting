@@ -6,16 +6,17 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredential
 data class DeeplinkParser(
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
-    fun parseDeeplink(uri: Uri): Deeplink? {
+    fun parseDeeplink(uri: String): Deeplink? {
+        val parsed: Uri = Uri.parse(uri)
         when {
-            uri.isViewChannelUrl() -> {
-                uri.pathSegments.firstOrNull()?.let { login ->
+            parsed.isViewChannelUrl() -> {
+                parsed.pathSegments.firstOrNull()?.let { login ->
                     return Deeplink.ViewChannel(login = login)
                 }
             }
 
-            uri.isRedirectUrl() -> {
-                val token = uri.parseToken()
+            parsed.isRedirectUrl() -> {
+                val token = parsed.parseToken()
                 if (token != null) {
                     return Deeplink.Authenticated(token = token)
                 }
@@ -31,10 +32,11 @@ data class DeeplinkParser(
     }
 
     private fun Uri.isRedirectUrl(): Boolean {
+        val redirectUri = Uri.parse(oAuthAppCredentials.redirectUri)
         val isFromUniversalLink =
-            scheme == oAuthAppCredentials.redirectUri.scheme &&
-                host == oAuthAppCredentials.redirectUri.host &&
-                path == oAuthAppCredentials.redirectUri.path
+            scheme == redirectUri.scheme &&
+                host == redirectUri.host &&
+                path == redirectUri.path
 
         val isFromDeeplink =
             scheme == DeeplinkDefinitions.AuthCallback.scheme &&

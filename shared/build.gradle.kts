@@ -30,6 +30,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                api(libs.ktor.client.core)
+
                 implementation(libs.androidx.paging.compose)
                 implementation(libs.androidx.paging.runtime)
                 implementation(libs.bignum)
@@ -39,7 +41,12 @@ kotlin {
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(libs.ktor.client.core)
+                implementation(libs.ktor.client.auth)
+                implementation(libs.ktor.client.cio)
+                implementation(libs.ktor.client.websockets)
+                implementation(libs.ktor.contentNegociation)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.serialization)
                 implementation(libs.moko.resources.core)
                 implementation(libs.sqldelight.coroutines)
                 implementation(libs.uri.kmp)
@@ -70,6 +77,8 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(libs.material.core)
                 implementation(libs.moko.resources.compose)
+
+                api(libs.sqldelight.driver.android)
             }
         }
 
@@ -81,6 +90,10 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+
+            dependencies {
+                api(libs.sqldelight.driver.native)
+            }
         }
 
         val androidUnitTest by getting {

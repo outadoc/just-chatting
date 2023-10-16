@@ -66,18 +66,10 @@ kotlin {
                 implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(libs.ktor.client.auth)
-                implementation(libs.ktor.client.core)
-                implementation(libs.ktor.client.cio)
-                implementation(libs.ktor.client.websockets)
-                implementation(libs.ktor.contentNegociation)
-                implementation(libs.ktor.logging)
-                implementation(libs.ktor.serialization)
                 implementation(libs.material.core)
                 implementation(libs.moko.resources.core)
                 implementation(libs.moko.resources.compose)
                 implementation(libs.okio)
-                implementation(libs.sqldelight.android.driver)
                 implementation(libs.uri.kmp)
             }
         }

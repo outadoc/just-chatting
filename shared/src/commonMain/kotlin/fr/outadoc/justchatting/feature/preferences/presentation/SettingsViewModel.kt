@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
-import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser
@@ -22,7 +21,7 @@ class SettingsViewModel(
 ) : ViewModel() {
 
     sealed class Event {
-        data class ShareLogs(val uri: Uri) : Event()
+        data class ShareLogs(val uri: String) : Event()
     }
 
     private val _events = MutableSharedFlow<Event>()
@@ -58,8 +57,13 @@ class SettingsViewModel(
     fun onShareLogsClick() {
         viewModelScope.launch {
             try {
-                val file: Uri = logRepository.dumpLogs()
-                _events.emit(Event.ShareLogs(uri = file))
+                if (logRepository.isSupported) {
+                    _events.emit(
+                        Event.ShareLogs(
+                            uri = logRepository.dumpLogs(),
+                        ),
+                    )
+                }
             } catch (e: Exception) {
                 logError<SettingsViewModel>(e) { "Error while reading logs" }
             }

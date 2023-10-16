@@ -41,7 +41,7 @@ class MainRouterViewModel(
 
     sealed class Event {
         data class ViewChannel(val login: String) : Event()
-        data class OpenInBrowser(val uri: Uri) : Event()
+        data class OpenInBrowser(val uri: String) : Event()
     }
 
     val state: StateFlow<State> =
@@ -111,12 +111,12 @@ class MainRouterViewModel(
                 .build()
 
         _events.emit(
-            Event.OpenInBrowser(uri = helixAuthUrl),
+            Event.OpenInBrowser(uri = helixAuthUrl.toString()),
         )
     }
 
-    fun onReceiveIntent(data: Uri) = viewModelScope.launch {
-        when (val deeplink = deeplinkParser.parseDeeplink(data)) {
+    fun onReceiveIntent(uri: String) = viewModelScope.launch {
+        when (val deeplink = deeplinkParser.parseDeeplink(uri)) {
             is Deeplink.Authenticated -> {
                 preferencesRepository.updatePreferences { prefs ->
                     prefs.copy(
@@ -137,7 +137,7 @@ class MainRouterViewModel(
             }
 
             null -> {
-                logError<MainRouterViewModel> { "Invalid deeplink: $data" }
+                logError<MainRouterViewModel> { "Invalid deeplink: $uri" }
             }
         }
     }

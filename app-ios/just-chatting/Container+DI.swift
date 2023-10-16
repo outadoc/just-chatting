@@ -23,21 +23,21 @@ extension Container {
     }
 
     private func setupHome() {
-        register(ChannelSearchViewModel.self) { _, repository in
+        register(ChannelSearchViewModel.self) { r in
             ChannelSearchViewModel(
-                repository: repository
+                repository: r.resolve(TwitchRepository.self)!
             )
         }
 
-        register(FollowedChannelsViewModel.self) { _, repository in
+        register(FollowedChannelsViewModel.self) { r in
             FollowedChannelsViewModel(
-                repository: repository
+                repository: r.resolve(TwitchRepository.self)!
             )
         }
 
-        register(FollowedStreamsViewModel.self) { _, repository in
+        register(FollowedStreamsViewModel.self) { r in
             FollowedStreamsViewModel(
-                repository: repository
+                repository: r.resolve(TwitchRepository.self)!
             )
         }
     }
@@ -51,19 +51,19 @@ extension Container {
             r.resolve(AppDatabase.self)!.recentEmoteQueries
         }
 
-        register(RecentEmotesRepository.self) { _, recentEmoteQueries in
+        register(RecentEmotesRepository.self) { r in
             DbRecentEmotesRepository(
-                recentEmoteQueries: recentEmoteQueries
+                recentEmoteQueries: r.resolve(RecentEmoteQueries.self)!
             )
         }
     }
 
     private func setupSettings() {
-        register(SettingsViewModel.self) { _, preferenceRepository, authRepository, logRepository in
+        register(SettingsViewModel.self) { r in
             SettingsViewModel(
-                preferenceRepository: preferenceRepository,
-                authRepository: authRepository,
-                logRepository: logRepository
+                preferenceRepository: r.resolve(PreferenceRepository.self)!,
+                authRepository: r.resolve(AuthRepository.self)!,
+                logRepository: r.resolve(LogRepository.self)!
             )
         }
 
@@ -92,13 +92,13 @@ extension Container {
             )
         }
 
-        register(EmotesRepository.self) { _, helixApi, stvEmotesApi, bttvEmotesApi, recentEmotes, preferencesRepository in
+        register(EmotesRepository.self) { r in
             EmotesRepository(
-                helixApi: helixApi,
-                stvEmotesApi: stvEmotesApi,
-                bttvEmotesApi: bttvEmotesApi,
-                recentEmotes: recentEmotes,
-                preferencesRepository: preferencesRepository
+                helixApi: r.resolve(HelixApi.self)!,
+                stvEmotesApi: r.resolve(StvEmotesApi.self)!,
+                bttvEmotesApi: r.resolve(BttvEmotesApi.self)!,
+                recentEmotes: r.resolve(RecentEmotesRepository.self)!,
+                preferencesRepository: r.resolve(PreferenceRepository.self)!
             )
         }
 
@@ -114,54 +114,54 @@ extension Container {
             )
         }
 
-        register(BttvEmotesApi.self) { _, httpClient in
+        register(BttvEmotesApi.self) { r in
             BttvEmotesServer(
-                httpClient: httpClient
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
             )
         }
 
-        register(StvEmotesApi.self) { _, httpClient in
+        register(StvEmotesApi.self) { r in
             StvEmotesServer(
-                httpClient: httpClient
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
             )
         }
 
-        register(RecentMessagesApi.self) { _, httpClient in
+        register(RecentMessagesApi.self) { r in
             RecentMessagesServer(
-                httpClient: httpClient
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
             )
         }
     }
 
     private func setupMainNavigation() {
-        register(MainRouterViewModel.self) { _, authRepository, preferencesRepository, deeplinkParser, oAuthAppCredentials in
+        register(MainRouterViewModel.self) { r in
             MainRouterViewModel(
-                authRepository: authRepository,
-                preferencesRepository: preferencesRepository,
-                deeplinkParser: deeplinkParser,
-                oAuthAppCredentials: oAuthAppCredentials
+                authRepository: r.resolve(AuthRepository.self)!,
+                preferencesRepository: r.resolve(PreferenceRepository.self)!,
+                deeplinkParser: r.resolve(DeeplinkParser.self)!,
+                oAuthAppCredentials: r.resolve(OAuthAppCredentials.self)!
             )
         }
     }
 
     private func setupChat() {
-        register(ChatViewModel.self) { _, clock, twitchRepository, emotesRepository, chatRepository, preferencesRepository, emoteListSourcesProvider, filterAutocompleteItemsUseCase, pronounsRepository, createShortcutForChannel in
+        register(ChatViewModel.self) { r in
             ChatViewModel(
-                clock: clock,
-                twitchRepository: twitchRepository,
-                emotesRepository: emotesRepository,
-                chatRepository: chatRepository,
-                preferencesRepository: preferencesRepository,
-                emoteListSourcesProvider: emoteListSourcesProvider,
-                filterAutocompleteItemsUseCase: filterAutocompleteItemsUseCase,
-                pronounsRepository: pronounsRepository,
-                createShortcutForChannel: createShortcutForChannel
+                clock: r.resolve(Kotlinx_datetimeClock.self)!,
+                twitchRepository: r.resolve(TwitchRepository.self)!,
+                emotesRepository: r.resolve(EmotesRepository.self)!,
+                chatRepository: r.resolve(ChatRepository.self)!,
+                preferencesRepository: r.resolve(PreferenceRepository.self)!,
+                emoteListSourcesProvider: r.resolve(EmoteListSourcesProvider.self)!,
+                filterAutocompleteItemsUseCase: r.resolve(FilterAutocompleteItemsUseCase.self)!,
+                pronounsRepository: r.resolve(PronounsRepository.self)!,
+                createShortcutForChannel: r.resolve(CreateShortcutForChannelUseCase.self)!
             )
         }
 
-        register(StreamAndUserInfoViewModel.self) { _, twitchRepository in
+        register(StreamAndUserInfoViewModel.self) { r in
             StreamAndUserInfoViewModel(
-                twitchRepository: twitchRepository
+                twitchRepository: r.resolve(TwitchRepository.self)!
             )
         }
 
@@ -173,45 +173,45 @@ extension Container {
             _ in NoopCreateShortcutForChannelUseCase()
         }
 
-        register(LiveChatWebSocket.Factory.self) { _, clock, networkStateObserver, parser, mapper, recentMessagesRepository, preferencesRepository, httpClient in
+        register(LiveChatWebSocket.Factory.self) { r in
             LiveChatWebSocket.Factory(
-                clock: clock,
-                networkStateObserver: networkStateObserver,
-                parser: parser,
-                mapper: mapper,
-                recentMessagesRepository: recentMessagesRepository,
-                preferencesRepository: preferencesRepository,
-                httpClient: httpClient
+                clock: r.resolve(Kotlinx_datetimeClock.self)!,
+                networkStateObserver: r.resolve(NetworkStateObserver.self)!,
+                parser: r.resolve(TwitchIrcCommandParser.self)!,
+                mapper: r.resolve(IrcMessageMapper.self)!,
+                recentMessagesRepository: r.resolve(RecentMessagesRepository.self)!,
+                preferencesRepository: r.resolve(PreferenceRepository.self)!,
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
             )
         }
 
-        register(LoggedInChatWebSocket.Factory.self) { _, clock, networkStateObserver, parser, mapper, preferencesRepository, httpClient in
+        register(LoggedInChatWebSocket.Factory.self) { r in
             LoggedInChatWebSocket.Factory(
-                clock: clock,
-                networkStateObserver: networkStateObserver,
-                parser: parser,
-                mapper: mapper,
-                preferencesRepository: preferencesRepository,
-                httpClient: httpClient
+                clock: r.resolve(Kotlinx_datetimeClock.self)!,
+                networkStateObserver: r.resolve(NetworkStateObserver.self)!,
+                parser: r.resolve(TwitchIrcCommandParser.self)!,
+                mapper: r.resolve(IrcMessageMapper.self)!,
+                preferencesRepository: r.resolve(PreferenceRepository.self)!,
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
             )
         }
 
-        register(MockChatWebSocket.Factory.self) { _, clock, networkStateObserver, parser, mapper, httpClient in
+        register(MockChatWebSocket.Factory.self) { r in
             MockChatWebSocket.Factory(
-                clock: clock,
-                networkStateObserver: networkStateObserver,
-                parser: parser,
-                mapper: mapper,
-                httpClient: httpClient
+                clock: r.resolve(Kotlinx_datetimeClock.self)!,
+                networkStateObserver: r.resolve(NetworkStateObserver.self)!,
+                parser: r.resolve(TwitchIrcCommandParser.self)!,
+                mapper: r.resolve(IrcMessageMapper.self)!,
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
             )
         }
 
-        register(PubSubWebSocket.Factory.self) { _, networkStateObserver, httpClient, preferencesRepository, pubSubPluginsProvider in
+        register(PubSubWebSocket.Factory.self) { r in
             PubSubWebSocket.Factory(
-                networkStateObserver: networkStateObserver,
-                httpClient: httpClient,
-                preferencesRepository: preferencesRepository,
-                pubSubPluginsProvider: pubSubPluginsProvider
+                networkStateObserver: r.resolve(NetworkStateObserver.self)!,
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!,
+                preferencesRepository: r.resolve(PreferenceRepository.self)!,
+                pubSubPluginsProvider: r.resolve(PubSubPluginsProvider.self)!
             )
         }
 
@@ -234,52 +234,52 @@ extension Container {
             return ChatCommandHandlerFactoriesProviderImpl(r: r)
         }
 
-        register(PubSubBroadcastSettingsPlugin.self) { _, json in
+        register(PubSubBroadcastSettingsPlugin.self) { r in
             PubSubBroadcastSettingsPlugin(
-                json: json
+                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
             )
         }
 
-        register(PubSubChannelPointsPlugin.self) { _, clock, json in
+        register(PubSubChannelPointsPlugin.self) { r in
             PubSubChannelPointsPlugin(
-                clock: clock,
-                json: json
+                clock: r.resolve(Kotlinx_datetimeClock.self)!,
+                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
             )
         }
 
-        register(PubSubPinnedMessagePlugin.self) { _, json in
+        register(PubSubPinnedMessagePlugin.self) { r in
             PubSubPinnedMessagePlugin(
-                json: json
+                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
             )
         }
 
-        register(PubSubPollPlugin.self) { _, json in
+        register(PubSubPollPlugin.self) { r in
             PubSubPollPlugin(
-                json: json
+                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
             )
         }
 
-        register(PubSubPredictionPlugin.self) { _, json in
+        register(PubSubPredictionPlugin.self) { r in
             PubSubPredictionPlugin(
-                json: json
+                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
             )
         }
 
-        register(PubSubRaidPlugin.self) { _, json in
+        register(PubSubRaidPlugin.self) { r in
             PubSubRaidPlugin(
-                json: json
+                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
             )
         }
 
-        register(PubSubRichEmbedPlugin.self) { _, json in
+        register(PubSubRichEmbedPlugin.self) { r in
             PubSubRichEmbedPlugin(
-                json: json
+                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
             )
         }
 
-        register(PubSubViewerCountPlugin.self) { _, json in
+        register(PubSubViewerCountPlugin.self) { r in
             PubSubViewerCountPlugin(
-                json: json
+                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
             )
         }
 
@@ -307,21 +307,21 @@ extension Container {
             return PubSubPluginsProviderImpl(r: r)
         }
 
-        register(AggregateChatEventHandler.Factory.self) { _, chatCommandHandlerFactoriesProvider in
+        register(AggregateChatEventHandler.Factory.self) { r in
             AggregateChatEventHandler.Factory(
-                chatCommandHandlerFactoriesProvider: chatCommandHandlerFactoriesProvider
+                chatCommandHandlerFactoriesProvider: r.resolve(ChatCommandHandlerFactoriesProvider.self)!
             )
         }
 
-        register(ChatRepository.self) { _, factory in
+        register(ChatRepository.self) { r in
             DefaultChatRepository(
-                factory: factory
+                factory: r.resolve(AggregateChatEventHandler.Factory.self)!
             )
         }
 
-        register(TwitchIrcCommandParser.self) { _, clock in
+        register(TwitchIrcCommandParser.self) { r in
             TwitchIrcCommandParser(
-                clock: clock
+                clock: r.resolve(Kotlinx_datetimeClock.self)!
             )
         }
 
@@ -329,23 +329,23 @@ extension Container {
             IrcMessageMapper()
         }
 
-        register(RecentMessagesRepository.self) { _, recentMessagesApi, parser in
+        register(RecentMessagesRepository.self) { r in
             RecentMessagesRepository(
-                recentMessagesApi: recentMessagesApi,
-                parser: parser
+                recentMessagesApi: r.resolve(RecentMessagesApi.self)!,
+                parser: r.resolve(TwitchIrcCommandParser.self)!
             )
         }
 
-        register(AlejoPronounsApi.self) { _, httpClient in
+        register(AlejoPronounsApi.self) { r in
             AlejoPronounsApi(
-                httpClient: httpClient
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
             )
         }
 
-        register(PronounsRepository.self) { _, alejoPronounsApi, preferenceRepository in
+        register(PronounsRepository.self) { r in
             DefaultPronounsRepository(
-                alejoPronounsApi: alejoPronounsApi,
-                preferenceRepository: preferenceRepository
+                alejoPronounsApi: r.resolve(AlejoPronounsApi.self)!,
+                preferenceRepository: r.resolve(PreferenceRepository.self)!
             )
         }
 

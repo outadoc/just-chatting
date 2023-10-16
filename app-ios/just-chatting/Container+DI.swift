@@ -450,5 +450,21 @@ extension Container {
                 oAuthAppCredentials: oAuthAppCredentials
             )
         }
+
+        register(HttpClientProvider.self) { _, json, preferenceRepository, oAuthAppCredentials in
+            HttpClientProvider(
+                json: json,
+                preferenceRepository: preferenceRepository,
+                oAuthAppCredentials: oAuthAppCredentials
+            )
+        }
+
+        register(Ktor_client_coreHttpClient.self) { r in
+            r.resolve(HttpClientProvider.self)!.getBaseClient()
+        }
+
+        register(Ktor_client_coreHttpClient.self, name: "twitch") { r in
+            r.resolve(HttpClientProvider.self)!.getTwitchClient()
+        }
     }
 }

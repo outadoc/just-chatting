@@ -16,6 +16,8 @@ extension Container {
         Container.shared.setupHome()
         Container.shared.setupDb()
         Container.shared.setupSettings()
+        Container.shared.setupTwitch()
+        Container.shared.setupMainNavigation()
     }
 
     private func setupHome() {
@@ -125,6 +127,17 @@ extension Container {
         register(RecentMessagesApi.self) {
             r in RecentMessagesServer(
                 httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+            )
+        }
+    }
+
+    private func setupMainNavigation() {
+        register(MainRouterViewModel.self) {
+            r in MainRouterViewModel(
+                authRepository: r.resolve(AuthRepository.self)!,
+                preferencesRepository: r.resolve(PreferenceRepository.self)!,
+                deeplinkParser: r.resolve(DeeplinkParser.self)!,
+                oAuthAppCredentials: r.resolve(OAuthAppCredentials.self)!
             )
         }
     }

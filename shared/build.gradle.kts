@@ -22,15 +22,24 @@ kotlin {
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "JCShared"
+        iosTarget.binaries {
+            framework {
+                baseName = "JCShared"
+                export(libs.kotlinx.datetime)
+                export(libs.kotlinx.serialization.json)
+                export(libs.ktor.client.core)
+                export(libs.moko.resources.core)
+            }
         }
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
+                api(libs.kotlinx.datetime)
+                api(libs.kotlinx.serialization.json)
                 api(libs.ktor.client.core)
+                api(libs.moko.resources.core)
 
                 implementation(libs.androidx.paging.compose)
                 implementation(libs.androidx.paging.runtime)
@@ -47,7 +56,6 @@ kotlin {
                 implementation(libs.ktor.contentNegociation)
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.serialization)
-                implementation(libs.moko.resources.core)
                 implementation(libs.sqldelight.coroutines)
                 implementation(libs.uri.kmp)
                 implementation(libs.unicode.codepoints)

@@ -19,6 +19,7 @@ extension Container {
         Container.shared.setupTwitch()
         Container.shared.setupMainNavigation()
         Container.shared.setupChat()
+        Container.shared.setupMain()
     }
 
     private func setupHome() {
@@ -424,6 +425,30 @@ extension Container {
             }
 
             return EmoteListSourcesProviderImpl(r: r)
+        }
+    }
+
+    private func setupMain() {
+        register(Kotlinx_datetimeClock.self) { _ in
+            ClockExtKt.DefaultClock
+        }
+
+        register(NetworkStateObserver.self) { _ in
+            NoopNetworkStateObserver()
+        }
+
+        register(AuthRepository.self) { _, api, preferencesRepository, oAuthAppCredentials in
+            AuthRepository(
+                api: api,
+                preferencesRepository: preferencesRepository,
+                oAuthAppCredentials: oAuthAppCredentials
+            )
+        }
+
+        register(DeeplinkParser.self) { _, oAuthAppCredentials in
+            DeeplinkParser(
+                oAuthAppCredentials: oAuthAppCredentials
+            )
         }
     }
 }

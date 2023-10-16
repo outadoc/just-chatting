@@ -22,8 +22,11 @@ kotlin {
         iosArm64(),
         iosSimulatorArm64(),
     ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
-            baseName = "JCShared"
+        iosTarget.binaries {
+            framework {
+                baseName = "JCShared"
+                export(libs.moko.resources.core)
+            }
         }
     }
 
@@ -31,6 +34,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api(libs.ktor.client.core)
+                api(libs.moko.resources.core)
 
                 implementation(libs.androidx.paging.compose)
                 implementation(libs.androidx.paging.runtime)
@@ -47,7 +51,6 @@ kotlin {
                 implementation(libs.ktor.contentNegociation)
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.serialization)
-                implementation(libs.moko.resources.core)
                 implementation(libs.sqldelight.coroutines)
                 implementation(libs.uri.kmp)
                 implementation(libs.unicode.codepoints)

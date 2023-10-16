@@ -1,5 +1,6 @@
 import SwiftUI
 import Swinject
+import JCShared
 
 @main
 struct iOSApp: App {
@@ -10,7 +11,9 @@ struct iOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            HomeView(
+                viewModel: Container.shared.resolve(MainRouterViewModel.self)!
+            )
         }
     }
 }

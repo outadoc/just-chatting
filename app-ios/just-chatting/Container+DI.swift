@@ -349,57 +349,57 @@ extension Container {
             )
         }
 
-        register(ChannelBttvEmotesSource.self) { _, emotesRepository in
+        register(ChannelBttvEmotesSource.self) { r in
             ChannelBttvEmotesSource(
-                emotesRepository: emotesRepository
+                emotesRepository: r.resolve(EmotesRepository.self)!
             )
         }
 
-        register(ChannelFfzEmotesSource.self) { _, emotesRepository in
+        register(ChannelFfzEmotesSource.self) { r in
             ChannelFfzEmotesSource(
-                emotesRepository: emotesRepository
+                emotesRepository: r.resolve(EmotesRepository.self)!
             )
         }
 
-        register(ChannelStvEmotesSource.self) { _, emotesRepository in
+        register(ChannelStvEmotesSource.self) { r in
             ChannelStvEmotesSource(
-                emotesRepository: emotesRepository
+                emotesRepository: r.resolve(EmotesRepository.self)!
             )
         }
 
-        register(ChannelTwitchEmotesSource.self) { _, delegateTwitchEmotesSource in
+        register(ChannelTwitchEmotesSource.self) { r in
             ChannelTwitchEmotesSource(
-                delegateTwitchEmotesSource: delegateTwitchEmotesSource
+                delegateTwitchEmotesSource: r.resolve(DelegateTwitchEmotesSource.self)!
             )
         }
 
-        register(GlobalBttvEmotesSource.self) { _, emotesRepository in
+        register(GlobalBttvEmotesSource.self) { r in
             GlobalBttvEmotesSource(
-                emotesRepository: emotesRepository
+                emotesRepository: r.resolve(EmotesRepository.self)!
             )
         }
 
-        register(GlobalFfzEmotesSource.self) { _, emotesRepository in
+        register(GlobalFfzEmotesSource.self) { r in
             GlobalFfzEmotesSource(
-                emotesRepository: emotesRepository
+                emotesRepository: r.resolve(EmotesRepository.self)!
             )
         }
 
-        register(GlobalStvEmotesSource.self) { _, emotesRepository in
+        register(GlobalStvEmotesSource.self) { r in
             GlobalStvEmotesSource(
-                emotesRepository: emotesRepository
+                emotesRepository: r.resolve(EmotesRepository.self)!
             )
         }
 
-        register(GlobalTwitchEmotesSource.self) { _, delegateTwitchEmotesSource in
+        register(GlobalTwitchEmotesSource.self) { r in
             GlobalTwitchEmotesSource(
-                delegateTwitchEmotesSource: delegateTwitchEmotesSource
+                delegateTwitchEmotesSource: r.resolve(DelegateTwitchEmotesSource.self)!
             )
         }
 
-        register(DelegateTwitchEmotesSource.self) { _, twitchRepository in
+        register(DelegateTwitchEmotesSource.self) { r in
             DelegateTwitchEmotesSource(
-                twitchRepository: twitchRepository
+                twitchRepository: r.resolve(TwitchRepository.self)!
             )
         }
 
@@ -437,25 +437,25 @@ extension Container {
             NoopNetworkStateObserver()
         }
 
-        register(AuthRepository.self) { _, api, preferencesRepository, oAuthAppCredentials in
+        register(AuthRepository.self) { r in
             AuthRepository(
-                api: api,
-                preferencesRepository: preferencesRepository,
-                oAuthAppCredentials: oAuthAppCredentials
+                api: r.resolve(IdApi.self)!,
+                preferencesRepository: r.resolve(PreferenceRepository.self)!,
+                oAuthAppCredentials: r.resolve(OAuthAppCredentials.self)!
             )
         }
 
-        register(DeeplinkParser.self) { _, oAuthAppCredentials in
+        register(DeeplinkParser.self) { r in
             DeeplinkParser(
-                oAuthAppCredentials: oAuthAppCredentials
+                oAuthAppCredentials: r.resolve(OAuthAppCredentials.self)!
             )
         }
 
-        register(HttpClientProvider.self) { _, json, preferenceRepository, oAuthAppCredentials in
+        register(HttpClientProvider.self) { r in
             HttpClientProvider(
-                json: json,
-                preferenceRepository: preferenceRepository,
-                oAuthAppCredentials: oAuthAppCredentials
+                json: r.resolve(Kotlinx_serialization_jsonJson.self)!,
+                preferenceRepository: r.resolve(PreferenceRepository.self)!,
+                oAuthAppCredentials: r.resolve(OAuthAppCredentials.self)!
             )
         }
 

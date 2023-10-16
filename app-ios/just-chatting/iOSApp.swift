@@ -1,4 +1,5 @@
 import SwiftUI
+import Swinject
 
 @main
 struct iOSApp: App {

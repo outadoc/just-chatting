@@ -7,7 +7,7 @@
 //
 
 import Swinject
-import shared
+import JCShared
 
 extension Container {
     static let shared = Container()

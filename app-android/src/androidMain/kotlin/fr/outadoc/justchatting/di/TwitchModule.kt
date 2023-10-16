@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.di
 
-import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesRepository
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
@@ -15,22 +14,18 @@ import fr.outadoc.justchatting.component.twitch.http.server.IdServer
 import fr.outadoc.justchatting.component.twitch.http.server.StvEmotesServer
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesServer
+import fr.outadoc.justchatting.utils.core.DefaultJson
 import kotlinx.serialization.json.Json
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val twitchModule = module {
-    single {
-        Json {
-            ignoreUnknownKeys = true
-            encodeDefaults = true
-        }
-    }
+    single<Json> { DefaultJson }
 
     single {
         OAuthAppCredentials(
             clientId = "l9klwmh97qgn0s0me276ezsft5szp2",
-            redirectUri = Uri.Companion.parse("https://just-chatting.app/auth/callback.html"),
+            redirectUri = "https://just-chatting.app/auth/callback.html",
         )
     }
 

@@ -75,4 +75,57 @@ extension Container {
             _ in NoopPreferenceRepository()
         }
     }
+
+    private func setupTwitch() {
+        register(Kotlinx_serialization_jsonJson.self) {
+            _ in JsonExtKt.DefaultJson
+        }
+
+        register(OAuthAppCredentials.self) {
+            _ in OAuthAppCredentials(
+                clientId: "l9klwmh97qgn0s0me276ezsft5szp2",
+                redirectUri: "https://just-chatting.app/auth/callback.html"
+            )
+        }
+
+        register(EmotesRepository.self) {
+            r in EmotesRepository(
+                helixApi: r.resolve(HelixApi.self)!,
+                stvEmotesApi: r.resolve(StvEmotesApi.self)!,
+                bttvEmotesApi: r.resolve(BttvEmotesApi.self)!,
+                recentEmotes: r.resolve(RecentEmotesRepository.self)!,
+                preferencesRepository: r.resolve(PreferenceRepository.self)!
+            )
+        }
+
+        register(IdApi.self) {
+            r in IdServer(
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self, name: "twitch")!
+            )
+        }
+
+        register(HelixApi.self) {
+            r in HelixServer(
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self, name: "twitch")!
+            )
+        }
+
+        register(BttvEmotesApi.self) {
+            r in BttvEmotesServer(
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+            )
+        }
+
+        register(StvEmotesApi.self) {
+            r in StvEmotesServer(
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+            )
+        }
+
+        register(RecentMessagesApi.self) {
+            r in RecentMessagesServer(
+                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+            )
+        }
+    }
 }

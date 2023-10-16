@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
-import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.deeplink.DeeplinkDefinitions
 
-fun String.createChannelDeeplink(): Uri =
+fun createChannelDeeplink(channelLogin: String): String =
     DeeplinkDefinitions.ViewChannel
         .buildUpon()
-        .appendPath(this)
+        .appendPath(channelLogin)
         .build()
+        .toString()

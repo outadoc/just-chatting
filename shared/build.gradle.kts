@@ -70,6 +70,8 @@ kotlin {
                 implementation(libs.koin.compose)
                 implementation(libs.material.core)
                 implementation(libs.moko.resources.compose)
+
+                api(libs.sqldelight.driver.android)
             }
         }
 
@@ -81,6 +83,10 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+
+            dependencies {
+                api(libs.sqldelight.driver.native)
+            }
         }
 
         val androidUnitTest by getting {

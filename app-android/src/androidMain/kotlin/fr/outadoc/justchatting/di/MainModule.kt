@@ -48,14 +48,6 @@ val mainModule = module {
     single { AuthRepository(get(), get(), get()) }
     single { DeeplinkParser(get()) }
 
-    single<SqlDriver> {
-        AndroidSqliteDriver(
-            schema = AppDatabase.Schema,
-            context = get(),
-            name = "database",
-        )
-    }
-
     single { baseHttpClient() }
 
     single(qualifier = named("twitch")) {

@@ -12,27 +12,38 @@ import JCShared
 extension Container {
     static let shared = Container()
 
-    func inject() {
-        injectHome()
+    func setup() {
+        Container.shared.setupHome()
+        Container.shared.setupDb()
     }
 
-    private func injectHome() {
-        Container.shared.register(ChannelSearchViewModel.self) {
+    private func setupHome() {
+        register(ChannelSearchViewModel.self) {
             r in ChannelSearchViewModel(
                 repository: r.resolve(TwitchRepository.self)!
             )
         }
         
-        Container.shared.register(FollowedChannelsViewModel.self) {
+        register(FollowedChannelsViewModel.self) {
             r in FollowedChannelsViewModel(
                 repository: r.resolve(TwitchRepository.self)!
             )
         }
         
-        Container.shared.register(FollowedStreamsViewModel.self) {
+        register(FollowedStreamsViewModel.self) {
             r in FollowedStreamsViewModel(
                 repository: r.resolve(TwitchRepository.self)!
             )
+        }
+    }
+    
+    private func setupDb() {
+        register(SqlDriver.self) {
+            r in NativeSqlDriver()
+        }
+
+        register(AppDatabase.self) {
+            r in AppDatabaseCompanion().invoke(driver: r.resolve(SqlDriver.self))
         }
     }
 }

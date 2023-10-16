@@ -16,9 +16,17 @@ struct HomeView: View {
     }
 
     var body: some View {
-        VStack {
+        VStack(spacing: 16) {
             Text(MR.strings().onboarding_title.format(args_: [MR.strings().app_name.desc()]).localized())
                 .font(.title)
+
+            Text(MR.strings().onboarding_message.desc().localized())
+                .font(.subheadline)
+
+            Button(MR.strings().onboarding_login_action.desc().localized()) {
+                viewModel.onLoginClick()
+            }
         }
+        .padding(.all)
     }
 }

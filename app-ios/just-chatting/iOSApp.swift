@@ -3,7 +3,13 @@ import Swinject
 
 @main
 struct iOSApp: App {
-	var body: some Scene {
+
+    init() {
+        // Perform dependency injection
+        Container.shared.inject()
+    }
+
+    var body: some Scene {
 		WindowGroup {
 			ContentView()
 		}

@@ -1,4 +1,3 @@
-import shared
 import SwiftUI
 
 struct ContentView: View {

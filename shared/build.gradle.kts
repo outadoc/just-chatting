@@ -25,6 +25,9 @@ kotlin {
         iosTarget.binaries {
             framework {
                 baseName = "JCShared"
+                export(libs.kotlinx.datetime)
+                export(libs.kotlinx.serialization.json)
+                export(libs.ktor.client.core)
                 export(libs.moko.resources.core)
             }
         }
@@ -33,6 +36,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                api(libs.kotlinx.datetime)
+                api(libs.kotlinx.serialization.json)
                 api(libs.ktor.client.core)
                 api(libs.moko.resources.core)
 

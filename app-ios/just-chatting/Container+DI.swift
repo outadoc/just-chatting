@@ -81,7 +81,7 @@ extension Container {
     }
 
     private func setupTwitch() {
-        register(Kotlinx_serialization_jsonJson.self) { _ in
+        register(Json.self) { _ in
             JsonExtKt.DefaultJson
         }
 
@@ -104,31 +104,31 @@ extension Container {
 
         register(IdApi.self) { r in
             IdServer(
-                httpClient: r.resolve(Ktor_client_coreHttpClient.self, name: "twitch")!
+                httpClient: r.resolve(HttpClient.self, name: "twitch")!
             )
         }
 
         register(HelixApi.self) { r in
             HelixServer(
-                httpClient: r.resolve(Ktor_client_coreHttpClient.self, name: "twitch")!
+                httpClient: r.resolve(HttpClient.self, name: "twitch")!
             )
         }
 
         register(BttvEmotesApi.self) { r in
             BttvEmotesServer(
-                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+                httpClient: r.resolve(HttpClient.self)!
             )
         }
 
         register(StvEmotesApi.self) { r in
             StvEmotesServer(
-                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+                httpClient: r.resolve(HttpClient.self)!
             )
         }
 
         register(RecentMessagesApi.self) { r in
             RecentMessagesServer(
-                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+                httpClient: r.resolve(HttpClient.self)!
             )
         }
     }
@@ -147,7 +147,7 @@ extension Container {
     private func setupChat() {
         register(ChatViewModel.self) { r in
             ChatViewModel(
-                clock: r.resolve(Kotlinx_datetimeClock.self)!,
+                clock: r.resolve(Clock.self)!,
                 twitchRepository: r.resolve(TwitchRepository.self)!,
                 emotesRepository: r.resolve(EmotesRepository.self)!,
                 chatRepository: r.resolve(ChatRepository.self)!,
@@ -175,41 +175,41 @@ extension Container {
 
         register(LiveChatWebSocket.Factory.self) { r in
             LiveChatWebSocket.Factory(
-                clock: r.resolve(Kotlinx_datetimeClock.self)!,
+                clock: r.resolve(Clock.self)!,
                 networkStateObserver: r.resolve(NetworkStateObserver.self)!,
                 parser: r.resolve(TwitchIrcCommandParser.self)!,
                 mapper: r.resolve(IrcMessageMapper.self)!,
                 recentMessagesRepository: r.resolve(RecentMessagesRepository.self)!,
                 preferencesRepository: r.resolve(PreferenceRepository.self)!,
-                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+                httpClient: r.resolve(HttpClient.self)!
             )
         }
 
         register(LoggedInChatWebSocket.Factory.self) { r in
             LoggedInChatWebSocket.Factory(
-                clock: r.resolve(Kotlinx_datetimeClock.self)!,
+                clock: r.resolve(Clock.self)!,
                 networkStateObserver: r.resolve(NetworkStateObserver.self)!,
                 parser: r.resolve(TwitchIrcCommandParser.self)!,
                 mapper: r.resolve(IrcMessageMapper.self)!,
                 preferencesRepository: r.resolve(PreferenceRepository.self)!,
-                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+                httpClient: r.resolve(HttpClient.self)!
             )
         }
 
         register(MockChatWebSocket.Factory.self) { r in
             MockChatWebSocket.Factory(
-                clock: r.resolve(Kotlinx_datetimeClock.self)!,
+                clock: r.resolve(Clock.self)!,
                 networkStateObserver: r.resolve(NetworkStateObserver.self)!,
                 parser: r.resolve(TwitchIrcCommandParser.self)!,
                 mapper: r.resolve(IrcMessageMapper.self)!,
-                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+                httpClient: r.resolve(HttpClient.self)!
             )
         }
 
         register(PubSubWebSocket.Factory.self) { r in
             PubSubWebSocket.Factory(
                 networkStateObserver: r.resolve(NetworkStateObserver.self)!,
-                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!,
+                httpClient: r.resolve(HttpClient.self)!,
                 preferencesRepository: r.resolve(PreferenceRepository.self)!,
                 pubSubPluginsProvider: r.resolve(PubSubPluginsProvider.self)!
             )
@@ -236,50 +236,50 @@ extension Container {
 
         register(PubSubBroadcastSettingsPlugin.self) { r in
             PubSubBroadcastSettingsPlugin(
-                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
+                json: r.resolve(Json.self)!
             )
         }
 
         register(PubSubChannelPointsPlugin.self) { r in
             PubSubChannelPointsPlugin(
-                clock: r.resolve(Kotlinx_datetimeClock.self)!,
-                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
+                clock: r.resolve(Clock.self)!,
+                json: r.resolve(Json.self)!
             )
         }
 
         register(PubSubPinnedMessagePlugin.self) { r in
             PubSubPinnedMessagePlugin(
-                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
+                json: r.resolve(Json.self)!
             )
         }
 
         register(PubSubPollPlugin.self) { r in
             PubSubPollPlugin(
-                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
+                json: r.resolve(Json.self)!
             )
         }
 
         register(PubSubPredictionPlugin.self) { r in
             PubSubPredictionPlugin(
-                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
+                json: r.resolve(Json.self)!
             )
         }
 
         register(PubSubRaidPlugin.self) { r in
             PubSubRaidPlugin(
-                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
+                json: r.resolve(Json.self)!
             )
         }
 
         register(PubSubRichEmbedPlugin.self) { r in
             PubSubRichEmbedPlugin(
-                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
+                json: r.resolve(Json.self)!
             )
         }
 
         register(PubSubViewerCountPlugin.self) { r in
             PubSubViewerCountPlugin(
-                json: r.resolve(Kotlinx_serialization_jsonJson.self)!
+                json: r.resolve(Json.self)!
             )
         }
 
@@ -321,7 +321,7 @@ extension Container {
 
         register(TwitchIrcCommandParser.self) { r in
             TwitchIrcCommandParser(
-                clock: r.resolve(Kotlinx_datetimeClock.self)!
+                clock: r.resolve(Clock.self)!
             )
         }
 
@@ -338,7 +338,7 @@ extension Container {
 
         register(AlejoPronounsApi.self) { r in
             AlejoPronounsApi(
-                httpClient: r.resolve(Ktor_client_coreHttpClient.self)!
+                httpClient: r.resolve(HttpClient.self)!
             )
         }
 
@@ -429,8 +429,8 @@ extension Container {
     }
 
     private func setupMain() {
-        register(Kotlinx_datetimeClock.self) { _ in
-            ClockExtKt.DefaultClock
+        register(Clock.self) { _ in
+            ClockSystem()
         }
 
         register(NetworkStateObserver.self) { _ in
@@ -453,17 +453,17 @@ extension Container {
 
         register(HttpClientProvider.self) { r in
             HttpClientProvider(
-                json: r.resolve(Kotlinx_serialization_jsonJson.self)!,
+                json: r.resolve(Json.self)!,
                 preferenceRepository: r.resolve(PreferenceRepository.self)!,
                 oAuthAppCredentials: r.resolve(OAuthAppCredentials.self)!
             )
         }
 
-        register(Ktor_client_coreHttpClient.self) { r in
+        register(HttpClient.self) { r in
             r.resolve(HttpClientProvider.self)!.getBaseClient()
         }
 
-        register(Ktor_client_coreHttpClient.self, name: "twitch") { r in
+        register(HttpClient.self, name: "twitch") { r in
             r.resolve(HttpClientProvider.self)!.getTwitchClient()
         }
     }

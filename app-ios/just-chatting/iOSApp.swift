@@ -6,7 +6,7 @@ struct iOSApp: App {
 
     init() {
         // Perform dependency injection
-        Container.shared.inject()
+        Container.shared.setup()
     }
 
     var body: some Scene {

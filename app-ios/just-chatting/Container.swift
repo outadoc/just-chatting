@@ -38,12 +38,8 @@ extension Container {
     }
     
     private func setupDb() {
-        register(SqlDriver.self) {
-            r in NativeSqlDriver()
-        }
-
         register(AppDatabase.self) {
-            r in AppDatabaseCompanion().invoke(driver: r.resolve(SqlDriver.self))
+            r in AppDatabaseProvider().get()
         }
     }
 }

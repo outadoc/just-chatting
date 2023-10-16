@@ -17,9 +17,8 @@ struct HomeView: View {
 
     var body: some View {
         VStack {
-            Text(
-                MR.strings().onboarding_title.format(args_: [MR.strings().app_name.desc()]).localized()
-            )
+            Text(MR.strings().onboarding_title.format(args_: [MR.strings().app_name.desc()]).localized())
+                .font(.title)
         }
     }
 }

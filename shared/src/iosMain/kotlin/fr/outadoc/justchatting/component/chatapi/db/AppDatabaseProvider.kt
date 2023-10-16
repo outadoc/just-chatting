@@ -8,8 +8,8 @@ object AppDatabaseProvider {
         return AppDatabase(
             driver = NativeSqliteDriver(
                 schema = AppDatabase.Schema,
-                name = "database"
-            )
+                name = "database",
+            ),
         )
     }
 }

@@ -3,9 +3,6 @@ package fr.outadoc.justchatting.di
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
-import app.cash.sqldelight.db.SqlDriver
-import app.cash.sqldelight.driver.android.AndroidSqliteDriver
-import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
 import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
 import fr.outadoc.justchatting.component.deeplink.DeeplinkParser

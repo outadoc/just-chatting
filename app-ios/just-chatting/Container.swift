@@ -15,6 +15,7 @@ extension Container {
     func setup() {
         Container.shared.setupHome()
         Container.shared.setupDb()
+        Container.shared.setupSettings()
     }
 
     private func setupHome() {
@@ -39,7 +40,7 @@ extension Container {
     
     private func setupDb() {
         register(AppDatabase.self) {
-            r in AppDatabaseProvider().get()
+            _ in AppDatabaseProvider().get()
         }
         
         register(RecentEmoteQueries.self) {
@@ -50,6 +51,28 @@ extension Container {
             r in DbRecentEmotesRepository(
                 recentEmoteQueries: r.resolve(RecentEmoteQueries.self)!
             )
+        }
+    }
+    
+    private func setupSettings() {
+        register(SettingsViewModel.self) {
+            r in SettingsViewModel(
+                preferenceRepository: r.resolve(PreferenceRepository.self)!,
+                authRepository: r.resolve(AuthRepository.self)!,
+                logRepository: r.resolve(LogRepository.self)!
+            )
+        }
+        
+        register(LogRepository.self) {
+            _ in NoopLogRepository()
+        }
+        
+        register(ReadExternalDependenciesList.self) {
+            _ in NoopReadExternalDependenciesList()
+        }
+        
+        register(PreferenceRepository.self) {
+            _ in NoopPreferenceRepository()
         }
     }
 }

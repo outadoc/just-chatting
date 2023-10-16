@@ -41,5 +41,15 @@ extension Container {
         register(AppDatabase.self) {
             r in AppDatabaseProvider().get()
         }
+        
+        register(RecentEmoteQueries.self) {
+            r in r.resolve(AppDatabase.self)!.recentEmoteQueries
+        }
+        
+        register(RecentEmotesRepository.self) {
+            r in DbRecentEmotesRepository(
+                recentEmoteQueries: r.resolve(RecentEmoteQueries.self)!
+            )
+        }
     }
 }

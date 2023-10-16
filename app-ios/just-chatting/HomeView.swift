@@ -6,11 +6,10 @@
 //  Copyright © 2023 Baptiste Candellier. All rights reserved.
 //
 
-import SwiftUI
 import JCShared
+import SwiftUI
 
 struct HomeView: View {
-
     let viewModel: MainRouterViewModel
     init(viewModel: MainRouterViewModel) {
         self.viewModel = viewModel
@@ -24,4 +23,3 @@ struct HomeView: View {
         }
     }
 }
-

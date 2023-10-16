@@ -1,6 +1,6 @@
+import JCShared
 import SwiftUI
 import Swinject
-import JCShared
 
 @main
 struct iOSApp: App {

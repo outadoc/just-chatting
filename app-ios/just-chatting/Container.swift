@@ -6,8 +6,8 @@
 //  Copyright © 2023 Baptiste Candellier. All rights reserved.
 //
 
-import Swinject
 import JCShared
+import Swinject
 
 extension Container {
     static let shared = Container()
@@ -24,36 +24,36 @@ extension Container {
                 repository: r.resolve(TwitchRepository.self)!
             )
         }
-        
+
         register(FollowedChannelsViewModel.self) {
             r in FollowedChannelsViewModel(
                 repository: r.resolve(TwitchRepository.self)!
             )
         }
-        
+
         register(FollowedStreamsViewModel.self) {
             r in FollowedStreamsViewModel(
                 repository: r.resolve(TwitchRepository.self)!
             )
         }
     }
-    
+
     private func setupDb() {
         register(AppDatabase.self) {
             _ in AppDatabaseProvider().get()
         }
-        
+
         register(RecentEmoteQueries.self) {
             r in r.resolve(AppDatabase.self)!.recentEmoteQueries
         }
-        
+
         register(RecentEmotesRepository.self) {
             r in DbRecentEmotesRepository(
                 recentEmoteQueries: r.resolve(RecentEmoteQueries.self)!
             )
         }
     }
-    
+
     private func setupSettings() {
         register(SettingsViewModel.self) {
             r in SettingsViewModel(
@@ -62,15 +62,15 @@ extension Container {
                 logRepository: r.resolve(LogRepository.self)!
             )
         }
-        
+
         register(LogRepository.self) {
             _ in NoopLogRepository()
         }
-        
+
         register(ReadExternalDependenciesList.self) {
             _ in NoopReadExternalDependenciesList()
         }
-        
+
         register(PreferenceRepository.self) {
             _ in NoopPreferenceRepository()
         }

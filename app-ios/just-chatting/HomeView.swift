@@ -6,6 +6,7 @@
 //  Copyright © 2023 Baptiste Candellier. All rights reserved.
 //
 
+import AuthenticationServices
 import JCShared
 import SwiftUI
 import Swinject
@@ -17,13 +18,13 @@ struct HomeView: View {
         InnerHomeView(
             state: viewModel.state,
             lastEvent: viewModel.lastEvent,
-            onLoginClick: viewModel.onLoginClick
+            onLoginClick: viewModel.onLoginClick,
+            onReceiveAuthResult: { url in
+                viewModel.onReceiveIntent(uri: url.absoluteString)
+            }
         )
         .task {
             await viewModel.activate()
-        }
-        .onOpenURL { url in
-            viewModel.onReceiveIntent(uri: url.absoluteString)
         }
     }
 }
@@ -32,8 +33,9 @@ private struct InnerHomeView: View {
     var state: MainRouterViewModel.State
     var lastEvent: MainRouterViewModel.Event? = nil
     var onLoginClick: () -> Void
+    var onReceiveAuthResult: (URL) -> Void
 
-    @Environment(\.openURL) private var openURL
+    @Environment(\.webAuthenticationSession) private var webAuthenticationSession
 
     var body: some View {
         VStack {
@@ -55,8 +57,13 @@ private struct InnerHomeView: View {
             if let event = event {
                 switch onEnum(of: event) {
                 case let .openInBrowser(openEvent):
-                    if let url = URL(string: openEvent.uri) {
-                        openURL(url)
+                    Task {
+                        let callbackUrl = try await webAuthenticationSession.authenticate(
+                            using: URL(string: openEvent.uri)!,
+                            callbackURLScheme: "justchatting"
+                        )
+
+                        onReceiveAuthResult(callbackUrl)
                     }
                 case .viewChannel:
                     break
@@ -109,7 +116,7 @@ private extension HomeView {
         func onLoginClick() {
             wrapped.onLoginClick()
         }
-        
+
         func onReceiveIntent(uri: String) {
             wrapped.onReceiveIntent(uri: uri)
         }

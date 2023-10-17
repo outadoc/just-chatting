@@ -9,7 +9,7 @@ struct iOSApp: App {
         Container.shared.setup()
 
         #if DEBUG
-        Logger.shared.logStrategy = AppleLogStrategy()
+            Logger.shared.logStrategy = AppleLogStrategy()
         #endif
     }
 

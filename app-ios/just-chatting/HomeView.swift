@@ -22,6 +22,9 @@ struct HomeView: View {
         .task {
             await viewModel.activate()
         }
+        .onOpenURL { url in
+            viewModel.onReceiveIntent(uri: url.absoluteString)
+        }
     }
 }
 
@@ -105,6 +108,10 @@ private extension HomeView {
 
         func onLoginClick() {
             wrapped.onLoginClick()
+        }
+        
+        func onReceiveIntent(uri: String) {
+            wrapped.onReceiveIntent(uri: uri)
         }
 
         func activate() async {

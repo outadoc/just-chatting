@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.compose)
     alias(libs.plugins.moko.resources)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.skie)
 }
 
 kotlin {
@@ -25,6 +26,7 @@ kotlin {
         iosTarget.binaries {
             framework {
                 baseName = "JCShared"
+                export(libs.kotlinx.coroutines)
                 export(libs.kotlinx.datetime)
                 export(libs.kotlinx.serialization.json)
                 export(libs.ktor.client.core)
@@ -36,6 +38,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                api(libs.kotlinx.coroutines)
                 api(libs.kotlinx.datetime)
                 api(libs.kotlinx.serialization.json)
                 api(libs.ktor.client.core)
@@ -47,11 +50,9 @@ kotlin {
                 implementation(libs.fluid.currency)
                 implementation(libs.koin.core)
                 implementation(libs.kotlinx.collections.immutable)
-                implementation(libs.kotlinx.coroutines)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.auth)
-                implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.websockets)
                 implementation(libs.ktor.contentNegociation)
                 implementation(libs.ktor.logging)
@@ -83,6 +84,7 @@ kotlin {
                 implementation(libs.compose.ui.core)
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.koin.compose)
+                implementation(libs.ktor.client.cio)
                 implementation(libs.material.core)
                 implementation(libs.moko.resources.compose)
 
@@ -101,6 +103,7 @@ kotlin {
 
             dependencies {
                 api(libs.sqldelight.driver.native)
+                implementation(libs.ktor.client.darwin)
             }
         }
 

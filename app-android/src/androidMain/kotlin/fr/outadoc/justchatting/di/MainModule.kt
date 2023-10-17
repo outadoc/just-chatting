@@ -7,7 +7,9 @@ import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepositor
 import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.utils.core.AndroidNetworkStateObserver
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
-import fr.outadoc.justchatting.utils.http.HttpClientProvider
+import fr.outadoc.justchatting.utils.http.AndroidHttpClientProvider
+import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
+import fr.outadoc.justchatting.utils.http.TwitchHttpClientProvider
 import kotlinx.datetime.Clock
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -19,9 +21,8 @@ val mainModule = module {
     single { AuthRepository(get(), get(), get()) }
     single { DeeplinkParser(get()) }
 
-    single { HttpClientProvider(get(), get(), get()) }
-    single { get<HttpClientProvider>().getBaseClient() }
-    single(qualifier = named("twitch")) {
-        get<HttpClientProvider>().getTwitchClient()
-    }
+    single<BaseHttpClientProvider> { AndroidHttpClientProvider(get()) }
+    single<TwitchHttpClientProvider> { TwitchHttpClientProvider(get(), get(), get()) }
+    single { get<BaseHttpClientProvider>().get() }
+    single(named("twitch")) { get<TwitchHttpClientProvider>().get() }
 }

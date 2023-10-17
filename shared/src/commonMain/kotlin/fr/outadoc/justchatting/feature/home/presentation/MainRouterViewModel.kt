@@ -10,6 +10,7 @@ import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.utils.logging.logError
+import fr.outadoc.justchatting.utils.logging.logInfo
 import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -36,7 +37,9 @@ class MainRouterViewModel(
             val causedByTokenExpiration: Boolean = false,
         ) : State()
 
-        data class LoggedIn(val appUser: AppUser) : State()
+        data class LoggedIn(
+            val appUser: AppUser.LoggedIn,
+        ) : State()
     }
 
     sealed class Event {
@@ -116,7 +119,11 @@ class MainRouterViewModel(
     }
 
     fun onReceiveIntent(uri: String) = viewModelScope.launch {
-        when (val deeplink = deeplinkParser.parseDeeplink(uri)) {
+        val deeplink = deeplinkParser.parseDeeplink(uri)
+
+        logInfo<MainRouterViewModel> { "Received deeplink $deeplink" }
+
+        when (deeplink) {
             is Deeplink.Authenticated -> {
                 preferencesRepository.updatePreferences { prefs ->
                     prefs.copy(

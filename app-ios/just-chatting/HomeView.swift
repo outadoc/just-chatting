@@ -8,25 +8,76 @@
 
 import JCShared
 import SwiftUI
+import Swinject
 
 struct HomeView: View {
-    let viewModel: MainRouterViewModel
-    init(viewModel: MainRouterViewModel) {
-        self.viewModel = viewModel
+    @StateObject private var viewModel = ViewModel(wrapped: Container.shared.resolve(MainRouterViewModel.self)!)
+
+    var body: some View {
+        InnerHomeView(
+            state: viewModel.state,
+            lastEvent: viewModel.lastEvent,
+            onLoginClick: viewModel.onLoginClick
+        )
+        .task {
+            await viewModel.activate()
+        }
     }
+}
+
+private struct InnerHomeView: View {
+    var state: MainRouterViewModel.State
+    var lastEvent: MainRouterViewModel.Event? = nil
+    var onLoginClick: () -> Void
 
     var body: some View {
         VStack(spacing: 16) {
-            Text(MR.strings().onboarding_title.format(args_: [MR.strings().app_name.desc()]).localized())
+            Text(MR.strings().onboarding_title.format(args: [MR.strings().app_name.desc()]).localized())
                 .font(.title)
 
             Text(MR.strings().onboarding_message.desc().localized())
                 .font(.subheadline)
 
             Button(MR.strings().onboarding_login_action.desc().localized()) {
-                viewModel.onLoginClick()
+                onLoginClick()
+            }
+
+            Text("state: \(state), lastEvent: \(lastEvent?.description ?? "nil")")
+        }
+    }
+}
+
+private extension HomeView {
+    @MainActor
+    class ViewModel: ObservableObject {
+        let wrapped: MainRouterViewModel
+        init(wrapped: MainRouterViewModel) {
+            self.wrapped = wrapped
+        }
+
+        @Published
+        private(set) var state: MainRouterViewModel.State = MainRouterViewModel.StateLoading()
+
+        @Published
+        private(set) var lastEvent: MainRouterViewModel.Event? = nil
+
+        func onLoginClick() {
+            wrapped.onLoginClick()
+        }
+
+        func activate() async {
+            await withTaskGroup(of: Void.self) { taskGroup in
+                taskGroup.addTask { @MainActor in
+                    for await state in self.wrapped.state {
+                        self.state = state
+                    }
+                }
+                taskGroup.addTask { @MainActor in
+                    for await lastEvent in self.wrapped.events {
+                        self.lastEvent = lastEvent
+                    }
+                }
             }
         }
-        .padding(.all)
     }
 }

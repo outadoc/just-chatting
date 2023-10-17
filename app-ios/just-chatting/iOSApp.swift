@@ -11,9 +11,8 @@ struct iOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView(
-                viewModel: Container.shared.resolve(MainRouterViewModel.self)!
-            )
+            HomeView()
+                .padding(.all)
         }
     }
 }

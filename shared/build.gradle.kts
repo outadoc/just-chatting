@@ -53,7 +53,6 @@ kotlin {
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.auth)
-                implementation(libs.ktor.client.cio)
                 implementation(libs.ktor.client.websockets)
                 implementation(libs.ktor.contentNegociation)
                 implementation(libs.ktor.logging)
@@ -85,6 +84,7 @@ kotlin {
                 implementation(libs.compose.ui.core)
                 implementation(libs.compose.ui.tooling)
                 implementation(libs.koin.compose)
+                implementation(libs.ktor.client.cio)
                 implementation(libs.material.core)
                 implementation(libs.moko.resources.compose)
 
@@ -103,6 +103,7 @@ kotlin {
 
             dependencies {
                 api(libs.sqldelight.driver.native)
+                implementation(libs.ktor.client.darwin)
             }
         }
 

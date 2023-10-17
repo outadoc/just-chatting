@@ -451,20 +451,26 @@ extension Container {
             )
         }
 
-        register(HttpClientProvider.self) { r in
-            HttpClientProvider(
-                json: r.resolve(Json.self)!,
+        register(BaseHttpClientProvider.self) { r in
+            AppleHttpClientProvider(
+                json: r.resolve(Json.self)!
+            )
+        }
+
+        register(HttpClient.self) { r in
+            r.resolve(BaseHttpClientProvider.self)!.get()
+        }
+
+        register(TwitchHttpClientProvider.self) { r in
+            TwitchHttpClientProvider(
+                baseHttpClientProvider: r.resolve(BaseHttpClientProvider.self)!,
                 preferenceRepository: r.resolve(PreferenceRepository.self)!,
                 oAuthAppCredentials: r.resolve(OAuthAppCredentials.self)!
             )
         }
 
-        register(HttpClient.self) { r in
-            r.resolve(HttpClientProvider.self)!.getBaseClient()
-        }
-
         register(HttpClient.self, name: "twitch") { r in
-            r.resolve(HttpClientProvider.self)!.getTwitchClient()
+            r.resolve(TwitchHttpClientProvider.self)!.get()
         }
     }
 }

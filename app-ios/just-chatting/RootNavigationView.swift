@@ -11,11 +11,11 @@ import JCShared
 import SwiftUI
 import Swinject
 
-struct HomeView: View {
+struct RootNavigationView: View {
     @StateObject private var viewModel = ViewModel(wrapped: Container.shared.resolve(MainRouterViewModel.self)!)
 
     var body: some View {
-        InnerHomeView(
+        InnerRootNavigationView(
             state: viewModel.state,
             lastEvent: viewModel.lastEvent,
             onLoginClick: viewModel.onLoginClick,
@@ -29,7 +29,7 @@ struct HomeView: View {
     }
 }
 
-private struct InnerHomeView: View {
+private struct InnerRootNavigationView: View {
     var state: MainRouterViewModel.State
     var lastEvent: MainRouterViewModel.Event? = nil
     var onLoginClick: () -> Void
@@ -47,6 +47,7 @@ private struct InnerHomeView: View {
                     state: state,
                     onLoginClick: onLoginClick
                 )
+                .padding(.all)
             case let .loggedIn(state):
                 LoggedInView(
                     state: state
@@ -99,7 +100,7 @@ private struct LoggedInView: View {
     }
 }
 
-private extension HomeView {
+private extension RootNavigationView {
     @MainActor
     class ViewModel: ObservableObject {
         let wrapped: MainRouterViewModel

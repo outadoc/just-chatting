@@ -15,8 +15,7 @@ struct iOSApp: App {
 
     var body: some Scene {
         WindowGroup {
-            HomeView()
-                .padding(.all)
+            RootNavigationView()
         }
     }
 }

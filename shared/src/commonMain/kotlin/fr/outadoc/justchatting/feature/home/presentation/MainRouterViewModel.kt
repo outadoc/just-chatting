@@ -38,7 +38,7 @@ class MainRouterViewModel(
         ) : State()
 
         data class LoggedIn(
-            val appUser: AppUser.LoggedIn
+            val appUser: AppUser.LoggedIn,
         ) : State()
     }
 

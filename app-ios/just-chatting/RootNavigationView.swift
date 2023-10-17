@@ -1,5 +1,5 @@
 //
-//  HomeView.swift
+//  RootNavigationView.swift
 //  just-chatting
 //
 //  Created by Baptiste Candellier on 2023-10-16.

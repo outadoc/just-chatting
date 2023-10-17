@@ -42,8 +42,10 @@ private struct InnerHomeView: View {
                     state: state,
                     onLoginClick: onLoginClick
                 )
-            case .loggedIn:
-                Text("Logged in :)")
+            case let .loggedIn(state):
+                LoggedInView(
+                    state: state
+                )
             }
         }
         .onChange(of: lastEvent) { event in
@@ -77,6 +79,13 @@ private struct LoggedOutView: View {
                 onLoginClick()
             }
         }
+    }
+}
+
+private struct LoggedInView: View {
+    var state: MainRouterViewModel.StateLoggedIn
+    var body: some View {
+        Text("Logged in :)")
     }
 }
 

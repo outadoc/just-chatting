@@ -30,6 +30,31 @@ private struct InnerHomeView: View {
     var lastEvent: MainRouterViewModel.Event? = nil
     var onLoginClick: () -> Void
 
+    @Environment(\.openURL) private var openURL
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Text("state: \(state), lastEvent: \(lastEvent?.description ?? "nil")")
+
+            switch onEnum(of: state) {
+            case .loading:
+                ProgressView()
+            case .loggedOut(let state):
+                LoggedOutView(
+                    state: state,
+                    onLoginClick: onLoginClick
+                )
+            case .loggedIn:
+                Text("Logged in :)")
+            }
+        }
+    }
+}
+
+private struct LoggedOutView: View {
+    var state: MainRouterViewModel.StateLoggedOut
+    var onLoginClick: () -> Void
+    
     var body: some View {
         VStack(spacing: 16) {
             Text(MR.strings().onboarding_title.format(args: [MR.strings().app_name.desc()]).localized())
@@ -41,8 +66,6 @@ private struct InnerHomeView: View {
             Button(MR.strings().onboarding_login_action.desc().localized()) {
                 onLoginClick()
             }
-
-            Text("state: \(state), lastEvent: \(lastEvent?.description ?? "nil")")
         }
     }
 }

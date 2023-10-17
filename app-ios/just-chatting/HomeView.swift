@@ -85,7 +85,7 @@ private struct LoggedOutView: View {
 private struct LoggedInView: View {
     var state: MainRouterViewModel.StateLoggedIn
     var body: some View {
-        Text("Logged in :)")
+        Text("Logged in as \(state.appUser.userLogin) :)")
     }
 }
 

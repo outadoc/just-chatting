@@ -36,7 +36,9 @@ class MainRouterViewModel(
             val causedByTokenExpiration: Boolean = false,
         ) : State()
 
-        data class LoggedIn(val appUser: AppUser) : State()
+        data class LoggedIn(
+            val appUser: AppUser.LoggedIn
+        ) : State()
     }
 
     sealed class Event {

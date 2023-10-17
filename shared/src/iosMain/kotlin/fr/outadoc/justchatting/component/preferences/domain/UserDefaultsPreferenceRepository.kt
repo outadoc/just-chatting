@@ -2,39 +2,29 @@ package fr.outadoc.justchatting.component.preferences.domain
 
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.utils.core.DispatchersProvider
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flowOn
-import platform.Foundation.NSNotificationCenter
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import platform.Foundation.NSUserDefaults
-import platform.Foundation.NSUserDefaultsDidChangeNotification
 
 class UserDefaultsPreferenceRepository : PreferenceRepository {
 
     private val userDefaults = NSUserDefaults.standardUserDefaults
     private val defaultPreferences = AppPreferences()
 
-    override val currentPreferences: Flow<AppPreferences> =
-        callbackFlow {
-            val observer = NSNotificationCenter.defaultCenter
-                .addObserverForName(
-                    name = NSUserDefaultsDidChangeNotification,
-                    `object` = userDefaults,
-                    queue = null,
-                ) { _ ->
-                    trySend(userDefaults.read())
-                }
+    private val _currentPreferences = MutableStateFlow(userDefaults.read())
+    override val currentPreferences: Flow<AppPreferences> = _currentPreferences
 
-            awaitClose { NSNotificationCenter.defaultCenter.removeObserver(observer) }
-        }
-            .flowOn(DispatchersProvider.default)
-            .distinctUntilChanged()
+    private val mutex = Mutex()
 
     override suspend fun updatePreferences(update: (AppPreferences) -> AppPreferences) {
-        update(userDefaults.read()).writeTo(userDefaults)
+        mutex.withLock {
+            val oldDefaults = userDefaults.read()
+            val afterEdit = update(oldDefaults)
+            afterEdit.writeToDefaults()
+            _currentPreferences.value = afterEdit
+        }
     }
 
     private fun NSUserDefaults.read(): AppPreferences {
@@ -69,7 +59,7 @@ class UserDefaultsPreferenceRepository : PreferenceRepository {
         }
     }
 
-    private fun AppPreferences.writeTo(prefs: NSUserDefaults) = with(prefs) {
+    private fun AppPreferences.writeToDefaults() = with(userDefaults) {
         when (val user = appUser) {
             is AppUser.LoggedIn -> {
                 setObject(user.userId, forKey = USER_ID)

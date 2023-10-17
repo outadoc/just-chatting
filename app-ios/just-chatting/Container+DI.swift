@@ -76,7 +76,7 @@ extension Container {
         }
 
         register(PreferenceRepository.self) { _ in
-            NoopPreferenceRepository()
+            UserDefaultsPreferenceRepository()
         }
     }
 

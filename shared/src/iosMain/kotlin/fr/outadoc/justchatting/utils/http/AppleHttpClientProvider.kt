@@ -18,7 +18,7 @@ class AppleHttpClientProvider(
     private val json: Json,
 ) : BaseHttpClientProvider {
 
-    override fun buildUpon(block: HttpClientConfig<*>.() -> Unit): HttpClient {
+    override fun get(block: HttpClientConfig<*>.() -> Unit): HttpClient {
         return HttpClient(Darwin) {
             install(HttpCache)
 

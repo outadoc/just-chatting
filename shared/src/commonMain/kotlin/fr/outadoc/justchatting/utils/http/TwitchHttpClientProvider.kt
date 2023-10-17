@@ -17,7 +17,7 @@ class TwitchHttpClientProvider(
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
     fun get(): HttpClient {
-        return baseHttpClientProvider.buildUpon {
+        return baseHttpClientProvider.get {
             defaultRequest {
                 header("Client-ID", oAuthAppCredentials.clientId)
             }

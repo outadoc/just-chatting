@@ -458,7 +458,7 @@ extension Container {
         }
 
         register(HttpClient.self) { r in
-            r.resolve(BaseHttpClientProvider.self)!.get()
+            r.resolve(BaseHttpClientProvider.self)!.get(block: { _ in })
         }
 
         register(TwitchHttpClientProvider.self) { r in

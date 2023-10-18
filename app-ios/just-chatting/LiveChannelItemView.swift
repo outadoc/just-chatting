@@ -46,6 +46,5 @@ struct LiveChannelItemView_Previews: PreviewProvider {
         )
         .previewLayout(PreviewLayout.sizeThatFits)
         .padding()
-        .previewDisplayName("Default preview")
     }
 }

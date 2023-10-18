@@ -33,21 +33,3 @@ struct MainNavigationView: View {
         }
     }
 }
-
-struct LiveChannelsView: View {
-    var body: some View {
-        VStack {}
-    }
-}
-
-struct FollowedChannelsView: View {
-    var body: some View {
-        VStack {}
-    }
-}
-
-struct SettingsView: View {
-    var body: some View {
-        VStack {}
-    }
-}

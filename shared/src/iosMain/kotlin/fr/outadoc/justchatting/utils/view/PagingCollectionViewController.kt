@@ -68,24 +68,6 @@ class PagingCollectionViewController<T : Any> {
 
     val onPagesUpdatedFlow: Flow<Unit> = differ.onPagesUpdatedFlow
 
-    fun addLoadStateListener(listener: (CombinedLoadStates) -> Unit) {
-        differ.addLoadStateListener(listener)
-    }
-
-    fun removeLoadStateListener(listener: (CombinedLoadStates) -> Unit) {
-        differ.removeLoadStateListener(listener)
-    }
-
-    fun addOnPagesUpdatedListener(listener: () -> Unit) {
-        differ.addOnPagesUpdatedListener(listener)
-    }
-
-    fun removeOnPagesUpdatedListener(listener: () -> Unit) {
-        differ.removeOnPagesUpdatedListener(listener)
-    }
-
-    // mine
-
     val itemsFlow: Flow<List<T>>
         get() = differ.onPagesUpdatedFlow.map { differ.snapshot().items }
 }

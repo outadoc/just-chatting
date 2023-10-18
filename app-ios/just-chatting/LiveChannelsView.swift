@@ -16,7 +16,8 @@ struct LiveChannelsView: View {
     var body: some View {
         InnerLiveChannelsView(
             loadedItems: viewModel.loadedItems,
-            loadMoreItems: viewModel.loadMoreItems
+            loadMoreItems: viewModel.loadMoreItems,
+            reload: viewModel.reload
         )
         .task {
             await viewModel.activate()
@@ -27,6 +28,7 @@ struct LiveChannelsView: View {
 private struct InnerLiveChannelsView: View {
     var loadedItems: [JCShared.Stream]? = nil
     var loadMoreItems: () -> Void
+    var reload: () -> Void
 
     var body: some View {
         VStack {
@@ -36,6 +38,9 @@ private struct InnerLiveChannelsView: View {
                         LiveChannelItemView(stream: item)
                             .onAppear(perform: loadMoreItems)
                     }
+                }
+                .refreshable {
+                    reload()
                 }
             } else {
                 ProgressView()
@@ -63,6 +68,10 @@ extension LiveChannelsView {
                     position: Int32(loadedItems.count - 1)
                 )
             }
+        }
+
+        func reload() {
+            pagingCollectionViewController.refresh()
         }
 
         func activate() async {

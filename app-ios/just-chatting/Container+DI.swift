@@ -102,6 +102,13 @@ extension Container {
             )
         }
 
+        register(TwitchRepository.self) { r in
+            TwitchRepositoryImpl(
+                helix: r.resolve(HelixApi.self)!,
+                preferencesRepository: r.resolve(PreferenceRepository.self)!
+            )
+        }
+
         register(IdApi.self) { r in
             IdServer(
                 httpClient: r.resolve(HttpClient.self, name: "twitch")!

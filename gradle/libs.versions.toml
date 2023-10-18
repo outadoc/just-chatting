@@ -42,8 +42,10 @@ androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common-java
 androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
-androidx-paging-runtime = { module = "app.cash.paging:paging-common", version.ref = "paging" }
-androidx-paging-compose = { module = "app.cash.paging:paging-compose-common", version.ref = "paging" }
+androidx-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging" }
+androidx-paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "paging" }
+androidx-paging-runtime-android = { module = "app.cash.paging:paging-runtime", version.ref = "paging" }
+androidx-paging-runtime-ios = { module = "app.cash.paging:paging-runtime-uikit", version.ref = "paging" }
 androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 bignum = "com.ionspin.kotlin:bignum:0.3.8"

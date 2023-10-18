@@ -44,8 +44,8 @@ kotlin {
                 api(libs.ktor.client.core)
                 api(libs.moko.resources.core)
 
-                implementation(libs.androidx.paging.compose)
-                implementation(libs.androidx.paging.runtime)
+                implementation(libs.androidx.paging.common)
+                implementation(libs.androidx.paging.compose.common)
                 implementation(libs.bignum)
                 implementation(libs.fluid.currency)
                 implementation(libs.koin.core)
@@ -75,6 +75,7 @@ kotlin {
                 implementation(libs.androidx.datastore.preferences)
                 implementation(libs.androidx.emoji2.core)
                 implementation(libs.androidx.palette)
+                implementation(libs.androidx.paging.runtime.android)
                 implementation(libs.androidx.splashscreen)
                 implementation(libs.coil.compose)
                 implementation(libs.compose.material.core2)
@@ -103,6 +104,7 @@ kotlin {
 
             dependencies {
                 api(libs.sqldelight.driver.native)
+                implementation(libs.androidx.paging.runtime.ios)
                 implementation(libs.ktor.client.darwin)
             }
         }

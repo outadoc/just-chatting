@@ -1,0 +1,51 @@
+//
+//  LiveChannelItemView.swift
+//  just-chatting
+//
+//  Created by Baptiste Candellier on 2023-10-18.
+//  Copyright © 2023 Baptiste Candellier. All rights reserved.
+//
+
+import Flow
+import JCShared
+import SwiftUI
+
+struct LiveChannelItemView: View {
+    var stream: JCShared.Stream
+    var body: some View {
+        VStack(alignment: .leading) {
+            Text(stream.title).bold()
+            Text(stream.userName)
+            if let gameName = stream.gameName {
+                Text(gameName)
+            }
+            HFlow {
+                ForEach(stream.tags, id: \.self) { tag in
+                    PillView(text: tag)
+                }
+            }
+        }
+    }
+}
+
+struct LiveChannelItemView_Previews: PreviewProvider {
+    static var previews: some View {
+        LiveChannelItemView(
+            stream: Stream(
+                id: "",
+                userId: "",
+                userLogin: "antoinedaniel",
+                userName: "AntoineDaniel",
+                gameName: "Professor Layton",
+                title: "LAYTON MAINTENANT VENEZ TOUT DE SUITE",
+                viewerCount: 10000,
+                startedAt: "",
+                profileImageURL: "",
+                tags: ["feur", "coubeh"]
+            )
+        )
+        .previewLayout(PreviewLayout.sizeThatFits)
+        .padding()
+        .previewDisplayName("Default preview")
+    }
+}

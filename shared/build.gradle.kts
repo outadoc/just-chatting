@@ -26,6 +26,8 @@ kotlin {
         iosTarget.binaries {
             framework {
                 baseName = "JCShared"
+                isStatic = false
+
                 export(libs.kotlinx.coroutines)
                 export(libs.kotlinx.datetime)
                 export(libs.kotlinx.serialization.json)

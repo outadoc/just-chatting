@@ -31,29 +31,14 @@ private struct InnerLiveChannelsView: View {
     var body: some View {
         VStack {
             if let loadedItems {
-                ScrollView {
-                    LazyVStack {
-                        ForEach(loadedItems, id: \.id) { item in
-                            FollowedStreamItemView(stream: item)
-                                .onAppear(perform: loadMoreItems)
-                        }
+                List {
+                    ForEach(loadedItems, id: \.id) { item in
+                        LiveChannelItemView(stream: item)
+                            .onAppear(perform: loadMoreItems)
                     }
                 }
             } else {
                 ProgressView()
-            }
-        }
-    }
-}
-
-struct FollowedStreamItemView: View {
-    var stream: JCShared.Stream
-    var body: some View {
-        VStack {
-            Text(stream.userName)
-            Text(stream.title)
-            if let gameName = stream.gameName {
-                Text(gameName)
             }
         }
     }

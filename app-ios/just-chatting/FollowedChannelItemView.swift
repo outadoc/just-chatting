@@ -6,15 +6,21 @@
 //  Copyright © 2023 Baptiste Candellier. All rights reserved.
 //
 
-import SwiftUI
 import JCShared
+import SwiftUI
 
 struct FollowedChannelItemView: View {
     var channel: JCShared.ChannelFollow
     var body: some View {
-        VStack {
-            if let displayName = channel.userDisplayName {
-                Text(displayName)
+        HStack(spacing: 16) {
+            if let avatarUrl = channel.profileImageURL {
+                AvatarView(url: URL(string: avatarUrl)!)
+            }
+
+            VStack {
+                if let displayName = channel.userDisplayName {
+                    Text(displayName)
+                }
             }
         }
     }

@@ -13,15 +13,28 @@ import SwiftUI
 struct LiveChannelItemView: View {
     var stream: JCShared.Stream
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(stream.title).bold()
-            Text(stream.userName)
-            if let gameName = stream.gameName {
-                Text(gameName)
+        HStack(spacing: 16) {
+            if let avatarUrl = stream.profileImageURL {
+                AvatarView(url: URL(string: avatarUrl)!)
             }
-            HFlow {
-                ForEach(stream.tags, id: \.self) { tag in
-                    PillView(text: tag)
+
+            VStack(alignment: .leading) {
+                Text(stream.title)
+                    .lineLimit(1)
+                    .bold()
+
+                Text(stream.userName)
+                    .lineLimit(1)
+
+                if let gameName = stream.gameName {
+                    Text(gameName)
+                        .lineLimit(1)
+                }
+
+                HFlow {
+                    ForEach(stream.tags, id: \.self) { tag in
+                        PillView(text: tag)
+                    }
                 }
             }
         }

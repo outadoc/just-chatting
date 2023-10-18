@@ -39,6 +39,7 @@ private struct InnerLiveChannelsView: View {
                             .onAppear(perform: loadMoreItems)
                     }
                 }
+                .listStyle(.inset)
                 .refreshable {
                     reload()
                 }

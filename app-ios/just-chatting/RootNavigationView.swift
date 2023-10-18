@@ -48,10 +48,8 @@ private struct InnerRootNavigationView: View {
                     onLoginClick: onLoginClick
                 )
                 .padding(.all)
-            case let .loggedIn(state):
-                LoggedInView(
-                    state: state
-                )
+            case .loggedIn:
+                MainNavigationView()
             }
         }
         .onChange(of: lastEvent) { event in
@@ -80,23 +78,16 @@ private struct LoggedOutView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Text(MR.strings().onboarding_title.format(args: [MR.strings().app_name.desc()]).localized())
+            Text(MR.strings.shared.onboarding_title.format(args: [MR.strings.shared.app_name.desc()]).localized())
                 .font(.title)
 
-            Text(MR.strings().onboarding_message.desc().localized())
+            Text(MR.strings.shared.onboarding_message.desc().localized())
                 .font(.subheadline)
 
-            Button(MR.strings().onboarding_login_action.desc().localized()) {
+            Button(MR.strings.shared.onboarding_login_action.desc().localized()) {
                 onLoginClick()
             }
         }
-    }
-}
-
-private struct LoggedInView: View {
-    var state: MainRouterViewModel.StateLoggedIn
-    var body: some View {
-        Text("Logged in as \(state.appUser.userLogin) :)")
     }
 }
 

@@ -18,6 +18,9 @@ struct LiveChannelsView: View {
             loadedItems: viewModel.loadedItems,
             loadMoreItems: viewModel.loadMoreItems
         )
+        .task {
+            await viewModel.activate()
+        }
     }
 }
 
@@ -32,10 +35,7 @@ private struct InnerLiveChannelsView: View {
                     LazyVStack {
                         ForEach(loadedItems, id: \.id) { item in
                             FollowedStreamItemView(stream: item)
-                                .onAppear {
-                                    // for loading more items
-                                    loadMoreItems()
-                                }
+                                .onAppear(perform: loadMoreItems)
                         }
                     }
                 }
@@ -74,7 +74,9 @@ extension LiveChannelsView {
 
         func loadMoreItems() {
             if let loadedItems {
-                pagingCollectionViewController.getItem(position: Int32(loadedItems.count))
+                pagingCollectionViewController.getItem(
+                    position: Int32(loadedItems.count - 1)
+                )
             }
         }
 

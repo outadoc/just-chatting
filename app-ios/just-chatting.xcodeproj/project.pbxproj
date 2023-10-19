@@ -20,6 +20,7 @@
 		A9AC12E32ADFEDF10010CA24 /* LiveChannelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E22ADFEDF10010CA24 /* LiveChannelsView.swift */; };
 		A9AC12E52ADFEE110010CA24 /* FollowedChannelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */; };
 		A9AC12E72ADFEE260010CA24 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E62ADFEE260010CA24 /* SettingsView.swift */; };
+		A9D14C822AE19CC400F676D2 /* AppPreferences+copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D14C812AE19CC400F676D2 /* AppPreferences+copy.swift */; };
 		A9F33DDA2AE075ED00663BF2 /* LiveChannelItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F33DD92AE075ED00663BF2 /* LiveChannelItemView.swift */; };
 		A9F33DDC2AE0776500663BF2 /* PillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F33DDB2AE0776500663BF2 /* PillView.swift */; };
 /* End PBXBuildFile section */
@@ -51,6 +52,7 @@
 		A9AC12E22ADFEDF10010CA24 /* LiveChannelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChannelsView.swift; sourceTree = "<group>"; };
 		A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowedChannelsView.swift; sourceTree = "<group>"; };
 		A9AC12E62ADFEE260010CA24 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		A9D14C812AE19CC400F676D2 /* AppPreferences+copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppPreferences+copy.swift"; sourceTree = "<group>"; };
 		A9F33DD92AE075ED00663BF2 /* LiveChannelItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChannelItemView.swift; sourceTree = "<group>"; };
 		A9F33DDB2AE0776500663BF2 /* PillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -107,6 +109,7 @@
 				A9F33DD92AE075ED00663BF2 /* LiveChannelItemView.swift */,
 				A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */,
 				A92CA4682AE082F100971922 /* FollowedChannelItemView.swift */,
+				A9D14C812AE19CC400F676D2 /* AppPreferences+copy.swift */,
 				A9AC12E62ADFEE260010CA24 /* SettingsView.swift */,
 				A9F33DDB2AE0776500663BF2 /* PillView.swift */,
 				A92CA46A2AE0860300971922 /* AvatarView.swift */,
@@ -231,6 +234,7 @@
 				A9AC12E32ADFEDF10010CA24 /* LiveChannelsView.swift in Sources */,
 				A97706962ADDE1E8004593B3 /* RootNavigationView.swift in Sources */,
 				A97706922ADD56F9004593B3 /* Container+DI.swift in Sources */,
+				A9D14C822AE19CC400F676D2 /* AppPreferences+copy.swift in Sources */,
 				A9F33DDA2AE075ED00663BF2 /* LiveChannelItemView.swift in Sources */,
 				A92CA4692AE082F100971922 /* FollowedChannelItemView.swift in Sources */,
 			);

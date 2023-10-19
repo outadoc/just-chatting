@@ -53,7 +53,7 @@ private struct InnerLiveChannelsView: View {
     }
 }
 
-extension LiveChannelsView {
+private extension LiveChannelsView {
     @MainActor
     class ViewModel: ObservableObject {
         let wrapped: FollowedStreamsViewModel

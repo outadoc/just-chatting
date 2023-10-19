@@ -34,22 +34,17 @@ private struct InnerSettingsView: View {
     var updatePreferences: (AppPreferences) -> Void
 
     private var enableRecentMessages: Binding<Bool> {
-        Binding {
-            appPreferences.enableRecentMessages
-        } set: { value in
-            updatePreferences(
-                AppPreferences(
-                    appUser: appPreferences.appUser,
-                    showTimestamps: appPreferences.showTimestamps,
-                    enableRecentMessages: value,
-                    enableFfzEmotes: appPreferences.enableFfzEmotes,
-                    enableStvEmotes: appPreferences.enableStvEmotes,
-                    enableBttvEmotes: appPreferences.enableBttvEmotes,
-                    enablePronouns: appPreferences.enablePronouns,
-                    enableNotifications: appPreferences.enableNotifications
-                )
-            )
-        }
+        Binding(
+            get: { appPreferences.enableRecentMessages },
+            set: { value in updatePreferences(appPreferences.doCopy(enableRecentMessages: value)) }
+        )
+    }
+
+    private var enablePronouns: Binding<Bool> {
+        Binding(
+            get: { appPreferences.enablePronouns },
+            set: { value in updatePreferences(appPreferences.doCopy(enablePronouns: value)) }
+        )
     }
 
     var body: some View {
@@ -58,6 +53,10 @@ private struct InnerSettingsView: View {
                 Section(header: Text(MR.strings.shared.settings_thirdparty_header.desc().localized())) {
                     Toggle(isOn: enableRecentMessages) {
                         Text(MR.strings.shared.settings_thirdparty_recent_title.desc().localized())
+                    }
+
+                    Toggle(isOn: enablePronouns) {
+                        Text(MR.strings.shared.settings_thirdparty_pronouns_title.desc().localized())
                     }
                 }
             }
@@ -68,7 +67,7 @@ private struct InnerSettingsView: View {
 
 private extension SettingsView {
     @MainActor
-    private class ViewModel: ObservableObject {
+    class ViewModel: ObservableObject {
         let wrapped: SettingsViewModel
         init(wrapped: SettingsViewModel) {
             self.wrapped = wrapped

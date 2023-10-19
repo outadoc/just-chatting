@@ -95,7 +95,7 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_thirdparty_header))
+                Text(stringResource(MR.strings.settings_thirdparty_recent_header))
             }
         }
 
@@ -113,6 +113,20 @@ fun SettingsList(
                     Text(stringResource(MR.strings.settings_thirdparty_recent_subtitle))
                 },
             )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+
+        item {
+            SettingsHeader(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(itemInsets),
+            ) {
+                Text(stringResource(MR.strings.settings_thirdparty_pronouns_header))
+            }
         }
 
         item {
@@ -145,6 +159,20 @@ fun SettingsList(
                     )
                 },
             )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+
+        item {
+            SettingsHeader(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(itemInsets),
+            ) {
+                Text(stringResource(MR.strings.settings_thirdparty_emotes_header))
+            }
         }
 
         item {
@@ -289,9 +317,6 @@ fun SettingsList(
                 },
                 title = {
                     Text(stringResource(MR.strings.settings_accessibility_timestamps_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_accessibility_timestamps_subtitle))
                 },
             )
         }

@@ -17,9 +17,8 @@ struct SettingsView: View {
             if let appPreferences = viewModel.appPreferences {
                 InnerSettingsView(
                     appPreferences: appPreferences,
-                    updatePreferences: { newPrefs in
-                        viewModel.update(appPreferences: newPrefs)
-                    }
+                    updatePreferences: { newPrefs in viewModel.update(appPreferences: newPrefs) },
+                    logout: { viewModel.logout() }
                 )
             }
         }
@@ -32,6 +31,7 @@ struct SettingsView: View {
 private struct InnerSettingsView: View {
     var appPreferences: AppPreferences
     var updatePreferences: (AppPreferences) -> Void
+    var logout: () -> Void
 
     private var enableRecentMessages: Binding<Bool> {
         Binding(
@@ -127,6 +127,14 @@ private struct InnerSettingsView: View {
                     }
                 }
 
+                Section(header: Text(MR.strings.shared.settings_account_header.desc().localized())) {
+                    Button(
+                        MR.strings.shared.settings_account_logout_action.desc().localized(),
+                        role: .destructive,
+                        action: logout
+                    )
+                }
+
                 Section(header: Text(MR.strings.shared.settings_about_header.desc().localized())) {
                     LabeledContent(
                         MR.strings.shared.app_name.desc().localized(),
@@ -152,6 +160,10 @@ private extension SettingsView {
 
         func update(appPreferences: AppPreferences) {
             wrapped.updatePreferences(appPreferences: appPreferences)
+        }
+
+        func logout() {
+            wrapped.logout()
         }
 
         func activate() async {

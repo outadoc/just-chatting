@@ -381,7 +381,7 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
-					shared,
+					JCShared,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = fr.outadoc.justchatting;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -412,7 +412,7 @@
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
-					shared,
+					JCShared,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = fr.outadoc.justchatting;
 				PRODUCT_NAME = "$(TARGET_NAME)";

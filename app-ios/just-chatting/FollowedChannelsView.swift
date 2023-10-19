@@ -31,20 +31,23 @@ private struct InnerFollowedChannelsView: View {
     var reload: () -> Void
 
     var body: some View {
-        VStack {
-            if let loadedItems {
-                List {
-                    ForEach(loadedItems, id: \.userId) { item in
-                        FollowedChannelItemView(channel: item)
-                            .onAppear(perform: loadMoreItems)
+        NavigationView {
+            VStack {
+                if let loadedItems {
+                    List {
+                        ForEach(loadedItems, id: \.userId) { item in
+                            FollowedChannelItemView(channel: item)
+                                .onAppear(perform: loadMoreItems)
+                        }
                     }
+                    .refreshable {
+                        reload()
+                    }
+                } else {
+                    ProgressView()
                 }
-                .refreshable {
-                    reload()
-                }
-            } else {
-                ProgressView()
             }
+            .navigationTitle(Text(MR.strings.shared.channels.desc().localized()))
         }
     }
 }

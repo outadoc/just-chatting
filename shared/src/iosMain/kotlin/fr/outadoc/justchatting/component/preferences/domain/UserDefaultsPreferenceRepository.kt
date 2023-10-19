@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.component.preferences.domain
 
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser
+import fr.outadoc.justchatting.utils.logging.logInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.sync.Mutex
@@ -60,6 +61,10 @@ class UserDefaultsPreferenceRepository : PreferenceRepository {
     }
 
     private fun AppPreferences.writeToDefaults() = with(userDefaults) {
+        logInfo<UserDefaultsPreferenceRepository> {
+            "Writing preferences to NSUserDefaults: ${this@writeToDefaults}"
+        }
+
         when (val user = appUser) {
             is AppUser.LoggedIn -> {
                 setObject(user.userId, forKey = USER_ID)

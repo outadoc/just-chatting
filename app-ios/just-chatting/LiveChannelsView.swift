@@ -31,26 +31,29 @@ private struct InnerLiveChannelsView: View {
     var reload: () -> Void
 
     var body: some View {
-        VStack {
-            if let loadedItems {
-                List {
-                    ForEach(loadedItems, id: \.id) { item in
-                        LiveChannelItemView(stream: item)
-                            .onAppear(perform: loadMoreItems)
+        NavigationView {
+            VStack {
+                if let loadedItems {
+                    List {
+                        ForEach(loadedItems, id: \.id) { item in
+                            LiveChannelItemView(stream: item)
+                                .onAppear(perform: loadMoreItems)
+                        }
                     }
+                    .listStyle(.inset)
+                    .refreshable {
+                        reload()
+                    }
+                } else {
+                    ProgressView()
                 }
-                .listStyle(.inset)
-                .refreshable {
-                    reload()
-                }
-            } else {
-                ProgressView()
             }
+            .navigationTitle(Text(MR.strings.shared.live.desc().localized()))
         }
     }
 }
 
-extension LiveChannelsView {
+private extension LiveChannelsView {
     @MainActor
     class ViewModel: ObservableObject {
         let wrapped: FollowedStreamsViewModel

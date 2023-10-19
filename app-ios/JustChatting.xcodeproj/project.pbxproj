@@ -23,6 +23,8 @@
 		A9D14C822AE19CC400F676D2 /* AppPreferences+copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D14C812AE19CC400F676D2 /* AppPreferences+copy.swift */; };
 		A9F33DDA2AE075ED00663BF2 /* LiveChannelItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F33DD92AE075ED00663BF2 /* LiveChannelItemView.swift */; };
 		A9F33DDC2AE0776500663BF2 /* PillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F33DDB2AE0776500663BF2 /* PillView.swift */; };
+		A9FF4C662AE1D21E00CF50C2 /* String+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FF4C652AE1D21E00CF50C2 /* String+Date.swift */; };
+		A9FF4C682AE1D27200CF50C2 /* Date+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FF4C672AE1D27200CF50C2 /* Date+Format.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,6 +57,8 @@
 		A9D14C812AE19CC400F676D2 /* AppPreferences+copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppPreferences+copy.swift"; sourceTree = "<group>"; };
 		A9F33DD92AE075ED00663BF2 /* LiveChannelItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChannelItemView.swift; sourceTree = "<group>"; };
 		A9F33DDB2AE0776500663BF2 /* PillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillView.swift; sourceTree = "<group>"; };
+		A9FF4C652AE1D21E00CF50C2 /* String+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Date.swift"; sourceTree = "<group>"; };
+		A9FF4C672AE1D27200CF50C2 /* Date+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Format.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,18 +105,15 @@
 				7555FF8C242A565B00829871 /* Info.plist */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
+				A9FF4C692AE1D87700CF50C2 /* Utils */,
 				2152FB032600AC8F00CF470E /* iOSApp.swift */,
 				A97706912ADD56F9004593B3 /* Container+DI.swift */,
+				A9FF4C6C2AE1D93400CF50C2 /* Atoms */,
 				A97706952ADDE1E8004593B3 /* RootNavigationView.swift */,
 				A9087C952ADF1BF00099C4E7 /* MainNavigationView.swift */,
-				A9AC12E22ADFEDF10010CA24 /* LiveChannelsView.swift */,
-				A9F33DD92AE075ED00663BF2 /* LiveChannelItemView.swift */,
-				A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */,
-				A92CA4682AE082F100971922 /* FollowedChannelItemView.swift */,
-				A9D14C812AE19CC400F676D2 /* AppPreferences+copy.swift */,
-				A9AC12E62ADFEE260010CA24 /* SettingsView.swift */,
-				A9F33DDB2AE0776500663BF2 /* PillView.swift */,
-				A92CA46A2AE0860300971922 /* AvatarView.swift */,
+				A9FF4C6A2AE1D8A400CF50C2 /* LiveChannels */,
+				A9FF4C6B2AE1D8BF00CF50C2 /* FollowedChannels */,
+				A9FF4C6D2AE1D95900CF50C2 /* Settings */,
 			);
 			path = JustChatting;
 			sourceTree = "<group>";
@@ -122,6 +123,51 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A9FF4C692AE1D87700CF50C2 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				A9D14C812AE19CC400F676D2 /* AppPreferences+copy.swift */,
+				A9FF4C652AE1D21E00CF50C2 /* String+Date.swift */,
+				A9FF4C672AE1D27200CF50C2 /* Date+Format.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		A9FF4C6A2AE1D8A400CF50C2 /* LiveChannels */ = {
+			isa = PBXGroup;
+			children = (
+				A9AC12E22ADFEDF10010CA24 /* LiveChannelsView.swift */,
+				A9F33DD92AE075ED00663BF2 /* LiveChannelItemView.swift */,
+			);
+			path = LiveChannels;
+			sourceTree = "<group>";
+		};
+		A9FF4C6B2AE1D8BF00CF50C2 /* FollowedChannels */ = {
+			isa = PBXGroup;
+			children = (
+				A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */,
+				A92CA4682AE082F100971922 /* FollowedChannelItemView.swift */,
+			);
+			path = FollowedChannels;
+			sourceTree = "<group>";
+		};
+		A9FF4C6C2AE1D93400CF50C2 /* Atoms */ = {
+			isa = PBXGroup;
+			children = (
+				A9F33DDB2AE0776500663BF2 /* PillView.swift */,
+				A92CA46A2AE0860300971922 /* AvatarView.swift */,
+			);
+			path = Atoms;
+			sourceTree = "<group>";
+		};
+		A9FF4C6D2AE1D95900CF50C2 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				A9AC12E62ADFEE260010CA24 /* SettingsView.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -227,6 +273,8 @@
 			files = (
 				A9AC12E72ADFEE260010CA24 /* SettingsView.swift in Sources */,
 				A9087C962ADF1BF00099C4E7 /* MainNavigationView.swift in Sources */,
+				A9FF4C682AE1D27200CF50C2 /* Date+Format.swift in Sources */,
+				A9FF4C662AE1D21E00CF50C2 /* String+Date.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				A9AC12E52ADFEE110010CA24 /* FollowedChannelsView.swift in Sources */,
 				A92CA46B2AE0860300971922 /* AvatarView.swift in Sources */,

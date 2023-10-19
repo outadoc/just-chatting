@@ -17,9 +17,14 @@ struct FollowedChannelItemView: View {
                 AvatarView(url: URL(string: avatarUrl)!)
             }
 
-            VStack {
+            VStack(alignment: .leading) {
                 if let displayName = channel.userDisplayName {
                     Text(displayName)
+                }
+
+                if let followedAt = channel.followedAt?.parseDate().formatDate() {
+                    Text(MR.strings.shared.followed_at.format(args: [followedAt]).localized())
+                        .font(.subheadline)
                 }
             }
         }

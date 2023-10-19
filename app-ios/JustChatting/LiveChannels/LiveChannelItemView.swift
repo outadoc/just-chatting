@@ -34,6 +34,7 @@ struct LiveChannelItemView: View {
                 HFlow {
                     ForEach(stream.tags, id: \.self) { tag in
                         PillView(text: tag)
+                            .font(.footnote)
                     }
                 }
             }

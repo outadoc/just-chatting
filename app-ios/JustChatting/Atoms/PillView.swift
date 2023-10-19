@@ -11,7 +11,7 @@ import SwiftUI
 struct PillView: View {
     var text: String
     var body: some View {
-        Text("(\(text))").italic()
+        Text("(\(text))")
     }
 }
 

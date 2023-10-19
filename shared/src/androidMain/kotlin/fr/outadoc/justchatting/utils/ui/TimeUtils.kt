@@ -30,7 +30,7 @@ fun Instant.formatTimestamp(): String? {
 }
 
 @Composable
-fun Instant.formatTime(
+fun Instant.formatDate(
     tz: TimeZone = TimeZone.currentSystemDefault(),
     clock: Clock = Clock.System,
 ): String? {

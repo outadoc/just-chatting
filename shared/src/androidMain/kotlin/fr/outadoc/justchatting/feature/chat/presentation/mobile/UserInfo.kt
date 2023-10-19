@@ -20,7 +20,7 @@ import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.formatTime
+import fr.outadoc.justchatting.utils.ui.formatDate
 import kotlinx.datetime.toInstant
 
 @Composable
@@ -55,7 +55,7 @@ fun UserInfo(
             Text(text = user.description)
         }
 
-        val createdAt = user.createdAt.toInstant().formatTime()
+        val createdAt = user.createdAt.toInstant().formatDate()
         if (createdAt != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(

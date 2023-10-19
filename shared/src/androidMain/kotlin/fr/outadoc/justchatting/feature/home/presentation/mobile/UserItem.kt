@@ -25,7 +25,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
-import fr.outadoc.justchatting.utils.ui.formatTime
+import fr.outadoc.justchatting.utils.ui.formatDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
@@ -105,7 +105,7 @@ fun UserItem(
             }
 
             followedAt
-                ?.formatTime()
+                ?.formatDate()
                 ?.let { followedAt ->
                     Text(
                         text = stringResource(MR.strings.followed_at, followedAt),

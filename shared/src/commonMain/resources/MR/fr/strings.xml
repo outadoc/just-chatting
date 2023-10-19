@@ -154,7 +154,7 @@
     <string name="irc_notice_usage_emote_only_off">Utilisation : « /emoteonlyoff »\nDésactive le mode emote uniquement.</string>
     <string name="irc_notice_usage_emote_only_on">Utilisation : « /emoteonly »\nActive le mode emote uniquement (seules les emotes peuvent être utilisées dans le chat). Utilisez « /emoteonlyoff » pour désactiver.</string>
     <string name="irc_notice_usage_followers_off">Utilisation : « /followersoff »\nDésactive le mode abonnés uniquement.</string>
-    <string name="irc_notice_usage_followers_on">Utilisation : « /followers [duration] »\nActive le mode abonnés uniquement (seuls les utilisateur·rice·s qui ont suivi pendant \'duration\' peuvent discuter). Exemples : « 30m\", « 1 semaine\", « 5 jours 12 heures\". Doit être inférieur à 3 mois.</string>
+    <string name="irc_notice_usage_followers_on">Utilisation : « /followers [duration] »\nActive le mode abonnés uniquement (seuls les utilisateur·rice·s qui ont suivi pendant \'duration\' peuvent discuter). Exemples : « 30m », « 1 semaine », « 5 jours 12 heures ». Doit être inférieur à 3 mois.</string>
     <string name="irc_notice_usage_help">Usage : « /help »\nRépertorie les commandes disponibles dans cette salle.</string>
     <string name="irc_notice_usage_host">Utilisation : « /host &lt;channel&gt; »\nHéberger un autre canal. Utilisez « /unhost » pour désactiver le mode hôte.</string>
     <string name="irc_notice_usage_marker">Utilisation : « /marqueur &lt;commentaire facultatif&gt; »\nAjoute un marqueur de flux (avec un commentaire facultatif, 140 caractères maximum) à l\'horodatage actuel. Vous pouvez utiliser des marqueurs dans le surligneur pour faciliter l\'édition.</string>
@@ -178,7 +178,7 @@
     <string name="irc_notice_usage_user">Usage : « /user &lt;username&gt; »\nAfficher des informations sur un·e utilisateur·rice spécifique sur ce canal.</string>
     <string name="irc_notice_usage_vip">Usage : « /vip &lt;username&gt; »\nAccorde le statut VIP à un·e utilisateur·rice. Utilisez « /vips » pour lister les VIP de ce canal.</string>
     <string name="irc_notice_usage_vips">Usage : « /vips »\nRépertorie les VIP de ce canal.</string>
-    <string name="irc_notice_usage_whisper">Utilisation : « /w &lt;nom d\'utilisateur&gt; &lt;message&gt;\"</string>
+    <string name="irc_notice_usage_whisper">Utilisation : « /w &lt;nom d\'utilisateur&gt; &lt;message&gt; »</string>
     <string name="irc_notice_vip_success">Vous avez ajouté %s en tant que VIP de ce canal.</string>
     <string name="irc_notice_vips_success">Les VIP de ce canal sont : %s.</string>
     <string name="irc_notice_whisper_banned">Vous avez été interdit·e d\'envoyer des chuchotements.</string>

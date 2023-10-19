@@ -89,10 +89,12 @@ private struct InnerSettingsView: View {
                     }
                 }
 
-                Section(header: Text(MR.strings.shared.settings_thirdparty_pronouns_header.desc().localized())) {
+                Section(
+                    header: Text(MR.strings.shared.settings_thirdparty_pronouns_header.desc().localized()),
+                    footer: Text(MR.strings.shared.settings_thirdparty_pronouns_subtitle.desc().localized())
+                ) {
                     Toggle(isOn: enablePronouns) {
                         Text(MR.strings.shared.settings_thirdparty_pronouns_title.desc().localized())
-                        Text(MR.strings.shared.settings_thirdparty_pronouns_subtitle.desc().localized())
                     }
 
                     Link(
@@ -101,20 +103,24 @@ private struct InnerSettingsView: View {
                     )
                 }
 
-                Section(header: Text(MR.strings.shared.settings_thirdparty_emotes_header.desc().localized())) {
+                Section(
+                    header: Text(MR.strings.shared.settings_thirdparty_emotes_header.desc().localized()),
+                    footer: Text(MR.strings.shared.settings_thirdparty_bttv_subtitle.desc().localized())
+                ) {
                     Toggle(isOn: enableBttvEmotes) {
                         Text(MR.strings.shared.settings_thirdparty_bttv_title.desc().localized())
-                        Text(MR.strings.shared.settings_thirdparty_bttv_subtitle.desc().localized())
                     }
+                }
 
+                Section(footer: Text(MR.strings.shared.settings_thirdparty_ffz_subtitle.desc().localized())) {
                     Toggle(isOn: enableFfzEmotes) {
                         Text(MR.strings.shared.settings_thirdparty_ffz_title.desc().localized())
-                        Text(MR.strings.shared.settings_thirdparty_ffz_subtitle.desc().localized())
                     }
+                }
 
+                Section(footer: Text(MR.strings.shared.settings_thirdparty_stv_subtitle.desc().localized())) {
                     Toggle(isOn: enableStvEmotes) {
                         Text(MR.strings.shared.settings_thirdparty_stv_title.desc().localized())
-                        Text(MR.strings.shared.settings_thirdparty_stv_subtitle.desc().localized())
                     }
                 }
 

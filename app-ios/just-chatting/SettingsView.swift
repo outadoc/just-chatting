@@ -11,7 +11,17 @@ import SwiftUI
 import Swinject
 
 struct SettingsView: View {
+    @State var isOn = true
     var body: some View {
-        VStack {}
+        NavigationView {
+            Form {
+                Section(header: Text(MR.strings.shared.settings_thirdparty_header.desc().localized())) {
+                    Toggle(isOn: $isOn) {
+                        Text(MR.strings.shared.settings_thirdparty_recent_title.desc().localized())
+                    }
+                }
+            }
+            .navigationTitle(Text(MR.strings.shared.settings.desc().localized()))
+        }
     }
 }

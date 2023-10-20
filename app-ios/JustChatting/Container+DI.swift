@@ -1,6 +1,6 @@
 //
 //  Container+DI.swift
-//  just-chatting
+//  JustChatting
 //
 //  Created by Baptiste Candellier on 2023-10-16.
 //  Copyright © 2023 Baptiste Candellier. All rights reserved.

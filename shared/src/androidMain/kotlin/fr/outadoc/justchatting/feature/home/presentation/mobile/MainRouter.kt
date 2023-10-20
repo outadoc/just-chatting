@@ -86,9 +86,7 @@ fun MainRouter(
                     Tab.Followed -> {
                         FollowedChannelsList(
                             onItemClick = { stream ->
-                                stream.userLogin?.let { login ->
-                                    onChannelClick(login)
-                                }
+                                onChannelClick(stream.userLogin)
                             },
                         )
                     }

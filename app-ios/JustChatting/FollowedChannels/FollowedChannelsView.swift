@@ -1,6 +1,6 @@
 //
 //  FollowedChannelsView.swift
-//  just-chatting
+//  JustChatting
 //
 //  Created by Baptiste Candellier on 2023-10-18.
 //  Copyright © 2023 Baptiste Candellier. All rights reserved.
@@ -31,23 +31,22 @@ private struct InnerFollowedChannelsView: View {
     var reload: () -> Void
 
     var body: some View {
-        NavigationStack {
-            VStack {
-                if let loadedItems {
-                    List {
-                        ForEach(loadedItems, id: \.userId) { item in
+        VStack {
+            if let loadedItems {
+                List {
+                    ForEach(loadedItems, id: \.userId) { item in
+                        NavigationLink(value: Screen.channel(channelLogin: item.userLogin)) {
                             FollowedChannelItemView(channel: item)
                                 .onAppear(perform: loadMoreItems)
                         }
                     }
-                    .refreshable {
-                        reload()
-                    }
-                } else {
-                    ProgressView()
                 }
+                .refreshable {
+                    reload()
+                }
+            } else {
+                ProgressView()
             }
-            .navigationTitle(Text(MR.strings.shared.channels.desc().localized()))
         }
     }
 }

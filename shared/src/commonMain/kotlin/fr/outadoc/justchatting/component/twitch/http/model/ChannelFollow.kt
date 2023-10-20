@@ -9,11 +9,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ChannelFollow(
     @SerialName("broadcaster_id")
-    val userId: String? = null,
+    val userId: String,
     @SerialName("broadcaster_login")
-    val userLogin: String? = null,
+    val userLogin: String,
     @SerialName("broadcaster_name")
-    val userDisplayName: String? = null,
+    val userDisplayName: String,
     @SerialName("followed_at")
-    val followedAt: String? = null,
+    val followedAt: String,
 ) : Parcelable

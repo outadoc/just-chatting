@@ -148,7 +148,7 @@ class TwitchRepositoryImpl(
         with(follows) {
             val results: List<User> =
                 filter { follow -> follow.profileImageURL == null }
-                    .mapNotNull { follow -> follow.userId }
+                    .map { follow -> follow.userId }
                     .chunked(size = 100)
                     .flatMap { idsToUpdate ->
                         helix.getUsersById(ids = idsToUpdate)

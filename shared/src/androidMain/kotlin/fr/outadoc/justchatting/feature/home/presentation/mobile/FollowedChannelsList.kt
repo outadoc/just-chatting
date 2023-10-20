@@ -74,7 +74,7 @@ fun FollowedChannelsList(
                             modifier = Modifier.fillMaxWidth(),
                             displayName = item.userDisplayName,
                             profileImageURL = item.profileImageURL,
-                            followedAt = item.followedAt?.toInstant(),
+                            followedAt = item.followedAt.toInstant(),
                             onClick = { onItemClick(item) },
                         )
                     } else {

@@ -17,6 +17,7 @@
 		A97706902ADD4EA0004593B3 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = A977068F2ADD4EA0004593B3 /* Swinject */; };
 		A97706922ADD56F9004593B3 /* Container+DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97706912ADD56F9004593B3 /* Container+DI.swift */; };
 		A97706962ADDE1E8004593B3 /* RootNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97706952ADDE1E8004593B3 /* RootNavigationView.swift */; };
+		A98906C62AE3028E000C776D /* ChattingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98906C52AE3028E000C776D /* ChattingView.swift */; };
 		A9AC12E32ADFEDF10010CA24 /* LiveChannelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E22ADFEDF10010CA24 /* LiveChannelsView.swift */; };
 		A9AC12E52ADFEE110010CA24 /* FollowedChannelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */; };
 		A9AC12E72ADFEE260010CA24 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E62ADFEE260010CA24 /* SettingsView.swift */; };
@@ -51,6 +52,7 @@
 		A92CA46A2AE0860300971922 /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		A97706912ADD56F9004593B3 /* Container+DI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+DI.swift"; sourceTree = "<group>"; };
 		A97706952ADDE1E8004593B3 /* RootNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationView.swift; sourceTree = "<group>"; };
+		A98906C52AE3028E000C776D /* ChattingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingView.swift; sourceTree = "<group>"; };
 		A9AC12E22ADFEDF10010CA24 /* LiveChannelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChannelsView.swift; sourceTree = "<group>"; };
 		A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowedChannelsView.swift; sourceTree = "<group>"; };
 		A9AC12E62ADFEE260010CA24 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				7555FF7D242A565900829871 /* JustChatting */,
+				A98906C42AE3025A000C776D /* Chat */,
 				7555FF7C242A565900829871 /* Products */,
 				7555FFB0242A642200829871 /* Frameworks */,
 			);
@@ -123,6 +126,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A98906C42AE3025A000C776D /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				A98906C52AE3028E000C776D /* ChattingView.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		A9FF4C692AE1D87700CF50C2 /* Utils */ = {
@@ -282,6 +293,7 @@
 				A9AC12E32ADFEDF10010CA24 /* LiveChannelsView.swift in Sources */,
 				A97706962ADDE1E8004593B3 /* RootNavigationView.swift in Sources */,
 				A97706922ADD56F9004593B3 /* Container+DI.swift in Sources */,
+				A98906C62AE3028E000C776D /* ChattingView.swift in Sources */,
 				A9D14C822AE19CC400F676D2 /* AppPreferences+copy.swift in Sources */,
 				A9F33DDA2AE075ED00663BF2 /* LiveChannelItemView.swift in Sources */,
 				A92CA4692AE082F100971922 /* FollowedChannelItemView.swift in Sources */,

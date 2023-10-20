@@ -1,6 +1,6 @@
 //
 //  SettingsView.swift
-//  just-chatting
+//  JustChatting
 //
 //  Created by Baptiste Candellier on 2023-10-18.
 //  Copyright © 2023 Baptiste Candellier. All rights reserved.
@@ -78,77 +78,74 @@ private struct InnerSettingsView: View {
     private let appVersion: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
 
     var body: some View {
-        NavigationStack {
-            Form {
-                Section(
-                    header: Text(MR.strings.shared.settings_thirdparty_recent_header.desc().localized()),
-                    footer: Text(MR.strings.shared.settings_thirdparty_recent_subtitle.desc().localized())
-                ) {
-                    Toggle(isOn: enableRecentMessages) {
-                        Text(MR.strings.shared.settings_thirdparty_recent_title.desc().localized())
-                    }
-                }
-
-                Section(
-                    header: Text(MR.strings.shared.settings_thirdparty_pronouns_header.desc().localized()),
-                    footer: Text(MR.strings.shared.settings_thirdparty_pronouns_subtitle.desc().localized())
-                ) {
-                    Toggle(isOn: enablePronouns) {
-                        Text(MR.strings.shared.settings_thirdparty_pronouns_title.desc().localized())
-                    }
-
-                    Link(
-                        MR.strings.shared.settings_thirdparty_pronouns_set_title.desc().localized(),
-                        destination: URL(string: MR.strings.shared.app_pronouns_url.desc().localized())!
-                    )
-                }
-
-                Section(
-                    header: Text(MR.strings.shared.settings_thirdparty_emotes_header.desc().localized()),
-                    footer: Text(MR.strings.shared.settings_thirdparty_bttv_subtitle.desc().localized())
-                ) {
-                    Toggle(isOn: enableBttvEmotes) {
-                        Text(MR.strings.shared.settings_thirdparty_bttv_title.desc().localized())
-                    }
-                }
-
-                Section(footer: Text(MR.strings.shared.settings_thirdparty_ffz_subtitle.desc().localized())) {
-                    Toggle(isOn: enableFfzEmotes) {
-                        Text(MR.strings.shared.settings_thirdparty_ffz_title.desc().localized())
-                    }
-                }
-
-                Section(footer: Text(MR.strings.shared.settings_thirdparty_stv_subtitle.desc().localized())) {
-                    Toggle(isOn: enableStvEmotes) {
-                        Text(MR.strings.shared.settings_thirdparty_stv_title.desc().localized())
-                    }
-                }
-
-                Section(
-                    header: Text(MR.strings.shared.settings_accessibility_header.desc().localized()),
-                    footer: Text(MR.strings.shared.settings_accessibility_animations_subtitle.desc().localized())
-                ) {
-                    Toggle(isOn: showTimestamps) {
-                        Text(MR.strings.shared.settings_accessibility_timestamps_title.desc().localized())
-                    }
-                }
-
-                Section(header: Text(MR.strings.shared.settings_account_header.desc().localized())) {
-                    Button(
-                        MR.strings.shared.settings_account_logout_action.desc().localized(),
-                        role: .destructive,
-                        action: logout
-                    )
-                }
-
-                Section(header: Text(MR.strings.shared.settings_about_header.desc().localized())) {
-                    LabeledContent(
-                        MR.strings.shared.app_name.desc().localized(),
-                        value: MR.strings.shared.settings_about_version.format(args: [appVersion]).localized()
-                    )
+        Form {
+            Section(
+                header: Text(MR.strings.shared.settings_thirdparty_recent_header.desc().localized()),
+                footer: Text(MR.strings.shared.settings_thirdparty_recent_subtitle.desc().localized())
+            ) {
+                Toggle(isOn: enableRecentMessages) {
+                    Text(MR.strings.shared.settings_thirdparty_recent_title.desc().localized())
                 }
             }
-            .navigationTitle(Text(MR.strings.shared.settings.desc().localized()))
+
+            Section(
+                header: Text(MR.strings.shared.settings_thirdparty_pronouns_header.desc().localized()),
+                footer: Text(MR.strings.shared.settings_thirdparty_pronouns_subtitle.desc().localized())
+            ) {
+                Toggle(isOn: enablePronouns) {
+                    Text(MR.strings.shared.settings_thirdparty_pronouns_title.desc().localized())
+                }
+
+                Link(
+                    MR.strings.shared.settings_thirdparty_pronouns_set_title.desc().localized(),
+                    destination: URL(string: MR.strings.shared.app_pronouns_url.desc().localized())!
+                )
+            }
+
+            Section(
+                header: Text(MR.strings.shared.settings_thirdparty_emotes_header.desc().localized()),
+                footer: Text(MR.strings.shared.settings_thirdparty_bttv_subtitle.desc().localized())
+            ) {
+                Toggle(isOn: enableBttvEmotes) {
+                    Text(MR.strings.shared.settings_thirdparty_bttv_title.desc().localized())
+                }
+            }
+
+            Section(footer: Text(MR.strings.shared.settings_thirdparty_ffz_subtitle.desc().localized())) {
+                Toggle(isOn: enableFfzEmotes) {
+                    Text(MR.strings.shared.settings_thirdparty_ffz_title.desc().localized())
+                }
+            }
+
+            Section(footer: Text(MR.strings.shared.settings_thirdparty_stv_subtitle.desc().localized())) {
+                Toggle(isOn: enableStvEmotes) {
+                    Text(MR.strings.shared.settings_thirdparty_stv_title.desc().localized())
+                }
+            }
+
+            Section(
+                header: Text(MR.strings.shared.settings_accessibility_header.desc().localized()),
+                footer: Text(MR.strings.shared.settings_accessibility_animations_subtitle.desc().localized())
+            ) {
+                Toggle(isOn: showTimestamps) {
+                    Text(MR.strings.shared.settings_accessibility_timestamps_title.desc().localized())
+                }
+            }
+
+            Section(header: Text(MR.strings.shared.settings_account_header.desc().localized())) {
+                Button(
+                    MR.strings.shared.settings_account_logout_action.desc().localized(),
+                    role: .destructive,
+                    action: logout
+                )
+            }
+
+            Section(header: Text(MR.strings.shared.settings_about_header.desc().localized())) {
+                LabeledContent(
+                    MR.strings.shared.app_name.desc().localized(),
+                    value: MR.strings.shared.settings_about_version.format(args: [appVersion]).localized()
+                )
+            }
         }
     }
 }

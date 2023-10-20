@@ -1,6 +1,6 @@
 //
 //  LiveChannelsView.swift
-//  just-chatting
+//  JustChatting
 //
 //  Created by Baptiste Candellier on 2023-10-18.
 //  Copyright © 2023 Baptiste Candellier. All rights reserved.
@@ -31,24 +31,23 @@ private struct InnerLiveChannelsView: View {
     var reload: () -> Void
 
     var body: some View {
-        NavigationStack {
-            VStack {
-                if let loadedItems {
-                    List {
-                        ForEach(loadedItems, id: \.id) { item in
+        VStack {
+            if let loadedItems {
+                List {
+                    ForEach(loadedItems, id: \.id) { item in
+                        NavigationLink(value: Screen.channel(channelLogin: item.userLogin)) {
                             LiveChannelItemView(stream: item)
                                 .onAppear(perform: loadMoreItems)
                         }
                     }
-                    .listStyle(.inset)
-                    .refreshable {
-                        reload()
-                    }
-                } else {
-                    ProgressView()
                 }
+                .listStyle(.inset)
+                .refreshable {
+                    reload()
+                }
+            } else {
+                ProgressView()
             }
-            .navigationTitle(Text(MR.strings.shared.live.desc().localized()))
         }
     }
 }

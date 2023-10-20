@@ -1,6 +1,6 @@
 //
 //  FollowedChannelItemView.swift
-//  just-chatting
+//  JustChatting
 //
 //  Created by Baptiste Candellier on 2023-10-18.
 //  Copyright © 2023 Baptiste Candellier. All rights reserved.
@@ -18,11 +18,9 @@ struct FollowedChannelItemView: View {
             }
 
             VStack(alignment: .leading) {
-                if let displayName = channel.userDisplayName {
-                    Text(displayName)
-                }
+                Text(channel.userDisplayName)
 
-                if let followedAt = channel.followedAt?.parseDate().formatDate() {
+                if let followedAt = channel.followedAt.parseDate().formatDate() {
                     Text(MR.strings.shared.followed_at.format(args: [followedAt]).localized())
                         .font(.subheadline)
                 }
@@ -38,7 +36,7 @@ struct FollowedChannelItemView_Previews: PreviewProvider {
                 userId: "",
                 userLogin: "hortyunderscore",
                 userDisplayName: "HortyUnderscore",
-                followedAt: nil,
+                followedAt: "2023-10-20T20:13:00",
                 profileImageURL: nil
             )
         )

@@ -31,7 +31,7 @@ private struct InnerFollowedChannelsView: View {
     var reload: () -> Void
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack {
                 if let loadedItems {
                     List {

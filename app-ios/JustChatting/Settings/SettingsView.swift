@@ -78,7 +78,7 @@ private struct InnerSettingsView: View {
     private let appVersion: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             Form {
                 Section(
                     header: Text(MR.strings.shared.settings_thirdparty_recent_header.desc().localized()),

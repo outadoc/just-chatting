@@ -58,6 +58,9 @@ private extension ChattingView {
         @Published
         private(set) var state: ChatViewModel.State = ChatViewModel.StateInitial()
 
+        @Published
+        private(set) var inputState: ChatViewModel.InputState = ChatViewModel.InputStateCompanion.shared.Empty
+
         func onResume() {
             wrapped.onResume()
         }
@@ -103,6 +106,12 @@ private extension ChattingView {
                 taskGroup.addTask { @MainActor in
                     for await state in self.wrapped.state {
                         self.state = state
+                    }
+                }
+
+                taskGroup.addTask { @MainActor in
+                    for await inputState in self.wrapped.inputState {
+                        self.inputState = inputState
                     }
                 }
             }

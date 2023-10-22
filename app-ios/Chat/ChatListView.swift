@@ -17,6 +17,7 @@ struct ChatListView: View {
                 ChatMessageView(message: message)
             }
         }
+        .listStyle(.inset)
     }
 }
 
@@ -39,20 +40,41 @@ struct ChatMessageView: View {
 struct SimpleChatMessage: View {
     var message: ChatEventMessage.Simple
     var body: some View {
-        VStack {}
+        VStack {
+            ChatMessageBody(messageBody: message.body)
+        }
     }
 }
 
 struct NoticeChatMessage: View {
     var message: ChatEventMessage.Notice
     var body: some View {
-        VStack {}
+        VStack {
+            if let messageBody = message.body {
+                ChatMessageBody(messageBody: messageBody)
+            }
+        }
     }
 }
 
 struct HighlightedChatMessage: View {
     var message: ChatEventMessage.Highlighted
     var body: some View {
-        VStack {}
+        VStack {
+            if let messageBody = message.body {
+                ChatMessageBody(messageBody: messageBody)
+            }
+        }
+    }
+}
+
+struct ChatMessageBody: View {
+    var messageBody: ChatEventMessage.Body
+    var body: some View {
+        VStack {
+            if let message = messageBody.message {
+                Text(message)
+            }
+        }
     }
 }

@@ -42,7 +42,7 @@ private struct InnerChattingView: View {
             case .initial:
                 ProgressView()
             case let .chatting(state):
-                Text(state.user.displayName)
+                ChatListView(messages: state.chatMessages)
             }
         }
     }

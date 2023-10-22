@@ -13,6 +13,8 @@ import Swinject
 struct ChattingView: View {
     @StateObject private var viewModel = ViewModel(wrapped: Container.shared.resolve(ChatViewModel.self)!)
 
+    @Environment(\.colorScheme) var colorScheme
+
     var channelLogin: String
     var body: some View {
         let displayName = switch onEnum(of: viewModel.state) {
@@ -22,84 +24,55 @@ struct ChattingView: View {
             state.user.displayName
         }
 
-        InnerChattingView(state: viewModel.state)
-            .navigationTitle(displayName)
-            .toolbarTitleDisplayMode(.inline)
-            .onAppear {
-                viewModel.loadChat(channelLogin: channelLogin)
-                // viewModel.onResume()
+        InnerChattingView(
+            state: viewModel.state,
+            inputState: viewModel.inputState,
+            updateInputMessage: { message in
+                viewModel.onMessageInputChanged(
+                    message: message,
+                    selectionRange: KotlinIntRange(start: 0, endInclusive: 0)
+                )
+            },
+            submit: {
+                viewModel.submit(
+                    screenDensity: 2.0,
+                    isDarkTheme: colorScheme == .dark
+                )
             }
-            .task {
-                await viewModel.activate()
-            }
+        )
+        .navigationTitle(displayName)
+        .toolbarTitleDisplayMode(.inline)
+        .onAppear {
+            viewModel.loadChat(channelLogin: channelLogin)
+            // viewModel.onResume()
+        }
+        .task {
+            await viewModel.activate()
+        }
     }
 }
 
 private struct InnerChattingView: View {
     var state: ChatViewModel.State
+    var inputState: ChatViewModel.InputState
+    var updateInputMessage: (String) -> Void
+    var submit: () -> Void
+
     var body: some View {
         VStack {
             switch onEnum(of: state) {
             case .initial:
                 ProgressView()
             case let .chatting(state):
-                ChatListView(messages: state.chatMessages)
+                ChatListView(
+                    inputMessage: inputState.message,
+                    updateInputMessage: updateInputMessage,
+                    submit: submit,
+                    messages: state.chatMessages
+                )
             }
         }
     }
-}
-
-#Preview {
-    InnerChattingView(
-        state: ChatViewModel.StateChatting(
-            user: User(
-                id: "",
-                login: "antoinedaniel",
-                displayName: "AntoineDaniel",
-                description: "",
-                profileImageUrl: "",
-                createdAt: ""
-            ),
-            appUser: AppUser.LoggedIn(
-                userId: "",
-                userLogin: "outadoc",
-                token: ""
-            ),
-            stream: nil,
-            channelBadges: [],
-            chatMessages: [],
-            chatters: Set(),
-            pronouns: [:],
-            cheerEmotes: [:],
-            globalBadges: [],
-            lastSentMessageInstant: nil,
-            pickableEmotes: [],
-            richEmbeds: [:],
-            recentEmotes: [],
-            userState: ChatEventUserState(emoteSets: []),
-            roomState: RoomState(
-                isEmoteOnly: false,
-                minFollowDuration: -1,
-                uniqueMessagesOnly: false,
-                slowModeDuration: -1,
-                isSubOnly: false
-            ),
-            ongoingEvents: OngoingEvents(
-                poll: nil,
-                prediction: nil,
-                pinnedMessage: nil,
-                outgoingRaid: nil
-            ),
-            removedContent: [],
-            connectionStatus: ConnectionStatus(
-                isAlive: true,
-                preventSendingMessages: false,
-                registeredListeners: 0
-            ),
-            maxAdapterCount: 1000,
-            showInfoForUserLogin: nil
-        )
-    )
 }
 
 private extension ChattingView {

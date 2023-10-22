@@ -200,9 +200,16 @@ class ChatViewModel(
         val selectionRange: IntRange = 0..0,
         val replyingTo: ChatEvent.Message? = null,
         val autoCompleteItems: List<AutoCompleteItem> = emptyList(),
-    )
+    ) {
+        companion object {
+            val Empty = InputState()
+        }
+    }
 
-    private val actions = MutableSharedFlow<Action>(extraBufferCapacity = 16)
+    private val actions = MutableSharedFlow<Action>(
+        extraBufferCapacity = 16,
+        replay = 1,
+    )
 
     @OptIn(FlowPreview::class)
     val state: StateFlow<State> =

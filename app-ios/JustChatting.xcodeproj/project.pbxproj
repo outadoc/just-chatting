@@ -18,6 +18,7 @@
 		A97706922ADD56F9004593B3 /* Container+DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97706912ADD56F9004593B3 /* Container+DI.swift */; };
 		A97706962ADDE1E8004593B3 /* RootNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97706952ADDE1E8004593B3 /* RootNavigationView.swift */; };
 		A98906C62AE3028E000C776D /* ChattingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A98906C52AE3028E000C776D /* ChattingView.swift */; };
+		A99672902AE53187000D9EB0 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A996728F2AE53187000D9EB0 /* Logger.swift */; };
 		A9AC12E32ADFEDF10010CA24 /* LiveChannelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E22ADFEDF10010CA24 /* LiveChannelsView.swift */; };
 		A9AC12E52ADFEE110010CA24 /* FollowedChannelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */; };
 		A9AC12E72ADFEE260010CA24 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E62ADFEE260010CA24 /* SettingsView.swift */; };
@@ -53,6 +54,7 @@
 		A97706912ADD56F9004593B3 /* Container+DI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Container+DI.swift"; sourceTree = "<group>"; };
 		A97706952ADDE1E8004593B3 /* RootNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootNavigationView.swift; sourceTree = "<group>"; };
 		A98906C52AE3028E000C776D /* ChattingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChattingView.swift; sourceTree = "<group>"; };
+		A996728F2AE53187000D9EB0 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		A9AC12E22ADFEDF10010CA24 /* LiveChannelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChannelsView.swift; sourceTree = "<group>"; };
 		A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowedChannelsView.swift; sourceTree = "<group>"; };
 		A9AC12E62ADFEE260010CA24 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				A9D14C812AE19CC400F676D2 /* AppPreferences+copy.swift */,
 				A9FF4C652AE1D21E00CF50C2 /* String+Date.swift */,
 				A9FF4C672AE1D27200CF50C2 /* Date+Format.swift */,
+				A996728F2AE53187000D9EB0 /* Logger.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -289,6 +292,7 @@
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				A9AC12E52ADFEE110010CA24 /* FollowedChannelsView.swift in Sources */,
 				A92CA46B2AE0860300971922 /* AvatarView.swift in Sources */,
+				A99672902AE53187000D9EB0 /* Logger.swift in Sources */,
 				A9F33DDC2AE0776500663BF2 /* PillView.swift in Sources */,
 				A9AC12E32ADFEDF10010CA24 /* LiveChannelsView.swift in Sources */,
 				A97706962ADDE1E8004593B3 /* RootNavigationView.swift in Sources */,

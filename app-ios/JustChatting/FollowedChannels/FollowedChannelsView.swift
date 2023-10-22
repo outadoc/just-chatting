@@ -84,7 +84,7 @@ extension FollowedChannelsView {
                             try await skie(self.pagingCollectionViewController).submitData(pagingData: pagingData)
                         } catch is CancellationError {
                         } catch {
-                            NSLog("Error when submitting paging data: \(error)")
+                            logError(tag: "FollowedChannelsView", "Error when submitting paging data", error: error)
                         }
                     }
                 }

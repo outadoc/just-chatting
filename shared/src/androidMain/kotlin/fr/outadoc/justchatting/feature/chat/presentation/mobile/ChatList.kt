@@ -11,11 +11,18 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.InlineTextContent
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
@@ -56,6 +63,7 @@ fun ChatList(
     roomState: RoomState,
     ongoingEvents: OngoingEvents,
     appUser: AppUser.LoggedIn,
+    onListScrolledToBottom: (Boolean) -> Unit = {},
     insets: PaddingValues,
     clock: Clock = Clock.System,
 ) {
@@ -96,8 +104,22 @@ fun ChatList(
                 .putAll(inlineCheerEmotes)
         }
 
+    var size by remember { mutableStateOf(IntSize.Zero) }
+
+    LaunchedEffect(size) {
+        listState.scrollToItem(
+            index = (entries.size - 1).coerceAtLeast(0),
+        )
+    }
+
     LazyColumn(
-        modifier = modifier,
+        modifier = modifier
+            .onGloballyPositioned { coordinates ->
+                val newSize = coordinates.size
+                if (size != newSize) {
+                    size = newSize
+                }
+            },
         state = listState,
         contentPadding = PaddingValues(
             bottom = insets.calculateBottomPadding(),
@@ -173,6 +195,18 @@ fun ChatList(
                     appUser = appUser,
                     onShowUserInfoForLogin = onShowUserInfoForLogin,
                 )
+            }
+        }
+
+        item(key = "visibility_trigger") {
+            LaunchedEffect(Unit) {
+                onListScrolledToBottom(true)
+            }
+
+            DisposableEffect(Unit) {
+                onDispose {
+                    onListScrolledToBottom(false)
+                }
             }
         }
     }

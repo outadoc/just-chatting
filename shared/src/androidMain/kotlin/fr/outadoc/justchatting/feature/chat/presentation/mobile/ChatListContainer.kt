@@ -47,14 +47,10 @@ fun ChatListContainer(
 
     val haptic = LocalHapticFeedback.current
 
-    var wasListScrolledByUser by remember { mutableStateOf(false) }
+    var isListAtBottom by remember { mutableStateOf(false) }
 
-    if (listState.isScrollInProgress) {
-        wasListScrolledByUser = true
-    }
-
-    LaunchedEffect(state.chatMessages, wasListScrolledByUser) {
-        if (!wasListScrolledByUser) {
+    LaunchedEffect(state.chatMessages) {
+        if (isListAtBottom) {
             listState.scrollToItem(
                 index = (state.chatMessages.size - 1).coerceAtLeast(0),
             )
@@ -71,21 +67,22 @@ fun ChatListContainer(
             knownChatters = state.chatters,
             pronouns = state.pronouns.filterValuesNotNull(),
             richEmbeds = state.richEmbeds,
-            roomState = state.roomState,
             showTimestamps = showTimestamps,
             isDisconnected = !state.connectionStatus.isAlive,
             listState = listState,
             onMessageLongClick = onMessageLongClick,
             onReplyToMessage = onReplyToMessage,
             onShowUserInfoForLogin = onShowUserInfoForLogin,
-            appUser = state.appUser,
+            roomState = state.roomState,
             ongoingEvents = state.ongoingEvents,
+            appUser = state.appUser,
+            onListScrolledToBottom = { isListAtBottom = it },
             insets = insets,
         )
 
         AnimatedVisibility(
             modifier = Modifier.align(Alignment.BottomCenter),
-            visible = wasListScrolledByUser,
+            visible = !isListAtBottom,
             enter = fadeIn() + expandVertically(expandFrom = Alignment.Bottom),
             exit = shrinkVertically(shrinkTowards = Alignment.Bottom) + fadeOut(),
         ) {
@@ -96,7 +93,6 @@ fun ChatListContainer(
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     scope.launch {
-                        wasListScrolledByUser = false
                         listState.scrollToItem(
                             index = (state.chatMessages.size - 1).coerceAtLeast(0),
                         )

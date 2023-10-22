@@ -11,7 +11,12 @@ import SwiftUI
 struct PillView: View {
     var text: String
     var body: some View {
-        Text("(\(text))")
+        Text(text)
+            .padding([.horizontal], 8)
+            .padding([.vertical], 2)
+            .background(
+                Capsule().stroke()
+            )
     }
 }
 

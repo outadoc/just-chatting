@@ -6,12 +6,12 @@ object Logger {
 
     var logStrategy: LogStrategy = NoopLogStrategy
 
-    enum class Level(val value: String) {
-        Verbose("VERBOSE"),
-        Debug("DEBUG"),
-        Info("INFO"),
-        Warning("WARN"),
-        Error("ERROR"),
+    enum class Level(val tag: String) {
+        Verbose("V"),
+        Debug("D"),
+        Info("I"),
+        Warning("W"),
+        Error("E"),
     }
 
     fun <T : Any> v(clazz: KClass<T>, content: () -> String) {

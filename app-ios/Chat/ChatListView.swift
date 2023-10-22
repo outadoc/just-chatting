@@ -103,13 +103,22 @@ struct HighlightedChatMessage: View {
 
 struct ChatMessageBody: View {
     var messageBody: ChatEventMessage.Body
+
+    private var userNameString: AttributedString {
+        var attributedString = AttributedString("\(messageBody.chatter.displayName): ")
+        attributedString.font = .boldSystemFont(ofSize: 14)
+        return attributedString
+    }
+
+    private var messageString: AttributedString {
+        var attributedString = AttributedString(messageBody.message ?? "")
+        attributedString.font = .systemFont(ofSize: 14)
+        return attributedString
+    }
+
     var body: some View {
-        VStack {
-            if let message = messageBody.message {
-                var userName = AttributedString("\(messageBody.chatter.displayName): ")
-                // userName.font = .largeTitle
-                Text(userName + AttributedString(message))
-            }
+        HStack {
+            Text(userNameString + messageString)
         }
     }
 }

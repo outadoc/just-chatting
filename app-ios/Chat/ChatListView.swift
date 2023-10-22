@@ -33,29 +33,49 @@ struct ChatListView: View {
                 if messages.isEmpty {
                     ProgressView()
                 } else {
-                    ScrollView(.vertical) {
-                        LazyVStack(alignment: .leading) {
-                            ForEach(messages, id: \.hashValue) { message in
-                                Divider()
-                                ChatMessageView(message: message)
-                                    .onAppear {
-                                        if message == messages.last {
-                                            isAtBottom = true
+                    ZStack(alignment: .bottomTrailing) {
+                        ScrollView(.vertical) {
+                            LazyVStack(alignment: .leading) {
+                                ForEach(messages, id: \.hashValue) { message in
+                                    Divider()
+                                    ChatMessageView(message: message)
+                                        .onAppear {
+                                            if message == messages.last {
+                                                isAtBottom = true
+                                            }
                                         }
-                                    }
-                                    .onDisappear {
-                                        if message == messages.last {
-                                            isAtBottom = false
+                                        .onDisappear {
+                                            if message == messages.last {
+                                                isAtBottom = false
+                                            }
                                         }
-                                    }
+                                }
                             }
+                            .scrollTargetLayout()
                         }
-                        .scrollTargetLayout()
+                        .safeAreaPadding(.horizontal, 16.0)
+                        .scrollTargetBehavior(.viewAligned)
+                        .scrollPosition(id: $currentPosition)
+                        .scrollDismissesKeyboard(.interactively)
+
+                        if !isAtBottom {
+                            Button(
+                                action: {
+                                    if let lastMessage = messages.last {
+                                        currentPosition = lastMessage.hashValue
+                                    }
+                                },
+                                label: {
+                                    Image(systemName: "chevron.down")
+                                        .padding()
+                                        .background(Color.accentColor)
+                                        .foregroundColor(.white)
+                                        .clipShape(Circle())
+                                }
+                            )
+                            .padding(24)
+                        }
                     }
-                    .safeAreaPadding(.horizontal, 16.0)
-                    .scrollTargetBehavior(.viewAligned)
-                    .scrollPosition(id: $currentPosition)
-                    .scrollDismissesKeyboard(.interactively)
                 }
             }
             .frame(maxHeight: .infinity)

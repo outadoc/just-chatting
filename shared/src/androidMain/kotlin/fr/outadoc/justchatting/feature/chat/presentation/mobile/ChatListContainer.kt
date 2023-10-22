@@ -62,7 +62,7 @@ fun ChatListContainer(
     }
 
     Box(modifier = modifier) {
-        (
+        ChatList(
             entries = state.chatMessages,
             emotes = state.allEmotesMap,
             cheerEmotes = state.cheerEmotes,

@@ -1,5 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
+import com.willowtreeapps.fuzzywuzzy.diffutils.FuzzySearch
+import com.willowtreeapps.fuzzywuzzy.diffutils.model.ExtractedResult
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import kotlinx.collections.immutable.ImmutableMap
@@ -45,11 +47,14 @@ class FilterAutocompleteItemsUseCase {
 
         val emoteItems: List<AutoCompleteItem.Emote> =
             if (prefix == null || prefix == ChatPrefixConstants.EmotePrefix) {
-                allEmotesMap.mapNotNull { emote ->
-                    if (emote.key.contains(cleanFilter, ignoreCase = true)) {
-                        AutoCompleteItem.Emote(emote.value)
-                    } else {
-                        null
+                FuzzySearch.extractTop(
+                    query = cleanFilter.toString(),
+                    choices = allEmotesMap.keys.toList(),
+                    limit = 10,
+                ).mapNotNull { res: ExtractedResult ->
+                    val emoteName = res.string
+                    allEmotesMap[emoteName]?.let { emote ->
+                        AutoCompleteItem.Emote(emote)
                     }
                 }
             } else {

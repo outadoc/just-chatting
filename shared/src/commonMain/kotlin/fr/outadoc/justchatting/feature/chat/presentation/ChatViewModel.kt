@@ -206,7 +206,10 @@ class ChatViewModel(
         }
     }
 
-    private val actions = MutableSharedFlow<Action>(extraBufferCapacity = 16)
+    private val actions = MutableSharedFlow<Action>(
+        extraBufferCapacity = 16,
+        replay = 1,
+    )
 
     @OptIn(FlowPreview::class)
     val state: StateFlow<State> =

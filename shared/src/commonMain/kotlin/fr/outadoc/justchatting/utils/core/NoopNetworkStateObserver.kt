@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.flowOf
 
 class NoopNetworkStateObserver : NetworkStateObserver {
     override val state: Flow<NetworkStateObserver.NetworkState> = flowOf(
-        NetworkStateObserver.NetworkState.Available
+        NetworkStateObserver.NetworkState.Available,
     )
 }

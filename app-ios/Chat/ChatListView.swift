@@ -31,34 +31,37 @@ struct ChatListView: View {
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            if messages.isEmpty {
-                ProgressView()
-            } else {
-                ScrollView(.vertical) {
-                    LazyVStack(alignment: .leading) {
-                        ForEach(messages, id: \.hashValue) { message in
-                            Divider()
-                            ChatMessageView(message: message)
-                                .onAppear {
-                                    if message == messages.last {
-                                        isAtBottom = true
+            ZStack {
+                if messages.isEmpty {
+                    ProgressView()
+                } else {
+                    ScrollView(.vertical) {
+                        LazyVStack(alignment: .leading) {
+                            ForEach(messages, id: \.hashValue) { message in
+                                Divider()
+                                ChatMessageView(message: message)
+                                    .onAppear {
+                                        if message == messages.last {
+                                            isAtBottom = true
+                                        }
                                     }
-                                }
-                                .onDisappear {
-                                    if message == messages.last {
-                                        isAtBottom = false
+                                    .onDisappear {
+                                        if message == messages.last {
+                                            isAtBottom = false
+                                        }
                                     }
-                                }
+                            }
                         }
+                        .scrollTargetLayout()
+                        .padding()
+                        .padding([.bottom], inputHeight)
                     }
-                    .scrollTargetLayout()
-                    .padding()
-                    .padding([.bottom], inputHeight)
+                    .scrollTargetBehavior(.viewAligned)
+                    .scrollPosition(id: $currentPosition)
+                    .scrollDismissesKeyboard(.interactively)
                 }
-                .scrollTargetBehavior(.viewAligned)
-                .scrollPosition(id: $currentPosition)
-                .scrollDismissesKeyboard(.interactively)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
 
             if !isAtBottom {
                 Button(

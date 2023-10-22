@@ -15,8 +15,15 @@ struct ChattingView: View {
 
     var channelLogin: String
     var body: some View {
+        let displayName = switch onEnum(of: viewModel.state) {
+        case .initial:
+            channelLogin
+        case let .chatting(state):
+            state.user.displayName
+        }
+
         InnerChattingView(state: viewModel.state)
-            .navigationTitle(channelLogin)
+            .navigationTitle(displayName)
             .onAppear {
                 viewModel.loadChat(channelLogin: channelLogin)
                 // viewModel.onResume()

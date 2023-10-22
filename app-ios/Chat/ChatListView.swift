@@ -16,6 +16,8 @@ struct ChatListView: View {
 
     var messages: [ChatEventMessage]
 
+    private let inputHeight = 48.0
+
     @State private var currentPosition: Int?
     @State private var isAtBottom: Bool = false
     @State private var isTextFieldFocused: Bool = false
@@ -28,64 +30,62 @@ struct ChatListView: View {
     }
 
     var body: some View {
-        VStack {
-            ZStack {
-                if messages.isEmpty {
-                    ProgressView()
-                } else {
-                    ZStack(alignment: .bottomTrailing) {
-                        ScrollView(.vertical) {
-                            LazyVStack(alignment: .leading) {
-                                ForEach(messages, id: \.hashValue) { message in
-                                    Divider()
-                                    ChatMessageView(message: message)
-                                        .onAppear {
-                                            if message == messages.last {
-                                                isAtBottom = true
-                                            }
-                                        }
-                                        .onDisappear {
-                                            if message == messages.last {
-                                                isAtBottom = false
-                                            }
-                                        }
-                                }
-                            }
-                            .scrollTargetLayout()
-                        }
-                        .safeAreaPadding(.horizontal, 16.0)
-                        .scrollTargetBehavior(.viewAligned)
-                        .scrollPosition(id: $currentPosition)
-                        .scrollDismissesKeyboard(.interactively)
-
-                        if !isAtBottom {
-                            Button(
-                                action: {
-                                    if let lastMessage = messages.last {
-                                        currentPosition = lastMessage.hashValue
+        ZStack(alignment: .bottomTrailing) {
+            if messages.isEmpty {
+                ProgressView()
+            } else {
+                ScrollView(.vertical) {
+                    LazyVStack(alignment: .leading) {
+                        ForEach(messages, id: \.hashValue) { message in
+                            Divider()
+                            ChatMessageView(message: message)
+                                .onAppear {
+                                    if message == messages.last {
+                                        isAtBottom = true
                                     }
-                                },
-                                label: {
-                                    Image(systemName: "chevron.down")
-                                        .padding()
-                                        .background(Color.accentColor)
-                                        .foregroundColor(.white)
-                                        .clipShape(Circle())
                                 }
-                            )
-                            .padding(24)
+                                .onDisappear {
+                                    if message == messages.last {
+                                        isAtBottom = false
+                                    }
+                                }
                         }
                     }
+                    .scrollTargetLayout()
+                    .padding()
+                    .padding([.bottom], inputHeight)
                 }
+                .scrollTargetBehavior(.viewAligned)
+                .scrollPosition(id: $currentPosition)
+                .scrollDismissesKeyboard(.interactively)
             }
-            .frame(maxHeight: .infinity)
 
-            HStack(spacing: 8) {
+            if !isAtBottom {
+                Button(
+                    action: {
+                        if let lastMessage = messages.last {
+                            currentPosition = lastMessage.hashValue
+                        }
+                    },
+                    label: {
+                        Image(systemName: "chevron.down")
+                            .padding()
+                            .background(.bar)
+                            .clipShape(Circle())
+                    }
+                )
+                .padding(24)
+                .padding([.bottom], inputHeight)
+            }
+
+            HStack(spacing: 16) {
                 TextField(
                     MR.strings.shared.chat_input_hint.desc().localized(),
                     text: inputMessageBinding,
                     prompt: Text(MR.strings.shared.chat_input_hint.desc().localized())
                 )
+                .keyboardType(.alphabet)
+                .submitLabel(.send)
                 .textFieldStyle(.roundedBorder)
                 .focusable(isTextFieldFocused)
                 .onSubmit(submit)
@@ -99,7 +99,9 @@ struct ChatListView: View {
                     )
                 }
             }
-            .padding(16)
+            .padding([.leading, .trailing])
+            .frame(height: inputHeight)
+            .background(.bar)
         }
         .onChange(of: isTextFieldFocused) {
             if let lastMessage = messages.last {

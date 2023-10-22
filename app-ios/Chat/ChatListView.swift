@@ -23,6 +23,7 @@ struct ChatListView: View {
                 ScrollView(.vertical) {
                     LazyVStack(alignment: .leading) {
                         ForEach(messages, id: \.hashValue) { message in
+                            Divider()
                             ChatMessageView(message: message)
                                 .onAppear {
                                     if message == messages.last {
@@ -38,6 +39,7 @@ struct ChatListView: View {
                     }
                     .scrollTargetLayout()
                 }
+                .safeAreaPadding(.horizontal, 16.0)
                 .scrollTargetBehavior(.viewAligned)
                 .scrollPosition(id: $currentPosition)
             }
@@ -104,7 +106,9 @@ struct ChatMessageBody: View {
     var body: some View {
         VStack {
             if let message = messageBody.message {
-                Text(message)
+                var userName = AttributedString("\(messageBody.chatter.displayName): ")
+                // userName.font = .largeTitle
+                Text(userName + AttributedString(message))
             }
         }
     }

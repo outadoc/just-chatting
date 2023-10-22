@@ -85,7 +85,7 @@ private extension LiveChannelsView {
                             try await skie(self.pagingCollectionViewController).submitData(pagingData: pagingData)
                         } catch is CancellationError {
                         } catch {
-                            NSLog("Error when submitting paging data: \(error)")
+                            LoggerExtKt.logDebug { "Error when submitting paging data: \(error)" }
                         }
                     }
                 }

@@ -43,7 +43,56 @@ private struct InnerChattingView: View {
 
 struct ChattingView_Previews: PreviewProvider {
     static var previews: some View {
-        ChattingView(channelLogin: "HortyUnderscore")
+        InnerChattingView(
+            state: ChatViewModel.StateChatting(
+                user: User(
+                    id: "",
+                    login: "antoinedaniel",
+                    displayName: "AntoineDaniel",
+                    description: "",
+                    profileImageUrl: "",
+                    createdAt: ""
+                ),
+                appUser: AppUser.LoggedIn(
+                    userId: "",
+                    userLogin: "outadoc",
+                    token: ""
+                ),
+                stream: nil,
+                channelBadges: [],
+                chatMessages: [],
+                chatters: Set(),
+                pronouns: [:],
+                cheerEmotes: [:],
+                globalBadges: [],
+                lastSentMessageInstant: nil,
+                pickableEmotes: [],
+                richEmbeds: [:],
+                recentEmotes: [],
+                userState: ChatEventUserState(emoteSets: []),
+                roomState: RoomState(
+                    isEmoteOnly: false,
+                    minFollowDuration: -1,
+                    uniqueMessagesOnly: false,
+                    slowModeDuration: -1,
+                    isSubOnly: false
+                ),
+                ongoingEvents: OngoingEvents(
+                    poll: nil,
+                    prediction: nil,
+                    pinnedMessage: nil,
+                    outgoingRaid: nil
+                ),
+                removedContent: [],
+                connectionStatus: ConnectionStatus(
+                    isAlive: true,
+                    preventSendingMessages: false,
+                    registeredListeners: 0
+                ),
+                maxAdapterCount: 1000,
+                showInfoForUserLogin: nil
+            )
+        )
     }
 }
 

@@ -27,3 +27,9 @@ struct AvatarView: View {
         )
     }
 }
+
+struct AvatarView_Previews: PreviewProvider {
+    static var previews: some View {
+        AvatarView(url: URL(string: "https://placekitten.com/56/56")!)
+    }
+}

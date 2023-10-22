@@ -11,13 +11,44 @@ import SwiftUI
 
 struct ChatListView: View {
     var messages: [ChatEventMessage]
+
+    @State var currentPosition: Int?
+    @State var isAtBottom: Bool = false
+
     var body: some View {
-        List {
-            ForEach(messages, id: \.timestamp) { message in
-                ChatMessageView(message: message)
+        ZStack {
+            if messages.isEmpty {
+                ProgressView()
+            } else {
+                ScrollView(.vertical) {
+                    LazyVStack(alignment: .leading) {
+                        ForEach(messages, id: \.hashValue) { message in
+                            ChatMessageView(message: message)
+                                .onAppear {
+                                    if message == messages.last {
+                                        isAtBottom = true
+                                    }
+                                }
+                                .onDisappear {
+                                    if message == messages.last {
+                                        isAtBottom = false
+                                    }
+                                }
+                        }
+                    }
+                    .scrollTargetLayout()
+                }
+                .scrollTargetBehavior(.viewAligned)
+                .scrollPosition(id: $currentPosition)
             }
         }
-        .listStyle(.inset)
+        .onChange(of: messages.count) {
+            if let lastMessage = messages.last {
+                if isAtBottom || currentPosition == nil {
+                    currentPosition = lastMessage.hashValue
+                }
+            }
+        }
     }
 }
 

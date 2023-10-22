@@ -24,6 +24,7 @@ struct ChattingView: View {
 
         InnerChattingView(state: viewModel.state)
             .navigationTitle(displayName)
+            .toolbarTitleDisplayMode(.inline)
             .onAppear {
                 viewModel.loadChat(channelLogin: channelLogin)
                 // viewModel.onResume()

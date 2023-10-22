@@ -12,8 +12,8 @@ import SwiftUI
 struct ChatListView: View {
     var messages: [ChatEventMessage]
 
-    @State var currentPosition: Int?
-    @State var isAtBottom: Bool = false
+    @State private var currentPosition: Int?
+    @State private var isAtBottom: Bool = false
 
     var body: some View {
         ZStack {

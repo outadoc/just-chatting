@@ -12,10 +12,9 @@ import SwiftUI
 struct NoticeChatMessageView: View {
     var message: ChatEventMessage.Notice
     var body: some View {
-        VStack {
-            if let messageBody = message.body {
-                ChatMessageBodyView(messageBody: messageBody)
-            }
+        VStack(alignment: .leading) {
+            Text(message.text.localized())
+                .italic()
         }
     }
 }

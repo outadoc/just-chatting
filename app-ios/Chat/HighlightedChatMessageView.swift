@@ -12,7 +12,15 @@ import SwiftUI
 struct HighlightedChatMessageView: View {
     var message: ChatEventMessage.Highlighted
     var body: some View {
-        VStack {
+        VStack(alignment: .leading) {
+            Text(message.metadata.title.localized())
+                .italic()
+
+            if let subtitle = message.metadata.subtitle {
+                Text(subtitle.localized())
+                    .italic()
+            }
+
             if let messageBody = message.body {
                 ChatMessageBodyView(messageBody: messageBody)
             }

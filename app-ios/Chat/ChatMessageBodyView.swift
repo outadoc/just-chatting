@@ -15,6 +15,9 @@ struct ChatMessageBodyView: View {
     private var userNameString: AttributedString {
         var attributedString = AttributedString("\(messageBody.chatter.displayName): ")
         attributedString.font = .boldSystemFont(ofSize: 14)
+        if let color = messageBody.color {
+            attributedString.foregroundColor = color.parseHex()
+        }
         return attributedString
     }
 

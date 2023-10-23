@@ -30,7 +30,10 @@ struct ChattingView: View {
             updateInputMessage: { message in
                 viewModel.onMessageInputChanged(
                     message: message,
-                    selectionRange: KotlinIntRange(start: 0, endInclusive: 0)
+                    selectionRange: KotlinIntRange(
+                        start: Int32(message.count),
+                        endInclusive: Int32(message.count)
+                    )
                 )
             },
             submit: {
@@ -38,6 +41,12 @@ struct ChattingView: View {
                     screenDensity: 2.0,
                     isDarkTheme: colorScheme == .dark
                 )
+            },
+            onEmoteClick: { emote in
+                viewModel.appendEmote(emote: emote, autocomplete: true)
+            },
+            onChatterClick: { chatter in
+                viewModel.appendChatter(chatter: chatter, autocomplete: true)
             }
         )
         .navigationTitle(displayName)
@@ -57,6 +66,8 @@ private struct InnerChattingView: View {
     var inputState: ChatViewModel.InputState
     var updateInputMessage: (String) -> Void
     var submit: () -> Void
+    var onEmoteClick: (Emote) -> Void
+    var onChatterClick: (Chatter) -> Void
 
     var body: some View {
         VStack {
@@ -65,10 +76,13 @@ private struct InnerChattingView: View {
                 ProgressView()
             case let .chatting(state):
                 ChatListView(
+                    messages: state.chatMessages,
+                    autoCompleteItems: inputState.autoCompleteItems,
                     inputMessage: inputState.message,
                     updateInputMessage: updateInputMessage,
                     submit: submit,
-                    messages: state.chatMessages
+                    onEmoteClick: onEmoteClick,
+                    onChatterClick: onChatterClick
                 )
             }
         }

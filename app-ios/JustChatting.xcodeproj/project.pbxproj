@@ -29,6 +29,8 @@
 		A9AC12E52ADFEE110010CA24 /* FollowedChannelsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */; };
 		A9AC12E72ADFEE260010CA24 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9AC12E62ADFEE260010CA24 /* SettingsView.swift */; };
 		A9D14C822AE19CC400F676D2 /* AppPreferences+copy.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D14C812AE19CC400F676D2 /* AppPreferences+copy.swift */; };
+		A9D234232AE6E8420077640B /* EmoteView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D234222AE6E8420077640B /* EmoteView.swift */; };
+		A9D234252AE6F2800077640B /* AutoCompleteRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D234242AE6F2800077640B /* AutoCompleteRow.swift */; };
 		A9F33DDA2AE075ED00663BF2 /* LiveChannelItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F33DD92AE075ED00663BF2 /* LiveChannelItemView.swift */; };
 		A9F33DDC2AE0776500663BF2 /* PillView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9F33DDB2AE0776500663BF2 /* PillView.swift */; };
 		A9FF4C662AE1D21E00CF50C2 /* String+Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9FF4C652AE1D21E00CF50C2 /* String+Date.swift */; };
@@ -71,6 +73,8 @@
 		A9AC12E42ADFEE110010CA24 /* FollowedChannelsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowedChannelsView.swift; sourceTree = "<group>"; };
 		A9AC12E62ADFEE260010CA24 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		A9D14C812AE19CC400F676D2 /* AppPreferences+copy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppPreferences+copy.swift"; sourceTree = "<group>"; };
+		A9D234222AE6E8420077640B /* EmoteView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmoteView.swift; sourceTree = "<group>"; };
+		A9D234242AE6F2800077640B /* AutoCompleteRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoCompleteRow.swift; sourceTree = "<group>"; };
 		A9F33DD92AE075ED00663BF2 /* LiveChannelItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveChannelItemView.swift; sourceTree = "<group>"; };
 		A9F33DDB2AE0776500663BF2 /* PillView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PillView.swift; sourceTree = "<group>"; };
 		A9FF4C652AE1D21E00CF50C2 /* String+Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Date.swift"; sourceTree = "<group>"; };
@@ -152,6 +156,7 @@
 				A989954F2AE56A3B009490DA /* NoticeChatMessageView.swift */,
 				A98995512AE56A4F009490DA /* SimpleChatMessageView.swift */,
 				A989954B2AE56A03009490DA /* ChatMessageBodyView.swift */,
+				A9D234242AE6F2800077640B /* AutoCompleteRow.swift */,
 			);
 			path = Chat;
 			sourceTree = "<group>";
@@ -190,6 +195,7 @@
 			children = (
 				A9F33DDB2AE0776500663BF2 /* PillView.swift */,
 				A92CA46A2AE0860300971922 /* AvatarView.swift */,
+				A9D234222AE6E8420077640B /* EmoteView.swift */,
 			);
 			path = Atoms;
 			sourceTree = "<group>";
@@ -313,12 +319,14 @@
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				A98995522AE56A4F009490DA /* SimpleChatMessageView.swift in Sources */,
 				A9AC12E52ADFEE110010CA24 /* FollowedChannelsView.swift in Sources */,
+				A9D234252AE6F2800077640B /* AutoCompleteRow.swift in Sources */,
 				A92CA46B2AE0860300971922 /* AvatarView.swift in Sources */,
 				A99672902AE53187000D9EB0 /* Logger.swift in Sources */,
 				A9F33DDC2AE0776500663BF2 /* PillView.swift in Sources */,
 				A9AC12E32ADFEDF10010CA24 /* LiveChannelsView.swift in Sources */,
 				A97706962ADDE1E8004593B3 /* RootNavigationView.swift in Sources */,
 				A97706922ADD56F9004593B3 /* Container+DI.swift in Sources */,
+				A9D234232AE6E8420077640B /* EmoteView.swift in Sources */,
 				A98906C62AE3028E000C776D /* ChattingView.swift in Sources */,
 				A9D14C822AE19CC400F676D2 /* AppPreferences+copy.swift in Sources */,
 				A9F33DDA2AE075ED00663BF2 /* LiveChannelItemView.swift in Sources */,

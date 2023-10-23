@@ -10,13 +10,15 @@ import JCShared
 import SwiftUI
 
 struct ChatListView: View {
+    var messages: [ChatEventMessage]
+    var autoCompleteItems: [AutoCompleteItem]
     var inputMessage: String
     var updateInputMessage: (String) -> Void
     var submit: () -> Void
+    var onEmoteClick: (Emote) -> Void
+    var onChatterClick: (Chatter) -> Void
 
-    var messages: [ChatEventMessage]
-
-    private let inputHeight = 48.0
+    private let inputHeight = 96.0
 
     @State private var currentPosition: Int?
     @State private var isAtBottom: Bool = false
@@ -81,28 +83,36 @@ struct ChatListView: View {
                 .padding([.bottom], inputHeight)
             }
 
-            HStack(spacing: 16) {
-                TextField(
-                    MR.strings.shared.chat_input_hint.desc().localized(),
-                    text: inputMessageBinding,
-                    prompt: Text(MR.strings.shared.chat_input_hint.desc().localized())
+            VStack {
+                AutoCompleteRow(
+                    items: autoCompleteItems,
+                    onEmoteClick: onEmoteClick,
+                    onChatterClick: onChatterClick
                 )
-                .keyboardType(.alphabet)
-                .submitLabel(.send)
-                .textFieldStyle(.roundedBorder)
-                .focusable(isTextFieldFocused)
-                .onSubmit(submit)
 
-                if !inputMessage.isEmpty {
-                    Button(
-                        action: submit,
-                        label: {
-                            Image(systemName: "paperplane")
-                        }
+                HStack(spacing: 16) {
+                    TextField(
+                        MR.strings.shared.chat_input_hint.desc().localized(),
+                        text: inputMessageBinding,
+                        prompt: Text(MR.strings.shared.chat_input_hint.desc().localized())
                     )
+                    .keyboardType(.alphabet)
+                    .submitLabel(.send)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .focusable(isTextFieldFocused)
+                    .onSubmit(submit)
+
+                    if !inputMessage.isEmpty {
+                        Button(
+                            action: submit,
+                            label: {
+                                Image(systemName: "paperplane")
+                            }
+                        )
+                    }
                 }
+                .padding([.horizontal, .bottom])
             }
-            .padding([.leading, .trailing])
             .frame(height: inputHeight)
             .background(.bar)
         }

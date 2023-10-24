@@ -14,6 +14,7 @@
 		A92CA4672AE07C0400971922 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = A92CA4662AE07C0400971922 /* Flow */; };
 		A92CA4692AE082F100971922 /* FollowedChannelItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92CA4682AE082F100971922 /* FollowedChannelItemView.swift */; };
 		A92CA46B2AE0860300971922 /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A92CA46A2AE0860300971922 /* AvatarView.swift */; };
+		A96167082AE7EC750076CD97 /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = A96167072AE7EC750076CD97 /* SDWebImageSwiftUI */; };
 		A97706902ADD4EA0004593B3 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = A977068F2ADD4EA0004593B3 /* Swinject */; };
 		A97706922ADD56F9004593B3 /* Container+DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97706912ADD56F9004593B3 /* Container+DI.swift */; };
 		A97706962ADDE1E8004593B3 /* RootNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A97706952ADDE1E8004593B3 /* RootNavigationView.swift */; };
@@ -88,6 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A96167082AE7EC750076CD97 /* SDWebImageSwiftUI in Frameworks */,
 				A92CA4672AE07C0400971922 /* Flow in Frameworks */,
 				A97706902ADD4EA0004593B3 /* Swinject in Frameworks */,
 			);
@@ -232,6 +234,7 @@
 			packageProductDependencies = (
 				A977068F2ADD4EA0004593B3 /* Swinject */,
 				A92CA4662AE07C0400971922 /* Flow */,
+				A96167072AE7EC750076CD97 /* SDWebImageSwiftUI */,
 			);
 			productName = JustChatting;
 			productReference = 7555FF7B242A565900829871 /* JustChatting.app */;
@@ -265,6 +268,7 @@
 			packageReferences = (
 				A977068E2ADD4EA0004593B3 /* XCRemoteSwiftPackageReference "Swinject" */,
 				A9F33DDD2AE0793200663BF2 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */,
+				A93BF5F12AE7E7FF000A1D6C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			productRefGroup = 7555FF7C242A565900829871 /* Products */;
 			projectDirPath = "";
@@ -547,6 +551,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		A93BF5F12AE7E7FF000A1D6C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.2.4;
+			};
+		};
 		A977068E2ADD4EA0004593B3 /* XCRemoteSwiftPackageReference "Swinject" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Swinject/Swinject.git";
@@ -570,6 +582,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A9F33DDD2AE0793200663BF2 /* XCRemoteSwiftPackageReference "SwiftUI-Flow" */;
 			productName = Flow;
+		};
+		A96167072AE7EC750076CD97 /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A93BF5F12AE7E7FF000A1D6C /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
 		};
 		A977068F2ADD4EA0004593B3 /* Swinject */ = {
 			isa = XCSwiftPackageProductDependency;

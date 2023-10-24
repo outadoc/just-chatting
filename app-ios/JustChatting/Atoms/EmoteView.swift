@@ -7,6 +7,7 @@
 //
 
 import JCShared
+import SDWebImageSwiftUI
 import SwiftUI
 
 struct EmoteView: View {
@@ -18,26 +19,17 @@ struct EmoteView: View {
     @Environment(\.colorScheme) var colorScheme
 
     var body: some View {
+        let url = emote.urls.getBestUrl(
+            screenDensity: Float(UIScreen.main.scale),
+            isDarkTheme: colorScheme == .dark
+        )
+
         Button(
             action: onClick,
             label: {
-                AsyncImage(
-                    url: URL(
-                        string: emote.urls.getBestUrl(
-                            screenDensity: Float(UIScreen.main.scale),
-                            isDarkTheme: colorScheme == .dark
-                        )
-                    )!,
-                    content: { image in
-                        image.resizable()
-                            .aspectRatio(1, contentMode: .fit)
-                            .frame(width: size, height: size)
-                    },
-                    placeholder: {
-                        ProgressView()
-                            .frame(width: size, height: size)
-                    }
-                )
+                AnimatedImage(url: URL(string: url)!)
+                    .resizable()
+                    .frame(width: size, height: size)
             }
         )
     }

@@ -52,8 +52,8 @@ private struct InnerRootNavigationView: View {
                 MainNavigationView()
             }
         }
-        .onChange(of: lastEvent) { event in
-            if let event = event {
+        .onChange(of: lastEvent) {
+            if let event = lastEvent {
                 switch onEnum(of: event) {
                 case let .openInBrowser(openEvent):
                     Task {

@@ -11,7 +11,7 @@ import SwiftUI
 import Swinject
 
 struct FollowedChannelsView: View {
-    @StateObject private var viewModel = ViewModel(wrapped: Container.shared.resolve(FollowedChannelsViewModel.self)!)
+    @State private var viewModel = ViewModel(wrapped: Container.shared.resolve(FollowedChannelsViewModel.self)!)
 
     var body: some View {
         InnerFollowedChannelsView(
@@ -52,15 +52,14 @@ private struct InnerFollowedChannelsView: View {
 }
 
 extension FollowedChannelsView {
-    @MainActor
-    class ViewModel: ObservableObject {
+    @Observable
+    class ViewModel {
         let wrapped: FollowedChannelsViewModel
         init(wrapped: FollowedChannelsViewModel) {
             self.wrapped = wrapped
         }
 
-        @Published
-        private(set) var loadedItems: [JCShared.ChannelFollow]? = nil
+        private(set) var loadedItems: [JCShared.ChannelFollow]?
 
         private let pagingCollectionViewController = PagingCollectionViewController<JCShared.ChannelFollow>()
 

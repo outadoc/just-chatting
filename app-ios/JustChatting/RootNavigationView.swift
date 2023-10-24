@@ -12,7 +12,7 @@ import SwiftUI
 import Swinject
 
 struct RootNavigationView: View {
-    @StateObject private var viewModel = ViewModel(wrapped: Container.shared.resolve(MainRouterViewModel.self)!)
+    @State private var viewModel = ViewModel(wrapped: Container.shared.resolve(MainRouterViewModel.self)!)
 
     var body: some View {
         InnerRootNavigationView(
@@ -92,18 +92,15 @@ private struct LoggedOutView: View {
 }
 
 private extension RootNavigationView {
-    @MainActor
-    class ViewModel: ObservableObject {
+    @Observable
+    class ViewModel {
         let wrapped: MainRouterViewModel
         init(wrapped: MainRouterViewModel) {
             self.wrapped = wrapped
         }
 
-        @Published
         private(set) var state: MainRouterViewModel.State = MainRouterViewModel.StateLoading()
-
-        @Published
-        private(set) var lastEvent: MainRouterViewModel.Event? = nil
+        private(set) var lastEvent: MainRouterViewModel.Event?
 
         func onLoginClick() {
             wrapped.onLoginClick()

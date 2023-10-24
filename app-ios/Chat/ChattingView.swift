@@ -11,7 +11,7 @@ import SwiftUI
 import Swinject
 
 struct ChattingView: View {
-    @StateObject private var viewModel = ViewModel(wrapped: Container.shared.resolve(ChatViewModel.self)!)
+    @State private var viewModel = ViewModel(wrapped: Container.shared.resolve(ChatViewModel.self)!)
 
     @Environment(\.colorScheme) var colorScheme
 
@@ -90,17 +90,14 @@ private struct InnerChattingView: View {
 }
 
 private extension ChattingView {
-    @MainActor
-    class ViewModel: ObservableObject {
+    @Observable
+    class ViewModel {
         let wrapped: ChatViewModel
         init(wrapped: ChatViewModel) {
             self.wrapped = wrapped
         }
 
-        @Published
         private(set) var state: ChatViewModel.State = ChatViewModel.StateInitial()
-
-        @Published
         private(set) var inputState: ChatViewModel.InputState = ChatViewModel.InputStateCompanion.shared.Empty
 
         func onResume() {

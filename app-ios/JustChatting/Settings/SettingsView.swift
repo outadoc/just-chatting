@@ -11,7 +11,7 @@ import SwiftUI
 import Swinject
 
 struct SettingsView: View {
-    @StateObject private var viewModel = ViewModel(wrapped: Container.shared.resolve(SettingsViewModel.self)!)
+    @State private var viewModel = ViewModel(wrapped: Container.shared.resolve(SettingsViewModel.self)!)
     var body: some View {
         VStack {
             if let appPreferences = viewModel.appPreferences {
@@ -151,15 +151,14 @@ private struct InnerSettingsView: View {
 }
 
 private extension SettingsView {
-    @MainActor
-    class ViewModel: ObservableObject {
+    @Observable
+    class ViewModel {
         let wrapped: SettingsViewModel
         init(wrapped: SettingsViewModel) {
             self.wrapped = wrapped
         }
 
-        @Published
-        private(set) var appPreferences: AppPreferences? = nil
+        private(set) var appPreferences: AppPreferences?
 
         func update(appPreferences: AppPreferences) {
             wrapped.updatePreferences(appPreferences: appPreferences)

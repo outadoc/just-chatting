@@ -11,7 +11,7 @@ import SwiftUI
 import Swinject
 
 struct LiveChannelsView: View {
-    @StateObject private var viewModel = ViewModel(wrapped: Container.shared.resolve(FollowedStreamsViewModel.self)!)
+    @State private var viewModel = ViewModel(wrapped: Container.shared.resolve(FollowedStreamsViewModel.self)!)
 
     var body: some View {
         InnerLiveChannelsView(
@@ -53,15 +53,14 @@ private struct InnerLiveChannelsView: View {
 }
 
 private extension LiveChannelsView {
-    @MainActor
-    class ViewModel: ObservableObject {
+    @Observable
+    class ViewModel {
         let wrapped: FollowedStreamsViewModel
         init(wrapped: FollowedStreamsViewModel) {
             self.wrapped = wrapped
         }
 
-        @Published
-        private(set) var loadedItems: [JCShared.Stream]? = nil
+        private(set) var loadedItems: [JCShared.Stream]?
 
         private let pagingCollectionViewController = PagingCollectionViewController<JCShared.Stream>()
 

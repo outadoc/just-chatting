@@ -36,6 +36,7 @@ struct ChatListView: View {
             ZStack {
                 if messages.isEmpty {
                     ProgressView()
+                        .frame(maxWidth: .infinity)
                 } else {
                     ScrollView(.vertical) {
                         LazyVStack(alignment: .leading) {
@@ -63,7 +64,7 @@ struct ChatListView: View {
                     .scrollDismissesKeyboard(.interactively)
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxHeight: .infinity)
 
             if !isAtBottom {
                 Button(

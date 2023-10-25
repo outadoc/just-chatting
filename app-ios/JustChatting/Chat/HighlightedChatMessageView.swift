@@ -14,11 +14,11 @@ struct HighlightedChatMessageView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(message.metadata.title.localized())
-                .italic()
+                .font(.system(size: 14, weight: .bold))
 
             if let subtitle = message.metadata.subtitle {
                 Text(subtitle.localized())
-                    .italic()
+                    .font(.system(size: 14, weight: .bold))
             }
 
             if let messageBody = message.body {

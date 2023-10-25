@@ -14,7 +14,7 @@ struct NoticeChatMessageView: View {
     var body: some View {
         VStack(alignment: .leading) {
             Text(message.text.localized())
-                .italic()
+                .font(.system(size: 14, weight: .bold))
         }
     }
 }

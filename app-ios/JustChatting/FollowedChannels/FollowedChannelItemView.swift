@@ -23,6 +23,7 @@ struct FollowedChannelItemView: View {
                 if let followedAt = channel.followedAt.parseDate().formatDate() {
                     Text(MR.strings.shared.followed_at.format(args: [followedAt]).localized())
                         .font(.subheadline)
+                        .foregroundStyle(.secondary)
                 }
             }
         }
@@ -36,8 +37,8 @@ struct FollowedChannelItemView_Previews: PreviewProvider {
                 userId: "",
                 userLogin: "hortyunderscore",
                 userDisplayName: "HortyUnderscore",
-                followedAt: "2023-10-20T20:13:00",
-                profileImageURL: nil
+                followedAt: "2023-10-20T20:13:00Z",
+                profileImageURL: "https://placekitten.com/56/56"
             )
         )
     }

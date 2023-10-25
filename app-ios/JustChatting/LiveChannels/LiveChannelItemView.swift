@@ -35,6 +35,7 @@ struct LiveChannelItemView: View {
                     ForEach(stream.tags, id: \.self) { tag in
                         PillView(text: tag)
                             .font(.footnote)
+                            .foregroundStyle(.secondary)
                     }
                 }
             }
@@ -54,7 +55,7 @@ struct LiveChannelItemView_Previews: PreviewProvider {
                 title: "LAYTON MAINTENANT VENEZ TOUT DE SUITE",
                 viewerCount: 10000,
                 startedAt: "",
-                profileImageURL: "",
+                profileImageURL: "https://placekitten.com/56/56",
                 tags: ["feur", "coubeh"]
             )
         )

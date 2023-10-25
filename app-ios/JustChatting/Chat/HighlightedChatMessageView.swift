@@ -13,17 +13,60 @@ struct HighlightedChatMessageView: View {
     var message: ChatEventMessage.Highlighted
     var body: some View {
         VStack(alignment: .leading) {
-            Text(message.metadata.title.localized())
-                .font(.system(size: 14, weight: .bold))
+            HStack(spacing: 4) {
+                if let icon = message.metadata.titleIcon?.toSystemName() {
+                    Image(systemName: icon)
+                }
+
+                Text(message.metadata.title.localized())
+                    .font(.system(size: 14, weight: .bold))
+            }
 
             if let subtitle = message.metadata.subtitle {
                 Text(subtitle.localized())
                     .font(.system(size: 14, weight: .bold))
             }
 
+            Spacer()
+
             if let messageBody = message.body {
                 ChatMessageBodyView(messageBody: messageBody)
             }
+        }
+    }
+}
+
+extension Icon {
+    func toSystemName() -> String {
+        switch self {
+        case .bolt:
+            "bolt"
+        case .callreceived:
+            "arrow.down.left"
+        case .campaign:
+            "megaphone"
+        case .cancel:
+            "x.circle"
+        case .fastforward:
+            "chevron.right.2"
+        case .gavel:
+            "person.fill.xmark"
+        case .highlight:
+            "highlighter"
+        case .redeem:
+            "gift"
+        case .reply:
+            "arrowshape.turn.up.left"
+        case .send:
+            "paperplane"
+        case .star:
+            "star"
+        case .toll:
+            "circle.dotted.and.circle"
+        case .volunteeractivism:
+            "giftcard"
+        case .wavinghand:
+            "hand.wave"
         }
     }
 }

@@ -110,7 +110,6 @@
 			isa = PBXGroup;
 			children = (
 				7555FF7D242A565900829871 /* JustChatting */,
-				A98906C42AE3025A000C776D /* Chat */,
 				7555FF7C242A565900829871 /* Products */,
 				7555FFB0242A642200829871 /* Frameworks */,
 			);
@@ -139,6 +138,7 @@
 				A9FF4C6A2AE1D8A400CF50C2 /* LiveChannels */,
 				A9FF4C6B2AE1D8BF00CF50C2 /* FollowedChannels */,
 				A9FF4C6D2AE1D95900CF50C2 /* Settings */,
+				A98906C42AE3025A000C776D /* Chat */,
 			);
 			path = JustChatting;
 			sourceTree = "<group>";

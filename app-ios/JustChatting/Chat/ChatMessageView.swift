@@ -12,15 +12,13 @@ import SwiftUI
 struct ChatMessageView: View {
     var message: ChatEventMessage
     var body: some View {
-        ZStack {
-            switch onEnum(of: message) {
-            case let .simple(message):
-                SimpleChatMessageView(message: message)
-            case let .notice(message):
-                NoticeChatMessageView(message: message)
-            case let .highlighted(message):
-                HighlightedChatMessageView(message: message)
-            }
+        switch onEnum(of: message) {
+        case let .simple(message):
+            SimpleChatMessageView(message: message)
+        case let .notice(message):
+            NoticeChatMessageView(message: message)
+        case let .highlighted(message):
+            HighlightedChatMessageView(message: message)
         }
     }
 }

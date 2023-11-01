@@ -12,8 +12,6 @@ import SwiftUI
 struct SimpleChatMessageView: View {
     var message: ChatEventMessage.Simple
     var body: some View {
-        VStack {
-            ChatMessageBodyView(messageBody: message.body)
-        }
+        ChatMessageBodyView(messageBody: message.body)
     }
 }

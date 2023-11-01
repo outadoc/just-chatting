@@ -28,8 +28,6 @@ struct ChatMessageBodyView: View {
     }
 
     var body: some View {
-        HStack {
-            Text(userNameString + messageString)
-        }
+        Text(userNameString + messageString)
     }
 }

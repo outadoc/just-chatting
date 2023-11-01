@@ -40,23 +40,36 @@ struct ChatListView: View {
                 } else {
                     ScrollView(.vertical) {
                         LazyVStack(alignment: .leading) {
-                            ForEach(messages, id: \.hashValue) { message in
-                                Divider()
-                                ChatMessageView(message: message)
-                                    .onAppear {
-                                        if message == messages.last {
-                                            isAtBottom = true
+                            ForEach(messages.indices, id: \.self) { index in
+                                let message = messages[index]
+
+                                VStack(alignment: .leading) {
+                                    Spacer().frame(maxWidth: .infinity)
+
+                                    ChatMessageView(message: message)
+                                        .onAppear {
+                                            if index == messages.count - 1 {
+                                                isAtBottom = true
+                                            }
                                         }
-                                    }
-                                    .onDisappear {
-                                        if message == messages.last {
-                                            isAtBottom = false
+                                        .onDisappear {
+                                            if index == messages.count - 1 {
+                                                isAtBottom = false
+                                            }
                                         }
-                                    }
+                                        .padding([.horizontal])
+
+                                    Spacer().frame(maxWidth: .infinity)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    Color(
+                                        index % 2 == 0 ? .systemBackground : .secondarySystemBackground
+                                    )
+                                )
                             }
                         }
                         .scrollTargetLayout()
-                        .padding()
                         .padding([.bottom], inputHeight)
                     }
                     .scrollTargetBehavior(.viewAligned)
@@ -69,8 +82,8 @@ struct ChatListView: View {
             if !isAtBottom {
                 Button(
                     action: {
-                        if let lastMessage = messages.last {
-                            currentPosition = lastMessage.hashValue
+                        if messages.count > 1 {
+                            currentPosition = messages.count - 1
                         }
                     },
                     label: {
@@ -118,16 +131,16 @@ struct ChatListView: View {
             .background(.bar)
         }
         .onChange(of: isTextFieldFocused) {
-            if let lastMessage = messages.last {
+            if messages.count > 1 {
                 if isTextFieldFocused {
-                    currentPosition = lastMessage.hashValue
+                    currentPosition = messages.count - 1
                 }
             }
         }
         .onChange(of: messages.count) {
-            if let lastMessage = messages.last {
+            if messages.count > 1 {
                 if isAtBottom || currentPosition == nil {
-                    currentPosition = lastMessage.hashValue
+                    currentPosition = messages.count - 1
                 }
             }
         }

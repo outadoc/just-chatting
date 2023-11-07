@@ -22,7 +22,7 @@ kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", versi
 ksp = { id = "com.google.devtools.ksp", version = "1.9.20-1.0.14" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.5" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
-skie = { id = "co.touchlab.skie", version = "0.5.3" }
+skie = { id = "co.touchlab.skie", version = "0.5.5" }
 spotless = { id = "com.diffplug.spotless", version = "6.22.0" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 

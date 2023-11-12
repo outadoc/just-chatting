@@ -72,7 +72,7 @@ private fun CompactSearchBar(
         onQueryChange = viewModel::onQueryChange,
         onSearch = {},
         active = state.isActive,
-        onActiveChange = viewModel::onActiveChange,
+        onActiveChange = viewModel::onSearchActiveChange,
         placeholder = { Text(stringResource(MR.strings.search_hint)) },
         leadingIcon = {
             Crossfade(
@@ -86,7 +86,7 @@ private fun CompactSearchBar(
                     if (isActive) {
                         Icon(
                             Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(fr.outadoc.justchatting.shared.MR.strings.all_goBack),
+                            contentDescription = stringResource(MR.strings.all_goBack),
                         )
                     } else {
                         Icon(
@@ -137,7 +137,7 @@ private fun FullHeightSearchBar(
         onQueryChange = viewModel::onQueryChange,
         onSearch = {},
         active = state.isActive,
-        onActiveChange = viewModel::onActiveChange,
+        onActiveChange = viewModel::onSearchActiveChange,
         placeholder = { Text(stringResource(MR.strings.search_hint)) },
         leadingIcon = {
             Crossfade(
@@ -151,7 +151,7 @@ private fun FullHeightSearchBar(
                     if (isActive) {
                         Icon(
                             Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(fr.outadoc.justchatting.shared.MR.strings.all_goBack),
+                            contentDescription = stringResource(MR.strings.all_goBack),
                         )
                     } else {
                         Icon(

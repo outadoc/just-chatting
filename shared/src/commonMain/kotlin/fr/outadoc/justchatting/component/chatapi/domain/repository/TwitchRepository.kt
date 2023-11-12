@@ -7,6 +7,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Instant
 
 interface TwitchRepository {
 
@@ -18,4 +19,6 @@ interface TwitchRepository {
     suspend fun loadUsersByLogin(logins: List<String>): List<User>?
     suspend fun loadCheerEmotes(userId: String): List<Emote>
     suspend fun loadEmotesFromSet(setIds: List<String>): List<Emote>?
+    suspend fun getRecentChannels(): Flow<List<ChannelSearch>?>
+    suspend fun insertRecentChannel(channel: User, usedAt: Instant)
 }

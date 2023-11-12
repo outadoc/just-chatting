@@ -72,7 +72,7 @@ fun SearchResultsList(
                         UserItemCard(
                             modifier = Modifier.fillMaxWidth(),
                             displayName = item.broadcasterDisplayName,
-                            profileImageURL = item.profileImageURL,
+                            profileImageURL = item.profileImageUrl,
                             tags = item.tags.toImmutableList(),
                             onClick = { onItemClick(item) },
                         )

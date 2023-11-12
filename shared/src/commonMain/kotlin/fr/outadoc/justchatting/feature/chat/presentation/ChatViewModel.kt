@@ -502,6 +502,11 @@ class ChatViewModel(
                 ?.firstOrNull()
                 ?: error("User not loaded")
 
+        twitchRepository.insertRecentChannel(
+            channel = channelUser,
+            usedAt = clock.now(),
+        )
+
         createShortcutForChannel(channelUser)
 
         return State.Chatting(
@@ -793,7 +798,7 @@ class ChatViewModel(
         val state = state.value as? State.Chatting ?: return inputState
 
         defaultScope.launch {
-            val currentTime = clock.now().toEpochMilliseconds()
+            val currentTime = clock.now()
 
             chatRepository.sendMessage(
                 channelId = state.user.id,

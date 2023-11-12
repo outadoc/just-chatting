@@ -25,7 +25,7 @@ extension Container {
     private func setupHome() {
         register(ChannelSearchViewModel.self) { r in
             ChannelSearchViewModel(
-                repository: r.resolve(TwitchRepository.self)!
+                twitchRepository: r.resolve(TwitchRepository.self)!
             )
         }
 
@@ -51,9 +51,19 @@ extension Container {
             r.resolve(AppDatabase.self)!.recentEmoteQueries
         }
 
+        register(RecentChannelQueries.self) { r in
+            r.resolve(AppDatabase.self)!.recentChannelQueries
+        }
+
         register(RecentEmotesRepository.self) { r in
             DbRecentEmotesRepository(
                 recentEmoteQueries: r.resolve(RecentEmoteQueries.self)!
+            )
+        }
+
+        register(RecentChannelsRepository.self) { r in
+            DbRecentChannelsRepository(
+                recentChannelQueries: r.resolve(RecentChannelQueries.self)!
             )
         }
     }
@@ -105,7 +115,8 @@ extension Container {
         register(TwitchRepository.self) { r in
             TwitchRepositoryImpl(
                 helix: r.resolve(HelixApi.self)!,
-                preferencesRepository: r.resolve(PreferenceRepository.self)!
+                preferencesRepository: r.resolve(PreferenceRepository.self)!,
+                recentChannelsRepository: r.resolve(RecentChannelsRepository.self)!
             )
         }
 

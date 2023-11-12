@@ -5,6 +5,8 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.component.chatapi.db.RecentChannelsRepository
+import fr.outadoc.justchatting.component.chatapi.db.Recent_channels
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
@@ -22,10 +24,13 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Instant
+import kotlin.jvm.JvmName
 
 class TwitchRepositoryImpl(
     private val helix: HelixApi,
     private val preferencesRepository: PreferenceRepository,
+    private val recentChannelsRepository: RecentChannelsRepository,
 ) : TwitchRepository {
 
     override suspend fun loadSearchChannels(query: String): Flow<PagingData<ChannelSearch>> {
@@ -46,13 +51,14 @@ class TwitchRepositoryImpl(
 
         return pager.flow.map { page ->
             page.flatMap { searchResponse ->
-                mapSearchWithUserProfileImages(searchResponse)
+                searchResponse.mapWithUserProfileImages()
             }
         }
     }
 
-    private suspend fun mapSearchWithUserProfileImages(searchResults: List<ChannelSearch>): List<ChannelSearch> =
-        with(searchResults) {
+    @JvmName("mapWithUserProfileImagesChannelSearch")
+    private suspend fun List<ChannelSearch>.mapWithUserProfileImages(): List<ChannelSearch> =
+        with(this) {
             return mapNotNull { result -> result.id }
                 .chunked(size = 100)
                 .flatMap { idsToUpdate ->
@@ -62,7 +68,7 @@ class TwitchRepositoryImpl(
 
                     map { searchResult ->
                         searchResult.copy(
-                            profileImageURL = users.firstOrNull { user -> user.id == searchResult.id }
+                            profileImageUrl = users.firstOrNull { user -> user.id == searchResult.id }
                                 ?.profileImageUrl,
                         )
                     }
@@ -94,13 +100,14 @@ class TwitchRepositoryImpl(
                 streams
                     .associateBy { stream -> stream.userId }
                     .values
-                    .let { stream -> mapStreamsWithUserProfileImages(stream) }
+                    .mapWithUserProfileImages()
             }
         }
     }
 
-    private suspend fun mapStreamsWithUserProfileImages(streams: Collection<Stream>): List<Stream> =
-        with(streams) {
+    @JvmName("mapWithUserProfileImagesStream")
+    private suspend fun Collection<Stream>.mapWithUserProfileImages(): List<Stream> =
+        with(this) {
             val users = mapNotNull { it.userId }
                 .chunked(100)
                 .flatMap { ids ->
@@ -139,13 +146,14 @@ class TwitchRepositoryImpl(
 
         return pager.flow.map { page ->
             page.flatMap { follows ->
-                mapFollowsWithUserProfileImages(follows)
+                follows.mapWithUserProfileImages()
             }
         }
     }
 
-    private suspend fun mapFollowsWithUserProfileImages(follows: Collection<ChannelFollow>): Collection<ChannelFollow> =
-        with(follows) {
+    @JvmName("mapWithUserProfileImagesChannelFollow")
+    private suspend fun Collection<ChannelFollow>.mapWithUserProfileImages(): Collection<ChannelFollow> =
+        with(this) {
             val results: List<User> =
                 filter { follow -> follow.profileImageURL == null }
                     .map { follow -> follow.userId }
@@ -240,4 +248,36 @@ class TwitchRepositoryImpl(
                 .sortedByDescending { it.setId }
                 .map { emote -> emote.map(templateUrl = response.template) }
         }
+
+    override suspend fun getRecentChannels(): Flow<List<ChannelSearch>?> {
+        return withContext(DispatchersProvider.io) {
+            recentChannelsRepository.getAll()
+                .map { channels ->
+                    val ids = channels.map { channel -> channel.id }
+                    helix.getUsersById(ids = ids)
+                        .data
+                        ?.map { user ->
+                            ChannelSearch(
+                                id = user.id,
+                                title = user.displayName,
+                                broadcasterLogin = user.login,
+                                broadcasterDisplayName = user.displayName,
+                                profileImageUrl = user.profileImageUrl,
+                            )
+                        }
+                        ?.mapWithUserProfileImages()
+                }
+        }
+    }
+
+    override suspend fun insertRecentChannel(channel: User, usedAt: Instant) {
+        withContext(DispatchersProvider.io) {
+            recentChannelsRepository.insert(
+                Recent_channels(
+                    id = channel.id,
+                    used_at = usedAt.toEpochMilliseconds(),
+                ),
+            )
+        }
+    }
 }

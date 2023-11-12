@@ -31,7 +31,7 @@ val twitchModule = module {
 
     single { EmotesRepository(get(), get(), get(), get(), get()) }
 
-    single<TwitchRepository> { TwitchRepositoryImpl(get(), get()) }
+    single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
 
     single<IdApi> { IdServer(get(named("twitch"))) }
     single<HelixApi> { HelixServer(get(named("twitch"))) }

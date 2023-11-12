@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import kotlinx.datetime.Instant
 
 class EmotesRepository(
     private val helixApi: HelixApi,
@@ -132,7 +133,7 @@ class EmotesRepository(
                 RecentEmote(
                     name = emote.name,
                     url = emote.url,
-                    usedAt = emote.used_at,
+                    usedAt = Instant.fromEpochMilliseconds(emote.used_at),
                 )
             }
         }
@@ -144,7 +145,7 @@ class EmotesRepository(
                     Recent_emotes(
                         name = emote.name,
                         url = emote.url,
-                        used_at = emote.usedAt,
+                        used_at = emote.usedAt.toEpochMilliseconds(),
                     )
                 },
             )

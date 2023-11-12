@@ -26,7 +26,11 @@ class DbRecentEmotesRepository(
                 )
             }
 
-            recentEmoteQueries.cleanUp(limit = MaxRecentEmotes)
+            recentEmoteQueries.cleanUp(limit = MAX_RECENT_EMOTES)
         }
+    }
+
+    private companion object {
+        const val MAX_RECENT_EMOTES: Long = 50
     }
 }

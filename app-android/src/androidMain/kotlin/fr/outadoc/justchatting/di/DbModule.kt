@@ -3,7 +3,10 @@ package fr.outadoc.justchatting.di
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
+import fr.outadoc.justchatting.component.chatapi.db.DbRecentChannelsRepository
 import fr.outadoc.justchatting.component.chatapi.db.DbRecentEmotesRepository
+import fr.outadoc.justchatting.component.chatapi.db.RecentChannelQueries
+import fr.outadoc.justchatting.component.chatapi.db.RecentChannelsRepository
 import fr.outadoc.justchatting.component.chatapi.db.RecentEmoteQueries
 import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesRepository
 import org.koin.dsl.module
@@ -19,6 +22,10 @@ val dbModule = module {
     }
 
     single { AppDatabase(get<SqlDriver>()) }
+
     single<RecentEmoteQueries> { get<AppDatabase>().recentEmoteQueries }
     single<RecentEmotesRepository> { DbRecentEmotesRepository(get()) }
+
+    single<RecentChannelQueries> { get<AppDatabase>().recentChannelQueries }
+    single<RecentChannelsRepository> { DbRecentChannelsRepository(get()) }
 }

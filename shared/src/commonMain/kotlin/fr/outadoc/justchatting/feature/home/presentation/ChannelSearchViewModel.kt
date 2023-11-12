@@ -1,5 +1,7 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
@@ -18,7 +20,7 @@ import kotlinx.coroutines.flow.update
 import kotlin.time.Duration.Companion.seconds
 
 class ChannelSearchViewModel(
-    private val repository: TwitchRepository,
+    private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
 
     data class State(
@@ -34,8 +36,32 @@ class ChannelSearchViewModel(
         state.mapNotNull { state -> state.query }
             .distinctUntilChanged()
             .debounce(0.3.seconds)
-            .flatMapLatest { query -> repository.loadSearchChannels(query) }
+            .flatMapLatest { query ->
+                if (query.isEmpty()) {
+                    loadRecentChannels()
+                } else {
+                    loadSearchResults(query)
+                }
+            }
             .cachedIn(viewModelScope)
+
+    private suspend fun loadSearchResults(query: String): Flow<PagingData<ChannelSearch>> {
+        return twitchRepository.loadSearchChannels(query)
+    }
+
+    private suspend fun loadRecentChannels(): Flow<PagingData<ChannelSearch>> {
+        return twitchRepository.getRecentChannels()
+            .mapNotNull { channels ->
+                PagingData.from(
+                    channels.orEmpty(),
+                    LoadStates(
+                        prepend = LoadState.NotLoading(endOfPaginationReached = true),
+                        append = LoadState.NotLoading(endOfPaginationReached = true),
+                        refresh = LoadState.NotLoading(endOfPaginationReached = true),
+                    ),
+                )
+            }
+    }
 
     fun onQueryChange(query: String) {
         _state.update { state ->
@@ -43,9 +69,12 @@ class ChannelSearchViewModel(
         }
     }
 
-    fun onActiveChange(isActive: Boolean) {
+    fun onSearchActiveChange(isActive: Boolean) {
         _state.update { state ->
-            state.copy(isActive = isActive)
+            state.copy(
+                isActive = isActive,
+                query = if (isActive) state.query else "",
+            )
         }
     }
 

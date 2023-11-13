@@ -114,89 +114,96 @@ fun LiveStream(
     profileImageURL: String?,
     tags: ImmutableList<String>,
 ) {
-    Row(
+    Column(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically,
     ) {
-        AsyncImage(
-            modifier = Modifier
-                .padding(end = 8.dp)
-                .size(56.dp)
-                .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colorScheme.surface),
-            model = remoteImageModel(profileImageURL),
-            contentDescription = null,
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            AsyncImage(
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .size(56.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surface),
+                model = remoteImageModel(profileImageURL),
+                contentDescription = null,
+            )
 
-        Column {
-            title?.let { title ->
-                Text(
-                    text = title,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-            }
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                userName?.let { userName ->
+            Column {
+                title?.let { title ->
                     Text(
-                        modifier = Modifier
-                            .weight(1f, fill = true)
-                            .alignByBaseline(),
-                        text = userName,
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = title,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium,
                     )
                 }
 
-                viewerCount?.let { viewerCount ->
-                    Text(
-                        modifier = Modifier.alignByBaseline(),
-                        text = viewerCount.formatNumber(),
-                        style = MaterialTheme.typography.labelMedium,
-                    )
-                }
-            }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                ) {
+                    userName?.let { userName ->
+                        Text(
+                            modifier = Modifier
+                                .weight(1f, fill = true)
+                                .alignByBaseline(),
+                            text = userName,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                gameName?.let { gameName ->
-                    Text(
-                        modifier = Modifier
-                            .weight(1f, fill = true)
-                            .alignByBaseline(),
-                        text = gameName,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
-
-                startedAt
-                    ?.formatTimestamp()
-                    ?.let { startedAt ->
+                    viewerCount?.let { viewerCount ->
                         Text(
                             modifier = Modifier.alignByBaseline(),
-                            text = startedAt,
+                            text = viewerCount.formatNumber(),
+                            maxLines = 1,
                             style = MaterialTheme.typography.labelMedium,
                         )
                     }
-            }
+                }
 
-            if (tags.isNotEmpty()) {
-                FlowRow(
-                    modifier = Modifier.padding(top = 4.dp),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    tags.forEach { tag ->
-                        StreamTagChip(
-                            modifier = Modifier.padding(vertical = 2.dp),
-                            tag = tag,
+                    gameName?.let { gameName ->
+                        Text(
+                            modifier = Modifier
+                                .weight(1f, fill = true)
+                                .alignByBaseline(),
+                            text = gameName,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.bodyMedium,
                         )
                     }
+
+                    startedAt
+                        ?.formatTimestamp()
+                        ?.let { startedAt ->
+                            Text(
+                                modifier = Modifier.alignByBaseline(),
+                                text = startedAt,
+                                maxLines = 1,
+                                style = MaterialTheme.typography.labelMedium,
+                            )
+                        }
+                }
+            }
+        }
+
+        if (tags.isNotEmpty()) {
+            FlowRow(
+                modifier = Modifier.padding(top = 4.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
+                tags.forEach { tag ->
+                    StreamTagChip(
+                        modifier = Modifier.padding(vertical = 2.dp),
+                        tag = tag,
+                    )
                 }
             }
         }

@@ -81,6 +81,7 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 implementation(compose.ui)
                 implementation(compose.uiTooling)
+                implementation(libs.compose.material.windowSizeClass)
             }
         }
 

@@ -18,6 +18,14 @@ kotlin {
         }
     }
 
+    jvm("desktop") {
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "17"
+            }
+        }
+    }
+
     listOf(
         iosX64(),
         iosArm64(),
@@ -65,8 +73,20 @@ kotlin {
             }
         }
 
-        val androidMain by getting {
+        val jvmMain by creating {
             dependsOn(commonMain)
+            dependencies {
+                implementation(compose.material)
+                implementation(compose.material3)
+                implementation(compose.materialIconsExtended)
+                implementation(compose.ui)
+                implementation(compose.uiTooling)
+                implementation(libs.compose.material.windowSizeClass)
+            }
+        }
+
+        val androidMain by getting {
+            dependsOn(jvmMain)
             dependencies {
                 implementation(libs.accompanist.permissions)
                 implementation(libs.accompanist.placeholder)
@@ -80,18 +100,20 @@ kotlin {
                 implementation(libs.androidx.paging.runtime.android)
                 implementation(libs.androidx.splashscreen)
                 implementation(libs.coil.compose)
-                implementation(libs.compose.material.core2)
-                implementation(libs.compose.material.core3)
-                implementation(libs.compose.material.icons)
-                implementation(libs.compose.material.windowSizeClass)
-                implementation(libs.compose.ui.core)
-                implementation(libs.compose.ui.tooling)
                 implementation(libs.koin.compose)
                 implementation(libs.ktor.client.cio)
                 implementation(libs.material.core)
                 implementation(libs.moko.resources.compose)
 
                 api(libs.sqldelight.driver.android)
+            }
+        }
+
+        val desktopMain by getting {
+            dependsOn(jvmMain)
+            dependencies {
+                implementation(compose.desktop.common)
+                implementation(compose.desktop.currentOs)
             }
         }
 

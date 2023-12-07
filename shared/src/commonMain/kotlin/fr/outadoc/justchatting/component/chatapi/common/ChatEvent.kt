@@ -72,9 +72,8 @@ sealed interface ChatEvent {
         ) {
             @Immutable
             data class InReplyTo(
-                val id: String,
-                val message: String,
-                val chatter: Chatter,
+                val message: String?,
+                val mentions: List<String>,
             )
         }
     }

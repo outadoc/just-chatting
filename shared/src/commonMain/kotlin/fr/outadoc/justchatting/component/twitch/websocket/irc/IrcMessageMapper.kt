@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Icon
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
+import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.formatCurrency
 import fr.outadoc.justchatting.utils.core.formatNumber
@@ -291,8 +292,13 @@ class IrcMessageMapper {
     }
 
     private fun IrcEvent.Message.ChatMessage.map(): ChatEvent.Message.Body {
+        val mentions = message.orEmpty().getMentionsPrefix()
+        val mentionsLength = mentions.sumOf { mention -> mention.length }
+
         return ChatEvent.Message.Body(
-            message = message.orEmpty(),
+            message = message.orEmpty()
+                .drop(mentionsLength)
+                .removePrefix(" "),
             messageId = id,
             chatter = Chatter(
                 id = userId,
@@ -303,16 +309,15 @@ class IrcMessageMapper {
             color = color,
             embeddedEmotes = embeddedEmotes.orEmpty().toImmutableList(),
             badges = badges.orEmpty().toImmutableList(),
-            inReplyTo = inReplyTo?.let {
+            inReplyTo = if (mentions.isNotEmpty()) {
                 ChatEvent.Message.Body.InReplyTo(
-                    id = inReplyTo.id,
-                    message = inReplyTo.message,
-                    chatter = Chatter(
-                        id = inReplyTo.id,
-                        login = inReplyTo.userLogin,
-                        displayName = inReplyTo.userName,
-                    ),
+                    message = inReplyTo?.message,
+                    mentions = mentions.map { mention ->
+                        mention.drop(1)
+                    },
                 )
+            } else {
+                null
             },
         )
     }
@@ -1173,4 +1178,11 @@ class IrcMessageMapper {
         const val SUB_T3 = "3000"
         const val SUB_PRIME = "Prime"
     }
+}
+
+private fun String.getMentionsPrefix(): List<String> {
+    return split(" ")
+        .takeWhile { word ->
+            word.startsWith(ChatPrefixConstants.ChatterPrefix)
+        }
 }

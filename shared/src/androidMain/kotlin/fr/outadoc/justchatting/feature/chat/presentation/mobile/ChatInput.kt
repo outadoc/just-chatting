@@ -43,6 +43,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.ui.AppTheme
@@ -104,7 +105,7 @@ fun ChatInputPreviewReplying() {
 @Composable
 fun ChatInput(
     modifier: Modifier = Modifier,
-    appUserId: String? = null,
+    appUser: AppUser.LoggedIn? = null,
     message: TextFieldValue = TextFieldValue(),
     autoCompleteItems: List<AutoCompleteItem> = emptyList(),
     replyingTo: ChatEvent.Message? = null,
@@ -143,8 +144,8 @@ fun ChatInput(
                     ) {
                         InReplyToMessage(
                             modifier = Modifier.weight(1f),
-                            appUserId = appUserId,
-                            chatter = replyingToMessage.chatter,
+                            appUser = appUser,
+                            mentions = listOf(replyingToMessage.chatter.displayName),
                             message = replyingToMessage.message.orEmpty(),
                         )
 

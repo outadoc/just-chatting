@@ -54,7 +54,7 @@ internal fun Map<String, String?>.parseParentMessage(): IrcEvent.Message.ChatMes
         message = this["reply-parent-msg-body"] ?: return null,
         userId = this["reply-parent-user-id"] ?: return null,
         userLogin = this["reply-parent-user-login"] ?: return null,
-        userName = this["reply-parent-display-name"] ?: return null,
+        userDisplayName = this["reply-parent-display-name"] ?: return null,
     )
 }
 

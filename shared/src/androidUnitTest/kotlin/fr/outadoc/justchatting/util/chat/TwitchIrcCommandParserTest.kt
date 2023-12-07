@@ -359,7 +359,7 @@ class TwitchIrcCommandParserTest {
                 timestamp = Instant.parse("2022-08-23T19:01:58.667Z"),
                 rewardId = null,
                 inReplyTo = IrcEvent.Message.ChatMessage.InReplyTo(
-                    userName = "Brankhorst",
+                    userDisplayName = "Brankhorst",
                     message = "On dirait EVE on line",
                     id = "7ffcf399-8d69-495c-920c-ea15a96eeee4",
                     userId = "108193474",

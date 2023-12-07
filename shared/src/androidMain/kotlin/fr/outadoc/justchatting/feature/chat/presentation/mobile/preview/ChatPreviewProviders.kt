@@ -52,12 +52,7 @@ private val simpleEntries = sequence {
                 embeddedEmotes = persistentListOf(),
                 badges = persistentListOf(),
                 inReplyTo = ChatEvent.Message.Body.InReplyTo(
-                    id = "4d0a8518-9bc5-44a6-8249-c2ed9122f987",
-                    chatter = Chatter(
-                        id = "221570322",
-                        displayName = "djessy728",
-                        login = "djessy728",
-                    ),
+                    mentions = listOf("djessy728"),
                     message = "Salut Antoine, est tu encore en contact avec Mathieu? Et penses tu streamer un peu avec lui?",
                 ),
             ),

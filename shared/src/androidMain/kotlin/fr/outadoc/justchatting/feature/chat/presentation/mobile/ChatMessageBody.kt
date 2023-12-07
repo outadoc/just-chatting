@@ -44,7 +44,6 @@ import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.ui.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlin.random.Random
@@ -54,7 +53,6 @@ fun ChatMessageBody(
     modifier: Modifier = Modifier,
     body: ChatEvent.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
-    knownChatters: PersistentSet<Chatter>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
     appUser: AppUser.LoggedIn,
     backgroundHint: Color,
@@ -83,7 +81,6 @@ fun ChatMessageBody(
     val annotatedString = body.toAnnotatedString(
         appUser = appUser,
         inlineContent = fullInlineContent,
-        knownChatters = knownChatters,
         pronouns = pronouns,
         backgroundHint = backgroundHint,
     )
@@ -92,8 +89,8 @@ fun ChatMessageBody(
         body.inReplyTo?.let { inReplyTo ->
             InReplyToMessage(
                 modifier = Modifier.padding(bottom = 8.dp),
-                appUserId = appUser.userId,
-                chatter = inReplyTo.chatter,
+                appUser = appUser,
+                mentions = inReplyTo.mentions,
                 message = inReplyTo.message,
             )
         }
@@ -161,7 +158,6 @@ fun ChatMessageBody(
 fun ChatEvent.Message.Body.toAnnotatedString(
     appUser: AppUser.LoggedIn,
     inlineContent: ImmutableMap<String, InlineTextContent>,
-    knownChatters: PersistentSet<Chatter>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
     urlColor: Color = MaterialTheme.colorScheme.primary,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
@@ -224,14 +220,8 @@ fun ChatEvent.Message.Body.toAnnotatedString(
         }
 
         message
-            ?.stripReplyMention(inReplyTo)
             ?.split(' ')
             ?.forEach { word ->
-                val mentionedChatter: Chatter? =
-                    knownChatters.firstOrNull { chatter ->
-                        chatter.matches(word.removePrefix(ChatPrefixConstants.ChatterPrefix.toString()))
-                    }
-
                 when {
                     word.matches(urlRegex) -> {
                         // This is a URL
@@ -246,10 +236,10 @@ fun ChatEvent.Message.Body.toAnnotatedString(
                         )
                     }
 
-                    mentionedChatter != null -> {
+                    word.startsWith(ChatPrefixConstants.ChatterPrefix) -> {
                         // This is a user mention
                         appendMention(
-                            chatter = mentionedChatter,
+                            mention = word,
                             appUser = appUser,
                             mentionBackground = mentionBackground,
                             mentionColor = mentionColor,
@@ -277,34 +267,24 @@ private fun AnnotatedString.Builder.appendUrl(url: String, urlColor: Color) {
     }
 }
 
-@OptIn(ExperimentalTextApi::class)
 private fun AnnotatedString.Builder.appendMention(
-    chatter: Chatter,
+    mention: String,
     appUser: AppUser.LoggedIn,
     mentionBackground: Color,
     mentionColor: Color,
 ) {
     withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
-        withAnnotation(
-            tag = CHATTER_LOGIN_ANNOTATION_TAG,
-            annotation = chatter.login,
+        withStyle(
+            getMentionStyle(
+                // TODO also check for userDisplayName
+                mentioned = mention.contentEquals(appUser.userLogin, ignoreCase = true),
+                mentionBackground = mentionBackground,
+                mentionColor = mentionColor,
+            ),
         ) {
-            withStyle(
-                getMentionStyle(
-                    mentioned = chatter.login == appUser.userLogin,
-                    mentionBackground = mentionBackground,
-                    mentionColor = mentionColor,
-                ),
-            ) {
-                append(ChatPrefixConstants.ChatterPrefix)
-                append(chatter.displayName)
-            }
+            append(mention)
         }
     }
-}
-
-private fun String.stripReplyMention(inReplyTo: ChatEvent.Message.Body.InReplyTo?): String {
-    return inReplyTo?.let { replyTo -> removePrefix("@${replyTo.chatter.displayName} ") } ?: this
 }
 
 private val Badge.inlineContentId: String

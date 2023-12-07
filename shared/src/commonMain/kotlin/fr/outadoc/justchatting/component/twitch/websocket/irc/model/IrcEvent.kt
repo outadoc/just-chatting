@@ -32,10 +32,10 @@ sealed interface IrcEvent {
             @Immutable
             data class InReplyTo(
                 val id: String,
-                val userName: String,
                 val message: String,
                 val userId: String,
                 val userLogin: String,
+                val userDisplayName: String,
             )
 
             @Immutable

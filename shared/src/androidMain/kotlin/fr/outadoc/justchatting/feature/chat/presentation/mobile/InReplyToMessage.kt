@@ -21,16 +21,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
+import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.shared.MR
 
 @Composable
 fun InReplyToMessage(
     modifier: Modifier = Modifier,
-    chatter: Chatter,
-    message: String,
-    appUserId: String? = null,
+    mentions: List<String>,
+    message: String?,
+    appUser: AppUser.LoggedIn? = null,
     mentionBackground: Color = MaterialTheme.colorScheme.onBackground,
     mentionColor: Color = MaterialTheme.colorScheme.background,
 ) {
@@ -47,7 +47,7 @@ fun InReplyToMessage(
                     .alignByBaseline()
                     .padding(end = 4.dp, top = 1.dp),
                 imageVector = Icons.Default.Reply,
-                contentDescription = stringResource(fr.outadoc.justchatting.shared.MR.strings.chat_replyingTo),
+                contentDescription = stringResource(MR.strings.chat_replyingTo),
             )
 
             Text(
@@ -55,17 +55,27 @@ fun InReplyToMessage(
                     withStyle(
                         SpanStyle(fontWeight = FontWeight.Bold) +
                             getMentionStyle(
-                                mentioned = chatter.id == appUserId,
+                                mentioned = mentions.any { mention ->
+                                    mention.equals(appUser?.userLogin, ignoreCase = true)
+                                },
                                 mentionBackground = mentionBackground,
                                 mentionColor = mentionColor,
                             ),
                     ) {
-                        append(ChatPrefixConstants.ChatterPrefix)
-                        append(chatter.displayName)
+                        append(
+                            mentions.joinToString(
+                                separator = " ",
+                                transform = { mention ->
+                                    "${ChatPrefixConstants.ChatterPrefix}$mention"
+                                },
+                            ),
+                        )
                     }
 
-                    append(stringResource(MR.strings.chat_message_standardSeparator))
-                    append(message)
+                    if (message != null) {
+                        append(stringResource(MR.strings.chat_message_standardSeparator))
+                        append(message)
+                    }
                 },
                 style = MaterialTheme.typography.bodySmall,
                 maxLines = 2,

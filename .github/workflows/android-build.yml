@@ -42,7 +42,7 @@ jobs:
           arguments: testDebugUnitTest
 
       - name: Upload app bundle to GitHub
-        uses: actions/upload-artifact@v4.1.0
+        uses: actions/upload-artifact@v4.2.0
         with:
           name: apk
           path: app-android/build/outputs/bundle/qa/app-android-qa.aab

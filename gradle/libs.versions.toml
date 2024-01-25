@@ -1,5 +1,5 @@
 [versions]
-accompanist = "0.32.0"
+accompanist = "0.34.0"
 android = "8.2.2"
 coil = "2.5.0"
 compose = "2023.03.00"

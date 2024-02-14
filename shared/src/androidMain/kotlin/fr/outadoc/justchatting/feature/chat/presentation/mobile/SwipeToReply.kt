@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Reply
-import androidx.compose.material3.DismissDirection
-import androidx.compose.material3.DismissValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
-import androidx.compose.material3.SwipeToDismiss
-import androidx.compose.material3.rememberDismissState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,28 +32,33 @@ fun SwipeToReply(
     onDismiss: () -> Unit,
     content: @Composable () -> Unit,
 ) {
-    val dismissState = rememberDismissState(
-        confirmValueChange = {
-            if (it == DismissValue.DismissedToEnd) onDismiss()
-            it != DismissValue.DismissedToEnd
-        },
-    )
+    val dismissState: SwipeToDismissBoxState =
+        rememberSwipeToDismissBoxState(
+            confirmValueChange = { value ->
+                if (value == SwipeToDismissBoxValue.StartToEnd) {
+                    onDismiss()
+                }
+                value != SwipeToDismissBoxValue.StartToEnd
+            },
+        )
 
-    SwipeToDismiss(
+    SwipeToDismissBox(
         modifier = modifier,
         state = dismissState,
-        directions = if (enabled) setOf(DismissDirection.StartToEnd) else emptySet(),
-        background = {
-            val direction = dismissState.dismissDirection ?: return@SwipeToDismiss
-            if (direction != DismissDirection.StartToEnd) return@SwipeToDismiss
-
+        enableDismissFromStartToEnd = enabled,
+        enableDismissFromEndToStart = false,
+        backgroundContent = {
             val scale by animateFloatAsState(
-                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f,
+                when (dismissState.targetValue) {
+                    SwipeToDismissBoxValue.Settled -> 0.75f
+                    else -> 1f
+                },
+                label = "Reply icon scale",
             )
 
             val haptic = LocalHapticFeedback.current
             LaunchedEffect(dismissState.targetValue) {
-                if (dismissState.targetValue == DismissValue.DismissedToEnd) {
+                if (dismissState.targetValue == SwipeToDismissBoxValue.StartToEnd) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 }
             }
@@ -71,16 +76,19 @@ fun SwipeToReply(
                 )
             }
         },
-        dismissContent = {
-            val elevation = animateDpAsState(
-                if (dismissState.dismissDirection != null) {
-                    4.dp
-                } else {
-                    0.dp
+        content = {
+            val elevation by animateDpAsState(
+                targetValue = when (dismissState.targetValue) {
+                    SwipeToDismissBoxValue.StartToEnd -> 1.dp
+                    else -> 0.dp
                 },
+                label = "Reply item elevation",
             )
 
-            Surface(shadowElevation = elevation.value) {
+            Surface(
+                tonalElevation = elevation,
+                shadowElevation = elevation
+            ) {
                 content()
             }
         },

@@ -87,7 +87,7 @@ fun SwipeToReply(
 
             Surface(
                 tonalElevation = elevation,
-                shadowElevation = elevation
+                shadowElevation = elevation,
             ) {
                 content()
             }

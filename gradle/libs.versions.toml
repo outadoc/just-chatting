@@ -2,7 +2,7 @@
 accompanist = "0.34.0"
 android = "8.2.2"
 coil = "2.5.0"
-compose = "2024.02.00"
+compose = "2024.02.02"
 composeMultiplatform = "1.5.12"
 emoji = "1.4.0"
 kotlin = "1.9.22"

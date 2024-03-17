@@ -3,9 +3,9 @@ accompanist = "0.34.0"
 android = "8.2.2"
 coil = "2.5.0"
 compose = "2024.02.02"
-composeMultiplatform = "1.5.12"
+composeMultiplatform = "1.6.1"
 emoji = "1.4.0"
-kotlin = "1.9.22"
+kotlin = "1.9.23"
 ktor = "2.3.8"
 lifecycle = "2.7.0"
 moko = "0.23.0"
@@ -19,7 +19,7 @@ compose = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "1.9.22-1.0.17" }
+ksp = { id = "com.google.devtools.ksp", version = "1.9.23-1.0.19" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.5" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
 skie = { id = "co.touchlab.skie", version = "0.6.2" }
@@ -69,9 +69,9 @@ koin-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.5
 koin-core = { module = "io.insert-koin:koin-core", version = "3.5.0" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7"
-kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3"
+kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
 kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.5.0"
-kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2"
+kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }

@@ -1,7 +1,7 @@
 [versions]
 accompanist = "0.34.0"
 android = "8.3.0"
-coil = "2.5.0"
+coil = "2.6.0"
 compose = "2024.02.02"
 composeMultiplatform = "1.6.1"
 emoji = "1.4.0"

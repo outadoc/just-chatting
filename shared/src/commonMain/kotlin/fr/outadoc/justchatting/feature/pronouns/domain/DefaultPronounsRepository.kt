@@ -35,9 +35,13 @@ class DefaultPronounsRepository(
             withContext(DispatchersProvider.io) {
                 cacheMutex.withLock {
                     if (_pronounCache == null) {
-                        _pronounCache = alejoPronounsApi
-                            .getPronouns()
-                            .associateBy { pronoun -> pronoun.id }
+                        try {
+                            _pronounCache = alejoPronounsApi
+                                .getPronouns()
+                                .associateBy { pronoun -> pronoun.id }
+                        } catch (e: Exception) {
+                            logError<DefaultPronounsRepository>(e) { "Error while fetching pronouns from Alejo API" }
+                        }
                     }
                 }
 

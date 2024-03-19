@@ -54,6 +54,8 @@ kotlin {
                 api(libs.ktor.client.core)
                 api(libs.moko.resources.core)
 
+                implementation(compose.runtime)
+
                 implementation(libs.androidx.paging.common)
                 implementation(libs.androidx.paging.compose.common)
                 implementation(libs.bignum)

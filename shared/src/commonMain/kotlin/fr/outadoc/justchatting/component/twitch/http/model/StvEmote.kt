@@ -9,10 +9,8 @@ data class StvEmote(
     val id: String,
     @SerialName("name")
     val name: String,
-    @SerialName("mime")
-    val mime: String,
-    @SerialName("visibility_simple")
-    val visibility: List<String>,
-    @SerialName("urls")
-    val urls: List<List<String>>,
+    @SerialName("flags")
+    val flags: Int,
+    @SerialName("data")
+    val data: StvEmoteData,
 )

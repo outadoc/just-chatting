@@ -74,16 +74,7 @@ class EmotesRepository(
             }
 
             stvEmotesApi.getGlobalStvEmotes()
-                .map { emote -> emote.map() }
-        }
-
-    suspend fun loadStvEmotes(channelId: String): List<Emote> =
-        withContext(DispatchersProvider.io) {
-            if (!preferencesRepository.currentPreferences.first().enableStvEmotes) {
-                return@withContext emptyList()
-            }
-
-            stvEmotesApi.getStvEmotes(channelId)
+                .emotes
                 .map { emote -> emote.map() }
         }
 

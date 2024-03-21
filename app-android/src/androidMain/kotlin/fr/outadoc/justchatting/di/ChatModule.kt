@@ -20,7 +20,6 @@ import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.richemb
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.viewercount.PubSubViewerCountPlugin
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource
-import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelStvEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelTwitchEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.DelegateTwitchEmotesSource
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
@@ -111,7 +110,6 @@ val chatModule = module {
 
     single { ChannelBttvEmotesSource(get()) }
     single { ChannelFfzEmotesSource(get()) }
-    single { ChannelStvEmotesSource(get()) }
     single { ChannelTwitchEmotesSource(get()) }
     single { GlobalBttvEmotesSource(get()) }
     single { GlobalFfzEmotesSource(get()) }
@@ -125,7 +123,6 @@ val chatModule = module {
                 get<ChannelTwitchEmotesSource>(),
                 get<ChannelBttvEmotesSource>(),
                 get<ChannelFfzEmotesSource>(),
-                get<ChannelStvEmotesSource>(),
                 get<GlobalTwitchEmotesSource>(),
                 get<GlobalBttvEmotesSource>(),
                 get<GlobalFfzEmotesSource>(),

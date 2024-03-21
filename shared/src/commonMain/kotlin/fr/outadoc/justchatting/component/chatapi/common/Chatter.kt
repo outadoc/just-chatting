@@ -28,9 +28,7 @@ data class Chatter(
 
         other as Chatter
 
-        if (id != other.id) return false
-
-        return true
+        return id == other.id
     }
 
     override fun hashCode(): Int {

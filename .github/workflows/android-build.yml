@@ -22,22 +22,22 @@ jobs:
         uses: gradle/wrapper-validation-action@v2
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
 
       - name: Build app bundle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: |
             bundleQa
             "-PexternalVersionName=pr-${{ steps.date.outputs.date }}-${{ github.event.pull_request.number }}-${{ github.sha }}"
 
       - name: Lint
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: lint
 
       - name: Run unit tests
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
         with:
           arguments: testDebugUnitTest
 

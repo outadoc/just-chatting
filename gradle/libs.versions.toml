@@ -10,7 +10,7 @@ ktor = "2.3.9"
 lifecycle = "2.7.0"
 moko = "0.23.0"
 paging = "3.3.0-alpha02-0.5.1"
-sqldelight = "2.0.0"
+sqldelight = "2.0.1"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }

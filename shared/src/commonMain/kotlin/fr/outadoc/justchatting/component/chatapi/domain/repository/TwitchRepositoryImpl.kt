@@ -265,7 +265,9 @@ class TwitchRepositoryImpl(
                                 profileImageUrl = user.profileImageUrl,
                             )
                         }
-                        ?.mapWithUserProfileImages()
+                        ?.sortedBy { user ->
+                            ids.indexOf(user.id)
+                        }
                 }
         }
     }

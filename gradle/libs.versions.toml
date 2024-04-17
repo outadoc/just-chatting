@@ -66,7 +66,7 @@ fluid-currency = "io.fluidsonic.currency:fluid-currency:0.13.0"
 junit = "junit:junit:4.13.2"
 koin-android = { module = "io.insert-koin:koin-android", version = "3.5.6" }
 koin-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.5.6" }
-koin-core = { module = "io.insert-koin:koin-core", version = "3.5.0" }
+koin-core = { module = "io.insert-koin:koin-core", version = "3.5.6" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7"
 kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"

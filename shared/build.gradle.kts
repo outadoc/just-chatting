@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.moko.resources)
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.skie)

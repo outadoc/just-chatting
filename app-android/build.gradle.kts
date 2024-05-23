@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.spotless)
     alias(libs.plugins.licenseReport)
     alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.moko.resources)
 }
 

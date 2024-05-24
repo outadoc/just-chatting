@@ -3,7 +3,7 @@ accompanist = "0.34.0"
 android = "8.3.2"
 coil = "2.6.0"
 compose = "2024.05.00"
-composeMultiplatform = "1.6.10"
+compose-multiplatform = "1.6.10"
 emoji = "1.4.0"
 kotlin = "2.0.0"
 ktor = "2.3.10"
@@ -15,7 +15,7 @@ sqldelight = "2.0.0"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
-compose = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }

@@ -69,6 +69,7 @@ kotlin {
             implementation(libs.ktor.logging)
             implementation(libs.ktor.serialization)
             implementation(libs.sqldelight.coroutines)
+            implementation(libs.stately.common)
             implementation(libs.uri.kmp)
             implementation(libs.unicode.codepoints)
         }

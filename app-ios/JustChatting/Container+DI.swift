@@ -379,12 +379,6 @@ extension Container {
             )
         }
 
-        register(ChannelStvEmotesSource.self) { r in
-            ChannelStvEmotesSource(
-                emotesRepository: r.resolve(EmotesRepository.self)!
-            )
-        }
-
         register(ChannelTwitchEmotesSource.self) { r in
             ChannelTwitchEmotesSource(
                 delegateTwitchEmotesSource: r.resolve(DelegateTwitchEmotesSource.self)!
@@ -433,7 +427,6 @@ extension Container {
                         r.resolve(ChannelTwitchEmotesSource.self)!,
                         r.resolve(ChannelBttvEmotesSource.self)!,
                         r.resolve(ChannelFfzEmotesSource.self)!,
-                        r.resolve(ChannelStvEmotesSource.self)!,
                         r.resolve(GlobalTwitchEmotesSource.self)!,
                         r.resolve(GlobalBttvEmotesSource.self)!,
                         r.resolve(GlobalFfzEmotesSource.self)!,

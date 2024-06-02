@@ -41,13 +41,13 @@ extension Icon {
         switch self {
         case .bolt:
             "bolt"
-        case .callreceived:
+        case .callReceived:
             "arrow.down.left"
         case .campaign:
             "megaphone"
         case .cancel:
             "x.circle"
-        case .fastforward:
+        case .fastForward:
             "chevron.right.2"
         case .gavel:
             "person.fill.xmark"
@@ -63,9 +63,9 @@ extension Icon {
             "star"
         case .toll:
             "circle.dotted.and.circle"
-        case .volunteeractivism:
+        case .volunteerActivism:
             "giftcard"
-        case .wavinghand:
+        case .wavingHand:
             "hand.wave"
         }
     }

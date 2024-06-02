@@ -108,8 +108,10 @@ kotlin {
             implementation(libs.ktor.client.darwin)
         }
 
-        androidNativeTest.dependencies {
-            implementation(libs.junit)
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.junit)
+            }
         }
     }
 }

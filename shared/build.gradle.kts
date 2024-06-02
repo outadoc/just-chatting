@@ -17,6 +17,13 @@ kotlin {
                 jvmTarget = "17"
             }
         }
+
+        compilerOptions {
+            freeCompilerArgs.addAll(
+                "-P",
+                "plugin:org.jetbrains.kotlin.parcelize:additionalAnnotation=fr.outadoc.justchatting.utils.parcel.Parcelize"
+            )
+        }
     }
 
     listOf(

@@ -59,7 +59,7 @@ jobs:
           path: app-android/build/outputs/bundle/release/app-android-release.aab
 
       - name: Publish nightly build to internal track
-        uses: r0adkll/upload-google-play@9cf8fd30c9e616ec761db3b9abb2b0f15842ce58
+        uses: r0adkll/upload-google-play@d2d9b79a276ba3654581a78130201ce792860982
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_INTERNAL_APP_SHARING }}
           packageName: fr.outadoc.justchatting

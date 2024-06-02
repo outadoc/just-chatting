@@ -11,7 +11,7 @@ lifecycle = "2.8.1"
 moko = "0.24.0-beta-4"
 paging = "3.3.0"
 paging-multiplatform = "3.3.0-alpha02-0.5.1"
-sqldelight = "2.0.0"
+sqldelight = "2.0.2"
 stately = "2.0.7"
 
 [plugins]

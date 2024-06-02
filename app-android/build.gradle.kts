@@ -7,7 +7,8 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.spotless)
     alias(libs.plugins.licenseReport)
-    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.multiplatform)
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.moko.resources)
 }
 
@@ -21,63 +22,58 @@ kotlin {
     }
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(project(":shared"))
-            }
+        commonMain.dependencies {
+            implementation(project(":shared"))
         }
 
-        val androidMain by getting {
-            dependsOn(commonMain)
-            dependencies {
-                implementation(libs.accompanist.systemuicontroller)
-                implementation(libs.androidx.activity.compose)
-                implementation(libs.androidx.appcompat)
-                implementation(libs.androidx.browser)
-                implementation(libs.androidx.constraintlayout)
-                implementation(libs.androidx.core)
-                implementation(libs.androidx.core)
-                implementation(libs.androidx.datastore.preferences)
-                implementation(libs.androidx.emoji2.core)
-                implementation(libs.androidx.fragment)
-                implementation(libs.androidx.lifecycle.common)
-                implementation(libs.androidx.lifecycle.livedata)
-                implementation(libs.androidx.lifecycle.process)
-                implementation(libs.androidx.lifecycle.viewmodel)
-                implementation(libs.androidx.paging.common)
-                implementation(libs.androidx.paging.compose.common)
-                implementation(libs.androidx.palette)
-                implementation(libs.androidx.splashscreen)
-                implementation(libs.coil.compose)
-                implementation(libs.coil.core)
-                implementation(libs.coil.gif)
-                implementation(libs.compose.foundation)
-                implementation(libs.compose.material.core2)
-                implementation(libs.compose.material.core3)
-                implementation(libs.compose.material.icons)
-                implementation(libs.compose.material.windowSizeClass)
-                implementation(libs.compose.runtime.livedata)
-                implementation(libs.compose.ui.core)
-                implementation(libs.compose.ui.tooling)
-                implementation(libs.koin.android)
-                implementation(libs.koin.compose)
-                implementation(libs.koin.core)
-                implementation(libs.kotlinx.collections.immutable)
-                implementation(libs.kotlinx.coroutines)
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.material.core)
-                implementation(libs.moko.resources.core)
-                implementation(libs.moko.resources.compose)
-                implementation(libs.okio)
-                implementation(libs.uri.kmp)
-            }
+        androidMain.dependencies {
+            implementation(libs.accompanist.systemuicontroller)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.appcompat)
+            implementation(libs.androidx.browser)
+            implementation(libs.androidx.constraintlayout)
+            implementation(libs.androidx.core)
+            implementation(libs.androidx.core)
+            implementation(libs.androidx.datastore.preferences)
+            implementation(libs.androidx.emoji2.core)
+            implementation(libs.androidx.fragment)
+            implementation(libs.androidx.lifecycle.common)
+            implementation(libs.androidx.lifecycle.livedata)
+            implementation(libs.androidx.lifecycle.process)
+            implementation(libs.androidx.lifecycle.viewmodel)
+            implementation(libs.androidx.paging.common)
+            implementation(libs.androidx.paging.compose.common)
+            implementation(libs.androidx.palette)
+            implementation(libs.androidx.splashscreen)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.core)
+            implementation(libs.coil.gif)
+            implementation(libs.compose.foundation)
+            implementation(libs.compose.material.core2)
+            implementation(libs.compose.material.core3)
+            implementation(libs.compose.material.icons)
+            implementation(libs.compose.material.windowSizeClass)
+            implementation(libs.compose.runtime.livedata)
+            implementation(libs.compose.ui.core)
+            implementation(libs.compose.ui.tooling)
+            implementation(libs.koin.android)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.core)
+            implementation(libs.kotlinx.collections.immutable)
+            implementation(libs.kotlinx.coroutines)
+            implementation(libs.kotlinx.datetime)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.material.core)
+            implementation(libs.moko.resources.core)
+            implementation(libs.moko.resources.compose)
+            implementation(libs.okio)
+            implementation(libs.uri.kmp)
         }
     }
 }
 
 multiplatformResources {
-    multiplatformResourcesPackage = "fr.outadoc.justchatting"
+    resourcesPackage.set("fr.outadoc.justchatting")
 }
 
 android {
@@ -178,6 +174,5 @@ tasks.named("generateLicenseReport") {
 
 dependencies {
     implementation(platform(libs.kotlin.bom))
-    implementation(platform(libs.compose.bom))
     coreLibraryDesugaring(libs.desugar)
 }

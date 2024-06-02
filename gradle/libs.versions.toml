@@ -2,27 +2,30 @@
 accompanist = "0.34.0"
 android = "8.3.2"
 coil = "2.6.0"
-compose = "2024.04.01"
-composeMultiplatform = "1.6.2"
+compose = "2024.05.00"
+compose-multiplatform = "1.6.10"
 emoji = "1.4.0"
-kotlin = "1.9.23"
+kotlin = "2.0.0"
 ktor = "2.3.10"
-lifecycle = "2.7.0"
-moko = "0.23.0"
-paging = "3.3.0-alpha02-0.5.1"
+lifecycle = "2.8.1"
+moko = "0.24.0-beta-4"
+paging = "3.3.0"
+paging-multiplatform = "3.3.0-alpha02-0.5.1"
 sqldelight = "2.0.0"
+stately = "2.0.7"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "android" }
 android-library = { id = "com.android.library", version.ref = "android" }
-compose = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "1.9.23-1.0.20" }
+ksp = { id = "com.google.devtools.ksp", version = "2.0.0-1.0.21" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.7" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
-skie = { id = "co.touchlab.skie", version = "0.6.4" }
+skie = { id = "co.touchlab.skie", version = "0.8.1" }
 spotless = { id = "com.diffplug.spotless", version = "6.22.0" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
@@ -30,22 +33,22 @@ sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 accompanist-placeholder = { module = "com.google.accompanist:accompanist-placeholder-material", version.ref = "accompanist" }
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
-androidx-activity-compose = "androidx.activity:activity-compose:1.8.2"
-androidx-appcompat = "androidx.appcompat:appcompat:1.6.1"
+androidx-activity-compose = "androidx.activity:activity-compose:1.9.0"
+androidx-appcompat = "androidx.appcompat:appcompat:1.7.0"
 androidx-browser = "androidx.browser:browser:1.8.0"
 androidx-constraintlayout = "androidx.constraintlayout:constraintlayout:2.1.4"
-androidx-core = "androidx.core:core-ktx:1.12.0"
-androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.0.0"
+androidx-core = "androidx.core:core-ktx:1.13.1"
+androidx-datastore-preferences = "androidx.datastore:datastore-preferences:1.1.1"
 androidx-emoji2-core = { module = "androidx.emoji2:emoji2", version.ref = "emoji" }
-androidx-fragment = "androidx.fragment:fragment-ktx:1.6.2"
+androidx-fragment = "androidx.fragment:fragment-ktx:1.7.1"
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common-java8", version.ref = "lifecycle" }
 androidx-lifecycle-livedata = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycle" }
 androidx-lifecycle-process = { module = "androidx.lifecycle:lifecycle-process", version.ref = "lifecycle" }
 androidx-lifecycle-viewmodel = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
-androidx-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging" }
-androidx-paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "paging" }
+androidx-paging-common = { module = "app.cash.paging:paging-common", version.ref = "paging-multiplatform" }
+androidx-paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "paging-multiplatform" }
 androidx-paging-runtime-android = { module = "androidx.paging:paging-runtime", version.ref = "paging" }
-androidx-paging-runtime-ios = { module = "app.cash.paging:paging-runtime-uikit", version.ref = "paging" }
+androidx-paging-runtime-ios = { module = "app.cash.paging:paging-runtime-uikit", version.ref = "paging-multiplatform" }
 androidx-palette = "androidx.palette:palette:1.0.0"
 androidx-splashscreen = "androidx.core:core-splashscreen:1.0.1"
 bignum = "com.ionspin.kotlin:bignum:0.3.9"
@@ -57,7 +60,7 @@ compose-foundation = { module = "androidx.compose.foundation:foundation" }
 compose-material-core2 = { module = "androidx.compose.material:material" }
 compose-material-core3 = { module = "androidx.compose.material3:material3" }
 compose-material-icons = { module = "androidx.compose.material:material-icons-extended" }
-compose-material-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class" }
+compose-material-windowSizeClass = { module = "androidx.compose.material3:material3-window-size-class", version = "1.2.1" }
 compose-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata" }
 compose-ui-core = { module = "androidx.compose.ui:ui" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
@@ -66,7 +69,7 @@ fluid-currency = "io.fluidsonic.currency:fluid-currency:0.13.0"
 junit = "junit:junit:4.13.2"
 koin-android = { module = "io.insert-koin:koin-android", version = "3.5.6" }
 koin-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.5.6" }
-koin-core = { module = "io.insert-koin:koin-core", version = "3.5.0" }
+koin-core = { module = "io.insert-koin:koin-core", version = "3.5.6" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7"
 kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
@@ -80,12 +83,13 @@ ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.re
 ktor-contentNegociation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor" }
 ktor-serialization = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor" }
-material-core = "com.google.android.material:material:1.11.0"
+material-core = "com.google.android.material:material:1.12.0"
 moko-resources-core = { module = "dev.icerock.moko:resources", version.ref = "moko" }
 moko-resources-compose = { module = "dev.icerock.moko:resources-compose", version.ref = "moko" }
 okio = "com.squareup.okio:okio:3.9.0"
 sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-driver-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 sqldelight-coroutines = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqldelight" }
+stately-common = { module = "co.touchlab:stately-common", version.ref = "stately" }
 unicode-codepoints = "de.cketti.unicode:kotlin-codepoints:0.7.0"
 uri-kmp = "com.eygraber:uri-kmp:0.0.18"

@@ -122,9 +122,9 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onNewIntent(intent: Intent?) {
+    override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        intent?.data?.toString()?.let { data ->
+        intent.data?.toString()?.let { data ->
             viewModel.onReceiveIntent(data)
         }
     }

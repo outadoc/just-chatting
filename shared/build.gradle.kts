@@ -19,14 +19,6 @@ kotlin {
         }
     }
 
-    jvm {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "17"
-            }
-        }
-    }
-
     listOf(
         iosX64(),
         iosArm64(),
@@ -74,16 +66,14 @@ kotlin {
             implementation(libs.unicode.codepoints)
         }
 
-        jvmMain.dependencies {
+        androidMain.dependencies {
             implementation(compose.material)
             implementation(compose.material3)
             implementation(compose.materialIconsExtended)
             implementation(compose.ui)
             implementation(compose.uiTooling)
             implementation(libs.compose.material.windowSizeClass)
-        }
 
-        androidMain.dependencies {
             implementation(libs.accompanist.permissions)
             implementation(libs.accompanist.placeholder)
             implementation(libs.accompanist.systemuicontroller)
@@ -102,11 +92,6 @@ kotlin {
             implementation(libs.moko.resources.compose)
 
             api(libs.sqldelight.driver.android)
-        }
-
-        jvmMain.dependencies {
-            implementation(compose.desktop.common)
-            implementation(compose.desktop.currentOs)
         }
 
         iosMain.dependencies {
@@ -151,6 +136,5 @@ sqldelight {
 }
 
 dependencies {
-    implementation(platform(libs.compose.bom))
     coreLibraryDesugaring(libs.desugar)
 }

@@ -174,6 +174,5 @@ tasks.named("generateLicenseReport") {
 
 dependencies {
     implementation(platform(libs.kotlin.bom))
-    implementation(platform(libs.compose.bom))
     coreLibraryDesugaring(libs.desugar)
 }

@@ -73,7 +73,7 @@ kotlin {
 }
 
 multiplatformResources {
-    multiplatformResourcesPackage = "fr.outadoc.justchatting"
+    resourcesPackage.set("fr.outadoc.justchatting")
 }
 
 android {

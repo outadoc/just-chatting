@@ -72,8 +72,8 @@ koin-compose = { module = "io.insert-koin:koin-androidx-compose", version = "3.5
 koin-core = { module = "io.insert-koin:koin-core", version = "3.5.6" }
 kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlinx-collections-immutable = "org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7"
-kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0"
-kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.5.0"
+kotlinx-coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
+kotlinx-datetime = "org.jetbrains.kotlinx:kotlinx-datetime:0.6.0"
 kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3"
 ktor-client-auth = { module = "io.ktor:ktor-client-auth", version.ref = "ktor" }
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor" }

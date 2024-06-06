@@ -3,7 +3,7 @@ accompanist = "0.34.0"
 android = "8.4.1"
 coil = "2.6.0"
 compose = "2024.05.00"
-compose-multiplatform = "1.6.10"
+compose-multiplatform = "1.6.11"
 emoji = "1.4.0"
 kotlin = "2.0.0"
 ktor = "2.3.11"
@@ -22,7 +22,7 @@ compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
-ksp = { id = "com.google.devtools.ksp", version = "2.0.0-1.0.21" }
+ksp = { id = "com.google.devtools.ksp", version = "2.0.0-1.0.22" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.8" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
 skie = { id = "co.touchlab.skie", version = "0.8.1" }

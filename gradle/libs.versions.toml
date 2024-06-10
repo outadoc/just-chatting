@@ -1,6 +1,6 @@
 [versions]
 accompanist = "0.34.0"
-android = "8.4.1"
+android = "8.4.2"
 coil = "2.6.0"
 compose = "2024.05.00"
 compose-multiplatform = "1.6.11"

@@ -8,13 +8,18 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.animation.Crossfade
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -23,9 +28,7 @@ import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.lifecycleScope
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.home.presentation.MainRouterViewModel
-import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.toast
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -76,6 +79,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        viewModel.onStart()
+    }
+
     @Composable
     private fun App(sizeClass: WindowSizeClass) {
         val state by viewModel.state.collectAsState()
@@ -84,14 +92,17 @@ class MainActivity : AppCompatActivity() {
             label = "Login state animation",
         ) { currentState ->
             when (currentState) {
-                is MainRouterViewModel.State.Loading -> {}
-                is MainRouterViewModel.State.LoggedOut -> {
-                    LaunchedEffect(currentState) {
-                        if (currentState.causedByTokenExpiration) {
-                            toast(MR.strings.token_expired.resourceId)
-                        }
+                is MainRouterViewModel.State.Loading -> {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        CircularProgressIndicator()
                     }
+                }
 
+                is MainRouterViewModel.State.LoggedOut -> {
                     OnboardingScreen(
                         onLoginClick = {
                             viewModel.onLoginClick()

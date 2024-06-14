@@ -258,7 +258,6 @@
     <string name="search">Search</string>
     <string name="search_clear_cd">Clear query</string>
     <string name="search_hint">Search for someone…</string>
-    <string name="token_expired">Your session has expired. Please log in again</string>
 
     <string name="app_license_name">GNU Affero General Public License v3.0</string>
     <string name="app_license_url">https://www.gnu.org/licenses/agpl-3.0.en.html</string>

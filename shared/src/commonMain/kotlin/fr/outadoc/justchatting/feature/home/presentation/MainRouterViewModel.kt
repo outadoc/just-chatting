@@ -11,7 +11,6 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
-import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,10 +32,7 @@ class MainRouterViewModel(
 
     sealed class State {
         data object Loading : State()
-        data class LoggedOut(
-            val causedByTokenExpiration: Boolean = false,
-        ) : State()
-
+        data object LoggedOut : State()
         data class LoggedIn(
             val appUser: AppUser.LoggedIn,
         ) : State()
@@ -52,39 +48,8 @@ class MainRouterViewModel(
             .map { prefs ->
                 when (val appUser = prefs.appUser) {
                     is AppUser.LoggedIn -> State.LoggedIn(appUser = appUser)
-                    is AppUser.NotLoggedIn -> State.LoggedOut()
-                    is AppUser.NotValidated -> {
-                        try {
-                            val userInfo: ValidationResponse =
-                                authRepository.validate(appUser.token)
-                                    ?: throw InvalidClientIdException()
-
-                            val validatedUser = AppUser.LoggedIn(
-                                userId = userInfo.userId,
-                                userLogin = userInfo.login,
-                                token = appUser.token,
-                            )
-
-                            if (userInfo.clientId != oAuthAppCredentials.clientId) {
-                                throw InvalidClientIdException()
-                            }
-
-                            preferencesRepository.updatePreferences { current ->
-                                current.copy(appUser = validatedUser)
-                            }
-
-                            State.LoggedIn(appUser = validatedUser)
-                        } catch (e: Exception) {
-                            if (e is InvalidClientIdException || (e as? ClientRequestException)?.response?.status?.value == 401) {
-                                preferencesRepository.updatePreferences { current ->
-                                    current.copy(appUser = AppUser.NotLoggedIn)
-                                }
-                                State.LoggedOut(causedByTokenExpiration = true)
-                            } else {
-                                State.LoggedOut()
-                            }
-                        }
-                    }
+                    is AppUser.NotLoggedIn -> State.LoggedOut
+                    is AppUser.NotValidated -> State.Loading
                 }
             }
             .stateIn(
@@ -95,6 +60,40 @@ class MainRouterViewModel(
 
     private val _events = MutableSharedFlow<Event>()
     val events = _events.asSharedFlow()
+
+    fun onStart() {
+        viewModelScope.launch {
+            preferencesRepository.currentPreferences.collect { prefs ->
+                if (prefs.appUser is AppUser.NotValidated) {
+                    try {
+                        val userInfo: ValidationResponse =
+                            authRepository.validate(prefs.appUser.token)
+                                ?: throw InvalidClientIdException()
+
+                        val validatedUser = AppUser.LoggedIn(
+                            userId = userInfo.userId,
+                            userLogin = userInfo.login,
+                            token = prefs.appUser.token,
+                        )
+
+                        if (userInfo.clientId != oAuthAppCredentials.clientId) {
+                            throw InvalidClientIdException()
+                        }
+
+                        preferencesRepository.updatePreferences { current ->
+                            current.copy(appUser = validatedUser)
+                        }
+                    } catch (e: Exception) {
+                        logError<MainRouterViewModel>(e) { "Failed to validate token" }
+
+                        preferencesRepository.updatePreferences { current ->
+                            current.copy(appUser = AppUser.NotLoggedIn)
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     fun onLoginClick() = viewModelScope.launch {
         val helixScopes = listOf(

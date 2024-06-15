@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.component.twitch.http.server
 
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.http.model.ChannelScheduleResponse
 import fr.outadoc.justchatting.component.twitch.http.model.ChannelSearchResponse
 import fr.outadoc.justchatting.component.twitch.http.model.CheerEmotesResponse
 import fr.outadoc.justchatting.component.twitch.http.model.EmoteSetResponse
@@ -129,6 +130,20 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
             url {
                 path("chat/badges")
                 parameter("broadcaster_id", channelId)
+            }
+        }.body()
+
+    override suspend fun getChannelSchedule(
+        channelId: String,
+        limit: Int,
+        after: String?,
+    ): ChannelScheduleResponse =
+        client.get {
+            url {
+                path("schedule")
+                parameter("broadcaster_id", channelId)
+                parameter("first", limit)
+                after?.let { parameter("after", after) }
             }
         }.body()
 }

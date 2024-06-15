@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.component.twitch.http.api
 
+import fr.outadoc.justchatting.component.twitch.http.model.ChannelScheduleResponse
 import fr.outadoc.justchatting.component.twitch.http.model.ChannelSearchResponse
 import fr.outadoc.justchatting.component.twitch.http.model.CheerEmotesResponse
 import fr.outadoc.justchatting.component.twitch.http.model.EmoteSetResponse
@@ -37,4 +38,10 @@ interface HelixApi {
     suspend fun getGlobalBadges(): TwitchBadgesResponse
 
     suspend fun getChannelBadges(channelId: String): TwitchBadgesResponse
+
+    suspend fun getChannelSchedule(
+        channelId: String,
+        limit: Int,
+        after: String?,
+    ): ChannelScheduleResponse
 }

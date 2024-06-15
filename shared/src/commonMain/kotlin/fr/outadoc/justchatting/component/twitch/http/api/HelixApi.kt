@@ -43,5 +43,5 @@ interface HelixApi {
         channelId: String,
         limit: Int,
         after: String?,
-    ): ChannelScheduleResponse
+    ): ChannelScheduleResponse?
 }

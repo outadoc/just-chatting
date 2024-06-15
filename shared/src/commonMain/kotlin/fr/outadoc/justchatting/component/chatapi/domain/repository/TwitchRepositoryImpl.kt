@@ -8,6 +8,9 @@ import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.db.RecentChannelsRepository
 import fr.outadoc.justchatting.component.chatapi.db.Recent_channels
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
+import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSchedule
+import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelScheduleSegment
+import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelScheduleVacation
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
@@ -281,5 +284,41 @@ class TwitchRepositoryImpl(
                 ),
             )
         }
+    }
+
+    override suspend fun loadChannelSchedule(channelId: String): ChannelSchedule? {
+        val response = helix.getChannelSchedule(
+            channelId = channelId,
+            limit = 10,
+            after = null
+        )
+
+        if (response == null) {
+            // Channel has no schedule
+            return null
+        }
+
+        return ChannelSchedule(
+            segments = response.data.segments.map { segment ->
+                ChannelScheduleSegment(
+                    id = segment.id,
+                    startTime = segment.startTime,
+                    endTime = segment.endTime,
+                    title = segment.title,
+                    canceledUntil = segment.canceledUntil,
+                    category = segment.category,
+                    isRecurring = segment.isRecurring,
+                )
+            },
+            userId = response.data.userId,
+            userLogin = response.data.userLogin,
+            userDisplayName = response.data.userDisplayName,
+            vacation = response.data.vacation?.let { vacation ->
+                ChannelScheduleVacation(
+                    startTime = vacation.startTime,
+                    endTime = vacation.endTime,
+                )
+            },
+        )
     }
 }

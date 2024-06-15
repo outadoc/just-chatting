@@ -137,13 +137,21 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
         channelId: String,
         limit: Int,
         after: String?,
-    ): ChannelScheduleResponse =
-        client.get {
+    ): ChannelScheduleResponse? {
+        val response = client.get {
             url {
                 path("schedule")
                 parameter("broadcaster_id", channelId)
                 parameter("first", limit)
                 after?.let { parameter("after", after) }
             }
-        }.body()
+        }
+
+        if (response.status.value == 404) {
+            // Channel has no schedule
+            return null
+        }
+
+        return response.body()
+    }
 }

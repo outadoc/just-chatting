@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.component.chatapi.domain.repository
 import androidx.paging.PagingData
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
+import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
@@ -21,4 +22,5 @@ interface TwitchRepository {
     suspend fun loadEmotesFromSet(setIds: List<String>): List<Emote>?
     suspend fun getRecentChannels(): Flow<List<ChannelSearch>?>
     suspend fun insertRecentChannel(channel: User, usedAt: Instant)
+    suspend fun loadChannelSchedule(channelId: String): ChannelSchedule?
 }

@@ -51,9 +51,9 @@ class FollowedStreamsDataSource(
                         itemsAfter = itemsAfter,
                     )
                 },
-                onFailure = { e ->
-                    logError<FollowedStreamsDataSource>(e) { "Error while fetching followed streams" }
-                    LoadResult.Error(e)
+                onFailure = { exception ->
+                    logError<FollowedStreamsDataSource>(exception) { "Error while fetching followed streams" }
+                    LoadResult.Error(exception)
                 },
             )
     }

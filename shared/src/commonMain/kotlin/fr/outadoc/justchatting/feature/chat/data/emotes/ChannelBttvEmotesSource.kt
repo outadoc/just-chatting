@@ -21,7 +21,7 @@ class ChannelBttvEmotesSource(
                         title = params.channelName.desc(),
                         source = MR.strings.chat_source_bttv.desc(),
                     ),
-                    emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                    emotes.map { emote -> EmoteSetItem.Emote(emote) },
                 )
             }
 }

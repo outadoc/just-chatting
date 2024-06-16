@@ -61,18 +61,18 @@ class StreamAndUserInfoViewModel(
                                         ),
                                     )
                                 },
-                                onFailure = { e ->
-                                    logError<StreamAndUserInfoViewModel>(e) { "Error while loading stream for $login" }
+                                onFailure = { exception ->
+                                    logError<StreamAndUserInfoViewModel>(exception) { "Error while loading stream for $login" }
                                     _state.emit(
-                                        State.Error(e),
+                                        State.Error(exception),
                                     )
                                 },
                             )
                     },
-                    onFailure = { e ->
-                        logError<StreamAndUserInfoViewModel>(e) { "Error while loading user info for $login" }
+                    onFailure = { exception ->
+                        logError<StreamAndUserInfoViewModel>(exception) { "Error while loading user info for $login" }
                         _state.emit(
-                            State.Error(e),
+                            State.Error(exception),
                         )
                     },
                 )

@@ -21,7 +21,7 @@ class ChannelFfzEmotesSource(
                         title = params.channelName.desc(),
                         source = MR.strings.chat_source_ffz.desc(),
                     ),
-                    emotes.map { emote -> EmoteSetItem.Emote(emote) }
+                    emotes.map { emote -> EmoteSetItem.Emote(emote) },
                 )
             }
 }

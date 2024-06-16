@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
@@ -26,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -41,15 +43,18 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_copiedToClipboard
+import fr.outadoc.justchatting.shared.stream_info
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ScreenPreviews
-import fr.outadoc.justchatting.utils.ui.shortToast
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.getString
+import org.jetbrains.compose.resources.stringResource
 
 @ScreenPreviews
 @Composable
@@ -95,6 +100,7 @@ fun ChannelChatScreenContent(
     val user = (state as? ChatViewModel.State.Chatting)?.user
 
     val inputFocusRequester = remember { FocusRequester() }
+    val scope = rememberCoroutineScope()
 
     LaunchedEffect(isEmotePickerOpen) {
         if (isEmotePickerOpen) {
@@ -133,7 +139,14 @@ fun ChannelChatScreenContent(
                     item.body?.message?.let { rawMessage ->
                         clipboard.setText(AnnotatedString(rawMessage))
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        context.shortToast(Res.string.chat_copiedToClipboard.resourceId)
+
+                        scope.launch {
+                            Toast.makeText(
+                                context,
+                                getString(Res.string.chat_copiedToClipboard),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
                 },
                 onReplyToMessage = onReplyToMessage,

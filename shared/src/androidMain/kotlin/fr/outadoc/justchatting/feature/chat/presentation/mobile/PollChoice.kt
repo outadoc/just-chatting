@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.poll_status_winner_cd
 import fr.outadoc.justchatting.utils.core.formatPercent
 import fr.outadoc.justchatting.utils.ui.customColors
 
@@ -41,6 +42,7 @@ fun PollChoice(
 
     Box(modifier = modifier.height(32.dp)) {
         LinearProgressIndicator(
+            progress = { ratio },
             modifier = Modifier
                 .fillMaxSize()
                 .clip(MaterialTheme.shapes.medium),
@@ -50,7 +52,6 @@ fun PollChoice(
                 MaterialTheme.colorScheme.primaryContainer
             },
             trackColor = MaterialTheme.colorScheme.outlineVariant,
-            progress = ratio,
         )
 
         Row(

@@ -35,7 +35,7 @@ class IrcMessageMapper {
                         titleIcon = Icon.CallReceived,
                         subtitle = Res.string.chat_raid_header
                             .format(
-                                MR.plurals.viewers.format(
+                                Res.plurals.viewers.format(
                                     number = raidersCount,
                                     raidersCount,
                                 ),
@@ -95,7 +95,7 @@ class IrcMessageMapper {
                                 Res.string.chat_sub_header_withDuration
                                     .format(
                                         parseSubscriptionTier(subscriptionPlan),
-                                        MR.plurals.months.format(
+                                        Res.plurals.months.format(
                                             number = cumulativeMonths,
                                             cumulativeMonths.formatNumber(),
                                         ),
@@ -105,11 +105,11 @@ class IrcMessageMapper {
                             else -> {
                                 Res.string.chat_sub_header_withDurationAndStreak.format(
                                     parseSubscriptionTier(subscriptionPlan),
-                                    MR.plurals.months.format(
+                                    Res.plurals.months.format(
                                         number = cumulativeMonths,
                                         cumulativeMonths.formatNumber(),
                                     ),
-                                    MR.plurals.months.format(
+                                    Res.plurals.months.format(
                                         number = streakMonths,
                                         streakMonths.formatNumber(),
                                     ),
@@ -162,7 +162,7 @@ class IrcMessageMapper {
                             .format(
                                 parseSubscriptionTier(subscriptionPlan),
                                 recipientDisplayName,
-                                MR.plurals.months.format(
+                                Res.plurals.months.format(
                                     number = cumulativeMonths,
                                     cumulativeMonths.formatNumber(),
                                 ),

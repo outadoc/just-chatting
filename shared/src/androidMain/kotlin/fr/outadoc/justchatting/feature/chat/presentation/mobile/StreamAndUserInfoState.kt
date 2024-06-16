@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.info_loadError
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @Composable

@@ -30,6 +30,8 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.menu_item_openInBubble
+import fr.outadoc.justchatting.shared.watch_live
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.utils.ui.canOpenInBubble
 import org.koin.compose.koinInject

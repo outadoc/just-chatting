@@ -5,6 +5,7 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Search
@@ -23,6 +24,9 @@ import androidx.compose.ui.unit.dp
 import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.all_goBack
+import fr.outadoc.justchatting.shared.search_clear_cd
+import fr.outadoc.justchatting.shared.search_hint
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import org.koin.androidx.compose.koinViewModel
 
@@ -85,7 +89,7 @@ private fun CompactSearchBar(
                 ) {
                     if (isActive) {
                         Icon(
-                            Icons.Filled.ArrowBack,
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(Res.string.all_goBack),
                         )
                     } else {
@@ -150,7 +154,7 @@ private fun FullHeightSearchBar(
                 ) {
                     if (isActive) {
                         Icon(
-                            Icons.Filled.ArrowBack,
+                            Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(Res.string.all_goBack),
                         )
                     } else {

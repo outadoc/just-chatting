@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
@@ -36,6 +37,54 @@ import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.presentation.Dependency
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.app_license_name
+import fr.outadoc.justchatting.shared.app_license_url
+import fr.outadoc.justchatting.shared.app_name
+import fr.outadoc.justchatting.shared.app_pronouns_url
+import fr.outadoc.justchatting.shared.app_repo_name
+import fr.outadoc.justchatting.shared.app_repo_url
+import fr.outadoc.justchatting.shared.logout_msg
+import fr.outadoc.justchatting.shared.logout_title
+import fr.outadoc.justchatting.shared.no
+import fr.outadoc.justchatting.shared.settings_about_header
+import fr.outadoc.justchatting.shared.settings_about_license_cd
+import fr.outadoc.justchatting.shared.settings_about_license_subtitle
+import fr.outadoc.justchatting.shared.settings_about_license_title
+import fr.outadoc.justchatting.shared.settings_about_repo_cd
+import fr.outadoc.justchatting.shared.settings_about_repo_title
+import fr.outadoc.justchatting.shared.settings_about_version
+import fr.outadoc.justchatting.shared.settings_accessibility_animations_action
+import fr.outadoc.justchatting.shared.settings_accessibility_animations_subtitle
+import fr.outadoc.justchatting.shared.settings_accessibility_animations_title
+import fr.outadoc.justchatting.shared.settings_accessibility_header
+import fr.outadoc.justchatting.shared.settings_accessibility_timestamps_title
+import fr.outadoc.justchatting.shared.settings_account_header
+import fr.outadoc.justchatting.shared.settings_account_logout_action
+import fr.outadoc.justchatting.shared.settings_dependencies_cd
+import fr.outadoc.justchatting.shared.settings_dependencies_header
+import fr.outadoc.justchatting.shared.settings_logs_subtitle
+import fr.outadoc.justchatting.shared.settings_logs_title
+import fr.outadoc.justchatting.shared.settings_notifications_enable_subtitle
+import fr.outadoc.justchatting.shared.settings_notifications_enable_title
+import fr.outadoc.justchatting.shared.settings_notifications_header
+import fr.outadoc.justchatting.shared.settings_notifications_openBubbleSettings
+import fr.outadoc.justchatting.shared.settings_notifications_openNotificationsSettings
+import fr.outadoc.justchatting.shared.settings_thirdparty_bttv_subtitle
+import fr.outadoc.justchatting.shared.settings_thirdparty_bttv_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_emotes_header
+import fr.outadoc.justchatting.shared.settings_thirdparty_ffz_subtitle
+import fr.outadoc.justchatting.shared.settings_thirdparty_ffz_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_pronouns_header
+import fr.outadoc.justchatting.shared.settings_thirdparty_pronouns_set_cd
+import fr.outadoc.justchatting.shared.settings_thirdparty_pronouns_set_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_pronouns_subtitle
+import fr.outadoc.justchatting.shared.settings_thirdparty_pronouns_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_recent_header
+import fr.outadoc.justchatting.shared.settings_thirdparty_recent_subtitle
+import fr.outadoc.justchatting.shared.settings_thirdparty_recent_title
+import fr.outadoc.justchatting.shared.settings_thirdparty_stv_subtitle
+import fr.outadoc.justchatting.shared.settings_thirdparty_stv_title
+import fr.outadoc.justchatting.shared.yes
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.plus
@@ -154,7 +203,7 @@ fun SettingsList(
                 title = { Text(text = stringResource(Res.string.settings_thirdparty_pronouns_set_title)) },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.OpenInNew,
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                         contentDescription = null,
                     )
                 },
@@ -268,7 +317,7 @@ fun SettingsList(
                 },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.OpenInNew,
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                         contentDescription = null,
                     )
                 },
@@ -286,7 +335,7 @@ fun SettingsList(
                     },
                     trailingIcon = {
                         Icon(
-                            imageVector = Icons.Default.OpenInNew,
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                             contentDescription = null,
                         )
                     },
@@ -334,7 +383,7 @@ fun SettingsList(
                 },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.OpenInNew,
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                         contentDescription = null,
                     )
                 },
@@ -442,7 +491,7 @@ fun SettingsList(
                 subtitle = { Text(text = stringResource(Res.string.app_repo_name)) },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.OpenInNew,
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                         contentDescription = null,
                     )
                 },
@@ -516,7 +565,7 @@ fun SettingsList(
                 trailingIcon = {
                     if (dependency.moduleUrl != null) {
                         Icon(
-                            imageVector = Icons.Default.OpenInNew,
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                             contentDescription = null,
                         )
                     }

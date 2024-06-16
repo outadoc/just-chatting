@@ -21,6 +21,7 @@ import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.shared.uptime
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import kotlinx.datetime.Instant

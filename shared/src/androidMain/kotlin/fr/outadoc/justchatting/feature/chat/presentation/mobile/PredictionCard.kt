@@ -26,11 +26,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.Prediction
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.prediction_collapse_action
+import fr.outadoc.justchatting.shared.prediction_expand_action
+import fr.outadoc.justchatting.shared.prediction_status_ended
+import fr.outadoc.justchatting.shared.prediction_status_locked
+import fr.outadoc.justchatting.shared.prediction_status_points
+import fr.outadoc.justchatting.shared.prediction_status_progress
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
@@ -39,6 +44,7 @@ import fr.outadoc.justchatting.utils.ui.parseHexColor
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,11 +66,19 @@ fun PredictionCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             val status = when (prediction.status) {
-                Prediction.Status.Active -> Res.string.prediction_status_progress
-                Prediction.Status.Locked -> Res.string.prediction_status_locked
+                Prediction.Status.Active -> {
+                    Res.string.prediction_status_progress
+                }
+
+                Prediction.Status.Locked -> {
+                    Res.string.prediction_status_locked
+                }
+
                 Prediction.Status.ResolvePending,
                 Prediction.Status.Resolved,
-                -> Res.string.prediction_status_ended
+                -> {
+                    Res.string.prediction_status_ended
+                }
             }
 
             val totalPointsSpent: Int =

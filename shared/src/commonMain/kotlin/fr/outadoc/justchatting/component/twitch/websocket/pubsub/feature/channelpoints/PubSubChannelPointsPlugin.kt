@@ -23,7 +23,7 @@ class PubSubChannelPointsPlugin(
                     ChatEvent.Message.Highlighted(
                         timestamp = message.data.redemption.redeemedAt ?: clock.now(),
                         metadata = ChatEvent.Message.Highlighted.Metadata(
-                            title = MR.plurals.user_redeemed
+                            title = Res.plurals.user_redeemed
                                 .format(
                                     number = message.data.redemption.reward.cost,
                                     message.data.redemption.user.displayName,

@@ -19,12 +19,18 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.shared.notification_action_reply
+import fr.outadoc.justchatting.shared.notification_action_reply_hint
+import fr.outadoc.justchatting.shared.notification_channel_bubbles_message
+import fr.outadoc.justchatting.shared.notification_channel_bubbles_openPrompt
+import fr.outadoc.justchatting.shared.notification_channel_bubbles_title
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
+import org.jetbrains.compose.resources.getString
 
 class DefaultChatNotifier(
     private val context: Context,
@@ -59,7 +65,7 @@ class DefaultChatNotifier(
             }
         }
 
-    override fun notify(context: Context, user: User) {
+    override suspend fun notify(context: Context, user: User) {
         // Don't post a new notification if already in a bubble
         if ((context as? Activity)?.isLaunchedFromBubbleCompat == true) return
 
@@ -71,15 +77,15 @@ class DefaultChatNotifier(
         }
     }
 
-    private fun createGenericBubbleChannelIfNeeded(context: Context): NotificationChannelCompat? {
+    private suspend fun createGenericBubbleChannelIfNeeded(context: Context): NotificationChannelCompat? {
         val nm = NotificationManagerCompat.from(context)
         nm.createNotificationChannel(
             NotificationChannelCompat.Builder(
                 NOTIFICATION_CHANNEL_ID,
                 NotificationManagerCompat.IMPORTANCE_MIN,
             )
-                .setName(Res.string.notification_channel_bubbles_title.getString(context))
-                .setDescription(Res.string.notification_channel_bubbles_message.getString(context))
+                .setName(getString(Res.string.notification_channel_bubbles_title))
+                .setDescription(getString(Res.string.notification_channel_bubbles_message))
                 .build(),
         )
 
@@ -87,7 +93,7 @@ class DefaultChatNotifier(
     }
 
     @RequiresPermission("android.permission.POST_NOTIFICATIONS")
-    private fun createNotificationForUser(context: Context, user: User) {
+    private suspend fun createNotificationForUser(context: Context, user: User) {
         val nm = NotificationManagerCompat.from(context)
         val intent = ChatActivity.createIntent(context, user.login)
 
@@ -112,18 +118,14 @@ class DefaultChatNotifier(
                 .addAction(
                     NotificationCompat.Action.Builder(
                         R.drawable.ic_reply,
-                        Res.string.notification_action_reply.getString(context),
+                        getString(Res.string.notification_action_reply),
                         ChatConnectionService.createReplyIntent(context, channelId = user.id)
                             .toPendingForegroundServiceIntent(context, mutable = true),
                     )
                         .setSemanticAction(NotificationCompat.Action.SEMANTIC_ACTION_REPLY)
                         .addRemoteInput(
                             RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
-                                .setLabel(
-                                    Res.string.notification_action_reply_hint.getString(
-                                        context,
-                                    ),
-                                )
+                                .setLabel(getString(Res.string.notification_action_reply_hint))
                                 .build(),
                         )
                         .build(),
@@ -141,7 +143,7 @@ class DefaultChatNotifier(
                 .setStyle(
                     NotificationCompat.MessagingStyle(person)
                         .addMessage(
-                            Res.string.notification_channel_bubbles_openPrompt.getString(context),
+                            getString(Res.string.notification_channel_bubbles_openPrompt),
                             System.currentTimeMillis(),
                             person,
                         ),

@@ -29,6 +29,8 @@ import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.poll_collapse_action
+import fr.outadoc.justchatting.shared.poll_expand_action
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import kotlinx.collections.immutable.ImmutableList

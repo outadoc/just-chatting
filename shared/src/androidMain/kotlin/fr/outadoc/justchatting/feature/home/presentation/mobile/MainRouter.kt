@@ -21,6 +21,8 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.zIndex
 import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.settings
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,7 +65,7 @@ fun MainRouter(
 
                     Tab.Settings -> {
                         TopAppBar(
-                            title = { Text(stringResource(fr.outadoc.justchatting.shared.Res.string.settings)) },
+                            title = { Text(stringResource(Res.string.settings)) },
                         )
                     }
                 }

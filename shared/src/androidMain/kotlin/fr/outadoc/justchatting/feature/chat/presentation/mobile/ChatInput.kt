@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Mood
@@ -46,6 +47,11 @@ import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_input_clear_cd
+import fr.outadoc.justchatting.shared.chat_input_emote_cd
+import fr.outadoc.justchatting.shared.chat_input_hint
+import fr.outadoc.justchatting.shared.chat_input_replyClear
+import fr.outadoc.justchatting.shared.chat_input_send_cd
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
@@ -205,7 +211,7 @@ fun ChatInput(
                         },
                     ) {
                         Icon(
-                            Icons.Default.Send,
+                            Icons.AutoMirrored.Filled.Send,
                             contentDescription = stringResource(Res.string.chat_input_send_cd),
                         )
                     }

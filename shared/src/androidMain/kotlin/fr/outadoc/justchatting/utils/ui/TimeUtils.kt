@@ -1,18 +1,21 @@
 package fr.outadoc.justchatting.utils.ui
 
-import android.content.Context
 import android.text.format.DateFormat
 import android.text.format.DateUtils
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.duration_days
+import fr.outadoc.justchatting.shared.duration_hours
+import fr.outadoc.justchatting.shared.duration_minutes
+import fr.outadoc.justchatting.shared.duration_seconds
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaInstant
 import kotlinx.datetime.toLocalDateTime
+import org.jetbrains.compose.resources.stringResource
 import java.util.Date
 import kotlin.time.Duration
 
@@ -49,23 +52,24 @@ fun Instant.formatDate(
     }
 }
 
-fun Duration.format(context: Context): String =
-    sequence {
+@Composable
+fun Duration.format(): String =
+    buildList {
         toComponents { days, hours, minutes, seconds, _ ->
-            days.takeIf { it > 0 }?.let {
-                yield(Res.string.duration_days.format(it).toString(context))
+            days.takeIf { it > 0 }?.let { d ->
+                add(stringResource(Res.string.duration_days, d))
             }
 
-            hours.takeIf { it > 0 }?.let {
-                yield(Res.string.duration_hours.format(it).toString(context))
+            hours.takeIf { it > 0 }?.let { h ->
+                add(stringResource(Res.string.duration_hours, h))
             }
 
-            minutes.takeIf { it > 0 }?.let {
-                yield(Res.string.duration_minutes.format(it).toString(context))
+            minutes.takeIf { it > 0 }?.let { m ->
+                add(stringResource(Res.string.duration_minutes, m))
             }
 
-            seconds.takeIf { it > 0 }?.let {
-                yield(Res.string.duration_seconds.format(it).toString(context))
+            seconds.takeIf { it > 0 }?.let { s ->
+                add(stringResource(Res.string.duration_seconds, s))
             }
         }
     }.joinToString(" ")

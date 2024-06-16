@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -87,19 +86,11 @@ fun StreamInfo(
             }
         }
 
-        val tags = stream.tags
-        if (tags.isNotEmpty()) {
-            FlowRow(
+        if (stream.tags.isNotEmpty()) {
+            TagList(
                 modifier = Modifier.padding(top = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                tags.forEach { tag ->
-                    StreamTagChip(
-                        modifier = Modifier.padding(vertical = 2.dp),
-                        tag = tag,
-                    )
-                }
-            }
+                tags = stream.tags,
+            )
         }
     }
 }

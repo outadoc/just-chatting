@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.utils.logging.logError
+import kotlinx.collections.immutable.toPersistentList
 
 class FollowedStreamsDataSource(
     private val userId: String?,
@@ -42,7 +43,7 @@ class FollowedStreamsDataSource(
                                     title = stream.title,
                                     viewerCount = stream.viewerCount,
                                     startedAt = stream.startedAt,
-                                    tags = stream.tags,
+                                    tags = stream.tags.toPersistentList(),
                                 )
                             },
                         ),

@@ -23,6 +23,7 @@ import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.utils.map
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -218,7 +219,7 @@ class TwitchRepositoryImpl(
                         title = stream.title,
                         viewerCount = stream.viewerCount,
                         startedAt = stream.startedAt,
-                        tags = stream.tags,
+                        tags = stream.tags.toPersistentList(),
                     )
                 }
         }

@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.component.chatapi.domain.model
 
 import fr.outadoc.justchatting.utils.parcel.Parcelable
 import fr.outadoc.justchatting.utils.parcel.Parcelize
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Parcelize
@@ -15,5 +16,5 @@ data class Stream(
     val viewerCount: Int,
     val startedAt: String,
     val profileImageURL: String? = null,
-    val tags: List<String> = persistentListOf(),
+    val tags: ImmutableList<String> = persistentListOf(),
 ) : Parcelable

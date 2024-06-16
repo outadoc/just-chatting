@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import kotlinx.collections.immutable.persistentListOf
 
 @Composable
 fun StreamAndUserInfo(
@@ -62,7 +63,7 @@ fun StreamInfoPreviewFull() {
                 title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
                 viewerCount = 10_000,
                 startedAt = "2022-09-01T00:00:00.00Z",
-                tags = listOf("French"),
+                tags = persistentListOf("French"),
             ),
         )
     }

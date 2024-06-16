@@ -3,8 +3,6 @@ package fr.outadoc.justchatting.feature.home.presentation.mobile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -12,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme
@@ -82,26 +82,41 @@ fun LiveStreamCard(
     tags: ImmutableList<String> = persistentListOf(),
     onClick: () -> Unit = {},
 ) {
-    Card(
+    OutlinedCard(
         modifier = modifier,
-        onClick = onClick,
     ) {
-        LiveStream(
-            modifier = Modifier.padding(8.dp),
-            title = title,
-            userName = userName,
-            viewerCount = viewerCount,
-            gameName = gameName,
-            startedAt = startedAt,
-            profileImageURL = profileImageURL,
-            tags = tags,
-        )
+        Column {
+            Card(
+                onClick = onClick,
+            ) {
+                LiveStream(
+                    modifier = Modifier.padding(8.dp),
+                    title = title,
+                    userName = userName,
+                    viewerCount = viewerCount,
+                    gameName = gameName,
+                    startedAt = startedAt,
+                    profileImageURL = profileImageURL,
+                )
+            }
+
+            if (tags.isNotEmpty()) {
+                TagList(
+                    modifier = Modifier.padding(
+                        start = 8.dp,
+                        end = 8.dp,
+                        top = 4.dp,
+                        bottom = 8.dp,
+                    ),
+                    tags = tags,
+                )
+            }
+        }
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun LiveStream(
+private fun LiveStream(
     modifier: Modifier = Modifier,
     title: String?,
     userName: String?,
@@ -109,7 +124,6 @@ fun LiveStream(
     gameName: String?,
     startedAt: Instant?,
     profileImageURL: String?,
-    tags: ImmutableList<String>,
 ) {
     Column(
         modifier = modifier,
@@ -187,20 +201,6 @@ fun LiveStream(
                                 style = MaterialTheme.typography.labelMedium,
                             )
                         }
-                }
-            }
-        }
-
-        if (tags.isNotEmpty()) {
-            FlowRow(
-                modifier = Modifier.padding(top = 4.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
-            ) {
-                tags.forEach { tag ->
-                    StreamTagChip(
-                        modifier = Modifier.padding(vertical = 2.dp),
-                        tag = tag,
-                    )
                 }
             }
         }

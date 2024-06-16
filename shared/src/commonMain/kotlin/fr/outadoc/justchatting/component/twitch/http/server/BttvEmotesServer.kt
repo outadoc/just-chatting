@@ -19,14 +19,22 @@ class BttvEmotesServer(httpClient: HttpClient) : BttvEmotesApi {
     }
 
     override suspend fun getGlobalBttvEmotes(): Result<List<BttvEmote>> =
-        client.get { url { path("3/cached/emotes/global") } }.body()
+        runCatching {
+            client.get { url { path("3/cached/emotes/global") } }.body()
+        }
 
     override suspend fun getBttvEmotes(channelId: String): Result<BttvChannelResponse> =
-        client.get { url { path("3/cached/users/twitch", channelId) } }.body()
+        runCatching {
+            client.get { url { path("3/cached/users/twitch", channelId) } }.body()
+        }
 
     override suspend fun getBttvGlobalFfzEmotes(): Result<List<FfzEmote>> =
-        client.get { url { path("3/cached/frankerfacez/emotes/global") } }.body()
+        runCatching {
+            client.get { url { path("3/cached/frankerfacez/emotes/global") } }.body()
+        }
 
     override suspend fun getBttvFfzEmotes(channelId: String): Result<List<FfzEmote>> =
-        client.get { url { path("3/cached/frankerfacez/users/twitch", channelId) } }.body()
+        runCatching {
+            client.get { url { path("3/cached/frankerfacez/users/twitch", channelId) } }.body()
+        }
 }

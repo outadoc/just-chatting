@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.feature.home.presentation
 
 import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
-import fr.outadoc.justchatting.component.chatapi.domain.model.ValidationResponse
 import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
 import fr.outadoc.justchatting.component.deeplink.Deeplink
 import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
@@ -65,30 +64,31 @@ class MainRouterViewModel(
         viewModelScope.launch {
             preferencesRepository.currentPreferences.collect { prefs ->
                 if (prefs.appUser is AppUser.NotValidated) {
-                    try {
-                        val userInfo: ValidationResponse =
-                            authRepository.validate(prefs.appUser.token)
-                                ?: throw InvalidClientIdException()
+                    val appUser = authRepository
+                        .validate(prefs.appUser.token)
+                        .mapCatching { userInfo ->
+                            val validatedUser = AppUser.LoggedIn(
+                                userId = userInfo.userId,
+                                userLogin = userInfo.login,
+                                token = prefs.appUser.token,
+                            )
 
-                        val validatedUser = AppUser.LoggedIn(
-                            userId = userInfo.userId,
-                            userLogin = userInfo.login,
-                            token = prefs.appUser.token,
+                            if (userInfo.clientId != oAuthAppCredentials.clientId) {
+                                throw InvalidClientIdException()
+                            }
+
+                            validatedUser
+                        }
+                        .fold(
+                            onSuccess = { it },
+                            onFailure = { exception ->
+                                logError<MainRouterViewModel>(exception) { "Failed to validate token" }
+                                AppUser.NotLoggedIn
+                            },
                         )
 
-                        if (userInfo.clientId != oAuthAppCredentials.clientId) {
-                            throw InvalidClientIdException()
-                        }
-
-                        preferencesRepository.updatePreferences { current ->
-                            current.copy(appUser = validatedUser)
-                        }
-                    } catch (e: Exception) {
-                        logError<MainRouterViewModel>(e) { "Failed to validate token" }
-
-                        preferencesRepository.updatePreferences { current ->
-                            current.copy(appUser = AppUser.NotLoggedIn)
-                        }
+                    preferencesRepository.updatePreferences { current ->
+                        current.copy(appUser = appUser)
                     }
                 }
             }

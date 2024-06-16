@@ -68,7 +68,7 @@ class DelegateTwitchEmotesSource(
                         .groupBy { emoteOwners[params.channelId] },
                     globalEmotes = emotes.filter { emote -> emote.ownerId != params.channelId }
                         .groupBy { emote -> emoteOwners[emote.ownerId] },
-                )
+                ),
             )
         }
     }

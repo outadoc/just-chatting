@@ -14,29 +14,31 @@ class AuthRepository(
     private val preferencesRepository: PreferenceRepository,
     private val oAuthAppCredentials: OAuthAppCredentials,
 ) {
-    suspend fun validate(token: String): ValidationResponse? =
+    suspend fun validate(token: String): Result<ValidationResponse> =
         withContext(DispatchersProvider.io) {
-            api.validateToken(token)?.let { response ->
-                ValidationResponse(
-                    clientId = response.clientId,
-                    login = response.login,
-                    userId = response.userId,
-                )
-            }
+            api.validateToken(token)
+                .map { response ->
+                    ValidationResponse(
+                        clientId = response.clientId,
+                        login = response.login,
+                        userId = response.userId,
+                    )
+                }
         }
 
-    suspend fun revokeToken() {
+    suspend fun revokeToken(): Result<Unit> =
         withContext(DispatchersProvider.io) {
             val user = preferencesRepository
                 .currentPreferences.first()
                 .appUser
 
-            if (user !is AppUser.LoggedIn) return@withContext
+            if (user !is AppUser.LoggedIn) {
+                return@withContext Result.failure(IllegalStateException("User is not logged in"))
+            }
 
             api.revokeToken(
                 clientId = oAuthAppCredentials.clientId,
                 token = user.token,
             )
         }
-    }
 }

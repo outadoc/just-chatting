@@ -46,11 +46,11 @@ class SettingsViewModel(
                 current.copy(appUser = AppUser.NotLoggedIn)
             }
 
-            try {
-                authRepository.revokeToken()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
+            authRepository
+                .revokeToken()
+                .onFailure { exception ->
+                    logError<SettingsViewModel>(exception) { "Failed to revoke token" }
+                }
         }
     }
 

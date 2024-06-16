@@ -6,5 +6,5 @@ interface EmoteListSource<T> {
         channelId: String,
         channelName: String,
         emoteSets: List<String>,
-    ): T
+    ): Result<T>
 }

@@ -62,6 +62,7 @@ class UserProfileImageContentProvider : ContentProvider() {
                 runBlocking(DispatchersProvider.io) {
                     val profileImageUrl: String =
                         apiRepository.loadUsersByLogin(listOf(userLogin))
+                            .getOrNull()
                             ?.firstOrNull()
                             ?.profileImageUrl
                             ?: throw FileNotFoundException("Could not retrieve user info from Twitch API.")

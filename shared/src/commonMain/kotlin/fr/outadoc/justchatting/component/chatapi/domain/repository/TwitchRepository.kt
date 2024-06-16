@@ -16,6 +16,7 @@ interface TwitchRepository {
     suspend fun loadFollowedChannels(): Flow<PagingData<ChannelFollow>>
     suspend fun loadStream(userId: String): Result<Stream>
     suspend fun loadUsersById(ids: List<String>): Result<List<User>>
+    suspend fun loadUserByLogin(login: String): Result<User>
     suspend fun loadUsersByLogin(logins: List<String>): Result<List<User>>
     suspend fun loadCheerEmotes(userId: String): Result<List<Emote>>
     suspend fun loadEmotesFromSet(setIds: List<String>): Result<List<Emote>>

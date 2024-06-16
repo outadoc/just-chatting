@@ -11,13 +11,16 @@ class GlobalBttvEmotesSource(
 
     override fun shouldUseCache(previous: Params, next: Params): Boolean = true
 
-    override suspend fun getEmotes(params: Params): List<EmoteSetItem> =
-        flatListOf(
-            EmoteSetItem.Header(
-                title = null,
-                source = MR.strings.chat_source_bttv.desc(),
-            ),
-            emotesRepository.loadGlobalBttvEmotes()
-                .map { emote -> EmoteSetItem.Emote(emote) },
-        )
+    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
+        emotesRepository
+            .loadGlobalBttvEmotes()
+            .map { emotes ->
+                flatListOf(
+                    EmoteSetItem.Header(
+                        title = null,
+                        source = MR.strings.chat_source_bttv.desc(),
+                    ),
+                    emotes.map { emote -> EmoteSetItem.Emote(emote) },
+                )
+            }
 }

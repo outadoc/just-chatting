@@ -243,7 +243,11 @@ class TwitchRepositoryImpl(
     override suspend fun loadUsersByLogin(logins: List<String>): Result<List<User>> =
         withContext(DispatchersProvider.io) {
             helix.getUsersByLogin(logins = logins)
-                .map { response ->
+                .mapCatching { response ->
+                    if (response.data.isEmpty()) {
+                        error("No users found for logins: $logins")
+                    }
+
                     response.data.map { user ->
                         User(
                             id = user.id,
@@ -256,6 +260,17 @@ class TwitchRepositoryImpl(
                     }
                 }
         }
+
+    override suspend fun loadUserByLogin(login: String): Result<User> {
+        return loadUsersByLogin(logins = listOf(login))
+            .mapCatching { users ->
+                if (users.isEmpty()) {
+                    error("No user found for login: $login")
+                }
+
+                users.first()
+            }
+    }
 
     override suspend fun loadCheerEmotes(userId: String): Result<List<Emote>> {
         return withContext(DispatchersProvider.io) {

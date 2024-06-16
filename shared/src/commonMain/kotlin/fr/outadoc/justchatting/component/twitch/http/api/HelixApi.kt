@@ -26,7 +26,7 @@ interface HelixApi {
     suspend fun searchChannels(
         query: String,
         limit: Int,
-        after: String?
+        after: String?,
     ): Result<ChannelSearchResponse>
 
     suspend fun getFollowedChannels(

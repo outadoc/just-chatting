@@ -5,7 +5,6 @@ import androidx.paging.PagingState
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
 import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
-import fr.outadoc.justchatting.component.twitch.http.model.ChannelSearchResponse
 import fr.outadoc.justchatting.utils.logging.logError
 
 class SearchChannelsDataSource(
@@ -26,46 +25,52 @@ class SearchChannelsDataSource(
             )
         }
 
-        return try {
-            val response: ChannelSearchResponse =
-                helixApi.searchChannels(
-                    query = query,
-                    limit = params.loadSize,
-                    after = (params.key as? Pagination.Next)?.cursor,
-                )
-
-            val itemsAfter: Int =
-                if (response.pagination.cursor == null) {
-                    0
-                } else {
-                    LoadResult.Page.COUNT_UNDEFINED
-                }
-
-            LoadResult.Page(
-                data = listOf(
-                    response.data.map { search ->
-                        ChannelSearch(
-                            id = search.id,
-                            title = search.title,
-                            broadcasterLogin = search.userLogin,
-                            broadcasterDisplayName = search.userDisplayName,
-                            broadcasterLanguage = search.broadcasterLanguage,
-                            gameId = search.gameId,
-                            gameName = search.gameName,
-                            isLive = search.isLive,
-                            startedAt = search.startedAt,
-                            thumbnailUrl = search.thumbnailUrl,
-                            tags = search.tags,
-                        )
-                    },
-                ),
-                prevKey = null,
-                nextKey = response.pagination.cursor?.let { cursor -> Pagination.Next(cursor) },
-                itemsAfter = itemsAfter,
+        return helixApi
+            .searchChannels(
+                query = query,
+                limit = params.loadSize,
+                after = (params.key as? Pagination.Next)?.cursor,
             )
-        } catch (e: Exception) {
-            logError<SearchChannelsDataSource>(e) { "Error while fetching followed streams" }
-            LoadResult.Error(e)
-        }
+            .fold(
+                onSuccess = { response ->
+                    val itemsAfter: Int =
+                        if (response.pagination.cursor == null) {
+                            0
+                        } else {
+                            LoadResult.Page.COUNT_UNDEFINED
+                        }
+
+                    LoadResult.Page(
+                        data = listOf(
+                            response.data.map { search ->
+                                ChannelSearch(
+                                    id = search.id,
+                                    title = search.title,
+                                    broadcasterLogin = search.userLogin,
+                                    broadcasterDisplayName = search.userDisplayName,
+                                    broadcasterLanguage = search.broadcasterLanguage,
+                                    gameId = search.gameId,
+                                    gameName = search.gameName,
+                                    isLive = search.isLive,
+                                    startedAt = search.startedAt,
+                                    thumbnailUrl = search.thumbnailUrl,
+                                    tags = search.tags,
+                                )
+                            },
+                        ),
+                        prevKey = null,
+                        nextKey = response.pagination.cursor?.let { cursor ->
+                            Pagination.Next(
+                                cursor,
+                            )
+                        },
+                        itemsAfter = itemsAfter,
+                    )
+                },
+                onFailure = { exception ->
+                    logError<SearchChannelsDataSource>(exception) { "Error while fetching followed streams" }
+                    return LoadResult.Error(exception)
+                },
+            )
     }
 }

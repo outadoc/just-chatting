@@ -22,6 +22,7 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.utils.map
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
+import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -69,7 +70,10 @@ class TwitchRepositoryImpl(
                 val users = helix.getUsersById(ids = idsToUpdate)
                     .fold(
                         onSuccess = { response -> response.data },
-                        onFailure = { emptyList() }
+                        onFailure = { exception ->
+                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
+                            emptyList()
+                        },
                     )
 
                 results.map { searchResult ->
@@ -115,13 +119,16 @@ class TwitchRepositoryImpl(
     private suspend fun Collection<Stream>.mapWithUserProfileImages(): List<Stream> {
         val results = this
         val users = results
-            .map { it.userId }
+            .map { user -> user.userId }
             .chunked(100)
             .flatMap { ids ->
                 helix.getUsersById(ids = ids)
                     .fold(
                         onSuccess = { response -> response.data },
-                        onFailure = { emptyList() }
+                        onFailure = { exception ->
+                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
+                            emptyList()
+                        },
                     )
             }
 
@@ -171,7 +178,10 @@ class TwitchRepositoryImpl(
                 helix.getUsersById(ids = idsToUpdate)
                     .fold(
                         onSuccess = { response -> response.data },
-                        onFailure = { emptyList() }
+                        onFailure = { exception ->
+                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
+                            emptyList()
+                        },
                     )
             }
             .associate { user ->
@@ -306,33 +316,35 @@ class TwitchRepositoryImpl(
     }
 
     override suspend fun loadChannelSchedule(channelId: String): Result<ChannelSchedule> {
-        return helix.getChannelSchedule(
-            channelId = channelId,
-            limit = 10,
-            after = null
-        ).mapCatching { response ->
-            ChannelSchedule(
-                segments = response.data.segments.map { segment ->
-                    ChannelScheduleSegment(
-                        id = segment.id,
-                        startTime = segment.startTime,
-                        endTime = segment.endTime,
-                        title = segment.title,
-                        canceledUntil = segment.canceledUntil,
-                        category = segment.category,
-                        isRecurring = segment.isRecurring,
-                    )
-                },
-                userId = response.data.userId,
-                userLogin = response.data.userLogin,
-                userDisplayName = response.data.userDisplayName,
-                vacation = response.data.vacation?.let { vacation ->
-                    ChannelScheduleVacation(
-                        startTime = vacation.startTime,
-                        endTime = vacation.endTime,
-                    )
-                },
-            )
+        return withContext(DispatchersProvider.io) {
+            helix.getChannelSchedule(
+                channelId = channelId,
+                limit = 10,
+                after = null,
+            ).mapCatching { response ->
+                ChannelSchedule(
+                    segments = response.data.segments.map { segment ->
+                        ChannelScheduleSegment(
+                            id = segment.id,
+                            startTime = segment.startTime,
+                            endTime = segment.endTime,
+                            title = segment.title,
+                            canceledUntil = segment.canceledUntil,
+                            category = segment.category,
+                            isRecurring = segment.isRecurring,
+                        )
+                    },
+                    userId = response.data.userId,
+                    userLogin = response.data.userLogin,
+                    userDisplayName = response.data.userDisplayName,
+                    vacation = response.data.vacation?.let { vacation ->
+                        ChannelScheduleVacation(
+                            startTime = vacation.startTime,
+                            endTime = vacation.endTime,
+                        )
+                    },
+                )
+            }
         }
     }
 }

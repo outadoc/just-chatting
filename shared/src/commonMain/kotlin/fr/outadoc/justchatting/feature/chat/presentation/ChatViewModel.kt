@@ -542,7 +542,7 @@ class ChatViewModel(
                             onFailure = { error ->
                                 logError<ChatViewModel>(error) { "Failed to load global badges" }
                                 null
-                            }
+                            },
                         )
                 }
 
@@ -554,7 +554,7 @@ class ChatViewModel(
                             onFailure = { error ->
                                 logError<ChatViewModel>(error) { "Failed to load badges for channel $channelId" }
                                 null
-                            }
+                            },
                         )
                 }
 

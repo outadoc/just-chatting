@@ -35,17 +35,21 @@ class DefaultPronounsRepository(
             withContext(DispatchersProvider.io) {
                 cacheMutex.withLock {
                     if (_pronounCache == null) {
-                        try {
-                            _pronounCache = alejoPronounsApi
-                                .getPronouns()
-                                .associateBy { pronoun -> pronoun.id }
-                        } catch (e: Exception) {
-                            logError<DefaultPronounsRepository>(e) { "Error while fetching pronouns from Alejo API" }
-                        }
+                        alejoPronounsApi
+                            .getPronouns()
+                            .fold(
+                                onSuccess = { pronouns ->
+                                    _pronounCache = pronouns.associateBy { pronoun -> pronoun.id }
+                                },
+                                onFailure = { e ->
+                                    logError<DefaultPronounsRepository>(e) { "Error while fetching pronouns from Alejo API" }
+                                }
+                            )
                     }
                 }
 
-                chatters.map { chatter -> async { chatter to getPronounFor(chatter) } }
+                chatters
+                    .map { chatter -> async { chatter to getPronounFor(chatter) } }
                     .awaitAll()
                     .toMap()
             }
@@ -56,17 +60,16 @@ class DefaultPronounsRepository(
 
         val cached: AlejoPronoun? =
             _userCache.getOrPut(chatter) {
-                try {
-                    val userPronouns: UserPronounResponse? =
-                        alejoPronounsApi
-                            .getPronounsForUser(chatter.login)
-                            .firstOrNull()
+                val userPronouns: UserPronounResponse? =
+                    alejoPronounsApi
+                        .getPronounsForUser(chatter.login)
+                        .onFailure { exception ->
+                            logError<DefaultPronounsRepository>(exception) { "Error while getting pronoun for $chatter" }
+                        }
+                        .getOrNull()
+                        ?.firstOrNull()
 
-                    pronounCache[userPronouns?.pronounId]
-                } catch (e: Exception) {
-                    logError<DefaultPronounsRepository>(e) { "Error while getting pronoun for $chatter" }
-                    null
-                }
+                pronounCache[userPronouns?.pronounId]
             }
 
         return cached?.display?.let { displayPronoun ->

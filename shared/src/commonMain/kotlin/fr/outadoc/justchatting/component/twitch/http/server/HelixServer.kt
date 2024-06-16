@@ -149,8 +149,8 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
         channelId: String,
         limit: Int,
         after: String?,
-    ): Result<ChannelScheduleResponse> {
-        return runCatching {
+    ): Result<ChannelScheduleResponse> =
+        runCatching {
             val response = client.get {
                 url {
                     path("schedule")
@@ -167,5 +167,4 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
                 response.body()
             }
         }
-    }
 }

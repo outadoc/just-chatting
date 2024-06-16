@@ -30,12 +30,12 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.presentation.Dependency
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.plus
@@ -95,7 +95,7 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_thirdparty_recent_header))
+                Text(stringResource(Res.string.settings_thirdparty_recent_header))
             }
         }
 
@@ -107,10 +107,10 @@ fun SettingsList(
                     onAppPreferencesChange(appPreferences.copy(enableRecentMessages = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_recent_title))
+                    Text(stringResource(Res.string.settings_thirdparty_recent_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_recent_subtitle))
+                    Text(stringResource(Res.string.settings_thirdparty_recent_subtitle))
                 },
             )
         }
@@ -125,7 +125,7 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_thirdparty_pronouns_header))
+                Text(stringResource(Res.string.settings_thirdparty_pronouns_header))
             }
         }
 
@@ -137,21 +137,21 @@ fun SettingsList(
                     onAppPreferencesChange(appPreferences.copy(enablePronouns = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_pronouns_title))
+                    Text(stringResource(Res.string.settings_thirdparty_pronouns_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_pronouns_subtitle))
+                    Text(stringResource(Res.string.settings_thirdparty_pronouns_subtitle))
                 },
             )
         }
 
         item {
-            val pronounsUrl = stringResource(MR.strings.app_pronouns_url)
+            val pronounsUrl = stringResource(Res.string.app_pronouns_url)
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = { uriHandler.openUri(pronounsUrl) },
-                onClickLabel = stringResource(MR.strings.settings_thirdparty_pronouns_set_cd),
-                title = { Text(text = stringResource(MR.strings.settings_thirdparty_pronouns_set_title)) },
+                onClickLabel = stringResource(Res.string.settings_thirdparty_pronouns_set_cd),
+                title = { Text(text = stringResource(Res.string.settings_thirdparty_pronouns_set_title)) },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Default.OpenInNew,
@@ -171,7 +171,7 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_thirdparty_emotes_header))
+                Text(stringResource(Res.string.settings_thirdparty_emotes_header))
             }
         }
 
@@ -183,10 +183,10 @@ fun SettingsList(
                     onAppPreferencesChange(appPreferences.copy(enableBttvEmotes = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_bttv_title))
+                    Text(stringResource(Res.string.settings_thirdparty_bttv_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_bttv_subtitle))
+                    Text(stringResource(Res.string.settings_thirdparty_bttv_subtitle))
                 },
             )
         }
@@ -199,10 +199,10 @@ fun SettingsList(
                     onAppPreferencesChange(appPreferences.copy(enableFfzEmotes = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_ffz_title))
+                    Text(stringResource(Res.string.settings_thirdparty_ffz_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_ffz_subtitle))
+                    Text(stringResource(Res.string.settings_thirdparty_ffz_subtitle))
                 },
             )
         }
@@ -215,10 +215,10 @@ fun SettingsList(
                     onAppPreferencesChange(appPreferences.copy(enableStvEmotes = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_stv_title))
+                    Text(stringResource(Res.string.settings_thirdparty_stv_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_stv_subtitle))
+                    Text(stringResource(Res.string.settings_thirdparty_stv_subtitle))
                 },
             )
         }
@@ -233,7 +233,7 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_notifications_header))
+                Text(stringResource(Res.string.settings_notifications_header))
             }
         }
 
@@ -243,8 +243,8 @@ fun SettingsList(
 
             SettingsSwitch(
                 modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_notifications_enable_title)) },
-                subtitle = { Text(text = stringResource(MR.strings.settings_notifications_enable_subtitle)) },
+                title = { Text(text = stringResource(Res.string.settings_notifications_enable_title)) },
+                subtitle = { Text(text = stringResource(Res.string.settings_notifications_enable_subtitle)) },
                 checked = notificationPermissionState.status.isGranted && appPreferences.enableNotifications,
                 onCheckedChange = { checked ->
                     if (checked) {
@@ -262,9 +262,9 @@ fun SettingsList(
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = onOpenNotificationPreferences,
-                onClickLabel = stringResource(MR.strings.settings_notifications_openNotificationsSettings),
+                onClickLabel = stringResource(Res.string.settings_notifications_openNotificationsSettings),
                 title = {
-                    Text(text = stringResource(MR.strings.settings_notifications_openNotificationsSettings))
+                    Text(text = stringResource(Res.string.settings_notifications_openNotificationsSettings))
                 },
                 trailingIcon = {
                     Icon(
@@ -280,9 +280,9 @@ fun SettingsList(
                 SettingsText(
                     modifier = Modifier.padding(itemInsets),
                     onClick = onOpenBubblePreferences,
-                    onClickLabel = stringResource(MR.strings.settings_notifications_openBubbleSettings),
+                    onClickLabel = stringResource(Res.string.settings_notifications_openBubbleSettings),
                     title = {
-                        Text(text = stringResource(MR.strings.settings_notifications_openBubbleSettings))
+                        Text(text = stringResource(Res.string.settings_notifications_openBubbleSettings))
                     },
                     trailingIcon = {
                         Icon(
@@ -304,7 +304,7 @@ fun SettingsList(
                     .padding(itemInsets)
                     .padding(top = 8.dp),
             ) {
-                Text(stringResource(MR.strings.settings_accessibility_header))
+                Text(stringResource(Res.string.settings_accessibility_header))
             }
         }
 
@@ -316,7 +316,7 @@ fun SettingsList(
                     onAppPreferencesChange(appPreferences.copy(showTimestamps = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_accessibility_timestamps_title))
+                    Text(stringResource(Res.string.settings_accessibility_timestamps_title))
                 },
             )
         }
@@ -325,12 +325,12 @@ fun SettingsList(
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = onOpenAccessibilityPreferences,
-                onClickLabel = stringResource(MR.strings.settings_accessibility_animations_action),
+                onClickLabel = stringResource(Res.string.settings_accessibility_animations_action),
                 title = {
-                    Text(stringResource(MR.strings.settings_accessibility_animations_title))
+                    Text(stringResource(Res.string.settings_accessibility_animations_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_accessibility_animations_subtitle))
+                    Text(stringResource(Res.string.settings_accessibility_animations_subtitle))
                 },
                 trailingIcon = {
                     Icon(
@@ -351,7 +351,7 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_account_header))
+                Text(stringResource(Res.string.settings_account_header))
             }
         }
 
@@ -366,7 +366,7 @@ fun SettingsList(
                         CompositionLocalProvider(
                             LocalContentColor provides MaterialTheme.colorScheme.error,
                         ) {
-                            Text(text = stringResource(MR.strings.settings_account_logout_action))
+                            Text(text = stringResource(Res.string.settings_account_logout_action))
                         }
                     },
                 )
@@ -374,18 +374,18 @@ fun SettingsList(
                 if (showLogoutDialog) {
                     AlertDialog(
                         onDismissRequest = { showLogoutDialog = false },
-                        title = { Text(text = stringResource(MR.strings.logout_title)) },
+                        title = { Text(text = stringResource(Res.string.logout_title)) },
                         text = {
                             Text(
                                 text = stringResource(
-                                    MR.strings.logout_msg,
+                                    Res.string.logout_msg,
                                     appUser.userLogin,
                                 ),
                             )
                         },
                         dismissButton = {
                             TextButton(onClick = { showLogoutDialog = false }) {
-                                Text(text = stringResource(MR.strings.no))
+                                Text(text = stringResource(Res.string.no))
                             }
                         },
                         confirmButton = {
@@ -395,7 +395,7 @@ fun SettingsList(
                                     showLogoutDialog = false
                                 },
                             ) {
-                                Text(text = stringResource(MR.strings.yes))
+                                Text(text = stringResource(Res.string.yes))
                             }
                         },
                     )
@@ -413,18 +413,18 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_about_header))
+                Text(stringResource(Res.string.settings_about_header))
             }
         }
 
         item {
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.app_name)) },
+                title = { Text(text = stringResource(Res.string.app_name)) },
                 subtitle = {
                     Text(
                         text = stringResource(
-                            MR.strings.settings_about_version,
+                            Res.string.settings_about_version,
                             versionName,
                         ),
                     )
@@ -433,13 +433,13 @@ fun SettingsList(
         }
 
         item {
-            val repoUrl = stringResource(MR.strings.app_repo_url)
+            val repoUrl = stringResource(Res.string.app_repo_url)
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = { uriHandler.openUri(repoUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_repo_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_repo_title)) },
-                subtitle = { Text(text = stringResource(MR.strings.app_repo_name)) },
+                onClickLabel = stringResource(Res.string.settings_about_repo_cd),
+                title = { Text(text = stringResource(Res.string.settings_about_repo_title)) },
+                subtitle = { Text(text = stringResource(Res.string.app_repo_name)) },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Default.OpenInNew,
@@ -450,18 +450,18 @@ fun SettingsList(
         }
 
         item {
-            val licenseUrl = stringResource(MR.strings.app_license_url)
+            val licenseUrl = stringResource(Res.string.app_license_url)
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = { uriHandler.openUri(licenseUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_license_title)) },
+                onClickLabel = stringResource(Res.string.settings_about_license_cd),
+                title = { Text(text = stringResource(Res.string.settings_about_license_title)) },
                 subtitle = {
                     Text(
                         text = stringResource(
-                            MR.strings.settings_about_license_subtitle,
-                            stringResource(MR.strings.app_name),
-                            stringResource(MR.strings.app_license_name),
+                            Res.string.settings_about_license_subtitle,
+                            stringResource(Res.string.app_name),
+                            stringResource(Res.string.app_license_name),
                         ),
                     )
                 },
@@ -471,9 +471,9 @@ fun SettingsList(
         item {
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_logs_title)) },
+                title = { Text(text = stringResource(Res.string.settings_logs_title)) },
                 onClick = onShareLogsClick,
-                subtitle = { Text(text = stringResource(MR.strings.settings_logs_subtitle)) },
+                subtitle = { Text(text = stringResource(Res.string.settings_logs_subtitle)) },
                 trailingIcon = {
                     Icon(
                         imageVector = Icons.Default.Share,
@@ -493,7 +493,7 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
-                Text(stringResource(MR.strings.settings_dependencies_header))
+                Text(stringResource(Res.string.settings_dependencies_header))
             }
         }
 
@@ -505,7 +505,7 @@ fun SettingsList(
                         uriHandler.openUri(url)
                     }
                 },
-                onClickLabel = stringResource(MR.strings.settings_dependencies_cd)
+                onClickLabel = stringResource(Res.string.settings_dependencies_cd)
                     .takeIf { dependency.moduleUrl != null },
                 title = { Text(text = dependency.moduleName) },
                 subtitle = {

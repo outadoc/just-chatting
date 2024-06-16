@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.websocket.Defaults
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
@@ -181,7 +181,7 @@ class LoggedInChatWebSocket(
                                     ChatEvent.Message.Highlighted(
                                         timestamp = clock.now(),
                                         metadata = ChatEvent.Message.Highlighted.Metadata(
-                                            title = MR.strings.chat_send_msg_error.desc(),
+                                            title = Res.string.chat_send_msg_error.desc(),
                                             subtitle = null,
                                         ),
                                         body = null,

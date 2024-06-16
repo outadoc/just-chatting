@@ -23,10 +23,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.Raid
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
@@ -69,13 +69,13 @@ fun RaidGoCard(
                 modifier = Modifier.weight(1f, fill = true),
             ) {
                 Text(
-                    text = stringResource(MR.strings.raid_go_title),
+                    text = stringResource(Res.string.raid_go_title),
                     style = MaterialTheme.typography.titleMedium,
                 )
 
                 Text(
                     text = stringResource(
-                        MR.strings.raid_go_message,
+                        Res.string.raid_go_message,
                         "${ChatPrefixConstants.ChatterPrefix}${raid.targetDisplayName}",
                     ),
                     style = MaterialTheme.typography.titleLarge,
@@ -84,7 +84,7 @@ fun RaidGoCard(
 
             Icon(
                 Icons.Default.ArrowForward,
-                contentDescription = stringResource(MR.strings.raid_go_action),
+                contentDescription = stringResource(Res.string.raid_go_action),
             )
         }
     }

@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.shared.MR
+import org.jetbrains.compose.resources.stringResource
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ScreenPreviews
@@ -65,8 +65,8 @@ fun OnboardingScreen(
 
                     Text(
                         text = stringResource(
-                            MR.strings.onboarding_title,
-                            stringResource(MR.strings.app_name),
+                            Res.string.onboarding_title,
+                            stringResource(Res.string.app_name),
                         ),
                         style = MaterialTheme.typography.headlineSmall,
                         textAlign = TextAlign.Center,
@@ -74,7 +74,7 @@ fun OnboardingScreen(
 
                     Text(
                         modifier = Modifier.padding(vertical = 32.dp),
-                        text = stringResource(MR.strings.onboarding_message),
+                        text = stringResource(Res.string.onboarding_message),
                         textAlign = TextAlign.Center,
                     )
 

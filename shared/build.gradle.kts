@@ -5,7 +5,6 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.moko.resources)
     alias(libs.plugins.sqldelight)
     alias(libs.plugins.skie)
 }
@@ -40,7 +39,6 @@ kotlin {
                 export(libs.kotlinx.datetime)
                 export(libs.kotlinx.serialization.json)
                 export(libs.ktor.client.core)
-                export(libs.moko.resources.core)
             }
         }
     }
@@ -51,9 +49,9 @@ kotlin {
             api(libs.kotlinx.datetime)
             api(libs.kotlinx.serialization.json)
             api(libs.ktor.client.core)
-            api(libs.moko.resources.core)
 
             implementation(compose.runtime)
+            implementation(compose.components.resources)
 
             implementation(libs.androidx.paging.common)
             implementation(libs.androidx.paging.compose.common)
@@ -97,7 +95,6 @@ kotlin {
             implementation(libs.koin.compose)
             implementation(libs.ktor.client.cio)
             implementation(libs.material.core)
-            implementation(libs.moko.resources.compose)
 
             api(libs.sqldelight.driver.android)
         }
@@ -116,8 +113,8 @@ kotlin {
     }
 }
 
-multiplatformResources {
-    resourcesPackage.set("fr.outadoc.justchatting.shared")
+compose.resources {
+    packageOfResClass = "fr.outadoc.justchatting.shared"
 }
 
 android {

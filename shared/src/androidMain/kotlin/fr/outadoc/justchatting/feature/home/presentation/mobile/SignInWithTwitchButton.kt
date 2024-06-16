@@ -11,8 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.shared.MR
+import org.jetbrains.compose.resources.stringResource
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
@@ -46,7 +46,7 @@ fun SignInWithTwitchButton(
         Spacer(Modifier.size(ButtonDefaults.IconSpacing))
 
         Text(
-            text = stringResource(MR.strings.onboarding_login_action),
+            text = stringResource(Res.string.onboarding_login_action),
             style = MaterialTheme.typography.bodyLarge,
         )
     }

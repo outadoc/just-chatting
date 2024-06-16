@@ -21,9 +21,9 @@ import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
@@ -68,7 +68,7 @@ fun ChatRichEmbed(
 
                 Text(
                     text = stringResource(
-                        MR.strings.richEmbed_author_title,
+                        Res.string.richEmbed_author_title,
                         authorName,
                     ),
                     style = MaterialTheme.typography.bodySmall,

@@ -39,13 +39,13 @@ import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
@@ -152,7 +152,7 @@ fun ChatInput(
                         HapticIconButton(onClick = onClearReplyingTo) {
                             Icon(
                                 Icons.Default.Clear,
-                                contentDescription = stringResource(MR.strings.chat_input_replyClear),
+                                contentDescription = stringResource(Res.string.chat_input_replyClear),
                             )
                         }
                     }
@@ -206,7 +206,7 @@ fun ChatInput(
                     ) {
                         Icon(
                             Icons.Default.Send,
-                            contentDescription = stringResource(MR.strings.chat_input_send_cd),
+                            contentDescription = stringResource(Res.string.chat_input_send_cd),
                         )
                     }
                 }
@@ -259,7 +259,7 @@ fun ChatTextField(
             onSend = { onSubmit() },
         ),
         placeholder = {
-            Text(text = stringResource(MR.strings.chat_input_hint))
+            Text(text = stringResource(Res.string.chat_input_hint))
         },
         colors = TextFieldDefaults.textFieldColors(
             focusedIndicatorColor = Color.Transparent,
@@ -269,7 +269,7 @@ fun ChatTextField(
             HapticIconButton(onClick = onToggleEmotePicker) {
                 Icon(
                     Icons.Default.Mood,
-                    contentDescription = stringResource(MR.strings.chat_input_emote_cd),
+                    contentDescription = stringResource(Res.string.chat_input_emote_cd),
                 )
             }
         },
@@ -280,7 +280,7 @@ fun ChatTextField(
                 ) {
                     Icon(
                         Icons.Filled.Cancel,
-                        contentDescription = stringResource(MR.strings.chat_input_clear_cd),
+                        contentDescription = stringResource(Res.string.chat_input_clear_cd),
                     )
                 }
             }

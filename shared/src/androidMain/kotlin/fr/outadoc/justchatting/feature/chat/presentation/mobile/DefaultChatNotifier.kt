@@ -17,7 +17,7 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.chat.data.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
@@ -78,8 +78,8 @@ class DefaultChatNotifier(
                 NOTIFICATION_CHANNEL_ID,
                 NotificationManagerCompat.IMPORTANCE_MIN,
             )
-                .setName(MR.strings.notification_channel_bubbles_title.getString(context))
-                .setDescription(MR.strings.notification_channel_bubbles_message.getString(context))
+                .setName(Res.string.notification_channel_bubbles_title.getString(context))
+                .setDescription(Res.string.notification_channel_bubbles_message.getString(context))
                 .build(),
         )
 
@@ -112,7 +112,7 @@ class DefaultChatNotifier(
                 .addAction(
                     NotificationCompat.Action.Builder(
                         R.drawable.ic_reply,
-                        MR.strings.notification_action_reply.getString(context),
+                        Res.string.notification_action_reply.getString(context),
                         ChatConnectionService.createReplyIntent(context, channelId = user.id)
                             .toPendingForegroundServiceIntent(context, mutable = true),
                     )
@@ -120,7 +120,7 @@ class DefaultChatNotifier(
                         .addRemoteInput(
                             RemoteInput.Builder(KEY_QUICK_REPLY_TEXT)
                                 .setLabel(
-                                    MR.strings.notification_action_reply_hint.getString(
+                                    Res.string.notification_action_reply_hint.getString(
                                         context,
                                     ),
                                 )
@@ -141,7 +141,7 @@ class DefaultChatNotifier(
                 .setStyle(
                     NotificationCompat.MessagingStyle(person)
                         .addMessage(
-                            MR.strings.notification_channel_bubbles_openPrompt.getString(context),
+                            Res.string.notification_channel_bubbles_openPrompt.getString(context),
                             System.currentTimeMillis(),
                             person,
                         ),

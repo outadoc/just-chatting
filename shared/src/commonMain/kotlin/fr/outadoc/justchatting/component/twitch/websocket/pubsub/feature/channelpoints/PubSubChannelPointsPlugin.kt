@@ -4,7 +4,7 @@ import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Icon
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 

@@ -29,8 +29,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.shared.MR
+import org.jetbrains.compose.resources.stringResource
+import fr.outadoc.justchatting.shared.Res
 
 @Composable
 fun MainNavigation(
@@ -89,7 +89,7 @@ fun CompactNavigation(
             NavigationBar {
                 NavigationBarItem(
                     selected = selectedTab == Tab.Live,
-                    label = { Text(stringResource(MR.strings.live)) },
+                    label = { Text(stringResource(Res.string.live)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.LiveTv,
@@ -101,7 +101,7 @@ fun CompactNavigation(
 
                 NavigationBarItem(
                     selected = selectedTab == Tab.Followed,
-                    label = { Text(stringResource(MR.strings.channels)) },
+                    label = { Text(stringResource(Res.string.channels)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
@@ -113,7 +113,7 @@ fun CompactNavigation(
 
                 NavigationBarItem(
                     selected = selectedTab == Tab.Settings,
-                    label = { Text(stringResource(MR.strings.settings)) },
+                    label = { Text(stringResource(Res.string.settings)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Settings,
@@ -149,7 +149,7 @@ fun MediumNavigation(
                     selected = selectedTab == Tab.Live,
                     label = {
                         AnimatedVisibility(visible = selectedTab == Tab.Live) {
-                            Text(stringResource(MR.strings.live))
+                            Text(stringResource(Res.string.live))
                         }
                     },
                     icon = {
@@ -165,7 +165,7 @@ fun MediumNavigation(
                     selected = selectedTab == Tab.Followed,
                     label = {
                         AnimatedVisibility(visible = selectedTab == Tab.Followed) {
-                            Text(stringResource(MR.strings.channels))
+                            Text(stringResource(Res.string.channels))
                         }
                     },
                     icon = {
@@ -181,7 +181,7 @@ fun MediumNavigation(
                     selected = selectedTab == Tab.Settings,
                     label = {
                         AnimatedVisibility(visible = selectedTab == Tab.Settings) {
-                            Text(stringResource(MR.strings.settings))
+                            Text(stringResource(Res.string.settings))
                         }
                     },
                     icon = {
@@ -226,7 +226,7 @@ fun ExpandedNavigation(
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Live,
-                    label = { Text(stringResource(MR.strings.live)) },
+                    label = { Text(stringResource(Res.string.live)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.LiveTv,
@@ -239,7 +239,7 @@ fun ExpandedNavigation(
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Followed,
-                    label = { Text(stringResource(MR.strings.channels)) },
+                    label = { Text(stringResource(Res.string.channels)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
@@ -252,7 +252,7 @@ fun ExpandedNavigation(
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
                     selected = selectedTab == Tab.Settings,
-                    label = { Text(stringResource(MR.strings.settings)) },
+                    label = { Text(stringResource(Res.string.settings)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Settings,

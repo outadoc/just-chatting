@@ -17,9 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.ui.formatDate
 import kotlinx.datetime.Instant
 
@@ -67,7 +67,7 @@ fun UserInfo(
                 )
 
                 Text(
-                    text = stringResource(MR.strings.created_at, createdAt),
+                    text = stringResource(Res.string.created_at, createdAt),
                 )
             }
         }

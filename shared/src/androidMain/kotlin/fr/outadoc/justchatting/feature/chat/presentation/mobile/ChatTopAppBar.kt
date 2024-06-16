@@ -25,11 +25,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import fr.outadoc.justchatting.utils.ui.canOpenInBubble
 import org.koin.compose.koinInject
@@ -97,7 +97,7 @@ fun ChatTopAppBar(
                 Icon(
                     modifier = Modifier.padding(bottom = 3.dp),
                     imageVector = Icons.Outlined.LiveTv,
-                    contentDescription = stringResource(MR.strings.watch_live),
+                    contentDescription = stringResource(Res.string.watch_live),
                 )
             }
 
@@ -105,7 +105,7 @@ fun ChatTopAppBar(
                 HapticIconButton(onClick = { onOpenBubbleClicked() }) {
                     Icon(
                         imageVector = Icons.Default.PictureInPictureAlt,
-                        contentDescription = stringResource(MR.strings.menu_item_openInBubble),
+                        contentDescription = stringResource(Res.string.menu_item_openInBubble),
                     )
                 }
             }

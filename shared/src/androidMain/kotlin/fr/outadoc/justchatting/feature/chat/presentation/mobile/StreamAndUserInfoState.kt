@@ -9,9 +9,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @Composable
@@ -42,7 +42,7 @@ fun StreamAndUserInfoState(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Text(
-                        text = stringResource(MR.strings.info_loadError),
+                        text = stringResource(Res.string.info_loadError),
                         style = MaterialTheme.typography.titleMedium,
                     )
                 }

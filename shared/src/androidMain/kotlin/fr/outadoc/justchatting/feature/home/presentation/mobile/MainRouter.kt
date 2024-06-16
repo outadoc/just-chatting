@@ -19,7 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.zIndex
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -63,7 +63,7 @@ fun MainRouter(
 
                     Tab.Settings -> {
                         TopAppBar(
-                            title = { Text(stringResource(fr.outadoc.justchatting.shared.MR.strings.settings)) },
+                            title = { Text(stringResource(fr.outadoc.justchatting.shared.Res.string.settings)) },
                         )
                     }
                 }

@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.emotes
 
 import dev.icerock.moko.resources.desc.desc
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.core.flatListOf
 
 class ChannelTwitchEmotesSource(
@@ -22,7 +22,7 @@ class ChannelTwitchEmotesSource(
                     flatListOf(
                         EmoteSetItem.Header(
                             title = owner?.displayName?.desc(),
-                            source = MR.strings.chat_source_twitch.desc(),
+                            source = Res.string.chat_source_twitch.desc(),
                             iconUrl = owner?.profileImageUrl,
                         ),
                         emotes.map { emote -> EmoteSetItem.Emote(emote) },

@@ -26,7 +26,7 @@ import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import fr.outadoc.justchatting.lifecycle.ViewModel
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.core.isOdd
@@ -160,7 +160,7 @@ class ChatViewModel(
             val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
                 get() = flatListOf(
                     EmoteSetItem.Header(
-                        title = MR.strings.chat_header_recent.desc(),
+                        title = Res.string.chat_header_recent.desc(),
                         source = null,
                     ),
                     recentEmotes

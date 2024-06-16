@@ -17,9 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
@@ -82,7 +82,7 @@ fun StreamInfo(
                     contentDescription = null,
                 )
 
-                Text(text = stringResource(MR.strings.uptime, startedAt))
+                Text(text = stringResource(Res.string.uptime, startedAt))
             }
         }
 

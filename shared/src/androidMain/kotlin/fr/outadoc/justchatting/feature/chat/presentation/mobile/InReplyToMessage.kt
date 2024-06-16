@@ -20,10 +20,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 
 @Composable
 fun InReplyToMessage(
@@ -47,7 +47,7 @@ fun InReplyToMessage(
                     .alignByBaseline()
                     .padding(end = 4.dp, top = 1.dp),
                 imageVector = Icons.Default.Reply,
-                contentDescription = stringResource(MR.strings.chat_replyingTo),
+                contentDescription = stringResource(Res.string.chat_replyingTo),
             )
 
             Text(
@@ -73,7 +73,7 @@ fun InReplyToMessage(
                     }
 
                     if (message != null) {
-                        append(stringResource(MR.strings.chat_message_standardSeparator))
+                        append(stringResource(Res.string.chat_message_standardSeparator))
                         append(message)
                     }
                 },

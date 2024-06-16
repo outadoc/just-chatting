@@ -32,14 +32,14 @@ import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Pronoun
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
 import fr.outadoc.justchatting.utils.ui.parseHexColor
@@ -211,9 +211,9 @@ fun ChatEvent.Message.Body.toAnnotatedString(
             append(
                 stringResource(
                     if (isAction) {
-                        MR.strings.chat_message_actionSeparator
+                        Res.string.chat_message_actionSeparator
                     } else {
-                        MR.strings.chat_message_standardSeparator
+                        Res.string.chat_message_standardSeparator
                     },
                 ),
             )

@@ -23,9 +23,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.Poll
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
@@ -58,8 +58,8 @@ fun PollCard(
                 }
 
             val status = when (poll.status) {
-                Poll.Status.Active -> MR.strings.poll_status_progress
-                Poll.Status.Completed, Poll.Status.Archived -> MR.strings.poll_status_ended
+                Poll.Status.Active -> Res.string.poll_status_progress
+                Poll.Status.Completed, Poll.Status.Archived -> Res.string.poll_status_ended
             }
 
             Row(
@@ -76,7 +76,7 @@ fun PollCard(
                             append(" · ")
                             append(
                                 stringResource(
-                                    MR.strings.poll_status_voterCount,
+                                    Res.string.poll_status_voterCount,
                                     poll.totalVoters.formatNumber(),
                                 ),
                             )
@@ -93,12 +93,12 @@ fun PollCard(
                 if (isExpanded) {
                     Icon(
                         Icons.Default.ArrowDropUp,
-                        contentDescription = stringResource(MR.strings.poll_collapse_action),
+                        contentDescription = stringResource(Res.string.poll_collapse_action),
                     )
                 } else {
                     Icon(
                         Icons.Default.ArrowDropDown,
-                        contentDescription = stringResource(MR.strings.poll_expand_action),
+                        contentDescription = stringResource(Res.string.poll_expand_action),
                     )
                 }
             }

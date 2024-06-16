@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.licenseReport)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
-    alias(libs.plugins.moko.resources)
 }
 
 kotlin {
@@ -27,6 +26,16 @@ kotlin {
         }
 
         androidMain.dependencies {
+            implementation(compose.foundation)
+            implementation(compose.material)
+            implementation(compose.material3)
+            implementation(compose.materialIconsExtended)
+            implementation(libs.compose.material.windowSizeClass)
+            implementation(libs.compose.runtime.livedata)
+            implementation(compose.ui)
+            implementation(compose.uiTooling)
+            implementation(compose.components.resources)
+
             implementation(libs.accompanist.systemuicontroller)
             implementation(libs.androidx.activity.compose)
             implementation(libs.androidx.appcompat)
@@ -48,14 +57,6 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.core)
             implementation(libs.coil.gif)
-            implementation(libs.compose.foundation)
-            implementation(libs.compose.material.core2)
-            implementation(libs.compose.material.core3)
-            implementation(libs.compose.material.icons)
-            implementation(libs.compose.material.windowSizeClass)
-            implementation(libs.compose.runtime.livedata)
-            implementation(libs.compose.ui.core)
-            implementation(libs.compose.ui.tooling)
             implementation(libs.koin.android)
             implementation(libs.koin.compose)
             implementation(libs.koin.core)
@@ -64,16 +65,14 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.material.core)
-            implementation(libs.moko.resources.core)
-            implementation(libs.moko.resources.compose)
             implementation(libs.okio)
             implementation(libs.uri.kmp)
         }
     }
 }
 
-multiplatformResources {
-    resourcesPackage.set("fr.outadoc.justchatting")
+compose.resources {
+    packageOfResClass = "fr.outadoc.justchatting"
 }
 
 android {

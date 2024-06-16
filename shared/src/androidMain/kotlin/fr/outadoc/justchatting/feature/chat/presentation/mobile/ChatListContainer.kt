@@ -25,10 +25,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 import kotlinx.coroutines.launch
 
@@ -101,7 +101,7 @@ fun ChatListContainer(
             ) {
                 Icon(
                     Icons.Default.ArrowDownward,
-                    contentDescription = stringResource(MR.strings.scroll_down),
+                    contentDescription = stringResource(Res.string.scroll_down),
                 )
             }
         }

@@ -24,7 +24,7 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.stringResource
+import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
@@ -33,7 +33,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.OngoingEvents
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
@@ -160,7 +160,7 @@ fun ChatList(
                 }
 
             val canBeRepliedTo = item.body?.messageId != null
-            val replyToActionCd = stringResource(MR.strings.chat_replyTo)
+            val replyToActionCd = stringResource(Res.string.chat_replyTo)
 
             SwipeToReply(
                 onDismiss = { onReplyToMessage(item) },
@@ -172,7 +172,7 @@ fun ChatList(
                         .combinedClickable(
                             onClick = {},
                             onLongClick = { onMessageLongClick(item) },
-                            onLongClickLabel = stringResource(MR.strings.chat_copyToClipboard),
+                            onLongClickLabel = stringResource(Res.string.chat_copyToClipboard),
                         )
                         .semantics {
                             if (canBeRepliedTo) {

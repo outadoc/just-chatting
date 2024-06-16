@@ -87,7 +87,7 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
                     path("search/channels")
                     parameter("query", query)
                     parameter("first", limit)
-                    parameter("after", after)
+                    after?.let { parameter("after", after) }
                 }
             }.body()
         }

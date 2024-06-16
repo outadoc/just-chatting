@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
 import androidx.compose.runtime.Immutable
-import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
@@ -26,9 +25,7 @@ import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import fr.outadoc.justchatting.lifecycle.ViewModel
-import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
-import fr.outadoc.justchatting.utils.core.flatListOf
 import fr.outadoc.justchatting.utils.core.isOdd
 import fr.outadoc.justchatting.utils.core.roundUpOddToEven
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -42,7 +39,6 @@ import kotlinx.collections.immutable.persistentHashSetOf
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.persistentSetOf
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.collections.immutable.toPersistentList
@@ -156,19 +152,6 @@ class ChatViewModel(
                     .distinctBy { emote -> emote.name }
                     .associateBy { emote -> emote.name }
                     .toImmutableMap()
-
-            val pickableEmotesWithRecent: ImmutableList<EmoteSetItem>
-                get() = flatListOf(
-                    EmoteSetItem.Header(
-                        title = Res.string.chat_header_recent.desc(),
-                        source = null,
-                    ),
-                    recentEmotes
-                        .filter { recentEmote -> recentEmote.name in allEmotesMap }
-                        .map { recentEmote -> EmoteSetItem.Emote(recentEmote) },
-                )
-                    .plus(pickableEmotes)
-                    .toImmutableList()
 
             val messagePostConstraint: MessagePostConstraint?
                 get() = lastSentMessageInstant?.let {

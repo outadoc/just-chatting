@@ -21,13 +21,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.all_goBack
 import fr.outadoc.justchatting.shared.search_clear_cd
 import fr.outadoc.justchatting.shared.search_hint
 import fr.outadoc.justchatting.utils.ui.HapticIconButton
+import org.jetbrains.compose.resources.stringResource
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

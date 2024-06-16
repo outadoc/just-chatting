@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Icon
+import fr.outadoc.justchatting.utils.core.desc
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 

@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
-import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactory
@@ -11,9 +10,11 @@ import fr.outadoc.justchatting.component.twitch.websocket.Defaults
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_join
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
+import fr.outadoc.justchatting.utils.core.desc
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
@@ -43,6 +44,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.resources.getString
 import kotlin.random.Random
 import kotlin.time.Duration.Companion.seconds
 
@@ -145,7 +147,7 @@ class LiveChatWebSocket private constructor(
                 ChatEvent.Message.Highlighted(
                     timestamp = clock.now(),
                     metadata = ChatEvent.Message.Highlighted.Metadata(
-                        title = Res.string.chat_join.format(channelLogin),
+                        title = getString(Res.string.chat_join, channelLogin).desc(),
                         subtitle = null,
                     ),
                     body = null,

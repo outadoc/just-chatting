@@ -13,8 +13,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
+import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_header_recent
+import fr.outadoc.justchatting.utils.core.flatListOf
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun EmotePicker(
@@ -36,7 +42,7 @@ fun EmotePicker(
 
         is ChatViewModel.State.Chatting -> {
             Column(modifier = modifier) {
-                val emotes = state.pickableEmotesWithRecent
+                val emotes = state.getPickableEmotesWithRecent()
 
                 if (emotes.isEmpty()) {
                     Column(
@@ -65,3 +71,17 @@ fun EmotePicker(
         }
     }
 }
+
+@Composable
+private fun ChatViewModel.State.Chatting.getPickableEmotesWithRecent(): ImmutableList<EmoteSetItem> =
+    flatListOf(
+        EmoteSetItem.Header(
+            title = stringResource(Res.string.chat_header_recent),
+            source = null,
+        ),
+        recentEmotes
+            .filter { recentEmote -> recentEmote.name in allEmotesMap }
+            .map { recentEmote -> EmoteSetItem.Emote(recentEmote) },
+    )
+        .plus(pickableEmotes)
+        .toImmutableList()

@@ -11,7 +11,7 @@ class PubSubPredictionPlugin(
     override fun getTopic(channelId: String): String =
         "predictions-channel-v1.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> {
+    override suspend fun parseMessage(payload: String): List<ChatEvent> {
         val message = json.decodeFromString<PubSubPredictionMessage>(payload)
         return listOfNotNull(
             ChatEvent.PredictionUpdate(

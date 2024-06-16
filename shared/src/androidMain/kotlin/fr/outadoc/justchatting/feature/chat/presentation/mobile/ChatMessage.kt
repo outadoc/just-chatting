@@ -14,22 +14,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.localized
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Pronoun
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
+import fr.outadoc.justchatting.utils.core.stringResource
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
-import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
-import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.collections.immutable.toPersistentHashMap
 
 @ThemePreviews
@@ -61,7 +59,6 @@ fun ChatMessage(
     message: ChatEvent.Message,
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),
     removedContent: ImmutableList<ChatEvent.RemoveContent> = persistentListOf(),
-    knownChatters: PersistentSet<Chatter> = persistentSetOf(),
     pronouns: ImmutableMap<Chatter, Pronoun> = persistentMapOf(),
     richEmbed: ChatEvent.RichEmbed? = null,
     showTimestamps: Boolean,
@@ -100,9 +97,9 @@ fun ChatMessage(
         when (message) {
             is ChatEvent.Message.Highlighted -> {
                 UserNoticeMessage(
-                    title = message.metadata.title.localized(),
+                    title = stringResource(message.metadata.title),
                     titleIcon = message.metadata.titleIcon?.toMaterialIcon(),
-                    subtitle = message.metadata.subtitle?.localized(),
+                    subtitle = message.metadata.subtitle?.let { stringResource(it) },
                     level = message.metadata.level,
                 ) {
                     message.body?.let { data ->
@@ -125,7 +122,7 @@ fun ChatMessage(
 
             is ChatEvent.Message.Notice -> {
                 NoticeMessage(
-                    text = message.text.localized(),
+                    text = stringResource(message.text),
                 )
             }
 

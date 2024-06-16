@@ -24,7 +24,6 @@ import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Emote
@@ -43,6 +42,7 @@ import kotlinx.collections.immutable.PersistentMap
 import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.toPersistentHashMap
 import kotlinx.datetime.Clock
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -189,7 +189,6 @@ fun ChatList(
                     message = item,
                     inlineContent = inlineContent,
                     removedContent = removedContent,
-                    knownChatters = knownChatters,
                     pronouns = pronouns,
                     richEmbed = item.body?.messageId?.let { messageId -> richEmbeds[messageId] },
                     showTimestamps = showTimestamps,

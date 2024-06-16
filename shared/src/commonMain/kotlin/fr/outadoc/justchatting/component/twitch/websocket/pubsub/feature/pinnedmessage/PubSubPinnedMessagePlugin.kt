@@ -11,7 +11,7 @@ class PubSubPinnedMessagePlugin(
     override fun getTopic(channelId: String): String =
         "pinned-chat-updates-v1.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> =
+    override suspend fun parseMessage(payload: String): List<ChatEvent> =
         when (val message = json.decodeFromString<PubSubPinnedMessage>(payload)) {
             is PubSubPinnedMessage.Pin -> {
                 listOf(

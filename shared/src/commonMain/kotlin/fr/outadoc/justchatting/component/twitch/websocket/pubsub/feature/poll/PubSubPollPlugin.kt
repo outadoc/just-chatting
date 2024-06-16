@@ -11,7 +11,7 @@ class PubSubPollPlugin(
     override fun getTopic(channelId: String): String =
         "polls.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> {
+    override suspend fun parseMessage(payload: String): List<ChatEvent> {
         val message = json.decodeFromString<PubSubPollMessage>(payload)
         return listOf(
             ChatEvent.PollUpdate(poll = message.data.poll.map()),

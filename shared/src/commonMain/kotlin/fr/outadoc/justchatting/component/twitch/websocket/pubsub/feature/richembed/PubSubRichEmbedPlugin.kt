@@ -11,7 +11,7 @@ class PubSubRichEmbedPlugin(
     override fun getTopic(channelId: String): String =
         "stream-chat-room-v1.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> {
+    override suspend fun parseMessage(payload: String): List<ChatEvent> {
         val message = json.decodeFromString<PubSubRichEmbedMessage>(payload)
         return listOfNotNull(
             when (message) {

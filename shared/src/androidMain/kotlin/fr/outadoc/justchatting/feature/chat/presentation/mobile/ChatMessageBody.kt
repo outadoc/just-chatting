@@ -32,15 +32,14 @@ import androidx.compose.ui.text.withAnnotation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Pronoun
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
-import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.chat_message_actionSeparator
 import fr.outadoc.justchatting.shared.chat_message_standardSeparator
 import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
@@ -48,6 +47,7 @@ import fr.outadoc.justchatting.utils.ui.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
+import org.jetbrains.compose.resources.stringResource
 import kotlin.random.Random
 
 @Composable

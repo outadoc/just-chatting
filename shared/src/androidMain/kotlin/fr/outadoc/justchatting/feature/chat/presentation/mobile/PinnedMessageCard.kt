@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.preferences.data.AppUser
@@ -39,6 +38,7 @@ import kotlinx.collections.immutable.PersistentSet
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.persistentMapOf
 import kotlinx.collections.immutable.persistentSetOf
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,11 +76,10 @@ fun PinnedMessageCard(
                 message = message,
                 inlineContent = inlineContent,
                 removedContent = removedContent,
-                knownChatters = knownChatters,
+                showTimestamps = false,
                 background = color,
                 appUser = appUser,
                 maxLines = maxLines,
-                showTimestamps = false,
             )
 
             if (isExpanded) {

@@ -1,15 +1,199 @@
 package fr.outadoc.justchatting.component.twitch.websocket.irc
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
-import dev.icerock.moko.resources.desc.StringDesc
-import dev.icerock.moko.resources.desc.desc
-import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.Chatter
 import fr.outadoc.justchatting.component.chatapi.common.Icon
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.shared.Res
+import fr.outadoc.justchatting.shared.chat_ban
+import fr.outadoc.justchatting.shared.chat_clear
+import fr.outadoc.justchatting.shared.chat_first
+import fr.outadoc.justchatting.shared.chat_massSubGift_header
+import fr.outadoc.justchatting.shared.chat_paidMessage
+import fr.outadoc.justchatting.shared.chat_raid_header
+import fr.outadoc.justchatting.shared.chat_reward
+import fr.outadoc.justchatting.shared.chat_subConversion_header
+import fr.outadoc.justchatting.shared.chat_subGift_header
+import fr.outadoc.justchatting.shared.chat_subGift_payForward
+import fr.outadoc.justchatting.shared.chat_subGift_payForwardAnonymous
+import fr.outadoc.justchatting.shared.chat_subGift_tier1
+import fr.outadoc.justchatting.shared.chat_subGift_tier2
+import fr.outadoc.justchatting.shared.chat_subGift_tier3
+import fr.outadoc.justchatting.shared.chat_sub_header_withDuration
+import fr.outadoc.justchatting.shared.chat_sub_header_withDurationAndStreak
+import fr.outadoc.justchatting.shared.chat_sub_prime
+import fr.outadoc.justchatting.shared.chat_sub_tier1
+import fr.outadoc.justchatting.shared.chat_sub_tier2
+import fr.outadoc.justchatting.shared.chat_sub_tier3
+import fr.outadoc.justchatting.shared.chat_timeout
+import fr.outadoc.justchatting.shared.chat_unraid_subtitle
+import fr.outadoc.justchatting.shared.irc_msgid_announcement
+import fr.outadoc.justchatting.shared.irc_msgid_highlighted_message
+import fr.outadoc.justchatting.shared.irc_notice_already_banned
+import fr.outadoc.justchatting.shared.irc_notice_already_emote_only_off
+import fr.outadoc.justchatting.shared.irc_notice_already_emote_only_on
+import fr.outadoc.justchatting.shared.irc_notice_already_followers_off
+import fr.outadoc.justchatting.shared.irc_notice_already_followers_on
+import fr.outadoc.justchatting.shared.irc_notice_already_r9k_off
+import fr.outadoc.justchatting.shared.irc_notice_already_r9k_on
+import fr.outadoc.justchatting.shared.irc_notice_already_slow_off
+import fr.outadoc.justchatting.shared.irc_notice_already_slow_on
+import fr.outadoc.justchatting.shared.irc_notice_already_subs_off
+import fr.outadoc.justchatting.shared.irc_notice_already_subs_on
+import fr.outadoc.justchatting.shared.irc_notice_autohost_receive
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_admin
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_anon
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_broadcaster
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_mod
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_self
+import fr.outadoc.justchatting.shared.irc_notice_bad_ban_staff
+import fr.outadoc.justchatting.shared.irc_notice_bad_commercial_error
+import fr.outadoc.justchatting.shared.irc_notice_bad_delete_message_broadcaster
+import fr.outadoc.justchatting.shared.irc_notice_bad_delete_message_mod
+import fr.outadoc.justchatting.shared.irc_notice_bad_host_error
+import fr.outadoc.justchatting.shared.irc_notice_bad_host_hosting
+import fr.outadoc.justchatting.shared.irc_notice_bad_host_rate_exceeded
+import fr.outadoc.justchatting.shared.irc_notice_bad_host_rejected
+import fr.outadoc.justchatting.shared.irc_notice_bad_host_self
+import fr.outadoc.justchatting.shared.irc_notice_bad_mod_banned
+import fr.outadoc.justchatting.shared.irc_notice_bad_mod_mod
+import fr.outadoc.justchatting.shared.irc_notice_bad_slow_duration
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_admin
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_anon
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_broadcaster
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_duration
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_mod
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_self
+import fr.outadoc.justchatting.shared.irc_notice_bad_timeout_staff
+import fr.outadoc.justchatting.shared.irc_notice_bad_unban_no_ban
+import fr.outadoc.justchatting.shared.irc_notice_bad_unhost_error
+import fr.outadoc.justchatting.shared.irc_notice_bad_unmod_mod
+import fr.outadoc.justchatting.shared.irc_notice_bad_unvip_grantee_not_vip
+import fr.outadoc.justchatting.shared.irc_notice_bad_vip_achievement_incomplete
+import fr.outadoc.justchatting.shared.irc_notice_bad_vip_grantee_already_vip
+import fr.outadoc.justchatting.shared.irc_notice_bad_vip_grantee_banned
+import fr.outadoc.justchatting.shared.irc_notice_bad_vip_max_vips_reached
+import fr.outadoc.justchatting.shared.irc_notice_ban_success
+import fr.outadoc.justchatting.shared.irc_notice_cmds_available
+import fr.outadoc.justchatting.shared.irc_notice_color_changed
+import fr.outadoc.justchatting.shared.irc_notice_commercial_success
+import fr.outadoc.justchatting.shared.irc_notice_delete_message_success
+import fr.outadoc.justchatting.shared.irc_notice_delete_staff_message_success
+import fr.outadoc.justchatting.shared.irc_notice_emote_only_off
+import fr.outadoc.justchatting.shared.irc_notice_emote_only_on
+import fr.outadoc.justchatting.shared.irc_notice_followers_off
+import fr.outadoc.justchatting.shared.irc_notice_followers_on
+import fr.outadoc.justchatting.shared.irc_notice_followers_on_zero
+import fr.outadoc.justchatting.shared.irc_notice_host_off
+import fr.outadoc.justchatting.shared.irc_notice_host_on
+import fr.outadoc.justchatting.shared.irc_notice_host_receive
+import fr.outadoc.justchatting.shared.irc_notice_host_receive_no_count
+import fr.outadoc.justchatting.shared.irc_notice_host_target_went_offline
+import fr.outadoc.justchatting.shared.irc_notice_hosts_remaining
+import fr.outadoc.justchatting.shared.irc_notice_invalid_user
+import fr.outadoc.justchatting.shared.irc_notice_mod_success
+import fr.outadoc.justchatting.shared.irc_notice_msg_bad_characters
+import fr.outadoc.justchatting.shared.irc_notice_msg_banned
+import fr.outadoc.justchatting.shared.irc_notice_msg_channel_blocked
+import fr.outadoc.justchatting.shared.irc_notice_msg_channel_suspended
+import fr.outadoc.justchatting.shared.irc_notice_msg_duplicate
+import fr.outadoc.justchatting.shared.irc_notice_msg_emoteonly
+import fr.outadoc.justchatting.shared.irc_notice_msg_followersonly
+import fr.outadoc.justchatting.shared.irc_notice_msg_followersonly_followed
+import fr.outadoc.justchatting.shared.irc_notice_msg_followersonly_zero
+import fr.outadoc.justchatting.shared.irc_notice_msg_r9k
+import fr.outadoc.justchatting.shared.irc_notice_msg_ratelimit
+import fr.outadoc.justchatting.shared.irc_notice_msg_rejected
+import fr.outadoc.justchatting.shared.irc_notice_msg_rejected_mandatory
+import fr.outadoc.justchatting.shared.irc_notice_msg_slowmode
+import fr.outadoc.justchatting.shared.irc_notice_msg_subsonly
+import fr.outadoc.justchatting.shared.irc_notice_msg_suspended
+import fr.outadoc.justchatting.shared.irc_notice_msg_timedout
+import fr.outadoc.justchatting.shared.irc_notice_msg_verified_email
+import fr.outadoc.justchatting.shared.irc_notice_no_help
+import fr.outadoc.justchatting.shared.irc_notice_no_mods
+import fr.outadoc.justchatting.shared.irc_notice_no_permission
+import fr.outadoc.justchatting.shared.irc_notice_no_vips
+import fr.outadoc.justchatting.shared.irc_notice_not_hosting
+import fr.outadoc.justchatting.shared.irc_notice_r9k_off
+import fr.outadoc.justchatting.shared.irc_notice_r9k_on
+import fr.outadoc.justchatting.shared.irc_notice_raid_error_already_raiding
+import fr.outadoc.justchatting.shared.irc_notice_raid_error_forbidden
+import fr.outadoc.justchatting.shared.irc_notice_raid_error_self
+import fr.outadoc.justchatting.shared.irc_notice_raid_error_too_many_viewers
+import fr.outadoc.justchatting.shared.irc_notice_raid_error_unexpected
+import fr.outadoc.justchatting.shared.irc_notice_raid_notice_mature
+import fr.outadoc.justchatting.shared.irc_notice_raid_notice_restricted_chat
+import fr.outadoc.justchatting.shared.irc_notice_room_mods
+import fr.outadoc.justchatting.shared.irc_notice_slow_off
+import fr.outadoc.justchatting.shared.irc_notice_slow_on
+import fr.outadoc.justchatting.shared.irc_notice_subs_off
+import fr.outadoc.justchatting.shared.irc_notice_subs_on
+import fr.outadoc.justchatting.shared.irc_notice_timeout_no_timeout
+import fr.outadoc.justchatting.shared.irc_notice_timeout_success
+import fr.outadoc.justchatting.shared.irc_notice_tos_ban
+import fr.outadoc.justchatting.shared.irc_notice_turbo_only_color
+import fr.outadoc.justchatting.shared.irc_notice_unavailable_command
+import fr.outadoc.justchatting.shared.irc_notice_unban_success
+import fr.outadoc.justchatting.shared.irc_notice_unmod_success
+import fr.outadoc.justchatting.shared.irc_notice_unraid_error_no_active_raid
+import fr.outadoc.justchatting.shared.irc_notice_unraid_error_unexpected
+import fr.outadoc.justchatting.shared.irc_notice_unraid_success
+import fr.outadoc.justchatting.shared.irc_notice_unrecognized_cmd
+import fr.outadoc.justchatting.shared.irc_notice_untimeout_banned
+import fr.outadoc.justchatting.shared.irc_notice_untimeout_success
+import fr.outadoc.justchatting.shared.irc_notice_unvip_success
+import fr.outadoc.justchatting.shared.irc_notice_usage_ban
+import fr.outadoc.justchatting.shared.irc_notice_usage_clear
+import fr.outadoc.justchatting.shared.irc_notice_usage_color
+import fr.outadoc.justchatting.shared.irc_notice_usage_commercial
+import fr.outadoc.justchatting.shared.irc_notice_usage_delete
+import fr.outadoc.justchatting.shared.irc_notice_usage_disconnect
+import fr.outadoc.justchatting.shared.irc_notice_usage_emote_only_off
+import fr.outadoc.justchatting.shared.irc_notice_usage_emote_only_on
+import fr.outadoc.justchatting.shared.irc_notice_usage_followers_off
+import fr.outadoc.justchatting.shared.irc_notice_usage_followers_on
+import fr.outadoc.justchatting.shared.irc_notice_usage_help
+import fr.outadoc.justchatting.shared.irc_notice_usage_host
+import fr.outadoc.justchatting.shared.irc_notice_usage_marker
+import fr.outadoc.justchatting.shared.irc_notice_usage_me
+import fr.outadoc.justchatting.shared.irc_notice_usage_mod
+import fr.outadoc.justchatting.shared.irc_notice_usage_mods
+import fr.outadoc.justchatting.shared.irc_notice_usage_r9k_off
+import fr.outadoc.justchatting.shared.irc_notice_usage_r9k_on
+import fr.outadoc.justchatting.shared.irc_notice_usage_raid
+import fr.outadoc.justchatting.shared.irc_notice_usage_slow_off
+import fr.outadoc.justchatting.shared.irc_notice_usage_slow_on
+import fr.outadoc.justchatting.shared.irc_notice_usage_subs_off
+import fr.outadoc.justchatting.shared.irc_notice_usage_subs_on
+import fr.outadoc.justchatting.shared.irc_notice_usage_timeout
+import fr.outadoc.justchatting.shared.irc_notice_usage_unban
+import fr.outadoc.justchatting.shared.irc_notice_usage_unhost
+import fr.outadoc.justchatting.shared.irc_notice_usage_unmod
+import fr.outadoc.justchatting.shared.irc_notice_usage_unraid
+import fr.outadoc.justchatting.shared.irc_notice_usage_untimeout
+import fr.outadoc.justchatting.shared.irc_notice_usage_unvip
+import fr.outadoc.justchatting.shared.irc_notice_usage_user
+import fr.outadoc.justchatting.shared.irc_notice_usage_vip
+import fr.outadoc.justchatting.shared.irc_notice_usage_vips
+import fr.outadoc.justchatting.shared.irc_notice_usage_whisper
+import fr.outadoc.justchatting.shared.irc_notice_vip_success
+import fr.outadoc.justchatting.shared.irc_notice_vips_success
+import fr.outadoc.justchatting.shared.irc_notice_whisper_banned
+import fr.outadoc.justchatting.shared.irc_notice_whisper_banned_recipient
+import fr.outadoc.justchatting.shared.irc_notice_whisper_invalid_login
+import fr.outadoc.justchatting.shared.irc_notice_whisper_invalid_self
+import fr.outadoc.justchatting.shared.irc_notice_whisper_limit_per_min
+import fr.outadoc.justchatting.shared.irc_notice_whisper_limit_per_sec
+import fr.outadoc.justchatting.shared.irc_notice_whisper_restricted
+import fr.outadoc.justchatting.shared.irc_notice_whisper_restricted_recipient
+import fr.outadoc.justchatting.shared.months
+import fr.outadoc.justchatting.shared.viewers
+import fr.outadoc.justchatting.utils.core.StringDesc
+import fr.outadoc.justchatting.utils.core.desc
+import fr.outadoc.justchatting.utils.core.format
 import fr.outadoc.justchatting.utils.core.formatCurrency
 import fr.outadoc.justchatting.utils.core.formatNumber
 import io.fluidsonic.currency.Currency
@@ -17,7 +201,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 class IrcMessageMapper {
 
-    fun mapMessage(ircEvent: IrcEvent.Message): ChatEvent = with(ircEvent) {
+    suspend fun mapMessage(ircEvent: IrcEvent.Message): ChatEvent = with(ircEvent) {
         when (this) {
             is IrcEvent.Message.Notice -> {
                 ChatEvent.Message.Notice(
@@ -36,7 +220,7 @@ class IrcMessageMapper {
                         subtitle = Res.string.chat_raid_header
                             .format(
                                 Res.plurals.viewers.format(
-                                    number = raidersCount,
+                                    quantity = raidersCount,
                                     raidersCount,
                                 ),
                             ),
@@ -96,7 +280,7 @@ class IrcMessageMapper {
                                     .format(
                                         parseSubscriptionTier(subscriptionPlan),
                                         Res.plurals.months.format(
-                                            number = cumulativeMonths,
+                                            quantity = cumulativeMonths,
                                             cumulativeMonths.formatNumber(),
                                         ),
                                     )
@@ -106,11 +290,11 @@ class IrcMessageMapper {
                                 Res.string.chat_sub_header_withDurationAndStreak.format(
                                     parseSubscriptionTier(subscriptionPlan),
                                     Res.plurals.months.format(
-                                        number = cumulativeMonths,
+                                        quantity = cumulativeMonths,
                                         cumulativeMonths.formatNumber(),
                                     ),
                                     Res.plurals.months.format(
-                                        number = streakMonths,
+                                        quantity = streakMonths,
                                         streakMonths.formatNumber(),
                                     ),
                                 )
@@ -163,7 +347,7 @@ class IrcMessageMapper {
                                 parseSubscriptionTier(subscriptionPlan),
                                 recipientDisplayName,
                                 Res.plurals.months.format(
-                                    number = cumulativeMonths,
+                                    quantity = cumulativeMonths,
                                     cumulativeMonths.formatNumber(),
                                 ),
                             ),
@@ -322,7 +506,7 @@ class IrcMessageMapper {
         )
     }
 
-    fun mapOptional(command: IrcEvent): ChatEvent? {
+    suspend fun mapOptional(command: IrcEvent): ChatEvent? {
         return when (command) {
             is IrcEvent.Command.ClearChat -> {
                 if (command.targetUserLogin != null) {
@@ -359,7 +543,7 @@ class IrcMessageMapper {
         }
     }
 
-    private fun getLabelForNotice(messageId: String?, message: String?): StringDesc? {
+    private suspend fun getLabelForNotice(messageId: String?, message: String?): StringDesc? {
         return when (messageId) {
             "already_banned" -> {
                 Res.string.irc_notice_already_banned

@@ -17,14 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
-import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.app_name
 import fr.outadoc.justchatting.shared.onboarding_message
 import fr.outadoc.justchatting.shared.onboarding_title
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ScreenPreviews
+import org.jetbrains.compose.resources.stringResource
 
 private val AppIconSize = 80.dp
 

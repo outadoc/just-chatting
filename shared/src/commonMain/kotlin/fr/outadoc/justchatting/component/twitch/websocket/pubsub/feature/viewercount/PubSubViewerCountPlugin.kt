@@ -11,7 +11,7 @@ class PubSubViewerCountPlugin(
     override fun getTopic(channelId: String): String =
         "video-playback-by-id.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> =
+    override suspend fun parseMessage(payload: String): List<ChatEvent> =
         when (val message = json.decodeFromString<PubSubViewerCountMessage>(payload)) {
             is PubSubViewerCountMessage.ViewCount -> {
                 listOf(

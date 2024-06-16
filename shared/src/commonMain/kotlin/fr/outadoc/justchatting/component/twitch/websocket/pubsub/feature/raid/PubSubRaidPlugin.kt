@@ -11,7 +11,7 @@ class PubSubRaidPlugin(
     override fun getTopic(channelId: String): String =
         "raid.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> {
+    override suspend fun parseMessage(payload: String): List<ChatEvent> {
         val message = json.decodeFromString<PubSubRaidMessage>(payload)
         return listOf(
             ChatEvent.RaidUpdate(raid = message.map()),

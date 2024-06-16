@@ -144,7 +144,7 @@ fun ChannelChatScreenContent(
                             Toast.makeText(
                                 context,
                                 getString(Res.string.chat_copiedToClipboard),
-                                Toast.LENGTH_SHORT
+                                Toast.LENGTH_SHORT,
                             ).show()
                         }
                     }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -19,12 +20,13 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.utils.core.createChannelExternalLink
 import fr.outadoc.justchatting.utils.ui.canOpenInBubble
 import fr.outadoc.justchatting.utils.ui.isDark
-import org.koin.androidx.compose.getViewModel
+import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
 @Composable
 fun ChannelChatScreen(channelLogin: String) {
-    val viewModel: ChatViewModel = getViewModel()
+    val viewModel: ChatViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
     val inputState by viewModel.inputState.collectAsState()
 
@@ -49,14 +51,18 @@ fun ChannelChatScreen(channelLogin: String) {
         isEmotePickerOpen = false
     }
 
+    val scope = rememberCoroutineScope()
+
     OnLifecycleEvent(
         onResume = viewModel::onResume,
         onPause = {
             if (user != null) {
-                notifier.notify(
-                    context = context,
-                    user = user,
-                )
+                scope.launch {
+                    notifier.notify(
+                        context = context,
+                        user = user,
+                    )
+                }
             }
         },
     )
@@ -105,10 +111,12 @@ fun ChannelChatScreen(channelLogin: String) {
             },
             onOpenBubbleClicked = {
                 if (canOpenInBubble && user != null) {
-                    notifier.notify(
-                        context = context,
-                        user = user,
-                    )
+                    scope.launch {
+                        notifier.notify(
+                            context = context,
+                            user = user,
+                        )
+                    }
                 }
             },
             onTriggerAutoComplete = {

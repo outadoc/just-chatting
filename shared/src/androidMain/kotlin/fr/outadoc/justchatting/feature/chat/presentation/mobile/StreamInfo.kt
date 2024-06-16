@@ -17,14 +17,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.shared.Res
-import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.shared.uptime
+import fr.outadoc.justchatting.shared.viewers
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -65,7 +66,7 @@ fun StreamInfo(
 
             Text(
                 text = pluralStringResource(
-                    R.plurals.viewers,
+                    Res.plurals.viewers,
                     stream.viewerCount,
                     stream.viewerCount.formatNumber(),
                 ),

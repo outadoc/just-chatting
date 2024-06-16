@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.room_emote
@@ -13,6 +12,7 @@ import fr.outadoc.justchatting.shared.room_slow
 import fr.outadoc.justchatting.shared.room_subs
 import fr.outadoc.justchatting.shared.room_unique
 import fr.outadoc.justchatting.utils.ui.format
+import org.jetbrains.compose.resources.stringResource
 import kotlin.time.Duration
 
 @Composable

@@ -17,8 +17,8 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.chat.data.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
-import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.notification_action_reply
 import fr.outadoc.justchatting.shared.notification_action_reply_hint
 import fr.outadoc.justchatting.shared.notification_channel_bubbles_message

@@ -17,9 +17,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import dev.icerock.moko.resources.compose.localized
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.NoticeMessagePreviewProvider
+import fr.outadoc.justchatting.utils.core.stringResource
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
@@ -30,7 +30,7 @@ fun NoticeMessagePreview(
 ) {
     AppTheme {
         NoticeMessage(
-            text = message.text.localized(),
+            text = stringResource(message.text),
         )
     }
 }

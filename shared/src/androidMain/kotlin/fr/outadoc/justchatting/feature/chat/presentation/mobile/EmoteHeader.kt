@@ -13,7 +13,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import dev.icerock.moko.resources.compose.localized
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 
 @Composable
@@ -41,14 +40,14 @@ fun EmoteHeader(
         Column {
             header.title?.let { title ->
                 Text(
-                    text = title.localized(),
+                    text = title,
                     style = MaterialTheme.typography.titleMedium,
                 )
             }
 
             header.source?.let { source ->
                 Text(
-                    text = source.localized(),
+                    text = source,
                     style = MaterialTheme.typography.labelMedium,
                 )
             }

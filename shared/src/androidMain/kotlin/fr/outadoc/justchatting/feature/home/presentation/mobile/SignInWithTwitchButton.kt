@@ -11,11 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import org.jetbrains.compose.resources.stringResource
-import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.onboarding_login_action
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import org.jetbrains.compose.resources.stringResource
 
 private val TwitchBrandColor = Color(0xFF7718AD)
 

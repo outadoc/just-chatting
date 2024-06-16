@@ -17,12 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.created_at
 import fr.outadoc.justchatting.utils.ui.formatDate
 import kotlinx.datetime.Instant
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun UserInfo(

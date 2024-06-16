@@ -29,11 +29,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import org.jetbrains.compose.resources.stringResource
 import fr.outadoc.justchatting.shared.Res
 import fr.outadoc.justchatting.shared.channels
 import fr.outadoc.justchatting.shared.live
 import fr.outadoc.justchatting.shared.settings
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun MainNavigation(

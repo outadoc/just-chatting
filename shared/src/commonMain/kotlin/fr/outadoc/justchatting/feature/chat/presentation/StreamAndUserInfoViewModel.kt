@@ -51,23 +51,18 @@ class StreamAndUserInfoViewModel(
                         )
 
                         twitchRepository.loadStream(userId = user.id)
-                            .fold(
-                                onSuccess = { stream ->
-                                    _state.emit(
-                                        State.Loaded(
-                                            userLogin = login,
-                                            user = user,
-                                            stream = stream,
-                                        ),
-                                    )
-                                },
-                                onFailure = { exception ->
-                                    logError<StreamAndUserInfoViewModel>(exception) { "Error while loading stream for $login" }
-                                    _state.emit(
-                                        State.Error(exception),
-                                    )
-                                },
-                            )
+                            .onSuccess { stream ->
+                                _state.emit(
+                                    State.Loaded(
+                                        userLogin = login,
+                                        user = user,
+                                        stream = stream,
+                                    ),
+                                )
+                            }
+                            .onFailure { exception ->
+                                logError<StreamAndUserInfoViewModel>(exception) { "Error while loading stream for $login" }
+                            }
                     },
                     onFailure = { exception ->
                         logError<StreamAndUserInfoViewModel>(exception) { "Error while loading user info for $login" }

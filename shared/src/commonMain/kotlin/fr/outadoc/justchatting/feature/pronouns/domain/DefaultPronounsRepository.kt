@@ -43,7 +43,7 @@ class DefaultPronounsRepository(
                                 },
                                 onFailure = { e ->
                                     logError<DefaultPronounsRepository>(e) { "Error while fetching pronouns from Alejo API" }
-                                }
+                                },
                             )
                     }
                 }

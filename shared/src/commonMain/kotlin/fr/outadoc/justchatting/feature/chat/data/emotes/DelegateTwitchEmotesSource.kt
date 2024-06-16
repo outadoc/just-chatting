@@ -20,13 +20,15 @@ class DelegateTwitchEmotesSource(
     override fun shouldUseCache(previous: Params, next: Params): Boolean =
         previous.channelId == next.channelId && previous.emoteSets == next.emoteSets
 
-    override suspend fun getEmotes(params: Params): CachedResult {
+    override suspend fun getEmotes(params: Params): Result<CachedResult> {
         return coroutineScope {
             val emotes: List<Emote> =
-                params.emoteSets.chunked(25)
+                params.emoteSets
+                    .chunked(25)
                     .map { setIds ->
                         async {
-                            twitchRepository.loadEmotesFromSet(setIds = setIds)
+                            twitchRepository
+                                .loadEmotesFromSet(setIds = setIds)
                                 .fold(
                                     onSuccess = { emotes -> emotes },
                                     onFailure = { exception ->
@@ -60,11 +62,13 @@ class DelegateTwitchEmotesSource(
                     )
                     .associateBy { user -> user.id }
 
-            CachedResult(
-                channelEmotes = emotes.filter { emote -> emote.ownerId == params.channelId }
-                    .groupBy { emoteOwners[params.channelId] },
-                globalEmotes = emotes.filter { emote -> emote.ownerId != params.channelId }
-                    .groupBy { emote -> emoteOwners[emote.ownerId] },
+            Result.success(
+                CachedResult(
+                    channelEmotes = emotes.filter { emote -> emote.ownerId == params.channelId }
+                        .groupBy { emoteOwners[params.channelId] },
+                    globalEmotes = emotes.filter { emote -> emote.ownerId != params.channelId }
+                        .groupBy { emote -> emoteOwners[emote.ownerId] },
+                )
             )
         }
     }

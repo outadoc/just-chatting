@@ -9,11 +9,14 @@ class RecentMessagesRepository(
     private val recentMessagesApi: RecentMessagesApi,
     private val parser: TwitchIrcCommandParser,
 ) {
-    suspend fun loadRecentMessages(channelLogin: String, limit: Int): List<IrcEvent> =
+    suspend fun loadRecentMessages(channelLogin: String, limit: Int): Result<List<IrcEvent>> =
         withContext(DispatchersProvider.io) {
-            recentMessagesApi.getRecentMessages(channelLogin, limit)
-                .messages
-                .filterNot { message -> message.isBlank() }
-                .mapNotNull { message -> parser.parse(message) }
+            recentMessagesApi
+                .getRecentMessages(channelLogin, limit)
+                .map { response ->
+                    response.messages
+                        .filterNot { message -> message.isBlank() }
+                        .mapNotNull { message -> parser.parse(message) }
+                }
         }
 }

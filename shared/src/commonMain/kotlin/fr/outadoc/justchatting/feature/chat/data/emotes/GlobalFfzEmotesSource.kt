@@ -11,13 +11,16 @@ class GlobalFfzEmotesSource(
 
     override fun shouldUseCache(previous: Params, next: Params): Boolean = true
 
-    override suspend fun getEmotes(params: Params): List<EmoteSetItem> =
-        flatListOf(
-            EmoteSetItem.Header(
-                title = null,
-                source = MR.strings.chat_source_ffz.desc(),
-            ),
-            emotesRepository.loadBttvGlobalFfzEmotes()
-                .map { emote -> EmoteSetItem.Emote(emote) },
-        )
+    override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
+        emotesRepository
+            .loadBttvGlobalFfzEmotes()
+            .map { emotes ->
+                flatListOf(
+                    EmoteSetItem.Header(
+                        title = null,
+                        source = MR.strings.chat_source_ffz.desc(),
+                    ),
+                    emotes.map { emote -> EmoteSetItem.Emote(emote) },
+                )
+            }
 }

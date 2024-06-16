@@ -18,12 +18,14 @@ class RecentMessagesServer(httpClient: HttpClient) : RecentMessagesApi {
     override suspend fun getRecentMessages(
         channelLogin: String,
         limit: Int,
-    ): RecentMessagesResponse {
-        return client.get {
-            url {
-                path("v2/recent-messages", channelLogin)
-                parameter("limit", limit)
-            }
-        }.body()
+    ): Result<RecentMessagesResponse> {
+        return runCatching {
+            client.get {
+                url {
+                    path("v2/recent-messages", channelLogin)
+                    parameter("limit", limit)
+                }
+            }.body()
+        }
     }
 }

@@ -22,7 +22,8 @@ fun ChatSlowModeProgress(
     state: ChatViewModel.State,
 ) {
     when (state) {
-        ChatViewModel.State.Initial -> {}
+        is ChatViewModel.State.Initial -> {}
+        is ChatViewModel.State.Failed -> {}
         is ChatViewModel.State.Chatting -> {
             ChatSlowModeProgress(
                 modifier = modifier,

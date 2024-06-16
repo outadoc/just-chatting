@@ -18,15 +18,23 @@ class BttvEmotesServer(httpClient: HttpClient) : BttvEmotesApi {
         }
     }
 
-    override suspend fun getGlobalBttvEmotes(): List<BttvEmote> =
-        client.get { url { path("3/cached/emotes/global") } }.body()
+    override suspend fun getGlobalBttvEmotes(): Result<List<BttvEmote>> =
+        runCatching {
+            client.get { url { path("3/cached/emotes/global") } }.body()
+        }
 
-    override suspend fun getBttvEmotes(channelId: String): BttvChannelResponse =
-        client.get { url { path("3/cached/users/twitch", channelId) } }.body()
+    override suspend fun getBttvEmotes(channelId: String): Result<BttvChannelResponse> =
+        runCatching {
+            client.get { url { path("3/cached/users/twitch", channelId) } }.body()
+        }
 
-    override suspend fun getBttvGlobalFfzEmotes(): List<FfzEmote> =
-        client.get { url { path("3/cached/frankerfacez/emotes/global") } }.body()
+    override suspend fun getBttvGlobalFfzEmotes(): Result<List<FfzEmote>> =
+        runCatching {
+            client.get { url { path("3/cached/frankerfacez/emotes/global") } }.body()
+        }
 
-    override suspend fun getBttvFfzEmotes(channelId: String): List<FfzEmote> =
-        client.get { url { path("3/cached/frankerfacez/users/twitch", channelId) } }.body()
+    override suspend fun getBttvFfzEmotes(channelId: String): Result<List<FfzEmote>> =
+        runCatching {
+            client.get { url { path("3/cached/frankerfacez/users/twitch", channelId) } }.body()
+        }
 }

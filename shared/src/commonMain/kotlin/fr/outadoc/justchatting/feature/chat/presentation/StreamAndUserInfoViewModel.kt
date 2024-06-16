@@ -36,35 +36,46 @@ class StreamAndUserInfoViewModel(
 
     fun loadFromLogin(login: String) {
         viewModelScope.launch {
-            try {
-                _state.emit(State.Loading(userLogin = login))
+            _state.emit(State.Loading(userLogin = login))
 
-                val user: User =
-                    twitchRepository.loadUsersByLogin(logins = listOf(login))
-                        ?.firstOrNull()
-                        ?: error("API returned no user")
+            twitchRepository
+                .loadUserByLogin(login)
+                .fold(
+                    onSuccess = { user ->
+                        _state.emit(
+                            State.Loaded(
+                                userLogin = login,
+                                user = user,
+                                stream = null,
+                            ),
+                        )
 
-                _state.emit(
-                    State.Loaded(
-                        userLogin = login,
-                        user = user,
-                        stream = null,
-                    ),
+                        twitchRepository.loadStream(userId = user.id)
+                            .fold(
+                                onSuccess = { stream ->
+                                    _state.emit(
+                                        State.Loaded(
+                                            userLogin = login,
+                                            user = user,
+                                            stream = stream,
+                                        ),
+                                    )
+                                },
+                                onFailure = { exception ->
+                                    logError<StreamAndUserInfoViewModel>(exception) { "Error while loading stream for $login" }
+                                    _state.emit(
+                                        State.Error(exception),
+                                    )
+                                },
+                            )
+                    },
+                    onFailure = { exception ->
+                        logError<StreamAndUserInfoViewModel>(exception) { "Error while loading user info for $login" }
+                        _state.emit(
+                            State.Error(exception),
+                        )
+                    },
                 )
-
-                _state.emit(
-                    State.Loaded(
-                        userLogin = login,
-                        user = user,
-                        stream = twitchRepository.loadStream(userId = user.id),
-                    ),
-                )
-            } catch (e: Exception) {
-                logError<StreamAndUserInfoViewModel>(e) { "Error while loading stream + user info for $login" }
-                _state.emit(
-                    State.Error(e),
-                )
-            }
         }
     }
 }

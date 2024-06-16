@@ -15,11 +15,15 @@ class AlejoPronounsApi(
         }
     }
 
-    suspend fun getPronouns(): List<AlejoPronoun> {
-        return client.get { url { path("pronouns") } }.body()
+    suspend fun getPronouns(): Result<List<AlejoPronoun>> {
+        return runCatching {
+            client.get { url { path("pronouns") } }.body()
+        }
     }
 
-    suspend fun getPronounsForUser(login: String): List<UserPronounResponse> {
-        return client.get { url { path("users", login) } }.body()
+    suspend fun getPronounsForUser(login: String): Result<List<UserPronounResponse>> {
+        return runCatching {
+            client.get { url { path("users", login) } }.body()
+        }
     }
 }

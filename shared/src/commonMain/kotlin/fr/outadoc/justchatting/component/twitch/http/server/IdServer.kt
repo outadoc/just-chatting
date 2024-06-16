@@ -19,18 +19,22 @@ class IdServer(httpClient: HttpClient) : IdApi {
         }
     }
 
-    override suspend fun validateToken(token: String): ValidationResponse? =
-        client.get {
-            url { path("validate") }
-            headers { append("Authorization", "Bearer $token") }
-        }.body()
+    override suspend fun validateToken(token: String): Result<ValidationResponse> =
+        runCatching {
+            client.get {
+                url { path("validate") }
+                headers { append("Authorization", "Bearer $token") }
+            }.body()
+        }
 
-    override suspend fun revokeToken(clientId: String, token: String) {
-        client.post {
-            url {
-                path("revoke")
-                parameter("client_id", clientId)
-                parameter("token", token)
+    override suspend fun revokeToken(clientId: String, token: String): Result<Unit> {
+        return runCatching {
+            client.post {
+                url {
+                    path("revoke")
+                    parameter("client_id", clientId)
+                    parameter("token", token)
+                }
             }
         }
     }

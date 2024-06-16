@@ -123,6 +123,7 @@ class ChatViewModel(
     @Immutable
     sealed class State {
         data object Initial : State()
+        data class Failed(val throwable: Throwable) : State()
 
         data class Chatting(
             val user: User,
@@ -497,37 +498,52 @@ class ChatViewModel(
         if (state is State.Chatting && state.user.login == channelLogin) return state
 
         val prefs: AppPreferences = preferencesRepository.currentPreferences.first()
-        val channelUser: User =
-            twitchRepository.loadUsersByLogin(logins = listOf(channelLogin))
-                ?.firstOrNull()
-                ?: error("User not loaded")
 
-        twitchRepository.insertRecentChannel(
-            channel = channelUser,
-            usedAt = clock.now(),
-        )
+        return twitchRepository
+            .loadUserByLogin(channelLogin)
+            .onSuccess { channelUser ->
+                twitchRepository.insertRecentChannel(
+                    channel = channelUser,
+                    usedAt = clock.now(),
+                )
 
-        createShortcutForChannel(channelUser)
-
-        return State.Chatting(
-            user = channelUser,
-            appUser = prefs.appUser as AppUser.LoggedIn,
-            chatters = persistentSetOf(
-                Chatter(
-                    id = channelUser.id,
-                    login = channelUser.login,
-                    displayName = channelUser.displayName,
-                ),
-            ),
-            maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
-        )
+                createShortcutForChannel(channelUser)
+            }
+            .fold(
+                onSuccess = { channelUser ->
+                    State.Chatting(
+                        user = channelUser,
+                        appUser = prefs.appUser as AppUser.LoggedIn,
+                        chatters = persistentSetOf(
+                            Chatter(
+                                id = channelUser.id,
+                                login = channelUser.login,
+                                displayName = channelUser.displayName,
+                            ),
+                        ),
+                        maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
+                    )
+                },
+                onFailure = { exception ->
+                    logError<ChatViewModel>(exception) { "Failed to load user $channelLogin" }
+                    State.Failed(exception)
+                },
+            )
     }
 
     private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
         if (state !is State.Chatting) return state
-        return state.copy(
-            stream = twitchRepository.loadStream(userId = state.user.id),
-        )
+        return twitchRepository
+            .loadStream(userId = state.user.id)
+            .fold(
+                onSuccess = { stream ->
+                    state.copy(stream = stream)
+                },
+                onFailure = { exception ->
+                    logError<ChatViewModel>(exception) { "Failed to load stream details for ${state.user.login}" }
+                    state
+                },
+            )
     }
 
     private suspend fun Action.LoadEmotes.reduce(state: State): State {
@@ -536,33 +552,42 @@ class ChatViewModel(
         return withContext(DispatchersProvider.io) {
             val globalBadges: Deferred<PersistentList<TwitchBadge>?> =
                 async {
-                    try {
-                        emotesRepository.loadGlobalBadges().toPersistentList()
-                    } catch (e: Exception) {
-                        logError<ChatViewModel>(e) { "Failed to load global badges" }
-                        null
-                    }
+                    emotesRepository.loadGlobalBadges()
+                        .fold(
+                            onSuccess = { badges -> badges.toPersistentList() },
+                            onFailure = { exception ->
+                                logError<ChatViewModel>(exception) { "Failed to load global badges" }
+                                null
+                            },
+                        )
                 }
 
             val channelBadges: Deferred<PersistentList<TwitchBadge>?> =
                 async {
-                    try {
-                        emotesRepository.loadChannelBadges(channelId).toPersistentList()
-                    } catch (e: Exception) {
-                        logError<ChatViewModel>(e) { "Failed to load badges for channel $channelId" }
-                        null
-                    }
+                    emotesRepository.loadChannelBadges(channelId)
+                        .fold(
+                            onSuccess = { badges -> badges.toPersistentList() },
+                            onFailure = { exception ->
+                                logError<ChatViewModel>(exception) { "Failed to load badges for channel $channelId" }
+                                null
+                            },
+                        )
                 }
 
             val cheerEmotes: PersistentMap<String, Emote>? =
-                try {
-                    twitchRepository.loadCheerEmotes(userId = channelId)
-                        .associateBy { emote -> emote.name }
-                        .toPersistentHashMap()
-                } catch (e: Exception) {
-                    logError<ChatViewModel>(e) { "Failed to load cheermotes for channel $channelId" }
-                    null
-                }
+                twitchRepository
+                    .loadCheerEmotes(userId = channelId)
+                    .fold(
+                        onSuccess = { emotes ->
+                            emotes
+                                .associateBy { emote -> emote.name }
+                                .toPersistentHashMap()
+                        },
+                        onFailure = { exception ->
+                            logError<ChatViewModel>(exception) { "Failed to load cheer emotes for channel $channelId" }
+                            null
+                        },
+                    )
 
             val pickableEmotes: PersistentList<EmoteSetItem> =
                 loadPickableEmotes(
@@ -589,16 +614,19 @@ class ChatViewModel(
             emoteListSourcesProvider.getSources()
                 .map { source ->
                     async {
-                        try {
-                            source.getEmotes(
+                        source
+                            .getEmotes(
                                 channelId = channelId,
                                 channelName = channelName,
                                 emoteSets = emoteSets,
                             )
-                        } catch (e: Exception) {
-                            logError<ChatViewModel>(e) { "Failed to load emotes from source $source" }
-                            emptyList()
-                        }
+                            .fold(
+                                onSuccess = { emotes -> emotes },
+                                onFailure = { exception ->
+                                    logError<ChatViewModel>(exception) { "Failed to load emotes from source $source" }
+                                    emptyList()
+                                },
+                            )
                     }
                 }
                 .awaitAll()

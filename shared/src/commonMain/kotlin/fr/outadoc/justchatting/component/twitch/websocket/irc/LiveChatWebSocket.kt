@@ -247,24 +247,29 @@ class LiveChatWebSocket private constructor(
         val prefs = preferencesRepository.currentPreferences.first()
         if (!prefs.enableRecentMessages) return
 
-        try {
-            _flow.emitAll(
-                recentMessagesRepository
-                    .loadRecentMessages(
-                        channelLogin = channelLogin,
-                        limit = AppPreferences.Defaults.RecentChatLimit,
-                    )
+        recentMessagesRepository
+            .loadRecentMessages(
+                channelLogin = channelLogin,
+                limit = AppPreferences.Defaults.RecentChatLimit,
+            )
+            .map { messages ->
+                messages
                     .asFlow()
                     .filterIsInstance<IrcEvent.Message>()
                     .dropWhile { event ->
                         // Drop messages that were received before the last message we received
                         event.timestamp < (lastMessageReceivedAt ?: Instant.DISTANT_PAST)
                     }
-                    .mapNotNull { event -> mapper.mapMessage(event) },
+                    .mapNotNull { event -> mapper.mapMessage(event) }
+            }
+            .fold(
+                onSuccess = { events ->
+                    _flow.emitAll(events)
+                },
+                onFailure = { e ->
+                    logError<LiveChatWebSocket>(e) { "Failed to load recent messages for channel $channelLogin" }
+                },
             )
-        } catch (e: Exception) {
-            logError<LiveChatWebSocket>(e) { "Failed to load recent messages for channel $channelLogin" }
-        }
     }
 
     class Factory(

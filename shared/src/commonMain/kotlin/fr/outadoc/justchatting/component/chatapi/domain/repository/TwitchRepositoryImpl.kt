@@ -22,6 +22,7 @@ import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.utils.map
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
+import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
@@ -60,23 +61,29 @@ class TwitchRepositoryImpl(
     }
 
     @JvmName("mapWithUserProfileImagesChannelSearch")
-    private suspend fun List<ChannelSearch>.mapWithUserProfileImages(): List<ChannelSearch> =
-        with(this) {
-            return mapNotNull { result -> result.id }
-                .chunked(size = 100)
-                .flatMap { idsToUpdate ->
-                    val users = helix.getUsersById(ids = idsToUpdate)
-                        .data
-                        .orEmpty()
+    private suspend fun List<ChannelSearch>.mapWithUserProfileImages(): List<ChannelSearch> {
+        val results = this
+        return results
+            .map { result -> result.id }
+            .chunked(size = 100)
+            .flatMap { idsToUpdate ->
+                val users = helix.getUsersById(ids = idsToUpdate)
+                    .fold(
+                        onSuccess = { response -> response.data },
+                        onFailure = { exception ->
+                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
+                            emptyList()
+                        },
+                    )
 
-                    map { searchResult ->
-                        searchResult.copy(
-                            profileImageUrl = users.firstOrNull { user -> user.id == searchResult.id }
-                                ?.profileImageUrl,
-                        )
-                    }
+                results.map { searchResult ->
+                    searchResult.copy(
+                        profileImageUrl = users.firstOrNull { user -> user.id == searchResult.id }
+                            ?.profileImageUrl,
+                    )
                 }
-        }
+            }
+    }
 
     override suspend fun loadFollowedStreams(): Flow<PagingData<Stream>> {
         val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser
@@ -109,23 +116,29 @@ class TwitchRepositoryImpl(
     }
 
     @JvmName("mapWithUserProfileImagesStream")
-    private suspend fun Collection<Stream>.mapWithUserProfileImages(): List<Stream> =
-        with(this) {
-            val users = mapNotNull { it.userId }
-                .chunked(100)
-                .flatMap { ids ->
-                    helix.getUsersById(ids = ids)
-                        .data
-                        .orEmpty()
-                }
-
-            return map { stream ->
-                val user = users.firstOrNull { user -> stream.userId == user.id }
-                stream.copy(
-                    profileImageURL = user?.profileImageUrl,
-                )
+    private suspend fun Collection<Stream>.mapWithUserProfileImages(): List<Stream> {
+        val results = this
+        val users = results
+            .map { user -> user.userId }
+            .chunked(100)
+            .flatMap { ids ->
+                helix.getUsersById(ids = ids)
+                    .fold(
+                        onSuccess = { response -> response.data },
+                        onFailure = { exception ->
+                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
+                            emptyList()
+                        },
+                    )
             }
+
+        return results.map { stream ->
+            val user = users.firstOrNull { user -> stream.userId == user.id }
+            stream.copy(
+                profileImageURL = user?.profileImageUrl,
+            )
         }
+    }
 
     override suspend fun loadFollowedChannels(): Flow<PagingData<ChannelFollow>> {
         val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser
@@ -155,42 +168,47 @@ class TwitchRepositoryImpl(
     }
 
     @JvmName("mapWithUserProfileImagesChannelFollow")
-    private suspend fun Collection<ChannelFollow>.mapWithUserProfileImages(): Collection<ChannelFollow> =
-        with(this) {
-            val results: List<User> =
-                filter { follow -> follow.profileImageURL == null }
-                    .map { follow -> follow.userId }
-                    .chunked(size = 100)
-                    .flatMap { idsToUpdate ->
-                        helix.getUsersById(ids = idsToUpdate)
-                            .data
-                            .orEmpty()
-                    }
-                    .map { user ->
-                        User(
-                            id = user.id,
-                            login = user.login,
-                            displayName = user.displayName,
-                            description = user.description,
-                            profileImageUrl = user.profileImageUrl,
-                            createdAt = user.createdAt,
-                        )
-                    }
-
-            return map { follow ->
-                val userInfo = results.firstOrNull { user -> user.id == follow.userId }
-                follow.copy(
-                    profileImageURL = userInfo?.profileImageUrl,
+    private suspend fun Collection<ChannelFollow>.mapWithUserProfileImages(): Collection<ChannelFollow> {
+        val results = this
+        val userMap: Map<String, User> = results
+            .filter { follow -> follow.profileImageURL == null }
+            .map { follow -> follow.userId }
+            .chunked(size = 100)
+            .flatMap { idsToUpdate ->
+                helix.getUsersById(ids = idsToUpdate)
+                    .fold(
+                        onSuccess = { response -> response.data },
+                        onFailure = { exception ->
+                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
+                            emptyList()
+                        },
+                    )
+            }
+            .associate { user ->
+                user.id to User(
+                    id = user.id,
+                    login = user.login,
+                    displayName = user.displayName,
+                    description = user.description,
+                    profileImageUrl = user.profileImageUrl,
+                    createdAt = user.createdAt,
                 )
             }
-        }
 
-    override suspend fun loadStream(userId: String): Stream? =
+        return results.map { follow ->
+            follow.copy(
+                profileImageURL = userMap[follow.userId]?.profileImageUrl,
+            )
+        }
+    }
+
+    override suspend fun loadStream(userId: String): Result<Stream> =
         withContext(DispatchersProvider.io) {
             helix.getStreams(ids = listOf(userId))
-                .data
-                .firstOrNull()
-                ?.let { stream ->
+                .mapCatching { response ->
+                    val stream = response.data.firstOrNull()
+                        ?: error("Stream for userId $userId not found")
+
                     Stream(
                         id = stream.id,
                         userId = stream.userId,
@@ -205,51 +223,76 @@ class TwitchRepositoryImpl(
                 }
         }
 
-    override suspend fun loadUsersById(ids: List<String>): List<User>? =
+    override suspend fun loadUsersById(ids: List<String>): Result<List<User>> =
         withContext(DispatchersProvider.io) {
-            helix.getUsersById(ids = ids).data?.map { user ->
-                User(
-                    id = user.id,
-                    login = user.login,
-                    displayName = user.displayName,
-                    description = user.description,
-                    profileImageUrl = user.profileImageUrl,
-                    createdAt = user.createdAt,
-                )
-            }
-        }
-
-    override suspend fun loadUsersByLogin(logins: List<String>): List<User>? =
-        withContext(DispatchersProvider.io) {
-            helix.getUsersByLogin(logins = logins).data?.map { user ->
-                User(
-                    id = user.id,
-                    login = user.login,
-                    displayName = user.displayName,
-                    description = user.description,
-                    profileImageUrl = user.profileImageUrl,
-                    createdAt = user.createdAt,
-                )
-            }
-        }
-
-    override suspend fun loadCheerEmotes(userId: String): List<Emote> =
-        withContext(DispatchersProvider.io) {
-            helix.getCheerEmotes(userId = userId)
-                .data
-                .flatMap { emote ->
-                    emote.tiers.map { tier ->
-                        tier.map(prefix = emote.prefix)
+            helix.getUsersById(ids = ids)
+                .map { response ->
+                    response.data.map { user ->
+                        User(
+                            id = user.id,
+                            login = user.login,
+                            displayName = user.displayName,
+                            description = user.description,
+                            profileImageUrl = user.profileImageUrl,
+                            createdAt = user.createdAt,
+                        )
                     }
                 }
         }
 
-    override suspend fun loadEmotesFromSet(setIds: List<String>): List<Emote> =
+    override suspend fun loadUsersByLogin(logins: List<String>): Result<List<User>> =
         withContext(DispatchersProvider.io) {
-            val response = helix.getEmotesFromSet(setIds = setIds)
-            response.data
-                .sortedByDescending { it.setId }
-                .map { emote -> emote.map(templateUrl = response.template) }
+            helix.getUsersByLogin(logins = logins)
+                .mapCatching { response ->
+                    if (response.data.isEmpty()) {
+                        error("No users found for logins: $logins")
+                    }
+
+                    response.data.map { user ->
+                        User(
+                            id = user.id,
+                            login = user.login,
+                            displayName = user.displayName,
+                            description = user.description,
+                            profileImageUrl = user.profileImageUrl,
+                            createdAt = user.createdAt,
+                        )
+                    }
+                }
+        }
+
+    override suspend fun loadUserByLogin(login: String): Result<User> {
+        return loadUsersByLogin(logins = listOf(login))
+            .mapCatching { users ->
+                if (users.isEmpty()) {
+                    error("No user found for login: $login")
+                }
+
+                users.first()
+            }
+    }
+
+    override suspend fun loadCheerEmotes(userId: String): Result<List<Emote>> {
+        return withContext(DispatchersProvider.io) {
+            helix.getCheerEmotes(userId = userId)
+                .map { response ->
+                    response.data.flatMap { emote ->
+                        emote.tiers.map { tier ->
+                            tier.map(prefix = emote.prefix)
+                        }
+                    }
+                }
+        }
+    }
+
+    override suspend fun loadEmotesFromSet(setIds: List<String>): Result<List<Emote>> =
+        withContext(DispatchersProvider.io) {
+            helix.getEmotesFromSet(setIds = setIds)
+                .map { response ->
+                    response.data
+                        .sortedByDescending { it.setId }
+                        .map { emote -> emote.map(templateUrl = response.template) }
+                }
         }
 
     override suspend fun getRecentChannels(): Flow<List<ChannelSearch>?> {
@@ -258,7 +301,8 @@ class TwitchRepositoryImpl(
                 .map { channels ->
                     val ids = channels.map { channel -> channel.id }
                     helix.getUsersById(ids = ids)
-                        .data
+                        .getOrNull()
+                        ?.data
                         ?.map { user ->
                             ChannelSearch(
                                 id = user.id,
@@ -286,39 +330,36 @@ class TwitchRepositoryImpl(
         }
     }
 
-    override suspend fun loadChannelSchedule(channelId: String): ChannelSchedule? {
-        val response = helix.getChannelSchedule(
-            channelId = channelId,
-            limit = 10,
-            after = null
-        )
-
-        if (response == null) {
-            // Channel has no schedule
-            return null
+    override suspend fun loadChannelSchedule(channelId: String): Result<ChannelSchedule> {
+        return withContext(DispatchersProvider.io) {
+            helix.getChannelSchedule(
+                channelId = channelId,
+                limit = 10,
+                after = null,
+            ).mapCatching { response ->
+                ChannelSchedule(
+                    segments = response.data.segments.map { segment ->
+                        ChannelScheduleSegment(
+                            id = segment.id,
+                            startTime = segment.startTime,
+                            endTime = segment.endTime,
+                            title = segment.title,
+                            canceledUntil = segment.canceledUntil,
+                            category = segment.category,
+                            isRecurring = segment.isRecurring,
+                        )
+                    },
+                    userId = response.data.userId,
+                    userLogin = response.data.userLogin,
+                    userDisplayName = response.data.userDisplayName,
+                    vacation = response.data.vacation?.let { vacation ->
+                        ChannelScheduleVacation(
+                            startTime = vacation.startTime,
+                            endTime = vacation.endTime,
+                        )
+                    },
+                )
+            }
         }
-
-        return ChannelSchedule(
-            segments = response.data.segments.map { segment ->
-                ChannelScheduleSegment(
-                    id = segment.id,
-                    startTime = segment.startTime,
-                    endTime = segment.endTime,
-                    title = segment.title,
-                    canceledUntil = segment.canceledUntil,
-                    category = segment.category,
-                    isRecurring = segment.isRecurring,
-                )
-            },
-            userId = response.data.userId,
-            userLogin = response.data.userLogin,
-            userDisplayName = response.data.userDisplayName,
-            vacation = response.data.vacation?.let { vacation ->
-                ChannelScheduleVacation(
-                    startTime = vacation.startTime,
-                    endTime = vacation.endTime,
-                )
-            },
-        )
     }
 }

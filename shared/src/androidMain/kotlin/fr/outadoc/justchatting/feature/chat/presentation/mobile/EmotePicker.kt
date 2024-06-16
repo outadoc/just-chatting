@@ -23,7 +23,8 @@ fun EmotePicker(
     onEmoteClick: (Emote) -> Unit,
 ) {
     when (state) {
-        ChatViewModel.State.Initial -> {
+        is ChatViewModel.State.Failed -> {}
+        is ChatViewModel.State.Initial -> {
             Column(
                 modifier = modifier,
                 verticalArrangement = Arrangement.Center,

@@ -14,7 +14,7 @@ abstract class CachedEmoteListSource<T> : EmoteListSource<T> {
         channelId: String,
         channelName: String,
         emoteSets: List<String>,
-    ): T {
+    ): Result<T> {
         val params = Params(
             channelId = channelId,
             channelName = channelName,
@@ -23,14 +23,15 @@ abstract class CachedEmoteListSource<T> : EmoteListSource<T> {
 
         val cachedResult = this.cachedResult
         return if (cachedResult != null && shouldUseCache(cachedResult.first, params)) {
-            cachedResult.second
+            Result.success(cachedResult.second)
         } else {
-            getEmotes(params).also { result ->
-                this.cachedResult = params to result
-            }
+            getEmotes(params)
+                .onSuccess { result ->
+                    this.cachedResult = params to result
+                }
         }
     }
 
-    abstract suspend fun getEmotes(params: Params): T
+    abstract suspend fun getEmotes(params: Params): Result<T>
     abstract fun shouldUseCache(previous: Params, next: Params): Boolean
 }

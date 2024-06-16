@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.chat.data.emotes
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
+import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -19,26 +20,30 @@ class DelegateTwitchEmotesSource(
     override fun shouldUseCache(previous: Params, next: Params): Boolean =
         previous.channelId == next.channelId && previous.emoteSets == next.emoteSets
 
-    override suspend fun getEmotes(params: Params): CachedResult {
+    override suspend fun getEmotes(params: Params): Result<CachedResult> {
         return coroutineScope {
             val emotes: List<Emote> =
-                params.emoteSets.chunked(25)
+                params.emoteSets
+                    .chunked(25)
                     .map { setIds ->
                         async {
-                            try {
-                                twitchRepository.loadEmotesFromSet(setIds = setIds)
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                null
-                            }.orEmpty()
+                            twitchRepository
+                                .loadEmotesFromSet(setIds = setIds)
+                                .fold(
+                                    onSuccess = { emotes -> emotes },
+                                    onFailure = { exception ->
+                                        logError<DelegateTwitchEmotesSource>(exception) { "Failed to load Twitch emotes for setIds" }
+                                        emptyList()
+                                    },
+                                )
                         }
                     }
                     .awaitAll()
                     .flatten()
 
             val emoteOwners: Map<String, User> =
-                try {
-                    twitchRepository.loadUsersById(
+                twitchRepository
+                    .loadUsersById(
                         ids = emotes
                             .mapNotNull { emote -> emote.ownerId }
                             .toSet()
@@ -48,18 +53,22 @@ class DelegateTwitchEmotesSource(
                                     ?.toString()
                             },
                     )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    null
-                }
-                    .orEmpty()
+                    .fold(
+                        onSuccess = { users -> users },
+                        onFailure = { exception ->
+                            logError<DelegateTwitchEmotesSource>(exception) { "Failed to load Twitch emote owners" }
+                            emptyList()
+                        },
+                    )
                     .associateBy { user -> user.id }
 
-            CachedResult(
-                channelEmotes = emotes.filter { emote -> emote.ownerId == params.channelId }
-                    .groupBy { emoteOwners[params.channelId] },
-                globalEmotes = emotes.filter { emote -> emote.ownerId != params.channelId }
-                    .groupBy { emote -> emoteOwners[emote.ownerId] },
+            Result.success(
+                CachedResult(
+                    channelEmotes = emotes.filter { emote -> emote.ownerId == params.channelId }
+                        .groupBy { emoteOwners[params.channelId] },
+                    globalEmotes = emotes.filter { emote -> emote.ownerId != params.channelId }
+                        .groupBy { emote -> emoteOwners[emote.ownerId] },
+                ),
             )
         }
     }

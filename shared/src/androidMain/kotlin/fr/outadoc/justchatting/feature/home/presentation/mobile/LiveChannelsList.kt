@@ -21,7 +21,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.presentation.FollowedStreamsViewModel
 import fr.outadoc.justchatting.utils.ui.plus
 import kotlinx.collections.immutable.toImmutableList
-import kotlinx.datetime.toInstant
+import kotlinx.datetime.Instant
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -77,7 +77,7 @@ fun LiveChannelsList(
                             userName = item.userName,
                             viewerCount = item.viewerCount,
                             gameName = item.gameName,
-                            startedAt = item.startedAt.toInstant(),
+                            startedAt = Instant.parse(item.startedAt),
                             profileImageURL = item.profileImageURL,
                             tags = item.tags.toImmutableList(),
                             onClick = { onItemClick(item) },

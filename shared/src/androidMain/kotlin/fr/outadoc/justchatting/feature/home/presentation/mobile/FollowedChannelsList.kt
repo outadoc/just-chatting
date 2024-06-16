@@ -20,7 +20,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.utils.ui.plus
-import kotlinx.datetime.toInstant
+import kotlinx.datetime.Instant
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -74,7 +74,7 @@ fun FollowedChannelsList(
                             modifier = Modifier.fillMaxWidth(),
                             displayName = item.userDisplayName,
                             profileImageURL = item.profileImageURL,
-                            followedAt = item.followedAt.toInstant(),
+                            followedAt = Instant.parse(item.followedAt),
                             onClick = { onItemClick(item) },
                         )
                     } else {

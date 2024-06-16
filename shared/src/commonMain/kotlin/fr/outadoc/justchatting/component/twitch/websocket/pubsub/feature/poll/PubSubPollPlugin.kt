@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.poll
 
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
 class PubSubPollPlugin(

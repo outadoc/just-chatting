@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -29,7 +28,6 @@ import fr.outadoc.justchatting.utils.ui.formatTimestamp
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
-import kotlinx.datetime.toInstant
 
 @ThemePreviews
 @Composable
@@ -41,7 +39,7 @@ fun LiveStreamPreview() {
             gameName = "Just Chatting",
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
-            startedAt = "2022-01-01T13:45:04.00Z".toInstant(),
+            startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
             profileImageURL = null,
             tags = persistentListOf(
                 "French",
@@ -66,13 +64,12 @@ fun LiveStreamLongPreview() {
             gameName = "The Dark Pictures Anthology: The Devil in Me",
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
-            startedAt = "2022-01-01T13:45:04.00Z".toInstant(),
+            startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
             profileImageURL = null,
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LiveStreamCard(
     modifier: Modifier = Modifier,

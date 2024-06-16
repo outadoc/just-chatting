@@ -24,7 +24,7 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.formatTimestamp
-import kotlinx.datetime.toInstant
+import kotlinx.datetime.Instant
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -72,7 +72,7 @@ fun StreamInfo(
             )
         }
 
-        val startedAt = stream.startedAt.toInstant().formatTimestamp()
+        val startedAt = Instant.parse(stream.startedAt).formatTimestamp()
         if (startedAt != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(

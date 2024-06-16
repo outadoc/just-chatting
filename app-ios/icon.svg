@@ -1,17 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   id="vector"
-   width="108"
-   height="108"
-   viewBox="0 0 41.327 41.181"
-   version="1.1"
-   sodipodi:docname="icon.svg"
-   inkscape:version="1.2.2 (b0a84865, 2022-12-01)"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:xlink="http://www.w3.org/1999/xlink"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:svg="http://www.w3.org/2000/svg">
+<svg id="vector" width="108" height="108" viewBox="0 0 41.327 41.181" version="1.1" sodipodi:docname="icon.svg"
+    inkscape:version="1.2.2 (b0a84865, 2022-12-01)" xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns="http://www.w3.org/2000/svg">
   <defs
      id="defs6">
     <linearGradient

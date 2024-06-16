@@ -29,7 +29,6 @@ import fr.outadoc.justchatting.utils.ui.formatDate
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
-import kotlinx.datetime.toInstant
 
 @ThemePreviews
 @Composable
@@ -40,7 +39,7 @@ fun UserItemPreview() {
                 .padding(8.dp)
                 .width(300.dp),
             displayName = "Maghla",
-            followedAt = "2022-01-01T13:45:04.00Z".toInstant(),
+            followedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
             profileImageURL = null,
             tags = persistentListOf("French", "ASMR"),
         )

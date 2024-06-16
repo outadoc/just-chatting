@@ -24,134 +24,148 @@ class HelixServer(httpClient: HttpClient) : HelixApi {
         }
     }
 
-    override suspend fun getStreams(ids: List<String>): StreamsResponse {
-        return client.get {
-            url {
-                path("streams")
-                ids.forEach { id ->
-                    parameter("user_id", id)
+    override suspend fun getStreams(ids: List<String>): Result<StreamsResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("streams")
+                    ids.forEach { id ->
+                        parameter("user_id", id)
+                    }
                 }
-            }
-        }.body()
-    }
+            }.body()
+        }
 
     override suspend fun getFollowedStreams(
         userId: String?,
         limit: Int,
         after: String?,
-    ): StreamsResponse {
-        return client.get {
-            url {
-                path("streams/followed")
-                parameter("user_id", userId)
-                parameter("first", limit)
-                after?.let { parameter("after", after) }
-            }
-        }.body()
-    }
-
-    override suspend fun getUsersById(ids: List<String>): UsersResponse {
-        return client.get {
-            url {
-                path("users")
-                ids.forEach { id ->
-                    parameter("id", id)
+    ): Result<StreamsResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("streams/followed")
+                    parameter("user_id", userId)
+                    parameter("first", limit)
+                    after?.let { parameter("after", after) }
                 }
-            }
-        }.body()
-    }
+            }.body()
+        }
 
-    override suspend fun getUsersByLogin(logins: List<String>): UsersResponse {
-        return client.get {
-            url {
-                path("users")
-                logins.forEach { login ->
-                    parameter("login", login)
+    override suspend fun getUsersById(ids: List<String>): Result<UsersResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("users")
+                    ids.forEach { id ->
+                        parameter("id", id)
+                    }
                 }
-            }
-        }.body()
-    }
+            }.body()
+        }
+
+    override suspend fun getUsersByLogin(logins: List<String>): Result<UsersResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("users")
+                    logins.forEach { login ->
+                        parameter("login", login)
+                    }
+                }
+            }.body()
+        }
 
     override suspend fun searchChannels(
         query: String,
         limit: Int,
         after: String?,
-    ): ChannelSearchResponse {
-        return client.get {
-            url {
-                path("search/channels")
-                parameter("query", query)
-                parameter("first", limit)
-                parameter("after", after)
-            }
-        }.body()
-    }
+    ): Result<ChannelSearchResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("search/channels")
+                    parameter("query", query)
+                    parameter("first", limit)
+                    parameter("after", after)
+                }
+            }.body()
+        }
 
     override suspend fun getFollowedChannels(
         userId: String?,
         limit: Int,
         after: String?,
-    ): FollowResponse {
-        return client.get {
-            url {
-                path("channels/followed")
-                parameter("user_id", userId)
-                parameter("first", limit)
-                after?.let { parameter("after", after) }
-            }
-        }.body()
-    }
-
-    override suspend fun getEmotesFromSet(setIds: List<String>): EmoteSetResponse {
-        return client.get {
-            url {
-                path("chat/emotes/set")
-                setIds.forEach { id ->
-                    parameter("emote_set_id", id)
+    ): Result<FollowResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("channels/followed")
+                    parameter("user_id", userId)
+                    parameter("first", limit)
+                    after?.let { parameter("after", after) }
                 }
-            }
-        }.body()
-    }
+            }.body()
+        }
 
-    override suspend fun getCheerEmotes(userId: String?): CheerEmotesResponse {
-        return client.get {
-            url {
-                path("bits/cheermotes")
-                parameter("broadcaster_id", userId)
-            }
-        }.body()
-    }
+    override suspend fun getEmotesFromSet(setIds: List<String>): Result<EmoteSetResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("chat/emotes/set")
+                    setIds.forEach { id ->
+                        parameter("emote_set_id", id)
+                    }
+                }
+            }.body()
+        }
 
-    override suspend fun getGlobalBadges(): TwitchBadgesResponse =
-        client.get { url { path("chat/badges/global") } }.body()
+    override suspend fun getCheerEmotes(userId: String?): Result<CheerEmotesResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("bits/cheermotes")
+                    parameter("broadcaster_id", userId)
+                }
+            }.body()
+        }
 
-    override suspend fun getChannelBadges(channelId: String): TwitchBadgesResponse =
-        client.get {
-            url {
-                path("chat/badges")
-                parameter("broadcaster_id", channelId)
-            }
-        }.body()
+    override suspend fun getGlobalBadges(): Result<TwitchBadgesResponse> =
+        runCatching {
+            client.get { url { path("chat/badges/global") } }.body()
+        }
+
+    override suspend fun getChannelBadges(channelId: String): Result<TwitchBadgesResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("chat/badges")
+                    parameter("broadcaster_id", channelId)
+                }
+            }.body()
+        }
 
     override suspend fun getChannelSchedule(
         channelId: String,
         limit: Int,
         after: String?,
-    ): ChannelScheduleResponse? {
-        val response = client.get {
-            url {
-                path("schedule")
-                parameter("broadcaster_id", channelId)
-                parameter("first", limit)
-                after?.let { parameter("after", after) }
+    ): Result<ChannelScheduleResponse> {
+        return runCatching {
+            val response = client.get {
+                url {
+                    path("schedule")
+                    parameter("broadcaster_id", channelId)
+                    parameter("first", limit)
+                    after?.let { parameter("after", after) }
+                }
+            }
+
+            if (response.status.value == 404) {
+                // Channel has no schedule
+                error("Channel has no schedule")
+            } else {
+                response.body()
             }
         }
-
-        if (response.status.value == 404) {
-            // Channel has no schedule
-            return null
-        }
-
-        return response.body()
     }
 }

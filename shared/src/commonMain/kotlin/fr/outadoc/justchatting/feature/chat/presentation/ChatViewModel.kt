@@ -536,22 +536,26 @@ class ChatViewModel(
         return withContext(DispatchersProvider.io) {
             val globalBadges: Deferred<PersistentList<TwitchBadge>?> =
                 async {
-                    try {
-                        emotesRepository.loadGlobalBadges().toPersistentList()
-                    } catch (e: Exception) {
-                        logError<ChatViewModel>(e) { "Failed to load global badges" }
-                        null
-                    }
+                    emotesRepository.loadGlobalBadges()
+                        .fold(
+                            onSuccess = { badges -> badges.toPersistentList() },
+                            onFailure = { error ->
+                                logError<ChatViewModel>(error) { "Failed to load global badges" }
+                                null
+                            }
+                        )
                 }
 
             val channelBadges: Deferred<PersistentList<TwitchBadge>?> =
                 async {
-                    try {
-                        emotesRepository.loadChannelBadges(channelId).toPersistentList()
-                    } catch (e: Exception) {
-                        logError<ChatViewModel>(e) { "Failed to load badges for channel $channelId" }
-                        null
-                    }
+                    emotesRepository.loadChannelBadges(channelId)
+                        .fold(
+                            onSuccess = { badges -> badges.toPersistentList() },
+                            onFailure = { error ->
+                                logError<ChatViewModel>(error) { "Failed to load badges for channel $channelId" }
+                                null
+                            }
+                        )
                 }
 
             val cheerEmotes: PersistentMap<String, Emote>? =

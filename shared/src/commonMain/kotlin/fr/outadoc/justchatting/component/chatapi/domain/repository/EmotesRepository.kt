@@ -25,11 +25,10 @@ class EmotesRepository(
     private val recentEmotes: RecentEmotesRepository,
     private val preferencesRepository: PreferenceRepository,
 ) {
-    suspend fun loadGlobalBadges(): List<TwitchBadge> =
+    suspend fun loadGlobalBadges(): Result<List<TwitchBadge>> =
         withContext(DispatchersProvider.io) {
-            helixApi.getGlobalBadges()
-                .badgeSets
-                .flatMap { set ->
+            helixApi.getGlobalBadges().map { result ->
+                result.badgeSets.flatMap { set ->
                     set.versions.map { version ->
                         TwitchBadge(
                             setId = set.setId,
@@ -44,13 +43,13 @@ class EmotesRepository(
                         )
                     }
                 }
+            }
         }
 
-    suspend fun loadChannelBadges(channelId: String): List<TwitchBadge> =
+    suspend fun loadChannelBadges(channelId: String): Result<List<TwitchBadge>> =
         withContext(DispatchersProvider.io) {
-            helixApi.getChannelBadges(channelId)
-                .badgeSets
-                .flatMap { set ->
+            helixApi.getChannelBadges(channelId).map { result ->
+                result.badgeSets.flatMap { set ->
                     set.versions.map { version ->
                         TwitchBadge(
                             setId = set.setId,
@@ -65,57 +64,69 @@ class EmotesRepository(
                         )
                     }
                 }
+            }
         }
 
-    suspend fun loadGlobalStvEmotes(): List<Emote> =
+    suspend fun loadGlobalStvEmotes(): Result<List<Emote>> =
         withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableStvEmotes) {
-                return@withContext emptyList()
+                return@withContext Result.success(emptyList())
             }
 
             stvEmotesApi.getGlobalStvEmotes()
-                .emotes
-                .map { emote -> emote.map() }
+                .map { response ->
+                    response.emotes
+                        .map { emote -> emote.map() }
+                }
         }
 
-    suspend fun loadGlobalBttvEmotes(): List<Emote> =
+    suspend fun loadGlobalBttvEmotes(): Result<List<Emote>> =
         withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableBttvEmotes) {
-                return@withContext emptyList()
+                return@withContext Result.success(emptyList())
             }
 
             bttvEmotesApi.getGlobalBttvEmotes()
-                .map { emote -> emote.map() }
+                .map { response ->
+                    response.map { emote -> emote.map() }
+                }
         }
 
-    suspend fun loadBttvEmotes(channelId: String): List<Emote> =
+    suspend fun loadBttvEmotes(channelId: String): Result<List<Emote>> =
         withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableBttvEmotes) {
-                return@withContext emptyList()
+                return@withContext Result.success(emptyList())
             }
 
-            bttvEmotesApi.getBttvEmotes(channelId).allEmotes
-                .map { emote -> emote.map() }
+            bttvEmotesApi.getBttvEmotes(channelId)
+                .map { response ->
+                    response.allEmotes
+                        .map { emote -> emote.map() }
+                }
         }
 
-    suspend fun loadBttvGlobalFfzEmotes(): List<Emote> =
+    suspend fun loadBttvGlobalFfzEmotes(): Result<List<Emote>> =
         withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableFfzEmotes) {
-                return@withContext emptyList()
+                return@withContext Result.success(emptyList())
             }
 
             bttvEmotesApi.getBttvGlobalFfzEmotes()
-                .map { emote -> emote.map() }
+                .map { response ->
+                    response.map { emote -> emote.map() }
+                }
         }
 
-    suspend fun loadBttvFfzEmotes(channelId: String): List<Emote> =
+    suspend fun loadBttvFfzEmotes(channelId: String): Result<List<Emote>> =
         withContext(DispatchersProvider.io) {
             if (!preferencesRepository.currentPreferences.first().enableFfzEmotes) {
-                return@withContext emptyList()
+                return@withContext Result.success(emptyList())
             }
 
             bttvEmotesApi.getBttvFfzEmotes(channelId)
-                .map { emote -> emote.map() }
+                .map { response ->
+                    response.map { emote -> emote.map() }
+                }
         }
 
     fun loadRecentEmotes(): Flow<List<RecentEmote>> =

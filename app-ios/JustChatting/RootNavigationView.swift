@@ -111,6 +111,8 @@ private extension RootNavigationView {
         }
 
         func activate() async {
+            wrapped.onStart()
+
             await withTaskGroup(of: Void.self) { taskGroup in
                 taskGroup.addTask { @MainActor in
                     for await state in self.wrapped.state {

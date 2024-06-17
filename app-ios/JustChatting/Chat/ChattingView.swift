@@ -18,7 +18,7 @@ struct ChattingView: View {
     var channelLogin: String
     var body: some View {
         let displayName = switch onEnum(of: viewModel.state) {
-        case .initial:
+        case .initial, .failed:
             channelLogin
         case let .chatting(state):
             state.user.displayName
@@ -72,7 +72,7 @@ private struct InnerChattingView: View {
     var body: some View {
         VStack {
             switch onEnum(of: state) {
-            case .initial:
+            case .initial, .failed:
                 ProgressView()
             case let .chatting(state):
                 ChatListView(

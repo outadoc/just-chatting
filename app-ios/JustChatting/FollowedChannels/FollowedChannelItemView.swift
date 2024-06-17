@@ -21,7 +21,7 @@ struct FollowedChannelItemView: View {
                 Text(channel.userDisplayName)
 
                 if let followedAt = channel.followedAt.parseDate().formatDate() {
-                    Text(MR.strings.shared.followed_at.format(args: [followedAt]).localized())
+                    Text(Res.string.followed_at.format(args: [followedAt]).localized())
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }

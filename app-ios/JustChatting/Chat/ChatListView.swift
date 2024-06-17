@@ -106,9 +106,9 @@ struct ChatListView: View {
 
                 HStack(spacing: 16) {
                     TextField(
-                        MR.strings.shared.chat_input_hint.desc().localized(),
+                        Res.string.chat_input_hint.desc().localized(),
                         text: inputMessageBinding,
-                        prompt: Text(MR.strings.shared.chat_input_hint.desc().localized())
+                        prompt: Text(Res.string.chat_input_hint.desc().localized())
                     )
                     .keyboardType(.alphabet)
                     .submitLabel(.send)

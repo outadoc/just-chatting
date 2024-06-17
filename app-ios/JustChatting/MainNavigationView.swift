@@ -11,30 +11,30 @@ import SwiftUI
 import Swinject
 
 struct MainNavigationView: View {
-    @State private var selectedTab = MR.strings.shared.live
+    @State private var selectedTab = Res.string.live
     var body: some View {
         NavigationStack {
             TabView(selection: $selectedTab) {
                 LiveChannelsView()
                     .tabItem {
                         Image(systemName: "tv")
-                        Text(MR.strings.shared.live.desc().localized())
+                        Text(Res.string.live.desc().localized())
                     }
-                    .tag(MR.strings.shared.live)
+                    .tag(Res.string.live)
 
                 FollowedChannelsView()
                     .tabItem {
                         Image(systemName: "heart.fill")
-                        Text(MR.strings.shared.channels.desc().localized())
+                        Text(Res.string.channels.desc().localized())
                     }
-                    .tag(MR.strings.shared.channels)
+                    .tag(Res.string.channels)
 
                 SettingsView()
                     .tabItem {
                         Image(systemName: "gear")
-                        Text(MR.strings.shared.settings.desc().localized())
+                        Text(Res.string.settings.desc().localized())
                     }
-                    .tag(MR.strings.shared.settings)
+                    .tag(Res.string.settings)
             }
             .navigationDestination(for: Screen.self) { screen in
                 switch screen {

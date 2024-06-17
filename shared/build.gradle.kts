@@ -114,6 +114,7 @@ kotlin {
 }
 
 compose.resources {
+    publicResClass = true
     packageOfResClass = "fr.outadoc.justchatting.shared"
 }
 

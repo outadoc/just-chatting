@@ -78,13 +78,13 @@ private struct LoggedOutView: View {
 
     var body: some View {
         VStack(spacing: 16) {
-            Text(MR.strings.shared.onboarding_title.format(args: [MR.strings.shared.app_name.desc()]).localized())
+            Text(Res.string.onboarding_title.format(args: [Res.string.app_name.desc()]).localized())
                 .font(.title)
 
-            Text(MR.strings.shared.onboarding_message.desc().localized())
+            Text(Res.string.onboarding_message.desc().localized())
                 .font(.subheadline)
 
-            Button(MR.strings.shared.onboarding_login_action.desc().localized()) {
+            Button(Res.string.onboarding_login_action.desc().localized()) {
                 onLoginClick()
             }
         }

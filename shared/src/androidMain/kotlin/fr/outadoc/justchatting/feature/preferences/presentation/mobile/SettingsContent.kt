@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import fr.outadoc.justchatting.feature.home.presentation.mobile.Tab
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -17,6 +18,8 @@ import org.koin.compose.koinInject
 @Composable
 fun SettingsContent(
     modifier: Modifier = Modifier,
+    selectedTab: Tab,
+    onSelectedTabChange: (Tab) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,

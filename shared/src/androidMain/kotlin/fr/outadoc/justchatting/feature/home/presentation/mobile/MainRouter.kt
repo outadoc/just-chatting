@@ -41,91 +41,41 @@ fun MainRouter(
         },
     )
 
-    MainNavigation(
-        modifier = modifier,
-        sizeClass = sizeClass,
-        selectedTab = selectedTab,
-        onSelectedTabChange = { selectedTab = it },
-        topBar = {
-            Crossfade(
-                targetState = selectedTab,
-                label = "Top app bar cross fade",
-            ) { tab ->
-                when (tab) {
-                    Tab.Live,
-                    Tab.Followed,
-                    -> {
-                        SearchBar(
-                            onChannelClick = onChannelClick,
-                            sizeClass = sizeClass,
-                        )
-                    }
-
-                    Tab.Settings -> {
-                        TopAppBar(
-                            title = { Text(stringResource(fr.outadoc.justchatting.shared.MR.strings.settings)) },
-                        )
-                    }
-                }
+    Crossfade(
+        targetState = selectedTab,
+        label = "Page contents",
+    ) { tab ->
+        when (tab) {
+            Tab.Live -> {
+                LiveChannelsList(
+                    sizeClass = sizeClass,
+                    selectedTab = selectedTab,
+                    onSelectedTabChange = { selectedTab = it },
+                    onItemClick = { stream ->
+                        onChannelClick(stream.userLogin)
+                    },
+                )
             }
-        },
-        content = { insets ->
-            Crossfade(
-                modifier = Modifier.padding(insets),
-                targetState = selectedTab,
-                label = "Page contents",
-            ) { tab ->
-                when (tab) {
-                    Tab.Live -> {
-                        LiveChannelsList(
-                            onItemClick = { stream ->
-                                onChannelClick(stream.userLogin)
-                            },
-                        )
-                    }
 
-                    Tab.Followed -> {
-                        FollowedChannelsList(
-                            onItemClick = { stream ->
-                                onChannelClick(stream.userLogin)
-                            },
-                        )
-                    }
-
-                    Tab.Settings -> {
-                        SettingsContent(
-                            onOpenNotificationPreferences = onOpenNotificationPreferences,
-                            onOpenBubblePreferences = onOpenBubblePreferences,
-                            onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
-                        )
-                    }
-                }
+            Tab.Followed -> {
+                FollowedChannelsList(
+                    selectedTab = selectedTab,
+                    onSelectedTabChange = { selectedTab = it },
+                    onItemClick = { stream ->
+                        onChannelClick(stream.userLogin)
+                    },
+                )
             }
-        },
-    )
-}
 
-@Composable
-private fun SearchBar(
-    modifier: Modifier = Modifier,
-    onChannelClick: (String) -> Unit,
-    sizeClass: WindowSizeClass,
-) {
-    // Talkback focus order sorts based on x and y position before considering z-index. The
-    // extra Box with semantics and fillMaxWidth is a workaround to get the search bar to focus
-    // before the content.
-    Box(
-        modifier
-            .semantics { isTraversalGroup = true }
-            .zIndex(1f)
-            .fillMaxWidth(),
-    ) {
-        SearchScreenBar(
-            modifier = Modifier
-                .statusBarsPadding()
-                .fillMaxWidth(),
-            onChannelClick = onChannelClick,
-            sizeClass = sizeClass,
-        )
+            Tab.Settings -> {
+                SettingsContent(
+                    selectedTab = selectedTab,
+                    onSelectedTabChange = { selectedTab = it },
+                    onOpenNotificationPreferences = onOpenNotificationPreferences,
+                    onOpenBubblePreferences = onOpenBubblePreferences,
+                    onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
+                )
+            }
+        }
     }
 }

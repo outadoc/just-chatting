@@ -10,6 +10,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,7 +29,10 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun LiveChannelsList(
     modifier: Modifier = Modifier,
-    insets: PaddingValues = PaddingValues(),
+    sizeClass: WindowSizeClass,
+    selectedTab: Tab,
+    onSelectedTabChange: (Tab) -> Unit,
+    onChannelClick: (login: String) -> Unit,
     onItemClick: (Stream) -> Unit,
 ) {
     val viewModel: FollowedStreamsViewModel = koinViewModel()
@@ -40,61 +44,92 @@ fun LiveChannelsList(
         onRefresh = { items.refresh() },
     )
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .pullRefresh(pullRefreshState),
-        contentAlignment = Alignment.TopCenter,
+    MainNavigation(
+        modifier = modifier,
+        sizeClass = sizeClass,
+        selectedTab = selectedTab,
+        onSelectedTabChange = onSelectedTabChange,
+        topBar = {
+            SearchBar(
+                onChannelClick = onChannelClick,
+                sizeClass = sizeClass,
+            )
+        },
+        content = { insets ->
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .pullRefresh(pullRefreshState),
+                contentAlignment = Alignment.TopCenter,
+            ) {
+                InnerLiveChannelsList(
+                    modifier = Modifier.fillMaxSize(),
+                    insets = insets,
+                    items = items,
+                    isRefreshing = isRefreshing,
+                    onItemClick = onItemClick,
+                )
+
+                PullRefreshIndicator(
+                    refreshing = isRefreshing,
+                    state = pullRefreshState,
+                    scale = true,
+                )
+            }
+        }
+    )
+}
+
+@Composable
+private fun InnerLiveChannelsList(
+    modifier: Modifier = Modifier,
+    insets: PaddingValues = PaddingValues(),
+    items: LazyPagingItems<Stream>,
+    isRefreshing: Boolean,
+    onItemClick: (Stream) -> Unit,
+) {
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = insets + PaddingValues(
+            start = 16.dp,
+            end = 16.dp,
+            bottom = 16.dp,
+        ),
     ) {
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = insets + PaddingValues(
-                start = 16.dp,
-                end = 16.dp,
-                bottom = 16.dp,
-            ),
-        ) {
-            if (items.itemCount == 0) {
-                if (!isRefreshing) {
-                    item(key = "_noContent") {
-                        NoContent(modifier = Modifier.fillParentMaxSize())
-                    }
-                } else {
-                    items(50) {
-                        LiveStreamCardPlaceholder(
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
+        if (items.itemCount == 0) {
+            if (!isRefreshing) {
+                item(key = "_noContent") {
+                    NoContent(modifier = Modifier.fillParentMaxSize())
                 }
             } else {
-                items(items.itemCount) { index ->
-                    val item: Stream? = items[index]
-                    if (item != null) {
-                        LiveStreamCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            title = item.title,
-                            userName = item.userName,
-                            viewerCount = item.viewerCount,
-                            gameName = item.gameName,
-                            startedAt = Instant.parse(item.startedAt),
-                            profileImageURL = item.profileImageURL,
-                            tags = item.tags.toImmutableList(),
-                            onClick = { onItemClick(item) },
-                        )
-                    } else {
-                        LiveStreamCardPlaceholder(
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
+                items(50) {
+                    LiveStreamCardPlaceholder(
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+            }
+        } else {
+            items(items.itemCount) { index ->
+                val item: Stream? = items[index]
+                if (item != null) {
+                    LiveStreamCard(
+                        modifier = Modifier.fillMaxWidth(),
+                        title = item.title,
+                        userName = item.userName,
+                        viewerCount = item.viewerCount,
+                        gameName = item.gameName,
+                        startedAt = Instant.parse(item.startedAt),
+                        profileImageURL = item.profileImageURL,
+                        tags = item.tags.toImmutableList(),
+                        onClick = { onItemClick(item) },
+                    )
+                } else {
+                    LiveStreamCardPlaceholder(
+                        modifier = Modifier.fillMaxWidth(),
+                    )
                 }
             }
         }
-
-        PullRefreshIndicator(
-            refreshing = isRefreshing,
-            state = pullRefreshState,
-            scale = true,
-        )
     }
 }

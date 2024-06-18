@@ -2,6 +2,10 @@ package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
 import android.content.Intent
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -10,14 +14,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
+import dev.icerock.moko.resources.compose.stringResource
+import fr.outadoc.justchatting.feature.home.presentation.mobile.MainNavigation
 import fr.outadoc.justchatting.feature.home.presentation.mobile.Tab
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
+import fr.outadoc.justchatting.shared.MR
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsContent(
     modifier: Modifier = Modifier,
+    sizeClass: WindowSizeClass,
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
@@ -47,19 +56,32 @@ fun SettingsContent(
         }
     }
 
-    SettingsList(
+    MainNavigation(
         modifier = modifier,
-        appPreferences = appPreferences,
-        onAppPreferencesChange = { updated ->
-            viewModel.updatePreferences(updated)
+        sizeClass = sizeClass,
+        selectedTab = selectedTab,
+        onSelectedTabChange = onSelectedTabChange,
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(MR.strings.settings)) },
+            )
         },
-        onOpenNotificationPreferences = onOpenNotificationPreferences,
-        onOpenBubblePreferences = onOpenBubblePreferences,
-        onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
-        onLogoutClick = viewModel::logout,
-        onShareLogsClick = viewModel::onShareLogsClick,
-        readDependencies = koinInject(),
-        itemInsets = PaddingValues(horizontal = 16.dp),
-        versionName = context.applicationVersionName.orEmpty(),
+        content = { insets ->
+            SettingsList(
+                modifier = modifier,
+                appPreferences = appPreferences,
+                onAppPreferencesChange = { updated ->
+                    viewModel.updatePreferences(updated)
+                },
+                onOpenNotificationPreferences = onOpenNotificationPreferences,
+                onOpenBubblePreferences = onOpenBubblePreferences,
+                onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
+                onLogoutClick = viewModel::logout,
+                onShareLogsClick = viewModel::onShareLogsClick,
+                readDependencies = koinInject(),
+                insets = insets,
+                versionName = context.applicationVersionName.orEmpty(),
+            )
+        }
     )
 }

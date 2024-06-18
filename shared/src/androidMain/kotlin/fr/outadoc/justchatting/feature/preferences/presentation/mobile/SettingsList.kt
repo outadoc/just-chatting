@@ -71,7 +71,7 @@ fun SettingsList(
     onOpenAccessibilityPreferences: () -> Unit,
     onLogoutClick: () -> Unit,
     onShareLogsClick: () -> Unit,
-    itemInsets: PaddingValues = PaddingValues(),
+    itemInsets: PaddingValues = PaddingValues(horizontal = 16.dp),
     insets: PaddingValues = PaddingValues(),
     readDependencies: ReadExternalDependenciesList,
     versionName: String,

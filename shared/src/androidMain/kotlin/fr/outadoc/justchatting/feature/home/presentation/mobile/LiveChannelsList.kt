@@ -32,8 +32,7 @@ fun LiveChannelsList(
     sizeClass: WindowSizeClass,
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
-    onChannelClick: (login: String) -> Unit,
-    onItemClick: (Stream) -> Unit,
+    onItemClick: (login: String) -> Unit,
 ) {
     val viewModel: FollowedStreamsViewModel = koinViewModel()
     val items: LazyPagingItems<Stream> = viewModel.pagingData.collectAsLazyPagingItems()
@@ -51,7 +50,7 @@ fun LiveChannelsList(
         onSelectedTabChange = onSelectedTabChange,
         topBar = {
             SearchBar(
-                onChannelClick = onChannelClick,
+                onChannelClick = onItemClick,
                 sizeClass = sizeClass,
             )
         },
@@ -67,7 +66,9 @@ fun LiveChannelsList(
                     insets = insets,
                     items = items,
                     isRefreshing = isRefreshing,
-                    onItemClick = onItemClick,
+                    onItemClick = { stream ->
+                        onItemClick(stream.userLogin)
+                    },
                 )
 
                 PullRefreshIndicator(

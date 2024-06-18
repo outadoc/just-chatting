@@ -36,7 +36,7 @@ fun FollowedChannelsList(
     sizeClass: WindowSizeClass,
     selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
-    onItemClick: (ChannelFollow) -> Unit,
+    onItemClick: (login: String) -> Unit,
 ) {
     val viewModel: FollowedChannelsViewModel = koinViewModel()
     val items: LazyPagingItems<ChannelFollow> = viewModel.pagingData.collectAsLazyPagingItems()
@@ -54,7 +54,7 @@ fun FollowedChannelsList(
         onSelectedTabChange = onSelectedTabChange,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(MR.strings.settings)) },
+                title = { Text(stringResource(MR.strings.channels)) },
             )
         },
         content = { insets ->
@@ -69,7 +69,9 @@ fun FollowedChannelsList(
                     insets = insets,
                     items = items,
                     isRefreshing = isRefreshing,
-                    onItemClick = onItemClick,
+                    onItemClick = { channel ->
+                        onItemClick(channel.userLogin)
+                    },
                 )
 
                 PullRefreshIndicator(

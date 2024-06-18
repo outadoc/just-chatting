@@ -13,10 +13,13 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -47,19 +50,22 @@ fun FollowedChannelsList(
         onRefresh = { items.refresh() },
     )
 
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
     MainNavigation(
-        modifier = modifier,
+        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         sizeClass = sizeClass,
         selectedTab = selectedTab,
         onSelectedTabChange = onSelectedTabChange,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(MR.strings.channels)) },
+                scrollBehavior = scrollBehavior,
             )
         },
         content = { insets ->
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .pullRefresh(pullRefreshState),
                 contentAlignment = Alignment.TopCenter,

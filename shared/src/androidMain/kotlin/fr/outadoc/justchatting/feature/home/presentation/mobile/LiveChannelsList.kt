@@ -56,7 +56,7 @@ fun LiveChannelsList(
         },
         content = { insets ->
             Box(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .pullRefresh(pullRefreshState),
                 contentAlignment = Alignment.TopCenter,

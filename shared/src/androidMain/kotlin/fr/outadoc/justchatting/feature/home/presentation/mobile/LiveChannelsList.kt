@@ -11,6 +11,8 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -50,10 +52,14 @@ fun LiveChannelsList(
         selectedTab = selectedTab,
         onSelectedTabChange = onSelectedTabChange,
         topBar = {
-            SearchBar(
-                onChannelClick = onItemClick,
-                sizeClass = sizeClass,
-            )
+            Surface(
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+            ) {
+                SearchBar(
+                    onChannelClick = onItemClick,
+                    sizeClass = sizeClass,
+                )
+            }
         },
         content = { insets ->
             Box(

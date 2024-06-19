@@ -17,19 +17,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.presentation.mobile.MainNavigation
-import fr.outadoc.justchatting.feature.home.presentation.mobile.Tab
+import fr.outadoc.justchatting.feature.home.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import fr.outadoc.justchatting.shared.MR
 import org.koin.androidx.compose.koinViewModel
-import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsContent(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
-    selectedTab: Tab,
-    onSelectedTabChange: (Tab) -> Unit,
+    onNavigate: (Screen) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
@@ -62,8 +60,8 @@ fun SettingsContent(
     MainNavigation(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         sizeClass = sizeClass,
-        selectedTab = selectedTab,
-        onSelectedTabChange = onSelectedTabChange,
+        selectedScreen = Screen.Settings,
+        onSelectedTabChange = onNavigate,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(MR.strings.settings)) },
@@ -81,7 +79,7 @@ fun SettingsContent(
                 onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
                 onLogoutClick = viewModel::logout,
                 onShareLogsClick = viewModel::onShareLogsClick,
-                readDependencies = koinInject(),
+                onOpenDependencyCredits = { onNavigate(Screen.DependencyCredits) },
                 insets = insets,
                 versionName = context.applicationVersionName.orEmpty(),
             )

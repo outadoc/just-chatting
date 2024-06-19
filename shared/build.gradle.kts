@@ -81,6 +81,7 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.uiTooling)
             implementation(libs.compose.material.windowSizeClass)
+            implementation(libs.compose.navigation)
 
             implementation(libs.accompanist.permissions)
             implementation(libs.accompanist.placeholder)

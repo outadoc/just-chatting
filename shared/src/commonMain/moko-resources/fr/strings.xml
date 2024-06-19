@@ -293,6 +293,7 @@
     <string name="settings_notifications_header">Notifications</string>
     <string name="settings_notifications_openNotificationsSettings">Préférences de notification</string>
     <string name="settings_notifications_openBubbleSettings">Préférences des bulles de conversation</string>
+    <string name="settings_oss_title">Licences de logiciels libres</string>
     <string name="settings_thirdparty_emotes_header">Émotes tierces</string>
     <string name="settings_thirdparty_recent_header">Messages récents</string>
     <string name="settings_thirdparty_recent_title">Charger les messages récents</string>

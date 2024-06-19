@@ -36,8 +36,8 @@ import fr.outadoc.justchatting.shared.MR
 fun MainNavigation(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
-    selectedTab: Tab,
-    onSelectedTabChange: (Tab) -> Unit,
+    selectedScreen: Screen,
+    onSelectedTabChange: (Screen) -> Unit,
     topBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -45,7 +45,7 @@ fun MainNavigation(
         WindowWidthSizeClass.Compact -> {
             CompactNavigation(
                 modifier = modifier,
-                selectedTab = selectedTab,
+                selectedScreen = selectedScreen,
                 onSelectedTabChange = onSelectedTabChange,
                 topBar = topBar,
                 content = content,
@@ -55,7 +55,7 @@ fun MainNavigation(
         WindowWidthSizeClass.Medium -> {
             MediumNavigation(
                 modifier = modifier,
-                selectedTab = selectedTab,
+                selectedScreen = selectedScreen,
                 onSelectedTabChange = onSelectedTabChange,
                 topBar = topBar,
                 content = content,
@@ -65,7 +65,7 @@ fun MainNavigation(
         WindowWidthSizeClass.Expanded -> {
             ExpandedNavigation(
                 modifier = modifier,
-                selectedTab = selectedTab,
+                selectedScreen = selectedScreen,
                 onSelectedTabChange = onSelectedTabChange,
                 topBar = topBar,
                 content = content,
@@ -77,8 +77,8 @@ fun MainNavigation(
 @Composable
 fun CompactNavigation(
     modifier: Modifier = Modifier,
-    selectedTab: Tab,
-    onSelectedTabChange: (Tab) -> Unit,
+    selectedScreen: Screen,
+    onSelectedTabChange: (Screen) -> Unit,
     topBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -88,7 +88,7 @@ fun CompactNavigation(
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
-                    selected = selectedTab == Tab.Live,
+                    selected = selectedScreen == Screen.Live,
                     label = { Text(stringResource(MR.strings.live)) },
                     icon = {
                         Icon(
@@ -96,11 +96,11 @@ fun CompactNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Live) },
+                    onClick = { onSelectedTabChange(Screen.Live) },
                 )
 
                 NavigationBarItem(
-                    selected = selectedTab == Tab.Followed,
+                    selected = selectedScreen == Screen.Followed,
                     label = { Text(stringResource(MR.strings.channels)) },
                     icon = {
                         Icon(
@@ -108,11 +108,11 @@ fun CompactNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Followed) },
+                    onClick = { onSelectedTabChange(Screen.Followed) },
                 )
 
                 NavigationBarItem(
-                    selected = selectedTab == Tab.Settings,
+                    selected = selectedScreen == Screen.Settings,
                     label = { Text(stringResource(MR.strings.settings)) },
                     icon = {
                         Icon(
@@ -120,7 +120,7 @@ fun CompactNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Settings) },
+                    onClick = { onSelectedTabChange(Screen.Settings) },
                 )
             }
         },
@@ -131,8 +131,8 @@ fun CompactNavigation(
 @Composable
 fun MediumNavigation(
     modifier: Modifier = Modifier,
-    selectedTab: Tab,
-    onSelectedTabChange: (Tab) -> Unit,
+    selectedScreen: Screen,
+    onSelectedTabChange: (Screen) -> Unit,
     topBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -146,9 +146,9 @@ fun MediumNavigation(
                 ),
             ) {
                 NavigationRailItem(
-                    selected = selectedTab == Tab.Live,
+                    selected = selectedScreen == Screen.Live,
                     label = {
-                        AnimatedVisibility(visible = selectedTab == Tab.Live) {
+                        AnimatedVisibility(visible = selectedScreen == Screen.Live) {
                             Text(stringResource(MR.strings.live))
                         }
                     },
@@ -158,13 +158,13 @@ fun MediumNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Live) },
+                    onClick = { onSelectedTabChange(Screen.Live) },
                 )
 
                 NavigationRailItem(
-                    selected = selectedTab == Tab.Followed,
+                    selected = selectedScreen == Screen.Followed,
                     label = {
-                        AnimatedVisibility(visible = selectedTab == Tab.Followed) {
+                        AnimatedVisibility(visible = selectedScreen == Screen.Followed) {
                             Text(stringResource(MR.strings.channels))
                         }
                     },
@@ -174,13 +174,13 @@ fun MediumNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Followed) },
+                    onClick = { onSelectedTabChange(Screen.Followed) },
                 )
 
                 NavigationRailItem(
-                    selected = selectedTab == Tab.Settings,
+                    selected = selectedScreen == Screen.Settings,
                     label = {
-                        AnimatedVisibility(visible = selectedTab == Tab.Settings) {
+                        AnimatedVisibility(visible = selectedScreen == Screen.Settings) {
                             Text(stringResource(MR.strings.settings))
                         }
                     },
@@ -190,7 +190,7 @@ fun MediumNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Settings) },
+                    onClick = { onSelectedTabChange(Screen.Settings) },
                 )
             }
         }
@@ -206,8 +206,8 @@ fun MediumNavigation(
 @Composable
 fun ExpandedNavigation(
     modifier: Modifier = Modifier,
-    selectedTab: Tab,
-    onSelectedTabChange: (Tab) -> Unit,
+    selectedScreen: Screen,
+    onSelectedTabChange: (Screen) -> Unit,
     topBar: @Composable () -> Unit = {},
     content: @Composable (PaddingValues) -> Unit,
 ) {
@@ -225,7 +225,7 @@ fun ExpandedNavigation(
             ) {
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
-                    selected = selectedTab == Tab.Live,
+                    selected = selectedScreen == Screen.Live,
                     label = { Text(stringResource(MR.strings.live)) },
                     icon = {
                         Icon(
@@ -233,12 +233,12 @@ fun ExpandedNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Live) },
+                    onClick = { onSelectedTabChange(Screen.Live) },
                 )
 
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
-                    selected = selectedTab == Tab.Followed,
+                    selected = selectedScreen == Screen.Followed,
                     label = { Text(stringResource(MR.strings.channels)) },
                     icon = {
                         Icon(
@@ -246,12 +246,12 @@ fun ExpandedNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Followed) },
+                    onClick = { onSelectedTabChange(Screen.Followed) },
                 )
 
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
-                    selected = selectedTab == Tab.Settings,
+                    selected = selectedScreen == Screen.Settings,
                     label = { Text(stringResource(MR.strings.settings)) },
                     icon = {
                         Icon(
@@ -259,7 +259,7 @@ fun ExpandedNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Tab.Settings) },
+                    onClick = { onSelectedTabChange(Screen.Settings) },
                 )
             }
         },

@@ -85,7 +85,7 @@ fun LiveChannelsList(
                     scale = true,
                 )
             }
-        }
+        },
     )
 }
 

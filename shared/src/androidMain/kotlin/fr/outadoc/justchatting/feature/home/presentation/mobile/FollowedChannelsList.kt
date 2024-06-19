@@ -88,7 +88,7 @@ fun FollowedChannelsList(
                     scale = true,
                 )
             }
-        }
+        },
     )
 }
 

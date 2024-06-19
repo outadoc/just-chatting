@@ -85,6 +85,6 @@ fun SettingsContent(
                 insets = insets,
                 versionName = context.applicationVersionName.orEmpty(),
             )
-        }
+        },
     )
 }

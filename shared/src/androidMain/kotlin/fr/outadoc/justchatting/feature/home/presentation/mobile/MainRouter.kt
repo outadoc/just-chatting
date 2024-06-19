@@ -23,7 +23,7 @@ fun MainRouter(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = DefaultScreen
+        startDestination = DefaultScreen,
     ) {
         composable<Screen.Live> {
             LiveChannelsList(
@@ -53,7 +53,7 @@ fun MainRouter(
 
         composable<Screen.DependencyCredits> {
             DependencyCreditsScreen(
-                onNavigateUp = { navController.popBackStack() }
+                onNavigateUp = { navController.popBackStack() },
             )
         }
     }

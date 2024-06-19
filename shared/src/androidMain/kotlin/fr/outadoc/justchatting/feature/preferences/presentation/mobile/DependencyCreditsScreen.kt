@@ -50,7 +50,7 @@ fun DependencyCreditsScreen(
                             contentDescription = stringResource(MR.strings.all_goBack),
                         )
                     }
-                }
+                },
             )
         },
     ) { insets ->

@@ -6,6 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.DependencyCreditsScreen
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
 
 @Composable
@@ -22,31 +23,37 @@ fun MainRouter(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = DefaultTab
+        startDestination = DefaultScreen
     ) {
-        composable<Tab.Live> {
+        composable<Screen.Live> {
             LiveChannelsList(
                 sizeClass = sizeClass,
-                onSelectedTabChange = { navController.navigate(it) },
+                onNavigate = { navController.navigate(it) },
                 onItemClick = onChannelClick,
             )
         }
 
-        composable<Tab.Followed> {
+        composable<Screen.Followed> {
             FollowedChannelsList(
                 sizeClass = sizeClass,
-                onSelectedTabChange = { navController.navigate(it) },
+                onNavigate = { navController.navigate(it) },
                 onItemClick = onChannelClick,
             )
         }
 
-        composable<Tab.Settings> {
+        composable<Screen.Settings> {
             SettingsContent(
                 sizeClass = sizeClass,
-                onSelectedTabChange = { navController.navigate(it) },
+                onNavigate = { navController.navigate(it) },
                 onOpenNotificationPreferences = onOpenNotificationPreferences,
                 onOpenBubblePreferences = onOpenBubblePreferences,
                 onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
+            )
+        }
+
+        composable<Screen.DependencyCredits> {
+            DependencyCreditsScreen(
+                onNavigateUp = { navController.popBackStack() }
             )
         }
     }

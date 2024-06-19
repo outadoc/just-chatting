@@ -33,6 +33,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import fr.outadoc.justchatting.component.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.home.presentation.mobile.Screen
 import fr.outadoc.justchatting.feature.preferences.presentation.Dependency
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.shared.MR
@@ -52,9 +53,7 @@ fun SettingsListPreview() {
             onOpenAccessibilityPreferences = {},
             onLogoutClick = {},
             onShareLogsClick = {},
-            readDependencies = object : ReadExternalDependenciesList {
-                override suspend fun invoke(): List<Dependency> = emptyList()
-            },
+            onOpenDependencyCredits = {},
             versionName = "1.2.3",
         )
     }
@@ -71,19 +70,14 @@ fun SettingsList(
     onOpenAccessibilityPreferences: () -> Unit,
     onLogoutClick: () -> Unit,
     onShareLogsClick: () -> Unit,
+    onOpenDependencyCredits: () -> Unit,
     itemInsets: PaddingValues = PaddingValues(horizontal = 16.dp),
     insets: PaddingValues = PaddingValues(),
-    readDependencies: ReadExternalDependenciesList,
     versionName: String,
 ) {
     val uriHandler = LocalUriHandler.current
-    var deps: List<Dependency> by remember { mutableStateOf(emptyList()) }
 
     val appUser = appPreferences.appUser
-
-    LaunchedEffect(readDependencies) {
-        deps = readDependencies()
-    }
 
     LazyColumn(
         modifier = modifier,
@@ -351,6 +345,94 @@ fun SettingsList(
                     .padding(top = 8.dp)
                     .padding(itemInsets),
             ) {
+                Text(stringResource(MR.strings.settings_about_header))
+            }
+        }
+
+        item {
+            val repoUrl = stringResource(MR.strings.app_repo_url)
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = { uriHandler.openUri(repoUrl) },
+                onClickLabel = stringResource(MR.strings.settings_about_repo_cd),
+                title = { Text(text = stringResource(MR.strings.settings_about_repo_title)) },
+                subtitle = { Text(text = stringResource(MR.strings.app_repo_name)) },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.OpenInNew,
+                        contentDescription = null,
+                    )
+                },
+            )
+        }
+
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                title = { Text(text = stringResource(MR.strings.settings_logs_title)) },
+                onClick = onShareLogsClick,
+                subtitle = { Text(text = stringResource(MR.strings.settings_logs_subtitle)) },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Share,
+                        contentDescription = null,
+                    )
+                },
+            )
+        }
+
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                title = { Text(text = stringResource(MR.strings.settings_dependencies_header)) },
+                onClick = onOpenDependencyCredits,
+            )
+        }
+
+        item {
+            val licenseUrl = stringResource(MR.strings.app_license_url)
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = { uriHandler.openUri(licenseUrl) },
+                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
+                title = { Text(text = stringResource(MR.strings.settings_about_license_title)) },
+                subtitle = {
+                    Text(
+                        text = stringResource(
+                            MR.strings.settings_about_license_subtitle,
+                            stringResource(MR.strings.app_name),
+                            stringResource(MR.strings.app_license_name),
+                        ),
+                    )
+                },
+            )
+        }
+
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                title = { Text(text = stringResource(MR.strings.app_name)) },
+                subtitle = {
+                    Text(
+                        text = stringResource(
+                            MR.strings.settings_about_version,
+                            versionName,
+                        ),
+                    )
+                },
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+
+        item {
+            SettingsHeader(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(itemInsets),
+            ) {
                 Text(stringResource(MR.strings.settings_account_header))
             }
         }
@@ -401,127 +483,6 @@ fun SettingsList(
                     )
                 }
             }
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_about_header))
-            }
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.app_name)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_about_version,
-                            versionName,
-                        ),
-                    )
-                },
-            )
-        }
-
-        item {
-            val repoUrl = stringResource(MR.strings.app_repo_url)
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri(repoUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_repo_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_repo_title)) },
-                subtitle = { Text(text = stringResource(MR.strings.app_repo_name)) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.OpenInNew,
-                        contentDescription = null,
-                    )
-                },
-            )
-        }
-
-        item {
-            val licenseUrl = stringResource(MR.strings.app_license_url)
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri(licenseUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_license_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_about_license_subtitle,
-                            stringResource(MR.strings.app_name),
-                            stringResource(MR.strings.app_license_name),
-                        ),
-                    )
-                },
-            )
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_logs_title)) },
-                onClick = onShareLogsClick,
-                subtitle = { Text(text = stringResource(MR.strings.settings_logs_subtitle)) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Share,
-                        contentDescription = null,
-                    )
-                },
-            )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_dependencies_header))
-            }
-        }
-
-        items(deps) { dependency ->
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = {
-                    dependency.moduleUrl?.let { url ->
-                        uriHandler.openUri(url)
-                    }
-                },
-                onClickLabel = stringResource(MR.strings.settings_dependencies_cd)
-                    .takeIf { dependency.moduleUrl != null },
-                title = { Text(text = dependency.moduleName) },
-                subtitle = {
-                    dependency.moduleLicense?.let { license ->
-                        Text(text = license)
-                    }
-                },
-                trailingIcon = {
-                    if (dependency.moduleUrl != null) {
-                        Icon(
-                            imageVector = Icons.Default.OpenInNew,
-                            contentDescription = null,
-                        )
-                    }
-                },
-            )
         }
     }
 }

@@ -38,7 +38,7 @@ import org.koin.androidx.compose.koinViewModel
 fun FollowedChannelsList(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
-    onSelectedTabChange: (Tab) -> Unit,
+    onNavigate: (Screen) -> Unit,
     onItemClick: (login: String) -> Unit,
 ) {
     val viewModel: FollowedChannelsViewModel = koinViewModel()
@@ -55,8 +55,8 @@ fun FollowedChannelsList(
     MainNavigation(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         sizeClass = sizeClass,
-        selectedTab = Tab.Followed,
-        onSelectedTabChange = onSelectedTabChange,
+        selectedScreen = Screen.Followed,
+        onSelectedTabChange = onNavigate,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(MR.strings.channels)) },

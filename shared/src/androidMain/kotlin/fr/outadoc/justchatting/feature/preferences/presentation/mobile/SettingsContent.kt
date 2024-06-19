@@ -28,7 +28,6 @@ import org.koin.compose.koinInject
 fun SettingsContent(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
-    selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
@@ -62,7 +61,7 @@ fun SettingsContent(
     MainNavigation(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         sizeClass = sizeClass,
-        selectedTab = selectedTab,
+        selectedTab = Tab.Settings,
         onSelectedTabChange = onSelectedTabChange,
         topBar = {
             TopAppBar(

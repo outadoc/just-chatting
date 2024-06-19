@@ -33,7 +33,6 @@ import org.koin.androidx.compose.koinViewModel
 fun LiveChannelsList(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
-    selectedTab: Tab,
     onSelectedTabChange: (Tab) -> Unit,
     onItemClick: (login: String) -> Unit,
 ) {
@@ -49,7 +48,7 @@ fun LiveChannelsList(
     MainNavigation(
         modifier = modifier,
         sizeClass = sizeClass,
-        selectedTab = selectedTab,
+        selectedTab = Tab.Live,
         onSelectedTabChange = onSelectedTabChange,
         topBar = {
             Surface(

@@ -26,7 +26,7 @@ ksp = { id = "com.google.devtools.ksp", version = "2.0.0-1.0.22" }
 licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.8" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
 skie = { id = "co.touchlab.skie", version = "0.8.2" }
-spotless = { id = "com.diffplug.spotless", version = "6.22.0" }
+spotless = { id = "com.diffplug.spotless", version = "6.25.0" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 
 [libraries]

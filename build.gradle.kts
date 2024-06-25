@@ -25,6 +25,7 @@ spotless {
                     "max_line_length" to "off",
                     "ktlint_function_naming_ignore_when_annotated_with" to "Composable",
                     "ktlint_standard_property-naming" to "disabled",
+                    "ktlint_standard_function-expression-body" to "disabled",
                 ),
             )
         endWithNewline()

@@ -63,13 +63,20 @@ private fun Bitmap.getSourceColor(): Color {
     val intArray = IntArray(width * height)
 
     getPixels(
-        /* pixels = */ intArray,
-        /* offset = */ 0,
-        /* stride = */ width,
-        /* x = */ 0,
-        /* y = */ 0,
-        /* width = */ width,
-        /* height = */ height,
+        /* pixels = */
+        intArray,
+        /* offset = */
+        0,
+        /* stride = */
+        width,
+        /* x = */
+        0,
+        /* y = */
+        0,
+        /* width = */
+        width,
+        /* height = */
+        height,
     )
 
     val quantized = QuantizerCelebi.quantize(intArray, 128)

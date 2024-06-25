@@ -16,7 +16,9 @@ interface IComponentsParser<out T> {
     fun parseFromComponents(components: IrcMessageComponents): T?
 }
 
-abstract class MessageParser<out T> : IMessageParser<T>, IComponentsParser<T> {
+abstract class MessageParser<out T> :
+    IMessageParser<T>,
+    IComponentsParser<T> {
 
     override fun parse(message: IrcMessage): T? {
         val components = IrcMessageComponents(tags = message.tags, prefix = message.prefix, parameters = message.parameters)

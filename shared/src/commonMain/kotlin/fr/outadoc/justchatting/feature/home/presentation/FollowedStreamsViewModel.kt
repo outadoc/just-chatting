@@ -16,16 +16,16 @@ class FollowedStreamsViewModel(
     private val repository: TwitchRepository,
 ) : ViewModel() {
 
-    private val _load = MutableStateFlow(0)
+    private val load = MutableStateFlow(0)
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagingData: Flow<PagingData<Stream>> =
-        _load.flatMapLatest { repository.loadFollowedStreams() }
+        load.flatMapLatest { repository.loadFollowedStreams() }
             .cachedIn(viewModelScope)
 
     init {
         viewModelScope.launch {
-            _load.value = Random.nextInt()
+            load.value = Random.nextInt()
         }
     }
 }

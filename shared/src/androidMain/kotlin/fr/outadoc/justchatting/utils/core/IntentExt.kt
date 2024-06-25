@@ -6,7 +6,8 @@ import android.content.Intent
 import android.os.Build
 
 private enum class IntentComponent {
-    Activity, ForegroundService
+    Activity,
+    ForegroundService,
 }
 
 fun Intent.toPendingActivityIntent(
@@ -46,26 +47,38 @@ private fun Intent.toPendingIntent(
 
     return when (intentComponent) {
         IntentComponent.Activity -> PendingIntent.getActivity(
-            /* context = */ context,
-            /* requestCode = */ 0,
-            /* intent = */ this,
-            /* flags = */ flags,
+            /* context = */
+            context,
+            /* requestCode = */
+            0,
+            /* intent = */
+            this,
+            /* flags = */
+            flags,
         )
 
         IntentComponent.ForegroundService ->
             if (Build.VERSION.SDK_INT >= 26) {
                 PendingIntent.getForegroundService(
-                    /* context = */ context,
-                    /* requestCode = */ 0,
-                    /* intent = */ this,
-                    /* flags = */ flags,
+                    /* context = */
+                    context,
+                    /* requestCode = */
+                    0,
+                    /* intent = */
+                    this,
+                    /* flags = */
+                    flags,
                 )
             } else {
                 PendingIntent.getService(
-                    /* context = */ context,
-                    /* requestCode = */ 0,
-                    /* intent = */ this,
-                    /* flags = */ flags,
+                    /* context = */
+                    context,
+                    /* requestCode = */
+                    0,
+                    /* intent = */
+                    this,
+                    /* flags = */
+                    flags,
                 )
             }
     }

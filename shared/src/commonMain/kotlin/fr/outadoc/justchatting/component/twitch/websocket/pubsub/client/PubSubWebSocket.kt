@@ -56,11 +56,11 @@ class PubSubWebSocket(
 
     private val plugins = pubSubPluginsProvider.get()
 
-    private val _flow = MutableSharedFlow<ChatEvent>(
+    private val _commandFlow = MutableSharedFlow<ChatEvent>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    override val commandFlow: Flow<ChatEvent> = _flow
+    override val commandFlow: Flow<ChatEvent> = _commandFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(
@@ -166,7 +166,7 @@ class PubSubWebSocket(
                     }
 
                 plugin?.apply {
-                    _flow.emitAll(
+                    _commandFlow.emitAll(
                         parseMessage(received.data.message).asFlow(),
                     )
                 }
@@ -212,15 +212,13 @@ class PubSubWebSocket(
             scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): PubSubWebSocket {
-            return PubSubWebSocket(
-                networkStateObserver = networkStateObserver,
-                scope = scope,
-                httpClient = httpClient,
-                preferencesRepository = preferencesRepository,
-                pubSubPluginsProvider = pubSubPluginsProvider,
-                channelId = channelId,
-            )
-        }
+        ): PubSubWebSocket = PubSubWebSocket(
+            networkStateObserver = networkStateObserver,
+            scope = scope,
+            httpClient = httpClient,
+            preferencesRepository = preferencesRepository,
+            pubSubPluginsProvider = pubSubPluginsProvider,
+            channelId = channelId,
+        )
     }
 }

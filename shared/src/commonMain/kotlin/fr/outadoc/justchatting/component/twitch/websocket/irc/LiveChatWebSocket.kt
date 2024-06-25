@@ -68,12 +68,12 @@ class LiveChatWebSocket private constructor(
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
-    private val _flow = MutableSharedFlow<ChatEvent>(
+    private val _commandFlow = MutableSharedFlow<ChatEvent>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
 
-    override val commandFlow: Flow<ChatEvent> = _flow
+    override val commandFlow: Flow<ChatEvent> = _commandFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(
@@ -141,7 +141,7 @@ class LiveChatWebSocket private constructor(
             send("CAP REQ :twitch.tv/tags twitch.tv/commands")
             send("JOIN #$channelLogin")
 
-            _flow.emit(
+            _commandFlow.emit(
                 ChatEvent.Message.Highlighted(
                     timestamp = clock.now(),
                     metadata = ChatEvent.Message.Highlighted.Metadata(
@@ -180,11 +180,11 @@ class LiveChatWebSocket private constructor(
                 // Remember time of last message so that we can restore lost messages after a connection loss
                 lastMessageReceivedAt = command.timestamp
 
-                _flow.emit(mapper.mapMessage(command))
+                _commandFlow.emit(mapper.mapMessage(command))
             }
 
             is IrcEvent.Command.RoomStateDelta -> {
-                _flow.emit(
+                _commandFlow.emit(
                     ChatEvent.RoomStateDelta(
                         isEmoteOnly = command.isEmoteOnly,
                         minFollowDuration = command.minFollowDuration,
@@ -196,7 +196,7 @@ class LiveChatWebSocket private constructor(
             }
 
             is IrcEvent.Command.ClearChat -> {
-                _flow.emit(
+                _commandFlow.emit(
                     ChatEvent.RemoveContent(
                         upUntil = command.timestamp,
                         matchingUserId = command.targetUserId,
@@ -204,12 +204,12 @@ class LiveChatWebSocket private constructor(
                 )
 
                 mapper.mapOptional(command)?.let { message ->
-                    _flow.emit(message)
+                    _commandFlow.emit(message)
                 }
             }
 
             is IrcEvent.Command.ClearMessage -> {
-                _flow.emit(
+                _commandFlow.emit(
                     ChatEvent.RemoveContent(
                         upUntil = command.timestamp,
                         matchingMessageId = command.targetMessageId,
@@ -217,7 +217,7 @@ class LiveChatWebSocket private constructor(
                 )
 
                 mapper.mapOptional(command)?.let { message ->
-                    _flow.emit(message)
+                    _commandFlow.emit(message)
                 }
             }
 
@@ -264,7 +264,7 @@ class LiveChatWebSocket private constructor(
             }
             .fold(
                 onSuccess = { events ->
-                    _flow.emitAll(events)
+                    _commandFlow.emitAll(events)
                 },
                 onFailure = { e ->
                     logError<LiveChatWebSocket>(e) { "Failed to load recent messages for channel $channelLogin" }
@@ -286,18 +286,16 @@ class LiveChatWebSocket private constructor(
             scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): LiveChatWebSocket {
-            return LiveChatWebSocket(
-                networkStateObserver = networkStateObserver,
-                scope = scope,
-                clock = clock,
-                parser = parser,
-                mapper = mapper,
-                httpClient = httpClient,
-                recentMessagesRepository = recentMessagesRepository,
-                preferencesRepository = preferencesRepository,
-                channelLogin = channelLogin,
-            )
-        }
+        ): LiveChatWebSocket = LiveChatWebSocket(
+            networkStateObserver = networkStateObserver,
+            scope = scope,
+            clock = clock,
+            parser = parser,
+            mapper = mapper,
+            httpClient = httpClient,
+            recentMessagesRepository = recentMessagesRepository,
+            preferencesRepository = preferencesRepository,
+            channelLogin = channelLogin,
+        )
     }
 }

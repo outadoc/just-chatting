@@ -187,8 +187,7 @@ class ChatViewModel(
     sealed class InputAction {
         data class AppendChatter(val chatter: Chatter, val autocomplete: Boolean) : InputAction()
         data class AppendEmote(val emote: Emote, val autocomplete: Boolean) : InputAction()
-        data class ChangeMessageInput(val message: String, val selectionRange: IntRange) :
-            InputAction()
+        data class ChangeMessageInput(val message: String, val selectionRange: IntRange) : InputAction()
 
         data class ReplyToMessage(val chatEvent: ChatEvent.Message? = null) : InputAction()
         data class UpdateAutoCompleteItems(val items: List<AutoCompleteItem>) : InputAction()

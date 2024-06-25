@@ -65,11 +65,11 @@ class LoggedInChatWebSocket(
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
-    private val _flow = MutableSharedFlow<ChatEvent>(
+    private val _commandFlow = MutableSharedFlow<ChatEvent>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    override val commandFlow: Flow<ChatEvent> = _flow
+    override val commandFlow: Flow<ChatEvent> = _commandFlow
 
     private data class QueuedMessage(
         val authoringTime: Instant,
@@ -177,7 +177,7 @@ class LoggedInChatWebSocket(
                                 // We've been trying to send this message for a while now, give up
                                 logError<LoggedInChatWebSocket> { "Timeout while trying to send message: $message" }
 
-                                _flow.emit(
+                                _commandFlow.emit(
                                     ChatEvent.Message.Highlighted(
                                         timestamp = clock.now(),
                                         metadata = ChatEvent.Message.Highlighted.Metadata(
@@ -216,11 +216,11 @@ class LoggedInChatWebSocket(
 
         when (val command = parser.parse(received)) {
             is IrcEvent.Message.Notice -> {
-                _flow.emit(mapper.mapMessage(command))
+                _commandFlow.emit(mapper.mapMessage(command))
             }
 
             is IrcEvent.Command.UserState -> {
-                _flow.emit(
+                _commandFlow.emit(
                     ChatEvent.UserState(
                         emoteSets = command.emoteSets.toImmutableList(),
                     ),
@@ -276,17 +276,15 @@ class LoggedInChatWebSocket(
             scope: CoroutineScope,
             channelLogin: String,
             channelId: String,
-        ): LoggedInChatWebSocket {
-            return LoggedInChatWebSocket(
-                networkStateObserver = networkStateObserver,
-                scope = scope,
-                clock = clock,
-                parser = parser,
-                mapper = mapper,
-                httpClient = httpClient,
-                preferencesRepository = preferencesRepository,
-                channelLogin = channelLogin,
-            )
-        }
+        ): LoggedInChatWebSocket = LoggedInChatWebSocket(
+            networkStateObserver = networkStateObserver,
+            scope = scope,
+            clock = clock,
+            parser = parser,
+            mapper = mapper,
+            httpClient = httpClient,
+            preferencesRepository = preferencesRepository,
+            channelLogin = channelLogin,
+        )
     }
 }

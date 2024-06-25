@@ -1,7 +1,9 @@
 package fr.outadoc.justchatting
 
 enum class BuildType {
-    Debug, QA, Release
+    Debug,
+    QA,
+    Release,
 }
 
 @Suppress("KotlinConstantConditions")

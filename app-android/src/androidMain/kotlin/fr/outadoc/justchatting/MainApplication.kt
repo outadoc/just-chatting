@@ -14,7 +14,9 @@ import com.google.android.material.color.DynamicColors
 import fr.outadoc.justchatting.utils.logging.AndroidLogStrategy
 import fr.outadoc.justchatting.utils.logging.Logger
 
-class MainApplication : Application(), ImageLoaderFactory {
+class MainApplication :
+    Application(),
+    ImageLoaderFactory {
 
     override fun onCreate() {
         super.onCreate()

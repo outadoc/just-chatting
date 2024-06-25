@@ -21,8 +21,8 @@ class DefaultPronounsRepository(
     private val preferenceRepository: PreferenceRepository,
 ) : PronounsRepository {
 
-    private var _pronounCache: Map<String, AlejoPronoun>? = null
-    private val _userCache = hashMapOf<Chatter, AlejoPronoun?>()
+    private var pronounCache: Map<String, AlejoPronoun>? = null
+    private val userCache = hashMapOf<Chatter, AlejoPronoun?>()
 
     private val cacheMutex = Mutex()
 
@@ -34,12 +34,12 @@ class DefaultPronounsRepository(
 
             withContext(DispatchersProvider.io) {
                 cacheMutex.withLock {
-                    if (_pronounCache == null) {
+                    if (pronounCache == null) {
                         alejoPronounsApi
                             .getPronouns()
                             .fold(
                                 onSuccess = { pronouns ->
-                                    _pronounCache = pronouns.associateBy { pronoun -> pronoun.id }
+                                    pronounCache = pronouns.associateBy { pronoun -> pronoun.id }
                                 },
                                 onFailure = { e ->
                                     logError<DefaultPronounsRepository>(e) { "Error while fetching pronouns from Alejo API" }
@@ -56,10 +56,10 @@ class DefaultPronounsRepository(
         }
 
     private suspend fun getPronounFor(chatter: Chatter): Pronoun? {
-        val pronounCache = _pronounCache ?: return null
+        val pronounCache = pronounCache ?: return null
 
         val cached: AlejoPronoun? =
-            _userCache.getOrPut(chatter) {
+            userCache.getOrPut(chatter) {
                 val userPronouns: UserPronounResponse? =
                     alejoPronounsApi
                         .getPronounsForUser(chatter.login)

@@ -37,8 +37,9 @@ import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItems
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.DefaultChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.MobileCreateShortcutForChannelUseCase
+import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsClient
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
-import fr.outadoc.justchatting.feature.pronouns.domain.DefaultPronounsRepository
+import fr.outadoc.justchatting.feature.pronouns.domain.PronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -105,8 +106,10 @@ val chatModule = module {
     single { IrcMessageMapper() }
 
     single { RecentMessagesRepository(get(), get()) }
-    single { AlejoPronounsApi(get()) }
-    single<PronounsRepository> { DefaultPronounsRepository(get(), get()) }
+
+    single<PronounsApi> { AlejoPronounsApi(get(), get()) }
+    single { AlejoPronounsClient(get()) }
+    single { PronounsRepository(get()) }
 
     single { ChannelBttvEmotesSource(get()) }
     single { ChannelFfzEmotesSource(get()) }

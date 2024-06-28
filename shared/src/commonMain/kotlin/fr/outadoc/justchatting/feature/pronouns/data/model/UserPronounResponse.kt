@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.pronouns.data
+package fr.outadoc.justchatting.feature.pronouns.data.model
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

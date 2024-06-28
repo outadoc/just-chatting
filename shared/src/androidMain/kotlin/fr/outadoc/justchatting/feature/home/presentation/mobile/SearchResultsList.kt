@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
+import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.utils.ui.plus
 import kotlinx.collections.immutable.toImmutableList
@@ -31,9 +31,9 @@ fun SearchResultsList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
     viewModel: ChannelSearchViewModel,
-    onItemClick: (ChannelSearch) -> Unit,
+    onItemClick: (ChannelSearchResult) -> Unit,
 ) {
-    val items: LazyPagingItems<ChannelSearch> = viewModel.pagingData.collectAsLazyPagingItems()
+    val items: LazyPagingItems<ChannelSearchResult> = viewModel.pagingData.collectAsLazyPagingItems()
     val state by viewModel.state.collectAsState()
 
     val isRefreshing = items.loadState.refresh is LoadState.Loading
@@ -68,12 +68,12 @@ fun SearchResultsList(
                 }
             } else {
                 items(items.itemCount) { index ->
-                    val item: ChannelSearch? = items[index]
+                    val item: ChannelSearchResult? = items[index]
                     if (item != null) {
                         UserItemCard(
                             modifier = Modifier.fillMaxWidth(),
-                            displayName = item.broadcasterDisplayName,
-                            profileImageURL = item.profileImageUrl,
+                            displayName = item.user.displayName,
+                            profileImageUrl = item.user.profileImageUrl,
                             tags = item.tags.toImmutableList(),
                             onClick = { onItemClick(item) },
                         )

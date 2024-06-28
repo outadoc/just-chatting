@@ -40,7 +40,7 @@ fun UserItemPreview() {
                 .width(300.dp),
             displayName = "Maghla",
             followedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
-            profileImageURL = null,
+            profileImageUrl = null,
             tags = persistentListOf("French", "ASMR"),
         )
     }
@@ -52,7 +52,7 @@ fun UserItemCard(
     modifier: Modifier = Modifier,
     displayName: String? = null,
     followedAt: Instant? = null,
-    profileImageURL: String? = null,
+    profileImageUrl: String? = null,
     tags: ImmutableList<String> = persistentListOf(),
     onClick: () -> Unit = {},
 ) {
@@ -64,7 +64,7 @@ fun UserItemCard(
             modifier = Modifier.padding(8.dp),
             displayName = displayName,
             followedAt = followedAt,
-            profileImageURL = profileImageURL,
+            profileImageURL = profileImageUrl,
             tags = tags,
         )
     }

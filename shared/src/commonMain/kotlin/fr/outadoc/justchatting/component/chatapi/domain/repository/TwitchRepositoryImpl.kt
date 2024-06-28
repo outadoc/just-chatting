@@ -11,7 +11,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelScheduleVacation
-import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
+import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.FollowedChannelsDataSource
@@ -30,7 +30,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
-import kotlin.jvm.JvmName
 
 class TwitchRepositoryImpl(
     private val helix: HelixApi,
@@ -38,7 +37,7 @@ class TwitchRepositoryImpl(
     private val recentChannelsRepository: RecentChannelsRepository,
 ) : TwitchRepository {
 
-    override suspend fun loadSearchChannels(query: String): Flow<PagingData<ChannelSearch>> {
+    override suspend fun loadSearchChannels(query: String): Flow<PagingData<ChannelSearchResult>> {
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 15,
@@ -55,35 +54,20 @@ class TwitchRepositoryImpl(
         )
 
         return pager.flow.map { page ->
-            page.flatMap { searchResponse ->
-                searchResponse.mapWithUserProfileImages()
-            }
-        }
-    }
+            page.flatMap { response ->
+                val completeUsers: Map<String, User> =
+                    response
+                        .map { stream -> stream.user }
+                        .mapWithProfileImages()
+                        .associateBy { user -> user.id }
 
-    @JvmName("mapWithUserProfileImagesChannelSearch")
-    private suspend fun List<ChannelSearch>.mapWithUserProfileImages(): List<ChannelSearch> {
-        val results = this
-        return results
-            .map { result -> result.id }
-            .chunked(size = 100)
-            .flatMap { idsToUpdate ->
-                val users = helix.getUsersById(ids = idsToUpdate)
-                    .fold(
-                        onSuccess = { response -> response.data },
-                        onFailure = { exception ->
-                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
-                            emptyList()
-                        },
-                    )
-
-                results.map { searchResult ->
-                    searchResult.copy(
-                        profileImageUrl = users.firstOrNull { user -> user.id == searchResult.id }
-                            ?.profileImageUrl,
+                response.map { stream ->
+                    stream.copy(
+                        user = completeUsers[stream.user.id] ?: stream.user
                     )
                 }
             }
+        }
     }
 
     override suspend fun loadFollowedStreams(): Flow<PagingData<Stream>> {
@@ -108,36 +92,18 @@ class TwitchRepositoryImpl(
 
         return pager.flow.map { page ->
             page.flatMap { streams ->
-                streams
-                    .associateBy { stream -> stream.userId }
-                    .values
-                    .mapWithUserProfileImages()
-            }
-        }
-    }
+                val completeUsers: Map<String, User> =
+                    streams
+                        .map { stream -> stream.user }
+                        .mapWithProfileImages()
+                        .associateBy { user -> user.id }
 
-    @JvmName("mapWithUserProfileImagesStream")
-    private suspend fun Collection<Stream>.mapWithUserProfileImages(): List<Stream> {
-        val results = this
-        val users = results
-            .map { user -> user.userId }
-            .chunked(100)
-            .flatMap { ids ->
-                helix.getUsersById(ids = ids)
-                    .fold(
-                        onSuccess = { response -> response.data },
-                        onFailure = { exception ->
-                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
-                            emptyList()
-                        },
+                streams.map { stream ->
+                    stream.copy(
+                        user = completeUsers[stream.user.id] ?: stream.user
                     )
+                }
             }
-
-        return results.map { stream ->
-            val user = users.firstOrNull { user -> stream.userId == user.id }
-            stream.copy(
-                profileImageURL = user?.profileImageUrl,
-            )
         }
     }
 
@@ -163,43 +129,18 @@ class TwitchRepositoryImpl(
 
         return pager.flow.map { page ->
             page.flatMap { follows ->
-                follows.mapWithUserProfileImages()
-            }
-        }
-    }
+                val completeUsers: Map<String, User> =
+                    follows
+                        .map { follow -> follow.user }
+                        .mapWithProfileImages()
+                        .associateBy { user -> user.id }
 
-    @JvmName("mapWithUserProfileImagesChannelFollow")
-    private suspend fun Collection<ChannelFollow>.mapWithUserProfileImages(): Collection<ChannelFollow> {
-        val results = this
-        val userMap: Map<String, User> = results
-            .filter { follow -> follow.profileImageURL == null }
-            .map { follow -> follow.userId }
-            .chunked(size = 100)
-            .flatMap { idsToUpdate ->
-                helix.getUsersById(ids = idsToUpdate)
-                    .fold(
-                        onSuccess = { response -> response.data },
-                        onFailure = { exception ->
-                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
-                            emptyList()
-                        },
+                follows.map { follow ->
+                    follow.copy(
+                        user = completeUsers[follow.user.id] ?: follow.user
                     )
+                }
             }
-            .associate { user ->
-                user.id to User(
-                    id = user.id,
-                    login = user.login,
-                    displayName = user.displayName,
-                    description = user.description,
-                    profileImageUrl = user.profileImageUrl,
-                    createdAt = user.createdAt,
-                )
-            }
-
-        return results.map { follow ->
-            follow.copy(
-                profileImageURL = userMap[follow.userId]?.profileImageUrl,
-            )
         }
     }
 
@@ -212,9 +153,12 @@ class TwitchRepositoryImpl(
 
                     Stream(
                         id = stream.id,
-                        userId = stream.userId,
-                        userLogin = stream.userLogin,
-                        userName = stream.userName,
+                        user = User(
+                            id = stream.userId,
+                            login = stream.userLogin,
+                            displayName = stream.userName,
+
+                            ),
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
@@ -296,8 +240,9 @@ class TwitchRepositoryImpl(
                 }
         }
 
-    override suspend fun getRecentChannels(): Flow<List<ChannelSearch>?> {
+    override suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?> {
         return withContext(DispatchersProvider.io) {
+            // FIXME remove this from TwitchRepository, only use RecentChannelsRepository
             recentChannelsRepository.getAll()
                 .map { channels ->
                     val ids = channels.map { channel -> channel.id }
@@ -305,16 +250,18 @@ class TwitchRepositoryImpl(
                         .getOrNull()
                         ?.data
                         ?.map { user ->
-                            ChannelSearch(
-                                id = user.id,
+                            ChannelSearchResult(
                                 title = user.displayName,
-                                broadcasterLogin = user.login,
-                                broadcasterDisplayName = user.displayName,
-                                profileImageUrl = user.profileImageUrl,
+                                user = User(
+                                    id = user.id,
+                                    login = user.login,
+                                    displayName = user.displayName,
+                                    profileImageUrl = user.profileImageUrl,
+                                ),
                             )
                         }
-                        ?.sortedBy { user ->
-                            ids.indexOf(user.id)
+                        ?.sortedBy { result ->
+                            ids.indexOf(result.user.id)
                         }
                 }
         }
@@ -362,5 +309,30 @@ class TwitchRepositoryImpl(
                 )
             }
         }
+    }
+
+    private suspend fun Collection<User>.mapWithProfileImages(): List<User> {
+        val results = this
+        return results
+            .map { result -> result.id }
+            .chunked(size = 100)
+            .flatMap { idsToUpdate ->
+                val users = helix.getUsersById(ids = idsToUpdate)
+                    .fold(
+                        onSuccess = { response -> response.data },
+                        onFailure = { exception ->
+                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
+                            emptyList()
+                        },
+                    )
+
+                results.map { result ->
+                    result.copy(
+                        profileImageUrl = users
+                            .firstOrNull { user -> user.id == result.id }
+                            ?.profileImageUrl,
+                    )
+                }
+            }
     }
 }

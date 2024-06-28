@@ -76,7 +76,7 @@ fun FollowedChannelsList(
                     items = items,
                     isRefreshing = isRefreshing,
                     onItemClick = { channel ->
-                        onItemClick(channel.userLogin)
+                        onItemClick(channel.user.login)
                     },
                 )
 
@@ -126,8 +126,8 @@ private fun InnerFollowedChannelsList(
                 if (item != null) {
                     UserItemCard(
                         modifier = Modifier.fillMaxWidth(),
-                        displayName = item.userDisplayName,
-                        profileImageURL = item.profileImageURL,
+                        displayName = item.user.displayName,
+                        profileImageUrl = item.user.profileImageUrl,
                         followedAt = Instant.parse(item.followedAt),
                         onClick = { onItemClick(item) },
                     )

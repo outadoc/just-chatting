@@ -73,7 +73,7 @@ fun LiveChannelsList(
                     items = items,
                     isRefreshing = isRefreshing,
                     onItemClick = { stream ->
-                        onItemClick(stream.userLogin)
+                        onItemClick(stream.user.login)
                     },
                 )
 
@@ -124,11 +124,11 @@ private fun InnerLiveChannelsList(
                     LiveStreamCard(
                         modifier = Modifier.fillMaxWidth(),
                         title = item.title,
-                        userName = item.userName,
+                        userName = item.user.displayName,
                         viewerCount = item.viewerCount,
                         gameName = item.gameName,
                         startedAt = Instant.parse(item.startedAt),
-                        profileImageURL = item.profileImageURL,
+                        profileImageURL = item.user.profileImageUrl,
                         tags = item.tags.toImmutableList(),
                         onClick = { onItemClick(item) },
                     )

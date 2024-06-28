@@ -55,10 +55,11 @@ fun StreamInfoPreviewFull() {
             ),
             stream = Stream(
                 id = "",
-                userId = "",
-                userLogin = "",
-                userName = "",
-                profileImageURL = null,
+                user = User(
+                    id = "",
+                    login = "",
+                    displayName = "",
+                ),
                 gameName = "Powerwash Simulator",
                 title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
                 viewerCount = 10_000,

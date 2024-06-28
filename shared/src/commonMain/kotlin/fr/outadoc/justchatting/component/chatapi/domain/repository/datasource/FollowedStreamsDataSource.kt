@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
+import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
@@ -36,9 +37,11 @@ class FollowedStreamsDataSource(
                             response.data.map { stream ->
                                 Stream(
                                     id = stream.id,
-                                    userId = stream.userId,
-                                    userLogin = stream.userLogin,
-                                    userName = stream.userName,
+                                    user = User(
+                                        id = stream.userId,
+                                        login = stream.userLogin,
+                                        displayName = stream.userName,
+                                    ),
                                     gameName = stream.gameName,
                                     title = stream.title,
                                     viewerCount = stream.viewerCount,

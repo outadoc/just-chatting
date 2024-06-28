@@ -110,7 +110,7 @@ private fun CompactSearchBar(
         content = {
             SearchResultsList(
                 onItemClick = { stream ->
-                    onChannelClick(stream.broadcasterLogin)
+                    onChannelClick(stream.user.login)
                 },
                 viewModel = viewModel,
             )
@@ -175,7 +175,7 @@ private fun FullHeightSearchBar(
         content = {
             SearchResultsList(
                 onItemClick = { stream ->
-                    onChannelClick(stream.broadcasterLogin)
+                    onChannelClick(stream.user.login)
                 },
                 viewModel = viewModel,
             )

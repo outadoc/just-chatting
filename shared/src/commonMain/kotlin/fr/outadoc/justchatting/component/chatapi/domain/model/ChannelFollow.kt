@@ -5,9 +5,6 @@ import fr.outadoc.justchatting.utils.parcel.Parcelize
 
 @Parcelize
 data class ChannelFollow(
-    val userId: String,
-    val userLogin: String,
-    val userDisplayName: String,
+    val user: User,
     val followedAt: String,
-    val profileImageURL: String? = null,
 ) : Parcelable

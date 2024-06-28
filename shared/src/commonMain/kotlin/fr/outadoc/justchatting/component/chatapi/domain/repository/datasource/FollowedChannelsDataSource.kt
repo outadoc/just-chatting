@@ -4,6 +4,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
+import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.utils.logging.logError
 
@@ -35,9 +36,11 @@ class FollowedChannelsDataSource(
                         data = listOf(
                             response.data.map { follow ->
                                 ChannelFollow(
-                                    userId = follow.userId,
-                                    userLogin = follow.userLogin,
-                                    userDisplayName = follow.userDisplayName,
+                                    user = User(
+                                        id = follow.userId,
+                                        login = follow.userLogin,
+                                        displayName = follow.userDisplayName,
+                                    ),
                                     followedAt = follow.followedAt,
                                 )
                             },

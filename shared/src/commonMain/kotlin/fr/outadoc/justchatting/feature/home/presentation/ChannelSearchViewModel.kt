@@ -4,7 +4,7 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearch
+import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.lifecycle.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -32,7 +32,7 @@ class ChannelSearchViewModel(
     val state = _state.asStateFlow()
 
     @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-    val pagingData: Flow<PagingData<ChannelSearch>> =
+    val pagingData: Flow<PagingData<ChannelSearchResult>> =
         state.mapNotNull { state -> state.query }
             .distinctUntilChanged()
             .debounce(0.3.seconds)
@@ -45,11 +45,11 @@ class ChannelSearchViewModel(
             }
             .cachedIn(viewModelScope)
 
-    private suspend fun loadSearchResults(query: String): Flow<PagingData<ChannelSearch>> {
+    private suspend fun loadSearchResults(query: String): Flow<PagingData<ChannelSearchResult>> {
         return twitchRepository.loadSearchChannels(query)
     }
 
-    private suspend fun loadRecentChannels(): Flow<PagingData<ChannelSearch>> {
+    private suspend fun loadRecentChannels(): Flow<PagingData<ChannelSearchResult>> {
         return twitchRepository.getRecentChannels()
             .mapNotNull { channels ->
                 PagingData.from(

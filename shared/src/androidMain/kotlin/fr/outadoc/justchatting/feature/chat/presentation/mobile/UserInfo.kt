@@ -51,11 +51,14 @@ fun UserInfo(
             )
         }
 
-        if (user.description.isNotBlank()) {
+        if (!user.description.isNullOrEmpty()) {
             Text(text = user.description)
         }
 
-        val createdAt = Instant.parse(user.createdAt).formatDate()
+        val createdAt = user.createdAt?.let {
+            Instant.parse(user.createdAt).formatDate()
+        }
+
         if (createdAt != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(

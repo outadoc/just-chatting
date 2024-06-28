@@ -5,12 +5,12 @@ import androidx.paging.PagingState
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.utils.logging.logError
 
 class SearchChannelsDataSource(
     private val query: String,
-    private val helixApi: HelixApi,
+    private val twitchApi: TwitchApi,
 ) : PagingSource<Pagination, List<ChannelSearchResult>>() {
 
     override fun getRefreshKey(state: PagingState<Pagination, List<ChannelSearchResult>>): Pagination? =
@@ -26,7 +26,7 @@ class SearchChannelsDataSource(
             )
         }
 
-        return helixApi
+        return twitchApi
             .searchChannels(
                 query = query,
                 limit = params.loadSize,

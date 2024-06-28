@@ -96,24 +96,24 @@ class MainRouterViewModel(
     }
 
     fun onLoginClick() = viewModelScope.launch {
-        val helixScopes = listOf(
+        val oauthScopes = listOf(
             "chat:read",
             "chat:edit",
             "user:read:follows",
         )
 
-        val helixAuthUrl: Uri =
+        val oauthAuthUrl: Uri =
             Uri.parse("https://id.twitch.tv/oauth2/authorize")
                 .buildUpon()
                 .appendQueryParameter("response_type", "token")
                 .appendQueryParameter("client_id", oAuthAppCredentials.clientId)
                 .appendQueryParameter("redirect_uri", oAuthAppCredentials.redirectUri.toString())
                 .appendQueryParameter("force_verify", "true")
-                .appendQueryParameter("scope", helixScopes.joinToString(" "))
+                .appendQueryParameter("scope", oauthScopes.joinToString(" "))
                 .build()
 
         _events.emit(
-            Event.OpenInBrowser(uri = helixAuthUrl.toString()),
+            Event.OpenInBrowser(uri = oauthAuthUrl.toString()),
         )
     }
 

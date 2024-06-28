@@ -5,7 +5,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.component.chatapi.common.Emote
-import fr.outadoc.justchatting.component.chatapi.db.RecentChannelsRepository
+import fr.outadoc.justchatting.component.chatapi.db.RecentChannelsDao
 import fr.outadoc.justchatting.component.chatapi.db.Recent_channels
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSchedule
@@ -19,7 +19,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.Fo
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.SearchChannelsDataSource
 import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.component.twitch.utils.map
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
@@ -32,9 +32,9 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
 class TwitchRepositoryImpl(
-    private val helix: HelixApi,
+    private val twitchApi: TwitchApi,
     private val preferencesRepository: PreferenceRepository,
-    private val recentChannelsRepository: RecentChannelsRepository,
+    private val recentChannelsDao: RecentChannelsDao,
 ) : TwitchRepository {
 
     override suspend fun loadSearchChannels(query: String): Flow<PagingData<ChannelSearchResult>> {
@@ -48,7 +48,7 @@ class TwitchRepositoryImpl(
             pagingSourceFactory = {
                 SearchChannelsDataSource(
                     query = query,
-                    helixApi = helix,
+                    twitchApi = twitchApi,
                 )
             },
         )
@@ -63,7 +63,7 @@ class TwitchRepositoryImpl(
 
                 response.map { stream ->
                     stream.copy(
-                        user = completeUsers[stream.user.id] ?: stream.user
+                        user = completeUsers[stream.user.id] ?: stream.user,
                     )
                 }
             }
@@ -85,7 +85,7 @@ class TwitchRepositoryImpl(
             pagingSourceFactory = {
                 FollowedStreamsDataSource(
                     userId = appUser.userId,
-                    helixApi = helix,
+                    twitchApi = twitchApi,
                 )
             },
         )
@@ -100,7 +100,7 @@ class TwitchRepositoryImpl(
 
                 streams.map { stream ->
                     stream.copy(
-                        user = completeUsers[stream.user.id] ?: stream.user
+                        user = completeUsers[stream.user.id] ?: stream.user,
                     )
                 }
             }
@@ -122,7 +122,7 @@ class TwitchRepositoryImpl(
             pagingSourceFactory = {
                 FollowedChannelsDataSource(
                     userId = appUser.userId,
-                    helixApi = helix,
+                    twitchApi = twitchApi,
                 )
             },
         )
@@ -137,7 +137,7 @@ class TwitchRepositoryImpl(
 
                 follows.map { follow ->
                     follow.copy(
-                        user = completeUsers[follow.user.id] ?: follow.user
+                        user = completeUsers[follow.user.id] ?: follow.user,
                     )
                 }
             }
@@ -146,7 +146,7 @@ class TwitchRepositoryImpl(
 
     override suspend fun loadStream(userId: String): Result<Stream> =
         withContext(DispatchersProvider.io) {
-            helix.getStreams(ids = listOf(userId))
+            twitchApi.getStreams(ids = listOf(userId))
                 .mapCatching { response ->
                     val stream = response.data.firstOrNull()
                         ?: error("Stream for userId $userId not found")
@@ -158,7 +158,7 @@ class TwitchRepositoryImpl(
                             login = stream.userLogin,
                             displayName = stream.userName,
 
-                            ),
+                        ),
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
@@ -170,7 +170,7 @@ class TwitchRepositoryImpl(
 
     override suspend fun loadUsersById(ids: List<String>): Result<List<User>> =
         withContext(DispatchersProvider.io) {
-            helix.getUsersById(ids = ids)
+            twitchApi.getUsersById(ids = ids)
                 .map { response ->
                     response.data.map { user ->
                         User(
@@ -187,7 +187,7 @@ class TwitchRepositoryImpl(
 
     override suspend fun loadUsersByLogin(logins: List<String>): Result<List<User>> =
         withContext(DispatchersProvider.io) {
-            helix.getUsersByLogin(logins = logins)
+            twitchApi.getUsersByLogin(logins = logins)
                 .mapCatching { response ->
                     if (response.data.isEmpty()) {
                         error("No users found for logins: $logins")
@@ -219,7 +219,7 @@ class TwitchRepositoryImpl(
 
     override suspend fun loadCheerEmotes(userId: String): Result<List<Emote>> {
         return withContext(DispatchersProvider.io) {
-            helix.getCheerEmotes(userId = userId)
+            twitchApi.getCheerEmotes(userId = userId)
                 .map { response ->
                     response.data.flatMap { emote ->
                         emote.tiers.map { tier ->
@@ -232,7 +232,7 @@ class TwitchRepositoryImpl(
 
     override suspend fun loadEmotesFromSet(setIds: List<String>): Result<List<Emote>> =
         withContext(DispatchersProvider.io) {
-            helix.getEmotesFromSet(setIds = setIds)
+            twitchApi.getEmotesFromSet(setIds = setIds)
                 .map { response ->
                     response.data
                         .sortedByDescending { it.setId }
@@ -242,11 +242,10 @@ class TwitchRepositoryImpl(
 
     override suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?> {
         return withContext(DispatchersProvider.io) {
-            // FIXME remove this from TwitchRepository, only use RecentChannelsRepository
-            recentChannelsRepository.getAll()
+            recentChannelsDao.getAll()
                 .map { channels ->
                     val ids = channels.map { channel -> channel.id }
-                    helix.getUsersById(ids = ids)
+                    twitchApi.getUsersById(ids = ids)
                         .getOrNull()
                         ?.data
                         ?.map { user ->
@@ -269,7 +268,7 @@ class TwitchRepositoryImpl(
 
     override suspend fun insertRecentChannel(channel: User, usedAt: Instant) {
         withContext(DispatchersProvider.io) {
-            recentChannelsRepository.insert(
+            recentChannelsDao.insert(
                 Recent_channels(
                     id = channel.id,
                     used_at = usedAt.toEpochMilliseconds(),
@@ -280,7 +279,7 @@ class TwitchRepositoryImpl(
 
     override suspend fun loadChannelSchedule(channelId: String): Result<ChannelSchedule> {
         return withContext(DispatchersProvider.io) {
-            helix.getChannelSchedule(
+            twitchApi.getChannelSchedule(
                 channelId = channelId,
                 limit = 10,
                 after = null,
@@ -317,7 +316,7 @@ class TwitchRepositoryImpl(
             .map { result -> result.id }
             .chunked(size = 100)
             .flatMap { idsToUpdate ->
-                val users = helix.getUsersById(ids = idsToUpdate)
+                val users = twitchApi.getUsersById(ids = idsToUpdate)
                     .fold(
                         onSuccess = { response -> response.data },
                         onFailure = { exception ->

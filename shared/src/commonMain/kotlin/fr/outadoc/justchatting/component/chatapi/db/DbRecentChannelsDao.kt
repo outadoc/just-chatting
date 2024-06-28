@@ -5,9 +5,9 @@ import app.cash.sqldelight.coroutines.mapToList
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
 
-class DbRecentChannelsRepository(
+class DbRecentChannelsDao(
     private val recentChannelQueries: RecentChannelQueries,
-) : RecentChannelsRepository {
+) : RecentChannelsDao {
 
     override fun getAll(): Flow<List<Recent_channels>> {
         return recentChannelQueries

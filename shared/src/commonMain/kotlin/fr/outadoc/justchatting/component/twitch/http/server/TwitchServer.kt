@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.component.twitch.http.server
 
-import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.component.twitch.http.model.ChannelScheduleResponse
 import fr.outadoc.justchatting.component.twitch.http.model.ChannelSearchResponse
 import fr.outadoc.justchatting.component.twitch.http.model.CheerEmotesResponse
@@ -16,7 +16,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.path
 
-class HelixServer(httpClient: HttpClient) : HelixApi {
+class TwitchServer(httpClient: HttpClient) : TwitchApi {
 
     private val client = httpClient.config {
         defaultRequest {

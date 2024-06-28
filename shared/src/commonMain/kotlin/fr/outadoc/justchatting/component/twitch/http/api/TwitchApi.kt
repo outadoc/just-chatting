@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.component.twitch.http.model.StreamsResponse
 import fr.outadoc.justchatting.component.twitch.http.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.component.twitch.http.model.UsersResponse
 
-interface HelixApi {
+interface TwitchApi {
 
     suspend fun getStreams(ids: List<String>): Result<StreamsResponse>
 

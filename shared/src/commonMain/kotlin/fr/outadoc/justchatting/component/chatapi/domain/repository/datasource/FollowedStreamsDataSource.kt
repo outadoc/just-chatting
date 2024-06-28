@@ -5,19 +5,19 @@ import androidx.paging.PagingState
 import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
 
 class FollowedStreamsDataSource(
     private val userId: String?,
-    private val helixApi: HelixApi,
+    private val twitchApi: TwitchApi,
 ) : PagingSource<Pagination, List<Stream>>() {
 
     override fun getRefreshKey(state: PagingState<Pagination, List<Stream>>): Pagination? = null
 
     override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, List<Stream>> {
-        return helixApi
+        return twitchApi
             .getFollowedStreams(
                 userId = userId,
                 limit = params.loadSize,

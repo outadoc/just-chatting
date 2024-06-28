@@ -2,14 +2,14 @@ package fr.outadoc.justchatting.component.chatapi.domain.repository
 
 import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
-import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesRepository
+import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
 import fr.outadoc.justchatting.component.chatapi.db.Recent_emotes
 import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
 import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.http.api.BttvEmotesApi
-import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.http.api.StvEmotesApi
+import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.component.twitch.utils.map
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
@@ -19,15 +19,15 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
 class EmotesRepository(
-    private val helixApi: HelixApi,
+    private val twitchApi: TwitchApi,
     private val stvEmotesApi: StvEmotesApi,
     private val bttvEmotesApi: BttvEmotesApi,
-    private val recentEmotes: RecentEmotesRepository,
+    private val recentEmotes: RecentEmotesDao,
     private val preferencesRepository: PreferenceRepository,
 ) {
     suspend fun loadGlobalBadges(): Result<List<TwitchBadge>> =
         withContext(DispatchersProvider.io) {
-            helixApi.getGlobalBadges().map { result ->
+            twitchApi.getGlobalBadges().map { result ->
                 result.badgeSets.flatMap { set ->
                     set.versions.map { version ->
                         TwitchBadge(
@@ -48,7 +48,7 @@ class EmotesRepository(
 
     suspend fun loadChannelBadges(channelId: String): Result<List<TwitchBadge>> =
         withContext(DispatchersProvider.io) {
-            helixApi.getChannelBadges(channelId).map { result ->
+            twitchApi.getChannelBadges(channelId).map { result ->
                 result.badgeSets.flatMap { set ->
                     set.versions.map { version ->
                         TwitchBadge(

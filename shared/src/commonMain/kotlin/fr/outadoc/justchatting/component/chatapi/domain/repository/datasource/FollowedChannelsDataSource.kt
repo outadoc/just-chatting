@@ -5,19 +5,19 @@ import androidx.paging.PagingState
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.component.chatapi.domain.model.Pagination
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
+import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.utils.logging.logError
 
 class FollowedChannelsDataSource(
     private val userId: String?,
-    private val helixApi: HelixApi,
+    private val twitchApi: TwitchApi,
 ) : PagingSource<Pagination, List<ChannelFollow>>() {
 
     override fun getRefreshKey(state: PagingState<Pagination, List<ChannelFollow>>): Pagination? =
         null
 
     override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, List<ChannelFollow>> {
-        return helixApi
+        return twitchApi
             .getFollowedChannels(
                 userId = userId,
                 limit = params.loadSize,

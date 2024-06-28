@@ -5,9 +5,9 @@ import app.cash.sqldelight.coroutines.mapToList
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
 
-class DbRecentEmotesRepository(
+class DbRecentEmotesDao(
     private val recentEmoteQueries: RecentEmoteQueries,
-) : RecentEmotesRepository {
+) : RecentEmotesDao {
 
     override fun getAll(): Flow<List<Recent_emotes>> {
         return recentEmoteQueries

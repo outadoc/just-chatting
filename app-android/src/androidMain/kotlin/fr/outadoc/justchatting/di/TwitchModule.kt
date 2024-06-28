@@ -5,13 +5,13 @@ import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesReposit
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepositoryImpl
 import fr.outadoc.justchatting.component.twitch.http.api.BttvEmotesApi
-import fr.outadoc.justchatting.component.twitch.http.api.HelixApi
 import fr.outadoc.justchatting.component.twitch.http.api.IdApi
 import fr.outadoc.justchatting.component.twitch.http.api.StvEmotesApi
+import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.component.twitch.http.server.BttvEmotesServer
-import fr.outadoc.justchatting.component.twitch.http.server.HelixServer
 import fr.outadoc.justchatting.component.twitch.http.server.IdServer
 import fr.outadoc.justchatting.component.twitch.http.server.StvEmotesServer
+import fr.outadoc.justchatting.component.twitch.http.server.TwitchServer
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesServer
 import fr.outadoc.justchatting.utils.core.DefaultJson
@@ -34,7 +34,7 @@ val twitchModule = module {
     single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
 
     single<IdApi> { IdServer(get(named("twitch"))) }
-    single<HelixApi> { HelixServer(get(named("twitch"))) }
+    single<TwitchApi> { TwitchServer(get(named("twitch"))) }
     single<BttvEmotesApi> { BttvEmotesServer(get()) }
     single<StvEmotesApi> { StvEmotesServer(get()) }
     single<RecentMessagesApi> { RecentMessagesServer(get()) }

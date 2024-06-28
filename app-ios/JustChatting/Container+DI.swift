@@ -55,14 +55,14 @@ extension Container {
             r.resolve(AppDatabase.self)!.recentChannelQueries
         }
 
-        register(RecentEmotesRepository.self) { r in
-            DbRecentEmotesRepository(
+        register(RecentEmotesDao.self) { r in
+            DbRecentEmotesDao(
                 recentEmoteQueries: r.resolve(RecentEmoteQueries.self)!
             )
         }
 
-        register(RecentChannelsRepository.self) { r in
-            DbRecentChannelsRepository(
+        register(RecentChannelsDao.self) { r in
+            DbRecentChannelsDao(
                 recentChannelQueries: r.resolve(RecentChannelQueries.self)!
             )
         }
@@ -104,19 +104,19 @@ extension Container {
 
         register(EmotesRepository.self) { r in
             EmotesRepository(
-                helixApi: r.resolve(HelixApi.self)!,
+                twitchApi: r.resolve(TwitchApi.self)!,
                 stvEmotesApi: r.resolve(StvEmotesApi.self)!,
                 bttvEmotesApi: r.resolve(BttvEmotesApi.self)!,
-                recentEmotes: r.resolve(RecentEmotesRepository.self)!,
+                recentEmotes: r.resolve(RecentEmotesDao.self)!,
                 preferencesRepository: r.resolve(PreferenceRepository.self)!
             )
         }
 
         register(TwitchRepository.self) { r in
             TwitchRepositoryImpl(
-                helix: r.resolve(HelixApi.self)!,
+                twitchApi: r.resolve(TwitchApi.self)!,
                 preferencesRepository: r.resolve(PreferenceRepository.self)!,
-                recentChannelsRepository: r.resolve(RecentChannelsRepository.self)!
+                recentChannelsDao: r.resolve(RecentChannelsDao.self)!
             )
         }
 
@@ -126,8 +126,8 @@ extension Container {
             )
         }
 
-        register(HelixApi.self) { r in
-            HelixServer(
+        register(TwitchApi.self) { r in
+            TwitchServer(
                 httpClient: r.resolve(HttpClient.self, name: "twitch")!
             )
         }

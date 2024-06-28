@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.richem
 
 import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 
-fun PubSubRichEmbedMessage.RichEmbed.Data.map(): ChatEvent.RichEmbed =
+internal fun PubSubRichEmbedMessage.RichEmbed.Data.map(): ChatEvent.RichEmbed =
     ChatEvent.RichEmbed(
         messageId = messageId,
         title = title,

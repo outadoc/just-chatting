@@ -34,7 +34,7 @@ import kotlinx.collections.immutable.toPersistentHashMap
 
 @ThemePreviews
 @Composable
-fun ChatMessagePreview(
+internal fun ChatMessagePreview(
     @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatEvent.Message,
 ) {
     val inlineBadges = previewBadges
@@ -56,7 +56,7 @@ fun ChatMessagePreview(
 }
 
 @Composable
-fun ChatMessage(
+internal fun ChatMessage(
     modifier: Modifier = Modifier,
     message: ChatEvent.Message,
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),

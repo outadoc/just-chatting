@@ -9,11 +9,11 @@ package fr.outadoc.justchatting.component.ircparser.irc.message
 import fr.outadoc.justchatting.component.ircparser.core.message.IrcMessage
 import fr.outadoc.justchatting.component.ircparser.irc.CharacterCodes
 
-interface IIrcMessageParser {
+internal interface IIrcMessageParser {
     fun parse(line: String): IrcMessage?
 }
 
-object IrcMessageParser : IIrcMessageParser {
+internal object IrcMessageParser : IIrcMessageParser {
 
     private const val MAX_LINE_LENGTH = 8192
 
@@ -181,7 +181,7 @@ object IrcMessageParser : IIrcMessageParser {
     }
 }
 
-object ParseHelper {
+internal object ParseHelper {
 
     fun parseToKeysAndOptionalValues(
         string: String,

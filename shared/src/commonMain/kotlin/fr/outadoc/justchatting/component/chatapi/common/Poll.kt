@@ -5,7 +5,7 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
 @Immutable
-data class Poll(
+internal data class Poll(
     val pollId: String,
     val status: Status,
     val title: String,

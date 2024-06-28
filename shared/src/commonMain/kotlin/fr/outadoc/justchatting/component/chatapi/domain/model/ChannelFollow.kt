@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.utils.parcel.Parcelable
 import fr.outadoc.justchatting.utils.parcel.Parcelize
 
 @Parcelize
-data class ChannelFollow(
+internal data class ChannelFollow(
     val user: User,
     val followedAt: String,
 ) : Parcelable

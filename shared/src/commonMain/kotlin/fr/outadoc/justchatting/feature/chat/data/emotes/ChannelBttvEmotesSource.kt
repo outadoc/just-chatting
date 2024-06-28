@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesReposit
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.flatListOf
 
-class ChannelBttvEmotesSource(
+internal class ChannelBttvEmotesSource(
     private val emotesRepository: EmotesRepository,
 ) : CachedEmoteListSource<List<EmoteSetItem>>() {
 

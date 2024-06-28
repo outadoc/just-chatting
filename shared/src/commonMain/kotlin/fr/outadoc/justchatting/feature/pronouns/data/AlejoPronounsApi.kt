@@ -16,7 +16,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-class AlejoPronounsApi(
+internal class AlejoPronounsApi(
     private val alejoPronounsClient: AlejoPronounsClient,
     private val preferenceRepository: PreferenceRepository,
 ) : PronounsApi {

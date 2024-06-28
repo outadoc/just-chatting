@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.update
 
-class DefaultChatRepository(
+internal class DefaultChatRepository(
     private val factory: AggregateChatEventHandler.Factory,
 ) : ChatRepository {
 

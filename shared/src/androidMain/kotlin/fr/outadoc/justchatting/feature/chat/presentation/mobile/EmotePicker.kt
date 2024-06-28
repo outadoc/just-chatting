@@ -17,7 +17,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
-fun EmotePicker(
+internal fun EmotePicker(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     onEmoteClick: (Emote) -> Unit,

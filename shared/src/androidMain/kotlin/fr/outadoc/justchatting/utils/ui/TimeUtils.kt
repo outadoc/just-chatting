@@ -17,7 +17,7 @@ import java.util.Date
 import kotlin.time.Duration
 
 @Composable
-fun Instant.formatTimestamp(): String? {
+internal fun Instant.formatTimestamp(): String? {
     val context = LocalContext.current
     val format = remember { DateFormat.getTimeFormat(context) }
     return remember(this) {
@@ -30,7 +30,7 @@ fun Instant.formatTimestamp(): String? {
 }
 
 @Composable
-fun Instant.formatDate(
+internal fun Instant.formatDate(
     tz: TimeZone = TimeZone.currentSystemDefault(),
     clock: Clock = Clock.System,
 ): String? {
@@ -49,7 +49,7 @@ fun Instant.formatDate(
     }
 }
 
-fun Duration.format(context: Context): String =
+internal fun Duration.format(context: Context): String =
     sequence {
         toComponents { days, hours, minutes, seconds, _ ->
             days.takeIf { it > 0 }?.let {

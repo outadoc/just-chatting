@@ -16,7 +16,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.path
 
-class TwitchServer(httpClient: HttpClient) : TwitchApi {
+internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
 
     private val client = httpClient.config {
         defaultRequest {

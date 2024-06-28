@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class SettingsViewModel(
+internal class SettingsViewModel(
     private val preferenceRepository: PreferenceRepository,
     private val authRepository: AuthRepository,
     private val logRepository: LogRepository,

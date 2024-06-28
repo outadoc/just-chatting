@@ -11,7 +11,7 @@ import coil.request.ImageRequest
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
 
 @Composable
-fun UpdateTaskDescriptionForUser(user: User?) {
+internal fun UpdateTaskDescriptionForUser(user: User?) {
     val context = LocalContext.current as? Activity ?: return
     LaunchedEffect(user) {
         if (user != null) {

@@ -4,7 +4,7 @@ import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.flatListOf
 
-class GlobalTwitchEmotesSource(
+internal class GlobalTwitchEmotesSource(
     private val delegateTwitchEmotesSource: DelegateTwitchEmotesSource,
 ) : CachedEmoteListSource<List<EmoteSetItem>>() {
 

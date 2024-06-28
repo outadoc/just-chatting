@@ -24,7 +24,7 @@ private fun createUrlForEmote(
         .replace("{{scale}}", scale)
 }
 
-fun TwitchEmote.map(templateUrl: String): Emote {
+internal fun TwitchEmote.map(templateUrl: String): Emote {
     return Emote(
         name = name,
         ownerId = ownerId,
@@ -50,7 +50,7 @@ fun TwitchEmote.map(templateUrl: String): Emote {
     )
 }
 
-fun ChatEmote.map(): Emote {
+internal fun ChatEmote.map(): Emote {
     return Emote(
         name = name,
         ownerId = null,

@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 
-fun getMentionStyle(
+internal fun getMentionStyle(
     mentioned: Boolean,
     mentionBackground: Color,
     mentionColor: Color,

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class AlejoPronoun(
+internal data class AlejoPronoun(
     @SerialName("name")
     val id: String,
     @SerialName("display")

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Dependency(
+internal data class Dependency(
     @SerialName("moduleName")
     val moduleName: String,
     @SerialName("moduleUrl")

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class StreamsResponse(
+internal data class StreamsResponse(
     @SerialName("data")
     val data: List<Stream>,
     @SerialName("pagination")

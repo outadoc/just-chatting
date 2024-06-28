@@ -8,7 +8,7 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
 @Immutable
-sealed interface ChatEvent {
+internal sealed interface ChatEvent {
 
     sealed class Message : ChatEvent {
 

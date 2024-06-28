@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.component.chatapi.common
 
-data class Chatter(
+internal data class Chatter(
     val id: String,
     val login: String,
     val displayName: String,

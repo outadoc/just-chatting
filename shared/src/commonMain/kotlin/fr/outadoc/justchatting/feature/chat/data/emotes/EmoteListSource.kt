@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.emotes
 
-interface EmoteListSource<T> {
+internal interface EmoteListSource<T> {
 
     suspend fun getEmotes(
         channelId: String,

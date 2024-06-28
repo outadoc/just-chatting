@@ -41,7 +41,7 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-class PubSubWebSocket(
+internal class PubSubWebSocket(
     private val networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val httpClient: HttpClient,

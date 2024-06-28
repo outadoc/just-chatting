@@ -6,7 +6,7 @@
 
 package fr.outadoc.justchatting.component.ircparser.irc
 
-object CharacterCodes {
+internal object CharacterCodes {
     val LF: Char = 0xA.toChar()
     val CR: Char = 0xD.toChar()
     val AT: Char = 0x40.toChar()

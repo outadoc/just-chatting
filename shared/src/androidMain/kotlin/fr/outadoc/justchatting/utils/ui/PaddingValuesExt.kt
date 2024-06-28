@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalLayoutDirection
 
 @Composable
-operator fun PaddingValues.plus(paddingValues: PaddingValues): PaddingValues {
+internal operator fun PaddingValues.plus(paddingValues: PaddingValues): PaddingValues {
     val layoutDirection = LocalLayoutDirection.current
     return PaddingValues(
         start = calculateStartPadding(layoutDirection) + paddingValues.calculateStartPadding(

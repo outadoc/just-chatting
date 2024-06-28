@@ -26,7 +26,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.shared.MR
 
 @Composable
-fun InReplyToMessage(
+internal fun InReplyToMessage(
     modifier: Modifier = Modifier,
     mentions: List<String>,
     message: String?,

@@ -17,7 +17,7 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
 @Composable
-fun ChatSlowModeProgress(
+internal fun ChatSlowModeProgress(
     modifier: Modifier,
     state: ChatViewModel.State,
 ) {
@@ -38,7 +38,7 @@ fun ChatSlowModeProgress(
 }
 
 @Composable
-fun ChatSlowModeProgress(
+internal fun ChatSlowModeProgress(
     modifier: Modifier,
     constraint: MessagePostConstraint,
 ) {

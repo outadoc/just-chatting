@@ -6,6 +6,6 @@
 
 package fr.outadoc.justchatting.component.ircparser.irc.prefix
 
-interface IPrefixParser {
+internal interface IPrefixParser {
     fun parse(rawPrefix: String): Prefix?
 }

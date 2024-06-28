@@ -11,19 +11,19 @@ import platform.Foundation.NSNumberFormatterPercentStyle
 import platform.Foundation.currentLocale
 import platform.Foundation.localeIdentifier
 
-actual fun Float.formatPercent(): String =
+internal actual fun Float.formatPercent(): String =
     NSNumberFormatter.localizedStringFromNumber(
         NSNumber(this),
         NSNumberFormatterPercentStyle,
     )
 
-actual fun Int.formatNumber(): String =
+internal actual fun Int.formatNumber(): String =
     NSNumberFormatter.localizedStringFromNumber(
         NSNumber(this),
         NSNumberFormatterDecimalStyle,
     )
 
-actual fun BigDecimal.formatCurrency(currency: Currency): String {
+internal actual fun BigDecimal.formatCurrency(currency: Currency): String {
     val amount = NSNumber(this.floatValue(exactRequired = false))
     val currentLocale = NSLocale.currentLocale().localeIdentifier()
     val formatter = NSNumberFormatter().apply {

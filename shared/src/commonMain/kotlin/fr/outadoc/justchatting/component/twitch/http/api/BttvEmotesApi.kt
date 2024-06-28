@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.component.twitch.http.model.BttvChannelResponse
 import fr.outadoc.justchatting.component.twitch.http.model.BttvEmote
 import fr.outadoc.justchatting.component.twitch.http.model.FfzEmote
 
-interface BttvEmotesApi {
+internal interface BttvEmotesApi {
 
     suspend fun getGlobalBttvEmotes(): Result<List<BttvEmote>>
 

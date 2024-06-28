@@ -14,14 +14,14 @@ import fr.outadoc.justchatting.utils.ui.ScreenPreviews
 
 @ScreenPreviews
 @Composable
-fun NoContentPreview() {
+internal fun NoContentPreview() {
     AppTheme {
         NoContent()
     }
 }
 
 @Composable
-fun NoContent(modifier: Modifier = Modifier) {
+internal fun NoContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier,
         verticalArrangement = Arrangement.Center,

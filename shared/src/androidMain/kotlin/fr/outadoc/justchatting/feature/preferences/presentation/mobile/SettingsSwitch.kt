@@ -23,7 +23,7 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @ThemePreviews
 @Composable
-fun SettingsSwitchPreview() {
+internal fun SettingsSwitchPreview() {
     AppTheme {
         Column(modifier = Modifier.width(256.dp)) {
             SettingsSwitch(
@@ -51,7 +51,7 @@ fun SettingsSwitchPreview() {
 }
 
 @Composable
-fun SettingsSwitch(
+internal fun SettingsSwitch(
     modifier: Modifier = Modifier,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,

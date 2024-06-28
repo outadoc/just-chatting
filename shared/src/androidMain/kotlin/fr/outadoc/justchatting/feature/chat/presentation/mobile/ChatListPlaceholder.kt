@@ -24,7 +24,7 @@ import kotlin.random.Random
 
 @ThemePreviews
 @Composable
-fun ChatListPlaceholderPreview() {
+internal fun ChatListPlaceholderPreview() {
     AppTheme {
         Surface {
             ChatListPlaceholder()
@@ -33,7 +33,7 @@ fun ChatListPlaceholderPreview() {
 }
 
 @Composable
-fun ChatListPlaceholder(
+internal fun ChatListPlaceholder(
     modifier: Modifier = Modifier,
     placeholderItemCount: Int = 100,
 ) {

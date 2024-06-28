@@ -9,7 +9,7 @@ import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 
 @Suppress("unused")
-class KoinInitializer : Initializer<KoinApplication> {
+public class KoinInitializer : Initializer<KoinApplication> {
 
     override fun dependencies(): List<Class<out Initializer<*>>> = emptyList()
 

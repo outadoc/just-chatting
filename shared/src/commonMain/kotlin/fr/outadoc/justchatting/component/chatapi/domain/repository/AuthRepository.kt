@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
 
-class AuthRepository(
+internal class AuthRepository(
     private val api: IdApi,
     private val preferencesRepository: PreferenceRepository,
     private val oAuthAppCredentials: OAuthAppCredentials,

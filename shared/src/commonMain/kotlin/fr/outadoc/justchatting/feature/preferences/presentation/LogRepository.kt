@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
-interface LogRepository {
+internal interface LogRepository {
     val isSupported: Boolean
     suspend fun dumpLogs(): String
 }

@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.component.chatapi.common
 import androidx.compose.runtime.Immutable
 
 @Immutable
-sealed class Raid {
+internal sealed class Raid {
 
     data class Preparing(
         val targetId: String,

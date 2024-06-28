@@ -10,7 +10,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-class AndroidNetworkStateObserver(
+internal class AndroidNetworkStateObserver(
     private val connectivityManager: ConnectivityManager,
 ) : NetworkStateObserver {
 

@@ -15,7 +15,7 @@ import fr.outadoc.justchatting.utils.core.formatNumber
 import io.fluidsonic.currency.Currency
 import kotlinx.collections.immutable.toImmutableList
 
-class IrcMessageMapper {
+internal class IrcMessageMapper {
 
     fun mapMessage(ircEvent: IrcEvent.Message): ChatEvent = with(ircEvent) {
         when (this) {

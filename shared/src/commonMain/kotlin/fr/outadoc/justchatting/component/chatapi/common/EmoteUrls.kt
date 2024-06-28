@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.component.chatapi.common
 import androidx.compose.runtime.Immutable
 
 @Immutable
-data class EmoteUrls(
+internal data class EmoteUrls(
     val dark: Map<Float, String>,
     val light: Map<Float, String>,
 ) {

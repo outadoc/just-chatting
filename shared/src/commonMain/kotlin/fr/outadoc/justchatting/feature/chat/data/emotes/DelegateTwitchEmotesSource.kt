@@ -8,7 +8,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-class DelegateTwitchEmotesSource(
+internal class DelegateTwitchEmotesSource(
     private val twitchRepository: TwitchRepository,
 ) : CachedEmoteListSource<DelegateTwitchEmotesSource.CachedResult>() {
 

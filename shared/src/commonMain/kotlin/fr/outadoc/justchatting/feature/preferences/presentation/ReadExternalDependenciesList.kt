@@ -1,5 +1,5 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
-interface ReadExternalDependenciesList {
+internal interface ReadExternalDependenciesList {
     suspend operator fun invoke(): List<Dependency>
 }

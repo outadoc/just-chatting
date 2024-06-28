@@ -10,7 +10,7 @@ import fr.outadoc.justchatting.feature.preferences.presentation.mobile.Dependenc
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
 
 @Composable
-fun MainRouter(
+internal fun MainRouter(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onChannelClick: (login: String) -> Unit,

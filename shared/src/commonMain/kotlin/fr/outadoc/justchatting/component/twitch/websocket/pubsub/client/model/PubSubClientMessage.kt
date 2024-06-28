@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class PubSubClientMessage {
+internal sealed class PubSubClientMessage {
 
     @Serializable
     @SerialName("LISTEN")

@@ -27,7 +27,7 @@ import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun SearchScreenBar(
+internal fun SearchScreenBar(
     modifier: Modifier = Modifier,
     onChannelClick: (login: String) -> Unit,
     sizeClass: WindowSizeClass,

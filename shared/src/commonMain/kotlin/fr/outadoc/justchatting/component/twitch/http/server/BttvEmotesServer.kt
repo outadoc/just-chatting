@@ -10,7 +10,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.http.path
 
-class BttvEmotesServer(httpClient: HttpClient) : BttvEmotesApi {
+internal class BttvEmotesServer(httpClient: HttpClient) : BttvEmotesApi {
 
     private val client = httpClient.config {
         defaultRequest {

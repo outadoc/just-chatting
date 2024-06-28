@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.BuildConfig
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.component.twitch.websocket.irc.IrcMessageMapper
@@ -37,14 +36,15 @@ import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItems
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.DefaultChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.MobileCreateShortcutForChannelUseCase
-import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsClient
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
+import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsClient
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
-val chatModule = module {
+public val chatModule: Module = module {
 
     viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { StreamAndUserInfoViewModel(get()) }
@@ -61,17 +61,11 @@ val chatModule = module {
 
     single {
         ChatCommandHandlerFactoriesProvider {
-            if (BuildConfig.ENABLE_MOCK_IRC_ENDPOINT) {
-                listOf(
-                    get<MockChatWebSocket.Factory>(),
-                )
-            } else {
-                listOf(
-                    get<LiveChatWebSocket.Factory>(),
-                    get<LoggedInChatWebSocket.Factory>(),
-                    get<PubSubWebSocket.Factory>(),
-                )
-            }
+            listOf(
+                get<LiveChatWebSocket.Factory>(),
+                get<LoggedInChatWebSocket.Factory>(),
+                get<PubSubWebSocket.Factory>(),
+            )
         }
     }
 

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CheerEmote(
+internal data class CheerEmote(
     @SerialName("prefix")
     val prefix: String,
     @SerialName("tiers")

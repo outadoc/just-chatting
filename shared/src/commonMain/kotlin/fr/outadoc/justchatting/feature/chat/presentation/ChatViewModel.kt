@@ -80,7 +80,7 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class, FlowPreview::class)
-class ChatViewModel(
+internal class ChatViewModel(
     private val clock: Clock,
     private val twitchRepository: TwitchRepository,
     private val emotesRepository: EmotesRepository,

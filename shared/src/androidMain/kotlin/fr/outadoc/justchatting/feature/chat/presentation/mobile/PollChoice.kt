@@ -25,7 +25,7 @@ import fr.outadoc.justchatting.utils.core.formatPercent
 import fr.outadoc.justchatting.utils.ui.customColors
 
 @Composable
-fun PollChoice(
+internal fun PollChoice(
     modifier: Modifier = Modifier,
     title: String,
     votes: Int,

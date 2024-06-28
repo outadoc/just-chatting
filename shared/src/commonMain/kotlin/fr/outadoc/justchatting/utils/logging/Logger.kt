@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.utils.logging
 
-object Logger {
+public object Logger {
 
-    var logStrategy: LogStrategy = NoopLogStrategy
+    public var logStrategy: LogStrategy = NoopLogStrategy
 
-    enum class Level(val tag: String) {
+    public enum class Level(internal val tag: String) {
         Verbose("V"),
         Debug("D"),
         Info("I"),
@@ -12,7 +12,7 @@ object Logger {
         Error("E"),
     }
 
-    fun println(level: Level, tag: String, content: () -> String) {
+    internal fun println(level: Level, tag: String, content: () -> String) {
         logStrategy.println(level, tag, content())
     }
 }

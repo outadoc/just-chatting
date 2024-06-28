@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin
 import kotlinx.serialization.json.Json
 
-class PubSubRichEmbedPlugin(
+internal class PubSubRichEmbedPlugin(
     private val json: Json,
 ) : PubSubPlugin<PubSubRichEmbedMessage> {
 

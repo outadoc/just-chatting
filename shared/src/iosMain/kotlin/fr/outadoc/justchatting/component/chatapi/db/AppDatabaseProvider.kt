@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.component.chatapi.db
 
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 
-object AppDatabaseProvider {
+internal object AppDatabaseProvider {
 
     fun get(): AppDatabase {
         return AppDatabase(

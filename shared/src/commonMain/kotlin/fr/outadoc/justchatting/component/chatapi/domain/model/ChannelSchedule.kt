@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.component.chatapi.domain.model
 
-data class ChannelSchedule(
+internal data class ChannelSchedule(
     val segments: List<ChannelScheduleSegment>,
     val userId: String,
     val userLogin: String,

@@ -33,7 +33,7 @@ import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 import kotlinx.coroutines.launch
 
 @Composable
-fun ChatListContainer(
+internal fun ChatListContainer(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State.Chatting,
     showTimestamps: Boolean,

@@ -26,7 +26,7 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 
 @Stable
 @Composable
-fun dynamicImageColorScheme(
+internal fun dynamicImageColorScheme(
     url: String?,
     parentScheme: ColorScheme = MaterialTheme.colorScheme,
 ): ColorScheme {
@@ -87,17 +87,17 @@ private fun Bitmap.getSourceColor(): Color {
 }
 
 @SuppressLint("RestrictedApi")
-fun darkSchemeFromColor(color: Color): ColorScheme {
+internal fun darkSchemeFromColor(color: Color): ColorScheme {
     return Scheme.dark(color.toArgb()).toComposeTheme()
 }
 
 @SuppressLint("RestrictedApi")
-fun lightSchemeFromColor(color: Color): ColorScheme {
+internal fun lightSchemeFromColor(color: Color): ColorScheme {
     return Scheme.light(color.toArgb()).toComposeTheme()
 }
 
 @SuppressLint("RestrictedApi")
-fun Scheme.toComposeTheme(): ColorScheme {
+internal fun Scheme.toComposeTheme(): ColorScheme {
     return ColorScheme(
         primary = Color(primary),
         onPrimary = Color(onPrimary),

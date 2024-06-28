@@ -49,7 +49,7 @@ import kotlinx.collections.immutable.toPersistentHashMap
 import kotlin.random.Random
 
 @Composable
-fun ChatMessageBody(
+internal fun ChatMessageBody(
     modifier: Modifier = Modifier,
     body: ChatEvent.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
@@ -155,7 +155,7 @@ fun ChatMessageBody(
 @Stable
 @Composable
 @OptIn(ExperimentalTextApi::class)
-fun ChatEvent.Message.Body.toAnnotatedString(
+internal fun ChatEvent.Message.Body.toAnnotatedString(
     appUser: AppUser.LoggedIn,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     pronouns: ImmutableMap<Chatter, Pronoun>,

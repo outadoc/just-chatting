@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-data class ChannelFollow(
+internal data class ChannelFollow(
     @SerialName("broadcaster_id")
     val userId: String,
     @SerialName("broadcaster_login")

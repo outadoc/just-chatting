@@ -33,7 +33,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.shared.MR
 
 @Composable
-fun MainNavigation(
+internal fun MainNavigation(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     selectedScreen: Screen,
@@ -75,7 +75,7 @@ fun MainNavigation(
 }
 
 @Composable
-fun CompactNavigation(
+internal fun CompactNavigation(
     modifier: Modifier = Modifier,
     selectedScreen: Screen,
     onSelectedTabChange: (Screen) -> Unit,
@@ -129,7 +129,7 @@ fun CompactNavigation(
 }
 
 @Composable
-fun MediumNavigation(
+internal fun MediumNavigation(
     modifier: Modifier = Modifier,
     selectedScreen: Screen,
     onSelectedTabChange: (Screen) -> Unit,
@@ -204,7 +204,7 @@ fun MediumNavigation(
 }
 
 @Composable
-fun ExpandedNavigation(
+internal fun ExpandedNavigation(
     modifier: Modifier = Modifier,
     selectedScreen: Screen,
     onSelectedTabChange: (Screen) -> Unit,

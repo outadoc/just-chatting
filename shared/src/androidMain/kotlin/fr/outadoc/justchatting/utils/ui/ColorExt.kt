@@ -11,7 +11,7 @@ import kotlin.math.min
 private const val MIN_LUMINANCE_SEARCH_MAX_ITERATIONS = 10
 private const val MIN_LUMINANCE_SEARCH_PRECISION = 1
 
-fun ensureColorIsAccessible(
+internal fun ensureColorIsAccessible(
     foreground: Color,
     background: Color,
     minimumContrast: Double = 4.5,
@@ -75,7 +75,7 @@ private fun calculateLuminanceContrast(foregroundY: Double, backgroundY: Double)
 }
 
 @ColorInt
-fun ensureMinimumAlpha(
+internal fun ensureMinimumAlpha(
     @ColorInt foreground: Int,
     @ColorInt background: Int,
     minimumContrast: Float = 10.0f,
@@ -97,10 +97,10 @@ private fun colorToXyz(color: Color): DoubleArray {
 
 private fun xyzToColor(x: Double, y: Double, z: Double) = Color(ColorUtils.XYZToColor(x, y, z))
 
-val Color.isLight: Boolean
+internal val Color.isLight: Boolean
     get() = luminance() > 0.5
 
-fun String.parseHexColor(): Color? =
+internal fun String.parseHexColor(): Color? =
     try {
         Color(android.graphics.Color.parseColor(this))
     } catch (e: IllegalArgumentException) {

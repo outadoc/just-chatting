@@ -17,7 +17,7 @@ import fr.outadoc.justchatting.utils.ui.AppTheme
 
 @Preview
 @Composable
-fun ChatAutoCompleteRowPreview() {
+internal fun ChatAutoCompleteRowPreview() {
     AppTheme {
         val items = listOf(
             AutoCompleteItem.User(
@@ -45,7 +45,7 @@ fun ChatAutoCompleteRowPreview() {
 }
 
 @Composable
-fun ChatAutoCompleteRow(
+internal fun ChatAutoCompleteRow(
     modifier: Modifier = Modifier,
     onChatterClick: (Chatter) -> Unit,
     onEmoteClick: (Emote) -> Unit,

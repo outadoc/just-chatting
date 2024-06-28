@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BttvEmote(
+internal data class BttvEmote(
     @SerialName("id")
     val id: String,
     @SerialName("code")

@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.component.preferences.data.AppPreferences
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class NoopPreferenceRepository : PreferenceRepository {
+internal class NoopPreferenceRepository : PreferenceRepository {
 
     override val currentPreferences: Flow<AppPreferences> = flowOf(AppPreferences())
 

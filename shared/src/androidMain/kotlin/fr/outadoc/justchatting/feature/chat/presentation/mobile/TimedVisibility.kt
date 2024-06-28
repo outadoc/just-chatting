@@ -15,7 +15,7 @@ import kotlinx.coroutines.isActive
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun IntervalCheckVisibility(
+internal fun IntervalCheckVisibility(
     modifier: Modifier = Modifier,
     enter: EnterTransition,
     exit: ExitTransition,

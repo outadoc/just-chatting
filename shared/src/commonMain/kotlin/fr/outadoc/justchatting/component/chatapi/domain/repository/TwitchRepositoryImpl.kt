@@ -31,7 +31,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
-class TwitchRepositoryImpl(
+internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
     private val preferencesRepository: PreferenceRepository,
     private val recentChannelsDao: RecentChannelsDao,

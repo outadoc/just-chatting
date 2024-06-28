@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlin.time.Duration.Companion.seconds
 
-class ChannelSearchViewModel(
+internal class ChannelSearchViewModel(
     private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
 

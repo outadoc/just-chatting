@@ -10,7 +10,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
-interface TwitchRepository {
+internal interface TwitchRepository {
     suspend fun loadSearchChannels(query: String): Flow<PagingData<ChannelSearchResult>>
     suspend fun loadFollowedStreams(): Flow<PagingData<Stream>>
     suspend fun loadFollowedChannels(): Flow<PagingData<ChannelFollow>>

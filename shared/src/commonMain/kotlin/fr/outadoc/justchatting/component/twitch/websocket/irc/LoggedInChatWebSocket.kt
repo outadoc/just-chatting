@@ -50,7 +50,7 @@ import kotlin.time.Duration.Companion.seconds
  *
  * Use this class to write messages to the chat.
  */
-class LoggedInChatWebSocket(
+internal class LoggedInChatWebSocket(
     networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val clock: Clock,

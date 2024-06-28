@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.utils.parcel.Parcelize
 import kotlinx.collections.immutable.persistentListOf
 
 @Parcelize
-data class ChannelSearchResult(
+internal data class ChannelSearchResult(
     val title: String,
     val user: User,
     val language: String? = null,

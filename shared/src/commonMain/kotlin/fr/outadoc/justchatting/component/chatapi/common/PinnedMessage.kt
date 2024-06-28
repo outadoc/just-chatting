@@ -4,7 +4,7 @@ import androidx.compose.runtime.Immutable
 import kotlinx.datetime.Instant
 
 @Immutable
-data class PinnedMessage(
+internal data class PinnedMessage(
     val pinId: String,
     val pinnedBy: User,
     val message: Message,

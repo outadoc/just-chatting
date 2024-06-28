@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.withContext
 
-class RecentMessagesRepository(
+internal class RecentMessagesRepository(
     private val recentMessagesApi: RecentMessagesApi,
     private val parser: TwitchIrcCommandParser,
 ) {

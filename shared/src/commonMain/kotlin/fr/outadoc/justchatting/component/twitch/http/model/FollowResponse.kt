@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FollowResponse(
+internal data class FollowResponse(
     @SerialName("total")
     val total: Int,
     @SerialName("data")

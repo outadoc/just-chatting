@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.stateIn
 
-class AggregateChatEventHandler(
+internal class AggregateChatEventHandler(
     channelId: String,
     channelLogin: String,
     coroutineScope: CoroutineScope,

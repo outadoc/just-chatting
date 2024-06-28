@@ -8,7 +8,7 @@ import io.ktor.websocket.WebSocketExtensionFactory
 import io.ktor.websocket.WebSocketExtensionHeader
 import io.ktor.websocket.readText
 
-class FrameLogger : WebSocketExtension<FrameLogger.Config> {
+internal class FrameLogger : WebSocketExtension<FrameLogger.Config> {
 
     class Config
 

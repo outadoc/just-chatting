@@ -27,7 +27,7 @@ import kotlinx.collections.immutable.toPersistentHashMap
 
 @ThemePreviews
 @Composable
-fun UserNoticeMessagePreview(
+internal fun UserNoticeMessagePreview(
     @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatEvent.Message,
 ) {
     val inlineBadges = previewBadges
@@ -49,7 +49,7 @@ fun UserNoticeMessagePreview(
 }
 
 @Composable
-fun UserNoticeMessage(
+internal fun UserNoticeMessage(
     modifier: Modifier = Modifier,
     title: String,
     titleIcon: ImageVector?,

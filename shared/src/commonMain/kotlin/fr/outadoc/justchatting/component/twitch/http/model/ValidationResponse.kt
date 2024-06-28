@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-class ValidationResponse(
+internal class ValidationResponse(
     @SerialName("client_id")
     val clientId: String,
     @SerialName("login")

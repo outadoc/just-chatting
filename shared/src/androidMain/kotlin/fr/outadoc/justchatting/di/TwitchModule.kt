@@ -16,10 +16,11 @@ import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessa
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesServer
 import fr.outadoc.justchatting.utils.core.DefaultJson
 import kotlinx.serialization.json.Json
+import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val twitchModule = module {
+public val twitchModule: Module = module {
     single<Json> { DefaultJson }
 
     single {

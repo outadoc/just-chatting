@@ -13,7 +13,7 @@ import okio.sink
 import okio.source
 import java.util.UUID
 
-class AndroidLogRepository(private val applicationContext: Context) : LogRepository {
+internal class AndroidLogRepository(private val applicationContext: Context) : LogRepository {
 
     override val isSupported: Boolean = true
 

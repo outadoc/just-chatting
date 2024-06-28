@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RecentMessagesResponse(
+internal data class RecentMessagesResponse(
     @SerialName("messages")
     val messages: List<String>,
 )

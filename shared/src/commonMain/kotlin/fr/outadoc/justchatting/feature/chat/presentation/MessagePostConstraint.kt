@@ -5,7 +5,7 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
 @Immutable
-data class MessagePostConstraint(
+internal data class MessagePostConstraint(
     val lastMessageSentAt: Instant,
     val slowModeDuration: Duration,
 )

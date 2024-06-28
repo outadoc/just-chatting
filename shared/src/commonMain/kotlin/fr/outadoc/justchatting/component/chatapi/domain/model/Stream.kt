@@ -6,7 +6,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Parcelize
-data class Stream(
+internal data class Stream(
     val id: String,
     val user: User,
     val gameName: String? = null,

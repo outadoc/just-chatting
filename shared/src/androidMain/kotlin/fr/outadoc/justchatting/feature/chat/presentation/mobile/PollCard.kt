@@ -35,7 +35,7 @@ import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PollCard(
+internal fun PollCard(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,
     poll: Poll,
@@ -177,7 +177,7 @@ private val mockPoll = Poll(
 
 @ThemePreviews
 @Composable
-fun PollCardPreview() {
+internal fun PollCardPreview() {
     AppTheme {
         PollCard(
             poll = mockPoll.copy(status = Poll.Status.Active),
@@ -187,7 +187,7 @@ fun PollCardPreview() {
 
 @ThemePreviews
 @Composable
-fun PollCardPreviewCompleted() {
+internal fun PollCardPreviewCompleted() {
     AppTheme {
         PollCard(
             poll = mockPoll.copy(status = Poll.Status.Completed),

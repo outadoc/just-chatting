@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-data class User(
+internal data class User(
     @SerialName("id")
     val id: String,
     @SerialName("login")

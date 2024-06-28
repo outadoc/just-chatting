@@ -29,7 +29,7 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatRichEmbed(
+internal fun ChatRichEmbed(
     modifier: Modifier = Modifier,
     title: String,
     authorName: String,
@@ -82,7 +82,7 @@ fun ChatRichEmbed(
 
 @ThemePreviews
 @Composable
-fun ChatRichEmbedPreview() {
+internal fun ChatRichEmbedPreview() {
     AppTheme {
         ChatRichEmbed(
             modifier = Modifier.width(640.dp),
@@ -95,7 +95,7 @@ fun ChatRichEmbedPreview() {
 }
 
 @Composable
-fun ChatRichEmbed(
+internal fun ChatRichEmbed(
     modifier: Modifier = Modifier,
     richEmbed: ChatEvent.RichEmbed,
 ) {

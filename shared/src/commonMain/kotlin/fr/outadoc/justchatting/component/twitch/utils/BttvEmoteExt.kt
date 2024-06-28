@@ -21,7 +21,7 @@ private val availableDensities = mapOf(
     3.0f to "3x",
 )
 
-fun BttvEmote.map(): Emote {
+internal fun BttvEmote.map(): Emote {
     return Emote(
         name = code,
         ownerId = null,

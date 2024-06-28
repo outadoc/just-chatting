@@ -52,7 +52,7 @@ import kotlin.time.Duration.Companion.seconds
  * Maintains a websocket connection to the IRC Twitch chat and notifies of all messages
  * and commands, except NOTICE and USERSTATE which are handled by [LoggedInChatWebSocket].
  */
-class LiveChatWebSocket private constructor(
+internal class LiveChatWebSocket private constructor(
     networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val clock: Clock,

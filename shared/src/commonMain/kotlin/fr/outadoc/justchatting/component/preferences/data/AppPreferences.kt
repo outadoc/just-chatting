@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.component.preferences.data
 
-data class AppPreferences(
+internal data class AppPreferences(
     val appUser: AppUser = AppUser.NotLoggedIn,
     val showTimestamps: Boolean = true,
     val enableRecentMessages: Boolean = true,

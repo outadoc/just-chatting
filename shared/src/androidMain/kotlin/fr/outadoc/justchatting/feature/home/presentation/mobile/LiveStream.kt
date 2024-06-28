@@ -31,7 +31,7 @@ import kotlinx.datetime.Instant
 
 @ThemePreviews
 @Composable
-fun LiveStreamPreview() {
+internal fun LiveStreamPreview() {
     AppTheme {
         LiveStreamCard(
             modifier = Modifier.padding(8.dp),
@@ -54,7 +54,7 @@ fun LiveStreamPreview() {
 
 @ThemePreviews
 @Composable
-fun LiveStreamLongPreview() {
+internal fun LiveStreamLongPreview() {
     AppTheme {
         LiveStreamCard(
             modifier = Modifier
@@ -71,7 +71,7 @@ fun LiveStreamLongPreview() {
 }
 
 @Composable
-fun LiveStreamCard(
+internal fun LiveStreamCard(
     modifier: Modifier = Modifier,
     title: String? = null,
     userName: String? = null,

@@ -5,7 +5,7 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
 @Immutable
-data class Prediction(
+internal data class Prediction(
     val id: String,
     val title: String,
     val status: Status,

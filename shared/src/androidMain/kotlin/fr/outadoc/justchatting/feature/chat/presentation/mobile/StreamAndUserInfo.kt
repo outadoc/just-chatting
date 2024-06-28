@@ -15,7 +15,7 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun StreamAndUserInfo(
+internal fun StreamAndUserInfo(
     modifier: Modifier = Modifier,
     user: User,
     stream: Stream?,
@@ -43,7 +43,7 @@ fun StreamAndUserInfo(
 
 @ThemePreviews
 @Composable
-fun StreamInfoPreviewFull() {
+internal fun StreamInfoPreviewFull() {
     AppTheme {
         StreamAndUserInfo(
             user = User(
@@ -72,7 +72,7 @@ fun StreamInfoPreviewFull() {
 
 @ThemePreviews
 @Composable
-fun StreamInfoPreviewOffline() {
+internal fun StreamInfoPreviewOffline() {
     AppTheme {
         StreamAndUserInfo(
             user = User(

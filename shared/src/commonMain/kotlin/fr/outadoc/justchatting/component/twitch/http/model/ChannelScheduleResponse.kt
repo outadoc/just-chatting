@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ChannelScheduleResponse(
+internal data class ChannelScheduleResponse(
     @SerialName("data")
     val data: ChannelSchedule,
     @SerialName("pagination")

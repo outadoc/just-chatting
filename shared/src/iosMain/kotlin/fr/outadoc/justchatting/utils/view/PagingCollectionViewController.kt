@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 // Making abstract causes the compilation error "Non-final Kotlin subclasses of Objective-C classes are not yet supported".
-class PagingCollectionViewController<T : Any> {
+internal class PagingCollectionViewController<T : Any> {
 
     private val mainDispatcher: CoroutineDispatcher = Dispatchers.Main
     private val workerDispatcher: CoroutineDispatcher = Dispatchers.Default

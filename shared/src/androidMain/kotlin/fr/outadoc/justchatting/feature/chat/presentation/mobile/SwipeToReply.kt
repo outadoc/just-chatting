@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SwipeToReply(
+internal fun SwipeToReply(
     modifier: Modifier = Modifier,
     enabled: Boolean,
     onDismiss: () -> Unit,

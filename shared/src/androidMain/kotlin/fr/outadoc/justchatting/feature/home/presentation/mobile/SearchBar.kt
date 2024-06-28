@@ -11,7 +11,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.zIndex
 
 @Composable
-fun SearchBar(
+internal fun SearchBar(
     modifier: Modifier = Modifier,
     onChannelClick: (String) -> Unit,
     sizeClass: WindowSizeClass,

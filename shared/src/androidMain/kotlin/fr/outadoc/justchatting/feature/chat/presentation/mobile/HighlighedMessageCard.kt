@@ -27,7 +27,7 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.isDark
 
 @Composable
-fun HighlightedMessageCard(
+internal fun HighlightedMessageCard(
     modifier: Modifier = Modifier,
     level: Level = Level.Base,
     content: @Composable () -> Unit,
@@ -68,7 +68,7 @@ fun HighlightedMessageCard(
 
 @ThemePreviews
 @Composable
-fun HighlightLevelPreview(
+internal fun HighlightLevelPreview(
     @PreviewParameter(HighlightLevelPreviewProvider::class) level: Level,
 ) {
     AppTheme {
@@ -86,7 +86,7 @@ fun HighlightLevelPreview(
 
 @Stable
 @Composable
-fun singleSourceColorScheme(
+internal fun singleSourceColorScheme(
     color: Color?,
     parentScheme: ColorScheme = MaterialTheme.colorScheme,
 ): ColorScheme {

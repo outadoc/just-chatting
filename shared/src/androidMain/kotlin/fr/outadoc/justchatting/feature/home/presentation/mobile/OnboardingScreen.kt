@@ -27,14 +27,14 @@ private val AppIconSize = 80.dp
 
 @ScreenPreviews
 @Composable
-fun OnboardingScreenPreview() {
+internal fun OnboardingScreenPreview() {
     AppTheme {
         OnboardingScreen(onLoginClick = {})
     }
 }
 
 @Composable
-fun OnboardingScreen(
+internal fun OnboardingScreen(
     modifier: Modifier = Modifier,
     onLoginClick: () -> Unit,
 ) {

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Subscription(
+internal data class Subscription(
     @SerialName("type")
     val type: String,
     @SerialName("version")

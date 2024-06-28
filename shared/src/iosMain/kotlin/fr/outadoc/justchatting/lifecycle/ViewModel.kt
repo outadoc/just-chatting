@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.lifecycle
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.cancel
 
-actual abstract class ViewModel {
+internal actual abstract class ViewModel {
 
     actual val viewModelScope = MainScope()
 

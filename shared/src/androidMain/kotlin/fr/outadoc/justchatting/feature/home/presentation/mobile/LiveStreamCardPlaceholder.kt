@@ -9,7 +9,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 
 @Composable
-fun LiveStreamCardPlaceholder(modifier: Modifier = Modifier) {
+internal fun LiveStreamCardPlaceholder(modifier: Modifier = Modifier) {
     LiveStreamCard(
         modifier = modifier.placeholder(
             visible = true,

@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 
 @Composable
-fun ChatScreen(
+internal fun ChatScreen(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     showTimestamps: Boolean,

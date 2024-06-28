@@ -23,7 +23,7 @@ import org.koin.androidx.compose.getViewModel
 import org.koin.compose.koinInject
 
 @Composable
-fun ChannelChatScreen(channelLogin: String) {
+internal fun ChannelChatScreen(channelLogin: String) {
     val viewModel: ChatViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
     val inputState by viewModel.inputState.collectAsState()

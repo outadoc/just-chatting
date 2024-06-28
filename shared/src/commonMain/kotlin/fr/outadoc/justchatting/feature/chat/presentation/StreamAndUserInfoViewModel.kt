@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class StreamAndUserInfoViewModel(
+internal class StreamAndUserInfoViewModel(
     private val twitchRepository: TwitchRepository,
 ) : ViewModel() {
 

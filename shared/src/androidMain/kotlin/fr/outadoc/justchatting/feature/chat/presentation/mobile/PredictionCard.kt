@@ -43,7 +43,7 @@ import kotlin.time.Duration.Companion.minutes
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PredictionCard(
+internal fun PredictionCard(
     modifier: Modifier = Modifier,
     prediction: Prediction,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,
@@ -199,7 +199,7 @@ private val mockPrediction = Prediction(
 
 @ThemePreviews
 @Composable
-fun PredictionCardPreview() {
+internal fun PredictionCardPreview() {
     AppTheme {
         PredictionCard(
             prediction = mockPrediction.copy(status = Prediction.Status.Active),
@@ -209,7 +209,7 @@ fun PredictionCardPreview() {
 
 @ThemePreviews
 @Composable
-fun PredictionCardPreviewCompleted() {
+internal fun PredictionCardPreviewCompleted() {
     AppTheme {
         PredictionCard(
             prediction = mockPrediction.copy(status = Prediction.Status.Resolved),

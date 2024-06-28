@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.component.chatapi.common.Emote
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentSet
 
-class FilterAutocompleteItemsUseCase {
+internal class FilterAutocompleteItemsUseCase {
 
     operator fun invoke(
         filter: CharSequence,

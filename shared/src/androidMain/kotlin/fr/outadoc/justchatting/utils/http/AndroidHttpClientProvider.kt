@@ -16,7 +16,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 import kotlin.time.Duration.Companion.seconds
 
-class AndroidHttpClientProvider(
+internal class AndroidHttpClientProvider(
     private val json: Json,
 ) : BaseHttpClientProvider {
 

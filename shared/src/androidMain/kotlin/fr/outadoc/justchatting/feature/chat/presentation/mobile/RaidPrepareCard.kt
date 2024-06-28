@@ -29,7 +29,7 @@ import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @Composable
-fun RaidPrepareCard(
+internal fun RaidPrepareCard(
     modifier: Modifier = Modifier,
     raid: Raid.Preparing,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,

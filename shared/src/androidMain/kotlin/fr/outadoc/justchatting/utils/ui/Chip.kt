@@ -15,7 +15,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun LabelChip(
+internal fun LabelChip(
     modifier: Modifier = Modifier,
     style: TextStyle = MaterialTheme.typography.labelSmall,
     color: Color = LocalContentColor.current.copy(alpha = 0.8f),
@@ -41,7 +41,7 @@ fun LabelChip(
 
 @ThemePreviews
 @Composable
-fun LabelChipPreview() {
+internal fun LabelChipPreview() {
     AppTheme {
         Surface {
             LabelChip {

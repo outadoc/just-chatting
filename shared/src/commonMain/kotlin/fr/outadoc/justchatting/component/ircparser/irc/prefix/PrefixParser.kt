@@ -8,7 +8,7 @@ package fr.outadoc.justchatting.component.ircparser.irc.prefix
 
 import fr.outadoc.justchatting.component.ircparser.irc.CharacterCodes
 
-object PrefixParser : IPrefixParser {
+internal object PrefixParser : IPrefixParser {
 
     override fun parse(rawPrefix: String): Prefix? {
         var raw = rawPrefix

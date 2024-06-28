@@ -7,7 +7,7 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.decodeFromStream
 
-class DefaultReadExternalDependenciesList(
+internal class DefaultReadExternalDependenciesList(
     private val context: Context,
 ) : ReadExternalDependenciesList {
 

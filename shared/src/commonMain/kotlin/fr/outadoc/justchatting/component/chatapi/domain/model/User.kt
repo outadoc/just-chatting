@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.utils.parcel.Parcelable
 import fr.outadoc.justchatting.utils.parcel.Parcelize
 
 @Parcelize
-data class User(
+internal data class User(
     val id: String,
     val login: String,
     val displayName: String,

@@ -9,7 +9,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import platform.Foundation.NSUserDefaults
 
-class UserDefaultsPreferenceRepository : PreferenceRepository {
+internal class UserDefaultsPreferenceRepository : PreferenceRepository {
 
     private val userDefaults = NSUserDefaults.standardUserDefaults
     private val defaultPreferences = AppPreferences()

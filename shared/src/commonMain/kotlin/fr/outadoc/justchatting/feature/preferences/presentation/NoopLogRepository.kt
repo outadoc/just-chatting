@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
-class NoopLogRepository : LogRepository {
+internal class NoopLogRepository : LogRepository {
 
     override val isSupported: Boolean = false
 

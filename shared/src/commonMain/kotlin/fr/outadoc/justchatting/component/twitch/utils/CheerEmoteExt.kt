@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.common.EmoteUrls
 import fr.outadoc.justchatting.component.twitch.http.model.CheerEmoteTier
 
-fun CheerEmoteTier.map(prefix: String): Emote {
+internal fun CheerEmoteTier.map(prefix: String): Emote {
     return Emote(
         name = "${prefix}$id",
         bitsValue = minBits,

@@ -4,7 +4,7 @@ import android.app.Activity
 import android.os.Build
 import android.view.Display
 
-val Activity.isLaunchedFromBubbleCompat: Boolean
+internal val Activity.isLaunchedFromBubbleCompat: Boolean
     get() = if (Build.VERSION.SDK_INT >= 31) {
         isLaunchedFromBubble
     } else {

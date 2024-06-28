@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TwitchBadgeVersion(
+internal data class TwitchBadgeVersion(
     @SerialName("id")
     val id: String,
     @SerialName("title")

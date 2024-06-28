@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class CheerEmoteTier(
+internal data class CheerEmoteTier(
     @SerialName("id")
     val id: String,
     @SerialName("min_bits")

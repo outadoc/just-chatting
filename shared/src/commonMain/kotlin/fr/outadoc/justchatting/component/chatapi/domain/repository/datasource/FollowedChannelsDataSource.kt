@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.utils.logging.logError
 
-class FollowedChannelsDataSource(
+internal class FollowedChannelsDataSource(
     private val userId: String?,
     private val twitchApi: TwitchApi,
 ) : PagingSource<Pagination, List<ChannelFollow>>() {

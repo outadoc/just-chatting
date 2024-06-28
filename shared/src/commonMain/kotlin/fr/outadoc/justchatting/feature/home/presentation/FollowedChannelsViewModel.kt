@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
-class FollowedChannelsViewModel(
+internal class FollowedChannelsViewModel(
     private val repository: TwitchRepository,
 ) : ViewModel() {
 

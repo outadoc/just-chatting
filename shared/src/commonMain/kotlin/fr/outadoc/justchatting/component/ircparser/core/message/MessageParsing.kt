@@ -6,17 +6,17 @@
 
 package fr.outadoc.justchatting.component.ircparser.core.message
 
-interface IMessageParser<out T> {
+internal interface IMessageParser<out T> {
 
     fun parse(message: IrcMessage): T?
 }
 
-interface IComponentsParser<out T> {
+internal interface IComponentsParser<out T> {
 
     fun parseFromComponents(components: IrcMessageComponents): T?
 }
 
-abstract class MessageParser<out T> :
+internal abstract class MessageParser<out T> :
     IMessageParser<T>,
     IComponentsParser<T> {
 

@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UsersResponse(
+internal data class UsersResponse(
     @SerialName("data")
     val data: List<User>,
 )

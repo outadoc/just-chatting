@@ -18,13 +18,13 @@ private val lightColors = CustomColorScheme(
     onSuccessContainer = Color(0xFFB2F655),
 )
 
-data class CustomColorScheme(
+internal data class CustomColorScheme(
     val success: Color,
     val successContainer: Color,
     val onSuccess: Color,
     val onSuccessContainer: Color,
 )
 
-val MaterialTheme.customColors: CustomColorScheme
+internal val MaterialTheme.customColors: CustomColorScheme
     @Composable
     get() = (if (colorScheme.isDark) darkColors else lightColors)

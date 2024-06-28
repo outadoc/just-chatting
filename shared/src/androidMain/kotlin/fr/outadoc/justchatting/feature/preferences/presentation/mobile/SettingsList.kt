@@ -38,7 +38,7 @@ import fr.outadoc.justchatting.utils.ui.plus
 
 @ThemePreviews
 @Composable
-fun SettingsListPreview() {
+internal fun SettingsListPreview() {
     AppTheme {
         SettingsList(
             appPreferences = AppPreferences(),
@@ -56,7 +56,7 @@ fun SettingsListPreview() {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun SettingsList(
+internal fun SettingsList(
     modifier: Modifier = Modifier,
     appPreferences: AppPreferences,
     onAppPreferencesChange: (AppPreferences) -> Unit,

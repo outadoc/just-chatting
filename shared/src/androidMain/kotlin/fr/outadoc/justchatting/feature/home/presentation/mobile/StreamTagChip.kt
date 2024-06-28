@@ -7,7 +7,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import fr.outadoc.justchatting.utils.ui.LabelChip
 
 @Composable
-fun StreamTagChip(
+internal fun StreamTagChip(
     tag: String,
     modifier: Modifier = Modifier,
 ) {

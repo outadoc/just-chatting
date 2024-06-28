@@ -8,9 +8,10 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.feature.chat.data.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 
-class MobileCreateShortcutForChannelUseCase(
+internal class MobileCreateShortcutForChannelUseCase(
     private val context: Context,
 ) : CreateShortcutForChannelUseCase {
+
     override operator fun invoke(user: User) {
         val intent = ChatActivity.createIntent(context, user.login)
         val person: Person =

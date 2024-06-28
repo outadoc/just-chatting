@@ -40,7 +40,7 @@ import kotlinx.collections.immutable.persistentSetOf
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PinnedMessageCard(
+internal fun PinnedMessageCard(
     modifier: Modifier = Modifier,
     message: ChatEvent.Message,
     appUser: AppUser.LoggedIn,
@@ -98,7 +98,7 @@ fun PinnedMessageCard(
 
 @ThemePreviews
 @Composable
-fun PinnedMessageCardPreview(
+internal fun PinnedMessageCardPreview(
     @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatEvent.Message,
 ) {
     AppTheme {

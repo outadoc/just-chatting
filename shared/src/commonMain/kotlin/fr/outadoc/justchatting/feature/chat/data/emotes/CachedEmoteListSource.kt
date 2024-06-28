@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.emotes
 
-abstract class CachedEmoteListSource<T> : EmoteListSource<T> {
+internal abstract class CachedEmoteListSource<T> : EmoteListSource<T> {
 
     data class Params(
         val channelId: String,

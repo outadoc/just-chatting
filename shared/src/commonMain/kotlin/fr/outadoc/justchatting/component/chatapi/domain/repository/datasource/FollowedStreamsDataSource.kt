@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
 
-class FollowedStreamsDataSource(
+internal class FollowedStreamsDataSource(
     private val userId: String?,
     private val twitchApi: TwitchApi,
 ) : PagingSource<Pagination, List<Stream>>() {

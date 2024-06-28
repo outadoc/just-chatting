@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class PubSubRichEmbedMessage {
+internal sealed class PubSubRichEmbedMessage {
 
     @Serializable
     @SerialName("chat_rich_embed")

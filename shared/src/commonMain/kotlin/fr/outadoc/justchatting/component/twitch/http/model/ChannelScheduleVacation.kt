@@ -6,7 +6,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ChannelScheduleVacation(
+internal data class ChannelScheduleVacation(
     @SerialName("start_time")
     @Serializable(with = InstantIso8601Serializer::class)
     val startTime: Instant,

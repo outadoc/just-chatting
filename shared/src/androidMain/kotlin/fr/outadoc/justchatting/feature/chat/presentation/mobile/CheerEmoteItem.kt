@@ -16,7 +16,7 @@ import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.parseHexColor
 
 @Composable
-fun CheerEmoteItem(
+internal fun CheerEmoteItem(
     modifier: Modifier = Modifier,
     emote: Emote,
 ) {

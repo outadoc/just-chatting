@@ -9,7 +9,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewMo
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun StreamAndUserInfoScreen(
+internal fun StreamAndUserInfoScreen(
     modifier: Modifier = Modifier,
     userLogin: String,
 ) {

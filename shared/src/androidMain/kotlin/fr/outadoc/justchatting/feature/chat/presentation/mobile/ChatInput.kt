@@ -53,7 +53,7 @@ import kotlinx.datetime.Instant
 
 @ThemePreviews
 @Composable
-fun ChatInputPreviewBasic() {
+internal fun ChatInputPreviewBasic() {
     AppTheme {
         ChatInput(
             message = TextFieldValue("Lorem ipsum KEKW"),
@@ -63,7 +63,7 @@ fun ChatInputPreviewBasic() {
 
 @ThemePreviews
 @Composable
-fun ChatInputPreviewLongMessage() {
+internal fun ChatInputPreviewLongMessage() {
     AppTheme {
         ChatInput(
             message = TextFieldValue(
@@ -75,7 +75,7 @@ fun ChatInputPreviewLongMessage() {
 
 @ThemePreviews
 @Composable
-fun ChatInputPreviewEmpty() {
+internal fun ChatInputPreviewEmpty() {
     AppTheme {
         ChatInput()
     }
@@ -83,7 +83,7 @@ fun ChatInputPreviewEmpty() {
 
 @ThemePreviews
 @Composable
-fun ChatInputPreviewReplying() {
+internal fun ChatInputPreviewReplying() {
     AppTheme {
         ChatInput(
             replyingTo = ChatEvent.Message.Simple(
@@ -103,7 +103,7 @@ fun ChatInputPreviewReplying() {
 }
 
 @Composable
-fun ChatInput(
+internal fun ChatInput(
     modifier: Modifier = Modifier,
     appUser: AppUser.LoggedIn? = null,
     message: TextFieldValue = TextFieldValue(),
@@ -217,7 +217,7 @@ fun ChatInput(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatTextField(
+internal fun ChatTextField(
     modifier: Modifier = Modifier,
     message: TextFieldValue,
     onMessageChange: (TextFieldValue) -> Unit,

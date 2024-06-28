@@ -27,7 +27,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SearchResultsList(
+internal fun SearchResultsList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
     viewModel: ChannelSearchViewModel,

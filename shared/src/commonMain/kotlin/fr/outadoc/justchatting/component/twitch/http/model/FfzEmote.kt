@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class FfzEmote(
+internal data class FfzEmote(
     @SerialName("id")
     val id: Int,
     @SerialName("code")

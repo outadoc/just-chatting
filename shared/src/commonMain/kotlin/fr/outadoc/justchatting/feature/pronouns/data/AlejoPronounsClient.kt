@@ -8,7 +8,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.http.path
 
-class AlejoPronounsClient(
+internal class AlejoPronounsClient(
     httpClient: HttpClient,
 ) {
     private val client = httpClient.config {

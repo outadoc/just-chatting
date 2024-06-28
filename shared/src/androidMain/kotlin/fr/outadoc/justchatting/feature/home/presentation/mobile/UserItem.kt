@@ -32,7 +32,7 @@ import kotlinx.datetime.Instant
 
 @ThemePreviews
 @Composable
-fun UserItemPreview() {
+internal fun UserItemPreview() {
     AppTheme {
         UserItemCard(
             modifier = Modifier
@@ -48,7 +48,7 @@ fun UserItemPreview() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserItemCard(
+internal fun UserItemCard(
     modifier: Modifier = Modifier,
     displayName: String? = null,
     followedAt: Instant? = null,
@@ -72,7 +72,7 @@ fun UserItemCard(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun UserItem(
+internal fun UserItem(
     modifier: Modifier = Modifier,
     displayName: String?,
     followedAt: Instant?,

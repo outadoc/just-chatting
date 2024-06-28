@@ -20,7 +20,7 @@ import fr.outadoc.justchatting.utils.ui.HapticIconButton
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
-fun EmoteGrid(
+internal fun EmoteGrid(
     modifier: Modifier = Modifier,
     emotes: ImmutableList<EmoteSetItem>,
     emoteSize: Dp = 36.dp,

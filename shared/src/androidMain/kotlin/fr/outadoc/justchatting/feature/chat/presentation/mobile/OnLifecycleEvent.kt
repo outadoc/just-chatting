@@ -8,7 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 
 @Composable
-fun OnLifecycleEvent(onEvent: (event: Lifecycle.Event) -> Unit) {
+internal fun OnLifecycleEvent(onEvent: (event: Lifecycle.Event) -> Unit) {
     val eventHandler = rememberUpdatedState(onEvent)
     val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
 
@@ -27,7 +27,7 @@ fun OnLifecycleEvent(onEvent: (event: Lifecycle.Event) -> Unit) {
 }
 
 @Composable
-fun OnLifecycleEvent(
+internal fun OnLifecycleEvent(
     onPause: () -> Unit = {},
     onCreate: () -> Unit = {},
     onStart: () -> Unit = {},

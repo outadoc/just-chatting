@@ -11,7 +11,7 @@ import fr.outadoc.justchatting.component.preferences.data.AppUser
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class SharedPrefsPreferenceRepository(
+internal class SharedPrefsPreferenceRepository(
     applicationContext: Context,
 ) : PreferenceRepository {
 

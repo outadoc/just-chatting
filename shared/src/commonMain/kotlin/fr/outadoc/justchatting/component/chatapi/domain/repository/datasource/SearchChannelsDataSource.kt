@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.utils.logging.logError
 
-class SearchChannelsDataSource(
+internal class SearchChannelsDataSource(
     private val query: String,
     private val twitchApi: TwitchApi,
 ) : PagingSource<Pagination, List<ChannelSearchResult>>() {

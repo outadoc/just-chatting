@@ -20,12 +20,12 @@ private val TwitchBrandColor = Color(0xFF7718AD)
 
 @ThemePreviews
 @Composable
-fun SignInWithTwitchButtonPreview() {
+internal fun SignInWithTwitchButtonPreview() {
     SignInWithTwitchButton(onClick = {})
 }
 
 @Composable
-fun SignInWithTwitchButton(
+internal fun SignInWithTwitchButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {

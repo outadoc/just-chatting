@@ -28,7 +28,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -53,7 +52,7 @@ import fr.outadoc.justchatting.utils.ui.shortToast
 
 @ScreenPreviews
 @Composable
-fun ChannelChatScreenLoadingPreview() {
+internal fun ChannelChatScreenLoadingPreview() {
     AppTheme {
         ChannelChatScreenContent(
             state = ChatViewModel.State.Initial,
@@ -64,9 +63,9 @@ fun ChannelChatScreenLoadingPreview() {
     }
 }
 
-@OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChannelChatScreenContent(
+internal fun ChannelChatScreenContent(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     inputState: ChatViewModel.InputState,

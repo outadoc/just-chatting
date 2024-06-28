@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-data class ChannelSearch(
+internal data class ChannelSearch(
     @SerialName("id")
     val id: String,
     @SerialName("title")

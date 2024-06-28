@@ -17,7 +17,7 @@ import dev.icerock.moko.resources.compose.localized
 import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
 
 @Composable
-fun EmoteHeader(
+internal fun EmoteHeader(
     modifier: Modifier = Modifier,
     header: EmoteSetItem.Header,
 ) {

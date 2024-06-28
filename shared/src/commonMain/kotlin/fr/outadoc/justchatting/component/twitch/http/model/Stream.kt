@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 @Parcelize
 @Serializable
-data class Stream(
+internal data class Stream(
     @SerialName("id")
     val id: String,
     @SerialName("user_id")

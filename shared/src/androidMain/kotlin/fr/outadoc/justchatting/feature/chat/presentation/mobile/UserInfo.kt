@@ -24,7 +24,7 @@ import fr.outadoc.justchatting.utils.ui.formatDate
 import kotlinx.datetime.Instant
 
 @Composable
-fun UserInfo(
+internal fun UserInfo(
     modifier: Modifier = Modifier,
     user: User,
 ) {

@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.component.twitch.http.model.StvEmote
 private const val BASE_URL = "https://cdn.7tv.app/emote/"
 private const val FLAG_IS_ZERO_WIDTH = 1 shl 8
 
-fun StvEmote.map(): Emote {
+internal fun StvEmote.map(): Emote {
     return Emote(
         name = name,
         ownerId = null,

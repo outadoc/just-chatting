@@ -15,7 +15,7 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @Composable
-fun StreamAndUserInfoState(
+internal fun StreamAndUserInfoState(
     modifier: Modifier = Modifier,
     state: StreamAndUserInfoViewModel.State,
 ) {

@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.utils.logging
 
 import android.util.Log
 
-object AndroidLogStrategy : LogStrategy {
+public object AndroidLogStrategy : LogStrategy {
 
     override fun println(level: Logger.Level, tag: String?, content: String) {
         Log.println(level.toPlatform(), tag, content)

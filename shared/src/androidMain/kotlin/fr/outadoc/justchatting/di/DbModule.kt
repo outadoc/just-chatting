@@ -9,9 +9,10 @@ import fr.outadoc.justchatting.component.chatapi.db.RecentChannelQueries
 import fr.outadoc.justchatting.component.chatapi.db.RecentChannelsDao
 import fr.outadoc.justchatting.component.chatapi.db.RecentEmoteQueries
 import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
-val dbModule = module {
+public val dbModule: Module = module {
 
     single<SqlDriver> {
         AndroidSqliteDriver(

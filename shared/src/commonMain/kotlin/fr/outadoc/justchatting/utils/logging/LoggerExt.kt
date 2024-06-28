@@ -1,18 +1,18 @@
 package fr.outadoc.justchatting.utils.logging
 
-inline fun <reified T : Any> logVerbose(noinline content: () -> String) =
+internal inline fun <reified T : Any> logVerbose(noinline content: () -> String) =
     Logger.println(Logger.Level.Verbose, T::class.simpleName!!, content)
 
-inline fun <reified T : Any> logDebug(noinline content: () -> String) =
+internal inline fun <reified T : Any> logDebug(noinline content: () -> String) =
     Logger.println(Logger.Level.Debug, T::class.simpleName!!, content)
 
-inline fun <reified T : Any> logInfo(noinline content: () -> String) =
+internal inline fun <reified T : Any> logInfo(noinline content: () -> String) =
     Logger.println(Logger.Level.Info, T::class.simpleName!!, content)
 
-inline fun <reified T : Any> logWarning(noinline content: () -> String) =
+internal inline fun <reified T : Any> logWarning(noinline content: () -> String) =
     Logger.println(Logger.Level.Warning, T::class.simpleName!!, content)
 
-inline fun <reified T : Any> logError(
+internal inline fun <reified T : Any> logError(
     throwable: Throwable? = null,
     noinline content: () -> String,
 ) {

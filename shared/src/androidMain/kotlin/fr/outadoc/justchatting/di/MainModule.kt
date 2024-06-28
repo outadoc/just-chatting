@@ -11,10 +11,11 @@ import fr.outadoc.justchatting.utils.http.AndroidHttpClientProvider
 import fr.outadoc.justchatting.utils.http.BaseHttpClientProvider
 import fr.outadoc.justchatting.utils.http.TwitchHttpClientProvider
 import kotlinx.datetime.Clock
+import org.koin.core.module.Module
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-val mainModule = module {
+public val mainModule: Module = module {
     single<Clock> { Clock.System }
     single<ConnectivityManager> { get<Context>().getSystemService()!! }
     single<NetworkStateObserver> { AndroidNetworkStateObserver(get()) }

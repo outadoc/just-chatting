@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.component.preferences.data
 
-sealed class AppUser {
+internal sealed class AppUser {
 
     data class LoggedIn(
         val userId: String,

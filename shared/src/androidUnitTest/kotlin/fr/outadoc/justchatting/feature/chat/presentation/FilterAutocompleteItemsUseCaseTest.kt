@@ -8,7 +8,7 @@ import kotlinx.collections.immutable.persistentSetOf
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-class FilterAutocompleteItemsUseCaseTest {
+internal class FilterAutocompleteItemsUseCaseTest {
 
     private val instance = FilterAutocompleteItemsUseCase()
 

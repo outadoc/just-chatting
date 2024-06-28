@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ChannelSchedule(
+internal data class ChannelSchedule(
     @SerialName("segments")
     val segments: List<ChannelScheduleSegment>,
     @SerialName("broadcaster_id")

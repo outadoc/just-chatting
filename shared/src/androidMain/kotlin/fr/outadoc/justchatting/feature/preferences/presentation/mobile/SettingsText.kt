@@ -22,7 +22,7 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @ThemePreviews
 @Composable
-fun SettingsTextPreview() {
+internal fun SettingsTextPreview() {
     AppTheme {
         Column(modifier = Modifier.width(256.dp)) {
             SettingsText(
@@ -39,7 +39,7 @@ fun SettingsTextPreview() {
 
 @ThemePreviews
 @Composable
-fun SettingsTextSubtitlePreview() {
+internal fun SettingsTextSubtitlePreview() {
     AppTheme {
         Column(modifier = Modifier.width(256.dp)) {
             SettingsText(
@@ -54,7 +54,7 @@ fun SettingsTextSubtitlePreview() {
 }
 
 @Composable
-fun SettingsText(
+internal fun SettingsText(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
     onClickLabel: String? = null,

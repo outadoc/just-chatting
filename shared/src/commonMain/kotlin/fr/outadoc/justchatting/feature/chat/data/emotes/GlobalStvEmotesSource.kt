@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesReposit
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.flatListOf
 
-class GlobalStvEmotesSource(
+internal class GlobalStvEmotesSource(
     private val emotesRepository: EmotesRepository,
 ) : CachedEmoteListSource<List<EmoteSetItem>>() {
 

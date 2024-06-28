@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-object ChatPrefixConstants {
+internal object ChatPrefixConstants {
     const val EmotePrefix = ':'
     const val ChatterPrefix = '@'
 }

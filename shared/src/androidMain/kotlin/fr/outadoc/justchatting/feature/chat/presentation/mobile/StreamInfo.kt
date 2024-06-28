@@ -27,7 +27,7 @@ import kotlinx.datetime.Instant
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun StreamInfo(
+internal fun StreamInfo(
     modifier: Modifier = Modifier,
     stream: Stream,
 ) {

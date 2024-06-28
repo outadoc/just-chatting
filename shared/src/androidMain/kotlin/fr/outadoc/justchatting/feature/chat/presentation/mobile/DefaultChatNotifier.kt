@@ -26,7 +26,7 @@ import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
-class DefaultChatNotifier(
+internal class DefaultChatNotifier(
     private val context: Context,
     private val preferenceRepository: PreferenceRepository,
 ) : ChatNotifier {

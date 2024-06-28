@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.utils.logging.logWarning
 import kotlinx.datetime.Clock
 
-class TwitchIrcCommandParser(private val clock: Clock) {
+internal class TwitchIrcCommandParser(private val clock: Clock) {
 
     fun parse(message: String): IrcEvent? {
         val ircMessage = IrcMessageParser.parse(message)

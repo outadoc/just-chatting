@@ -18,7 +18,7 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @ThemePreviews
 @Composable
-fun SettingsSliderPreview() {
+internal fun SettingsSliderPreview() {
     AppTheme {
         Column(modifier = Modifier.width(256.dp)) {
             SettingsSlider(
@@ -51,7 +51,7 @@ fun SettingsSliderPreview() {
 }
 
 @Composable
-fun SettingsSlider(
+internal fun SettingsSlider(
     modifier: Modifier = Modifier,
     value: Int,
     onValueChange: (Int) -> Unit,

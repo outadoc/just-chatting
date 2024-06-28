@@ -12,9 +12,9 @@ import androidx.emoji2.text.DefaultEmojiCompatConfig
 import androidx.emoji2.text.EmojiCompat
 import fr.outadoc.justchatting.utils.ui.AppTheme
 
-class ChatActivity : AppCompatActivity() {
+public class ChatActivity : AppCompatActivity() {
 
-    companion object {
+    internal companion object {
         private const val CHANNEL_LOGIN = "channel_login"
 
         fun createIntent(context: Context, channelLogin: String): Intent {

@@ -10,7 +10,7 @@ import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.utils.logging.logInfo
 import org.koin.android.ext.android.inject
 
-class ChatConnectionService : Service() {
+internal class ChatConnectionService : Service() {
 
     companion object {
         private const val ACTION_REPLY = "reply"

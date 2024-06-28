@@ -11,7 +11,7 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.post
 import io.ktor.http.path
 
-class IdServer(httpClient: HttpClient) : IdApi {
+internal class IdServer(httpClient: HttpClient) : IdApi {
 
     private val client = httpClient.config {
         defaultRequest {

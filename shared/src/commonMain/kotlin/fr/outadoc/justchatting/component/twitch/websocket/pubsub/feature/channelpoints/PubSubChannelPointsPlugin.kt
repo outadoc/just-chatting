@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.shared.MR
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
-class PubSubChannelPointsPlugin(
+internal class PubSubChannelPointsPlugin(
     private val clock: Clock,
     private val json: Json,
 ) : PubSubPlugin<PubSubRewardMessage> {

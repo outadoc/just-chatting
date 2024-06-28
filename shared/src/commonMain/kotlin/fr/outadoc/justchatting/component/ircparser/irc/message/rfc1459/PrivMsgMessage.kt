@@ -12,7 +12,7 @@ import fr.outadoc.justchatting.component.ircparser.core.message.MessageParser
 import fr.outadoc.justchatting.component.ircparser.irc.prefix.Prefix
 import fr.outadoc.justchatting.component.ircparser.irc.prefix.PrefixParser
 
-object PrivMsgMessage : ICommand {
+internal object PrivMsgMessage : ICommand {
 
     override val command = "PRIVMSG"
 

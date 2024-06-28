@@ -27,7 +27,7 @@ import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @Composable
-fun PredictionOutcome(
+internal fun PredictionOutcome(
     modifier: Modifier = Modifier,
     title: String,
     votes: Int,
@@ -85,7 +85,7 @@ fun PredictionOutcome(
 
 @ThemePreviews
 @Composable
-fun PredictionOutcomePreview() {
+internal fun PredictionOutcomePreview() {
     AppTheme {
         PredictionOutcome(
             title = "Antoine",
@@ -99,7 +99,7 @@ fun PredictionOutcomePreview() {
 
 @ThemePreviews
 @Composable
-fun PredictionOutcomePreviewWinning() {
+internal fun PredictionOutcomePreviewWinning() {
     AppTheme {
         PredictionOutcome(
             modifier = Modifier.width(800.dp),

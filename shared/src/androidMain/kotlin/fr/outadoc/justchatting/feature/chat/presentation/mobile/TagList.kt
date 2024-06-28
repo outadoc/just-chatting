@@ -12,7 +12,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TagList(
+internal fun TagList(
     modifier: Modifier = Modifier,
     tags: ImmutableList<String>,
 ) {

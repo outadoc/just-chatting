@@ -26,7 +26,7 @@ import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @Composable
-fun AutoCompleteEmoteItem(
+internal fun AutoCompleteEmoteItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     emote: Emote,
@@ -41,7 +41,7 @@ fun AutoCompleteEmoteItem(
 }
 
 @Composable
-fun AutoCompleteUserItem(
+internal fun AutoCompleteUserItem(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     chatter: Chatter,
@@ -57,7 +57,7 @@ fun AutoCompleteUserItem(
 
 @ThemePreviews
 @Composable
-fun AutoCompleteItemPreviewSimple() {
+internal fun AutoCompleteItemPreviewSimple() {
     AppTheme {
         SuggestionChip(
             onClick = {},
@@ -70,7 +70,7 @@ fun AutoCompleteItemPreviewSimple() {
 
 @ThemePreviews
 @Composable
-fun AutoCompleteItemPreviewIcon() {
+internal fun AutoCompleteItemPreviewIcon() {
     AppTheme {
         SuggestionChip(
             onClick = {},
@@ -82,7 +82,7 @@ fun AutoCompleteItemPreviewIcon() {
 }
 
 @Composable
-fun SuggestionChip(
+internal fun SuggestionChip(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     clickLabel: String,

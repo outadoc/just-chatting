@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class TwitchEmote(
+internal data class TwitchEmote(
     @SerialName("id")
     val id: String,
     @SerialName("name")

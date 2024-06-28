@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.component.chatapi.common.Emote
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
-sealed interface IrcEvent {
+internal sealed interface IrcEvent {
 
     sealed interface Message : IrcEvent {
 

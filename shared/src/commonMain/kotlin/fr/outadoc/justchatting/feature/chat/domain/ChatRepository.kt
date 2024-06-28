@@ -4,7 +4,7 @@ import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
 import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
 import kotlinx.coroutines.flow.Flow
 
-interface ChatRepository {
+internal interface ChatRepository {
 
     val connectionStatus: Flow<ConnectionStatus>
 

@@ -14,7 +14,7 @@ import io.ktor.serialization.kotlinx.KotlinxWebsocketSerializationConverter
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-class AppleHttpClientProvider(
+internal class AppleHttpClientProvider(
     private val json: Json,
 ) : BaseHttpClientProvider {
 

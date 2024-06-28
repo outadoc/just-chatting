@@ -13,7 +13,7 @@ import org.junit.Test
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
-class TwitchIrcCommandParserTest {
+internal class TwitchIrcCommandParserTest {
 
     @Test
     fun `Parse simple PRIVMSG`() = test {

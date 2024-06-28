@@ -44,7 +44,7 @@ import kotlinx.datetime.Clock
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ChatList(
+internal fun ChatList(
     modifier: Modifier = Modifier,
     entries: ImmutableList<ChatEvent.Message>,
     emotes: ImmutableMap<String, Emote>,

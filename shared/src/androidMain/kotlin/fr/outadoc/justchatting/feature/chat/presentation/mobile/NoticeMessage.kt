@@ -25,7 +25,7 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @ThemePreviews
 @Composable
-fun NoticeMessagePreview(
+internal fun NoticeMessagePreview(
     @PreviewParameter(NoticeMessagePreviewProvider::class) message: ChatEvent.Message.Notice,
 ) {
     AppTheme {
@@ -36,7 +36,7 @@ fun NoticeMessagePreview(
 }
 
 @Composable
-fun NoticeMessage(
+internal fun NoticeMessage(
     modifier: Modifier = Modifier,
     text: String,
 ) {

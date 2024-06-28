@@ -7,7 +7,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.path
 
-class RecentMessagesServer(httpClient: HttpClient) : RecentMessagesApi {
+internal class RecentMessagesServer(httpClient: HttpClient) : RecentMessagesApi {
 
     private val client = httpClient.config {
         defaultRequest {

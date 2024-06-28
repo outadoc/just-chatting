@@ -7,7 +7,7 @@ import coil.request.ImageRequest
 import fr.outadoc.justchatting.feature.chat.presentation.CoilReducedAnimationTransformation
 
 @Composable
-fun remoteImageModel(url: String?): ImageRequest {
+internal fun remoteImageModel(url: String?): ImageRequest {
     val context = LocalContext.current
 
     val systemAnimationScale: Float =

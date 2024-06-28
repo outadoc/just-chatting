@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class EmoteSetResponse(
+internal data class EmoteSetResponse(
     @SerialName("template")
     val template: String,
     @SerialName("data")

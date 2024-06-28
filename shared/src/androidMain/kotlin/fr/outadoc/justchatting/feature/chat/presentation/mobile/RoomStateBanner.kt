@@ -11,7 +11,7 @@ import fr.outadoc.justchatting.utils.ui.format
 import kotlin.time.Duration
 
 @Composable
-fun RoomStateBanner(
+internal fun RoomStateBanner(
     modifier: Modifier = Modifier,
     roomState: RoomState,
 ) {

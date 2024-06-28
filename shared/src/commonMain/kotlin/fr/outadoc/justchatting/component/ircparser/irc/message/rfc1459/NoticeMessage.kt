@@ -10,7 +10,7 @@ import fr.outadoc.justchatting.component.ircparser.core.ICommand
 import fr.outadoc.justchatting.component.ircparser.core.message.IrcMessageComponents
 import fr.outadoc.justchatting.component.ircparser.core.message.MessageParser
 
-object NoticeMessage : ICommand {
+internal object NoticeMessage : ICommand {
 
     override val command = "NOTICE"
 

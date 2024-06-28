@@ -8,7 +8,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.http.path
 
-class StvEmotesServer(httpClient: HttpClient) : StvEmotesApi {
+internal class StvEmotesServer(httpClient: HttpClient) : StvEmotesApi {
 
     private val client = httpClient.config {
         defaultRequest {

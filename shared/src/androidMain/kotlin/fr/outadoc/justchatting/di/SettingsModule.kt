@@ -8,9 +8,10 @@ import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.Module
 import org.koin.dsl.module
 
-val settingsModule = module {
+public val settingsModule: Module = module {
     viewModel { SettingsViewModel(get(), get(), get()) }
     single<LogRepository> { AndroidLogRepository(get()) }
     single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList(get()) }

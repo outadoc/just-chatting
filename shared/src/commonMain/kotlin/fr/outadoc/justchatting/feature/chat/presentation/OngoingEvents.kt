@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.component.chatapi.common.Prediction
 import fr.outadoc.justchatting.component.chatapi.common.Raid
 import kotlinx.datetime.Instant
 
-data class OngoingEvents(
+internal data class OngoingEvents(
     val poll: Poll? = null,
     val prediction: Prediction? = null,
     val pinnedMessage: PinnedMessage? = null,

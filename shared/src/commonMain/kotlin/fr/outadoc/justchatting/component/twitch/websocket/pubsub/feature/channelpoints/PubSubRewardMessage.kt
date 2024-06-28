@@ -8,7 +8,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class PubSubRewardMessage {
+internal sealed class PubSubRewardMessage {
     @Serializable
     @SerialName("reward-redeemed")
     data class Redeemed(

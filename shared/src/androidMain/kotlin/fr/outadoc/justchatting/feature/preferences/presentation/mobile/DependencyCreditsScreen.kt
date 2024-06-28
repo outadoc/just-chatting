@@ -32,7 +32,7 @@ import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DependencyCreditsScreen(
+internal fun DependencyCreditsScreen(
     modifier: Modifier = Modifier,
     onNavigateUp: () -> Unit,
 ) {

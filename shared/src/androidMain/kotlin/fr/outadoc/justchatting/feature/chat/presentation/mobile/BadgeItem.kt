@@ -12,7 +12,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.getBestUrl
 import fr.outadoc.justchatting.utils.ui.isDark
 
 @Composable
-fun BadgeItem(
+internal fun BadgeItem(
     modifier: Modifier = Modifier,
     badge: TwitchBadge,
 ) {

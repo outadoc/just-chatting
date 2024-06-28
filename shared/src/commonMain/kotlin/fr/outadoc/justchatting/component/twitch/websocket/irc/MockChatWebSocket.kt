@@ -45,7 +45,7 @@ import kotlin.time.Duration.Companion.seconds
  * Mock chat web socket. Connects to a mock server to be able to simulate chat events.
  * See https://fdgt.dev
  */
-class MockChatWebSocket private constructor(
+internal class MockChatWebSocket private constructor(
     networkStateObserver: NetworkStateObserver,
     private val scope: CoroutineScope,
     private val clock: Clock,

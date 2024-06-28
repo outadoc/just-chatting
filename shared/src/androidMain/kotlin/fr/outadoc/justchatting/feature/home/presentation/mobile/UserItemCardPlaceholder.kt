@@ -9,7 +9,7 @@ import com.google.accompanist.placeholder.material.placeholder
 import com.google.accompanist.placeholder.material.shimmer
 
 @Composable
-fun UserItemCardPlaceholder(modifier: Modifier = Modifier) {
+internal fun UserItemCardPlaceholder(modifier: Modifier = Modifier) {
     UserItemCard(
         modifier = modifier.placeholder(
             visible = true,

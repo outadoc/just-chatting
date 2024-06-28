@@ -32,7 +32,7 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RaidGoCard(
+internal fun RaidGoCard(
     modifier: Modifier = Modifier,
     raid: Raid.Go,
     color: Color = MaterialTheme.colorScheme.secondaryContainer,

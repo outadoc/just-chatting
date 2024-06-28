@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class BttvChannelResponse(
+internal data class BttvChannelResponse(
     @SerialName("channelEmotes")
     val channelEmotes: List<BttvEmote>,
     @SerialName("sharedEmotes")

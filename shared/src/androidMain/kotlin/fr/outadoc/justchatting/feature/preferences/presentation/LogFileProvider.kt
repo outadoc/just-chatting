@@ -5,7 +5,7 @@ import androidx.core.content.FileProvider
 import fr.outadoc.justchatting.shared.R
 import okio.Path
 
-class LogFileProvider : FileProvider(R.xml.log_share) {
+internal class LogFileProvider : FileProvider(R.xml.log_share) {
 
     companion object {
 

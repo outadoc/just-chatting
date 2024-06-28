@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import kotlinx.serialization.Serializable
 
-sealed interface Screen {
+internal sealed interface Screen {
     @Serializable
     data object Live : Screen
 
@@ -16,4 +16,4 @@ sealed interface Screen {
     data object DependencyCredits : Screen
 }
 
-val DefaultScreen = Screen.Live
+internal val DefaultScreen = Screen.Live

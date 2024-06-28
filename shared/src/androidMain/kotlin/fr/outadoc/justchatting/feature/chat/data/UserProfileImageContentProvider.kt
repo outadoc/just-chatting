@@ -21,9 +21,9 @@ import org.koin.android.ext.android.inject
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 
-class UserProfileImageContentProvider : ContentProvider() {
+public class UserProfileImageContentProvider : ContentProvider() {
 
-    companion object {
+    internal companion object {
 
         private const val PATH_LOGIN = "login"
 

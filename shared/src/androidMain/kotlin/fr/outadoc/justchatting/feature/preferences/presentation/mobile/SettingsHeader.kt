@@ -14,7 +14,7 @@ import fr.outadoc.justchatting.utils.ui.ThemePreviews
 
 @ThemePreviews
 @Composable
-fun SettingsHeaderPreview() {
+internal fun SettingsHeaderPreview() {
     AppTheme {
         Surface {
             SettingsHeader {
@@ -25,7 +25,7 @@ fun SettingsHeaderPreview() {
 }
 
 @Composable
-fun SettingsHeader(
+internal fun SettingsHeader(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit,
 ) {

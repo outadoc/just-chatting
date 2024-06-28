@@ -8,7 +8,7 @@ import fr.outadoc.justchatting.component.chatapi.common.Icon
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 
-val previewBadges = listOf(
+internal val previewBadges = listOf(
     "badge_subscriber_48",
     "badge_sub-gifter_100",
 )
@@ -154,7 +154,7 @@ private val noticeEntries = sequence {
     )
 }
 
-class ChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message> {
+internal class ChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message> {
     override val values: Sequence<ChatEvent.Message> = sequence {
         yieldAll(simpleEntries)
         yieldAll(noticeEntries)
@@ -163,13 +163,13 @@ class ChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message> {
     }
 }
 
-class SimpleChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message.Simple> {
+internal class SimpleChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message.Simple> {
     override val values: Sequence<ChatEvent.Message.Simple> = sequence {
         yieldAll(simpleEntries)
     }
 }
 
-class NoticeMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message.Notice> {
+internal class NoticeMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message.Notice> {
     override val values: Sequence<ChatEvent.Message.Notice> = sequence {
         yieldAll(noticeEntries)
     }

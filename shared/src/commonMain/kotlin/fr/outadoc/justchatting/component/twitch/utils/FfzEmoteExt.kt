@@ -6,7 +6,7 @@ import fr.outadoc.justchatting.component.twitch.http.model.FfzEmote
 import fr.outadoc.justchatting.utils.core.filterKeysNotNull
 import fr.outadoc.justchatting.utils.core.filterValuesNotNull
 
-fun FfzEmote.map(): Emote {
+internal fun FfzEmote.map(): Emote {
     return Emote(
         name = code,
         ownerId = null,

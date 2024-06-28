@@ -36,7 +36,7 @@ import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChatTopAppBar(
+internal fun ChatTopAppBar(
     modifier: Modifier = Modifier,
     channelLogin: String,
     user: User?,

@@ -37,7 +37,7 @@ import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.minutes
 
 @Composable
-fun ChatEvents(
+internal fun ChatEvents(
     modifier: Modifier = Modifier,
     insets: PaddingValues,
     roomState: RoomState,

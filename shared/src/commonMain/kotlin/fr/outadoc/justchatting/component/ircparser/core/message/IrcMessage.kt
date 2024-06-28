@@ -6,7 +6,7 @@
 
 package fr.outadoc.justchatting.component.ircparser.core.message
 
-data class IrcMessage(
+internal data class IrcMessage(
     val tags: Map<String, String?> = emptyMap(),
     val prefix: String? = null,
     val command: String,

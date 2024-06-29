@@ -152,7 +152,7 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
             message = message,
             color = ircMessage.tags.color,
             isAction = actionGroups != null,
-            embeddedEmotes = ircMessage.tags.parseEmotes(message),
+            embeddedEmotes = ircMessage.tags.parseEmotes(message).orEmpty(),
             badges = ircMessage.tags.parseBadges(),
             isFirstMessageByUser = ircMessage.tags.firstMsg,
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),

@@ -20,7 +20,7 @@ internal sealed interface IrcEvent {
             val message: String?,
             val color: String?,
             val isAction: Boolean = false,
-            val embeddedEmotes: List<Emote>?,
+            val embeddedEmotes: List<Emote>,
             val badges: List<Badge>?,
             val isFirstMessageByUser: Boolean = false,
             val rewardId: String?,

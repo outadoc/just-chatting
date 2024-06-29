@@ -164,8 +164,8 @@ internal class MockChatWebSocket private constructor(
 
                                 _eventFlow.emit(
                                     ChatEvent.Message.SendError(
-                                        timestamp = clock.now()
-                                    )
+                                        timestamp = clock.now(),
+                                    ),
                                 )
                             }
 
@@ -199,7 +199,8 @@ internal class MockChatWebSocket private constructor(
             is ChatEvent.Command.UserState,
             is ChatEvent.Command.RoomStateDelta,
             is ChatEvent.Command.ClearChat,
-            is ChatEvent.Command.ClearMessage -> {
+            is ChatEvent.Command.ClearMessage,
+            -> {
                 _eventFlow.emit(command)
             }
 

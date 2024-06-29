@@ -94,7 +94,7 @@ internal class ChatViewModel(
     private val filterAutocompleteItemsUseCase: FilterAutocompleteItemsUseCase,
     private val pronounsRepository: PronounsRepository,
     private val createShortcutForChannel: CreateShortcutForChannelUseCase,
-    private val chatEventViewMapper: ChatEventViewMapper
+    private val chatEventViewMapper: ChatEventViewMapper,
 ) : ViewModel() {
 
     private val defaultScope = viewModelScope + CoroutineName("defaultScope")
@@ -192,17 +192,17 @@ internal class ChatViewModel(
     sealed class InputAction {
         data class AppendChatter(
             val chatter: Chatter,
-            val autocomplete: Boolean
+            val autocomplete: Boolean,
         ) : InputAction()
 
         data class AppendEmote(
             val emote: Emote,
-            val autocomplete: Boolean
+            val autocomplete: Boolean,
         ) : InputAction()
 
         data class ChangeMessageInput(
             val message: String,
-            val selectionRange: IntRange
+            val selectionRange: IntRange,
         ) : InputAction()
 
         data class ReplyToMessage(val chatListItem: ChatListItem.Message? = null) : InputAction()
@@ -211,7 +211,7 @@ internal class ChatViewModel(
 
         data class Submit(
             val screenDensity: Float,
-            val isDarkTheme: Boolean
+            val isDarkTheme: Boolean,
         ) : InputAction()
     }
 
@@ -266,7 +266,7 @@ internal class ChatViewModel(
                 chatRepository
                     .getChatEventFlow(
                         channelId = user.id,
-                        channelLogin = user.login
+                        channelLogin = user.login,
                     )
                     .flatMapConcat { event ->
                         chatEventViewMapper.map(event).asFlow()

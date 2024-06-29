@@ -129,6 +129,52 @@ internal sealed interface ChatEvent {
         data class SendError(
             override val timestamp: Instant,
         ) : Message
+
+        data class PollUpdate(
+            override val timestamp: Instant,
+            val poll: Poll,
+        ) : Message
+
+        data class BroadcastSettingsUpdate(
+            override val timestamp: Instant,
+            val streamTitle: String,
+            val gameName: String,
+        ) : Message
+
+        data class ViewerCountUpdate(
+            override val timestamp: Instant,
+            val viewerCount: Int,
+        ) : Message
+
+        data class PredictionUpdate(
+            override val timestamp: Instant,
+            val prediction: Prediction,
+        ) : Message
+
+        data class RaidUpdate(
+            override val timestamp: Instant,
+            val raid: Raid?,
+        ) : Message
+
+        data class PinnedMessageUpdate(
+            override val timestamp: Instant,
+            val pinnedMessage: PinnedMessage?,
+        ) : Message
+
+        data class RedemptionUpdate(
+            override val timestamp: Instant,
+            val redemption: Redemption,
+        ) : Message
+
+        data class RichEmbed(
+            override val timestamp: Instant,
+            val messageId: String,
+            val title: String,
+            val requestUrl: String,
+            val thumbnailUrl: String,
+            val authorName: String,
+            val channelName: String?,
+        ) : Message
     }
 
     sealed interface Command : ChatEvent {

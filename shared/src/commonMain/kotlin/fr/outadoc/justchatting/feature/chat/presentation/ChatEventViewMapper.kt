@@ -75,7 +75,7 @@ internal class ChatEventViewMapper {
                             timestamp = command.timestamp,
                             text = MR.strings.chat_clear.desc(),
                         )
-                    }
+                    },
                 )
             }
 
@@ -84,7 +84,7 @@ internal class ChatEventViewMapper {
                     ChatListItem.RemoveContent(
                         upUntil = command.timestamp,
                         matchingMessageId = command.targetMessageId,
-                    )
+                    ),
                 )
             }
 
@@ -367,6 +367,72 @@ internal class ChatEventViewMapper {
                         timestamp = timestamp,
                     )
                 }
+            }
+
+            is ChatEvent.Message.BroadcastSettingsUpdate -> {
+                ChatListItem.BroadcastSettingsUpdate(
+                    streamTitle = streamTitle,
+                    gameName = gameName,
+                )
+            }
+
+            is ChatEvent.Message.PinnedMessageUpdate -> {
+                ChatListItem.PinnedMessageUpdate(
+                    pinnedMessage = pinnedMessage,
+                )
+            }
+
+            is ChatEvent.Message.PollUpdate -> {
+                ChatListItem.PollUpdate(
+                    poll = poll,
+                )
+            }
+
+            is ChatEvent.Message.PredictionUpdate -> {
+                ChatListItem.PredictionUpdate(
+                    prediction = prediction,
+                )
+            }
+
+            is ChatEvent.Message.RaidUpdate -> {
+                ChatListItem.RaidUpdate(
+                    raid = raid,
+                )
+            }
+
+            is ChatEvent.Message.RedemptionUpdate -> {
+                ChatListItem.Message.Highlighted(
+                    timestamp = timestamp,
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
+                        title = MR.plurals.user_redeemed
+                            .format(
+                                number = redemption.reward.cost,
+                                redemption.user.displayName,
+                                redemption.reward.title,
+                                redemption.reward.cost,
+                            ),
+                        titleIcon = Icon.Toll,
+                        subtitle = null,
+                    ),
+                    body = null,
+                )
+            }
+
+            is ChatEvent.Message.RichEmbed -> {
+                ChatListItem.RichEmbed(
+                    messageId = messageId,
+                    title = title,
+                    requestUrl = requestUrl,
+                    thumbnailUrl = thumbnailUrl,
+                    authorName = authorName,
+                    channelName = channelName,
+                )
+            }
+
+            is ChatEvent.Message.ViewerCountUpdate -> {
+                ChatListItem.ViewerCountUpdate(
+                    viewerCount = viewerCount,
+                )
             }
         }
     }

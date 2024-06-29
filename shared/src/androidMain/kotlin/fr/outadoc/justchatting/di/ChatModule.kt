@@ -19,11 +19,11 @@ import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.DefaultChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
+import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.DefaultChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.MobileCreateShortcutForChannelUseCase
@@ -71,14 +71,14 @@ public val chatModule: Module = module {
         }
     }
 
-    single { PubSubBroadcastSettingsPlugin(get()) }
+    single { PubSubBroadcastSettingsPlugin(get(), get()) }
     single { PubSubChannelPointsPlugin(get(), get()) }
-    single { PubSubPinnedMessagePlugin(get()) }
-    single { PubSubPollPlugin(get()) }
+    single { PubSubPinnedMessagePlugin(get(), get()) }
+    single { PubSubPollPlugin(get(), get()) }
     single { PubSubPredictionPlugin(get()) }
-    single { PubSubRaidPlugin(get()) }
-    single { PubSubRichEmbedPlugin(get()) }
-    single { PubSubViewerCountPlugin(get()) }
+    single { PubSubRaidPlugin(get(), get()) }
+    single { PubSubRichEmbedPlugin(get(), get()) }
+    single { PubSubViewerCountPlugin(get(), get()) }
 
     single {
         PubSubPluginsProvider {

@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.feature.chat.domain
 
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi

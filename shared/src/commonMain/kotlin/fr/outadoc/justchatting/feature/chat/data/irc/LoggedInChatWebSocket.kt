@@ -175,7 +175,7 @@ internal class LoggedInChatWebSocket(
                                 _eventFlow.emit(
                                     ChatEvent.Message.SendError(
                                         timestamp = clock.now(),
-                                    )
+                                    ),
                                 )
                             }
 

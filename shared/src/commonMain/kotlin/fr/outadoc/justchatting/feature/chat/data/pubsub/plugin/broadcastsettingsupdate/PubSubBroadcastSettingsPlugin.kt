@@ -1,12 +1,13 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.broadcastsettingsupdate
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
+import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
 internal class PubSubBroadcastSettingsPlugin(
     private val json: Json,
+    private val clock: Clock,
 ) : PubSubPlugin<PubSubBroadcastSettingsMessage> {
 
     override fun getTopic(channelId: String): String =
@@ -16,7 +17,8 @@ internal class PubSubBroadcastSettingsPlugin(
         when (val message = json.decodeFromString<PubSubBroadcastSettingsMessage>(payload)) {
             is PubSubBroadcastSettingsMessage.Update -> {
                 listOf(
-                    ChatListItem.BroadcastSettingsUpdate(
+                    ChatEvent.Message.BroadcastSettingsUpdate(
+                        timestamp = clock.now(),
                         streamTitle = message.status,
                         gameName = message.game,
                     ),

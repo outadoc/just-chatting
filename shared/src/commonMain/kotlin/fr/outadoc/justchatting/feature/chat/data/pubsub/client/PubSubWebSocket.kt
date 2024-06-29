@@ -6,7 +6,6 @@ import fr.outadoc.justchatting.feature.chat.data.pubsub.client.model.PubSubServe
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider

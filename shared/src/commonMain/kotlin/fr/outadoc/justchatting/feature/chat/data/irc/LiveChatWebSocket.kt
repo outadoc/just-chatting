@@ -140,7 +140,7 @@ internal class LiveChatWebSocket private constructor(
                 ChatEvent.Message.Join(
                     timestamp = clock.now(),
                     channelLogin = channelLogin,
-                )
+                ),
             )
 
             // Receive messages
@@ -164,7 +164,8 @@ internal class LiveChatWebSocket private constructor(
 
         when (val command: ChatEvent? = parser.parse(received)) {
             is ChatEvent.Command.UserState,
-            is ChatEvent.Message.Notice -> {
+            is ChatEvent.Message.Notice,
+            -> {
                 // Handled by LoggedInChatWebSocket
             }
 
@@ -177,7 +178,8 @@ internal class LiveChatWebSocket private constructor(
 
             is ChatEvent.Command.RoomStateDelta,
             is ChatEvent.Command.ClearChat,
-            is ChatEvent.Command.ClearMessage -> {
+            is ChatEvent.Command.ClearMessage,
+            -> {
                 _eventFlow.emit(command)
             }
 

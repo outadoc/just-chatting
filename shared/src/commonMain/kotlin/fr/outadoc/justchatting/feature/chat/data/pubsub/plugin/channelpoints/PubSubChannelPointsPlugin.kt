@@ -1,11 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.channelpoints
 
-import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
-import fr.outadoc.justchatting.feature.chat.domain.model.Icon
+import fr.outadoc.justchatting.feature.chat.domain.model.Redemption
+import fr.outadoc.justchatting.feature.chat.domain.model.Reward
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
@@ -21,20 +20,23 @@ internal class PubSubChannelPointsPlugin(
         when (val message = json.decodeFromString<PubSubRewardMessage>(payload)) {
             is PubSubRewardMessage.Redeemed -> {
                 listOf(
-                    ChatListItem.Message.Highlighted(
+                    ChatEvent.Message.RedemptionUpdate(
                         timestamp = message.data.redemption.redeemedAt ?: clock.now(),
-                        metadata = ChatListItem.Message.Highlighted.Metadata(
-                            title = MR.plurals.user_redeemed
-                                .format(
-                                    number = message.data.redemption.reward.cost,
-                                    message.data.redemption.user.displayName,
-                                    message.data.redemption.reward.title,
-                                    message.data.redemption.reward.cost,
-                                ),
-                            titleIcon = Icon.Toll,
-                            subtitle = null,
+                        redemption = Redemption(
+                            id = message.data.redemption.id,
+                            user = User(
+                                id = message.data.redemption.user.id,
+                                login = message.data.redemption.user.login,
+                                displayName = message.data.redemption.user.displayName,
+                            ),
+                            userAddedMessage = message.data.redemption.userAddedMessage,
+                            redeemedAt = message.data.redemption.redeemedAt,
+                            reward = Reward(
+                                id = message.data.redemption.reward.id,
+                                title = message.data.redemption.reward.title,
+                                cost = message.data.redemption.reward.cost,
+                            ),
                         ),
-                        body = null,
                     ),
                 )
             }

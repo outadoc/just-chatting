@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.emotes.domain
 
-import fr.outadoc.justchatting.component.chatapi.db.Recent_emotes
+import fr.outadoc.justchatting.db.Recent_emotes
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.map
 import fr.outadoc.justchatting.feature.emotes.data.recent.RecentEmotesDao

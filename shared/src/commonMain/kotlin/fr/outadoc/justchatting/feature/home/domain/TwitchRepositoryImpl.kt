@@ -4,7 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.flatMap
-import fr.outadoc.justchatting.component.chatapi.db.Recent_channels
+import fr.outadoc.justchatting.db.Recent_channels
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.map
 import fr.outadoc.justchatting.feature.emotes.data.recent.RecentChannelsDao
 import fr.outadoc.justchatting.feature.emotes.data.twitch.model.map

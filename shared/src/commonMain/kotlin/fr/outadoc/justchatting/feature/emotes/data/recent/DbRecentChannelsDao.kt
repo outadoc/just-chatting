@@ -2,8 +2,8 @@ package fr.outadoc.justchatting.feature.emotes.data.recent
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import fr.outadoc.justchatting.db.RecentChannelQueries
-import fr.outadoc.justchatting.db.Recent_channels
+import fr.outadoc.justchatting.data.db.RecentChannelQueries
+import fr.outadoc.justchatting.data.db.Recent_channels
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
 

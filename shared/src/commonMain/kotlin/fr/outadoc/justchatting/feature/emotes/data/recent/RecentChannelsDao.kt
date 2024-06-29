@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.emotes.data.recent
 
-import fr.outadoc.justchatting.db.Recent_channels
+import fr.outadoc.justchatting.data.db.Recent_channels
 import kotlinx.coroutines.flow.Flow
 
 internal interface RecentChannelsDao {

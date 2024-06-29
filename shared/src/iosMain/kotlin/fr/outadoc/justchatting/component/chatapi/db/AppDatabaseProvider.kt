@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.db
+package fr.outadoc.justchatting.data.db
 
 import app.cash.sqldelight.driver.native.NativeSqliteDriver
 

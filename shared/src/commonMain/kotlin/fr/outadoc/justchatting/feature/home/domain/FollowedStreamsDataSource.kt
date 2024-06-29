@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.home.domain
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import fr.outadoc.justchatting.feature.home.data.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.Pagination
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.User
@@ -10,7 +11,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 internal class FollowedStreamsDataSource(
     private val userId: String?,
-    private val twitchApi: fr.outadoc.justchatting.feature.home.data.TwitchApi,
+    private val twitchApi: TwitchApi,
 ) : PagingSource<Pagination, List<Stream>>() {
 
     override fun getRefreshKey(state: PagingState<Pagination, List<Stream>>): Pagination? = null

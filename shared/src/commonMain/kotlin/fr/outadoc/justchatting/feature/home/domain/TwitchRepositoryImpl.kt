@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.db.Recent_channels
 import fr.outadoc.justchatting.feature.emotes.data.recent.RecentChannelsDao
 import fr.outadoc.justchatting.feature.emotes.data.twitch.model.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.home.data.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
@@ -28,7 +29,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
 internal class TwitchRepositoryImpl(
-    private val twitchApi: fr.outadoc.justchatting.feature.home.data.TwitchApi,
+    private val twitchApi: TwitchApi,
     private val preferencesRepository: PreferenceRepository,
     private val recentChannelsDao: RecentChannelsDao,
 ) : TwitchRepository {

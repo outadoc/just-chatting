@@ -3,13 +3,12 @@ package fr.outadoc.justchatting
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.architecture.KoArchitectureCreator.assertArchitecture
 import com.lemonappdev.konsist.api.architecture.Layer
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 
 class ArchitectureTest {
 
+    // @Disabled("Disabled until architecture is properly fixed")
     @Test
-    @Disabled("Disabled until architecture is properly fixed")
     fun `Check that clean architecture layers have correct dependencies`() {
         Konsist
             .scopeFromProject()

@@ -9,6 +9,7 @@ import fr.outadoc.justchatting.feature.emotes.data.stv.model.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
+import fr.outadoc.justchatting.feature.home.data.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
@@ -19,7 +20,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
 internal class EmotesRepository(
-    private val twitchApi: fr.outadoc.justchatting.feature.home.data.TwitchApi,
+    private val twitchApi: TwitchApi,
     private val stvEmotesApi: StvEmotesApi,
     private val bttvEmotesApi: BttvEmotesApi,
     private val recentEmotes: RecentEmotesDao,

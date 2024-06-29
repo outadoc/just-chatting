@@ -10,6 +10,7 @@ import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesServer
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesServer
 import fr.outadoc.justchatting.feature.emotes.domain.EmotesRepository
+import fr.outadoc.justchatting.feature.home.data.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepositoryImpl
 import fr.outadoc.justchatting.utils.core.DefaultJson
@@ -33,7 +34,7 @@ public val twitchModule: Module = module {
     single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
 
     single<IdApi> { IdServer(get(named("twitch"))) }
-    single<fr.outadoc.justchatting.feature.home.data.TwitchApi> {
+    single<TwitchApi> {
         fr.outadoc.justchatting.feature.home.data.TwitchServer(
             get(named("twitch")),
         )

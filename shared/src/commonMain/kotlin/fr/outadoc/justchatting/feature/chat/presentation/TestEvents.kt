@@ -1,11 +1,11 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-import fr.outadoc.justchatting.component.chatapi.common.Badge
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.chatapi.common.PinnedMessage
-import fr.outadoc.justchatting.component.chatapi.common.Poll
-import fr.outadoc.justchatting.component.chatapi.common.Prediction
+import fr.outadoc.justchatting.feature.chat.domain.model.Badge
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.feature.chat.domain.model.PinnedMessage
+import fr.outadoc.justchatting.feature.chat.domain.model.Poll
+import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.Instant
@@ -100,9 +100,9 @@ internal object TestEvents {
         ),
         ChatViewModel.Action.AddMessages(
             messages = listOf(
-                ChatEvent.Message.Simple(
+                ChatListItem.Message.Simple(
                     timestamp = Instant.parse("2023-02-08T20:35:35.839478452Z"),
-                    body = ChatEvent.Message.Body(
+                    body = ChatListItem.Message.Body(
                         messageId = "14124",
                         message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
                         chatter = Chatter(

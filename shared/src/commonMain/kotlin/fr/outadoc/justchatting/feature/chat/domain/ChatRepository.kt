@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.domain
 
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import kotlinx.coroutines.flow.Flow
 
 internal interface ChatRepository {

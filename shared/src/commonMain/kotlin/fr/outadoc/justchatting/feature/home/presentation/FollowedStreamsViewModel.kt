@@ -2,9 +2,9 @@ package fr.outadoc.justchatting.feature.home.presentation
 
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
-import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
-import fr.outadoc.justchatting.lifecycle.ViewModel
+import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.home.domain.model.Stream
+import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ internal class FollowedStreamsViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagingData: Flow<PagingData<Stream>> =
-        load.flatMapLatest { repository.loadFollowedStreams() }
+        load.flatMapLatest { repository.getFollowedStreams() }
             .cachedIn(viewModelScope)
 
     init {

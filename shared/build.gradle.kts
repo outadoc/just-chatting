@@ -143,7 +143,7 @@ android {
 sqldelight {
     databases {
         create("AppDatabase") {
-            packageName.set("fr.outadoc.justchatting.component.chatapi.db")
+            packageName.set("fr.outadoc.justchatting.data.db")
         }
     }
 }

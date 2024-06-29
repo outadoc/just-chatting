@@ -21,9 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.presentation.FollowedStreamsViewModel
-import fr.outadoc.justchatting.utils.ui.plus
+import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.datetime.Instant
 import org.koin.androidx.compose.koinViewModel

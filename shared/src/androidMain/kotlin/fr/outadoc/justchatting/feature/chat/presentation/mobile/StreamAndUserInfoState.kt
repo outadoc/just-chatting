@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 
 @Composable
 internal fun StreamAndUserInfoState(

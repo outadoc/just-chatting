@@ -8,7 +8,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import coil.imageLoader
 import coil.request.ImageRequest
-import fr.outadoc.justchatting.component.chatapi.domain.model.User
+import fr.outadoc.justchatting.feature.home.domain.model.User
 
 @Composable
 internal fun UpdateTaskDescriptionForUser(user: User?) {

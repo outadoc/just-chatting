@@ -11,18 +11,18 @@ import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
-import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.component.preferences.data.AppPreferences
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.feature.chat.data.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
+import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
+import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.logging.logError
-import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
+import fr.outadoc.justchatting.utils.presentation.isLaunchedFromBubbleCompat
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 

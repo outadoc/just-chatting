@@ -11,9 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.chatapi.common.Emote
-import fr.outadoc.justchatting.utils.core.formatNumber
-import fr.outadoc.justchatting.utils.ui.parseHexColor
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.utils.presentation.formatNumber
+import fr.outadoc.justchatting.utils.presentation.parseHexColor
 
 @Composable
 internal fun CheerEmoteItem(

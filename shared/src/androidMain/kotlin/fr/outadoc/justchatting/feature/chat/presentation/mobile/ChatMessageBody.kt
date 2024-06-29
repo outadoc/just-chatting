@@ -33,16 +33,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.component.chatapi.common.Badge
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.chatapi.common.Pronoun
-import fr.outadoc.justchatting.component.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.chat.domain.model.Badge
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
-import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
-import fr.outadoc.justchatting.utils.ui.parseHexColor
+import fr.outadoc.justchatting.utils.presentation.ensureColorIsAccessible
+import fr.outadoc.justchatting.utils.presentation.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap
@@ -51,12 +51,12 @@ import kotlin.random.Random
 @Composable
 internal fun ChatMessageBody(
     modifier: Modifier = Modifier,
-    body: ChatEvent.Message.Body,
+    body: ChatListItem.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
     appUser: AppUser.LoggedIn,
     backgroundHint: Color,
-    richEmbed: ChatEvent.RichEmbed?,
+    richEmbed: ChatListItem.RichEmbed?,
     maxLines: Int = Int.MAX_VALUE,
     onShowUserInfoForLogin: (String) -> Unit = {},
 ) {
@@ -155,7 +155,7 @@ internal fun ChatMessageBody(
 @Stable
 @Composable
 @OptIn(ExperimentalTextApi::class)
-internal fun ChatEvent.Message.Body.toAnnotatedString(
+internal fun ChatListItem.Message.Body.toAnnotatedString(
     appUser: AppUser.LoggedIn,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     pronouns: ImmutableMap<Chatter, Pronoun>,

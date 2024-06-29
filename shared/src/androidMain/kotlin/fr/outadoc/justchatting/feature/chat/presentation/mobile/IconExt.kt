@@ -16,7 +16,7 @@ import androidx.compose.material.icons.filled.VolunteerActivism
 import androidx.compose.material.icons.filled.WavingHand
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.ui.graphics.vector.ImageVector
-import fr.outadoc.justchatting.component.chatapi.common.Icon
+import fr.outadoc.justchatting.feature.chat.domain.model.Icon
 
 internal fun Icon.toMaterialIcon(): ImageVector = when (this) {
     Icon.Bolt -> Icons.Default.Bolt

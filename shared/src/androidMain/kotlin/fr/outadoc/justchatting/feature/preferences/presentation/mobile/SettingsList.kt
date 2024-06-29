@@ -29,12 +29,12 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.component.preferences.data.AppPreferences
-import fr.outadoc.justchatting.component.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
-import fr.outadoc.justchatting.utils.ui.plus
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.plus
 
 @ThemePreviews
 @Composable

@@ -40,15 +40,15 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.chatapi.common.Emote
-import fr.outadoc.justchatting.component.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.HapticIconButton
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.HapticIconButton
+import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import kotlinx.datetime.Instant
 
 @ThemePreviews
@@ -86,8 +86,8 @@ internal fun ChatInputPreviewEmpty() {
 internal fun ChatInputPreviewReplying() {
     AppTheme {
         ChatInput(
-            replyingTo = ChatEvent.Message.Simple(
-                body = ChatEvent.Message.Body(
+            replyingTo = ChatListItem.Message.Simple(
+                body = ChatListItem.Message.Body(
                     message = "Lorem ipsum dolor sit amet?",
                     messageId = "",
                     chatter = Chatter(
@@ -108,7 +108,7 @@ internal fun ChatInput(
     appUser: AppUser.LoggedIn? = null,
     message: TextFieldValue = TextFieldValue(),
     autoCompleteItems: List<AutoCompleteItem> = emptyList(),
-    replyingTo: ChatEvent.Message? = null,
+    replyingTo: ChatListItem.Message? = null,
     onEmoteClick: (Emote) -> Unit = {},
     onChatterClick: (Chatter) -> Unit = {},
     onMessageChange: (TextFieldValue) -> Unit = {},

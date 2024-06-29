@@ -14,7 +14,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.localized
-import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteSetItem
+import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
 
 @Composable
 internal fun EmoteHeader(

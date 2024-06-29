@@ -2,13 +2,13 @@ package fr.outadoc.justchatting.di
 
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
-import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
-import fr.outadoc.justchatting.component.chatapi.db.DbRecentChannelsDao
-import fr.outadoc.justchatting.component.chatapi.db.DbRecentEmotesDao
-import fr.outadoc.justchatting.component.chatapi.db.RecentChannelQueries
-import fr.outadoc.justchatting.component.chatapi.db.RecentChannelsDao
-import fr.outadoc.justchatting.component.chatapi.db.RecentEmoteQueries
-import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
+import fr.outadoc.justchatting.data.db.AppDatabase
+import fr.outadoc.justchatting.data.db.RecentChannelQueries
+import fr.outadoc.justchatting.data.db.RecentEmoteQueries
+import fr.outadoc.justchatting.feature.recent.data.RecentChannelsDb
+import fr.outadoc.justchatting.feature.recent.data.RecentEmotesDb
+import fr.outadoc.justchatting.feature.recent.domain.RecentChannelsApi
+import fr.outadoc.justchatting.feature.recent.domain.RecentEmotesApi
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -25,8 +25,8 @@ public val dbModule: Module = module {
     single { AppDatabase(get<SqlDriver>()) }
 
     single<RecentEmoteQueries> { get<AppDatabase>().recentEmoteQueries }
-    single<RecentEmotesDao> { DbRecentEmotesDao(get()) }
+    single<RecentEmotesApi> { RecentEmotesDb(get()) }
 
     single<RecentChannelQueries> { get<AppDatabase>().recentChannelQueries }
-    single<RecentChannelsDao> { DbRecentChannelsDao(get()) }
+    single<RecentChannelsApi> { RecentChannelsDb(get()) }
 }

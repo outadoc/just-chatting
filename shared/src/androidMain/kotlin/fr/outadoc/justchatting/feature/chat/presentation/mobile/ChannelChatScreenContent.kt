@@ -41,14 +41,14 @@ import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.ScreenPreviews
-import fr.outadoc.justchatting.utils.ui.shortToast
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.ScreenPreviews
+import fr.outadoc.justchatting.utils.presentation.shortToast
 
 @ScreenPreviews
 @Composable
@@ -81,7 +81,7 @@ internal fun ChannelChatScreenContent(
     onOpenBubbleClicked: () -> Unit = {},
     onTriggerAutoComplete: () -> Unit = {},
     onSubmit: () -> Unit = {},
-    onReplyToMessage: (ChatEvent.Message) -> Unit = {},
+    onReplyToMessage: (ChatListItem.Message) -> Unit = {},
     onDismissUserInfo: () -> Unit = {},
     onShowUserInfoForLogin: (String) -> Unit = {},
 ) {

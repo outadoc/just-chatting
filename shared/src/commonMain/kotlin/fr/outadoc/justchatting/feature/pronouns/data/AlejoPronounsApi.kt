@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.feature.pronouns.data
 
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.chatapi.common.Pronoun
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.pronouns.data.model.AlejoPronoun
 import fr.outadoc.justchatting.feature.pronouns.data.model.UserPronounResponse
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsApi

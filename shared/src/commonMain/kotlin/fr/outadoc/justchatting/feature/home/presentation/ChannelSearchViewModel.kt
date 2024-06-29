@@ -4,9 +4,9 @@ import androidx.paging.LoadState
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResult
-import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
-import fr.outadoc.justchatting.lifecycle.ViewModel
+import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
+import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
@@ -46,7 +46,7 @@ internal class ChannelSearchViewModel(
             .cachedIn(viewModelScope)
 
     private suspend fun loadSearchResults(query: String): Flow<PagingData<ChannelSearchResult>> {
-        return twitchRepository.loadSearchChannels(query)
+        return twitchRepository.searchChannels(query)
     }
 
     private suspend fun loadRecentChannels(): Flow<PagingData<ChannelSearchResult>> {

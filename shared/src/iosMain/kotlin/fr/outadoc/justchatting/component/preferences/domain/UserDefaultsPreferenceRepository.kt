@@ -1,7 +1,8 @@
 package fr.outadoc.justchatting.component.preferences.domain
 
-import fr.outadoc.justchatting.component.preferences.data.AppPreferences
-import fr.outadoc.justchatting.component.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.logging.logInfo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

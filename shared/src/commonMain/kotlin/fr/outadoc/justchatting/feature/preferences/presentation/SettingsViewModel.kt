@@ -1,11 +1,11 @@
 package fr.outadoc.justchatting.feature.preferences.presentation
 
-import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
-import fr.outadoc.justchatting.component.preferences.data.AppPreferences
-import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.lifecycle.ViewModel
+import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.logging.logError
+import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted

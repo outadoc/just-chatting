@@ -14,7 +14,7 @@ import androidx.compose.ui.res.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 
 private val TwitchBrandColor = Color(0xFF7718AD)
 

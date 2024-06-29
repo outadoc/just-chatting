@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.component.preferences.domain.SharedPrefsPreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.data.SharedPrefsPreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.AndroidLogRepository
 import fr.outadoc.justchatting.feature.preferences.presentation.DefaultReadExternalDependenciesList
 import fr.outadoc.justchatting.feature.preferences.presentation.LogRepository

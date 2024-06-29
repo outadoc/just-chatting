@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
-import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
-import fr.outadoc.justchatting.lifecycle.ViewModel
+import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.home.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logError
+import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -39,7 +39,7 @@ internal class StreamAndUserInfoViewModel(
             _state.emit(State.Loading(userLogin = login))
 
             twitchRepository
-                .loadUserByLogin(login)
+                .getUserByLogin(login)
                 .fold(
                     onSuccess = { user ->
                         _state.emit(
@@ -50,7 +50,7 @@ internal class StreamAndUserInfoViewModel(
                             ),
                         )
 
-                        twitchRepository.loadStream(userId = user.id)
+                        twitchRepository.getStream(userId = user.id)
                             .onSuccess { stream ->
                                 _state.emit(
                                     State.Loaded(

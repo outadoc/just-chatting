@@ -1,15 +1,14 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
-import com.eygraber.uri.Uri
-import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
-import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
-import fr.outadoc.justchatting.component.deeplink.Deeplink
-import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
-import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
-import fr.outadoc.justchatting.lifecycle.ViewModel
+import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
+import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.deeplink.Deeplink
+import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
+import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -96,24 +95,10 @@ internal class MainRouterViewModel(
     }
 
     fun onLoginClick() = viewModelScope.launch {
-        val oauthScopes = listOf(
-            "chat:read",
-            "chat:edit",
-            "user:read:follows",
-        )
-
-        val oauthAuthUrl: Uri =
-            Uri.parse("https://id.twitch.tv/oauth2/authorize")
-                .buildUpon()
-                .appendQueryParameter("response_type", "token")
-                .appendQueryParameter("client_id", oAuthAppCredentials.clientId)
-                .appendQueryParameter("redirect_uri", oAuthAppCredentials.redirectUri.toString())
-                .appendQueryParameter("force_verify", "true")
-                .appendQueryParameter("scope", oauthScopes.joinToString(" "))
-                .build()
-
         _events.emit(
-            Event.OpenInBrowser(uri = oauthAuthUrl.toString()),
+            Event.OpenInBrowser(
+                uri = authRepository.getExternalAuthorizeUrl().toString(),
+            ),
         )
     }
 

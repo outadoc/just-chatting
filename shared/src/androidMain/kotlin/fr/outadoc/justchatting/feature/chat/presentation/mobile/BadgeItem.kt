@@ -7,9 +7,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
 import coil.compose.AsyncImage
-import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.chat.presentation.getBestUrl
-import fr.outadoc.justchatting.utils.ui.isDark
+import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
+import fr.outadoc.justchatting.utils.presentation.isDark
 
 @Composable
 internal fun BadgeItem(

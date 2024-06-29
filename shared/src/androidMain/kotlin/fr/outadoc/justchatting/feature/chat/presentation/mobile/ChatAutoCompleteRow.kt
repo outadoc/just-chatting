@@ -10,10 +10,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.chatapi.common.Emote
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
-import fr.outadoc.justchatting.utils.ui.AppTheme
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.utils.presentation.AppTheme
 
 @Preview
 @Composable

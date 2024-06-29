@@ -84,14 +84,10 @@
                 android:name="androidx.emoji2.text.EmojiCompatInitializer"
                 tools:node="remove" />
 
-            <meta-data
-                android:name="fr.outadoc.justchatting.di.KoinInitializer"
-                android:value="androidx.startup" />
-
         </provider>
 
         <provider
-            android:name=".feature.chat.data.UserProfileImageContentProvider"
+            android:name=".feature.chat.presentation.UserProfileImageContentProvider"
             android:authorities="${applicationId}.user-image-provider"
             android:exported="true"
             android:grantUriPermissions="true"

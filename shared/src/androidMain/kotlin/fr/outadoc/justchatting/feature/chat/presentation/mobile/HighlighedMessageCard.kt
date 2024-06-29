@@ -20,11 +20,11 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent.Message.Highlighted.Level
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem.Message.Highlighted.Level
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.HighlightLevelPreviewProvider
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
-import fr.outadoc.justchatting.utils.ui.isDark
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.isDark
 
 @Composable
 internal fun HighlightedMessageCard(

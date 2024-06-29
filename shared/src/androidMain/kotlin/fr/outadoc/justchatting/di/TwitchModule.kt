@@ -1,19 +1,19 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
-import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesRepository
-import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
-import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepositoryImpl
-import fr.outadoc.justchatting.component.twitch.http.api.BttvEmotesApi
-import fr.outadoc.justchatting.component.twitch.http.api.IdApi
-import fr.outadoc.justchatting.component.twitch.http.api.StvEmotesApi
-import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
-import fr.outadoc.justchatting.component.twitch.http.server.BttvEmotesServer
-import fr.outadoc.justchatting.component.twitch.http.server.IdServer
-import fr.outadoc.justchatting.component.twitch.http.server.StvEmotesServer
-import fr.outadoc.justchatting.component.twitch.http.server.TwitchServer
-import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesApi
-import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesServer
+import fr.outadoc.justchatting.feature.auth.data.TwitchAuthApi
+import fr.outadoc.justchatting.feature.auth.domain.AuthApi
+import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesApi
+import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesServer
+import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
+import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesServer
+import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi
+import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesServer
+import fr.outadoc.justchatting.feature.home.data.TwitchApiImpl
+import fr.outadoc.justchatting.feature.home.data.TwitchClient
+import fr.outadoc.justchatting.feature.home.domain.TwitchApi
+import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.home.domain.TwitchRepositoryImpl
 import fr.outadoc.justchatting.utils.core.DefaultJson
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
@@ -30,12 +30,11 @@ public val twitchModule: Module = module {
         )
     }
 
-    single { EmotesRepository(get(), get(), get(), get(), get()) }
-
     single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
+    single<TwitchApi> { TwitchApiImpl(get()) }
+    single { TwitchClient(get(named("twitch"))) }
 
-    single<IdApi> { IdServer(get(named("twitch"))) }
-    single<TwitchApi> { TwitchServer(get(named("twitch"))) }
+    single<AuthApi> { TwitchAuthApi(get(named("twitch"))) }
     single<BttvEmotesApi> { BttvEmotesServer(get()) }
     single<StvEmotesApi> { StvEmotesServer(get()) }
     single<RecentMessagesApi> { RecentMessagesServer(get()) }

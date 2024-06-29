@@ -2,9 +2,10 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import dev.icerock.moko.resources.desc.desc
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.chatapi.common.Icon
+import fr.outadoc.justchatting.feature.chat.domain.model.Badge
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.feature.chat.domain.model.Icon
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 
@@ -15,8 +16,8 @@ internal val previewBadges = listOf(
 
 private val simpleEntries = sequence {
     yield(
-        ChatEvent.Message.Simple(
-            body = ChatEvent.Message.Body(
+        ChatListItem.Message.Simple(
+            body = ChatListItem.Message.Body(
                 chatter = Chatter(
                     displayName = "Hiccoz",
                     id = "68552712",
@@ -28,8 +29,8 @@ private val simpleEntries = sequence {
                 color = "#FF69B4",
                 embeddedEmotes = persistentListOf(),
                 badges = persistentListOf(
-                    fr.outadoc.justchatting.component.chatapi.common.Badge("subscriber", "48"),
-                    fr.outadoc.justchatting.component.chatapi.common.Badge("sub-gifter", "100"),
+                    Badge("subscriber", "48"),
+                    Badge("sub-gifter", "100"),
                 ),
                 inReplyTo = null,
             ),
@@ -38,8 +39,8 @@ private val simpleEntries = sequence {
     )
 
     yield(
-        ChatEvent.Message.Simple(
-            body = ChatEvent.Message.Body(
+        ChatListItem.Message.Simple(
+            body = ChatListItem.Message.Body(
                 chatter = Chatter(
                     displayName = "컬러히에",
                     id = "232421548",
@@ -51,7 +52,7 @@ private val simpleEntries = sequence {
                 color = "#5F9EA0",
                 embeddedEmotes = persistentListOf(),
                 badges = persistentListOf(),
-                inReplyTo = ChatEvent.Message.Body.InReplyTo(
+                inReplyTo = ChatListItem.Message.Body.InReplyTo(
                     mentions = listOf("djessy728"),
                     message = "Salut Antoine, est tu encore en contact avec Mathieu? Et penses tu streamer un peu avec lui?",
                 ),
@@ -63,14 +64,14 @@ private val simpleEntries = sequence {
 
 private val highlightedEntries = sequence {
     yield(
-        ChatEvent.Message.Highlighted(
+        ChatListItem.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664398268452),
-            metadata = ChatEvent.Message.Highlighted.Metadata(
+            metadata = ChatListItem.Message.Highlighted.Metadata(
                 title = "clo_chette_".desc(),
                 titleIcon = Icon.Star,
                 subtitle = "subscribed at Tier 1. They've subscribed for 18 months!".desc(),
             ),
-            body = ChatEvent.Message.Body(
+            body = ChatListItem.Message.Body(
                 chatter = Chatter(
                     id = "672551946",
                     displayName = "clo_chette_",
@@ -88,14 +89,14 @@ private val highlightedEntries = sequence {
     )
 
     yield(
-        ChatEvent.Message.Highlighted(
+        ChatListItem.Message.Highlighted(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
-            metadata = ChatEvent.Message.Highlighted.Metadata(
+            metadata = ChatListItem.Message.Highlighted.Metadata(
                 title = "First message".desc(),
                 titleIcon = Icon.WavingHand,
                 subtitle = null,
             ),
-            body = ChatEvent.Message.Body(
+            body = ChatListItem.Message.Body(
                 chatter = Chatter(
                     id = "0",
                     displayName = "Ravencheese",
@@ -115,15 +116,15 @@ private val highlightedEntries = sequence {
 
 private val paidEntries = sequence {
     yield(
-        ChatEvent.Message.Highlighted(
+        ChatListItem.Message.Highlighted(
             timestamp = Instant.parse("2023-06-26T17:53:11.208Z"),
-            metadata = ChatEvent.Message.Highlighted.Metadata(
+            metadata = ChatListItem.Message.Highlighted.Metadata(
                 title = "Boosted for $1".desc(),
                 titleIcon = Icon.Bolt,
                 subtitle = null,
-                level = ChatEvent.Message.Highlighted.Level.Eight,
+                level = ChatListItem.Message.Highlighted.Level.Eight,
             ),
-            body = ChatEvent.Message.Body(
+            body = ChatListItem.Message.Body(
                 messageId = "e63c83f4-4f4c-44fb-b62d-b1003599e61a",
                 chatter = Chatter(
                     id = "43868596",
@@ -140,22 +141,22 @@ private val paidEntries = sequence {
 
 private val noticeEntries = sequence {
     yield(
-        ChatEvent.Message.Notice(
+        ChatListItem.Message.Notice(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
             text = "This room is now in followers-only mode.".desc(),
         ),
     )
 
     yield(
-        ChatEvent.Message.Notice(
+        ChatListItem.Message.Notice(
             timestamp = Instant.fromEpochMilliseconds(1664400523912),
             text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.".desc(),
         ),
     )
 }
 
-internal class ChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message> {
-    override val values: Sequence<ChatEvent.Message> = sequence {
+internal class ChatMessagePreviewProvider : PreviewParameterProvider<ChatListItem.Message> {
+    override val values: Sequence<ChatListItem.Message> = sequence {
         yieldAll(simpleEntries)
         yieldAll(noticeEntries)
         yieldAll(highlightedEntries)
@@ -163,14 +164,14 @@ internal class ChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.M
     }
 }
 
-internal class SimpleChatMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message.Simple> {
-    override val values: Sequence<ChatEvent.Message.Simple> = sequence {
+internal class SimpleChatMessagePreviewProvider : PreviewParameterProvider<ChatListItem.Message.Simple> {
+    override val values: Sequence<ChatListItem.Message.Simple> = sequence {
         yieldAll(simpleEntries)
     }
 }
 
-internal class NoticeMessagePreviewProvider : PreviewParameterProvider<ChatEvent.Message.Notice> {
-    override val values: Sequence<ChatEvent.Message.Notice> = sequence {
+internal class NoticeMessagePreviewProvider : PreviewParameterProvider<ChatListItem.Message.Notice> {
+    override val values: Sequence<ChatListItem.Message.Notice> = sequence {
         yieldAll(noticeEntries)
     }
 }

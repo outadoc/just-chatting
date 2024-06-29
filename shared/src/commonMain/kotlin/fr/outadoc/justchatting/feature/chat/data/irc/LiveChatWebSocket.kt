@@ -1,16 +1,13 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
-import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
-import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
-import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
@@ -37,7 +34,6 @@ import kotlinx.coroutines.flow.dropWhile
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -141,14 +137,10 @@ internal class LiveChatWebSocket private constructor(
             send("JOIN #$channelLogin")
 
             _eventFlow.emit(
-                ChatListItem.Message.Highlighted(
+                ChatEvent.Message.Join(
                     timestamp = clock.now(),
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = MR.strings.chat_join.format(channelLogin),
-                        subtitle = null,
-                    ),
-                    body = null,
-                ),
+                    channelLogin = channelLogin,
+                )
             )
 
             // Receive messages
@@ -171,7 +163,8 @@ internal class LiveChatWebSocket private constructor(
         logInfo<LiveChatWebSocket> { "received: $received" }
 
         when (val command: ChatEvent? = parser.parse(received)) {
-            is ChatEvent.Command.UserState, is ChatEvent.Message.Notice -> {
+            is ChatEvent.Command.UserState,
+            is ChatEvent.Message.Notice -> {
                 // Handled by LoggedInChatWebSocket
             }
 
@@ -179,45 +172,13 @@ internal class LiveChatWebSocket private constructor(
                 // Remember time of last message so that we can restore lost messages after a connection loss
                 lastMessageReceivedAt = command.timestamp
 
-                _eventFlow.emit(mapper.mapMessage(command))
+                _eventFlow.emit(command)
             }
 
-            is ChatEvent.Command.RoomStateDelta -> {
-                _eventFlow.emit(
-                    ChatListItem.RoomStateDelta(
-                        isEmoteOnly = command.isEmoteOnly,
-                        minFollowDuration = command.minFollowDuration,
-                        uniqueMessagesOnly = command.uniqueMessagesOnly,
-                        slowModeDuration = command.slowModeDuration,
-                        isSubOnly = command.isSubOnly,
-                    ),
-                )
-            }
-
-            is ChatEvent.Command.ClearChat -> {
-                _eventFlow.emit(
-                    ChatListItem.RemoveContent(
-                        upUntil = command.timestamp,
-                        matchingUserId = command.targetUserId,
-                    ),
-                )
-
-                mapper.mapOptional(command)?.let { message ->
-                    _eventFlow.emit(message)
-                }
-            }
-
+            is ChatEvent.Command.RoomStateDelta,
+            is ChatEvent.Command.ClearChat,
             is ChatEvent.Command.ClearMessage -> {
-                _eventFlow.emit(
-                    ChatListItem.RemoveContent(
-                        upUntil = command.timestamp,
-                        matchingMessageId = command.targetMessageId,
-                    ),
-                )
-
-                mapper.mapOptional(command)?.let { message ->
-                    _eventFlow.emit(message)
-                }
+                _eventFlow.emit(command)
             }
 
             is ChatEvent.Command.Ping -> {
@@ -259,7 +220,6 @@ internal class LiveChatWebSocket private constructor(
                         // Drop messages that were received before the last message we received
                         event.timestamp < (lastMessageReceivedAt ?: Instant.DISTANT_PAST)
                     }
-                    .mapNotNull { event -> mapper.mapMessage(event) }
             }
             .fold(
                 onSuccess = { events ->

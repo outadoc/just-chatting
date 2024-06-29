@@ -1,14 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
-import dev.icerock.moko.resources.desc.desc
-import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
-import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
-import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
@@ -21,7 +17,6 @@ import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -142,13 +137,9 @@ internal class MockChatWebSocket private constructor(
             send("JOIN #$channelLogin")
 
             _eventFlow.emit(
-                ChatListItem.Message.Highlighted(
+                ChatEvent.Message.Join(
                     timestamp = clock.now(),
-                    metadata = ChatListItem.Message.Highlighted.Metadata(
-                        title = MR.strings.chat_join.format(channelLogin),
-                        subtitle = null,
-                    ),
-                    body = null,
+                    channelLogin = channelLogin,
                 ),
             )
 
@@ -172,14 +163,9 @@ internal class MockChatWebSocket private constructor(
                                 logError<LoggedInChatWebSocket> { "Timeout while trying to send message: $message" }
 
                                 _eventFlow.emit(
-                                    ChatListItem.Message.Highlighted(
-                                        timestamp = clock.now(),
-                                        metadata = ChatListItem.Message.Highlighted.Metadata(
-                                            title = MR.strings.chat_send_msg_error.desc(),
-                                            subtitle = null,
-                                        ),
-                                        body = null,
-                                    ),
+                                    ChatEvent.Message.SendError(
+                                        timestamp = clock.now()
+                                    )
                                 )
                             }
 
@@ -209,54 +195,12 @@ internal class MockChatWebSocket private constructor(
         logInfo<MockChatWebSocket> { "received: $received" }
 
         when (val command: ChatEvent? = parser.parse(received)) {
-            is ChatEvent.Message -> {
-                _eventFlow.emit(mapper.mapMessage(command))
-            }
-
-            is ChatEvent.Command.UserState -> {
-                _eventFlow.emit(
-                    ChatListItem.UserState(
-                        emoteSets = command.emoteSets.toImmutableList(),
-                    ),
-                )
-            }
-
-            is ChatEvent.Command.RoomStateDelta -> {
-                _eventFlow.emit(
-                    ChatListItem.RoomStateDelta(
-                        isEmoteOnly = command.isEmoteOnly,
-                        minFollowDuration = command.minFollowDuration,
-                        uniqueMessagesOnly = command.uniqueMessagesOnly,
-                        slowModeDuration = command.slowModeDuration,
-                        isSubOnly = command.isSubOnly,
-                    ),
-                )
-            }
-
-            is ChatEvent.Command.ClearChat -> {
-                _eventFlow.emit(
-                    ChatListItem.RemoveContent(
-                        upUntil = command.timestamp,
-                        matchingUserId = command.targetUserId,
-                    ),
-                )
-
-                mapper.mapOptional(command)?.let { message ->
-                    _eventFlow.emit(message)
-                }
-            }
-
+            is ChatEvent.Message,
+            is ChatEvent.Command.UserState,
+            is ChatEvent.Command.RoomStateDelta,
+            is ChatEvent.Command.ClearChat,
             is ChatEvent.Command.ClearMessage -> {
-                _eventFlow.emit(
-                    ChatListItem.RemoveContent(
-                        upUntil = command.timestamp,
-                        matchingMessageId = command.targetMessageId,
-                    ),
-                )
-
-                mapper.mapOptional(command)?.let { message ->
-                    _eventFlow.emit(message)
-                }
+                _eventFlow.emit(command)
             }
 
             is ChatEvent.Command.Ping -> {

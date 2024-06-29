@@ -120,6 +120,15 @@ internal sealed interface ChatEvent {
             val message: String,
             val messageId: String?,
         ) : Message
+
+        data class Join(
+            override val timestamp: Instant,
+            val channelLogin: String,
+        ) : Message
+
+        data class SendError(
+            override val timestamp: Instant,
+        ) : Message
     }
 
     sealed interface Command : ChatEvent {

@@ -48,7 +48,7 @@ import org.koin.dsl.module
 
 public val chatModule: Module = module {
 
-    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { StreamAndUserInfoViewModel(get()) }
 
     single<ChatNotifier> { DefaultChatNotifier(get(), get()) }
@@ -110,12 +110,12 @@ public val chatModule: Module = module {
     factory { GetRecentEmotesUseCase(get()) }
     factory { InsertRecentEmotesUseCase(get()) }
 
-    single { ChannelBttvEmotesSource(get()) }
-    single { ChannelFfzEmotesSource(get()) }
+    single { ChannelBttvEmotesSource(get(), get()) }
+    single { ChannelFfzEmotesSource(get(), get()) }
     single { ChannelTwitchEmotesSource(get()) }
-    single { GlobalBttvEmotesSource(get()) }
-    single { GlobalFfzEmotesSource(get()) }
-    single { GlobalStvEmotesSource(get()) }
+    single { GlobalBttvEmotesSource(get(), get()) }
+    single { GlobalFfzEmotesSource(get(), get()) }
+    single { GlobalStvEmotesSource(get(), get()) }
     single { GlobalTwitchEmotesSource(get()) }
     single { DelegateTwitchEmotesSource(get()) }
 

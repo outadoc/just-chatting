@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.chat.presentation
 import androidx.compose.runtime.Immutable
 import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
@@ -59,18 +58,19 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.emitAll
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
@@ -268,16 +268,8 @@ internal class ChatViewModel(
                         channelId = user.id,
                         channelLogin = user.login
                     )
-                    .mapNotNull { event ->
-                        when (event) {
-                            is ChatEvent.Message -> {
-                                chatEventViewMapper.mapMessage(event)
-                            }
-
-                            else -> {
-                                chatEventViewMapper.mapOptional(event)
-                            }
-                        }
+                    .flatMapConcat { event ->
+                        chatEventViewMapper.map(event).asFlow()
                     }
                     .map { event ->
                         when (event) {

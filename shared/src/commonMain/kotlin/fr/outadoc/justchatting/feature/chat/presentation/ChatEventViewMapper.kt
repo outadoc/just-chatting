@@ -4,10 +4,10 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.format
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.formatCurrency
 import fr.outadoc.justchatting.utils.presentation.formatNumber
@@ -16,7 +16,7 @@ import kotlinx.collections.immutable.toImmutableList
 
 internal class ChatEventViewMapper {
 
-    fun mapMessage(chatEvent: ChatEvent.Message): ChatListItem = with(chatEvent) {
+    private fun mapMessage(chatEvent: ChatEvent.Message): ChatListItem = with(chatEvent) {
         when (this) {
             is ChatEvent.Message.Notice -> {
                 ChatListItem.Message.Notice(
@@ -202,6 +202,28 @@ internal class ChatEventViewMapper {
                 )
             }
 
+            is ChatEvent.Message.Join -> {
+                ChatListItem.Message.Highlighted(
+                    timestamp = timestamp,
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
+                        title = MR.strings.chat_join.format(channelLogin),
+                        subtitle = null,
+                    ),
+                    body = null,
+                )
+            }
+
+            is ChatEvent.Message.SendError -> {
+                ChatListItem.Message.Highlighted(
+                    timestamp = timestamp,
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
+                        title = MR.strings.chat_send_msg_error.desc(),
+                        subtitle = null,
+                    ),
+                    body = null,
+                )
+            }
+
             is ChatEvent.Message.ChatMessage -> {
                 val metadata = when {
                     isFirstMessageByUser -> {
@@ -321,40 +343,79 @@ internal class ChatEventViewMapper {
         )
     }
 
-    fun mapOptional(command: ChatEvent): ChatListItem? {
+    fun map(command: ChatEvent): List<ChatListItem> {
         return when (command) {
-            is ChatEvent.Command.ClearChat -> {
-                if (command.targetUserLogin != null) {
-                    if (command.duration == null) {
-                        ChatListItem.Message.Highlighted(
-                            timestamp = command.timestamp,
-                            metadata = ChatListItem.Message.Highlighted.Metadata(
-                                title = command.targetUserLogin.desc(),
-                                titleIcon = Icon.Gavel,
-                                subtitle = MR.strings.chat_ban.desc(),
-                            ),
-                            body = null,
-                        )
-                    } else {
-                        ChatListItem.Message.Highlighted(
-                            timestamp = command.timestamp,
-                            metadata = ChatListItem.Message.Highlighted.Metadata(
-                                title = command.targetUserLogin.desc(),
-                                titleIcon = Icon.Gavel,
-                                subtitle = MR.strings.chat_timeout.format(command.duration),
-                            ),
-                            body = null,
-                        )
-                    }
-                } else {
-                    ChatListItem.Message.Notice(
-                        timestamp = command.timestamp,
-                        text = MR.strings.chat_clear.desc(),
-                    )
-                }
+            is ChatEvent.Message -> {
+                listOf(mapMessage(command))
             }
 
-            else -> null
+            is ChatEvent.Command.UserState -> {
+                listOf(
+                    ChatListItem.UserState(
+                        emoteSets = command.emoteSets.toImmutableList(),
+                    ),
+                )
+            }
+
+            is ChatEvent.Command.RoomStateDelta -> {
+                listOf(
+                    ChatListItem.RoomStateDelta(
+                        isEmoteOnly = command.isEmoteOnly,
+                        minFollowDuration = command.minFollowDuration,
+                        uniqueMessagesOnly = command.uniqueMessagesOnly,
+                        slowModeDuration = command.slowModeDuration,
+                        isSubOnly = command.isSubOnly,
+                    ),
+                )
+            }
+
+            is ChatEvent.Command.ClearChat -> {
+                listOf(
+                    ChatListItem.RemoveContent(
+                        upUntil = command.timestamp,
+                        matchingUserId = command.targetUserId,
+                    ),
+                    if (command.targetUserLogin != null) {
+                        if (command.duration == null) {
+                            ChatListItem.Message.Highlighted(
+                                timestamp = command.timestamp,
+                                metadata = ChatListItem.Message.Highlighted.Metadata(
+                                    title = command.targetUserLogin.desc(),
+                                    titleIcon = Icon.Gavel,
+                                    subtitle = MR.strings.chat_ban.desc(),
+                                ),
+                                body = null,
+                            )
+                        } else {
+                            ChatListItem.Message.Highlighted(
+                                timestamp = command.timestamp,
+                                metadata = ChatListItem.Message.Highlighted.Metadata(
+                                    title = command.targetUserLogin.desc(),
+                                    titleIcon = Icon.Gavel,
+                                    subtitle = MR.strings.chat_timeout.format(command.duration),
+                                ),
+                                body = null,
+                            )
+                        }
+                    } else {
+                        ChatListItem.Message.Notice(
+                            timestamp = command.timestamp,
+                            text = MR.strings.chat_clear.desc(),
+                        )
+                    }
+                )
+            }
+
+            is ChatEvent.Command.ClearMessage -> {
+                listOf(
+                    ChatListItem.RemoveContent(
+                        upUntil = command.timestamp,
+                        matchingMessageId = command.targetMessageId,
+                    )
+                )
+            }
+
+            else -> emptyList()
         }
     }
 

@@ -1,15 +1,12 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
-import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
-import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter
@@ -22,7 +19,6 @@ import io.ktor.websocket.DefaultWebSocketSession
 import io.ktor.websocket.Frame
 import io.ktor.websocket.readText
 import io.ktor.websocket.send
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -177,14 +173,9 @@ internal class LoggedInChatWebSocket(
                                 logError<LoggedInChatWebSocket> { "Timeout while trying to send message: $message" }
 
                                 _eventFlow.emit(
-                                    ChatListItem.Message.Highlighted(
+                                    ChatEvent.Message.SendError(
                                         timestamp = clock.now(),
-                                        metadata = ChatListItem.Message.Highlighted.Metadata(
-                                            title = MR.strings.chat_send_msg_error.desc(),
-                                            subtitle = null,
-                                        ),
-                                        body = null,
-                                    ),
+                                    )
                                 )
                             }
 
@@ -215,15 +206,11 @@ internal class LoggedInChatWebSocket(
 
         when (val command = parser.parse(received)) {
             is ChatEvent.Message.Notice -> {
-                _eventFlow.emit(mapper.mapMessage(command))
+                _eventFlow.emit(command)
             }
 
             is ChatEvent.Command.UserState -> {
-                _eventFlow.emit(
-                    ChatListItem.UserState(
-                        emoteSets = command.emoteSets.toImmutableList(),
-                    ),
-                )
+                _eventFlow.emit(command)
             }
 
             is ChatEvent.Command.Ping -> {

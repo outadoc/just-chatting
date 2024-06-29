@@ -1,8 +1,7 @@
-package fr.outadoc.justchatting.feature.home.domain
+package fr.outadoc.justchatting.feature.home.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import fr.outadoc.justchatting.feature.home.data.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Pagination
 import fr.outadoc.justchatting.feature.home.domain.model.User
@@ -10,7 +9,7 @@ import fr.outadoc.justchatting.utils.logging.logError
 
 internal class SearchChannelsDataSource(
     private val query: String,
-    private val twitchApi: TwitchApi,
+    private val twitchClient: TwitchClient,
 ) : PagingSource<Pagination, List<ChannelSearchResult>>() {
 
     override fun getRefreshKey(state: PagingState<Pagination, List<ChannelSearchResult>>): Pagination? =
@@ -26,7 +25,7 @@ internal class SearchChannelsDataSource(
             )
         }
 
-        return twitchApi
+        return twitchClient
             .searchChannels(
                 query = query,
                 limit = params.loadSize,

@@ -20,7 +20,7 @@ internal class FollowedStreamsViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagingData: Flow<PagingData<Stream>> =
-        load.flatMapLatest { repository.loadFollowedStreams() }
+        load.flatMapLatest { repository.getFollowedStreams() }
             .cachedIn(viewModelScope)
 
     init {

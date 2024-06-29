@@ -28,7 +28,7 @@ internal class DelegateTwitchEmotesSource(
                     .map { setIds ->
                         async {
                             twitchRepository
-                                .loadEmotesFromSet(setIds = setIds)
+                                .getEmotesFromSet(setIds = setIds)
                                 .fold(
                                     onSuccess = { emotes -> emotes },
                                     onFailure = { exception ->
@@ -43,7 +43,7 @@ internal class DelegateTwitchEmotesSource(
 
             val emoteOwners: Map<String, User> =
                 twitchRepository
-                    .loadUsersById(
+                    .getUsersById(
                         ids = emotes
                             .mapNotNull { emote -> emote.ownerId }
                             .toSet()

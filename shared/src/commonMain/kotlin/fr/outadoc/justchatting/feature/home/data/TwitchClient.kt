@@ -16,7 +16,7 @@ import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.path
 
-internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
+internal class TwitchClient(httpClient: HttpClient) {
 
     private val client = httpClient.config {
         defaultRequest {
@@ -24,7 +24,7 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
         }
     }
 
-    override suspend fun getStreams(ids: List<String>): Result<StreamsResponse> =
+    suspend fun getStreams(ids: List<String>): Result<StreamsResponse> =
         runCatching {
             client.get {
                 url {
@@ -36,7 +36,7 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
             }.body()
         }
 
-    override suspend fun getFollowedStreams(
+    suspend fun getFollowedStreams(
         userId: String?,
         limit: Int,
         after: String?,
@@ -52,7 +52,7 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
             }.body()
         }
 
-    override suspend fun getUsersById(ids: List<String>): Result<UsersResponse> =
+    suspend fun getUsersById(ids: List<String>): Result<UsersResponse> =
         runCatching {
             client.get {
                 url {
@@ -64,7 +64,7 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
             }.body()
         }
 
-    override suspend fun getUsersByLogin(logins: List<String>): Result<UsersResponse> =
+    suspend fun getUsersByLogin(logins: List<String>): Result<UsersResponse> =
         runCatching {
             client.get {
                 url {
@@ -76,7 +76,7 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
             }.body()
         }
 
-    override suspend fun searchChannels(
+    suspend fun searchChannels(
         query: String,
         limit: Int,
         after: String?,
@@ -92,7 +92,7 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
             }.body()
         }
 
-    override suspend fun getFollowedChannels(
+    suspend fun getFollowedChannels(
         userId: String?,
         limit: Int,
         after: String?,
@@ -108,7 +108,7 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
             }.body()
         }
 
-    override suspend fun getEmotesFromSet(setIds: List<String>): Result<EmoteSetResponse> =
+    suspend fun getEmotesFromSet(setIds: List<String>): Result<EmoteSetResponse> =
         runCatching {
             client.get {
                 url {
@@ -120,7 +120,7 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
             }.body()
         }
 
-    override suspend fun getCheerEmotes(userId: String?): Result<CheerEmotesResponse> =
+    suspend fun getCheerEmotes(userId: String?): Result<CheerEmotesResponse> =
         runCatching {
             client.get {
                 url {
@@ -130,12 +130,12 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
             }.body()
         }
 
-    override suspend fun getGlobalBadges(): Result<TwitchBadgesResponse> =
+    suspend fun getGlobalBadges(): Result<TwitchBadgesResponse> =
         runCatching {
             client.get { url { path("chat/badges/global") } }.body()
         }
 
-    override suspend fun getChannelBadges(channelId: String): Result<TwitchBadgesResponse> =
+    suspend fun getChannelBadges(channelId: String): Result<TwitchBadgesResponse> =
         runCatching {
             client.get {
                 url {
@@ -145,7 +145,7 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
             }.body()
         }
 
-    override suspend fun getChannelSchedule(
+    suspend fun getChannelSchedule(
         channelId: String,
         limit: Int,
         after: String?,

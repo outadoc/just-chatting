@@ -20,7 +20,7 @@ internal class FollowedChannelsViewModel(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val pagingData: Flow<PagingData<ChannelFollow>> =
-        load.flatMapLatest { repository.loadFollowedChannels() }
+        load.flatMapLatest { repository.getFollowedChannels() }
             .cachedIn(viewModelScope)
 
     init {

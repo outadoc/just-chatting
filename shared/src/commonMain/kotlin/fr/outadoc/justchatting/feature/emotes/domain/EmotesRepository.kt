@@ -7,9 +7,8 @@ import fr.outadoc.justchatting.feature.emotes.data.recent.RecentEmotesDao
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.stv.model.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
-import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
-import fr.outadoc.justchatting.feature.home.data.TwitchApi
+import fr.outadoc.justchatting.feature.home.domain.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
@@ -28,44 +27,12 @@ internal class EmotesRepository(
 ) {
     suspend fun loadGlobalBadges(): Result<List<TwitchBadge>> =
         withContext(DispatchersProvider.io) {
-            twitchApi.getGlobalBadges().map { result ->
-                result.badgeSets.flatMap { set ->
-                    set.versions.map { version ->
-                        TwitchBadge(
-                            setId = set.setId,
-                            version = version.id,
-                            urls = EmoteUrls(
-                                mapOf(
-                                    1f to version.image1x,
-                                    2f to version.image2x,
-                                    4f to version.image4x,
-                                ),
-                            ),
-                        )
-                    }
-                }
-            }
+            twitchApi.getGlobalBadges()
         }
 
     suspend fun loadChannelBadges(channelId: String): Result<List<TwitchBadge>> =
         withContext(DispatchersProvider.io) {
-            twitchApi.getChannelBadges(channelId).map { result ->
-                result.badgeSets.flatMap { set ->
-                    set.versions.map { version ->
-                        TwitchBadge(
-                            setId = set.setId,
-                            version = version.id,
-                            urls = EmoteUrls(
-                                mapOf(
-                                    1f to version.image1x,
-                                    2f to version.image2x,
-                                    4f to version.image4x,
-                                ),
-                            ),
-                        )
-                    }
-                }
-            }
+            twitchApi.getChannelBadges(channelId)
         }
 
     suspend fun loadGlobalStvEmotes(): Result<List<Emote>> =

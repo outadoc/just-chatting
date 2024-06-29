@@ -499,7 +499,7 @@ internal class ChatViewModel(
         val prefs: AppPreferences = preferencesRepository.currentPreferences.first()
 
         return twitchRepository
-            .loadUserByLogin(channelLogin)
+            .getUserByLogin(channelLogin)
             .onSuccess { channelUser ->
                 twitchRepository.insertRecentChannel(
                     channel = channelUser,
@@ -533,7 +533,7 @@ internal class ChatViewModel(
     private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return twitchRepository
-            .loadStream(userId = state.user.id)
+            .getStream(userId = state.user.id)
             .fold(
                 onSuccess = { stream ->
                     state.copy(stream = stream)
@@ -575,7 +575,7 @@ internal class ChatViewModel(
 
             val cheerEmotes: PersistentMap<String, Emote>? =
                 twitchRepository
-                    .loadCheerEmotes(userId = channelId)
+                    .getCheerEmotes(userId = channelId)
                     .fold(
                         onSuccess = { emotes ->
                             emotes

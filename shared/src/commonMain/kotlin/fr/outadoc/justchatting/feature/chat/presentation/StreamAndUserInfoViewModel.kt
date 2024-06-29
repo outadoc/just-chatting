@@ -39,7 +39,7 @@ internal class StreamAndUserInfoViewModel(
             _state.emit(State.Loading(userLogin = login))
 
             twitchRepository
-                .loadUserByLogin(login)
+                .getUserByLogin(login)
                 .fold(
                     onSuccess = { user ->
                         _state.emit(
@@ -50,7 +50,7 @@ internal class StreamAndUserInfoViewModel(
                             ),
                         )
 
-                        twitchRepository.loadStream(userId = user.id)
+                        twitchRepository.getStream(userId = user.id)
                             .onSuccess { stream ->
                                 _state.emit(
                                     State.Loaded(

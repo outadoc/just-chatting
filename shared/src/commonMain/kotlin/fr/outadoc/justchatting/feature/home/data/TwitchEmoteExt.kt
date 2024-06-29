@@ -1,7 +1,8 @@
-package fr.outadoc.justchatting.feature.emotes.data.twitch.model
+package fr.outadoc.justchatting.feature.home.data
 
 import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEmote
+import fr.outadoc.justchatting.feature.emotes.data.twitch.model.TwitchEmote
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 

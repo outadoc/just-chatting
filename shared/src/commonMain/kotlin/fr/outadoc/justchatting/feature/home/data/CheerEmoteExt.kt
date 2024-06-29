@@ -1,8 +1,8 @@
-package fr.outadoc.justchatting.feature.emotes.data.twitch.model
+package fr.outadoc.justchatting.feature.home.data
 
-import fr.outadoc.justchatting.component.twitch.http.model.CheerEmoteTier
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
+import fr.outadoc.justchatting.feature.home.data.model.CheerEmoteTier
 
 internal fun CheerEmoteTier.map(prefix: String): Emote {
     return Emote(

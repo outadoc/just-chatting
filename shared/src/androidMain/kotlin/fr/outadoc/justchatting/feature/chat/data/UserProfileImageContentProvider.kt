@@ -61,7 +61,7 @@ public class UserProfileImageContentProvider : ContentProvider() {
 
                 runBlocking(DispatchersProvider.io) {
                     val profileImageUrl: String =
-                        apiRepository.loadUsersByLogin(listOf(userLogin))
+                        apiRepository.getUsersByLogin(listOf(userLogin))
                             .getOrNull()
                             ?.firstOrNull()
                             ?.profileImageUrl

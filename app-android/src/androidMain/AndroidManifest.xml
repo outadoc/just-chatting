@@ -84,10 +84,6 @@
                 android:name="androidx.emoji2.text.EmojiCompatInitializer"
                 tools:node="remove" />
 
-            <meta-data
-                android:name="fr.outadoc.justchatting.di.KoinInitializer"
-                android:value="androidx.startup" />
-
         </provider>
 
         <provider

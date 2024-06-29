@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.chat.domain
 
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import kotlinx.coroutines.CoroutineScope
@@ -46,7 +47,7 @@ internal class AggregateChatEventHandler(
             )
         }
 
-    override val eventFlow: Flow<ChatListItem> =
+    override val eventFlow: Flow<ChatEvent> =
         handlers.map { handler -> handler.eventFlow }.merge()
 
     override val connectionStatus: StateFlow<ConnectionStatus> =

@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.chat.presentation
 import androidx.compose.runtime.Immutable
 import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
@@ -69,6 +70,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
@@ -92,6 +94,7 @@ internal class ChatViewModel(
     private val filterAutocompleteItemsUseCase: FilterAutocompleteItemsUseCase,
     private val pronounsRepository: PronounsRepository,
     private val createShortcutForChannel: CreateShortcutForChannelUseCase,
+    private val chatEventViewMapper: ChatEventViewMapper
 ) : ViewModel() {
 
     private val defaultScope = viewModelScope + CoroutineName("defaultScope")
@@ -187,13 +190,29 @@ internal class ChatViewModel(
     }
 
     sealed class InputAction {
-        data class AppendChatter(val chatter: Chatter, val autocomplete: Boolean) : InputAction()
-        data class AppendEmote(val emote: Emote, val autocomplete: Boolean) : InputAction()
-        data class ChangeMessageInput(val message: String, val selectionRange: IntRange) : InputAction()
+        data class AppendChatter(
+            val chatter: Chatter,
+            val autocomplete: Boolean
+        ) : InputAction()
+
+        data class AppendEmote(
+            val emote: Emote,
+            val autocomplete: Boolean
+        ) : InputAction()
+
+        data class ChangeMessageInput(
+            val message: String,
+            val selectionRange: IntRange
+        ) : InputAction()
 
         data class ReplyToMessage(val chatListItem: ChatListItem.Message? = null) : InputAction()
+
         data class UpdateAutoCompleteItems(val items: List<AutoCompleteItem>) : InputAction()
-        data class Submit(val screenDensity: Float, val isDarkTheme: Boolean) : InputAction()
+
+        data class Submit(
+            val screenDensity: Float,
+            val isDarkTheme: Boolean
+        ) : InputAction()
     }
 
     @Immutable
@@ -202,11 +221,7 @@ internal class ChatViewModel(
         val selectionRange: IntRange = 0..0,
         val replyingTo: ChatListItem.Message? = null,
         val autoCompleteItems: List<AutoCompleteItem> = emptyList(),
-    ) {
-        companion object {
-            val Empty = InputState()
-        }
-    }
+    )
 
     private val actions = MutableSharedFlow<Action>(
         extraBufferCapacity = 16,
@@ -248,59 +263,74 @@ internal class ChatViewModel(
             .map { state -> state.user }
             .distinctUntilChanged()
             .onEach { user ->
-                chatRepository.getChatEventFlow(user.id, user.login)
-                    .map { command ->
-                        when (command) {
+                chatRepository
+                    .getChatEventFlow(
+                        channelId = user.id,
+                        channelLogin = user.login
+                    )
+                    .mapNotNull { event ->
+                        when (event) {
+                            is ChatEvent.Message -> {
+                                chatEventViewMapper.mapMessage(event)
+                            }
+
+                            else -> {
+                                chatEventViewMapper.mapOptional(event)
+                            }
+                        }
+                    }
+                    .map { event ->
+                        when (event) {
                             is ChatListItem.Message -> {
-                                Action.AddMessages(listOf(command))
+                                Action.AddMessages(listOf(event))
                             }
 
                             is ChatListItem.RoomStateDelta -> {
-                                Action.ChangeRoomState(command)
+                                Action.ChangeRoomState(event)
                             }
 
                             is ChatListItem.UserState -> {
-                                Action.ChangeUserState(command)
+                                Action.ChangeUserState(event)
                             }
 
                             is ChatListItem.RemoveContent -> {
-                                Action.RemoveContent(command)
+                                Action.RemoveContent(event)
                             }
 
                             is ChatListItem.PollUpdate -> {
-                                Action.UpdatePoll(command.poll)
+                                Action.UpdatePoll(event.poll)
                             }
 
                             is ChatListItem.PredictionUpdate -> {
-                                Action.UpdatePrediction(command.prediction)
+                                Action.UpdatePrediction(event.prediction)
                             }
 
                             is ChatListItem.BroadcastSettingsUpdate -> {
                                 Action.UpdateStreamMetadata(
-                                    streamTitle = command.streamTitle,
-                                    gameName = command.gameName,
+                                    streamTitle = event.streamTitle,
+                                    gameName = event.gameName,
                                 )
                             }
 
                             is ChatListItem.ViewerCountUpdate -> {
                                 Action.UpdateStreamMetadata(
-                                    viewerCount = command.viewerCount,
+                                    viewerCount = event.viewerCount,
                                 )
                             }
 
                             is ChatListItem.RichEmbed -> {
-                                Action.AddRichEmbed(command)
+                                Action.AddRichEmbed(event)
                             }
 
                             is ChatListItem.RaidUpdate -> {
                                 Action.UpdateRaidAnnouncement(
-                                    raid = command.raid,
+                                    raid = event.raid,
                                 )
                             }
 
                             is ChatListItem.PinnedMessageUpdate -> {
                                 Action.UpdatePinnedMessage(
-                                    pinnedMessage = command.pinnedMessage,
+                                    pinnedMessage = event.pinnedMessage,
                                 )
                             }
                         }
@@ -532,6 +562,7 @@ internal class ChatViewModel(
             )
     }
 
+    @Suppress("UnusedReceiverParameter")
     private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return twitchRepository
@@ -811,7 +842,7 @@ internal class ChatViewModel(
         )
     }
 
-    private suspend fun InputAction.reduce(state: InputState): InputState {
+    private fun InputAction.reduce(state: InputState): InputState {
         return when (this) {
             is InputAction.AppendChatter -> reduce(state)
             is InputAction.AppendEmote -> reduce(state)
@@ -822,7 +853,7 @@ internal class ChatViewModel(
         }
     }
 
-    private suspend fun InputAction.Submit.reduce(inputState: InputState): InputState {
+    private fun InputAction.Submit.reduce(inputState: InputState): InputState {
         if (inputState.message.isEmpty()) return inputState
         val state = state.value as? State.Chatting ?: return inputState
 

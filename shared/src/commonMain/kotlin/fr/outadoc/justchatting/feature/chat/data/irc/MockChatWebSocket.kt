@@ -8,7 +8,6 @@ import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
-import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -51,7 +50,6 @@ internal class MockChatWebSocket private constructor(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
-    private val mapper: ChatEventViewMapper,
     private val httpClient: HttpClient,
     private val channelLogin: String,
 ) : ChatEventHandler {
@@ -60,11 +58,11 @@ internal class MockChatWebSocket private constructor(
         private const val ENDPOINT = "wss://irc.fdgt.dev"
     }
 
-    private val _eventFlow = MutableSharedFlow<ChatListItem>(
+    private val _eventFlow = MutableSharedFlow<ChatEvent>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    override val eventFlow: Flow<ChatListItem> = _eventFlow
+    override val eventFlow: Flow<ChatEvent> = _eventFlow
 
     private data class QueuedMessage(
         val authoringTime: Instant,
@@ -301,7 +299,6 @@ internal class MockChatWebSocket private constructor(
         private val clock: Clock,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
-        private val mapper: ChatEventViewMapper,
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
 
@@ -314,7 +311,6 @@ internal class MockChatWebSocket private constructor(
             scope = scope,
             clock = clock,
             parser = parser,
-            mapper = mapper,
             httpClient = httpClient,
             channelLogin = channelLogin,
         )

@@ -3,8 +3,8 @@ package fr.outadoc.justchatting.di
 import android.content.Context
 import android.net.ConnectivityManager
 import androidx.core.content.getSystemService
-import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
-import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
+import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
+import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.utils.core.AndroidNetworkStateObserver
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.http.AndroidHttpClientProvider

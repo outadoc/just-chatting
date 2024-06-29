@@ -1,12 +1,12 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
 import com.eygraber.uri.Uri
-import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
-import fr.outadoc.justchatting.component.chatapi.domain.repository.AuthRepository
-import fr.outadoc.justchatting.component.deeplink.Deeplink
-import fr.outadoc.justchatting.component.deeplink.DeeplinkParser
-import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
+import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.deeplink.Deeplink
+import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
+import fr.outadoc.justchatting.feature.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo

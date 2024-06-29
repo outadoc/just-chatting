@@ -4,11 +4,11 @@ import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.component.twitch.http.model.ChannelScheduleResponse
 import fr.outadoc.justchatting.component.twitch.http.model.ChannelSearchResponse
 import fr.outadoc.justchatting.component.twitch.http.model.CheerEmotesResponse
-import fr.outadoc.justchatting.component.twitch.http.model.EmoteSetResponse
 import fr.outadoc.justchatting.component.twitch.http.model.FollowResponse
 import fr.outadoc.justchatting.component.twitch.http.model.StreamsResponse
 import fr.outadoc.justchatting.component.twitch.http.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.component.twitch.http.model.UsersResponse
+import fr.outadoc.justchatting.feature.emotes.data.twitch.model.EmoteSetResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest

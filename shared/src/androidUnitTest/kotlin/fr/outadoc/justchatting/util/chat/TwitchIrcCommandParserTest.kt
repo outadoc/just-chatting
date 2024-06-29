@@ -2,9 +2,9 @@ package fr.outadoc.justchatting.util.chat
 
 import fr.outadoc.justchatting.component.chatapi.common.Badge
 import fr.outadoc.justchatting.component.chatapi.common.ChatEmote
-import fr.outadoc.justchatting.component.twitch.utils.map
 import fr.outadoc.justchatting.component.twitch.websocket.irc.TwitchIrcCommandParser
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
+import fr.outadoc.justchatting.feature.emotes.data.bttv.model.map
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import org.junit.Assert

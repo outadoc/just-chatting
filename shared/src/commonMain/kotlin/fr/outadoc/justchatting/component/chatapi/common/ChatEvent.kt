@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.component.chatapi.common
 
 import androidx.compose.runtime.Immutable
 import dev.icerock.moko.resources.desc.StringDesc
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant

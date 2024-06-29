@@ -21,8 +21,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.component.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
+import fr.outadoc.justchatting.feature.preferences.data.AppUser
 import fr.outadoc.justchatting.shared.MR
 
 @Composable

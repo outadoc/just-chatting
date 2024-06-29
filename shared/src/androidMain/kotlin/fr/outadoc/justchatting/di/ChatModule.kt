@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.di
 
 import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactoriesProvider
 import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPluginsProvider
-import fr.outadoc.justchatting.component.twitch.websocket.irc.IrcMessageMapper
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.MockChatWebSocket
@@ -17,15 +16,7 @@ import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.predict
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.raid.PubSubRaidPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.richembed.PubSubRichEmbedPlugin
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.feature.viewercount.PubSubViewerCountPlugin
-import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelBttvEmotesSource
-import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelFfzEmotesSource
-import fr.outadoc.justchatting.feature.chat.data.emotes.ChannelTwitchEmotesSource
-import fr.outadoc.justchatting.feature.chat.data.emotes.DelegateTwitchEmotesSource
-import fr.outadoc.justchatting.feature.chat.data.emotes.EmoteListSourcesProvider
-import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalBttvEmotesSource
-import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalFfzEmotesSource
-import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalStvEmotesSource
-import fr.outadoc.justchatting.feature.chat.data.emotes.GlobalTwitchEmotesSource
+import fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.DefaultChatRepository
@@ -36,6 +27,15 @@ import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItems
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.DefaultChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.MobileCreateShortcutForChannelUseCase
+import fr.outadoc.justchatting.feature.emotes.data.bttv.ChannelBttvEmotesSource
+import fr.outadoc.justchatting.feature.emotes.data.bttv.ChannelFfzEmotesSource
+import fr.outadoc.justchatting.feature.emotes.data.bttv.GlobalBttvEmotesSource
+import fr.outadoc.justchatting.feature.emotes.data.bttv.GlobalFfzEmotesSource
+import fr.outadoc.justchatting.feature.emotes.data.stv.GlobalStvEmotesSource
+import fr.outadoc.justchatting.feature.emotes.data.twitch.ChannelTwitchEmotesSource
+import fr.outadoc.justchatting.feature.emotes.data.twitch.GlobalTwitchEmotesSource
+import fr.outadoc.justchatting.feature.emotes.domain.DelegateTwitchEmotesSource
+import fr.outadoc.justchatting.feature.emotes.domain.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsClient
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsApi
@@ -97,7 +97,7 @@ public val chatModule: Module = module {
     single<ChatRepository> { DefaultChatRepository(get()) }
 
     single { TwitchIrcCommandParser(get()) }
-    single { IrcMessageMapper() }
+    single { fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper() }
 
     single { RecentMessagesRepository(get(), get()) }
 

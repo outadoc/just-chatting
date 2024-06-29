@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.utils.http
 
-import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
-import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BearerTokens

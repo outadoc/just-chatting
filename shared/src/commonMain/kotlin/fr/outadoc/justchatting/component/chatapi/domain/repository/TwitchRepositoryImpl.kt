@@ -4,7 +4,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.flatMap
-import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.db.RecentChannelsDao
 import fr.outadoc.justchatting.component.chatapi.db.Recent_channels
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
@@ -17,10 +16,11 @@ import fr.outadoc.justchatting.component.chatapi.domain.model.User
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.FollowedChannelsDataSource
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.FollowedStreamsDataSource
 import fr.outadoc.justchatting.component.chatapi.domain.repository.datasource.SearchChannelsDataSource
-import fr.outadoc.justchatting.component.preferences.data.AppUser
-import fr.outadoc.justchatting.component.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
-import fr.outadoc.justchatting.component.twitch.utils.map
+import fr.outadoc.justchatting.feature.emotes.data.bttv.model.map
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList

@@ -1,12 +1,12 @@
 package fr.outadoc.justchatting.component.chatapi.domain.repository
 
 import androidx.paging.PagingData
-import fr.outadoc.justchatting.component.chatapi.common.Emote
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
 import fr.outadoc.justchatting.component.chatapi.domain.model.User
+import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 

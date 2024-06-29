@@ -1,19 +1,19 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.component.chatapi.domain.model.OAuthAppCredentials
-import fr.outadoc.justchatting.component.chatapi.domain.repository.EmotesRepository
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepositoryImpl
-import fr.outadoc.justchatting.component.twitch.http.api.BttvEmotesApi
-import fr.outadoc.justchatting.component.twitch.http.api.IdApi
-import fr.outadoc.justchatting.component.twitch.http.api.StvEmotesApi
 import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
-import fr.outadoc.justchatting.component.twitch.http.server.BttvEmotesServer
-import fr.outadoc.justchatting.component.twitch.http.server.IdServer
-import fr.outadoc.justchatting.component.twitch.http.server.StvEmotesServer
 import fr.outadoc.justchatting.component.twitch.http.server.TwitchServer
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesServer
+import fr.outadoc.justchatting.feature.auth.data.IdApi
+import fr.outadoc.justchatting.feature.auth.data.IdServer
+import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
+import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesServer
+import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi
+import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesServer
+import fr.outadoc.justchatting.feature.emotes.domain.EmotesRepository
 import fr.outadoc.justchatting.utils.core.DefaultJson
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module

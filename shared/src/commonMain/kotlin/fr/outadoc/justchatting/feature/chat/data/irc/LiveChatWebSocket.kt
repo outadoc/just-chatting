@@ -1,13 +1,14 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
 import dev.icerock.moko.resources.format
-import fr.outadoc.justchatting.feature.chat.data.irc.model.IrcEvent
 import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
+import fr.outadoc.justchatting.feature.chat.presentation.IrcMessageMapper
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.shared.MR
@@ -57,7 +58,7 @@ internal class LiveChatWebSocket private constructor(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
-    private val mapper: fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper,
+    private val mapper: IrcMessageMapper,
     private val httpClient: HttpClient,
     private val recentMessagesRepository: RecentMessagesRepository,
     private val preferencesRepository: PreferenceRepository,
@@ -276,7 +277,7 @@ internal class LiveChatWebSocket private constructor(
         private val clock: Clock,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
-        private val mapper: fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper,
+        private val mapper: IrcMessageMapper,
         private val recentMessagesRepository: RecentMessagesRepository,
         private val preferencesRepository: PreferenceRepository,
         private val httpClient: HttpClient,

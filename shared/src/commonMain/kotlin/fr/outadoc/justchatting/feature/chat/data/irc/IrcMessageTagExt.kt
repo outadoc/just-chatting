@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
 import de.cketti.codepoints.offsetByCodePoints
-import fr.outadoc.justchatting.feature.chat.data.irc.model.IrcEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEmote
+import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.data.map
 import kotlinx.datetime.Instant

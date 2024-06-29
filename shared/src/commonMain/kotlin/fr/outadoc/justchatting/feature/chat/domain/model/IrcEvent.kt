@@ -1,7 +1,6 @@
-package fr.outadoc.justchatting.feature.chat.data.irc.model
+package fr.outadoc.justchatting.feature.chat.domain.model
 
 import androidx.compose.runtime.Immutable
-import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
@@ -10,7 +9,7 @@ internal sealed interface IrcEvent {
 
     sealed interface Message : IrcEvent {
 
-        abstract val timestamp: Instant
+        val timestamp: Instant
 
         data class ChatMessage(
             override val timestamp: Instant,

@@ -38,7 +38,7 @@ internal class TwitchApiImpl(
                             login = stream.userLogin,
                             displayName = stream.userName,
 
-                            ),
+                        ),
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,

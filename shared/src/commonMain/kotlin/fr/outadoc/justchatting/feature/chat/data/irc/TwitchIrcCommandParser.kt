@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
-import fr.outadoc.justchatting.feature.chat.data.irc.model.IrcEvent
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.core.message.IrcMessage
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.IrcMessageParser
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.rfc1459.NoticeMessage
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.rfc1459.PrivMsgMessage
+import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
 import fr.outadoc.justchatting.utils.logging.logWarning
 import kotlinx.datetime.Clock
 

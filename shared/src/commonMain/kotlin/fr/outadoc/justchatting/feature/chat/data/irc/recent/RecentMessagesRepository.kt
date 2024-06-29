@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.irc.recent
 
 import fr.outadoc.justchatting.feature.chat.data.irc.TwitchIrcCommandParser
-import fr.outadoc.justchatting.feature.chat.data.irc.model.IrcEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.withContext
 

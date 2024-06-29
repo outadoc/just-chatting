@@ -23,6 +23,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase
 import fr.outadoc.justchatting.feature.chat.presentation.FilterAutocompleteItemsUseCase
+import fr.outadoc.justchatting.feature.chat.presentation.IrcMessageMapper
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.DefaultChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.MobileCreateShortcutForChannelUseCase
@@ -96,7 +97,7 @@ public val chatModule: Module = module {
     single<ChatRepository> { DefaultChatRepository(get()) }
 
     single { TwitchIrcCommandParser(get()) }
-    single { fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper() }
+    single { IrcMessageMapper() }
 
     single { RecentMessagesRepository(get(), get()) }
 

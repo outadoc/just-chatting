@@ -1,14 +1,13 @@
-package fr.outadoc.justchatting.feature.chat.data.irc
+package fr.outadoc.justchatting.feature.chat.presentation
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.format
-import fr.outadoc.justchatting.feature.chat.data.irc.model.IrcEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
-import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
+import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.formatCurrency
 import fr.outadoc.justchatting.utils.core.formatNumber
@@ -87,7 +86,7 @@ internal class IrcMessageMapper {
                     metadata = ChatEvent.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = when (subscriptionPlan) {
-                            fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper.Companion.SUB_PRIME -> Icon.Star
+                            SUB_PRIME -> Icon.Star
                             else -> Icon.Star
                         },
                         subtitle = when (streakMonths) {
@@ -274,19 +273,19 @@ internal class IrcMessageMapper {
 
     private fun parseSubscriptionTier(planId: String): StringDesc {
         return when (planId) {
-            fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper.Companion.SUB_T1 -> MR.strings.chat_sub_tier1.desc()
-            fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper.Companion.SUB_T2 -> MR.strings.chat_sub_tier2.desc()
-            fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper.Companion.SUB_T3 -> MR.strings.chat_sub_tier3.desc()
-            fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper.Companion.SUB_PRIME -> MR.strings.chat_sub_prime.desc()
+            IrcMessageMapper.Companion.SUB_T1 -> MR.strings.chat_sub_tier1.desc()
+            IrcMessageMapper.Companion.SUB_T2 -> MR.strings.chat_sub_tier2.desc()
+            IrcMessageMapper.Companion.SUB_T3 -> MR.strings.chat_sub_tier3.desc()
+            IrcMessageMapper.Companion.SUB_PRIME -> MR.strings.chat_sub_prime.desc()
             else -> planId.desc()
         }
     }
 
     private fun parseSubscriptionTierWithArticle(planId: String): StringDesc {
         return when (planId) {
-            fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper.Companion.SUB_T1 -> MR.strings.chat_subGift_tier1.desc()
-            fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper.Companion.SUB_T2 -> MR.strings.chat_subGift_tier2.desc()
-            fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper.Companion.SUB_T3 -> MR.strings.chat_subGift_tier3.desc()
+            IrcMessageMapper.Companion.SUB_T1 -> MR.strings.chat_subGift_tier1.desc()
+            IrcMessageMapper.Companion.SUB_T2 -> MR.strings.chat_subGift_tier2.desc()
+            IrcMessageMapper.Companion.SUB_T3 -> MR.strings.chat_subGift_tier3.desc()
             else -> planId.desc()
         }
     }

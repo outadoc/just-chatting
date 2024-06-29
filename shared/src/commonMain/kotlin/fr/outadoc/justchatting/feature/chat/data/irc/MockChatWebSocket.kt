@@ -2,12 +2,13 @@ package fr.outadoc.justchatting.feature.chat.data.irc
 
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.format
-import fr.outadoc.justchatting.feature.chat.data.irc.model.IrcEvent
 import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
+import fr.outadoc.justchatting.feature.chat.presentation.IrcMessageMapper
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -50,7 +51,7 @@ internal class MockChatWebSocket private constructor(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
-    private val mapper: fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper,
+    private val mapper: IrcMessageMapper,
     private val httpClient: HttpClient,
     private val channelLogin: String,
 ) : ChatEventHandler {
@@ -300,7 +301,7 @@ internal class MockChatWebSocket private constructor(
         private val clock: Clock,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
-        private val mapper: fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper,
+        private val mapper: IrcMessageMapper,
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
 

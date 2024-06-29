@@ -273,19 +273,19 @@ internal class IrcMessageMapper {
 
     private fun parseSubscriptionTier(planId: String): StringDesc {
         return when (planId) {
-            IrcMessageMapper.Companion.SUB_T1 -> MR.strings.chat_sub_tier1.desc()
-            IrcMessageMapper.Companion.SUB_T2 -> MR.strings.chat_sub_tier2.desc()
-            IrcMessageMapper.Companion.SUB_T3 -> MR.strings.chat_sub_tier3.desc()
-            IrcMessageMapper.Companion.SUB_PRIME -> MR.strings.chat_sub_prime.desc()
+            SUB_T1 -> MR.strings.chat_sub_tier1.desc()
+            SUB_T2 -> MR.strings.chat_sub_tier2.desc()
+            SUB_T3 -> MR.strings.chat_sub_tier3.desc()
+            SUB_PRIME -> MR.strings.chat_sub_prime.desc()
             else -> planId.desc()
         }
     }
 
     private fun parseSubscriptionTierWithArticle(planId: String): StringDesc {
         return when (planId) {
-            IrcMessageMapper.Companion.SUB_T1 -> MR.strings.chat_subGift_tier1.desc()
-            IrcMessageMapper.Companion.SUB_T2 -> MR.strings.chat_subGift_tier2.desc()
-            IrcMessageMapper.Companion.SUB_T3 -> MR.strings.chat_subGift_tier3.desc()
+            SUB_T1 -> MR.strings.chat_subGift_tier1.desc()
+            SUB_T2 -> MR.strings.chat_subGift_tier2.desc()
+            SUB_T3 -> MR.strings.chat_subGift_tier3.desc()
             else -> planId.desc()
         }
     }

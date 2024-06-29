@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.feature.chat.data.irc
 
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.format
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
+import fr.outadoc.justchatting.feature.chat.data.irc.model.IrcEvent
 import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler

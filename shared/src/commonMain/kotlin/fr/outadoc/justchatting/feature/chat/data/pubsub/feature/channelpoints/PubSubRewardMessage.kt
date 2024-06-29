@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.channelpoints
 
-import fr.outadoc.justchatting.component.twitch.http.model.Reward
-import fr.outadoc.justchatting.component.twitch.http.model.User
+import fr.outadoc.justchatting.feature.home.data.model.Reward
+import fr.outadoc.justchatting.feature.home.data.model.User
 import kotlinx.datetime.Instant
 import kotlinx.datetime.serializers.InstantIso8601Serializer
 import kotlinx.serialization.SerialName

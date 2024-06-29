@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.client
 
-import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.model.PubSubClientMessage
-import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.model.PubSubServerMessage
 import fr.outadoc.justchatting.feature.chat.data.Defaults
+import fr.outadoc.justchatting.feature.chat.data.pubsub.client.model.PubSubClientMessage
+import fr.outadoc.justchatting.feature.chat.data.pubsub.client.model.PubSubServerMessage
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent

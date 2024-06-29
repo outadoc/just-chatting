@@ -1,6 +1,5 @@
 package fr.outadoc.justchatting.feature.home.domain.model
 
-import fr.outadoc.justchatting.component.twitch.http.model.StreamCategory
 import kotlinx.datetime.Instant
 
 internal data class ChannelScheduleSegment(

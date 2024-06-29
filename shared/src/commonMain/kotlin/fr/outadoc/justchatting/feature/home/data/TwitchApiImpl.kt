@@ -14,6 +14,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleVacation
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logError
@@ -37,7 +38,7 @@ internal class TwitchApiImpl(
                             login = stream.userLogin,
                             displayName = stream.userName,
 
-                        ),
+                            ),
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
@@ -273,7 +274,12 @@ internal class TwitchApiImpl(
                             endTime = segment.endTime,
                             title = segment.title,
                             canceledUntil = segment.canceledUntil,
-                            category = segment.category,
+                            category = segment.category?.let {
+                                StreamCategory(
+                                    id = segment.category.id,
+                                    name = segment.category.name,
+                                )
+                            },
                             isRecurring = segment.isRecurring,
                         )
                     },

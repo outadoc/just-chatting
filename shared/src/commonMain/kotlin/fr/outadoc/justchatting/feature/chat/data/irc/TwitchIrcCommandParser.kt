@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
-import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
+import fr.outadoc.justchatting.feature.chat.data.irc.model.IrcEvent
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.core.message.IrcMessage
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.IrcMessageParser
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.rfc1459.NoticeMessage

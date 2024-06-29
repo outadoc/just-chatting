@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal class ValidationResponse(
+internal class TwitchAuthValidationResponse(
     @SerialName("client_id")
     val clientId: String,
     @SerialName("login")

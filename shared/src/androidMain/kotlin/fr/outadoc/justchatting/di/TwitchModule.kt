@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.feature.auth.data.IdApi
-import fr.outadoc.justchatting.feature.auth.data.IdServer
+import fr.outadoc.justchatting.feature.auth.data.TwitchAuthApi
+import fr.outadoc.justchatting.feature.auth.domain.AuthApi
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesServer
@@ -33,7 +33,7 @@ public val twitchModule: Module = module {
 
     single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
 
-    single<IdApi> { IdServer(get(named("twitch"))) }
+    single<AuthApi> { TwitchAuthApi(get(named("twitch"))) }
     single<TwitchApi> {
         fr.outadoc.justchatting.feature.home.data.TwitchServer(
             get(named("twitch")),

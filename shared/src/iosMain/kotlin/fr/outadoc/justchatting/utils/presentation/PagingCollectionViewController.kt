@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.utils.view
+package fr.outadoc.justchatting.utils.presentation
 
 import androidx.paging.AsyncPagingDataDiffer
 import androidx.paging.CombinedLoadStates

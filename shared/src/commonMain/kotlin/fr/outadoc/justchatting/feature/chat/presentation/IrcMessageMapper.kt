@@ -9,8 +9,8 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
 import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.core.formatCurrency
-import fr.outadoc.justchatting.utils.core.formatNumber
+import fr.outadoc.justchatting.utils.presentation.formatCurrency
+import fr.outadoc.justchatting.utils.presentation.formatNumber
 import io.fluidsonic.currency.Currency
 import kotlinx.collections.immutable.toImmutableList
 

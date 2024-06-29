@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
-import fr.outadoc.justchatting.utils.core.formatNumber
+import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.parseHexColor
 
 @Composable

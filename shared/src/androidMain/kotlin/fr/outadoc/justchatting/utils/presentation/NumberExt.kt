@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.utils.core
+package fr.outadoc.justchatting.utils.presentation
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import io.fluidsonic.currency.Currency

@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.prediction
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.prediction
 
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction

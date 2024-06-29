@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.richembed
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.richembed
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 

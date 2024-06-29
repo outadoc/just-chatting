@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.poll
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.poll
 
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import kotlin.time.Duration.Companion.milliseconds

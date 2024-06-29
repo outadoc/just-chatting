@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.pinnedmessage
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.pinnedmessage
 
 import fr.outadoc.justchatting.utils.core.InstantUnixEpochSerializer
 import kotlinx.datetime.Instant

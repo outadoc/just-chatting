@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.prediction
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.prediction
 
 import kotlinx.datetime.Instant
 import kotlinx.datetime.serializers.InstantIso8601Serializer

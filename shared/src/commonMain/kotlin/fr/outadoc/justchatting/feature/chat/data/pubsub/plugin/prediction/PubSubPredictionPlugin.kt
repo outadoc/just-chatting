@@ -1,21 +1,23 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.raid
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.prediction
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import kotlinx.serialization.json.Json
 
-internal class PubSubRaidPlugin(
+internal class PubSubPredictionPlugin(
     private val json: Json,
-) : PubSubPlugin<PubSubRaidMessage> {
+) : PubSubPlugin<PubSubPredictionMessage> {
 
     override fun getTopic(channelId: String): String =
-        "raid.$channelId"
+        "predictions-channel-v1.$channelId"
 
     override fun parseMessage(payload: String): List<ChatEvent> {
-        val message = json.decodeFromString<PubSubRaidMessage>(payload)
-        return listOf(
-            ChatListItem.RaidUpdate(raid = message.map()),
+        val message = json.decodeFromString<PubSubPredictionMessage>(payload)
+        return listOfNotNull(
+            ChatListItem.PredictionUpdate(
+                message.map(),
+            ),
         )
     }
 }

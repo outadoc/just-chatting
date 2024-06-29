@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.channelpoints
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.channelpoints
 
 import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent

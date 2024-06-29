@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.raid
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.raid
 
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 

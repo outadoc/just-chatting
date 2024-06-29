@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.pinnedmessage
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.pinnedmessage
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem

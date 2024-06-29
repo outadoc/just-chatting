@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.broadcastsettingsupdate
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.broadcastsettingsupdate
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

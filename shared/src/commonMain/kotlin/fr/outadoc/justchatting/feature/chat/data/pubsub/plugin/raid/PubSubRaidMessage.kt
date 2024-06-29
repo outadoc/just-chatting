@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.raid
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.raid
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable

@@ -1,7 +1,6 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.richembed
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.richembed
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import kotlinx.serialization.json.Json
 

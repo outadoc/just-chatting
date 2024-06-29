@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.viewercount
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.viewercount
 
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem

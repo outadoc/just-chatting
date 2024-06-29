@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.channelpoints
+package fr.outadoc.justchatting.feature.chat.data.pubsub.plugin.channelpoints
 
 import fr.outadoc.justchatting.feature.home.data.model.Reward
 import fr.outadoc.justchatting.feature.home.data.model.User

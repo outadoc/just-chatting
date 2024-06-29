@@ -18,3 +18,4 @@ rootProject.name = "just-chatting"
 
 include(":app-android")
 include(":shared")
+include(":konsist-checks")

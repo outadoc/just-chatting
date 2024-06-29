@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.chat.data
+package fr.outadoc.justchatting.feature.chat.presentation
 
 import android.content.Context
 import androidx.core.graphics.drawable.IconCompat

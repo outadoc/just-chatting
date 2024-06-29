@@ -11,9 +11,9 @@ import androidx.core.app.Person
 import androidx.core.app.RemoteInput
 import androidx.core.content.ContextCompat
 import androidx.core.content.LocusIdCompat
-import fr.outadoc.justchatting.feature.chat.data.getProfileImageIcon
 import fr.outadoc.justchatting.feature.chat.presentation.ChatConnectionService
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
+import fr.outadoc.justchatting.feature.chat.presentation.getProfileImageIcon
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences

@@ -2,8 +2,8 @@ package fr.outadoc.justchatting.feature.home.presentation
 
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
-import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
+import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.lifecycle.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

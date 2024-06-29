@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.pinnedmessage
 
-import fr.outadoc.justchatting.component.chatapi.common.PinnedMessage
+import fr.outadoc.justchatting.feature.chat.domain.model.PinnedMessage
 
 internal fun PubSubPinnedMessage.Pin.map(): PinnedMessage {
     return PinnedMessage(

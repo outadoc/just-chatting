@@ -27,9 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.component.chatapi.common.Badge
-import fr.outadoc.justchatting.component.chatapi.common.Prediction
-import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
+import fr.outadoc.justchatting.feature.chat.domain.model.Badge
+import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
+import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme

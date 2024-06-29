@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.channelpoints
 
 import dev.icerock.moko.resources.format
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.Icon
-import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.Icon
+import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.shared.MR
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json

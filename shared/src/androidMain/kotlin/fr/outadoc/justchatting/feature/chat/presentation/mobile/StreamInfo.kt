@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.component.chatapi.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.core.formatNumber

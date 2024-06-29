@@ -1,9 +1,5 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
-import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepositoryImpl
-import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
-import fr.outadoc.justchatting.component.twitch.http.server.TwitchServer
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesApi
 import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesServer
 import fr.outadoc.justchatting.feature.auth.data.IdApi
@@ -14,6 +10,8 @@ import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesServer
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesServer
 import fr.outadoc.justchatting.feature.emotes.domain.EmotesRepository
+import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.home.domain.TwitchRepositoryImpl
 import fr.outadoc.justchatting.utils.core.DefaultJson
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
@@ -35,7 +33,11 @@ public val twitchModule: Module = module {
     single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
 
     single<IdApi> { IdServer(get(named("twitch"))) }
-    single<TwitchApi> { TwitchServer(get(named("twitch"))) }
+    single<fr.outadoc.justchatting.feature.home.data.TwitchApi> {
+        fr.outadoc.justchatting.feature.home.data.TwitchServer(
+            get(named("twitch")),
+        )
+    }
     single<BttvEmotesApi> { BttvEmotesServer(get()) }
     single<StvEmotesApi> { StvEmotesServer(get()) }
     single<RecentMessagesApi> { RecentMessagesServer(get()) }

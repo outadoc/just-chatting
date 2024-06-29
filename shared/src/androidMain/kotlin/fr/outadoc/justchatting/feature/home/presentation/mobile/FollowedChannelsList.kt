@@ -26,7 +26,7 @@ import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelFollow
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.ui.plus

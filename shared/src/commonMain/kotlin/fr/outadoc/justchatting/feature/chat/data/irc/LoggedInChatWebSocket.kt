@@ -1,12 +1,12 @@
 package fr.outadoc.justchatting.feature.chat.data.irc
 
 import dev.icerock.moko.resources.desc.desc
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
-import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactory
-import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
 import fr.outadoc.justchatting.component.twitch.websocket.irc.model.IrcEvent
 import fr.outadoc.justchatting.feature.chat.data.Defaults
+import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
+import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.shared.MR

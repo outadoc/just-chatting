@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.prediction
 
-import fr.outadoc.justchatting.component.chatapi.common.Badge
-import fr.outadoc.justchatting.component.chatapi.common.Prediction
+import fr.outadoc.justchatting.feature.chat.domain.model.Badge
+import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import kotlin.time.Duration.Companion.seconds
 
 internal fun PubSubPredictionMessage.Outcome.map(): Prediction.Outcome {

@@ -2,9 +2,10 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile.preview
 
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import dev.icerock.moko.resources.desc.desc
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.chatapi.common.Icon
+import fr.outadoc.justchatting.feature.chat.domain.model.Badge
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.feature.chat.domain.model.Icon
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 
@@ -28,8 +29,8 @@ private val simpleEntries = sequence {
                 color = "#FF69B4",
                 embeddedEmotes = persistentListOf(),
                 badges = persistentListOf(
-                    fr.outadoc.justchatting.component.chatapi.common.Badge("subscriber", "48"),
-                    fr.outadoc.justchatting.component.chatapi.common.Badge("sub-gifter", "100"),
+                    Badge("subscriber", "48"),
+                    Badge("sub-gifter", "100"),
                 ),
                 inReplyTo = null,
             ),

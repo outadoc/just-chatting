@@ -3,12 +3,12 @@ package fr.outadoc.justchatting.di
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import fr.outadoc.justchatting.component.chatapi.db.AppDatabase
-import fr.outadoc.justchatting.component.chatapi.db.DbRecentChannelsDao
-import fr.outadoc.justchatting.component.chatapi.db.DbRecentEmotesDao
 import fr.outadoc.justchatting.component.chatapi.db.RecentChannelQueries
-import fr.outadoc.justchatting.component.chatapi.db.RecentChannelsDao
 import fr.outadoc.justchatting.component.chatapi.db.RecentEmoteQueries
-import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
+import fr.outadoc.justchatting.feature.emotes.data.recent.DbRecentChannelsDao
+import fr.outadoc.justchatting.feature.emotes.data.recent.DbRecentEmotesDao
+import fr.outadoc.justchatting.feature.emotes.data.recent.RecentChannelsDao
+import fr.outadoc.justchatting.feature.emotes.data.recent.RecentEmotesDao
 import org.koin.core.module.Module
 import org.koin.dsl.module
 

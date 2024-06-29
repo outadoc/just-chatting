@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.poll
 
-import fr.outadoc.justchatting.component.chatapi.common.Poll
+import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 

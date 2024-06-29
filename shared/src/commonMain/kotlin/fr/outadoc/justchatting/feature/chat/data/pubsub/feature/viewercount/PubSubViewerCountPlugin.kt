@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.viewercount
 
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import kotlinx.serialization.json.Json
 
 internal class PubSubViewerCountPlugin(

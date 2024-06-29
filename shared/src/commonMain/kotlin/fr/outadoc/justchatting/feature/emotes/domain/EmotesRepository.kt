@@ -1,16 +1,15 @@
 package fr.outadoc.justchatting.feature.emotes.domain
 
-import fr.outadoc.justchatting.component.chatapi.db.RecentEmotesDao
 import fr.outadoc.justchatting.component.chatapi.db.Recent_emotes
-import fr.outadoc.justchatting.component.chatapi.domain.model.RecentEmote
-import fr.outadoc.justchatting.component.chatapi.domain.model.TwitchBadge
-import fr.outadoc.justchatting.component.twitch.http.api.TwitchApi
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.map
+import fr.outadoc.justchatting.feature.emotes.data.recent.RecentEmotesDao
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.stv.model.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
+import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
+import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +19,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
 internal class EmotesRepository(
-    private val twitchApi: TwitchApi,
+    private val twitchApi: fr.outadoc.justchatting.feature.home.data.TwitchApi,
     private val stvEmotesApi: StvEmotesApi,
     private val bttvEmotesApi: BttvEmotesApi,
     private val recentEmotes: RecentEmotesDao,

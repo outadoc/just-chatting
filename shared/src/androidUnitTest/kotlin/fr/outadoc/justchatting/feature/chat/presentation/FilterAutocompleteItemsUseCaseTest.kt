@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import kotlinx.collections.immutable.persistentMapOf

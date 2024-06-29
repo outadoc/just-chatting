@@ -1,13 +1,14 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.client
 
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.ConnectionStatus
-import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactory
-import fr.outadoc.justchatting.component.chatapi.common.handler.ChatEventHandler
-import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.model.PubSubClientMessage
 import fr.outadoc.justchatting.component.twitch.websocket.pubsub.client.model.PubSubServerMessage
 import fr.outadoc.justchatting.feature.chat.data.Defaults
+import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
+import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
+import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
+import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
@@ -160,7 +161,7 @@ internal class PubSubWebSocket(
 
         when (received) {
             is PubSubServerMessage.Message -> {
-                val plugin: fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPlugin<*>? =
+                val plugin: PubSubPlugin<*>? =
                     plugins.firstOrNull { plugin ->
                         plugin.getTopic(channelId) == received.data.topic
                     }

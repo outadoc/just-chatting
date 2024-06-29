@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.pronouns.domain
 
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.chatapi.common.Pronoun
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
 
 internal class PronounsRepository(
     private val pronounsApi: PronounsApi,

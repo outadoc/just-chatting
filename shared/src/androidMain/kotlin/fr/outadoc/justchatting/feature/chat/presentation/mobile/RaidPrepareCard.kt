@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import dev.icerock.moko.resources.format
-import fr.outadoc.justchatting.component.chatapi.common.Raid
+import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.formatNumber
 import fr.outadoc.justchatting.utils.ui.AppTheme

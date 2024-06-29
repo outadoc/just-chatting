@@ -1,7 +1,5 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.component.chatapi.common.handler.ChatCommandHandlerFactoriesProvider
-import fr.outadoc.justchatting.component.chatapi.common.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LiveChatWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.LoggedInChatWebSocket
 import fr.outadoc.justchatting.component.twitch.websocket.irc.MockChatWebSocket
@@ -20,6 +18,8 @@ import fr.outadoc.justchatting.feature.chat.data.irc.IrcMessageMapper
 import fr.outadoc.justchatting.feature.chat.domain.AggregateChatEventHandler
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
 import fr.outadoc.justchatting.feature.chat.domain.DefaultChatRepository
+import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactoriesProvider
+import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
 import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.chat.presentation.CreateShortcutForChannelUseCase

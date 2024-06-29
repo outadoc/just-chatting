@@ -1,8 +1,8 @@
 package fr.outadoc.justchatting.feature.emotes.domain
 
-import fr.outadoc.justchatting.component.chatapi.domain.model.User
-import fr.outadoc.justchatting.component.chatapi.domain.repository.TwitchRepository
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
+import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll

@@ -1,11 +1,11 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-import fr.outadoc.justchatting.component.chatapi.common.Badge
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
-import fr.outadoc.justchatting.component.chatapi.common.Chatter
-import fr.outadoc.justchatting.component.chatapi.common.PinnedMessage
-import fr.outadoc.justchatting.component.chatapi.common.Poll
-import fr.outadoc.justchatting.component.chatapi.common.Prediction
+import fr.outadoc.justchatting.feature.chat.domain.model.Badge
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.feature.chat.domain.model.PinnedMessage
+import fr.outadoc.justchatting.feature.chat.domain.model.Poll
+import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.Instant

@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.richembed
 
-import fr.outadoc.justchatting.component.chatapi.common.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 
 internal fun PubSubRichEmbedMessage.RichEmbed.Data.map(): ChatEvent.RichEmbed =
     ChatEvent.RichEmbed(

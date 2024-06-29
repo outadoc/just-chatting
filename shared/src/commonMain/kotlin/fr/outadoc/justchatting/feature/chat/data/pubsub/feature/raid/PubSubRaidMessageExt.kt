@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.raid
 
-import fr.outadoc.justchatting.component.chatapi.common.Raid
+import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 
 internal fun PubSubRaidMessage.map(): Raid? {
     val imageDimensions = "70x70"

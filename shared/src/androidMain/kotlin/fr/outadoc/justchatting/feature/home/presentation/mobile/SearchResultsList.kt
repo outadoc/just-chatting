@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import fr.outadoc.justchatting.component.chatapi.domain.model.ChannelSearchResult
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.utils.ui.plus
 import kotlinx.collections.immutable.toImmutableList

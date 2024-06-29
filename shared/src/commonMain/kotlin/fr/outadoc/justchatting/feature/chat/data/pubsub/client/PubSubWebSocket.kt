@@ -9,8 +9,8 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
-import fr.outadoc.justchatting.feature.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
 import fr.outadoc.justchatting.utils.core.delayWithJitter

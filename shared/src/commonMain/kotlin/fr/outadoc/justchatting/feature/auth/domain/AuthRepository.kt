@@ -3,8 +3,8 @@ package fr.outadoc.justchatting.feature.auth.domain
 import fr.outadoc.justchatting.feature.auth.data.IdApi
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.auth.domain.model.ValidationResponse
-import fr.outadoc.justchatting.feature.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext

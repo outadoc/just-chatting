@@ -27,7 +27,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.feature.chat.presentation.OngoingEvents
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
-import fr.outadoc.justchatting.feature.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentMap

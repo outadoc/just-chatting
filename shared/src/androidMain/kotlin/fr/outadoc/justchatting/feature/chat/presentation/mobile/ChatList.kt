@@ -32,7 +32,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.OngoingEvents
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
-import fr.outadoc.justchatting.feature.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.isOdd
 import kotlinx.collections.immutable.ImmutableList

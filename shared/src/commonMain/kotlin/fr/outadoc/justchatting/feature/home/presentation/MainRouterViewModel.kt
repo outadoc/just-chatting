@@ -5,8 +5,8 @@ import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
-import fr.outadoc.justchatting.feature.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo

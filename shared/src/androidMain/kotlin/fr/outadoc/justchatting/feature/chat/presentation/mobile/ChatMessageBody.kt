@@ -38,7 +38,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
-import fr.outadoc.justchatting.feature.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible

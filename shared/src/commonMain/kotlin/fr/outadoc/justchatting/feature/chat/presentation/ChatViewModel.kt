@@ -21,9 +21,9 @@ import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
-import fr.outadoc.justchatting.feature.preferences.data.AppPreferences
-import fr.outadoc.justchatting.feature.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
 import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.shared.MR

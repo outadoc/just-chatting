@@ -5,7 +5,6 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.db.Recent_channels
-import fr.outadoc.justchatting.feature.emotes.data.bttv.model.map
 import fr.outadoc.justchatting.feature.emotes.data.recent.RecentChannelsDao
 import fr.outadoc.justchatting.feature.emotes.data.twitch.model.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
@@ -16,8 +15,8 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleVacation
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.User
-import fr.outadoc.justchatting.feature.preferences.data.AppUser
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList

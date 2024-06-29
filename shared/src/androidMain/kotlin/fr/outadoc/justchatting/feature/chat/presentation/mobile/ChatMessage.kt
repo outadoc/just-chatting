@@ -20,7 +20,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
-import fr.outadoc.justchatting.feature.preferences.data.AppUser
+import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.ui.AppTheme
 import fr.outadoc.justchatting.utils.ui.ThemePreviews
 import fr.outadoc.justchatting.utils.ui.formatTimestamp

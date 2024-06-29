@@ -16,6 +16,84 @@ import kotlinx.collections.immutable.toImmutableList
 
 internal class ChatEventViewMapper {
 
+    fun map(command: ChatEvent): List<ChatListItem> {
+        return when (command) {
+            is ChatEvent.Message -> {
+                listOf(mapMessage(command))
+            }
+
+            is ChatEvent.Command.UserState -> {
+                listOf(
+                    ChatListItem.UserState(
+                        emoteSets = command.emoteSets.toImmutableList(),
+                    ),
+                )
+            }
+
+            is ChatEvent.Command.RoomStateDelta -> {
+                listOf(
+                    ChatListItem.RoomStateDelta(
+                        isEmoteOnly = command.isEmoteOnly,
+                        minFollowDuration = command.minFollowDuration,
+                        uniqueMessagesOnly = command.uniqueMessagesOnly,
+                        slowModeDuration = command.slowModeDuration,
+                        isSubOnly = command.isSubOnly,
+                    ),
+                )
+            }
+
+            is ChatEvent.Command.ClearChat -> {
+                listOf(
+                    ChatListItem.RemoveContent(
+                        upUntil = command.timestamp,
+                        matchingUserId = command.targetUserId,
+                    ),
+                    if (command.targetUserLogin != null) {
+                        if (command.duration == null) {
+                            ChatListItem.Message.Highlighted(
+                                timestamp = command.timestamp,
+                                metadata = ChatListItem.Message.Highlighted.Metadata(
+                                    title = command.targetUserLogin.desc(),
+                                    titleIcon = Icon.Gavel,
+                                    subtitle = MR.strings.chat_ban.desc(),
+                                ),
+                                body = null,
+                            )
+                        } else {
+                            ChatListItem.Message.Highlighted(
+                                timestamp = command.timestamp,
+                                metadata = ChatListItem.Message.Highlighted.Metadata(
+                                    title = command.targetUserLogin.desc(),
+                                    titleIcon = Icon.Gavel,
+                                    subtitle = MR.strings.chat_timeout.format(command.duration),
+                                ),
+                                body = null,
+                            )
+                        }
+                    } else {
+                        ChatListItem.Message.Notice(
+                            timestamp = command.timestamp,
+                            text = MR.strings.chat_clear.desc(),
+                        )
+                    }
+                )
+            }
+
+            is ChatEvent.Command.ClearMessage -> {
+                listOf(
+                    ChatListItem.RemoveContent(
+                        upUntil = command.timestamp,
+                        matchingMessageId = command.targetMessageId,
+                    )
+                )
+            }
+
+            ChatEvent.Command.Ping -> {
+                emptyList()
+            }
+        }
+    }
+
     private fun mapMessage(chatEvent: ChatEvent.Message): ChatListItem = with(chatEvent) {
         when (this) {
             is ChatEvent.Message.Notice -> {
@@ -341,82 +419,6 @@ internal class ChatEventViewMapper {
                 null
             },
         )
-    }
-
-    fun map(command: ChatEvent): List<ChatListItem> {
-        return when (command) {
-            is ChatEvent.Message -> {
-                listOf(mapMessage(command))
-            }
-
-            is ChatEvent.Command.UserState -> {
-                listOf(
-                    ChatListItem.UserState(
-                        emoteSets = command.emoteSets.toImmutableList(),
-                    ),
-                )
-            }
-
-            is ChatEvent.Command.RoomStateDelta -> {
-                listOf(
-                    ChatListItem.RoomStateDelta(
-                        isEmoteOnly = command.isEmoteOnly,
-                        minFollowDuration = command.minFollowDuration,
-                        uniqueMessagesOnly = command.uniqueMessagesOnly,
-                        slowModeDuration = command.slowModeDuration,
-                        isSubOnly = command.isSubOnly,
-                    ),
-                )
-            }
-
-            is ChatEvent.Command.ClearChat -> {
-                listOf(
-                    ChatListItem.RemoveContent(
-                        upUntil = command.timestamp,
-                        matchingUserId = command.targetUserId,
-                    ),
-                    if (command.targetUserLogin != null) {
-                        if (command.duration == null) {
-                            ChatListItem.Message.Highlighted(
-                                timestamp = command.timestamp,
-                                metadata = ChatListItem.Message.Highlighted.Metadata(
-                                    title = command.targetUserLogin.desc(),
-                                    titleIcon = Icon.Gavel,
-                                    subtitle = MR.strings.chat_ban.desc(),
-                                ),
-                                body = null,
-                            )
-                        } else {
-                            ChatListItem.Message.Highlighted(
-                                timestamp = command.timestamp,
-                                metadata = ChatListItem.Message.Highlighted.Metadata(
-                                    title = command.targetUserLogin.desc(),
-                                    titleIcon = Icon.Gavel,
-                                    subtitle = MR.strings.chat_timeout.format(command.duration),
-                                ),
-                                body = null,
-                            )
-                        }
-                    } else {
-                        ChatListItem.Message.Notice(
-                            timestamp = command.timestamp,
-                            text = MR.strings.chat_clear.desc(),
-                        )
-                    }
-                )
-            }
-
-            is ChatEvent.Command.ClearMessage -> {
-                listOf(
-                    ChatListItem.RemoveContent(
-                        upUntil = command.timestamp,
-                        matchingMessageId = command.targetMessageId,
-                    )
-                )
-            }
-
-            else -> emptyList()
-        }
     }
 
     private fun getLabelForNotice(messageId: String?, message: String?): StringDesc? {

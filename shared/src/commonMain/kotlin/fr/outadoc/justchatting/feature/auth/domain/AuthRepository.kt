@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.auth.domain
 
+import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.feature.auth.domain.model.AuthValidationResponse
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
@@ -33,4 +34,8 @@ internal class AuthRepository(
                 token = user.token,
             )
         }
+
+    fun getExternalAuthorizeUrl(): Uri {
+        return api.getExternalAuthorizeUrl(oAuthAppCredentials)
+    }
 }

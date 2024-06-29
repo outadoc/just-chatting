@@ -1,7 +1,5 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
-import com.eygraber.uri.Uri
-import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.deeplink.Deeplink
@@ -97,24 +95,10 @@ internal class MainRouterViewModel(
     }
 
     fun onLoginClick() = viewModelScope.launch {
-        val oauthScopes = listOf(
-            "chat:read",
-            "chat:edit",
-            "user:read:follows",
-        )
-
-        val oauthAuthUrl: Uri =
-            Uri.parse("${ApiEndpoints.TWITCH_AUTH}/authorize")
-                .buildUpon()
-                .appendQueryParameter("response_type", "token")
-                .appendQueryParameter("client_id", oAuthAppCredentials.clientId)
-                .appendQueryParameter("redirect_uri", oAuthAppCredentials.redirectUri.toString())
-                .appendQueryParameter("force_verify", "true")
-                .appendQueryParameter("scope", oauthScopes.joinToString(" "))
-                .build()
-
         _events.emit(
-            Event.OpenInBrowser(uri = oauthAuthUrl.toString()),
+            Event.OpenInBrowser(
+                uri = authRepository.getExternalAuthorizeUrl().toString(),
+            ),
         )
     }
 

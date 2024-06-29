@@ -1,9 +1,11 @@
 package fr.outadoc.justchatting.feature.auth.data
 
+import com.eygraber.uri.Uri
 import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.auth.data.model.TwitchAuthValidationResponse
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
 import fr.outadoc.justchatting.feature.auth.domain.model.AuthValidationResponse
+import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest
@@ -47,5 +49,22 @@ internal class TwitchAuthApi(httpClient: HttpClient) : AuthApi {
                 }
             }
         }
+    }
+
+    override fun getExternalAuthorizeUrl(oAuthAppCredentials: OAuthAppCredentials): Uri {
+        val oauthScopes = listOf(
+            "chat:read",
+            "chat:edit",
+            "user:read:follows",
+        )
+
+        return Uri.parse("${ApiEndpoints.TWITCH_AUTH}/authorize")
+            .buildUpon()
+            .appendQueryParameter("response_type", "token")
+            .appendQueryParameter("client_id", oAuthAppCredentials.clientId)
+            .appendQueryParameter("redirect_uri", oAuthAppCredentials.redirectUri)
+            .appendQueryParameter("force_verify", "true")
+            .appendQueryParameter("scope", oauthScopes.joinToString(" "))
+            .build()
     }
 }

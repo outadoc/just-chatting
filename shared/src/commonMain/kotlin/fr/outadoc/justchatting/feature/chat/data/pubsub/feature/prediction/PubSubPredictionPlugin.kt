@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.prediction
 
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import kotlinx.serialization.json.Json
 
@@ -11,10 +11,10 @@ internal class PubSubPredictionPlugin(
     override fun getTopic(channelId: String): String =
         "predictions-channel-v1.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> {
+    override fun parseMessage(payload: String): List<ChatListItem> {
         val message = json.decodeFromString<PubSubPredictionMessage>(payload)
         return listOfNotNull(
-            ChatEvent.PredictionUpdate(
+            ChatListItem.PredictionUpdate(
                 message.map(),
             ),
         )

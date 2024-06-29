@@ -5,10 +5,10 @@ import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
-import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
-import fr.outadoc.justchatting.feature.chat.presentation.IrcMessageMapper
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.NetworkStateObserver
@@ -51,7 +51,7 @@ internal class MockChatWebSocket private constructor(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
-    private val mapper: IrcMessageMapper,
+    private val mapper: ChatEventViewMapper,
     private val httpClient: HttpClient,
     private val channelLogin: String,
 ) : ChatEventHandler {
@@ -60,11 +60,11 @@ internal class MockChatWebSocket private constructor(
         private const val ENDPOINT = "wss://irc.fdgt.dev"
     }
 
-    private val _eventFlow = MutableSharedFlow<ChatEvent>(
+    private val _eventFlow = MutableSharedFlow<ChatListItem>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    override val eventFlow: Flow<ChatEvent> = _eventFlow
+    override val eventFlow: Flow<ChatListItem> = _eventFlow
 
     private data class QueuedMessage(
         val authoringTime: Instant,
@@ -144,9 +144,9 @@ internal class MockChatWebSocket private constructor(
             send("JOIN #$channelLogin")
 
             _eventFlow.emit(
-                ChatEvent.Message.Highlighted(
+                ChatListItem.Message.Highlighted(
                     timestamp = clock.now(),
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = MR.strings.chat_join.format(channelLogin),
                         subtitle = null,
                     ),
@@ -174,9 +174,9 @@ internal class MockChatWebSocket private constructor(
                                 logError<LoggedInChatWebSocket> { "Timeout while trying to send message: $message" }
 
                                 _eventFlow.emit(
-                                    ChatEvent.Message.Highlighted(
+                                    ChatListItem.Message.Highlighted(
                                         timestamp = clock.now(),
-                                        metadata = ChatEvent.Message.Highlighted.Metadata(
+                                        metadata = ChatListItem.Message.Highlighted.Metadata(
                                             title = MR.strings.chat_send_msg_error.desc(),
                                             subtitle = null,
                                         ),
@@ -210,22 +210,22 @@ internal class MockChatWebSocket private constructor(
     private suspend fun DefaultWebSocketSession.handleMessage(received: String) {
         logInfo<MockChatWebSocket> { "received: $received" }
 
-        when (val command: IrcEvent? = parser.parse(received)) {
-            is IrcEvent.Message -> {
+        when (val command: ChatEvent? = parser.parse(received)) {
+            is ChatEvent.Message -> {
                 _eventFlow.emit(mapper.mapMessage(command))
             }
 
-            is IrcEvent.Command.UserState -> {
+            is ChatEvent.Command.UserState -> {
                 _eventFlow.emit(
-                    ChatEvent.UserState(
+                    ChatListItem.UserState(
                         emoteSets = command.emoteSets.toImmutableList(),
                     ),
                 )
             }
 
-            is IrcEvent.Command.RoomStateDelta -> {
+            is ChatEvent.Command.RoomStateDelta -> {
                 _eventFlow.emit(
-                    ChatEvent.RoomStateDelta(
+                    ChatListItem.RoomStateDelta(
                         isEmoteOnly = command.isEmoteOnly,
                         minFollowDuration = command.minFollowDuration,
                         uniqueMessagesOnly = command.uniqueMessagesOnly,
@@ -235,9 +235,9 @@ internal class MockChatWebSocket private constructor(
                 )
             }
 
-            is IrcEvent.Command.ClearChat -> {
+            is ChatEvent.Command.ClearChat -> {
                 _eventFlow.emit(
-                    ChatEvent.RemoveContent(
+                    ChatListItem.RemoveContent(
                         upUntil = command.timestamp,
                         matchingUserId = command.targetUserId,
                     ),
@@ -248,9 +248,9 @@ internal class MockChatWebSocket private constructor(
                 }
             }
 
-            is IrcEvent.Command.ClearMessage -> {
+            is ChatEvent.Command.ClearMessage -> {
                 _eventFlow.emit(
-                    ChatEvent.RemoveContent(
+                    ChatListItem.RemoveContent(
                         upUntil = command.timestamp,
                         matchingMessageId = command.targetMessageId,
                     ),
@@ -261,7 +261,7 @@ internal class MockChatWebSocket private constructor(
                 }
             }
 
-            is IrcEvent.Command.Ping -> {
+            is ChatEvent.Command.Ping -> {
                 send("PONG :tmi.twitch.tv")
             }
 
@@ -301,7 +301,7 @@ internal class MockChatWebSocket private constructor(
         private val clock: Clock,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
-        private val mapper: IrcMessageMapper,
+        private val mapper: ChatEventViewMapper,
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {
 

@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.localized
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.NoticeMessagePreviewProvider
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
@@ -26,7 +26,7 @@ import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 @ThemePreviews
 @Composable
 internal fun NoticeMessagePreview(
-    @PreviewParameter(NoticeMessagePreviewProvider::class) message: ChatEvent.Message.Notice,
+    @PreviewParameter(NoticeMessagePreviewProvider::class) message: ChatListItem.Message.Notice,
 ) {
     AppTheme {
         NoticeMessage(

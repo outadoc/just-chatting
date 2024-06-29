@@ -4,32 +4,32 @@ import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import dev.icerock.moko.resources.desc.StringDesc
 import dev.icerock.moko.resources.desc.desc
 import dev.icerock.moko.resources.format
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
-import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.formatCurrency
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import io.fluidsonic.currency.Currency
 import kotlinx.collections.immutable.toImmutableList
 
-internal class IrcMessageMapper {
+internal class ChatEventViewMapper {
 
-    fun mapMessage(ircEvent: IrcEvent.Message): ChatEvent = with(ircEvent) {
+    fun mapMessage(chatEvent: ChatEvent.Message): ChatListItem = with(chatEvent) {
         when (this) {
-            is IrcEvent.Message.Notice -> {
-                ChatEvent.Message.Notice(
+            is ChatEvent.Message.Notice -> {
+                ChatListItem.Message.Notice(
                     timestamp = timestamp,
                     text = getLabelForNotice(messageId = messageId, message = message)
                         ?: message.desc(),
                 )
             }
 
-            is IrcEvent.Message.IncomingRaid -> {
-                ChatEvent.Message.Highlighted(
+            is ChatEvent.Message.IncomingRaid -> {
+                ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.CallReceived,
                         subtitle = MR.strings.chat_raid_header
@@ -44,10 +44,10 @@ internal class IrcMessageMapper {
                 )
             }
 
-            is IrcEvent.Message.CancelledRaid -> {
-                ChatEvent.Message.Highlighted(
+            is ChatEvent.Message.CancelledRaid -> {
+                ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.Cancel,
                         subtitle = MR.strings.chat_unraid_subtitle.desc(),
@@ -56,10 +56,10 @@ internal class IrcMessageMapper {
                 )
             }
 
-            is IrcEvent.Message.HighlightedMessage -> {
-                ChatEvent.Message.Highlighted(
+            is ChatEvent.Message.HighlightedMessage -> {
+                ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = MR.strings.irc_msgid_highlighted_message.desc(),
                         titleIcon = Icon.Highlight,
                         subtitle = null,
@@ -68,10 +68,10 @@ internal class IrcMessageMapper {
                 )
             }
 
-            is IrcEvent.Message.Announcement -> {
-                ChatEvent.Message.Highlighted(
+            is ChatEvent.Message.Announcement -> {
+                ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = MR.strings.irc_msgid_announcement.desc(),
                         titleIcon = Icon.Campaign,
                         subtitle = null,
@@ -80,10 +80,10 @@ internal class IrcMessageMapper {
                 )
             }
 
-            is IrcEvent.Message.Subscription -> {
-                ChatEvent.Message.Highlighted(
+            is ChatEvent.Message.Subscription -> {
+                ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = when (subscriptionPlan) {
                             SUB_PRIME -> Icon.Star
@@ -120,10 +120,10 @@ internal class IrcMessageMapper {
                 )
             }
 
-            is IrcEvent.Message.SubscriptionConversion -> {
-                ChatEvent.Message.Highlighted(
+            is ChatEvent.Message.SubscriptionConversion -> {
+                ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.Star,
                         subtitle = MR.strings.chat_subConversion_header
@@ -133,10 +133,10 @@ internal class IrcMessageMapper {
                 )
             }
 
-            is IrcEvent.Message.MassSubscriptionGift -> {
-                ChatEvent.Message.Highlighted(
+            is ChatEvent.Message.MassSubscriptionGift -> {
+                ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.VolunteerActivism,
                         subtitle = MR.strings.chat_massSubGift_header
@@ -150,11 +150,11 @@ internal class IrcMessageMapper {
                 )
             }
 
-            is IrcEvent.Message.SubscriptionGift -> {
-                ChatEvent.Message.Highlighted(
+            is ChatEvent.Message.SubscriptionGift -> {
+                ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
                     body = null,
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.Redeem,
                         subtitle = MR.strings.chat_subGift_header
@@ -170,10 +170,10 @@ internal class IrcMessageMapper {
                 )
             }
 
-            is IrcEvent.Message.GiftPayForward -> {
-                ChatEvent.Message.Highlighted(
+            is ChatEvent.Message.GiftPayForward -> {
+                ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = userDisplayName.desc(),
                         titleIcon = Icon.FastForward,
                         subtitle = when (priorGifterDisplayName) {
@@ -190,11 +190,11 @@ internal class IrcMessageMapper {
                 )
             }
 
-            is IrcEvent.Message.UserNotice -> {
-                ChatEvent.Message.Highlighted(
+            is ChatEvent.Message.UserNotice -> {
+                ChatListItem.Message.Highlighted(
                     timestamp = timestamp,
                     body = userMessage?.map(),
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = systemMsg.desc(),
                         titleIcon = null,
                         subtitle = null,
@@ -202,10 +202,10 @@ internal class IrcMessageMapper {
                 )
             }
 
-            is IrcEvent.Message.ChatMessage -> {
+            is ChatEvent.Message.ChatMessage -> {
                 val metadata = when {
                     isFirstMessageByUser -> {
-                        ChatEvent.Message.Highlighted.Metadata(
+                        ChatListItem.Message.Highlighted.Metadata(
                             title = MR.strings.chat_first.desc(),
                             titleIcon = Icon.WavingHand,
                             subtitle = null,
@@ -213,7 +213,7 @@ internal class IrcMessageMapper {
                     }
 
                     rewardId != null -> {
-                        ChatEvent.Message.Highlighted.Metadata(
+                        ChatListItem.Message.Highlighted.Metadata(
                             title = MR.strings.chat_reward.desc(),
                             titleIcon = Icon.Toll,
                             subtitle = null,
@@ -230,22 +230,22 @@ internal class IrcMessageMapper {
                         val formattedAmount = amount.formatCurrency(currency)
                         val header = MR.strings.chat_paidMessage.format(formattedAmount)
 
-                        ChatEvent.Message.Highlighted.Metadata(
+                        ChatListItem.Message.Highlighted.Metadata(
                             title = header,
                             titleIcon = Icon.Bolt,
                             subtitle = null,
                             level = when (paidMessageInfo.level) {
-                                "ONE" -> ChatEvent.Message.Highlighted.Level.One
-                                "TWO" -> ChatEvent.Message.Highlighted.Level.Two
-                                "THREE" -> ChatEvent.Message.Highlighted.Level.Three
-                                "FOUR" -> ChatEvent.Message.Highlighted.Level.Four
-                                "FIVE" -> ChatEvent.Message.Highlighted.Level.Five
-                                "SIX" -> ChatEvent.Message.Highlighted.Level.Six
-                                "SEVEN" -> ChatEvent.Message.Highlighted.Level.Seven
-                                "EIGHT" -> ChatEvent.Message.Highlighted.Level.Eight
-                                "NINE" -> ChatEvent.Message.Highlighted.Level.Nine
-                                "TEN" -> ChatEvent.Message.Highlighted.Level.Ten
-                                else -> ChatEvent.Message.Highlighted.Level.Base
+                                "ONE" -> ChatListItem.Message.Highlighted.Level.One
+                                "TWO" -> ChatListItem.Message.Highlighted.Level.Two
+                                "THREE" -> ChatListItem.Message.Highlighted.Level.Three
+                                "FOUR" -> ChatListItem.Message.Highlighted.Level.Four
+                                "FIVE" -> ChatListItem.Message.Highlighted.Level.Five
+                                "SIX" -> ChatListItem.Message.Highlighted.Level.Six
+                                "SEVEN" -> ChatListItem.Message.Highlighted.Level.Seven
+                                "EIGHT" -> ChatListItem.Message.Highlighted.Level.Eight
+                                "NINE" -> ChatListItem.Message.Highlighted.Level.Nine
+                                "TEN" -> ChatListItem.Message.Highlighted.Level.Ten
+                                else -> ChatListItem.Message.Highlighted.Level.Base
                             },
                         )
                     }
@@ -256,13 +256,13 @@ internal class IrcMessageMapper {
                 }
 
                 if (metadata != null) {
-                    ChatEvent.Message.Highlighted(
+                    ChatListItem.Message.Highlighted(
                         timestamp = timestamp,
                         body = map(),
                         metadata = metadata,
                     )
                 } else {
-                    ChatEvent.Message.Simple(
+                    ChatListItem.Message.Simple(
                         body = map(),
                         timestamp = timestamp,
                     )
@@ -290,11 +290,11 @@ internal class IrcMessageMapper {
         }
     }
 
-    private fun IrcEvent.Message.ChatMessage.map(): ChatEvent.Message.Body {
+    private fun ChatEvent.Message.ChatMessage.map(): ChatListItem.Message.Body {
         val mentions = message.orEmpty().getMentionsPrefix()
         val mentionsLength = mentions.sumOf { mention -> mention.length }
 
-        return ChatEvent.Message.Body(
+        return ChatListItem.Message.Body(
             message = message.orEmpty()
                 .drop(mentionsLength)
                 .removePrefix(" "),
@@ -309,7 +309,7 @@ internal class IrcMessageMapper {
             embeddedEmotes = embeddedEmotes.orEmpty().toImmutableList(),
             badges = badges.orEmpty().toImmutableList(),
             inReplyTo = if (mentions.isNotEmpty()) {
-                ChatEvent.Message.Body.InReplyTo(
+                ChatListItem.Message.Body.InReplyTo(
                     message = inReplyTo?.message,
                     mentions = mentions.map { mention ->
                         mention.drop(1)
@@ -321,14 +321,14 @@ internal class IrcMessageMapper {
         )
     }
 
-    fun mapOptional(command: IrcEvent): ChatEvent? {
+    fun mapOptional(command: ChatEvent): ChatListItem? {
         return when (command) {
-            is IrcEvent.Command.ClearChat -> {
+            is ChatEvent.Command.ClearChat -> {
                 if (command.targetUserLogin != null) {
                     if (command.duration == null) {
-                        ChatEvent.Message.Highlighted(
+                        ChatListItem.Message.Highlighted(
                             timestamp = command.timestamp,
-                            metadata = ChatEvent.Message.Highlighted.Metadata(
+                            metadata = ChatListItem.Message.Highlighted.Metadata(
                                 title = command.targetUserLogin.desc(),
                                 titleIcon = Icon.Gavel,
                                 subtitle = MR.strings.chat_ban.desc(),
@@ -336,9 +336,9 @@ internal class IrcMessageMapper {
                             body = null,
                         )
                     } else {
-                        ChatEvent.Message.Highlighted(
+                        ChatListItem.Message.Highlighted(
                             timestamp = command.timestamp,
-                            metadata = ChatEvent.Message.Highlighted.Metadata(
+                            metadata = ChatListItem.Message.Highlighted.Metadata(
                                 title = command.targetUserLogin.desc(),
                                 titleIcon = Icon.Gavel,
                                 subtitle = MR.strings.chat_timeout.format(command.duration),
@@ -347,7 +347,7 @@ internal class IrcMessageMapper {
                         )
                     }
                 } else {
-                    ChatEvent.Message.Notice(
+                    ChatListItem.Message.Notice(
                         timestamp = command.timestamp,
                         text = MR.strings.chat_clear.desc(),
                     )

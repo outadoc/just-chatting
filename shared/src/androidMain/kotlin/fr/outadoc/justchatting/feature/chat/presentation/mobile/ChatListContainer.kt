@@ -26,7 +26,7 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.filterValuesNotNull
@@ -37,8 +37,8 @@ internal fun ChatListContainer(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State.Chatting,
     showTimestamps: Boolean,
-    onMessageLongClick: (ChatEvent.Message) -> Unit,
-    onReplyToMessage: (ChatEvent.Message) -> Unit,
+    onMessageLongClick: (ChatListItem.Message) -> Unit,
+    onReplyToMessage: (ChatListItem.Message) -> Unit,
     onShowUserInfoForLogin: (String) -> Unit,
     insets: PaddingValues,
 ) {

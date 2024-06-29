@@ -17,7 +17,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatMessagePreviewProvider
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewBadges
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -28,7 +28,7 @@ import kotlinx.collections.immutable.toPersistentHashMap
 @ThemePreviews
 @Composable
 internal fun UserNoticeMessagePreview(
-    @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatEvent.Message,
+    @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatListItem.Message,
 ) {
     val inlineBadges = previewBadges
         .associateWith { previewTextContent() }
@@ -54,7 +54,7 @@ internal fun UserNoticeMessage(
     title: String,
     titleIcon: ImageVector?,
     subtitle: String?,
-    level: ChatEvent.Message.Highlighted.Level,
+    level: ChatListItem.Message.Highlighted.Level,
     iconSize: Dp = 20.dp,
     data: @Composable () -> Unit,
 ) {

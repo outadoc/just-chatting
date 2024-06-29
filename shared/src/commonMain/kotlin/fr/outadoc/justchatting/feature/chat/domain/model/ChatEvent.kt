@@ -1,143 +1,155 @@
 package fr.outadoc.justchatting.feature.chat.domain.model
 
 import androidx.compose.runtime.Immutable
-import dev.icerock.moko.resources.desc.StringDesc
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
 import kotlin.time.Duration
 
-@Immutable
 internal sealed interface ChatEvent {
 
-    sealed class Message : ChatEvent {
+    sealed interface Message : ChatEvent {
 
-        abstract val body: Body?
-        abstract val timestamp: Instant
+        val timestamp: Instant
 
-        @Immutable
-        data class Simple(
-            override val body: Body,
+        data class ChatMessage(
             override val timestamp: Instant,
-        ) : Message()
-
-        @Immutable
-        data class Highlighted(
-            override val timestamp: Instant,
-            override val body: Body?,
-            val metadata: Metadata,
-        ) : Message() {
-
-            data class Metadata(
-                val title: StringDesc,
-                val titleIcon: Icon? = null,
-                val subtitle: StringDesc?,
-                val level: Level = Level.Base,
-            )
-
-            @Immutable
-            enum class Level {
-                Base,
-                One,
-                Two,
-                Three,
-                Four,
-                Five,
-                Six,
-                Seven,
-                Eight,
-                Nine,
-                Ten,
-            }
-        }
-
-        @Immutable
-        data class Notice(
-            override val timestamp: Instant,
-            val text: StringDesc,
-        ) : Message() {
-            override val body: Body? = null
-        }
-
-        @Immutable
-        data class Body(
-            val messageId: String?,
+            val id: String?,
+            val userId: String,
+            val userLogin: String,
+            val userName: String,
             val message: String?,
-            val chatter: Chatter,
+            val color: String?,
             val isAction: Boolean = false,
-            val color: String? = null,
-            val embeddedEmotes: ImmutableList<Emote> = persistentListOf(),
-            val badges: ImmutableList<Badge> = persistentListOf(),
-            val inReplyTo: InReplyTo? = null,
-        ) {
+            val embeddedEmotes: List<Emote>,
+            val badges: List<Badge>?,
+            val isFirstMessageByUser: Boolean = false,
+            val rewardId: String?,
+            val inReplyTo: InReplyTo?,
+            val paidMessageInfo: PaidMessageInfo?,
+        ) : Message {
+
             @Immutable
             data class InReplyTo(
-                val message: String?,
-                val mentions: List<String>,
+                val id: String,
+                val message: String,
+                val userId: String,
+                val userLogin: String,
+                val userDisplayName: String,
+            )
+
+            @Immutable
+            data class PaidMessageInfo(
+                val amount: Long,
+                val currency: String,
+                val exponent: Long,
+                val isSystemMessage: Boolean,
+                val level: String,
             )
         }
+
+        data class UserNotice(
+            override val timestamp: Instant,
+            val systemMsg: String,
+            val userMessage: ChatMessage?,
+            val msgId: String?,
+        ) : Message
+
+        data class IncomingRaid(
+            override val timestamp: Instant,
+            val userDisplayName: String,
+            val raidersCount: Int,
+        ) : Message
+
+        data class CancelledRaid(
+            override val timestamp: Instant,
+            val userDisplayName: String,
+        ) : Message
+
+        data class Announcement(
+            override val timestamp: Instant,
+            val userMessage: ChatMessage,
+        ) : Message
+
+        data class Subscription(
+            override val timestamp: Instant,
+            val userDisplayName: String,
+            val months: Int,
+            val streakMonths: Int,
+            val cumulativeMonths: Int,
+            val subscriptionPlan: String,
+            val userMessage: ChatMessage?,
+        ) : Message
+
+        data class SubscriptionConversion(
+            override val timestamp: Instant,
+            val userDisplayName: String,
+            val subscriptionPlan: String,
+            val userMessage: ChatMessage?,
+        ) : Message
+
+        data class SubscriptionGift(
+            override val timestamp: Instant,
+            val userDisplayName: String,
+            val recipientDisplayName: String,
+            val months: Int,
+            val cumulativeMonths: Int,
+            val subscriptionPlan: String,
+        ) : Message
+
+        data class GiftPayForward(
+            override val timestamp: Instant,
+            val userDisplayName: String,
+            val priorGifterDisplayName: String?,
+        ) : Message
+
+        data class MassSubscriptionGift(
+            override val timestamp: Instant,
+            val userDisplayName: String,
+            val giftCount: Int,
+            val totalChannelGiftCount: Int,
+            val subscriptionPlan: String,
+        ) : Message
+
+        data class HighlightedMessage(
+            override val timestamp: Instant,
+            val userMessage: ChatMessage,
+        ) : Message
+
+        data class Notice(
+            override val timestamp: Instant,
+            val message: String,
+            val messageId: String?,
+        ) : Message
     }
 
-    @Immutable
-    data class RoomStateDelta(
-        val isEmoteOnly: Boolean? = null,
-        val minFollowDuration: Duration? = null,
-        val uniqueMessagesOnly: Boolean? = null,
-        val slowModeDuration: Duration? = null,
-        val isSubOnly: Boolean? = null,
-    ) : ChatEvent
+    sealed interface Command : ChatEvent {
 
-    @Immutable
-    data class UserState(
-        val emoteSets: ImmutableList<String> = persistentListOf(),
-    ) : ChatEvent
+        data object Ping : Command
 
-    @Immutable
-    data class RemoveContent(
-        val upUntil: Instant,
-        val matchingUserId: String? = null,
-        val matchingMessageId: String? = null,
-    ) : ChatEvent
+        data class RoomStateDelta(
+            val isEmoteOnly: Boolean? = null,
+            val minFollowDuration: Duration? = null,
+            val uniqueMessagesOnly: Boolean? = null,
+            val slowModeDuration: Duration? = null,
+            val isSubOnly: Boolean? = null,
+        ) : Command
 
-    @Immutable
-    data class PollUpdate(
-        val poll: Poll,
-    ) : ChatEvent
+        data class UserState(
+            val emoteSets: List<String> = emptyList(),
+        ) : Command
 
-    @Immutable
-    data class BroadcastSettingsUpdate(
-        val streamTitle: String,
-        val gameName: String,
-    ) : ChatEvent
+        data class ClearChat(
+            val timestamp: Instant,
+            val targetUserId: String?,
+            val targetUserLogin: String?,
+            val duration: Duration?,
+        ) : Command
 
-    @Immutable
-    data class ViewerCountUpdate(
-        val viewerCount: Int,
-    ) : ChatEvent
-
-    @Immutable
-    data class PredictionUpdate(
-        val prediction: Prediction,
-    ) : ChatEvent
-
-    @Immutable
-    data class RaidUpdate(
-        val raid: Raid?,
-    ) : ChatEvent
-
-    @Immutable
-    data class PinnedMessageUpdate(
-        val pinnedMessage: PinnedMessage?,
-    ) : ChatEvent
-
-    @Immutable
-    data class RichEmbed(
-        val messageId: String,
-        val title: String,
-        val requestUrl: String,
-        val thumbnailUrl: String,
-        val authorName: String,
-        val channelName: String?,
-    ) : ChatEvent
+        data class ClearMessage(
+            val timestamp: Instant,
+            val targetMessage: String?,
+            val targetMessageId: String?,
+            val targetUserLogin: String?,
+        ) : Command
+    }
 }

@@ -19,7 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
@@ -45,7 +45,7 @@ internal fun ChatEvents(
     ongoingEvents: OngoingEvents,
     clock: Clock,
     inlineContent: PersistentMap<String, InlineTextContent>,
-    removedContent: ImmutableList<ChatEvent.RemoveContent>,
+    removedContent: ImmutableList<ChatListItem.RemoveContent>,
     knownChatters: PersistentSet<Chatter>,
     appUser: AppUser.LoggedIn,
     badges: ImmutableList<TwitchBadge>,

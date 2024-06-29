@@ -15,7 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.localized
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.ChatMessagePreviewProvider
@@ -35,7 +35,7 @@ import kotlinx.collections.immutable.toPersistentHashMap
 @ThemePreviews
 @Composable
 internal fun ChatMessagePreview(
-    @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatEvent.Message,
+    @PreviewParameter(ChatMessagePreviewProvider::class) message: ChatListItem.Message,
 ) {
     val inlineBadges = previewBadges
         .associateWith { previewTextContent() }
@@ -58,12 +58,12 @@ internal fun ChatMessagePreview(
 @Composable
 internal fun ChatMessage(
     modifier: Modifier = Modifier,
-    message: ChatEvent.Message,
+    message: ChatListItem.Message,
     inlineContent: ImmutableMap<String, InlineTextContent> = persistentMapOf(),
-    removedContent: ImmutableList<ChatEvent.RemoveContent> = persistentListOf(),
+    removedContent: ImmutableList<ChatListItem.RemoveContent> = persistentListOf(),
     knownChatters: PersistentSet<Chatter> = persistentSetOf(),
     pronouns: ImmutableMap<Chatter, Pronoun> = persistentMapOf(),
-    richEmbed: ChatEvent.RichEmbed? = null,
+    richEmbed: ChatListItem.RichEmbed? = null,
     showTimestamps: Boolean,
     background: Color = Color.Transparent,
     backgroundHint: Color = MaterialTheme.colorScheme.surface,
@@ -98,7 +98,7 @@ internal fun ChatMessage(
             }
 
         when (message) {
-            is ChatEvent.Message.Highlighted -> {
+            is ChatListItem.Message.Highlighted -> {
                 UserNoticeMessage(
                     title = message.metadata.title.localized(),
                     titleIcon = message.metadata.titleIcon?.toMaterialIcon(),
@@ -123,13 +123,13 @@ internal fun ChatMessage(
                 }
             }
 
-            is ChatEvent.Message.Notice -> {
+            is ChatListItem.Message.Notice -> {
                 NoticeMessage(
                     text = message.text.localized(),
                 )
             }
 
-            is ChatEvent.Message.Simple -> {
+            is ChatListItem.Message.Simple -> {
                 SimpleMessage {
                     ChatMessageBody(
                         modifier = Modifier

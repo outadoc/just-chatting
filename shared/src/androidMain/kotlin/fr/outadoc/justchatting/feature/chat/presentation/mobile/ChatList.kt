@@ -25,7 +25,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.chat.presentation.OngoingEvents
@@ -46,19 +46,19 @@ import kotlinx.datetime.Clock
 @Composable
 internal fun ChatList(
     modifier: Modifier = Modifier,
-    entries: ImmutableList<ChatEvent.Message>,
+    entries: ImmutableList<ChatListItem.Message>,
     emotes: ImmutableMap<String, Emote>,
     cheerEmotes: ImmutableMap<String, Emote>,
     badges: ImmutableList<TwitchBadge>,
-    removedContent: ImmutableList<ChatEvent.RemoveContent>,
+    removedContent: ImmutableList<ChatListItem.RemoveContent>,
     knownChatters: PersistentSet<Chatter>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
-    richEmbeds: ImmutableMap<String, ChatEvent.RichEmbed>,
+    richEmbeds: ImmutableMap<String, ChatListItem.RichEmbed>,
     showTimestamps: Boolean,
     isDisconnected: Boolean,
     listState: LazyListState,
-    onMessageLongClick: (ChatEvent.Message) -> Unit,
-    onReplyToMessage: (ChatEvent.Message) -> Unit,
+    onMessageLongClick: (ChatListItem.Message) -> Unit,
+    onReplyToMessage: (ChatListItem.Message) -> Unit,
     onShowUserInfoForLogin: (String) -> Unit,
     roomState: RoomState,
     ongoingEvents: OngoingEvents,
@@ -146,9 +146,9 @@ internal fun ChatList(
             key = { _, item -> item.hashCode() },
             contentType = { _, item ->
                 when (item) {
-                    is ChatEvent.Message.Highlighted -> 1
-                    is ChatEvent.Message.Simple -> 2
-                    is ChatEvent.Message.Notice -> 3
+                    is ChatListItem.Message.Highlighted -> 1
+                    is ChatListItem.Message.Simple -> 2
+                    is ChatListItem.Message.Notice -> 3
                 }
             },
         ) { index, item ->

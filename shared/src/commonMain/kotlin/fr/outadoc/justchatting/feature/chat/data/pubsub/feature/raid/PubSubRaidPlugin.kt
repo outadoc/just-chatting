@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.raid
 
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import kotlinx.serialization.json.Json
 
@@ -11,10 +11,10 @@ internal class PubSubRaidPlugin(
     override fun getTopic(channelId: String): String =
         "raid.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> {
+    override fun parseMessage(payload: String): List<ChatListItem> {
         val message = json.decodeFromString<PubSubRaidMessage>(payload)
         return listOf(
-            ChatEvent.RaidUpdate(raid = message.map()),
+            ChatListItem.RaidUpdate(raid = message.map()),
         )
     }
 }

@@ -4,16 +4,16 @@ import fr.outadoc.justchatting.feature.chat.data.irc.parser.core.message.IrcMess
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.IrcMessageParser
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.rfc1459.NoticeMessage
 import fr.outadoc.justchatting.feature.chat.data.irc.parser.irc.message.rfc1459.PrivMsgMessage
-import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.utils.logging.logWarning
 import kotlinx.datetime.Clock
 
 internal class TwitchIrcCommandParser(private val clock: Clock) {
 
-    fun parse(message: String): IrcEvent? {
+    fun parse(message: String): ChatEvent? {
         val ircMessage = IrcMessageParser.parse(message)
         val parsedMessage = when (ircMessage?.command) {
-            "PING" -> IrcEvent.Command.Ping
+            "PING" -> ChatEvent.Command.Ping
             "PRIVMSG" -> parsePrivateMsg(ircMessage)
             "NOTICE" -> parseNotice(ircMessage)
             "USERNOTICE" -> parseUserNotice(ircMessage)
@@ -31,11 +31,11 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
         return parsedMessage
     }
 
-    private fun parsePrivateMsg(ircMessage: IrcMessage): IrcEvent.Message? {
+    private fun parsePrivateMsg(ircMessage: IrcMessage): ChatEvent.Message? {
         val timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
         return when (ircMessage.tags.messageId) {
             "highlighted-message" -> {
-                IrcEvent.Message.HighlightedMessage(
+                ChatEvent.Message.HighlightedMessage(
                     timestamp = timestamp,
                     userMessage = parseMessage(ircMessage) ?: return null,
                 )
@@ -47,11 +47,11 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
         }
     }
 
-    private fun parseUserNotice(ircMessage: IrcMessage): IrcEvent.Message? {
+    private fun parseUserNotice(ircMessage: IrcMessage): ChatEvent.Message? {
         val timestamp = ircMessage.tags.parseTimestamp() ?: clock.now()
         return when (ircMessage.tags.messageId) {
             "raid" -> {
-                IrcEvent.Message.IncomingRaid(
+                ChatEvent.Message.IncomingRaid(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,
                     raidersCount = ircMessage.tags.raidersCount ?: return null,
@@ -59,21 +59,21 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
             }
 
             "unraid" -> {
-                IrcEvent.Message.CancelledRaid(
+                ChatEvent.Message.CancelledRaid(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,
                 )
             }
 
             "announcement" -> {
-                IrcEvent.Message.Announcement(
+                ChatEvent.Message.Announcement(
                     timestamp = timestamp,
                     userMessage = parseMessage(ircMessage) ?: return null,
                 )
             }
 
             "sub", "resub" -> {
-                IrcEvent.Message.Subscription(
+                ChatEvent.Message.Subscription(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,
                     subscriptionPlan = ircMessage.tags.subscriptionPlan ?: return null,
@@ -85,7 +85,7 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
             }
 
             "giftpaidupgrade", "primepaidupgrade" -> {
-                IrcEvent.Message.SubscriptionConversion(
+                ChatEvent.Message.SubscriptionConversion(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,
                     subscriptionPlan = ircMessage.tags.subscriptionPlan ?: return null,
@@ -94,7 +94,7 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
             }
 
             "submysterygift" -> {
-                IrcEvent.Message.MassSubscriptionGift(
+                ChatEvent.Message.MassSubscriptionGift(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,
                     subscriptionPlan = ircMessage.tags.subscriptionPlan ?: return null,
@@ -104,7 +104,7 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
             }
 
             "subgift" -> {
-                IrcEvent.Message.SubscriptionGift(
+                ChatEvent.Message.SubscriptionGift(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,
                     subscriptionPlan = ircMessage.tags.subscriptionPlan ?: return null,
@@ -115,7 +115,7 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
             }
 
             "communitypayforward" -> {
-                IrcEvent.Message.GiftPayForward(
+                ChatEvent.Message.GiftPayForward(
                     timestamp = timestamp,
                     userDisplayName = ircMessage.tags.displayName ?: return null,
                     priorGifterDisplayName = ircMessage.tags.priorGifterDisplayName
@@ -124,7 +124,7 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
             }
 
             else -> {
-                IrcEvent.Message.UserNotice(
+                ChatEvent.Message.UserNotice(
                     timestamp = timestamp,
                     msgId = ircMessage.tags.messageId,
                     systemMsg = ircMessage.tags.systemMsg ?: return null,
@@ -134,7 +134,7 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
         }
     }
 
-    private fun parseMessage(ircMessage: IrcMessage): IrcEvent.Message.ChatMessage? {
+    private fun parseMessage(ircMessage: IrcMessage): ChatEvent.Message.ChatMessage? {
         val privateMessage = PrivMsgMessage.Message.Parser.parse(ircMessage)
             ?: return null
 
@@ -144,7 +144,7 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
 
         val message = actionGroups?.groupValues?.get(1) ?: privateMessage.message
 
-        return IrcEvent.Message.ChatMessage(
+        return ChatEvent.Message.ChatMessage(
             id = ircMessage.tags.id,
             userId = ircMessage.tags.userId,
             userLogin = ircMessage.tags.login ?: privateMessage.source.nick,
@@ -162,8 +162,8 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
         )
     }
 
-    private fun parseClearMessage(ircMessage: IrcMessage): IrcEvent {
-        return IrcEvent.Command.ClearMessage(
+    private fun parseClearMessage(ircMessage: IrcMessage): ChatEvent {
+        return ChatEvent.Command.ClearMessage(
             targetMessage = ircMessage.parameters.getOrNull(1),
             targetMessageId = ircMessage.tags.targetMessageId,
             targetUserLogin = ircMessage.tags.login,
@@ -171,8 +171,8 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
         )
     }
 
-    private fun parseClearChat(ircMessage: IrcMessage): IrcEvent {
-        return IrcEvent.Command.ClearChat(
+    private fun parseClearChat(ircMessage: IrcMessage): ChatEvent {
+        return ChatEvent.Command.ClearChat(
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
             targetUserId = ircMessage.tags.targetUserId,
             targetUserLogin = ircMessage.parameters.getOrNull(1),
@@ -180,19 +180,19 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
         )
     }
 
-    private fun parseNotice(ircMessage: IrcMessage): IrcEvent.Message.Notice? {
+    private fun parseNotice(ircMessage: IrcMessage): ChatEvent.Message.Notice? {
         val notice = NoticeMessage.Command.Parser.parse(ircMessage)
             ?: return null
 
-        return IrcEvent.Message.Notice(
+        return ChatEvent.Message.Notice(
             message = notice.message,
             messageId = ircMessage.tags.messageId,
             timestamp = ircMessage.tags.parseTimestamp() ?: clock.now(),
         )
     }
 
-    private fun parseRoomState(ircMessage: IrcMessage): IrcEvent.Command.RoomStateDelta {
-        return IrcEvent.Command.RoomStateDelta(
+    private fun parseRoomState(ircMessage: IrcMessage): ChatEvent.Command.RoomStateDelta {
+        return ChatEvent.Command.RoomStateDelta(
             isEmoteOnly = ircMessage.tags.isEmoteOnly,
             minFollowDuration = ircMessage.tags.minFollowDuration,
             uniqueMessagesOnly = ircMessage.tags.uniqueMessagesOnly,
@@ -201,8 +201,8 @@ internal class TwitchIrcCommandParser(private val clock: Clock) {
         )
     }
 
-    private fun parseUserState(ircMessage: IrcMessage): IrcEvent.Command.UserState {
-        return IrcEvent.Command.UserState(
+    private fun parseUserState(ircMessage: IrcMessage): ChatEvent.Command.UserState {
+        return ChatEvent.Command.UserState(
             emoteSets = ircMessage.tags.emoteSets.orEmpty(),
         )
     }

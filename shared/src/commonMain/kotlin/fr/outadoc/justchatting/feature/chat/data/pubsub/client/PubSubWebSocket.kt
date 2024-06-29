@@ -5,7 +5,7 @@ import fr.outadoc.justchatting.feature.chat.data.pubsub.client.model.PubSubClien
 import fr.outadoc.justchatting.feature.chat.data.pubsub.client.model.PubSubServerMessage
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPluginsProvider
@@ -57,11 +57,11 @@ internal class PubSubWebSocket(
 
     private val plugins = pubSubPluginsProvider.get()
 
-    private val _eventFlow = MutableSharedFlow<ChatEvent>(
+    private val _eventFlow = MutableSharedFlow<ChatListItem>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    override val eventFlow: Flow<ChatEvent> = _eventFlow
+    override val eventFlow: Flow<ChatListItem> = _eventFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(

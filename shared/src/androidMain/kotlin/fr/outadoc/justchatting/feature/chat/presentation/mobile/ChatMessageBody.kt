@@ -34,7 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
@@ -51,12 +51,12 @@ import kotlin.random.Random
 @Composable
 internal fun ChatMessageBody(
     modifier: Modifier = Modifier,
-    body: ChatEvent.Message.Body,
+    body: ChatListItem.Message.Body,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     pronouns: ImmutableMap<Chatter, Pronoun>,
     appUser: AppUser.LoggedIn,
     backgroundHint: Color,
-    richEmbed: ChatEvent.RichEmbed?,
+    richEmbed: ChatListItem.RichEmbed?,
     maxLines: Int = Int.MAX_VALUE,
     onShowUserInfoForLogin: (String) -> Unit = {},
 ) {
@@ -155,7 +155,7 @@ internal fun ChatMessageBody(
 @Stable
 @Composable
 @OptIn(ExperimentalTextApi::class)
-internal fun ChatEvent.Message.Body.toAnnotatedString(
+internal fun ChatListItem.Message.Body.toAnnotatedString(
     appUser: AppUser.LoggedIn,
     inlineContent: ImmutableMap<String, InlineTextContent>,
     pronouns: ImmutableMap<Chatter, Pronoun>,

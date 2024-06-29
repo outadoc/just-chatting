@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.PinnedMessage
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
@@ -100,9 +100,9 @@ internal object TestEvents {
         ),
         ChatViewModel.Action.AddMessages(
             messages = listOf(
-                ChatEvent.Message.Simple(
+                ChatListItem.Message.Simple(
                     timestamp = Instant.parse("2023-02-08T20:35:35.839478452Z"),
-                    body = ChatEvent.Message.Body(
+                    body = ChatListItem.Message.Body(
                         messageId = "14124",
                         message = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
                         chatter = Chatter(

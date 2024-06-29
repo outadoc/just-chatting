@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.presentation
 
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
@@ -13,7 +13,7 @@ internal data class OngoingEvents(
     val outgoingRaid: Raid? = null,
 ) {
     data class PinnedMessage(
-        val message: ChatEvent.Message,
+        val message: ChatListItem.Message,
         val endsAt: Instant,
     )
 }

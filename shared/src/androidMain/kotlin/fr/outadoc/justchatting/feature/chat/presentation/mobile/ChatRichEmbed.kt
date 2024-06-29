@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
@@ -97,7 +97,7 @@ internal fun ChatRichEmbedPreview() {
 @Composable
 internal fun ChatRichEmbed(
     modifier: Modifier = Modifier,
-    richEmbed: ChatEvent.RichEmbed,
+    richEmbed: ChatListItem.RichEmbed,
 ) {
     ChatRichEmbed(
         modifier = modifier,

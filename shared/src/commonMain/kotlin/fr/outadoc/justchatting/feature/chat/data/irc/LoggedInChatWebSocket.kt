@@ -4,10 +4,10 @@ import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
-import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
-import fr.outadoc.justchatting.feature.chat.presentation.IrcMessageMapper
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
@@ -56,7 +56,7 @@ internal class LoggedInChatWebSocket(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
-    private val mapper: IrcMessageMapper,
+    private val mapper: ChatEventViewMapper,
     private val httpClient: HttpClient,
     private val preferencesRepository: PreferenceRepository,
     private val channelLogin: String,
@@ -66,11 +66,11 @@ internal class LoggedInChatWebSocket(
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
-    private val _eventFlow = MutableSharedFlow<ChatEvent>(
+    private val _eventFlow = MutableSharedFlow<ChatListItem>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    override val eventFlow: Flow<ChatEvent> = _eventFlow
+    override val eventFlow: Flow<ChatListItem> = _eventFlow
 
     private data class QueuedMessage(
         val authoringTime: Instant,
@@ -179,9 +179,9 @@ internal class LoggedInChatWebSocket(
                                 logError<LoggedInChatWebSocket> { "Timeout while trying to send message: $message" }
 
                                 _eventFlow.emit(
-                                    ChatEvent.Message.Highlighted(
+                                    ChatListItem.Message.Highlighted(
                                         timestamp = clock.now(),
-                                        metadata = ChatEvent.Message.Highlighted.Metadata(
+                                        metadata = ChatListItem.Message.Highlighted.Metadata(
                                             title = MR.strings.chat_send_msg_error.desc(),
                                             subtitle = null,
                                         ),
@@ -216,19 +216,19 @@ internal class LoggedInChatWebSocket(
         logInfo<LoggedInChatWebSocket> { "received: $received" }
 
         when (val command = parser.parse(received)) {
-            is IrcEvent.Message.Notice -> {
+            is ChatEvent.Message.Notice -> {
                 _eventFlow.emit(mapper.mapMessage(command))
             }
 
-            is IrcEvent.Command.UserState -> {
+            is ChatEvent.Command.UserState -> {
                 _eventFlow.emit(
-                    ChatEvent.UserState(
+                    ChatListItem.UserState(
                         emoteSets = command.emoteSets.toImmutableList(),
                     ),
                 )
             }
 
-            is IrcEvent.Command.Ping -> {
+            is ChatEvent.Command.Ping -> {
                 send("PONG :tmi.twitch.tv")
             }
 
@@ -268,7 +268,7 @@ internal class LoggedInChatWebSocket(
         private val clock: Clock,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
-        private val mapper: IrcMessageMapper,
+        private val mapper: ChatEventViewMapper,
         private val preferencesRepository: PreferenceRepository,
         private val httpClient: HttpClient,
     ) : ChatCommandHandlerFactory {

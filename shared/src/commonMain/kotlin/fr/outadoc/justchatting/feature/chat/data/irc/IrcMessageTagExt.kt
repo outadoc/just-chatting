@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.chat.data.irc
 import de.cketti.codepoints.offsetByCodePoints
 import fr.outadoc.justchatting.feature.chat.domain.model.Badge
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEmote
-import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.data.map
 import kotlinx.datetime.Instant
@@ -48,8 +48,8 @@ internal fun Map<String, String?>.parseTimestamp(): Instant? {
     return prop?.toLong()?.let { Instant.fromEpochMilliseconds(it) }
 }
 
-internal fun Map<String, String?>.parseParentMessage(): IrcEvent.Message.ChatMessage.InReplyTo? {
-    return IrcEvent.Message.ChatMessage.InReplyTo(
+internal fun Map<String, String?>.parseParentMessage(): ChatEvent.Message.ChatMessage.InReplyTo? {
+    return ChatEvent.Message.ChatMessage.InReplyTo(
         id = this["reply-parent-msg-id"] ?: return null,
         message = this["reply-parent-msg-body"] ?: return null,
         userId = this["reply-parent-user-id"] ?: return null,
@@ -58,8 +58,8 @@ internal fun Map<String, String?>.parseParentMessage(): IrcEvent.Message.ChatMes
     )
 }
 
-internal fun Map<String, String?>.parsePaidMessageInfo(): IrcEvent.Message.ChatMessage.PaidMessageInfo? {
-    return IrcEvent.Message.ChatMessage.PaidMessageInfo(
+internal fun Map<String, String?>.parsePaidMessageInfo(): ChatEvent.Message.ChatMessage.PaidMessageInfo? {
+    return ChatEvent.Message.ChatMessage.PaidMessageInfo(
         amount = this["pinned-chat-paid-amount"]?.toLongOrNull()
             ?: this["pinned-chat-paid-canonical-amount"]?.toLongOrNull()
             ?: return null,

@@ -5,10 +5,10 @@ import fr.outadoc.justchatting.feature.chat.data.Defaults
 import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesRepository
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatCommandHandlerFactory
 import fr.outadoc.justchatting.feature.chat.domain.handler.ChatEventHandler
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
-import fr.outadoc.justchatting.feature.chat.domain.model.IrcEvent
-import fr.outadoc.justchatting.feature.chat.presentation.IrcMessageMapper
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.presentation.ChatEventViewMapper
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.shared.MR
@@ -58,7 +58,7 @@ internal class LiveChatWebSocket private constructor(
     private val scope: CoroutineScope,
     private val clock: Clock,
     private val parser: TwitchIrcCommandParser,
-    private val mapper: IrcMessageMapper,
+    private val mapper: ChatEventViewMapper,
     private val httpClient: HttpClient,
     private val recentMessagesRepository: RecentMessagesRepository,
     private val preferencesRepository: PreferenceRepository,
@@ -69,12 +69,12 @@ internal class LiveChatWebSocket private constructor(
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
-    private val _eventFlow = MutableSharedFlow<ChatEvent>(
+    private val _eventFlow = MutableSharedFlow<ChatListItem>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
 
-    override val eventFlow: Flow<ChatEvent> = _eventFlow
+    override val eventFlow: Flow<ChatListItem> = _eventFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(
@@ -143,9 +143,9 @@ internal class LiveChatWebSocket private constructor(
             send("JOIN #$channelLogin")
 
             _eventFlow.emit(
-                ChatEvent.Message.Highlighted(
+                ChatListItem.Message.Highlighted(
                     timestamp = clock.now(),
-                    metadata = ChatEvent.Message.Highlighted.Metadata(
+                    metadata = ChatListItem.Message.Highlighted.Metadata(
                         title = MR.strings.chat_join.format(channelLogin),
                         subtitle = null,
                     ),
@@ -172,21 +172,21 @@ internal class LiveChatWebSocket private constructor(
     private suspend fun DefaultWebSocketSession.handleMessage(received: String) {
         logInfo<LiveChatWebSocket> { "received: $received" }
 
-        when (val command: IrcEvent? = parser.parse(received)) {
-            is IrcEvent.Command.UserState, is IrcEvent.Message.Notice -> {
+        when (val command: ChatEvent? = parser.parse(received)) {
+            is ChatEvent.Command.UserState, is ChatEvent.Message.Notice -> {
                 // Handled by LoggedInChatWebSocket
             }
 
-            is IrcEvent.Message -> {
+            is ChatEvent.Message -> {
                 // Remember time of last message so that we can restore lost messages after a connection loss
                 lastMessageReceivedAt = command.timestamp
 
                 _eventFlow.emit(mapper.mapMessage(command))
             }
 
-            is IrcEvent.Command.RoomStateDelta -> {
+            is ChatEvent.Command.RoomStateDelta -> {
                 _eventFlow.emit(
-                    ChatEvent.RoomStateDelta(
+                    ChatListItem.RoomStateDelta(
                         isEmoteOnly = command.isEmoteOnly,
                         minFollowDuration = command.minFollowDuration,
                         uniqueMessagesOnly = command.uniqueMessagesOnly,
@@ -196,9 +196,9 @@ internal class LiveChatWebSocket private constructor(
                 )
             }
 
-            is IrcEvent.Command.ClearChat -> {
+            is ChatEvent.Command.ClearChat -> {
                 _eventFlow.emit(
-                    ChatEvent.RemoveContent(
+                    ChatListItem.RemoveContent(
                         upUntil = command.timestamp,
                         matchingUserId = command.targetUserId,
                     ),
@@ -209,9 +209,9 @@ internal class LiveChatWebSocket private constructor(
                 }
             }
 
-            is IrcEvent.Command.ClearMessage -> {
+            is ChatEvent.Command.ClearMessage -> {
                 _eventFlow.emit(
-                    ChatEvent.RemoveContent(
+                    ChatListItem.RemoveContent(
                         upUntil = command.timestamp,
                         matchingMessageId = command.targetMessageId,
                     ),
@@ -222,7 +222,7 @@ internal class LiveChatWebSocket private constructor(
                 }
             }
 
-            is IrcEvent.Command.Ping -> {
+            is ChatEvent.Command.Ping -> {
                 send("PONG :tmi.twitch.tv")
             }
 
@@ -256,7 +256,7 @@ internal class LiveChatWebSocket private constructor(
             .map { messages ->
                 messages
                     .asFlow()
-                    .filterIsInstance<IrcEvent.Message>()
+                    .filterIsInstance<ChatEvent.Message>()
                     .dropWhile { event ->
                         // Drop messages that were received before the last message we received
                         event.timestamp < (lastMessageReceivedAt ?: Instant.DISTANT_PAST)
@@ -277,7 +277,7 @@ internal class LiveChatWebSocket private constructor(
         private val clock: Clock,
         private val networkStateObserver: NetworkStateObserver,
         private val parser: TwitchIrcCommandParser,
-        private val mapper: IrcMessageMapper,
+        private val mapper: ChatEventViewMapper,
         private val recentMessagesRepository: RecentMessagesRepository,
         private val preferencesRepository: PreferenceRepository,
         private val httpClient: HttpClient,

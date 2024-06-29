@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.channelpoints
 
 import dev.icerock.moko.resources.format
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.shared.MR
@@ -16,13 +16,13 @@ internal class PubSubChannelPointsPlugin(
     override fun getTopic(channelId: String): String =
         "community-points-channel-v1.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> =
+    override fun parseMessage(payload: String): List<ChatListItem> =
         when (val message = json.decodeFromString<PubSubRewardMessage>(payload)) {
             is PubSubRewardMessage.Redeemed -> {
                 listOf(
-                    ChatEvent.Message.Highlighted(
+                    ChatListItem.Message.Highlighted(
                         timestamp = message.data.redemption.redeemedAt ?: clock.now(),
-                        metadata = ChatEvent.Message.Highlighted.Metadata(
+                        metadata = ChatListItem.Message.Highlighted.Metadata(
                             title = MR.plurals.user_redeemed
                                 .format(
                                     number = message.data.redemption.reward.cost,

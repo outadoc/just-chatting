@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.viewercount
 
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import kotlinx.serialization.json.Json
 
@@ -11,11 +11,11 @@ internal class PubSubViewerCountPlugin(
     override fun getTopic(channelId: String): String =
         "video-playback-by-id.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> =
+    override fun parseMessage(payload: String): List<ChatListItem> =
         when (val message = json.decodeFromString<PubSubViewerCountMessage>(payload)) {
             is PubSubViewerCountMessage.ViewCount -> {
                 listOf(
-                    ChatEvent.ViewerCountUpdate(
+                    ChatListItem.ViewerCountUpdate(
                         viewerCount = message.viewers,
                     ),
                 )

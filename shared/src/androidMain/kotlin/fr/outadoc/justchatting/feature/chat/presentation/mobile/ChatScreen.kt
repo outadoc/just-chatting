@@ -5,7 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 
 @Composable
@@ -13,8 +13,8 @@ internal fun ChatScreen(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     showTimestamps: Boolean,
-    onMessageLongClick: (ChatEvent.Message) -> Unit,
-    onReplyToMessage: (ChatEvent.Message) -> Unit,
+    onMessageLongClick: (ChatListItem.Message) -> Unit,
+    onReplyToMessage: (ChatListItem.Message) -> Unit,
     onShowUserInfoForLogin: (String) -> Unit,
     insets: PaddingValues,
 ) {

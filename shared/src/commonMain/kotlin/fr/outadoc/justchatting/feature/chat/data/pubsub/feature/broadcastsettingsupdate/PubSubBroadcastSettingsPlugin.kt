@@ -1,6 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.pubsub.feature.broadcastsettingsupdate
 
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import kotlinx.serialization.json.Json
 
@@ -11,11 +11,11 @@ internal class PubSubBroadcastSettingsPlugin(
     override fun getTopic(channelId: String): String =
         "broadcast-settings-update.$channelId"
 
-    override fun parseMessage(payload: String): List<ChatEvent> =
+    override fun parseMessage(payload: String): List<ChatListItem> =
         when (val message = json.decodeFromString<PubSubBroadcastSettingsMessage>(payload)) {
             is PubSubBroadcastSettingsMessage.Update -> {
                 listOf(
-                    ChatEvent.BroadcastSettingsUpdate(
+                    ChatListItem.BroadcastSettingsUpdate(
                         streamTitle = message.status,
                         gameName = message.game,
                     ),

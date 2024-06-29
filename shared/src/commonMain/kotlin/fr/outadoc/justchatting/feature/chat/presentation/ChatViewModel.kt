@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.chat.presentation
 import androidx.compose.runtime.Immutable
 import dev.icerock.moko.resources.desc.desc
 import fr.outadoc.justchatting.feature.chat.domain.ChatRepository
-import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
+import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.model.PinnedMessage
@@ -98,17 +98,17 @@ internal class ChatViewModel(
     private val inputScope = viewModelScope + CoroutineName("inputScope")
 
     sealed class Action {
-        data class AddMessages(val messages: List<ChatEvent.Message>) : Action()
+        data class AddMessages(val messages: List<ChatListItem.Message>) : Action()
         data class ChangeRecentEmotes(val recentEmotes: List<Emote>) : Action()
-        data class ChangeRoomState(val delta: ChatEvent.RoomStateDelta) : Action()
+        data class ChangeRoomState(val delta: ChatListItem.RoomStateDelta) : Action()
         data class ChangeConnectionStatus(val connectionStatus: ConnectionStatus) : Action()
-        data class ChangeUserState(val userState: ChatEvent.UserState) : Action()
-        data class RemoveContent(val removedContent: ChatEvent.RemoveContent) : Action()
+        data class ChangeUserState(val userState: ChatListItem.UserState) : Action()
+        data class RemoveContent(val removedContent: ChatListItem.RemoveContent) : Action()
         data class UpdatePoll(val poll: Poll) : Action()
         data class UpdatePrediction(val prediction: Prediction) : Action()
         data class UpdateRaidAnnouncement(val raid: Raid?) : Action()
         data class UpdatePinnedMessage(val pinnedMessage: PinnedMessage?) : Action()
-        data class AddRichEmbed(val richEmbed: ChatEvent.RichEmbed) : Action()
+        data class AddRichEmbed(val richEmbed: ChatListItem.RichEmbed) : Action()
         data class UpdateStreamMetadata(
             val viewerCount: Int? = null,
             val streamTitle: String? = null,
@@ -132,19 +132,19 @@ internal class ChatViewModel(
             val appUser: AppUser.LoggedIn,
             val stream: Stream? = null,
             val channelBadges: PersistentList<TwitchBadge> = persistentListOf(),
-            val chatMessages: PersistentList<ChatEvent.Message> = persistentListOf(),
+            val chatMessages: PersistentList<ChatListItem.Message> = persistentListOf(),
             val chatters: PersistentSet<Chatter> = persistentHashSetOf(),
             val pronouns: PersistentMap<Chatter, Pronoun?> = persistentMapOf(),
             val cheerEmotes: PersistentMap<String, Emote> = persistentMapOf(),
             val globalBadges: PersistentList<TwitchBadge> = persistentListOf(),
             val lastSentMessageInstant: Instant? = null,
             val pickableEmotes: ImmutableList<EmoteSetItem> = persistentListOf(),
-            val richEmbeds: PersistentMap<String, ChatEvent.RichEmbed> = persistentMapOf(),
+            val richEmbeds: PersistentMap<String, ChatListItem.RichEmbed> = persistentMapOf(),
             val recentEmotes: List<Emote> = emptyList(),
-            val userState: ChatEvent.UserState = ChatEvent.UserState(),
+            val userState: ChatListItem.UserState = ChatListItem.UserState(),
             val roomState: RoomState = RoomState(),
             val ongoingEvents: OngoingEvents = OngoingEvents(),
-            val removedContent: PersistentList<ChatEvent.RemoveContent> = persistentListOf(),
+            val removedContent: PersistentList<ChatListItem.RemoveContent> = persistentListOf(),
             val connectionStatus: ConnectionStatus = ConnectionStatus(),
             val maxAdapterCount: Int,
             val showInfoForUserLogin: String? = null,
@@ -191,7 +191,7 @@ internal class ChatViewModel(
         data class AppendEmote(val emote: Emote, val autocomplete: Boolean) : InputAction()
         data class ChangeMessageInput(val message: String, val selectionRange: IntRange) : InputAction()
 
-        data class ReplyToMessage(val chatEvent: ChatEvent.Message? = null) : InputAction()
+        data class ReplyToMessage(val chatListItem: ChatListItem.Message? = null) : InputAction()
         data class UpdateAutoCompleteItems(val items: List<AutoCompleteItem>) : InputAction()
         data class Submit(val screenDensity: Float, val isDarkTheme: Boolean) : InputAction()
     }
@@ -200,7 +200,7 @@ internal class ChatViewModel(
     data class InputState(
         val message: String = "",
         val selectionRange: IntRange = 0..0,
-        val replyingTo: ChatEvent.Message? = null,
+        val replyingTo: ChatListItem.Message? = null,
         val autoCompleteItems: List<AutoCompleteItem> = emptyList(),
     ) {
         companion object {
@@ -251,54 +251,54 @@ internal class ChatViewModel(
                 chatRepository.getChatEventFlow(user.id, user.login)
                     .map { command ->
                         when (command) {
-                            is ChatEvent.Message -> {
+                            is ChatListItem.Message -> {
                                 Action.AddMessages(listOf(command))
                             }
 
-                            is ChatEvent.RoomStateDelta -> {
+                            is ChatListItem.RoomStateDelta -> {
                                 Action.ChangeRoomState(command)
                             }
 
-                            is ChatEvent.UserState -> {
+                            is ChatListItem.UserState -> {
                                 Action.ChangeUserState(command)
                             }
 
-                            is ChatEvent.RemoveContent -> {
+                            is ChatListItem.RemoveContent -> {
                                 Action.RemoveContent(command)
                             }
 
-                            is ChatEvent.PollUpdate -> {
+                            is ChatListItem.PollUpdate -> {
                                 Action.UpdatePoll(command.poll)
                             }
 
-                            is ChatEvent.PredictionUpdate -> {
+                            is ChatListItem.PredictionUpdate -> {
                                 Action.UpdatePrediction(command.prediction)
                             }
 
-                            is ChatEvent.BroadcastSettingsUpdate -> {
+                            is ChatListItem.BroadcastSettingsUpdate -> {
                                 Action.UpdateStreamMetadata(
                                     streamTitle = command.streamTitle,
                                     gameName = command.gameName,
                                 )
                             }
 
-                            is ChatEvent.ViewerCountUpdate -> {
+                            is ChatListItem.ViewerCountUpdate -> {
                                 Action.UpdateStreamMetadata(
                                     viewerCount = command.viewerCount,
                                 )
                             }
 
-                            is ChatEvent.RichEmbed -> {
+                            is ChatListItem.RichEmbed -> {
                                 Action.AddRichEmbed(command)
                             }
 
-                            is ChatEvent.RaidUpdate -> {
+                            is ChatListItem.RaidUpdate -> {
                                 Action.UpdateRaidAnnouncement(
                                     raid = command.raid,
                                 )
                             }
 
-                            is ChatEvent.PinnedMessageUpdate -> {
+                            is ChatListItem.PinnedMessageUpdate -> {
                                 Action.UpdatePinnedMessage(
                                     pinnedMessage = command.pinnedMessage,
                                 )
@@ -417,7 +417,7 @@ internal class ChatViewModel(
         }
     }
 
-    fun onReplyToMessage(entry: ChatEvent.Message?) {
+    fun onReplyToMessage(entry: ChatListItem.Message?) {
         inputScope.launch {
             inputActions.emit(InputAction.ReplyToMessage(entry))
         }
@@ -651,7 +651,7 @@ internal class ChatViewModel(
                 .mapNotNull { message -> message.body?.chatter }
                 .toPersistentSet()
 
-        val newMessages: PersistentList<ChatEvent> =
+        val newMessages: PersistentList<ChatListItem> =
             state.chatMessages
                 .addAll(messages)
                 .distinct()
@@ -665,7 +665,7 @@ internal class ChatViewModel(
 
         return state.copy(
             chatMessages = newMessages
-                .filterIsInstance<ChatEvent.Message>()
+                .filterIsInstance<ChatListItem.Message>()
                 .takeLast(maxCount)
                 .toPersistentList(),
             lastSentMessageInstant = lastSentMessageInstant
@@ -776,7 +776,7 @@ internal class ChatViewModel(
             )
         }
 
-        val matchingMessage: ChatEvent.Message =
+        val matchingMessage: ChatListItem.Message =
             state.chatMessages.findLast { message ->
                 message.body?.messageId == pinnedMessage.message.messageId
             } ?: return state.copy(
@@ -885,7 +885,7 @@ internal class ChatViewModel(
     }
 
     private fun InputAction.ReplyToMessage.reduce(inputState: InputState): InputState {
-        return inputState.copy(replyingTo = chatEvent)
+        return inputState.copy(replyingTo = chatListItem)
     }
 
     private fun InputAction.UpdateAutoCompleteItems.reduce(inputState: InputState): InputState {

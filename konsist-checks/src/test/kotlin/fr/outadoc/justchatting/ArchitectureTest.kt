@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test
 
 class ArchitectureTest {
 
-    // @Disabled("Disabled until architecture is properly fixed")
     @Test
     fun `Check that clean architecture layers have correct dependencies`() {
         Konsist

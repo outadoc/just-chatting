@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.lifecycle
+package fr.outadoc.justchatting.utils.presentation
 
 import kotlinx.coroutines.CoroutineScope
 

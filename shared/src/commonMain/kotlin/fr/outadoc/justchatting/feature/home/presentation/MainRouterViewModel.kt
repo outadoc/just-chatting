@@ -6,9 +6,9 @@ import fr.outadoc.justchatting.feature.deeplink.Deeplink
 import fr.outadoc.justchatting.feature.deeplink.DeeplinkParser
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.lifecycle.ViewModel
 import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.logging.logInfo
+import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted

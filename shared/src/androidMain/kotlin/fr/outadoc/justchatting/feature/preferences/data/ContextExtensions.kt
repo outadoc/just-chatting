@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.component.preferences.domain
+package fr.outadoc.justchatting.feature.preferences.data
 
 import android.content.Context
 import androidx.datastore.core.DataStore

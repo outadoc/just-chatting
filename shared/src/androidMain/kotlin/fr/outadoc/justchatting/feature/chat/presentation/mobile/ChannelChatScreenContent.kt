@@ -46,9 +46,9 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.ChatViewModel
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.ScreenPreviews
-import fr.outadoc.justchatting.utils.ui.shortToast
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.ScreenPreviews
+import fr.outadoc.justchatting.utils.presentation.shortToast
 
 @ScreenPreviews
 @Composable

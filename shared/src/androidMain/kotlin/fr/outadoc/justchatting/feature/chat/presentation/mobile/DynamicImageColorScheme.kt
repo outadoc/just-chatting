@@ -21,7 +21,7 @@ import coil.request.ImageRequest
 import com.google.android.material.color.utilities.QuantizerCelebi
 import com.google.android.material.color.utilities.Scheme
 import com.google.android.material.color.utilities.Score
-import fr.outadoc.justchatting.utils.ui.isDark
+import fr.outadoc.justchatting.utils.presentation.isDark
 import kotlinx.coroutines.suspendCancellableCoroutine
 
 @Stable

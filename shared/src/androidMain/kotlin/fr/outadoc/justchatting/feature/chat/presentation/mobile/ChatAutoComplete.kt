@@ -22,8 +22,8 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 
 @Composable
 internal fun AutoCompleteEmoteItem(

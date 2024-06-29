@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.HapticIconButton
+import fr.outadoc.justchatting.utils.presentation.HapticIconButton
 import org.koin.androidx.compose.koinViewModel
 
 @Composable

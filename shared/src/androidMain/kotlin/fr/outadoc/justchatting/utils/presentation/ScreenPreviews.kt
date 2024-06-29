@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.utils.ui
+package fr.outadoc.justchatting.utils.presentation
 
 import android.content.res.Configuration
 import androidx.compose.ui.tooling.preview.Preview
@@ -7,10 +7,11 @@ import androidx.compose.ui.tooling.preview.Preview
     group = "themes",
     uiMode = Configuration.UI_MODE_NIGHT_YES,
     showBackground = true,
+    showSystemUi = true,
 )
 @Preview(
     group = "themes",
     uiMode = Configuration.UI_MODE_NIGHT_NO,
-    showBackground = true,
+    showSystemUi = true,
 )
-internal annotation class ThemePreviews
+internal annotation class ScreenPreviews

@@ -32,9 +32,9 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
-import fr.outadoc.justchatting.utils.ui.plus
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.plus
 
 @ThemePreviews
 @Composable

@@ -29,7 +29,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.plus
+import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.datetime.Instant
 import org.koin.androidx.compose.koinViewModel
 

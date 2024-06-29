@@ -28,7 +28,7 @@ import androidx.emoji2.text.EmojiCompat
 import androidx.lifecycle.lifecycleScope
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.ChatActivity
 import fr.outadoc.justchatting.feature.home.presentation.MainRouterViewModel
-import fr.outadoc.justchatting.utils.ui.AppTheme
+import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel

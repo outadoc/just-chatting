@@ -32,10 +32,10 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.formatNumber
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
-import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
-import fr.outadoc.justchatting.utils.ui.parseHexColor
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.ensureColorIsAccessible
+import fr.outadoc.justchatting.utils.presentation.parseHexColor
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant

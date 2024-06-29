@@ -22,7 +22,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.core.formatNumber
-import fr.outadoc.justchatting.utils.ui.formatTimestamp
+import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.datetime.Instant
 
 @OptIn(ExperimentalLayoutApi::class)

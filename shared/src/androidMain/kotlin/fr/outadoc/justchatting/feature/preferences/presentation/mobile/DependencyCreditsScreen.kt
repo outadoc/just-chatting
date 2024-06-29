@@ -6,7 +6,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -27,7 +26,7 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.preferences.presentation.Dependency
 import fr.outadoc.justchatting.feature.preferences.presentation.ReadExternalDependenciesList
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.plus
+import fr.outadoc.justchatting.utils.presentation.plus
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)

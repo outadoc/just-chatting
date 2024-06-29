@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
-import fr.outadoc.justchatting.utils.ui.AppTheme
+import fr.outadoc.justchatting.utils.presentation.AppTheme
 
 @Preview
 @Composable

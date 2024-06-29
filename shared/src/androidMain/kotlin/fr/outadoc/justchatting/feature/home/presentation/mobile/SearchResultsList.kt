@@ -22,7 +22,7 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.presentation.ChannelSearchViewModel
-import fr.outadoc.justchatting.utils.ui.plus
+import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalMaterialApi::class)

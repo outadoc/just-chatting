@@ -41,8 +41,8 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatPrefixConstants
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
-import fr.outadoc.justchatting.utils.ui.ensureColorIsAccessible
-import fr.outadoc.justchatting.utils.ui.parseHexColor
+import fr.outadoc.justchatting.utils.presentation.ensureColorIsAccessible
+import fr.outadoc.justchatting.utils.presentation.parseHexColor
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.toImmutableMap
 import kotlinx.collections.immutable.toPersistentHashMap

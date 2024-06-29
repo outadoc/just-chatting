@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.localized
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.NoticeMessagePreviewProvider
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 
 @ThemePreviews
 @Composable

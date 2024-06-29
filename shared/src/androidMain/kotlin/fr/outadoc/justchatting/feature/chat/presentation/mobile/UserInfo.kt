@@ -20,7 +20,7 @@ import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.formatDate
+import fr.outadoc.justchatting.utils.presentation.formatDate
 import kotlinx.datetime.Instant
 
 @Composable

@@ -7,7 +7,7 @@ import androidx.compose.ui.platform.LocalContext
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.RoomState
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.format
+import fr.outadoc.justchatting.utils.presentation.format
 import kotlin.time.Duration
 
 @Composable

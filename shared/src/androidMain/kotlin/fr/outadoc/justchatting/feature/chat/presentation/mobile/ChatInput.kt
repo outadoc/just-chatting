@@ -46,9 +46,9 @@ import fr.outadoc.justchatting.feature.chat.presentation.AutoCompleteItem
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.AppTheme
-import fr.outadoc.justchatting.utils.ui.HapticIconButton
-import fr.outadoc.justchatting.utils.ui.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.HapticIconButton
+import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import kotlinx.datetime.Instant
 
 @ThemePreviews

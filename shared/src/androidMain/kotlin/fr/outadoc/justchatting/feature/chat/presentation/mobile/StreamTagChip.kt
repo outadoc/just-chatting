@@ -4,7 +4,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
-import fr.outadoc.justchatting.utils.ui.LabelChip
+import fr.outadoc.justchatting.utils.presentation.LabelChip
 
 @Composable
 internal fun StreamTagChip(

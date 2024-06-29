@@ -12,7 +12,7 @@
  * permissions and limitations under the License.
  */
 
-package fr.outadoc.justchatting.utils.ui
+package fr.outadoc.justchatting.utils.presentation
 
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable

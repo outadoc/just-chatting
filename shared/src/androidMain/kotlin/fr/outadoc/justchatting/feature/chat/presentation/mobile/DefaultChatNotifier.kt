@@ -22,7 +22,7 @@ import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.core.toPendingActivityIntent
 import fr.outadoc.justchatting.utils.core.toPendingForegroundServiceIntent
 import fr.outadoc.justchatting.utils.logging.logError
-import fr.outadoc.justchatting.utils.ui.isLaunchedFromBubbleCompat
+import fr.outadoc.justchatting.utils.presentation.isLaunchedFromBubbleCompat
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 

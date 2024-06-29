@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.utils.ui
+package fr.outadoc.justchatting.utils.presentation
 
 import androidx.annotation.ColorInt
 import androidx.compose.ui.graphics.Color

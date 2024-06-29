@@ -30,8 +30,8 @@ import fr.outadoc.justchatting.feature.chat.presentation.ChatNotifier
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.ui.HapticIconButton
-import fr.outadoc.justchatting.utils.ui.canOpenInBubble
+import fr.outadoc.justchatting.utils.presentation.HapticIconButton
+import fr.outadoc.justchatting.utils.presentation.canOpenInBubble
 import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)

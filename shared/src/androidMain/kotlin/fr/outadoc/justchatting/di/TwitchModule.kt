@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.di
 
-import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesApi
-import fr.outadoc.justchatting.component.twitch.websocket.irc.recent.RecentMessagesServer
 import fr.outadoc.justchatting.feature.auth.data.IdApi
 import fr.outadoc.justchatting.feature.auth.data.IdServer
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
+import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesApi
+import fr.outadoc.justchatting.feature.chat.data.irc.recent.RecentMessagesServer
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesServer
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi

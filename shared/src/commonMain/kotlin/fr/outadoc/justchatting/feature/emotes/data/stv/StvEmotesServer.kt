@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.emotes.data.stv
 
+import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.emotes.data.stv.model.StvEmoteResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -11,7 +12,7 @@ internal class StvEmotesServer(httpClient: HttpClient) : StvEmotesApi {
 
     private val client = httpClient.config {
         defaultRequest {
-            url("https://7tv.io/")
+            url(ApiEndpoints.STV_BASE)
         }
     }
 

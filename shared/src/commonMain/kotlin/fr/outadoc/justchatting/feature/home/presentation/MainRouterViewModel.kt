@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
 import com.eygraber.uri.Uri
+import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.auth.domain.AuthRepository
 import fr.outadoc.justchatting.feature.auth.domain.model.OAuthAppCredentials
 import fr.outadoc.justchatting.feature.deeplink.Deeplink
@@ -103,7 +104,7 @@ internal class MainRouterViewModel(
         )
 
         val oauthAuthUrl: Uri =
-            Uri.parse("https://id.twitch.tv/oauth2/authorize")
+            Uri.parse("${ApiEndpoints.TWITCH_AUTH}/authorize")
                 .buildUpon()
                 .appendQueryParameter("response_type", "token")
                 .appendQueryParameter("client_id", oAuthAppCredentials.clientId)

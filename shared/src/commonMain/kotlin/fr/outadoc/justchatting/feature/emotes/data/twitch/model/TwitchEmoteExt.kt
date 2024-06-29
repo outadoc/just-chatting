@@ -1,11 +1,12 @@
 package fr.outadoc.justchatting.feature.emotes.data.twitch.model
 
+import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatEmote
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 
 private const val BASE_EMOTE_URL: String =
-    "https://static-cdn.jtvnw.net/emoticons/v2/{{id}}/{{format}}/{{theme_mode}}/{{scale}}"
+    "${ApiEndpoints.TWITCH_EMOTE_CDN}/v2/{{id}}/{{format}}/{{theme_mode}}/{{scale}}"
 
 private val scales: List<Float> = listOf(1f, 2f, 3f)
 

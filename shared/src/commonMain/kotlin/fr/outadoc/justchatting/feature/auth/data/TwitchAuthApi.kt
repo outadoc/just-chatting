@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.auth.data
 
+import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.auth.data.model.TwitchAuthValidationResponse
 import fr.outadoc.justchatting.feature.auth.domain.AuthApi
 import fr.outadoc.justchatting.feature.auth.domain.model.AuthValidationResponse
@@ -16,7 +17,7 @@ internal class TwitchAuthApi(httpClient: HttpClient) : AuthApi {
 
     private val client = httpClient.config {
         defaultRequest {
-            url("https://id.twitch.tv/oauth2/")
+            url(ApiEndpoints.TWITCH_AUTH)
         }
     }
 

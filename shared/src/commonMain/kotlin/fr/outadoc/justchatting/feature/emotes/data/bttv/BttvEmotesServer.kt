@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.emotes.data.bttv
 
+import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.BttvChannelResponse
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.BttvEmote
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.FfzEmote
@@ -13,7 +14,7 @@ internal class BttvEmotesServer(httpClient: HttpClient) : BttvEmotesApi {
 
     private val client = httpClient.config {
         defaultRequest {
-            url("https://api.betterttv.net/")
+            url(ApiEndpoints.BTTV_BASE)
         }
     }
 

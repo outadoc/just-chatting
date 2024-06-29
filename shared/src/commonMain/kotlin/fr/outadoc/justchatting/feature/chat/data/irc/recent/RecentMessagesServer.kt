@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.chat.data.irc.recent
 
+import fr.outadoc.justchatting.data.ApiEndpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest
@@ -11,7 +12,7 @@ internal class RecentMessagesServer(httpClient: HttpClient) : RecentMessagesApi 
 
     private val client = httpClient.config {
         defaultRequest {
-            url("https://recent-messages.robotty.de/api/")
+            url(ApiEndpoints.RECENT_MESSAGES)
         }
     }
 

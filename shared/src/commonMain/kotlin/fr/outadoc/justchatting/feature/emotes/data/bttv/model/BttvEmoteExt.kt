@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.emotes.data.bttv.model
 
+import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 
@@ -27,7 +28,7 @@ internal fun BttvEmote.map(): Emote {
         isZeroWidth = code in zeroWidthEmotes,
         urls = EmoteUrls(
             availableDensities.mapValues { (_, densityStr) ->
-                "https://cdn.betterttv.net/emote/$id/$densityStr"
+                "${ApiEndpoints.BTTV_EMOTE_CDN}/$id/$densityStr"
             },
         ),
     )

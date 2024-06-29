@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.pronouns.data
 
+import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.pronouns.data.model.AlejoPronoun
 import fr.outadoc.justchatting.feature.pronouns.data.model.UserPronounResponse
 import io.ktor.client.HttpClient
@@ -13,7 +14,7 @@ internal class AlejoPronounsClient(
 ) {
     private val client = httpClient.config {
         defaultRequest {
-            url("https://pronouns.alejo.io/api/")
+            url(ApiEndpoints.ALEJO_PRONOUNS)
         }
     }
 

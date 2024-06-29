@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.home.data
 
+import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.emotes.data.twitch.model.EmoteSetResponse
 import fr.outadoc.justchatting.feature.home.data.model.ChannelScheduleResponse
 import fr.outadoc.justchatting.feature.home.data.model.ChannelSearchResponse
@@ -19,7 +20,7 @@ internal class TwitchServer(httpClient: HttpClient) : TwitchApi {
 
     private val client = httpClient.config {
         defaultRequest {
-            url("https://api.twitch.tv/helix/")
+            url(ApiEndpoints.TWITCH_HELIX)
         }
     }
 

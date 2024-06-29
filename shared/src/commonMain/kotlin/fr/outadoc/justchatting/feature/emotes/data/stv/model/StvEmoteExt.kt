@@ -1,10 +1,10 @@
 package fr.outadoc.justchatting.feature.emotes.data.stv.model
 
 import com.eygraber.uri.Uri
+import fr.outadoc.justchatting.data.ApiEndpoints
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 
-private const val BASE_URL = "https://cdn.7tv.app/emote/"
 private const val FLAG_IS_ZERO_WIDTH = 1 shl 8
 
 internal fun StvEmote.map(): Emote {
@@ -33,7 +33,7 @@ private fun Int.hasFlag(flag: Int): Boolean {
 }
 
 private fun formatUrl(density: Float, versionId: String, emoteId: String): Pair<Float, String> {
-    return density to Uri.parse(BASE_URL)
+    return density to Uri.parse(ApiEndpoints.STV_EMOTE_CDN)
         .buildUpon()
         .appendPath(emoteId)
         .appendPath("$versionId.webp")

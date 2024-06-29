@@ -33,20 +33,22 @@ import fr.outadoc.justchatting.feature.emotes.data.bttv.GlobalBttvEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.bttv.GlobalFfzEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.stv.GlobalStvEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.twitch.ChannelTwitchEmotesSource
+import fr.outadoc.justchatting.feature.emotes.data.twitch.DelegateTwitchEmotesSource
 import fr.outadoc.justchatting.feature.emotes.data.twitch.GlobalTwitchEmotesSource
-import fr.outadoc.justchatting.feature.emotes.domain.DelegateTwitchEmotesSource
 import fr.outadoc.justchatting.feature.emotes.domain.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsApi
 import fr.outadoc.justchatting.feature.pronouns.data.AlejoPronounsClient
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
+import fr.outadoc.justchatting.feature.recent.domain.GetRecentEmotesUseCase
+import fr.outadoc.justchatting.feature.recent.domain.InsertRecentEmotesUseCase
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
 public val chatModule: Module = module {
 
-    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
     viewModel { StreamAndUserInfoViewModel(get()) }
 
     single<ChatNotifier> { DefaultChatNotifier(get(), get()) }
@@ -104,6 +106,9 @@ public val chatModule: Module = module {
     single<PronounsApi> { AlejoPronounsApi(get(), get()) }
     single { AlejoPronounsClient(get()) }
     single { PronounsRepository(get()) }
+
+    factory { GetRecentEmotesUseCase(get()) }
+    factory { InsertRecentEmotesUseCase(get()) }
 
     single { ChannelBttvEmotesSource(get()) }
     single { ChannelFfzEmotesSource(get()) }

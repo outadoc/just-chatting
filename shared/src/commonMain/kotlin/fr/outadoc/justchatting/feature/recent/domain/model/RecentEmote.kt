@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.emotes.domain.model
+package fr.outadoc.justchatting.feature.recent.domain.model
 
 import kotlinx.datetime.Instant
 

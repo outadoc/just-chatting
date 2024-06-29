@@ -1,5 +1,6 @@
-package fr.outadoc.justchatting.feature.emotes.domain
+package fr.outadoc.justchatting.feature.emotes.data.twitch
 
+import fr.outadoc.justchatting.feature.emotes.domain.CachedEmoteListSource
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.home.domain.model.User

@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
@@ -145,4 +146,14 @@ internal class TwitchRepositoryImpl(
             )
         }
     }
+
+    override suspend fun loadGlobalBadges(): Result<List<TwitchBadge>> =
+        withContext(DispatchersProvider.io) {
+            twitchApi.getGlobalBadges()
+        }
+
+    override suspend fun loadChannelBadges(channelId: String): Result<List<TwitchBadge>> =
+        withContext(DispatchersProvider.io) {
+            twitchApi.getChannelBadges(channelId)
+        }
 }

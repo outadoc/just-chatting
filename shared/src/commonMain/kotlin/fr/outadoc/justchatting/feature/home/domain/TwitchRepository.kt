@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
@@ -23,4 +24,6 @@ internal interface TwitchRepository {
     suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?>
     suspend fun insertRecentChannel(channel: User, usedAt: Instant)
     suspend fun loadChannelSchedule(channelId: String): Result<ChannelSchedule>
+    suspend fun loadGlobalBadges(): Result<List<TwitchBadge>>
+    suspend fun loadChannelBadges(channelId: String): Result<List<TwitchBadge>>
 }

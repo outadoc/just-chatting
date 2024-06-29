@@ -5,10 +5,10 @@ import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import fr.outadoc.justchatting.data.db.AppDatabase
 import fr.outadoc.justchatting.data.db.RecentChannelQueries
 import fr.outadoc.justchatting.data.db.RecentEmoteQueries
-import fr.outadoc.justchatting.feature.emotes.data.recent.DbRecentEmotesDao
-import fr.outadoc.justchatting.feature.emotes.domain.recent.RecentEmotesDao
 import fr.outadoc.justchatting.feature.recent.data.RecentChannelsDb
+import fr.outadoc.justchatting.feature.recent.data.RecentEmotesDb
 import fr.outadoc.justchatting.feature.recent.domain.RecentChannelsApi
+import fr.outadoc.justchatting.feature.recent.domain.RecentEmotesApi
 import org.koin.core.module.Module
 import org.koin.dsl.module
 
@@ -25,7 +25,7 @@ public val dbModule: Module = module {
     single { AppDatabase(get<SqlDriver>()) }
 
     single<RecentEmoteQueries> { get<AppDatabase>().recentEmoteQueries }
-    single<RecentEmotesDao> { DbRecentEmotesDao(get()) }
+    single<RecentEmotesApi> { RecentEmotesDb(get()) }
 
     single<RecentChannelQueries> { get<AppDatabase>().recentChannelQueries }
     single<RecentChannelsApi> { RecentChannelsDb(get()) }

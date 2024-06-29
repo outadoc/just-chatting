@@ -12,11 +12,9 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
 import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.feature.emotes.domain.EmoteListSourcesProvider
-import fr.outadoc.justchatting.feature.emotes.domain.EmotesRepository
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
-import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
@@ -25,6 +23,9 @@ import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
+import fr.outadoc.justchatting.feature.recent.domain.GetRecentEmotesUseCase
+import fr.outadoc.justchatting.feature.recent.domain.InsertRecentEmotesUseCase
+import fr.outadoc.justchatting.feature.recent.domain.model.RecentEmote
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.core.flatListOf
@@ -83,7 +84,8 @@ import kotlin.time.Duration.Companion.seconds
 internal class ChatViewModel(
     private val clock: Clock,
     private val twitchRepository: TwitchRepository,
-    private val emotesRepository: EmotesRepository,
+    private val getRecentEmotes: GetRecentEmotesUseCase,
+    private val insertRecentEmotes: InsertRecentEmotesUseCase,
     private val chatRepository: ChatRepository,
     private val preferencesRepository: PreferenceRepository,
     private val emoteListSourcesProvider: EmoteListSourcesProvider,
@@ -320,7 +322,7 @@ internal class ChatViewModel(
             .map { state -> state.allEmotesMap }
             .distinctUntilChanged()
             .flatMapLatest { allEmotesMap ->
-                emotesRepository.loadRecentEmotes()
+                getRecentEmotes()
                     .map { recentEmotes ->
                         Pair(
                             recentEmotes,
@@ -551,7 +553,7 @@ internal class ChatViewModel(
         return withContext(DispatchersProvider.io) {
             val globalBadges: Deferred<PersistentList<TwitchBadge>?> =
                 async {
-                    emotesRepository.loadGlobalBadges()
+                    twitchRepository.loadGlobalBadges()
                         .fold(
                             onSuccess = { badges -> badges.toPersistentList() },
                             onFailure = { exception ->
@@ -563,7 +565,7 @@ internal class ChatViewModel(
 
             val channelBadges: Deferred<PersistentList<TwitchBadge>?> =
                 async {
-                    emotesRepository.loadChannelBadges(channelId)
+                    twitchRepository.loadChannelBadges(channelId)
                         .fold(
                             onSuccess = { badges -> badges.toPersistentList() },
                             onFailure = { exception ->
@@ -849,7 +851,7 @@ internal class ChatViewModel(
                         }
                     }
 
-            emotesRepository.insertRecentEmotes(usedEmotes)
+            insertRecentEmotes(usedEmotes)
         }
 
         return inputState.copy(

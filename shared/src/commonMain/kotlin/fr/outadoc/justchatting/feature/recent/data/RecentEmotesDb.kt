@@ -1,31 +1,42 @@
-package fr.outadoc.justchatting.feature.emotes.data.recent
+package fr.outadoc.justchatting.feature.recent.data
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import fr.outadoc.justchatting.data.db.RecentEmoteQueries
-import fr.outadoc.justchatting.data.db.Recent_emotes
-import fr.outadoc.justchatting.feature.emotes.domain.recent.RecentEmotesDao
+import fr.outadoc.justchatting.feature.recent.domain.RecentEmotesApi
+import fr.outadoc.justchatting.feature.recent.domain.model.RecentEmote
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import kotlinx.datetime.Instant
 
-internal class DbRecentEmotesDao(
+internal class RecentEmotesDb(
     private val recentEmoteQueries: RecentEmoteQueries,
-) : RecentEmotesDao {
+) : RecentEmotesApi {
 
-    override fun getAll(): Flow<List<Recent_emotes>> {
+    override fun getAll(): Flow<List<RecentEmote>> {
         return recentEmoteQueries
             .getAll()
             .asFlow()
             .mapToList(DispatchersProvider.io)
+            .map { emotes ->
+                emotes.map { emote ->
+                    RecentEmote(
+                        name = emote.name,
+                        url = emote.url,
+                        usedAt = Instant.fromEpochMilliseconds(emote.used_at),
+                    )
+                }
+            }
     }
 
-    override fun insertAll(emotes: Collection<Recent_emotes>) {
+    override fun insertAll(emotes: Collection<RecentEmote>) {
         recentEmoteQueries.transaction {
             emotes.forEach { emote ->
                 recentEmoteQueries.insert(
                     name = emote.name,
                     url = emote.url,
-                    used_at = emote.used_at,
+                    used_at = emote.usedAt.toEpochMilliseconds(),
                 )
             }
 

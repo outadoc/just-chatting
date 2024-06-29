@@ -4,6 +4,7 @@ import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import fr.outadoc.justchatting.data.db.RecentEmoteQueries
 import fr.outadoc.justchatting.data.db.Recent_emotes
+import fr.outadoc.justchatting.feature.emotes.domain.recent.RecentEmotesDao
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
 

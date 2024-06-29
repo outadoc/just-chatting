@@ -1,8 +1,6 @@
 package fr.outadoc.justchatting.feature.home.domain
 
 import androidx.paging.PagingData
-import fr.outadoc.justchatting.data.db.Recent_channels
-import fr.outadoc.justchatting.feature.emotes.data.recent.RecentChannelsDao
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
@@ -11,6 +9,8 @@ import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
+import fr.outadoc.justchatting.feature.recent.domain.RecentChannelsApi
+import fr.outadoc.justchatting.feature.recent.domain.model.RecentChannel
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
@@ -22,7 +22,7 @@ import kotlinx.datetime.Instant
 internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
     private val preferencesRepository: PreferenceRepository,
-    private val recentChannelsDao: RecentChannelsDao,
+    private val recentChannelsApi: RecentChannelsApi,
 ) : TwitchRepository {
 
     override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> {
@@ -102,7 +102,7 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?> {
         return withContext(DispatchersProvider.io) {
-            recentChannelsDao.getAll()
+            recentChannelsApi.getAll()
                 .map { channels ->
                     val ids = channels.map { channel -> channel.id }
                     twitchApi.getUsersById(ids = ids)
@@ -127,10 +127,10 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun insertRecentChannel(channel: User, usedAt: Instant) {
         withContext(DispatchersProvider.io) {
-            recentChannelsDao.insert(
-                Recent_channels(
+            recentChannelsApi.insert(
+                RecentChannel(
                     id = channel.id,
-                    used_at = usedAt.toEpochMilliseconds(),
+                    usedAt = usedAt,
                 ),
             )
         }

@@ -3,11 +3,11 @@ package fr.outadoc.justchatting.feature.emotes.domain
 import fr.outadoc.justchatting.data.db.Recent_emotes
 import fr.outadoc.justchatting.feature.emotes.data.bttv.BttvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.bttv.model.map
-import fr.outadoc.justchatting.feature.emotes.data.recent.RecentEmotesDao
 import fr.outadoc.justchatting.feature.emotes.data.stv.StvEmotesApi
 import fr.outadoc.justchatting.feature.emotes.data.stv.model.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.RecentEmote
+import fr.outadoc.justchatting.feature.emotes.domain.recent.RecentEmotesDao
 import fr.outadoc.justchatting.feature.home.domain.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository

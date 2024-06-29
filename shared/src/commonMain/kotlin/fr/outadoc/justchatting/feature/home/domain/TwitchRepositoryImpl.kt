@@ -26,14 +26,13 @@ internal class TwitchRepositoryImpl(
     private val recentChannelsApi: RecentChannelsApi,
 ) : TwitchRepository {
 
-    override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> {
-        return withContext(DispatchersProvider.io) {
+    override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
+        withContext(DispatchersProvider.io) {
             twitchApi.searchChannels(query)
         }
-    }
 
-    override suspend fun getFollowedStreams(): Flow<PagingData<Stream>> {
-        return withContext(DispatchersProvider.io) {
+    override suspend fun getFollowedStreams(): Flow<PagingData<Stream>> =
+        withContext(DispatchersProvider.io) {
             when (val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser) {
                 is AppUser.LoggedIn -> {
                     twitchApi.getFollowedStreams(userId = appUser.userId)
@@ -44,10 +43,9 @@ internal class TwitchRepositoryImpl(
                 }
             }
         }
-    }
 
-    override suspend fun getFollowedChannels(): Flow<PagingData<ChannelFollow>> {
-        return withContext(DispatchersProvider.io) {
+    override suspend fun getFollowedChannels(): Flow<PagingData<ChannelFollow>> =
+        withContext(DispatchersProvider.io) {
             when (val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser) {
                 is AppUser.LoggedIn -> {
                     twitchApi.getFollowedChannels(userId = appUser.userId)
@@ -58,7 +56,6 @@ internal class TwitchRepositoryImpl(
                 }
             }
         }
-    }
 
     override suspend fun getStream(userId: String): Result<Stream> =
         withContext(DispatchersProvider.io) {
@@ -79,30 +76,30 @@ internal class TwitchRepositoryImpl(
             twitchApi.getUsersByLogin(logins = logins)
         }
 
-    override suspend fun getUserByLogin(login: String): Result<User> {
-        return getUsersByLogin(logins = listOf(login))
-            .mapCatching { users ->
-                if (users.isEmpty()) {
-                    error("No user found for login: $login")
+    override suspend fun getUserByLogin(login: String): Result<User> =
+        withContext(DispatchersProvider.io) {
+            getUsersByLogin(logins = listOf(login))
+                .mapCatching { users ->
+                    if (users.isEmpty()) {
+                        error("No user found for login: $login")
+                    }
+
+                    users.first()
                 }
+        }
 
-                users.first()
-            }
-    }
-
-    override suspend fun getCheerEmotes(userId: String): Result<List<Emote>> {
-        return withContext(DispatchersProvider.io) {
+    override suspend fun getCheerEmotes(userId: String): Result<List<Emote>> =
+        withContext(DispatchersProvider.io) {
             twitchApi.getCheerEmotes(userId = userId)
         }
-    }
 
     override suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>> =
         withContext(DispatchersProvider.io) {
             twitchApi.getEmotesFromSet(setIds = setIds)
         }
 
-    override suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?> {
-        return withContext(DispatchersProvider.io) {
+    override suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?> =
+        withContext(DispatchersProvider.io) {
             recentChannelsApi.getAll()
                 .map { channels ->
                     val ids = channels.map { channel -> channel.id }
@@ -124,7 +121,6 @@ internal class TwitchRepositoryImpl(
                         }
                 }
         }
-    }
 
     override suspend fun insertRecentChannel(channel: User, usedAt: Instant) {
         withContext(DispatchersProvider.io) {
@@ -137,15 +133,14 @@ internal class TwitchRepositoryImpl(
         }
     }
 
-    override suspend fun loadChannelSchedule(channelId: String): Result<ChannelSchedule> {
-        return withContext(DispatchersProvider.io) {
+    override suspend fun loadChannelSchedule(channelId: String): Result<ChannelSchedule> =
+        withContext(DispatchersProvider.io) {
             twitchApi.getChannelSchedule(
                 channelId = channelId,
                 limit = 10,
                 after = null,
             )
         }
-    }
 
     override suspend fun loadGlobalBadges(): Result<List<TwitchBadge>> =
         withContext(DispatchersProvider.io) {

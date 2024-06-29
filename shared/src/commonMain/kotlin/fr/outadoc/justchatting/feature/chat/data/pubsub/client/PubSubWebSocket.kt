@@ -57,11 +57,11 @@ internal class PubSubWebSocket(
 
     private val plugins = pubSubPluginsProvider.get()
 
-    private val _commandFlow = MutableSharedFlow<ChatEvent>(
+    private val _eventFlow = MutableSharedFlow<ChatEvent>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    override val commandFlow: Flow<ChatEvent> = _commandFlow
+    override val eventFlow: Flow<ChatEvent> = _eventFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(
@@ -167,7 +167,7 @@ internal class PubSubWebSocket(
                     }
 
                 plugin?.apply {
-                    _commandFlow.emitAll(
+                    _eventFlow.emitAll(
                         parseMessage(received.data.message).asFlow(),
                     )
                 }

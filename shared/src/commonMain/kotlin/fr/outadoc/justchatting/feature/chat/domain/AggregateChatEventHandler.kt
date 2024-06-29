@@ -46,8 +46,8 @@ internal class AggregateChatEventHandler(
             )
         }
 
-    override val commandFlow: Flow<ChatEvent> =
-        handlers.map { handler -> handler.commandFlow }.merge()
+    override val eventFlow: Flow<ChatEvent> =
+        handlers.map { handler -> handler.eventFlow }.merge()
 
     override val connectionStatus: StateFlow<ConnectionStatus> =
         combine(handlers.map { handler -> handler.connectionStatus }) { statuses ->

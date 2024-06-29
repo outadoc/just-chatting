@@ -60,11 +60,11 @@ internal class MockChatWebSocket private constructor(
         private const val ENDPOINT = "wss://irc.fdgt.dev"
     }
 
-    private val _commandFlow = MutableSharedFlow<ChatEvent>(
+    private val _eventFlow = MutableSharedFlow<ChatEvent>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    override val commandFlow: Flow<ChatEvent> = _commandFlow
+    override val eventFlow: Flow<ChatEvent> = _eventFlow
 
     private data class QueuedMessage(
         val authoringTime: Instant,
@@ -143,7 +143,7 @@ internal class MockChatWebSocket private constructor(
             send("CAP REQ :twitch.tv/tags twitch.tv/commands")
             send("JOIN #$channelLogin")
 
-            _commandFlow.emit(
+            _eventFlow.emit(
                 ChatEvent.Message.Highlighted(
                     timestamp = clock.now(),
                     metadata = ChatEvent.Message.Highlighted.Metadata(
@@ -173,7 +173,7 @@ internal class MockChatWebSocket private constructor(
                                 // We've been trying to send this message for a while now, give up
                                 logError<LoggedInChatWebSocket> { "Timeout while trying to send message: $message" }
 
-                                _commandFlow.emit(
+                                _eventFlow.emit(
                                     ChatEvent.Message.Highlighted(
                                         timestamp = clock.now(),
                                         metadata = ChatEvent.Message.Highlighted.Metadata(
@@ -212,11 +212,11 @@ internal class MockChatWebSocket private constructor(
 
         when (val command: IrcEvent? = parser.parse(received)) {
             is IrcEvent.Message -> {
-                _commandFlow.emit(mapper.mapMessage(command))
+                _eventFlow.emit(mapper.mapMessage(command))
             }
 
             is IrcEvent.Command.UserState -> {
-                _commandFlow.emit(
+                _eventFlow.emit(
                     ChatEvent.UserState(
                         emoteSets = command.emoteSets.toImmutableList(),
                     ),
@@ -224,7 +224,7 @@ internal class MockChatWebSocket private constructor(
             }
 
             is IrcEvent.Command.RoomStateDelta -> {
-                _commandFlow.emit(
+                _eventFlow.emit(
                     ChatEvent.RoomStateDelta(
                         isEmoteOnly = command.isEmoteOnly,
                         minFollowDuration = command.minFollowDuration,
@@ -236,7 +236,7 @@ internal class MockChatWebSocket private constructor(
             }
 
             is IrcEvent.Command.ClearChat -> {
-                _commandFlow.emit(
+                _eventFlow.emit(
                     ChatEvent.RemoveContent(
                         upUntil = command.timestamp,
                         matchingUserId = command.targetUserId,
@@ -244,12 +244,12 @@ internal class MockChatWebSocket private constructor(
                 )
 
                 mapper.mapOptional(command)?.let { message ->
-                    _commandFlow.emit(message)
+                    _eventFlow.emit(message)
                 }
             }
 
             is IrcEvent.Command.ClearMessage -> {
-                _commandFlow.emit(
+                _eventFlow.emit(
                     ChatEvent.RemoveContent(
                         upUntil = command.timestamp,
                         matchingMessageId = command.targetMessageId,
@@ -257,7 +257,7 @@ internal class MockChatWebSocket private constructor(
                 )
 
                 mapper.mapOptional(command)?.let { message ->
-                    _commandFlow.emit(message)
+                    _eventFlow.emit(message)
                 }
             }
 

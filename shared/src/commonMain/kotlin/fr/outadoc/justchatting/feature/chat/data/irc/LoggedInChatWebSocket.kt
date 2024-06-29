@@ -66,11 +66,11 @@ internal class LoggedInChatWebSocket(
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
-    private val _commandFlow = MutableSharedFlow<ChatEvent>(
+    private val _eventFlow = MutableSharedFlow<ChatEvent>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
-    override val commandFlow: Flow<ChatEvent> = _commandFlow
+    override val eventFlow: Flow<ChatEvent> = _eventFlow
 
     private data class QueuedMessage(
         val authoringTime: Instant,
@@ -178,7 +178,7 @@ internal class LoggedInChatWebSocket(
                                 // We've been trying to send this message for a while now, give up
                                 logError<LoggedInChatWebSocket> { "Timeout while trying to send message: $message" }
 
-                                _commandFlow.emit(
+                                _eventFlow.emit(
                                     ChatEvent.Message.Highlighted(
                                         timestamp = clock.now(),
                                         metadata = ChatEvent.Message.Highlighted.Metadata(
@@ -217,11 +217,11 @@ internal class LoggedInChatWebSocket(
 
         when (val command = parser.parse(received)) {
             is IrcEvent.Message.Notice -> {
-                _commandFlow.emit(mapper.mapMessage(command))
+                _eventFlow.emit(mapper.mapMessage(command))
             }
 
             is IrcEvent.Command.UserState -> {
-                _commandFlow.emit(
+                _eventFlow.emit(
                     ChatEvent.UserState(
                         emoteSets = command.emoteSets.toImmutableList(),
                     ),

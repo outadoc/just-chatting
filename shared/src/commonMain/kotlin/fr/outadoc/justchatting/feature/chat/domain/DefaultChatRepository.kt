@@ -37,7 +37,7 @@ internal class DefaultChatRepository(
         .distinctUntilChanged()
 
     override fun getChatEventFlow(channelId: String, channelLogin: String): Flow<ChatEvent> {
-        return getOrCreateEventHandler(channelId, channelLogin).commandFlow
+        return getOrCreateEventHandler(channelId, channelLogin).eventFlow
     }
 
     override fun getConnectionStatusFlow(

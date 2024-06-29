@@ -69,12 +69,12 @@ internal class LiveChatWebSocket private constructor(
         private const val ENDPOINT = "wss://irc-ws.chat.twitch.tv"
     }
 
-    private val _commandFlow = MutableSharedFlow<ChatEvent>(
+    private val _eventFlow = MutableSharedFlow<ChatEvent>(
         replay = Defaults.EventBufferSize,
         onBufferOverflow = BufferOverflow.DROP_OLDEST,
     )
 
-    override val commandFlow: Flow<ChatEvent> = _commandFlow
+    override val eventFlow: Flow<ChatEvent> = _eventFlow
 
     private val _connectionStatus: MutableStateFlow<ConnectionStatus> =
         MutableStateFlow(
@@ -142,7 +142,7 @@ internal class LiveChatWebSocket private constructor(
             send("CAP REQ :twitch.tv/tags twitch.tv/commands")
             send("JOIN #$channelLogin")
 
-            _commandFlow.emit(
+            _eventFlow.emit(
                 ChatEvent.Message.Highlighted(
                     timestamp = clock.now(),
                     metadata = ChatEvent.Message.Highlighted.Metadata(
@@ -181,11 +181,11 @@ internal class LiveChatWebSocket private constructor(
                 // Remember time of last message so that we can restore lost messages after a connection loss
                 lastMessageReceivedAt = command.timestamp
 
-                _commandFlow.emit(mapper.mapMessage(command))
+                _eventFlow.emit(mapper.mapMessage(command))
             }
 
             is IrcEvent.Command.RoomStateDelta -> {
-                _commandFlow.emit(
+                _eventFlow.emit(
                     ChatEvent.RoomStateDelta(
                         isEmoteOnly = command.isEmoteOnly,
                         minFollowDuration = command.minFollowDuration,
@@ -197,7 +197,7 @@ internal class LiveChatWebSocket private constructor(
             }
 
             is IrcEvent.Command.ClearChat -> {
-                _commandFlow.emit(
+                _eventFlow.emit(
                     ChatEvent.RemoveContent(
                         upUntil = command.timestamp,
                         matchingUserId = command.targetUserId,
@@ -205,12 +205,12 @@ internal class LiveChatWebSocket private constructor(
                 )
 
                 mapper.mapOptional(command)?.let { message ->
-                    _commandFlow.emit(message)
+                    _eventFlow.emit(message)
                 }
             }
 
             is IrcEvent.Command.ClearMessage -> {
-                _commandFlow.emit(
+                _eventFlow.emit(
                     ChatEvent.RemoveContent(
                         upUntil = command.timestamp,
                         matchingMessageId = command.targetMessageId,
@@ -218,7 +218,7 @@ internal class LiveChatWebSocket private constructor(
                 )
 
                 mapper.mapOptional(command)?.let { message ->
-                    _commandFlow.emit(message)
+                    _eventFlow.emit(message)
                 }
             }
 
@@ -265,7 +265,7 @@ internal class LiveChatWebSocket private constructor(
             }
             .fold(
                 onSuccess = { events ->
-                    _commandFlow.emitAll(events)
+                    _eventFlow.emitAll(events)
                 },
                 onFailure = { e ->
                     logError<LiveChatWebSocket>(e) { "Failed to load recent messages for channel $channelLogin" }

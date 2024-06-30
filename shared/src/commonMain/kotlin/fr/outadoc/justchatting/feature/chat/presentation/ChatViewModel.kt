@@ -71,6 +71,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.runningFold
 import kotlinx.coroutines.flow.stateIn
@@ -271,7 +272,7 @@ internal class ChatViewModel(
                     .flatMapConcat { event ->
                         chatEventViewMapper.map(event).asFlow()
                     }
-                    .map { event ->
+                    .mapNotNull { event ->
                         when (event) {
                             is ChatListItem.Message -> {
                                 Action.AddMessages(listOf(event))
@@ -327,7 +328,6 @@ internal class ChatViewModel(
                             }
                         }
                     }
-                    .filterNotNull()
                     .onEach { action -> actions.emit(action) }
                     .launchIn(defaultScope)
 

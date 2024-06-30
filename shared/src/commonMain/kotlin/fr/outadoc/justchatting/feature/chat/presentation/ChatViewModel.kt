@@ -576,7 +576,7 @@ internal class ChatViewModel(
         return withContext(DispatchersProvider.io) {
             val globalBadges: Deferred<PersistentList<TwitchBadge>?> =
                 async {
-                    twitchRepository.loadGlobalBadges()
+                    twitchRepository.getGlobalBadges()
                         .fold(
                             onSuccess = { badges -> badges.toPersistentList() },
                             onFailure = { exception ->
@@ -588,7 +588,7 @@ internal class ChatViewModel(
 
             val channelBadges: Deferred<PersistentList<TwitchBadge>?> =
                 async {
-                    twitchRepository.loadChannelBadges(channelId)
+                    twitchRepository.getChannelBadges(channelId)
                         .fold(
                             onSuccess = { badges -> badges.toPersistentList() },
                             onFailure = { exception ->

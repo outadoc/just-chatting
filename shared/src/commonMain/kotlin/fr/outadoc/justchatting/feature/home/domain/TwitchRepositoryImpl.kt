@@ -133,7 +133,7 @@ internal class TwitchRepositoryImpl(
         }
     }
 
-    override suspend fun loadChannelSchedule(channelId: String): Result<ChannelSchedule> =
+    override suspend fun getChannelSchedule(channelId: String): Result<ChannelSchedule> =
         withContext(DispatchersProvider.io) {
             twitchApi.getChannelSchedule(
                 channelId = channelId,
@@ -142,12 +142,12 @@ internal class TwitchRepositoryImpl(
             )
         }
 
-    override suspend fun loadGlobalBadges(): Result<List<TwitchBadge>> =
+    override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> =
         withContext(DispatchersProvider.io) {
             twitchApi.getGlobalBadges()
         }
 
-    override suspend fun loadChannelBadges(channelId: String): Result<List<TwitchBadge>> =
+    override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> =
         withContext(DispatchersProvider.io) {
             twitchApi.getChannelBadges(channelId)
         }

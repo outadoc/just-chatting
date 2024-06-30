@@ -35,9 +35,9 @@ internal interface TwitchRepository {
 
     suspend fun insertRecentChannel(channel: User, usedAt: Instant)
 
-    suspend fun loadChannelSchedule(channelId: String): Result<ChannelSchedule>
+    suspend fun getChannelSchedule(channelId: String): Result<ChannelSchedule>
 
-    suspend fun loadGlobalBadges(): Result<List<TwitchBadge>>
+    suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 
-    suspend fun loadChannelBadges(channelId: String): Result<List<TwitchBadge>>
+    suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>>
 }

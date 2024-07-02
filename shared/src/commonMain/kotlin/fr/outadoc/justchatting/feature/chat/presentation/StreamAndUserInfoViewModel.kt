@@ -7,6 +7,7 @@ import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 internal class StreamAndUserInfoViewModel(
@@ -40,37 +41,43 @@ internal class StreamAndUserInfoViewModel(
 
             twitchRepository
                 .getUserByLogin(login)
-                .fold(
-                    onSuccess = { user ->
-                        _state.emit(
-                            State.Loaded(
-                                userLogin = login,
-                                user = user,
-                                stream = null,
-                            ),
-                        )
+                .map { result ->
+                    result.fold(
+                        onSuccess = { user ->
+                            _state.emit(
+                                State.Loaded(
+                                    userLogin = login,
+                                    user = user,
+                                    stream = null,
+                                ),
+                            )
 
-                        twitchRepository.getStream(userId = user.id)
-                            .onSuccess { stream ->
-                                _state.emit(
-                                    State.Loaded(
-                                        userLogin = login,
-                                        user = user,
-                                        stream = stream,
-                                    ),
-                                )
-                            }
-                            .onFailure { exception ->
-                                logError<StreamAndUserInfoViewModel>(exception) { "Error while loading stream for $login" }
-                            }
-                    },
-                    onFailure = { exception ->
-                        logError<StreamAndUserInfoViewModel>(exception) { "Error while loading user info for $login" }
-                        _state.emit(
-                            State.Error(exception),
-                        )
-                    },
-                )
+                            twitchRepository
+                                .getStreamByUserId(userId = user.id)
+                                .map { result ->
+                                    result
+                                        .onSuccess { stream ->
+                                            _state.emit(
+                                                State.Loaded(
+                                                    userLogin = login,
+                                                    user = user,
+                                                    stream = stream,
+                                                ),
+                                            )
+                                        }
+                                        .onFailure { exception ->
+                                            logError<StreamAndUserInfoViewModel>(exception) { "Error while loading stream for $login" }
+                                        }
+                                }
+                        },
+                        onFailure = { exception ->
+                            logError<StreamAndUserInfoViewModel>(exception) { "Error while loading user info for $login" }
+                            _state.emit(
+                                State.Error(exception),
+                            )
+                        },
+                    )
+                }
         }
     }
 }

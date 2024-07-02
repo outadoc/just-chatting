@@ -121,13 +121,21 @@ internal class ChatViewModel(
         data class LoadEmotes(val channelId: String) : Action()
         data class LoadChat(val channelLogin: String) : Action()
         data class UpdateChatterPronouns(val pronouns: Map<Chatter, Pronoun?>) : Action()
-        data object LoadStreamDetails : Action()
+        data class UpdateStreamDetails(val stream: Stream) : Action()
         data class ShowUserInfo(val userLogin: String?) : Action()
+        data class UpdateUser(val user: User) : Action()
     }
 
     @Immutable
     sealed class State {
         data object Initial : State()
+
+        data class Loading(
+            val userLogin: String,
+            val appUser: AppUser.LoggedIn,
+            val maxAdapterCount: Int,
+        ) : State()
+
         data class Failed(val throwable: Throwable) : State()
 
         data class Chatting(
@@ -251,16 +259,65 @@ internal class ChatViewModel(
 
     init {
         state.filterIsInstance<State.Chatting>()
-            .map { state -> state.user }
+            .mapNotNull { state -> state.user }
             .distinctUntilChanged()
             .onEach { user ->
                 actions.emit(Action.LoadEmotes(user.id))
-                actions.emit(Action.LoadStreamDetails)
+            }
+            .launchIn(defaultScope)
+
+        state
+            .mapNotNull { state ->
+                when (state) {
+                    is State.Chatting -> state.user.login
+                    is State.Loading -> state.userLogin
+                    else -> null
+                }
+            }
+            .distinctUntilChanged()
+            .onEach { userLogin ->
+                twitchRepository
+                    .getUserByLogin(userLogin)
+                    .map { result ->
+                        result
+                            .onSuccess { user ->
+                                actions.emit(Action.UpdateUser(user))
+
+                                twitchRepository.insertRecentChannel(
+                                    channel = user,
+                                    usedAt = clock.now(),
+                                )
+
+                                createShortcutForChannel(user)
+                            }
+                            .onFailure { exception ->
+                                logError<ChatViewModel>(exception) { "Failed to load user $userLogin" }
+                            }
+                    }
             }
             .launchIn(defaultScope)
 
         state.filterIsInstance<State.Chatting>()
-            .map { state -> state.user }
+            .mapNotNull { state -> state.user.id }
+            .distinctUntilChanged()
+            .onEach { userId ->
+                twitchRepository
+                    .getStreamByUserId(userId = userId)
+                    .map { result ->
+                        result
+                            .onSuccess { stream ->
+                                actions.emit(Action.UpdateStreamDetails(stream))
+                            }
+                            .onFailure { exception ->
+                                logError<ChatViewModel>(exception) { "Failed to load stream details for user id = $userId" }
+                                state
+                            }
+                    }
+            }
+            .launchIn(defaultScope)
+
+        state.filterIsInstance<State.Chatting>()
+            .mapNotNull { state -> state.user }
             .distinctUntilChanged()
             .onEach { user ->
                 chatRepository
@@ -509,10 +566,11 @@ internal class ChatViewModel(
             is Action.AddRichEmbed -> reduce(state)
             is Action.LoadChat -> reduce(state)
             is Action.LoadEmotes -> reduce(state)
-            is Action.LoadStreamDetails -> reduce(state)
+            is Action.UpdateStreamDetails -> reduce(state)
             is Action.UpdateRaidAnnouncement -> reduce(state)
             is Action.UpdatePinnedMessage -> reduce(state)
             is Action.ShowUserInfo -> reduce(state)
+            is Action.UpdateUser -> reduce(state)
         }
     }
 
@@ -521,52 +579,16 @@ internal class ChatViewModel(
 
         val prefs: AppPreferences = preferencesRepository.currentPreferences.first()
 
-        return twitchRepository
-            .getUserByLogin(channelLogin)
-            .onSuccess { channelUser ->
-                twitchRepository.insertRecentChannel(
-                    channel = channelUser,
-                    usedAt = clock.now(),
-                )
-
-                createShortcutForChannel(channelUser)
-            }
-            .fold(
-                onSuccess = { channelUser ->
-                    State.Chatting(
-                        user = channelUser,
-                        appUser = prefs.appUser as AppUser.LoggedIn,
-                        chatters = persistentSetOf(
-                            Chatter(
-                                id = channelUser.id,
-                                login = channelUser.login,
-                                displayName = channelUser.displayName,
-                            ),
-                        ),
-                        maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
-                    )
-                },
-                onFailure = { exception ->
-                    logError<ChatViewModel>(exception) { "Failed to load user $channelLogin" }
-                    State.Failed(exception)
-                },
-            )
+        return State.Loading(
+            userLogin = channelLogin,
+            appUser = prefs.appUser as AppUser.LoggedIn,
+            maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
+        )
     }
 
-    @Suppress("UnusedReceiverParameter")
-    private suspend fun Action.LoadStreamDetails.reduce(state: State): State {
+    private fun Action.UpdateStreamDetails.reduce(state: State): State {
         if (state !is State.Chatting) return state
-        return twitchRepository
-            .getStream(userId = state.user.id)
-            .fold(
-                onSuccess = { stream ->
-                    state.copy(stream = stream)
-                },
-                onFailure = { exception ->
-                    logError<ChatViewModel>(exception) { "Failed to load stream details for ${state.user.login}" }
-                    state
-                },
-            )
+        return state.copy(stream = stream)
     }
 
     private suspend fun Action.LoadEmotes.reduce(state: State): State {
@@ -704,11 +726,12 @@ internal class ChatViewModel(
     private suspend fun Action.ChangeUserState.reduce(state: State): State {
         if (state !is State.Chatting) return state
 
-        val pickableEmotes = loadPickableEmotes(
-            channelId = state.user.id,
-            channelName = state.user.displayName,
-            emoteSets = userState.emoteSets,
-        )
+        val pickableEmotes: PersistentList<EmoteSetItem> =
+            loadPickableEmotes(
+                channelId = state.user.id,
+                channelName = state.user.displayName,
+                emoteSets = userState.emoteSets,
+            )
 
         return state.copy(
             userState = userState,
@@ -830,6 +853,20 @@ internal class ChatViewModel(
         if (state !is State.Chatting) return state
         return state.copy(
             showInfoForUserLogin = userLogin,
+        )
+    }
+
+    private fun Action.UpdateUser.reduce(state: State): State {
+        if (state !is State.Chatting) return state
+        return state.copy(
+            user = user,
+            chatters = persistentSetOf(
+                Chatter(
+                    id = user.id,
+                    login = user.login,
+                    displayName = user.displayName,
+                ),
+            ),
         )
     }
 

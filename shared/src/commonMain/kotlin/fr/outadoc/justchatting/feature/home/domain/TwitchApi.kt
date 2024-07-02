@@ -12,7 +12,9 @@ import kotlinx.coroutines.flow.Flow
 
 internal interface TwitchApi {
 
-    suspend fun getStreams(ids: List<String>): Result<List<Stream>>
+    suspend fun getStreamsByUserId(ids: List<String>): Result<List<Stream>>
+
+    suspend fun getStreamsByUserLogin(logins: List<String>): Result<List<Stream>>
 
     suspend fun getUsersById(ids: List<String>): Result<List<User>>
 

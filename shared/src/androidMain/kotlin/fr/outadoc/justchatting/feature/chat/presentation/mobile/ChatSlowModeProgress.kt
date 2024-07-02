@@ -23,6 +23,7 @@ internal fun ChatSlowModeProgress(
 ) {
     when (state) {
         is ChatViewModel.State.Initial -> {}
+        is ChatViewModel.State.Loading -> {}
         is ChatViewModel.State.Failed -> {}
         is ChatViewModel.State.Chatting -> {
             ChatSlowModeProgress(

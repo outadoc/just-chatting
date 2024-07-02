@@ -16,6 +16,8 @@ import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
@@ -57,34 +59,46 @@ internal class TwitchRepositoryImpl(
             }
         }
 
-    override suspend fun getStream(userId: String): Result<Stream> =
-        withContext(DispatchersProvider.io) {
-            twitchApi.getStreams(ids = listOf(userId))
-                .mapCatching { response ->
-                    response.firstOrNull()
-                        ?: error("Stream for userId $userId not found")
-                }
-        }
+    override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> =
+        flow {
+            emit(
+                twitchApi
+                    .getStreamsByUserId(ids = listOf(userId))
+                    .mapCatching { response ->
+                        response.firstOrNull()
+                            ?: error("Stream for userId $userId not found")
+                    }
+            )
+        }.flowOn(DispatchersProvider.io)
 
-    override suspend fun getUsersById(ids: List<String>): Result<List<User>> =
-        withContext(DispatchersProvider.io) {
-            twitchApi.getUsersById(ids = ids)
-        }
+    override suspend fun getStreamByUserLogin(userLogin: String): Flow<Result<Stream>> =
+        flow {
+            emit(
+                twitchApi
+                    .getStreamsByUserLogin(logins = listOf(userLogin))
+                    .mapCatching { response ->
+                        response.firstOrNull()
+                            ?: error("Stream for userLogin $userLogin not found")
+                    }
+            )
+        }.flowOn(DispatchersProvider.io)
 
-    override suspend fun getUsersByLogin(logins: List<String>): Result<List<User>> =
-        withContext(DispatchersProvider.io) {
-            twitchApi.getUsersByLogin(logins = logins)
-        }
+    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
+        flow { emit(twitchApi.getUsersById(ids = ids)) }
+            .flowOn(DispatchersProvider.io)
 
-    override suspend fun getUserByLogin(login: String): Result<User> =
+    override suspend fun getUsersByLogin(logins: List<String>): Flow<Result<List<User>>> =
+        flow { emit(twitchApi.getUsersByLogin(logins = logins)) }
+            .flowOn(DispatchersProvider.io)
+
+    override suspend fun getUserByLogin(login: String): Flow<Result<User>> =
         withContext(DispatchersProvider.io) {
             getUsersByLogin(logins = listOf(login))
-                .mapCatching { users ->
-                    if (users.isEmpty()) {
-                        error("No user found for login: $login")
+                .map { result ->
+                    result.mapCatching { users ->
+                        users.firstOrNull()
+                            ?: error("No user found for login: $login")
                     }
-
-                    users.first()
                 }
         }
 
@@ -103,7 +117,8 @@ internal class TwitchRepositoryImpl(
             recentChannelsApi.getAll()
                 .map { channels ->
                     val ids = channels.map { channel -> channel.id }
-                    twitchApi.getUsersById(ids = ids)
+                    twitchApi
+                        .getUsersById(ids = ids)
                         .getOrNull()
                         ?.map { user ->
                             ChannelSearchResult(

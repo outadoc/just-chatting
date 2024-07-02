@@ -26,9 +26,32 @@ internal class TwitchApiImpl(
     private val twitchClient: TwitchClient,
 ) : TwitchApi {
 
-    override suspend fun getStreams(ids: List<String>): Result<List<Stream>> {
+    override suspend fun getStreamsByUserId(ids: List<String>): Result<List<Stream>> {
         return twitchClient
-            .getStreams(ids)
+            .getStreamsByUserId(ids)
+            .map { response ->
+                response.data.map { stream ->
+                    Stream(
+                        id = stream.id,
+                        user = User(
+                            id = stream.userId,
+                            login = stream.userLogin,
+                            displayName = stream.userName,
+
+                        ),
+                        gameName = stream.gameName,
+                        title = stream.title,
+                        viewerCount = stream.viewerCount,
+                        startedAt = stream.startedAt,
+                        tags = stream.tags.toPersistentList(),
+                    )
+                }
+            }
+    }
+
+    override suspend fun getStreamsByUserLogin(logins: List<String>): Result<List<Stream>> {
+        return twitchClient
+            .getStreamsByUserLogin(logins)
             .map { response ->
                 response.data.map { stream ->
                     Stream(

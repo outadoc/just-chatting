@@ -24,13 +24,25 @@ internal class TwitchClient(httpClient: HttpClient) {
         }
     }
 
-    suspend fun getStreams(ids: List<String>): Result<StreamsResponse> =
+    suspend fun getStreamsByUserId(ids: List<String>): Result<StreamsResponse> =
         runCatching {
             client.get {
                 url {
                     path("streams")
                     ids.forEach { id ->
                         parameter("user_id", id)
+                    }
+                }
+            }.body()
+        }
+
+    suspend fun getStreamsByUserLogin(logins: List<String>): Result<StreamsResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("streams")
+                    logins.forEach { id ->
+                        parameter("user_login", id)
                     }
                 }
             }.body()

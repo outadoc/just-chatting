@@ -24,6 +24,7 @@ internal fun EmotePicker(
 ) {
     when (state) {
         is ChatViewModel.State.Failed -> {}
+        is ChatViewModel.State.Loading -> {}
         is ChatViewModel.State.Initial -> {
             Column(
                 modifier = modifier,

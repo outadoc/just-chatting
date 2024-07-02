@@ -19,13 +19,15 @@ internal interface TwitchRepository {
 
     suspend fun getFollowedChannels(): Flow<PagingData<ChannelFollow>>
 
-    suspend fun getStream(userId: String): Result<Stream>
+    suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>>
 
-    suspend fun getUsersById(ids: List<String>): Result<List<User>>
+    suspend fun getStreamByUserLogin(userLogin: String): Flow<Result<Stream>>
 
-    suspend fun getUserByLogin(login: String): Result<User>
+    suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>>
 
-    suspend fun getUsersByLogin(logins: List<String>): Result<List<User>>
+    suspend fun getUserByLogin(login: String): Flow<Result<User>>
+
+    suspend fun getUsersByLogin(logins: List<String>): Flow<Result<List<User>>>
 
     suspend fun getCheerEmotes(userId: String): Result<List<Emote>>
 

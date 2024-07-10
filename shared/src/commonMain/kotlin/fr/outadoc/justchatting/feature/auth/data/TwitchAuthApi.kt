@@ -19,7 +19,7 @@ internal class TwitchAuthApi(httpClient: HttpClient) : AuthApi {
 
     private val client = httpClient.config {
         defaultRequest {
-            url(ApiEndpoints.TWITCH_AUTH)
+            url(ApiEndpoints.TWITCH_AUTH_BASE)
         }
     }
 
@@ -58,7 +58,7 @@ internal class TwitchAuthApi(httpClient: HttpClient) : AuthApi {
             "user:read:follows",
         )
 
-        return Uri.parse("${ApiEndpoints.TWITCH_AUTH}/authorize")
+        return Uri.parse(ApiEndpoints.TWITCH_AUTH_AUTHORIZE)
             .buildUpon()
             .appendQueryParameter("response_type", "token")
             .appendQueryParameter("client_id", oAuthAppCredentials.clientId)

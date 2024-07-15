@@ -160,6 +160,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
         isCoreLibraryDesugaringEnabled = true
     }
+
+    packaging {
+        resources.excludes += "DebugProbesKt.bin"
+    }
 }
 
 licenseReport {

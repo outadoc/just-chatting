@@ -67,7 +67,7 @@ internal class TwitchRepositoryImpl(
                     .mapCatching { response ->
                         response.firstOrNull()
                             ?: error("Stream for userId $userId not found")
-                    }
+                    },
             )
         }.flowOn(DispatchersProvider.io)
 
@@ -79,7 +79,7 @@ internal class TwitchRepositoryImpl(
                     .mapCatching { response ->
                         response.firstOrNull()
                             ?: error("Stream for userLogin $userLogin not found")
-                    }
+                    },
             )
         }.flowOn(DispatchersProvider.io)
 

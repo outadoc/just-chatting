@@ -16,7 +16,6 @@ import coil.transform.CircleCropTransformation
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject

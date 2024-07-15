@@ -5,11 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import kotlinx.collections.immutable.persistentListOf
@@ -17,20 +21,29 @@ import kotlinx.collections.immutable.persistentListOf
 @Composable
 internal fun StreamAndUserInfo(
     modifier: Modifier = Modifier,
-    user: User,
+    user: User?,
     stream: Stream?,
 ) {
     Column(
         modifier = modifier,
-        verticalArrangement = Arrangement.spacedBy(4.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        UserInfo(user = user)
+        if (user != null && stream == null) {
+            Text(
+                modifier = Modifier.fillMaxWidth(),
+                text = stringResource(MR.strings.info_loadError),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.error,
+            )
+        }
+
+        if (user != null) {
+            UserInfo(user = user)
+        }
 
         if (stream != null) {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 8.dp),
+                modifier = Modifier.fillMaxWidth(),
             ) {
                 StreamInfo(
                     modifier = Modifier.padding(16.dp),
@@ -82,6 +95,17 @@ internal fun StreamInfoPreviewOffline() {
                 description = "Lorem ipsum dolor sit amet",
                 createdAt = "2022-01-01T00:00:00.00Z",
             ),
+            stream = null,
+        )
+    }
+}
+
+@ThemePreviews
+@Composable
+internal fun StreamInfoPreviewError() {
+    AppTheme {
+        StreamAndUserInfo(
+            user = null,
             stream = null,
         )
     }

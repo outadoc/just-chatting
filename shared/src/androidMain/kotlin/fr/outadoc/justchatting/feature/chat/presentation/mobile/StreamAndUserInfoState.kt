@@ -4,14 +4,10 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.StreamAndUserInfoViewModel
-import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 
 @Composable
@@ -35,19 +31,6 @@ internal fun StreamAndUserInfoState(
                 }
             }
 
-            is StreamAndUserInfoViewModel.State.Error -> {
-                Column(
-                    modifier = modifier,
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Text(
-                        text = stringResource(MR.strings.info_loadError),
-                        style = MaterialTheme.typography.titleMedium,
-                    )
-                }
-            }
-
             is StreamAndUserInfoViewModel.State.Loaded -> {
                 StreamAndUserInfo(
                     modifier = modifier,
@@ -57,14 +40,6 @@ internal fun StreamAndUserInfoState(
             }
         }
     }
-}
-
-@ThemePreviews
-@Composable
-private fun StreamAndUserInfoError() {
-    StreamAndUserInfoState(
-        state = StreamAndUserInfoViewModel.State.Error(null),
-    )
 }
 
 @ThemePreviews

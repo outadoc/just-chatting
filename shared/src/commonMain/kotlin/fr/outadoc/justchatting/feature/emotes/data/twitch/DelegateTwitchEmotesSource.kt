@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.first
 
 internal class DelegateTwitchEmotesSource(
     private val twitchRepository: TwitchRepository,
@@ -54,6 +55,7 @@ internal class DelegateTwitchEmotesSource(
                                     ?.toString()
                             },
                     )
+                    .first()
                     .fold(
                         onSuccess = { users -> users },
                         onFailure = { exception ->

@@ -16,6 +16,7 @@ import coil.transform.CircleCropTransformation
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
 import org.koin.android.ext.android.inject
 import java.io.FileNotFoundException
@@ -62,7 +63,8 @@ public class UserProfileImageContentProvider : ContentProvider() {
                 runBlocking(DispatchersProvider.io) {
                     val profileImageUrl: String =
                         apiRepository.getUsersByLogin(listOf(userLogin))
-                            .getOrNull()
+                            .firstOrNull()
+                            ?.getOrNull()
                             ?.firstOrNull()
                             ?.profileImageUrl
                             ?: throw FileNotFoundException("Could not retrieve user info from Twitch API.")

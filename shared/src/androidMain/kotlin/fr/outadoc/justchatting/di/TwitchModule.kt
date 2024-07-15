@@ -14,6 +14,8 @@ import fr.outadoc.justchatting.feature.home.data.TwitchClient
 import fr.outadoc.justchatting.feature.home.domain.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepositoryImpl
+import fr.outadoc.justchatting.feature.home.domain.UsersMemoryCache
+import fr.outadoc.justchatting.feature.home.domain.UsersMemoryCacheImpl
 import fr.outadoc.justchatting.utils.core.DefaultJson
 import kotlinx.serialization.json.Json
 import org.koin.core.module.Module
@@ -30,7 +32,8 @@ public val twitchModule: Module = module {
         )
     }
 
-    single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
+    single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get(), get()) }
+    single<UsersMemoryCache> { UsersMemoryCacheImpl() }
     single<TwitchApi> { TwitchApiImpl(get()) }
     single { TwitchClient(get(named("twitch"))) }
 

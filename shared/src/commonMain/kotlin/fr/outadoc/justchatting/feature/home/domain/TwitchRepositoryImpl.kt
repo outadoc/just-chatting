@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.home.domain
 
 import androidx.paging.PagingData
+import androidx.paging.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
@@ -24,6 +25,7 @@ import kotlinx.datetime.Instant
 
 internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
+    private val usersMemoryCache: UsersMemoryCache,
     private val preferencesRepository: PreferenceRepository,
     private val recentChannelsApi: RecentChannelsApi,
 ) : TwitchRepository {
@@ -50,7 +52,14 @@ internal class TwitchRepositoryImpl(
         withContext(DispatchersProvider.io) {
             when (val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser) {
                 is AppUser.LoggedIn -> {
-                    twitchApi.getFollowedChannels(userId = appUser.userId)
+                    twitchApi
+                        .getFollowedChannels(userId = appUser.userId)
+                        .map { pagingData ->
+                            pagingData.map { follow ->
+                                usersMemoryCache.put(follow.user)
+                                follow
+                            }
+                        }
                 }
 
                 else -> {
@@ -84,11 +93,39 @@ internal class TwitchRepositoryImpl(
         }.flowOn(DispatchersProvider.io)
 
     override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
-        flow { emit(twitchApi.getUsersById(ids = ids)) }
+        flow {
+            emit(
+                Result.success(
+                    usersMemoryCache.getUsersById(ids = ids)
+                )
+            )
+
+            emit(
+                twitchApi
+                    .getUsersById(ids = ids)
+                    .onSuccess { users ->
+                        usersMemoryCache.put(users)
+                    }
+            )
+        }
             .flowOn(DispatchersProvider.io)
 
     override suspend fun getUsersByLogin(logins: List<String>): Flow<Result<List<User>>> =
-        flow { emit(twitchApi.getUsersByLogin(logins = logins)) }
+        flow {
+            emit(
+                Result.success(
+                    usersMemoryCache.getUsersByLogin(logins = logins)
+                )
+            )
+
+            emit(
+                twitchApi
+                    .getUsersByLogin(logins = logins)
+                    .onSuccess { users ->
+                        usersMemoryCache.put(users)
+                    }
+            )
+        }
             .flowOn(DispatchersProvider.io)
 
     override suspend fun getUserByLogin(login: String): Flow<Result<User>> =

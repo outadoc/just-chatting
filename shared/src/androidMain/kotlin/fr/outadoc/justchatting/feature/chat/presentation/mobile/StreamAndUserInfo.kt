@@ -28,15 +28,6 @@ internal fun StreamAndUserInfo(
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        if (user != null && stream == null) {
-            Text(
-                modifier = Modifier.fillMaxWidth(),
-                text = stringResource(MR.strings.info_loadError),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.error,
-            )
-        }
-
         if (user != null) {
             UserInfo(user = user)
         }
@@ -50,6 +41,14 @@ internal fun StreamAndUserInfo(
                     stream = stream,
                 )
             }
+        }
+
+        if (user == null && stream == null) {
+            Text(
+                text = stringResource(MR.strings.info_loadError),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.error,
+            )
         }
     }
 }

@@ -856,7 +856,8 @@ internal class ChatViewModel(
     private fun Action.UpdateUser.reduce(state: State): State {
         return when (state) {
             is State.Initial,
-            is State.Failed -> {
+            is State.Failed,
+            -> {
                 state
             }
 
@@ -871,7 +872,7 @@ internal class ChatViewModel(
                             login = user.login,
                             displayName = user.displayName,
                         ),
-                    )
+                    ),
                 )
             }
 
@@ -884,7 +885,7 @@ internal class ChatViewModel(
                             login = user.login,
                             displayName = user.displayName,
                         ),
-                    )
+                    ),
                 )
             }
         }

@@ -275,24 +275,23 @@ internal class ChatViewModel(
                 }
             }
             .distinctUntilChanged()
-            .onEach { userLogin ->
-                twitchRepository
-                    .getUserByLogin(userLogin)
-                    .map { result ->
-                        result
-                            .onSuccess { user ->
-                                actions.emit(Action.UpdateUser(user))
+            .flatMapLatest { userLogin ->
+                twitchRepository.getUserByLogin(userLogin)
+            }
+            .onEach { result ->
+                result
+                    .onSuccess { user ->
+                        actions.emit(Action.UpdateUser(user))
 
-                                twitchRepository.insertRecentChannel(
-                                    channel = user,
-                                    usedAt = clock.now(),
-                                )
+                        twitchRepository.insertRecentChannel(
+                            channel = user,
+                            usedAt = clock.now(),
+                        )
 
-                                createShortcutForChannel(user)
-                            }
-                            .onFailure { exception ->
-                                logError<ChatViewModel>(exception) { "Failed to load user $userLogin" }
-                            }
+                        createShortcutForChannel(user)
+                    }
+                    .onFailure { exception ->
+                        logError<ChatViewModel>(exception) { "Failed to load user" }
                     }
             }
             .launchIn(defaultScope)
@@ -300,18 +299,16 @@ internal class ChatViewModel(
         state.filterIsInstance<State.Chatting>()
             .mapNotNull { state -> state.user.id }
             .distinctUntilChanged()
-            .onEach { userId ->
-                twitchRepository
-                    .getStreamByUserId(userId = userId)
-                    .map { result ->
-                        result
-                            .onSuccess { stream ->
-                                actions.emit(Action.UpdateStreamDetails(stream))
-                            }
-                            .onFailure { exception ->
-                                logError<ChatViewModel>(exception) { "Failed to load stream details for user id = $userId" }
-                                state
-                            }
+            .flatMapLatest { userId ->
+                twitchRepository.getStreamByUserId(userId = userId)
+            }
+            .onEach { result ->
+                result
+                    .onSuccess { stream ->
+                        actions.emit(Action.UpdateStreamDetails(stream))
+                    }
+                    .onFailure { exception ->
+                        logError<ChatViewModel>(exception) { "Failed to load stream details for user" }
                     }
             }
             .launchIn(defaultScope)

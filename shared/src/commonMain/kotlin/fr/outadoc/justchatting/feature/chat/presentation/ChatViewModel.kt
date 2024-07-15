@@ -854,17 +854,40 @@ internal class ChatViewModel(
     }
 
     private fun Action.UpdateUser.reduce(state: State): State {
-        if (state !is State.Chatting) return state
-        return state.copy(
-            user = user,
-            chatters = persistentSetOf(
-                Chatter(
-                    id = user.id,
-                    login = user.login,
-                    displayName = user.displayName,
-                ),
-            ),
-        )
+        return when (state) {
+            is State.Initial,
+            is State.Failed -> {
+                state
+            }
+
+            is State.Loading -> {
+                State.Chatting(
+                    user = user,
+                    appUser = state.appUser,
+                    maxAdapterCount = state.maxAdapterCount,
+                    chatters = persistentSetOf(
+                        Chatter(
+                            id = user.id,
+                            login = user.login,
+                            displayName = user.displayName,
+                        ),
+                    )
+                )
+            }
+
+            is State.Chatting -> {
+                state.copy(
+                    user = user,
+                    chatters = state.chatters.add(
+                        Chatter(
+                            id = user.id,
+                            login = user.login,
+                            displayName = user.displayName,
+                        ),
+                    )
+                )
+            }
+        }
     }
 
     private fun InputAction.reduce(state: InputState): InputState {

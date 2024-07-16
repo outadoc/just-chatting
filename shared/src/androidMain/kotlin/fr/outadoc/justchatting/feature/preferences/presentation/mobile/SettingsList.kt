@@ -9,10 +9,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Brush
+import androidx.compose.material.icons.filled.Extension
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.FormatPaint
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -145,7 +146,7 @@ internal fun SettingsList(
                 modifier = Modifier.clickable { onOpenThirdPartiesSection() },
                 leadingContent = {
                     Icon(
-                        imageVector = Icons.Default.FormatPaint,
+                        imageVector = Icons.Default.Extension,
                         contentDescription = null,
                     )
                 },
@@ -183,7 +184,7 @@ internal fun SettingsList(
                 modifier = Modifier.clickable { onOpenAppearanceSection() },
                 leadingContent = {
                     Icon(
-                        imageVector = Icons.Default.Brush,
+                        imageVector = Icons.Default.Palette,
                         contentDescription = null,
                     )
                 },

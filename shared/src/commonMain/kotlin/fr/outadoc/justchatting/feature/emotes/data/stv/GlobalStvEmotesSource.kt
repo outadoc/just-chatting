@@ -19,7 +19,8 @@ internal class GlobalStvEmotesSource(
 
     override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
         withContext(DispatchersProvider.io) {
-            if (!preferencesRepository.currentPreferences.first().enableStvEmotes) {
+            val prefs = preferencesRepository.currentPreferences.first()
+            if (!prefs.enableStvEmotes) {
                 return@withContext Result.success(emptyList())
             }
 

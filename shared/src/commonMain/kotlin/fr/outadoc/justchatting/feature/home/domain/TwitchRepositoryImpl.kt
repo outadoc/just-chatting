@@ -41,10 +41,11 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getFollowedStreams(): Flow<PagingData<Stream>> =
         withContext(DispatchersProvider.io) {
-            when (val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser) {
+            val prefs = preferencesRepository.currentPreferences.first()
+            when (prefs.appUser) {
                 is AppUser.LoggedIn -> {
                     twitchApi
-                        .getFollowedStreams(userId = appUser.userId)
+                        .getFollowedStreams(userId = prefs.appUser.userId)
                         .map { pagingData ->
                             pagingData.map { stream ->
                                 usersMemoryCache.put(stream.user)
@@ -61,10 +62,11 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getFollowedChannels(): Flow<PagingData<ChannelFollow>> =
         withContext(DispatchersProvider.io) {
-            when (val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser) {
+            val prefs = preferencesRepository.currentPreferences.first()
+            when (prefs.appUser) {
                 is AppUser.LoggedIn -> {
                     twitchApi
-                        .getFollowedChannels(userId = appUser.userId)
+                        .getFollowedChannels(userId = prefs.appUser.userId)
                         .map { pagingData ->
                             pagingData.map { follow ->
                                 usersMemoryCache.put(follow.user)

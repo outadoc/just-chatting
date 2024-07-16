@@ -574,7 +574,7 @@ internal class ChatViewModel(
     private suspend fun Action.LoadChat.reduce(state: State): State {
         if (state is State.Chatting && state.user.login == channelLogin) return state
 
-        val prefs: AppPreferences = preferencesRepository.currentPreferences.first()
+        val prefs = preferencesRepository.currentPreferences.first()
 
         return State.Loading(
             userLogin = channelLogin,

@@ -19,7 +19,8 @@ internal class GlobalBttvEmotesSource(
 
     override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
         withContext(DispatchersProvider.io) {
-            if (!preferencesRepository.currentPreferences.first().enableBttvEmotes) {
+            val prefs = preferencesRepository.currentPreferences.first()
+            if (!prefs.enableBttvEmotes) {
                 return@withContext Result.success(emptyList())
             }
 

@@ -19,7 +19,8 @@ internal class GlobalFfzEmotesSource(
 
     override suspend fun getEmotes(params: Params): Result<List<EmoteSetItem>> =
         withContext(DispatchersProvider.io) {
-            if (!preferencesRepository.currentPreferences.first().enableFfzEmotes) {
+            val prefs = preferencesRepository.currentPreferences.first()
+            if (!prefs.enableFfzEmotes) {
                 return@withContext Result.success(emptyList())
             }
 

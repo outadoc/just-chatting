@@ -6,10 +6,10 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionDependencies
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAbout
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAppearance
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionDependencies
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionNotifications
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionThirdParties
 

@@ -77,7 +77,7 @@ internal fun SettingsList(
             var showLogoutDialog by remember { mutableStateOf(false) }
 
             Card(
-                modifier = Modifier.padding(8.dp),
+                modifier = Modifier.padding(itemInsets),
             ) {
                 AnimatedVisibility(visible = loggedInUser != null) {
                     StreamAndUserInfo(
@@ -135,7 +135,7 @@ internal fun SettingsList(
         }
 
         item {
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(16.dp))
         }
 
         item {

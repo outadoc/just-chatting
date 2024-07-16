@@ -309,6 +309,7 @@
     <string name="settings_thirdparty_pronouns_subtitle">Data provided by pronouns.alejo.io</string>
     <string name="settings_thirdparty_pronouns_set_title">Set your own pronouns</string>
     <string name="settings_thirdparty_pronouns_set_cd">Open pronouns.alejo.io in browser</string>
+    <string name="settings_thirdparty_section_title">Third-party integrations</string>
     <string name="settings_thirdparty_stv_title">Show 7TV Emotes</string>
     <string name="settings_thirdparty_stv_subtitle">Data provided by 7tv.app</string>
     <string name="yes">Yes</string>

@@ -60,7 +60,7 @@ internal fun SettingsContent(
     MainNavigation(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         sizeClass = sizeClass,
-        selectedScreen = Screen.Settings,
+        selectedScreen = Screen.Settings.Root,
         onSelectedTabChange = onNavigate,
         topBar = {
             TopAppBar(
@@ -80,7 +80,8 @@ internal fun SettingsContent(
                 onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
                 onLogoutClick = viewModel::logout,
                 onShareLogsClick = viewModel::onShareLogsClick,
-                onOpenDependencyCredits = { onNavigate(Screen.DependencyCredits) },
+                onOpenDependencyCredits = { onNavigate(Screen.Settings.DependencyCredits) },
+                onOpenThirdPartiesSection = { onNavigate(Screen.Settings.ThirdParties) },
                 insets = insets,
                 versionName = context.applicationVersionName.orEmpty(),
             )

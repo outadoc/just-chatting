@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -9,10 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.ImagesearchRoller
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -58,6 +61,7 @@ internal fun SettingsListPreview() {
             onLogoutClick = {},
             onShareLogsClick = {},
             onOpenDependencyCredits = {},
+            onOpenThirdPartiesSection = {},
             versionName = "1.2.3",
         )
     }
@@ -76,7 +80,8 @@ internal fun SettingsList(
     onLogoutClick: () -> Unit,
     onShareLogsClick: () -> Unit,
     onOpenDependencyCredits: () -> Unit,
-    itemInsets: PaddingValues = PaddingValues(horizontal = 16.dp),
+    onOpenThirdPartiesSection: () -> Unit,
+    itemInsets: PaddingValues = SettingsConstants.ItemInsets,
     insets: PaddingValues = PaddingValues(),
     versionName: String,
 ) {
@@ -152,135 +157,16 @@ internal fun SettingsList(
         }
 
         item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_thirdparty_recent_header))
-            }
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.enableRecentMessages,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(enableRecentMessages = checked))
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_recent_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_recent_subtitle))
-                },
-            )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_thirdparty_pronouns_header))
-            }
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.enablePronouns,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(enablePronouns = checked))
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_pronouns_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_pronouns_subtitle))
-                },
-            )
-        }
-
-        item {
-            val pronounsUrl = stringResource(MR.strings.app_pronouns_url)
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri(pronounsUrl) },
-                onClickLabel = stringResource(MR.strings.settings_thirdparty_pronouns_set_cd),
-                title = { Text(text = stringResource(MR.strings.settings_thirdparty_pronouns_set_title)) },
-                trailingIcon = {
+            ListItem(
+                modifier = Modifier.clickable { onOpenThirdPartiesSection() },
+                leadingContent = {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        imageVector = Icons.Default.ImagesearchRoller,
                         contentDescription = null,
                     )
                 },
-            )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_thirdparty_emotes_header))
-            }
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.enableBttvEmotes,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(enableBttvEmotes = checked))
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_bttv_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_bttv_subtitle))
-                },
-            )
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.enableFfzEmotes,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(enableFfzEmotes = checked))
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_ffz_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_ffz_subtitle))
-                },
-            )
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.enableStvEmotes,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(enableStvEmotes = checked))
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_stv_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_stv_subtitle))
+                headlineContent = {
+                    Text(stringResource(MR.strings.settings_thirdparty_section_title))
                 },
             )
         }

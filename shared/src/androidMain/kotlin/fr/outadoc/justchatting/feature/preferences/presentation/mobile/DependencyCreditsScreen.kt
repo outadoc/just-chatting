@@ -56,7 +56,6 @@ internal fun DependencyCreditsScreen(
         DependencyCreditsContent(
             modifier = modifier,
             insets = insets,
-            itemInsets = PaddingValues(horizontal = 16.dp),
             readDependencies = koinInject(),
         )
     }
@@ -66,7 +65,7 @@ internal fun DependencyCreditsScreen(
 private fun DependencyCreditsContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    itemInsets: PaddingValues = PaddingValues(horizontal = 16.dp),
+    itemInsets: PaddingValues = SettingsConstants.ItemInsets,
     readDependencies: ReadExternalDependenciesList,
 ) {
     val uriHandler = LocalUriHandler.current

@@ -311,6 +311,7 @@
     <string name="settings_thirdparty_pronouns_subtitle">Récupérer et afficher les pronoms préférés des utilisateur·rice·s, grâce aux données de pronouns.alejo.io.</string>
     <string name="settings_thirdparty_pronouns_set_title">Renseignez vos propres pronoms</string>
     <string name="settings_thirdparty_pronouns_set_cd">Ouvrir pronouns.alejo.io dans le navigateur</string>
+    <string name="settings_thirdparty_section_title">Intégrations tierces</string>
     <string name="settings_thirdparty_stv_title">Afficher les émotes 7TV</string>
     <string name="settings_thirdparty_stv_subtitle">Données fournies par 7tv.app</string>
     <string name="yes">Oui</string>

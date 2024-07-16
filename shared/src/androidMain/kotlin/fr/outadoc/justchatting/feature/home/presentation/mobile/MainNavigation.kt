@@ -112,7 +112,7 @@ internal fun CompactNavigation(
                 )
 
                 NavigationBarItem(
-                    selected = selectedScreen == Screen.Settings,
+                    selected = selectedScreen == Screen.Settings.Root,
                     label = { Text(stringResource(MR.strings.settings)) },
                     icon = {
                         Icon(
@@ -120,7 +120,7 @@ internal fun CompactNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Screen.Settings) },
+                    onClick = { onSelectedTabChange(Screen.Settings.Root) },
                 )
             }
         },
@@ -178,9 +178,9 @@ internal fun MediumNavigation(
                 )
 
                 NavigationRailItem(
-                    selected = selectedScreen == Screen.Settings,
+                    selected = selectedScreen == Screen.Settings.Root,
                     label = {
-                        AnimatedVisibility(visible = selectedScreen == Screen.Settings) {
+                        AnimatedVisibility(visible = selectedScreen == Screen.Settings.Root) {
                             Text(stringResource(MR.strings.settings))
                         }
                     },
@@ -190,7 +190,7 @@ internal fun MediumNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Screen.Settings) },
+                    onClick = { onSelectedTabChange(Screen.Settings.Root) },
                 )
             }
         }
@@ -251,7 +251,7 @@ internal fun ExpandedNavigation(
 
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
-                    selected = selectedScreen == Screen.Settings,
+                    selected = selectedScreen == Screen.Settings.Root,
                     label = { Text(stringResource(MR.strings.settings)) },
                     icon = {
                         Icon(
@@ -259,7 +259,7 @@ internal fun ExpandedNavigation(
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Screen.Settings) },
+                    onClick = { onSelectedTabChange(Screen.Settings.Root) },
                 )
             }
         },

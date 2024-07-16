@@ -10,10 +10,17 @@ internal sealed interface Screen {
     data object Followed : Screen
 
     @Serializable
-    data object Settings : Screen
+    sealed interface Settings : Screen {
 
-    @Serializable
-    data object DependencyCredits : Screen
+        @Serializable
+        data object Root : Settings
+
+        @Serializable
+        data object ThirdParties : Settings
+
+        @Serializable
+        data object DependencyCredits : Settings
+    }
 }
 
 internal val DefaultScreen = Screen.Live

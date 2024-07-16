@@ -33,7 +33,7 @@ internal fun SettingsContent(
     onOpenAccessibilityPreferences: () -> Unit,
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
-    val appPreferences by viewModel.appPreferences.collectAsState()
+    val state by viewModel.state.collectAsState()
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
@@ -70,7 +70,8 @@ internal fun SettingsContent(
         },
         content = { insets ->
             SettingsList(
-                appPreferences = appPreferences,
+                appPreferences = state.appPreferences,
+                loggedInUser = state.user,
                 onAppPreferencesChange = { updated ->
                     viewModel.updatePreferences(updated)
                 },

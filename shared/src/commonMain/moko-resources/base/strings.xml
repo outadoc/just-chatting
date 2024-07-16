@@ -279,7 +279,6 @@
     <string name="settings_about_repo_cd">Browse the code</string>
     <string name="settings_about_xtra_title">Based on Xtra for Twitch</string>
     <string name="settings_about_xtra_subtitle">%1$s is based on the Xtra for Twitch project.</string>
-    <string name="settings_account_header">Twitch account</string>
     <string name="settings_account_logout_action">Log out…</string>
     <string name="settings_dependencies_header">Open-source</string>
     <string name="settings_dependencies_title">Open-source dependencies</string>

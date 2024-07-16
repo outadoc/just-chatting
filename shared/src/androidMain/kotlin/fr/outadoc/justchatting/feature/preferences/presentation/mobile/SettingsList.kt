@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
 import android.os.Build
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -29,8 +31,9 @@ import com.google.accompanist.permissions.PermissionState
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import dev.icerock.moko.resources.compose.stringResource
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.StreamAndUserInfo
+import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
-import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
@@ -42,6 +45,12 @@ internal fun SettingsListPreview() {
     AppTheme {
         SettingsList(
             appPreferences = AppPreferences(),
+            loggedInUser = User(
+                id = "123",
+                displayName = "Maghla",
+                login = "maghla",
+                profileImageUrl = null,
+            ),
             onAppPreferencesChange = {},
             onOpenNotificationPreferences = {},
             onOpenBubblePreferences = {},
@@ -60,6 +69,7 @@ internal fun SettingsList(
     modifier: Modifier = Modifier,
     appPreferences: AppPreferences,
     onAppPreferencesChange: (AppPreferences) -> Unit,
+    loggedInUser: User?,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
@@ -72,12 +82,75 @@ internal fun SettingsList(
 ) {
     val uriHandler = LocalUriHandler.current
 
-    val appUser = appPreferences.appUser
-
     LazyColumn(
         modifier = modifier,
         contentPadding = insets + PaddingValues(bottom = 16.dp),
     ) {
+        item {
+            var showLogoutDialog by remember { mutableStateOf(false) }
+
+            Card(
+                modifier = Modifier.padding(8.dp),
+            ) {
+                AnimatedVisibility(visible = loggedInUser != null) {
+                    StreamAndUserInfo(
+                        modifier = Modifier
+                            .padding(itemInsets)
+                            .padding(top = 16.dp),
+                        user = loggedInUser,
+                        stream = null,
+                    )
+                }
+
+                SettingsText(
+                    modifier = Modifier.padding(itemInsets),
+                    onClick = { showLogoutDialog = true },
+                    onClickLabel = null,
+                    title = {
+                        CompositionLocalProvider(
+                            LocalContentColor provides MaterialTheme.colorScheme.error,
+                        ) {
+                            Text(text = stringResource(MR.strings.settings_account_logout_action))
+                        }
+                    },
+                )
+            }
+
+            if (showLogoutDialog) {
+                AlertDialog(
+                    onDismissRequest = { showLogoutDialog = false },
+                    title = { Text(text = stringResource(MR.strings.logout_title)) },
+                    text = {
+                        Text(
+                            text = stringResource(
+                                MR.strings.logout_msg,
+                                loggedInUser?.displayName ?: "",
+                            ),
+                        )
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showLogoutDialog = false }) {
+                            Text(text = stringResource(MR.strings.no))
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                onLogoutClick()
+                                showLogoutDialog = false
+                            },
+                        ) {
+                            Text(text = stringResource(MR.strings.yes))
+                        }
+                    },
+                )
+            }
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+
         item {
             SettingsHeader(
                 modifier = Modifier
@@ -467,68 +540,6 @@ internal fun SettingsList(
                     )
                 },
             )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_account_header))
-            }
-        }
-
-        if (appUser is AppUser.LoggedIn) {
-            item {
-                var showLogoutDialog by remember { mutableStateOf(false) }
-                SettingsText(
-                    modifier = Modifier.padding(itemInsets),
-                    onClick = { showLogoutDialog = true },
-                    onClickLabel = null,
-                    title = {
-                        CompositionLocalProvider(
-                            LocalContentColor provides MaterialTheme.colorScheme.error,
-                        ) {
-                            Text(text = stringResource(MR.strings.settings_account_logout_action))
-                        }
-                    },
-                )
-
-                if (showLogoutDialog) {
-                    AlertDialog(
-                        onDismissRequest = { showLogoutDialog = false },
-                        title = { Text(text = stringResource(MR.strings.logout_title)) },
-                        text = {
-                            Text(
-                                text = stringResource(
-                                    MR.strings.logout_msg,
-                                    appUser.userLogin,
-                                ),
-                            )
-                        },
-                        dismissButton = {
-                            TextButton(onClick = { showLogoutDialog = false }) {
-                                Text(text = stringResource(MR.strings.no))
-                            }
-                        },
-                        confirmButton = {
-                            TextButton(
-                                onClick = {
-                                    onLogoutClick()
-                                    showLogoutDialog = false
-                                },
-                            ) {
-                                Text(text = stringResource(MR.strings.yes))
-                            }
-                        },
-                    )
-                }
-            }
         }
     }
 }

@@ -129,6 +129,17 @@ internal class TwitchRepositoryImpl(
         }
             .flowOn(DispatchersProvider.io)
 
+    override suspend fun getUserById(id: String): Flow<Result<User>> =
+        withContext(DispatchersProvider.io) {
+            getUsersById(ids = listOf(id))
+                .map { result ->
+                    result.mapCatching { users ->
+                        users.firstOrNull()
+                            ?: error("No user found for id: $id")
+                    }
+                }
+        }
+
     override suspend fun getUsersByLogin(logins: List<String>): Flow<Result<List<User>>> =
         flow {
             if (logins.isEmpty()) {

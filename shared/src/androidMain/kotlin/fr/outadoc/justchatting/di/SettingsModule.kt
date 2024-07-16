@@ -12,7 +12,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.module
 
 public val settingsModule: Module = module {
-    viewModel { SettingsViewModel(get(), get(), get()) }
+    viewModel { SettingsViewModel(get(), get(), get(), get()) }
     single<LogRepository> { AndroidLogRepository(get()) }
     single<ReadExternalDependenciesList> { DefaultReadExternalDependenciesList(get()) }
     single<PreferenceRepository> { SharedPrefsPreferenceRepository(get()) }

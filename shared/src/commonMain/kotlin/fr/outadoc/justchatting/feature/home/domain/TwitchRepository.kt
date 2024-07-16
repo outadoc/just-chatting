@@ -23,6 +23,8 @@ internal interface TwitchRepository {
 
     suspend fun getStreamByUserLogin(userLogin: String): Flow<Result<Stream>>
 
+    suspend fun getUserById(id: String): Flow<Result<User>>
+
     suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>>
 
     suspend fun getUserByLogin(login: String): Flow<Result<User>>

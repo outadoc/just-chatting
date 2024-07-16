@@ -1,5 +1,8 @@
 package fr.outadoc.justchatting.feature.home.presentation.mobile
 
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,8 +31,31 @@ internal fun MainRouter(
         modifier = modifier,
         navController = navController,
         startDestination = DefaultScreen,
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+            )
+        },
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left,
+            )
+        },
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+            )
+        },
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right,
+            )
+        },
     ) {
-        composable<Screen.Live> {
+        composable<Screen.Live>(
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+        ) {
             LiveChannelsList(
                 sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },
@@ -37,7 +63,10 @@ internal fun MainRouter(
             )
         }
 
-        composable<Screen.Followed> {
+        composable<Screen.Followed>(
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+        ) {
             FollowedChannelsList(
                 sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },
@@ -45,7 +74,10 @@ internal fun MainRouter(
             )
         }
 
-        composable<Screen.Settings.Root> {
+        composable<Screen.Settings.Root>(
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+        ) {
             SettingsContent(
                 sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },

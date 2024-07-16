@@ -8,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.DependencyCreditsScreen
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAbout
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionThirdParties
 
 @Composable
@@ -60,6 +61,12 @@ internal fun MainRouter(
 
         composable<Screen.Settings.ThirdParties> {
             SettingsSectionThirdParties(
+                onNavigateUp = { navController.popBackStack() },
+            )
+        }
+
+        composable<Screen.Settings.About> {
+            SettingsSectionAbout(
                 onNavigateUp = { navController.popBackStack() },
             )
         }

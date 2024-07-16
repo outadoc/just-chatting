@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.ImagesearchRoller
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -27,7 +27,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionState
@@ -59,10 +58,9 @@ internal fun SettingsListPreview() {
             onOpenBubblePreferences = {},
             onOpenAccessibilityPreferences = {},
             onLogoutClick = {},
-            onShareLogsClick = {},
             onOpenDependencyCredits = {},
             onOpenThirdPartiesSection = {},
-            versionName = "1.2.3",
+            onOpenAboutSection = {},
         )
     }
 }
@@ -78,15 +76,12 @@ internal fun SettingsList(
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,
     onLogoutClick: () -> Unit,
-    onShareLogsClick: () -> Unit,
     onOpenDependencyCredits: () -> Unit,
     onOpenThirdPartiesSection: () -> Unit,
+    onOpenAboutSection: () -> Unit,
     itemInsets: PaddingValues = SettingsConstants.ItemInsets,
     insets: PaddingValues = PaddingValues(),
-    versionName: String,
 ) {
-    val uriHandler = LocalUriHandler.current
-
     LazyColumn(
         modifier = modifier,
         contentPadding = insets + PaddingValues(bottom = 16.dp),
@@ -320,110 +315,16 @@ internal fun SettingsList(
         }
 
         item {
-            val licenseUrl = stringResource(MR.strings.app_license_url)
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri(licenseUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_license_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_about_license_subtitle,
-                            stringResource(MR.strings.app_name),
-                            stringResource(MR.strings.app_license_name),
-                        ),
-                    )
-                },
-                trailingIcon = {
+            ListItem(
+                modifier = Modifier.clickable { onOpenAboutSection() },
+                leadingContent = {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        imageVector = Icons.Default.Info,
                         contentDescription = null,
                     )
                 },
-            )
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri("https://github.com/crackededed/Xtra") },
-                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_xtra_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_about_xtra_subtitle,
-                            stringResource(MR.strings.app_name),
-                        ),
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                        contentDescription = null,
-                    )
-                },
-            )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_about_header))
-            }
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.app_name)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_about_version,
-                            versionName,
-                        ),
-                    )
-                },
-            )
-        }
-
-        item {
-            val repoUrl = stringResource(MR.strings.app_repo_url)
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri(repoUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_repo_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_repo_title)) },
-                subtitle = { Text(text = stringResource(MR.strings.app_repo_name)) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                        contentDescription = null,
-                    )
-                },
-            )
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_logs_title)) },
-                onClick = onShareLogsClick,
-                subtitle = { Text(text = stringResource(MR.strings.settings_logs_subtitle)) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Share,
-                        contentDescription = null,
-                    )
+                headlineContent = {
+                    Text(stringResource(MR.strings.settings_about_header))
                 },
             )
         }

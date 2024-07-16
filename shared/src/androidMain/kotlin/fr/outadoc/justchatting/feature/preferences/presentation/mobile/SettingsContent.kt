@@ -79,11 +79,10 @@ internal fun SettingsContent(
                 onOpenBubblePreferences = onOpenBubblePreferences,
                 onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
                 onLogoutClick = viewModel::logout,
-                onShareLogsClick = viewModel::onShareLogsClick,
                 onOpenDependencyCredits = { onNavigate(Screen.Settings.DependencyCredits) },
                 onOpenThirdPartiesSection = { onNavigate(Screen.Settings.ThirdParties) },
+                onOpenAboutSection = { onNavigate(Screen.Settings.About) },
                 insets = insets,
-                versionName = context.applicationVersionName.orEmpty(),
             )
         },
     )

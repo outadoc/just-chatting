@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.OpenInNew
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Icon
@@ -143,7 +143,7 @@ internal fun SettingsList(
                 title = { Text(text = stringResource(MR.strings.settings_thirdparty_pronouns_set_title)) },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.OpenInNew,
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                         contentDescription = null,
                     )
                 },
@@ -257,7 +257,7 @@ internal fun SettingsList(
                 },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.OpenInNew,
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                         contentDescription = null,
                     )
                 },
@@ -275,7 +275,7 @@ internal fun SettingsList(
                     },
                     trailingIcon = {
                         Icon(
-                            imageVector = Icons.Default.OpenInNew,
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                             contentDescription = null,
                         )
                     },
@@ -323,7 +323,85 @@ internal fun SettingsList(
                 },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.OpenInNew,
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = null,
+                    )
+                },
+            )
+        }
+
+        item {
+            Spacer(modifier = Modifier.height(4.dp))
+        }
+
+        item {
+            SettingsHeader(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .padding(itemInsets),
+            ) {
+                Text(stringResource(MR.strings.settings_dependencies_header))
+            }
+        }
+
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                title = { Text(text = stringResource(MR.strings.settings_dependencies_title)) },
+                subtitle = {
+                    Text(
+                        text = stringResource(
+                            MR.strings.settings_dependencies_subtitle,
+                            stringResource(MR.strings.app_name),
+                        ),
+                    )
+                },
+                onClick = onOpenDependencyCredits,
+            )
+        }
+
+        item {
+            val licenseUrl = stringResource(MR.strings.app_license_url)
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = { uriHandler.openUri(licenseUrl) },
+                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
+                title = { Text(text = stringResource(MR.strings.settings_about_license_title)) },
+                subtitle = {
+                    Text(
+                        text = stringResource(
+                            MR.strings.settings_about_license_subtitle,
+                            stringResource(MR.strings.app_name),
+                            stringResource(MR.strings.app_license_name),
+                        ),
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        contentDescription = null,
+                    )
+                },
+            )
+        }
+
+        item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = { uriHandler.openUri("https://github.com/crackededed/Xtra") },
+                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
+                title = { Text(text = stringResource(MR.strings.settings_about_xtra_title)) },
+                subtitle = {
+                    Text(
+                        text = stringResource(
+                            MR.strings.settings_about_xtra_subtitle,
+                            stringResource(MR.strings.app_name),
+                        ),
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                         contentDescription = null,
                     )
                 },
@@ -345,6 +423,21 @@ internal fun SettingsList(
         }
 
         item {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                title = { Text(text = stringResource(MR.strings.app_name)) },
+                subtitle = {
+                    Text(
+                        text = stringResource(
+                            MR.strings.settings_about_version,
+                            versionName,
+                        ),
+                    )
+                },
+            )
+        }
+
+        item {
             val repoUrl = stringResource(MR.strings.app_repo_url)
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
@@ -354,7 +447,7 @@ internal fun SettingsList(
                 subtitle = { Text(text = stringResource(MR.strings.app_repo_name)) },
                 trailingIcon = {
                     Icon(
-                        imageVector = Icons.Default.OpenInNew,
+                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
                         contentDescription = null,
                     )
                 },
@@ -371,48 +464,6 @@ internal fun SettingsList(
                     Icon(
                         imageVector = Icons.Default.Share,
                         contentDescription = null,
-                    )
-                },
-            )
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_dependencies_header)) },
-                onClick = onOpenDependencyCredits,
-            )
-        }
-
-        item {
-            val licenseUrl = stringResource(MR.strings.app_license_url)
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri(licenseUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_license_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_about_license_subtitle,
-                            stringResource(MR.strings.app_name),
-                            stringResource(MR.strings.app_license_name),
-                        ),
-                    )
-                },
-            )
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.app_name)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_about_version,
-                            versionName,
-                        ),
                     )
                 },
             )

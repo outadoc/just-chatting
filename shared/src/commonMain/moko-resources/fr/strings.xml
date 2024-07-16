@@ -277,10 +277,15 @@
     <string name="settings_about_license_cd">Voir la licence</string>
     <string name="settings_about_repo_title">Contribuer au projet</string>
     <string name="settings_about_repo_cd">Voir le code</string>
+    <string name="settings_about_xtra_title">Basée sur Xtra for Twitch</string>
+    <string name="settings_about_xtra_subtitle">%1$s est basée sur le projet Xtra for Twitch.</string>
     <string name="settings_account_header">Compte Twitch</string>
     <string name="settings_account_logout_action">Déconnecter mon compte…</string>
     <string name="settings_dependencies_header">Dépendences libres</string>
+    <string name="settings_dependencies_subtitle">Retrouvez tous les super projets qui rendent %1$s possible.</string>
     <string name="settings_dependencies_cd">Voir le site web</string>
+    <string name="settings_dependencies_header">Logiciels libres</string>
+    <string name="settings_dependencies_title">Dépendances libres</string>
     <string name="settings_accessibility_header">Accessibilité</string>
     <string name="settings_accessibility_animations_title">Émotes animées</string>
     <string name="settings_accessibility_animations_subtitle">Vous pouvez désactiver l\'animation des émotes en activant l\'option de "Suppression des animations" dans les réglages de votre appareil.</string>

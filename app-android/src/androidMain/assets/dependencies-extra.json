@@ -1,15 +1,7 @@
-{"dependencies": [
-  {
-    "moduleLicense": "ISC License",
-    "moduleVersion": "5.0.0",
-    "moduleName": "chat.willow.kale:kale",
-    "moduleLicenseUrl": "https://opensource.org/licenses/ISC",
-    "moduleUrl": "https://github.com/WillowChat/Kale"
-  },
-  {
-    "moduleLicense": "GNU Affero General Public License v3.0",
-    "moduleName": "Xtra for Twitch",
-    "moduleLicenseUrl": "https://www.gnu.org/licenses/agpl-3.0.en.html",
-    "moduleUrl": "https://github.com/crackededed/Xtra"
-  }
-]}
+{"dependencies": [{
+  "moduleLicense": "ISC License",
+  "moduleVersion": "5.0.0",
+  "moduleName": "chat.willow.kale:kale",
+  "moduleLicenseUrl": "https://opensource.org/licenses/ISC",
+  "moduleUrl": "https://github.com/WillowChat/Kale"
+}]}

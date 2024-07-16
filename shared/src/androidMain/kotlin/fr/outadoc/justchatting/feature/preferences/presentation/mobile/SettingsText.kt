@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -48,6 +52,18 @@ internal fun SettingsTextSubtitlePreview() {
                 onClickLabel = "",
                 title = { Text("Lorem ipsum") },
                 subtitle = { Text("Dolor sit amet") },
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = null,
+                    )
+                },
+                trailingIcon = {
+                    Icon(
+                        imageVector = Icons.Default.Star,
+                        contentDescription = null,
+                    )
+                },
             )
         }
     }
@@ -60,6 +76,7 @@ internal fun SettingsText(
     onClickLabel: String? = null,
     title: @Composable () -> Unit,
     subtitle: @Composable () -> Unit = {},
+    leadingIcon: @Composable () -> Unit = {},
     trailingIcon: @Composable () -> Unit = {},
 ) {
     Box(
@@ -74,6 +91,8 @@ internal fun SettingsText(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
+            leadingIcon()
+
             Column(
                 modifier = Modifier.weight(1f, fill = true),
                 verticalArrangement = Arrangement.spacedBy(4.dp),

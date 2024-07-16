@@ -1,7 +1,6 @@
 package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -16,7 +15,6 @@ import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -141,15 +139,16 @@ internal fun SettingsList(
         }
 
         item {
-            ListItem(
-                modifier = Modifier.clickable { onOpenThirdPartiesSection() },
-                leadingContent = {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = { onOpenThirdPartiesSection() },
+                leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Extension,
                         contentDescription = null,
                     )
                 },
-                headlineContent = {
+                title = {
                     Text(stringResource(MR.strings.settings_thirdparty_section_title))
                 },
             )
@@ -160,15 +159,16 @@ internal fun SettingsList(
         }
 
         item {
-            ListItem(
-                modifier = Modifier.clickable { onOpenNotificationSection() },
-                leadingContent = {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = { onOpenNotificationSection() },
+                leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Notifications,
                         contentDescription = null,
                     )
                 },
-                headlineContent = {
+                title = {
                     Text(stringResource(MR.strings.settings_notifications_header))
                 },
             )
@@ -179,15 +179,16 @@ internal fun SettingsList(
         }
 
         item {
-            ListItem(
-                modifier = Modifier.clickable { onOpenAppearanceSection() },
-                leadingContent = {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = { onOpenAppearanceSection() },
+                leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Palette,
                         contentDescription = null,
                     )
                 },
-                headlineContent = {
+                title = {
                     Text(stringResource(MR.strings.settings_appearance_header))
                 },
             )
@@ -198,30 +199,32 @@ internal fun SettingsList(
         }
 
         item {
-            ListItem(
-                modifier = Modifier.clickable { onOpenDependencyCredits() },
-                leadingContent = {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = { onOpenDependencyCredits() },
+                leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Favorite,
                         contentDescription = null,
                     )
                 },
-                headlineContent = {
+                title = {
                     Text(stringResource(MR.strings.settings_dependencies_title))
                 },
             )
         }
 
         item {
-            ListItem(
-                modifier = Modifier.clickable { onOpenAboutSection() },
-                leadingContent = {
+            SettingsText(
+                modifier = Modifier.padding(itemInsets),
+                onClick = { onOpenAboutSection() },
+                leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Info,
                         contentDescription = null,
                     )
                 },
-                headlineContent = {
+                title = {
                     Text(stringResource(MR.strings.settings_about_header))
                 },
             )

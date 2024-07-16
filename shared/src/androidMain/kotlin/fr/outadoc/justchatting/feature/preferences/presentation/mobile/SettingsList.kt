@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.ImagesearchRoller
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -289,28 +290,17 @@ internal fun SettingsList(
         }
 
         item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_dependencies_header))
-            }
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_dependencies_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_dependencies_subtitle,
-                            stringResource(MR.strings.app_name),
-                        ),
+            ListItem(
+                modifier = Modifier.clickable { onOpenDependencyCredits() },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.Favorite,
+                        contentDescription = null,
                     )
                 },
-                onClick = onOpenDependencyCredits,
+                headlineContent = {
+                    Text(stringResource(MR.strings.settings_dependencies_title))
+                },
             )
         }
 

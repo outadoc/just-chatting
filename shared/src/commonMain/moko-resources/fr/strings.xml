@@ -281,15 +281,14 @@
     <string name="settings_about_xtra_subtitle">%1$s est basée sur le projet Xtra for Twitch.</string>
     <string name="settings_account_logout_action">Déconnecter mon compte…</string>
     <string name="settings_dependencies_header">Dépendences libres</string>
-    <string name="settings_dependencies_subtitle">Retrouvez tous les super projets qui rendent %1$s possible.</string>
     <string name="settings_dependencies_cd">Voir le site web</string>
     <string name="settings_dependencies_header">Logiciels libres</string>
     <string name="settings_dependencies_title">Dépendances libres</string>
-    <string name="settings_accessibility_header">Accessibilité</string>
-    <string name="settings_accessibility_animations_title">Émotes animées</string>
-    <string name="settings_accessibility_animations_subtitle">Vous pouvez désactiver l\'animation des émotes en activant l\'option de "Suppression des animations" dans les réglages de votre appareil.</string>
-    <string name="settings_accessibility_animations_action">Ouvrir les réglages d\'accessibilité du système</string>
-    <string name="settings_accessibility_timestamps_title">Horodatage des messages</string>
+    <string name="settings_appearance_header">Apparence</string>
+    <string name="settings_appearance_animations_title">Émotes animées</string>
+    <string name="settings_appearance_animations_subtitle">Vous pouvez désactiver l\'animation des émotes en activant l\'option de "Suppression des animations" dans les réglages de votre appareil.</string>
+    <string name="settings_appearance_animations_action">Ouvrir les réglages d\'accessibilité du système</string>
+    <string name="settings_appearance_timestamps_title">Horodatage des messages</string>
     <string name="settings_logs_title">Partager les logs</string>
     <string name="settings_logs_subtitle">Exporter et partager vos logs récents à des fins de débogage.</string>
     <string name="settings_notifications_enable_subtitle">Si activé, les sessions de tchat resteront ouvertes en arrière-plan, et seront accessibles depuis des bulles sur les appareils compatibles.</string>
@@ -297,7 +296,6 @@
     <string name="settings_notifications_header">Notifications</string>
     <string name="settings_notifications_openNotificationsSettings">Préférences de notification</string>
     <string name="settings_notifications_openBubbleSettings">Préférences des bulles de conversation</string>
-    <string name="settings_oss_title">Licences de logiciels libres</string>
     <string name="settings_thirdparty_emotes_header">Émotes tierces</string>
     <string name="settings_thirdparty_recent_header">Messages récents</string>
     <string name="settings_thirdparty_recent_title">Charger les messages récents</string>
@@ -311,6 +309,7 @@
     <string name="settings_thirdparty_pronouns_subtitle">Récupérer et afficher les pronoms préférés des utilisateur·rice·s, grâce aux données de pronouns.alejo.io.</string>
     <string name="settings_thirdparty_pronouns_set_title">Renseignez vos propres pronoms</string>
     <string name="settings_thirdparty_pronouns_set_cd">Ouvrir pronouns.alejo.io dans le navigateur</string>
+    <string name="settings_thirdparty_section_title">Intégrations tierces</string>
     <string name="settings_thirdparty_stv_title">Afficher les émotes 7TV</string>
     <string name="settings_thirdparty_stv_subtitle">Données fournies par 7tv.app</string>
     <string name="yes">Oui</string>

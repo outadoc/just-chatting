@@ -1,18 +1,22 @@
 package fr.outadoc.justchatting.feature.preferences.presentation.mobile
 
-import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.OpenInNew
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.Extension
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ListItem
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -24,16 +28,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionState
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.StreamAndUserInfo
 import fr.outadoc.justchatting.feature.home.domain.model.User
-import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
@@ -44,44 +42,35 @@ import fr.outadoc.justchatting.utils.presentation.plus
 internal fun SettingsListPreview() {
     AppTheme {
         SettingsList(
-            appPreferences = AppPreferences(),
             loggedInUser = User(
                 id = "123",
                 displayName = "Maghla",
                 login = "maghla",
                 profileImageUrl = null,
             ),
-            onAppPreferencesChange = {},
-            onOpenNotificationPreferences = {},
-            onOpenBubblePreferences = {},
-            onOpenAccessibilityPreferences = {},
             onLogoutClick = {},
-            onShareLogsClick = {},
             onOpenDependencyCredits = {},
-            versionName = "1.2.3",
+            onOpenThirdPartiesSection = {},
+            onOpenAppearanceSection = {},
+            onOpenAboutSection = {},
+            onOpenNotificationSection = {},
         )
     }
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 internal fun SettingsList(
     modifier: Modifier = Modifier,
-    appPreferences: AppPreferences,
-    onAppPreferencesChange: (AppPreferences) -> Unit,
     loggedInUser: User?,
-    onOpenNotificationPreferences: () -> Unit,
-    onOpenBubblePreferences: () -> Unit,
-    onOpenAccessibilityPreferences: () -> Unit,
     onLogoutClick: () -> Unit,
-    onShareLogsClick: () -> Unit,
     onOpenDependencyCredits: () -> Unit,
-    itemInsets: PaddingValues = PaddingValues(horizontal = 16.dp),
+    onOpenThirdPartiesSection: () -> Unit,
+    onOpenAboutSection: () -> Unit,
+    onOpenAppearanceSection: () -> Unit,
+    onOpenNotificationSection: () -> Unit,
+    itemInsets: PaddingValues = SettingsConstants.ItemInsets,
     insets: PaddingValues = PaddingValues(),
-    versionName: String,
 ) {
-    val uriHandler = LocalUriHandler.current
-
     LazyColumn(
         modifier = modifier,
         contentPadding = insets + PaddingValues(bottom = 16.dp),
@@ -152,27 +141,16 @@ internal fun SettingsList(
         }
 
         item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_thirdparty_recent_header))
-            }
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.enableRecentMessages,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(enableRecentMessages = checked))
+            ListItem(
+                modifier = Modifier.clickable { onOpenThirdPartiesSection() },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.Extension,
+                        contentDescription = null,
+                    )
                 },
-                title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_recent_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_recent_subtitle))
+                headlineContent = {
+                    Text(stringResource(MR.strings.settings_thirdparty_section_title))
                 },
             )
         }
@@ -182,43 +160,16 @@ internal fun SettingsList(
         }
 
         item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_thirdparty_pronouns_header))
-            }
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.enablePronouns,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(enablePronouns = checked))
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_pronouns_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_pronouns_subtitle))
-                },
-            )
-        }
-
-        item {
-            val pronounsUrl = stringResource(MR.strings.app_pronouns_url)
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri(pronounsUrl) },
-                onClickLabel = stringResource(MR.strings.settings_thirdparty_pronouns_set_cd),
-                title = { Text(text = stringResource(MR.strings.settings_thirdparty_pronouns_set_title)) },
-                trailingIcon = {
+            ListItem(
+                modifier = Modifier.clickable { onOpenNotificationSection() },
+                leadingContent = {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        imageVector = Icons.Default.Notifications,
                         contentDescription = null,
                     )
+                },
+                headlineContent = {
+                    Text(stringResource(MR.strings.settings_notifications_header))
                 },
             )
         }
@@ -228,59 +179,16 @@ internal fun SettingsList(
         }
 
         item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_thirdparty_emotes_header))
-            }
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.enableBttvEmotes,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(enableBttvEmotes = checked))
+            ListItem(
+                modifier = Modifier.clickable { onOpenAppearanceSection() },
+                leadingContent = {
+                    Icon(
+                        imageVector = Icons.Default.Palette,
+                        contentDescription = null,
+                    )
                 },
-                title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_bttv_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_bttv_subtitle))
-                },
-            )
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.enableFfzEmotes,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(enableFfzEmotes = checked))
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_ffz_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_ffz_subtitle))
-                },
-            )
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.enableStvEmotes,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(enableStvEmotes = checked))
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_thirdparty_stv_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_thirdparty_stv_subtitle))
+                headlineContent = {
+                    Text(stringResource(MR.strings.settings_appearance_header))
                 },
             )
         }
@@ -290,254 +198,31 @@ internal fun SettingsList(
         }
 
         item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_notifications_header))
-            }
-        }
-
-        item {
-            val notificationPermissionState: PermissionState =
-                rememberPermissionState("android.permission.POST_NOTIFICATIONS")
-
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_notifications_enable_title)) },
-                subtitle = { Text(text = stringResource(MR.strings.settings_notifications_enable_subtitle)) },
-                checked = notificationPermissionState.status.isGranted && appPreferences.enableNotifications,
-                onCheckedChange = { checked ->
-                    if (checked) {
-                        notificationPermissionState.launchPermissionRequest()
-                    }
-
-                    onAppPreferencesChange(
-                        appPreferences.copy(enableNotifications = checked),
-                    )
-                },
-            )
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = onOpenNotificationPreferences,
-                onClickLabel = stringResource(MR.strings.settings_notifications_openNotificationsSettings),
-                title = {
-                    Text(text = stringResource(MR.strings.settings_notifications_openNotificationsSettings))
-                },
-                trailingIcon = {
+            ListItem(
+                modifier = Modifier.clickable { onOpenDependencyCredits() },
+                leadingContent = {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        imageVector = Icons.Default.Favorite,
                         contentDescription = null,
                     )
                 },
-            )
-        }
-
-        if (Build.VERSION.SDK_INT >= 29) {
-            item {
-                SettingsText(
-                    modifier = Modifier.padding(itemInsets),
-                    onClick = onOpenBubblePreferences,
-                    onClickLabel = stringResource(MR.strings.settings_notifications_openBubbleSettings),
-                    title = {
-                        Text(text = stringResource(MR.strings.settings_notifications_openBubbleSettings))
-                    },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                            contentDescription = null,
-                        )
-                    },
-                )
-            }
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(itemInsets)
-                    .padding(top = 8.dp),
-            ) {
-                Text(stringResource(MR.strings.settings_accessibility_header))
-            }
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.showTimestamps,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(showTimestamps = checked))
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_accessibility_timestamps_title))
+                headlineContent = {
+                    Text(stringResource(MR.strings.settings_dependencies_title))
                 },
             )
         }
 
         item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = onOpenAccessibilityPreferences,
-                onClickLabel = stringResource(MR.strings.settings_accessibility_animations_action),
-                title = {
-                    Text(stringResource(MR.strings.settings_accessibility_animations_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_accessibility_animations_subtitle))
-                },
-                trailingIcon = {
+            ListItem(
+                modifier = Modifier.clickable { onOpenAboutSection() },
+                leadingContent = {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        imageVector = Icons.Default.Info,
                         contentDescription = null,
                     )
                 },
-            )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_dependencies_header))
-            }
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_dependencies_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_dependencies_subtitle,
-                            stringResource(MR.strings.app_name),
-                        ),
-                    )
-                },
-                onClick = onOpenDependencyCredits,
-            )
-        }
-
-        item {
-            val licenseUrl = stringResource(MR.strings.app_license_url)
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri(licenseUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_license_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_about_license_subtitle,
-                            stringResource(MR.strings.app_name),
-                            stringResource(MR.strings.app_license_name),
-                        ),
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                        contentDescription = null,
-                    )
-                },
-            )
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri("https://github.com/crackededed/Xtra") },
-                onClickLabel = stringResource(MR.strings.settings_about_license_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_xtra_title)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_about_xtra_subtitle,
-                            stringResource(MR.strings.app_name),
-                        ),
-                    )
-                },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                        contentDescription = null,
-                    )
-                },
-            )
-        }
-
-        item {
-            Spacer(modifier = Modifier.height(4.dp))
-        }
-
-        item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .padding(itemInsets),
-            ) {
-                Text(stringResource(MR.strings.settings_about_header))
-            }
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.app_name)) },
-                subtitle = {
-                    Text(
-                        text = stringResource(
-                            MR.strings.settings_about_version,
-                            versionName,
-                        ),
-                    )
-                },
-            )
-        }
-
-        item {
-            val repoUrl = stringResource(MR.strings.app_repo_url)
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = { uriHandler.openUri(repoUrl) },
-                onClickLabel = stringResource(MR.strings.settings_about_repo_cd),
-                title = { Text(text = stringResource(MR.strings.settings_about_repo_title)) },
-                subtitle = { Text(text = stringResource(MR.strings.app_repo_name)) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
-                        contentDescription = null,
-                    )
-                },
-            )
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                title = { Text(text = stringResource(MR.strings.settings_logs_title)) },
-                onClick = onShareLogsClick,
-                subtitle = { Text(text = stringResource(MR.strings.settings_logs_subtitle)) },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Share,
-                        contentDescription = null,
-                    )
+                headlineContent = {
+                    Text(stringResource(MR.strings.settings_about_header))
                 },
             )
         }

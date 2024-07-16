@@ -6,8 +6,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import fr.outadoc.justchatting.feature.preferences.presentation.mobile.DependencyCreditsScreen
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAbout
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAppearance
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionDependencies
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionNotifications
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionThirdParties
 
 @Composable
 internal fun MainRouter(
@@ -41,18 +45,42 @@ internal fun MainRouter(
             )
         }
 
-        composable<Screen.Settings> {
+        composable<Screen.Settings.Root> {
             SettingsContent(
                 sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },
-                onOpenNotificationPreferences = onOpenNotificationPreferences,
-                onOpenBubblePreferences = onOpenBubblePreferences,
+            )
+        }
+
+        composable<Screen.Settings.About> {
+            SettingsSectionAbout(
+                onNavigateUp = { navController.popBackStack() },
+            )
+        }
+
+        composable<Screen.Settings.Appearance> {
+            SettingsSectionAppearance(
+                onNavigateUp = { navController.popBackStack() },
                 onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
             )
         }
 
-        composable<Screen.DependencyCredits> {
-            DependencyCreditsScreen(
+        composable<Screen.Settings.DependencyCredits> {
+            SettingsSectionDependencies(
+                onNavigateUp = { navController.popBackStack() },
+            )
+        }
+
+        composable<Screen.Settings.Notifications> {
+            SettingsSectionNotifications(
+                onNavigateUp = { navController.popBackStack() },
+                onOpenNotificationPreferences = onOpenNotificationPreferences,
+                onOpenBubblePreferences = onOpenBubblePreferences,
+            )
+        }
+
+        composable<Screen.Settings.ThirdParties> {
+            SettingsSectionThirdParties(
                 onNavigateUp = { navController.popBackStack() },
             )
         }

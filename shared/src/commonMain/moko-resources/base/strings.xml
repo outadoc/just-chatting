@@ -282,13 +282,12 @@
     <string name="settings_account_logout_action">Log out…</string>
     <string name="settings_dependencies_header">Open-source</string>
     <string name="settings_dependencies_title">Open-source dependencies</string>
-    <string name="settings_dependencies_subtitle">Find all the great software that makes %1$s possible.</string>
     <string name="settings_dependencies_cd">Show website</string>
-    <string name="settings_accessibility_header">Accessibility</string>
-    <string name="settings_accessibility_animations_title">Show animated emotes</string>
-    <string name="settings_accessibility_animations_subtitle">You can disable animated emotes by enabling "Reduce motion" in your device\'s accessibility settings.</string>
-    <string name="settings_accessibility_animations_action">Open system accessibility settings</string>
-    <string name="settings_accessibility_timestamps_title">Show message timestamps</string>
+    <string name="settings_appearance_header">Appearance</string>
+    <string name="settings_appearance_animations_title">Show animated emotes</string>
+    <string name="settings_appearance_animations_subtitle">You can disable animated emotes by enabling "Reduce motion" in your device\'s accessibility settings.</string>
+    <string name="settings_appearance_animations_action">Open system accessibility settings</string>
+    <string name="settings_appearance_timestamps_title">Show message timestamps</string>
     <string name="settings_logs_title">Share logs</string>
     <string name="settings_logs_subtitle">Dump recent logs and share them for debugging purposes.</string>
     <string name="settings_notifications_enable_subtitle">When enabled, chat sessions will keep running in the background, and be available through bubbles on supported devices.</string>
@@ -309,6 +308,7 @@
     <string name="settings_thirdparty_pronouns_subtitle">Data provided by pronouns.alejo.io</string>
     <string name="settings_thirdparty_pronouns_set_title">Set your own pronouns</string>
     <string name="settings_thirdparty_pronouns_set_cd">Open pronouns.alejo.io in browser</string>
+    <string name="settings_thirdparty_section_title">Third-party integrations</string>
     <string name="settings_thirdparty_stv_title">Show 7TV Emotes</string>
     <string name="settings_thirdparty_stv_subtitle">Data provided by 7tv.app</string>
     <string name="yes">Yes</string>

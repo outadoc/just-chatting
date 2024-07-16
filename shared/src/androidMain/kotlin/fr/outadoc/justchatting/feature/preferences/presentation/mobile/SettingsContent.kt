@@ -28,9 +28,6 @@ internal fun SettingsContent(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
-    onOpenNotificationPreferences: () -> Unit,
-    onOpenBubblePreferences: () -> Unit,
-    onOpenAccessibilityPreferences: () -> Unit,
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
@@ -60,7 +57,7 @@ internal fun SettingsContent(
     MainNavigation(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         sizeClass = sizeClass,
-        selectedScreen = Screen.Settings,
+        selectedScreen = Screen.Settings.Root,
         onSelectedTabChange = onNavigate,
         topBar = {
             TopAppBar(
@@ -70,19 +67,14 @@ internal fun SettingsContent(
         },
         content = { insets ->
             SettingsList(
-                appPreferences = state.appPreferences,
                 loggedInUser = state.user,
-                onAppPreferencesChange = { updated ->
-                    viewModel.updatePreferences(updated)
-                },
-                onOpenNotificationPreferences = onOpenNotificationPreferences,
-                onOpenBubblePreferences = onOpenBubblePreferences,
-                onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
                 onLogoutClick = viewModel::logout,
-                onShareLogsClick = viewModel::onShareLogsClick,
-                onOpenDependencyCredits = { onNavigate(Screen.DependencyCredits) },
+                onOpenDependencyCredits = { onNavigate(Screen.Settings.DependencyCredits) },
+                onOpenThirdPartiesSection = { onNavigate(Screen.Settings.ThirdParties) },
+                onOpenAboutSection = { onNavigate(Screen.Settings.About) },
+                onOpenAppearanceSection = { onNavigate(Screen.Settings.Appearance) },
+                onOpenNotificationSection = { onNavigate(Screen.Settings.Notifications) },
                 insets = insets,
-                versionName = context.applicationVersionName.orEmpty(),
             )
         },
     )

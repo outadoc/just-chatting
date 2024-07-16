@@ -49,7 +49,7 @@ jobs:
 
       - name: Upload to internal app sharing
         id: publish
-        uses: r0adkll/upload-google-play@d2d9b79a276ba3654581a78130201ce792860982
+        uses: r0adkll/upload-google-play@v1
         with:
           serviceAccountJsonPlainText: ${{ secrets.SERVICE_ACCOUNT_INTERNAL_APP_SHARING }}
           packageName: fr.outadoc.justchatting

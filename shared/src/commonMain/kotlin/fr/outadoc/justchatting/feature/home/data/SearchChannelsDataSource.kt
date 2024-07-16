@@ -46,7 +46,7 @@ internal class SearchChannelsDataSource(
                                 ChannelSearchResult(
                                     title = search.title,
                                     user = User(
-                                        id = search.userLogin,
+                                        id = search.userId,
                                         login = search.userLogin,
                                         displayName = search.userDisplayName,
                                     ),

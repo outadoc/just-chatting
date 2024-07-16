@@ -9,13 +9,13 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class ChannelSearch(
     @SerialName("id")
-    val id: String,
-    @SerialName("title")
-    val title: String,
+    val userId: String,
     @SerialName("broadcaster_login")
     val userLogin: String,
     @SerialName("display_name")
     val userDisplayName: String,
+    @SerialName("title")
+    val title: String,
     @SerialName("broadcaster_language")
     val broadcasterLanguage: String? = null,
     @SerialName("game_id")

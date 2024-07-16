@@ -10,6 +10,7 @@ import fr.outadoc.justchatting.feature.preferences.presentation.mobile.Dependenc
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAbout
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAppearance
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionNotifications
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionThirdParties
 
 @Composable
@@ -48,8 +49,6 @@ internal fun MainRouter(
             SettingsContent(
                 sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },
-                onOpenNotificationPreferences = onOpenNotificationPreferences,
-                onOpenBubblePreferences = onOpenBubblePreferences,
             )
         }
 
@@ -75,6 +74,14 @@ internal fun MainRouter(
             SettingsSectionAppearance(
                 onNavigateUp = { navController.popBackStack() },
                 onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
+            )
+        }
+
+        composable<Screen.Settings.Notifications> {
+            SettingsSectionNotifications(
+                onNavigateUp = { navController.popBackStack() },
+                onOpenNotificationPreferences = onOpenNotificationPreferences,
+                onOpenBubblePreferences = onOpenBubblePreferences,
             )
         }
     }

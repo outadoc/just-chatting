@@ -25,6 +25,9 @@ internal sealed interface Screen {
         data object Appearance : Settings
 
         @Serializable
+        data object Notifications : Settings
+
+        @Serializable
         data object DependencyCredits : Settings
     }
 }

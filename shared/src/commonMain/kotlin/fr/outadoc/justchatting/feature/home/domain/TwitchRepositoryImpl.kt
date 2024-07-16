@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.home.domain
 
 import androidx.paging.PagingData
+import androidx.paging.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
@@ -13,17 +14,22 @@ import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.recent.domain.RecentChannelsApi
 import fr.outadoc.justchatting.feature.recent.domain.model.RecentChannel
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
+    private val usersMemoryCache: UsersMemoryCache,
     private val preferencesRepository: PreferenceRepository,
     private val recentChannelsApi: RecentChannelsApi,
 ) : TwitchRepository {
@@ -37,7 +43,14 @@ internal class TwitchRepositoryImpl(
         withContext(DispatchersProvider.io) {
             when (val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser) {
                 is AppUser.LoggedIn -> {
-                    twitchApi.getFollowedStreams(userId = appUser.userId)
+                    twitchApi
+                        .getFollowedStreams(userId = appUser.userId)
+                        .map { pagingData ->
+                            pagingData.map { stream ->
+                                usersMemoryCache.put(stream.user)
+                                stream
+                            }
+                        }
                 }
 
                 else -> {
@@ -50,7 +63,14 @@ internal class TwitchRepositoryImpl(
         withContext(DispatchersProvider.io) {
             when (val appUser: AppUser = preferencesRepository.currentPreferences.first().appUser) {
                 is AppUser.LoggedIn -> {
-                    twitchApi.getFollowedChannels(userId = appUser.userId)
+                    twitchApi
+                        .getFollowedChannels(userId = appUser.userId)
+                        .map { pagingData ->
+                            pagingData.map { follow ->
+                                usersMemoryCache.put(follow.user)
+                                follow
+                            }
+                        }
                 }
 
                 else -> {
@@ -84,11 +104,51 @@ internal class TwitchRepositoryImpl(
         }.flowOn(DispatchersProvider.io)
 
     override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
-        flow { emit(twitchApi.getUsersById(ids = ids)) }
+        flow {
+            if (ids.isEmpty()) {
+                emit(Result.success(emptyList()))
+                return@flow
+            }
+
+            val cachedUsers = usersMemoryCache.getUsersById(ids = ids)
+            if (cachedUsers.isNotEmpty()) {
+                emit(
+                    Result.success(cachedUsers),
+                )
+            }
+
+            emit(
+                twitchApi
+                    .getUsersById(ids = ids)
+                    .onSuccess { users ->
+                        usersMemoryCache.put(users)
+                    },
+            )
+        }
             .flowOn(DispatchersProvider.io)
 
     override suspend fun getUsersByLogin(logins: List<String>): Flow<Result<List<User>>> =
-        flow { emit(twitchApi.getUsersByLogin(logins = logins)) }
+        flow {
+            if (logins.isEmpty()) {
+                emit(Result.success(emptyList()))
+                return@flow
+            }
+
+            val cachedUsers = usersMemoryCache.getUsersByLogin(logins = logins)
+            if (cachedUsers.isNotEmpty()) {
+                emit(
+                    Result.success(cachedUsers),
+                )
+            }
+
+            emit(
+                twitchApi
+                    .getUsersByLogin(logins = logins)
+                    .onSuccess { users ->
+                        usersMemoryCache.put(users)
+                    },
+            )
+        }
             .flowOn(DispatchersProvider.io)
 
     override suspend fun getUserByLogin(login: String): Flow<Result<User>> =
@@ -114,13 +174,30 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?> =
         withContext(DispatchersProvider.io) {
-            recentChannelsApi.getAll()
-                .map { channels ->
+            recentChannelsApi
+                .getAll()
+                .flatMapLatest { channels ->
                     val ids = channels.map { channel -> channel.id }
-                    twitchApi
-                        .getUsersById(ids = ids)
-                        .getOrNull()
-                        ?.map { user ->
+                    flow {
+                        val cachedUsers: List<User> =
+                            usersMemoryCache.getUsersById(ids = ids)
+
+                        emit(ids to cachedUsers)
+
+                        val remoteUsers: List<User> =
+                            twitchApi
+                                .getUsersById(ids = ids)
+                                .getOrElse { emptyList() }
+
+                        emit(ids to remoteUsers)
+                    }
+                }
+                .onEach { (_, users) ->
+                    usersMemoryCache.put(users)
+                }
+                .map { (ids, users) ->
+                    users
+                        .map { user ->
                             ChannelSearchResult(
                                 title = user.displayName,
                                 user = User(
@@ -131,7 +208,7 @@ internal class TwitchRepositoryImpl(
                                 ),
                             )
                         }
-                        ?.sortedBy { result ->
+                        .sortedBy { result ->
                             ids.indexOf(result.user.id)
                         }
                 }

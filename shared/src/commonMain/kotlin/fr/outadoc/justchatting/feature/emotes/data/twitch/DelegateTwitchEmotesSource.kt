@@ -8,7 +8,6 @@ import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.last
 
 internal class DelegateTwitchEmotesSource(

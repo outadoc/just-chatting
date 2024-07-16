@@ -105,11 +105,17 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
         flow {
-            emit(
-                Result.success(
-                    usersMemoryCache.getUsersById(ids = ids),
-                ),
-            )
+            if (ids.isEmpty()) {
+                emit(Result.success(emptyList()))
+                return@flow
+            }
+
+            val cachedUsers = usersMemoryCache.getUsersById(ids = ids)
+            if (cachedUsers.isNotEmpty()) {
+                emit(
+                    Result.success(cachedUsers),
+                )
+            }
 
             emit(
                 twitchApi
@@ -123,11 +129,17 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getUsersByLogin(logins: List<String>): Flow<Result<List<User>>> =
         flow {
-            emit(
-                Result.success(
-                    usersMemoryCache.getUsersByLogin(logins = logins),
-                ),
-            )
+            if (logins.isEmpty()) {
+                emit(Result.success(emptyList()))
+                return@flow
+            }
+
+            val cachedUsers = usersMemoryCache.getUsersByLogin(logins = logins)
+            if (cachedUsers.isNotEmpty()) {
+                emit(
+                    Result.success(cachedUsers),
+                )
+            }
 
             emit(
                 twitchApi

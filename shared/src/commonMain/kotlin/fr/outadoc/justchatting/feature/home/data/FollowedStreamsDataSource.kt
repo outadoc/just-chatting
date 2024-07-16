@@ -11,11 +11,11 @@ import kotlinx.collections.immutable.toPersistentList
 internal class FollowedStreamsDataSource(
     private val userId: String?,
     private val twitchClient: TwitchClient,
-) : PagingSource<Pagination, List<Stream>>() {
+) : PagingSource<Pagination, Stream>() {
 
-    override fun getRefreshKey(state: PagingState<Pagination, List<Stream>>): Pagination? = null
+    override fun getRefreshKey(state: PagingState<Pagination, Stream>): Pagination? = null
 
-    override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, List<Stream>> {
+    override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, Stream> {
         return twitchClient
             .getFollowedStreams(
                 userId = userId,
@@ -32,23 +32,21 @@ internal class FollowedStreamsDataSource(
                         }
 
                     LoadResult.Page(
-                        data = listOf(
-                            response.data.map { stream ->
-                                Stream(
-                                    id = stream.id,
-                                    user = User(
-                                        id = stream.userId,
-                                        login = stream.userLogin,
-                                        displayName = stream.userName,
-                                    ),
-                                    gameName = stream.gameName,
-                                    title = stream.title,
-                                    viewerCount = stream.viewerCount,
-                                    startedAt = stream.startedAt,
-                                    tags = stream.tags.toPersistentList(),
-                                )
-                            },
-                        ),
+                        data = response.data.map { stream ->
+                            Stream(
+                                id = stream.id,
+                                user = User(
+                                    id = stream.userId,
+                                    login = stream.userLogin,
+                                    displayName = stream.userName,
+                                ),
+                                gameName = stream.gameName,
+                                title = stream.title,
+                                viewerCount = stream.viewerCount,
+                                startedAt = stream.startedAt,
+                                tags = stream.tags.toPersistentList(),
+                            )
+                        },
                         prevKey = null,
                         nextKey = response.pagination.cursor?.let { cursor -> Pagination.Next(cursor) },
                         itemsAfter = itemsAfter,

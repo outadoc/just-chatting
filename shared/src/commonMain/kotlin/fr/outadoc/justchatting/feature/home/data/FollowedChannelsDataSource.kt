@@ -10,12 +10,12 @@ import fr.outadoc.justchatting.utils.logging.logError
 internal class FollowedChannelsDataSource(
     private val userId: String?,
     private val twitchClient: TwitchClient,
-) : PagingSource<Pagination, List<ChannelFollow>>() {
+) : PagingSource<Pagination, ChannelFollow>() {
 
-    override fun getRefreshKey(state: PagingState<Pagination, List<ChannelFollow>>): Pagination? =
+    override fun getRefreshKey(state: PagingState<Pagination, ChannelFollow>): Pagination? =
         null
 
-    override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, List<ChannelFollow>> {
+    override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, ChannelFollow> {
         return twitchClient
             .getFollowedChannels(
                 userId = userId,
@@ -32,18 +32,16 @@ internal class FollowedChannelsDataSource(
                         }
 
                     LoadResult.Page(
-                        data = listOf(
-                            response.data.map { follow ->
-                                ChannelFollow(
-                                    user = User(
-                                        id = follow.userId,
-                                        login = follow.userLogin,
-                                        displayName = follow.userDisplayName,
-                                    ),
-                                    followedAt = follow.followedAt,
-                                )
-                            },
-                        ),
+                        data = response.data.map { follow ->
+                            ChannelFollow(
+                                user = User(
+                                    id = follow.userId,
+                                    login = follow.userLogin,
+                                    displayName = follow.userDisplayName,
+                                ),
+                                followedAt = follow.followedAt,
+                            )
+                        },
                         prevKey = null,
                         nextKey = response.pagination.cursor?.let { cursor -> Pagination.Next(cursor) },
                         itemsAfter = itemsAfter,

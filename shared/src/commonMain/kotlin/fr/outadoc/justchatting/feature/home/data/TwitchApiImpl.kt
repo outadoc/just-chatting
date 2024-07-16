@@ -3,11 +3,9 @@ package fr.outadoc.justchatting.feature.home.data
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.flatMap
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.home.domain.TwitchApi
-import fr.outadoc.justchatting.feature.home.domain.TwitchRepositoryImpl
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
@@ -17,10 +15,8 @@ import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
-import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
 
 internal class TwitchApiImpl(
     private val twitchClient: TwitchClient,
@@ -88,21 +84,7 @@ internal class TwitchApiImpl(
             },
         )
 
-        return pager.flow.map { page ->
-            page.flatMap { streams ->
-                val completeUsers: Map<String, User> =
-                    streams
-                        .map { stream -> stream.user }
-                        .mapWithProfileImages()
-                        .associateBy { user -> user.id }
-
-                streams.map { stream ->
-                    stream.copy(
-                        user = completeUsers[stream.user.id] ?: stream.user,
-                    )
-                }
-            }
-        }
+        return pager.flow
     }
 
     override suspend fun getUsersById(ids: List<String>): Result<List<User>> {
@@ -161,21 +143,7 @@ internal class TwitchApiImpl(
             },
         )
 
-        return pager.flow.map { page ->
-            page.flatMap { response ->
-                val completeUsers: Map<String, User> =
-                    response
-                        .map { stream -> stream.user }
-                        .mapWithProfileImages()
-                        .associateBy { user -> user.id }
-
-                response.map { stream ->
-                    stream.copy(
-                        user = completeUsers[stream.user.id] ?: stream.user,
-                    )
-                }
-            }
-        }
+        return pager.flow
     }
 
     override suspend fun getFollowedChannels(userId: String): Flow<PagingData<ChannelFollow>> {
@@ -194,21 +162,7 @@ internal class TwitchApiImpl(
             },
         )
 
-        return pager.flow.map { page ->
-            page.flatMap { follows ->
-                val completeUsers: Map<String, User> =
-                    follows
-                        .map { follow -> follow.user }
-                        .mapWithProfileImages()
-                        .associateBy { user -> user.id }
-
-                follows.map { follow ->
-                    follow.copy(
-                        user = completeUsers[follow.user.id] ?: follow.user,
-                    )
-                }
-            }
-        }
+        return pager.flow
     }
 
     override suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>> {
@@ -316,32 +270,6 @@ internal class TwitchApiImpl(
                         )
                     },
                 )
-            }
-    }
-
-    private suspend fun Collection<User>.mapWithProfileImages(): List<User> {
-        val results = this
-        return results
-            .map { result -> result.id }
-            .chunked(size = 100)
-            .flatMap { idsToUpdate ->
-                val users = twitchClient
-                    .getUsersById(ids = idsToUpdate)
-                    .fold(
-                        onSuccess = { response -> response.data },
-                        onFailure = { exception ->
-                            logError<TwitchRepositoryImpl>(exception) { "Failed to load user profiles" }
-                            emptyList()
-                        },
-                    )
-
-                results.map { result ->
-                    result.copy(
-                        profileImageUrl = users
-                            .firstOrNull { user -> user.id == result.id }
-                            ?.profileImageUrl,
-                    )
-                }
             }
     }
 }

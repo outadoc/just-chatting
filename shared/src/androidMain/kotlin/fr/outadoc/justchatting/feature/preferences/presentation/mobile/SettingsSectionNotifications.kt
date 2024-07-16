@@ -39,7 +39,7 @@ internal fun SettingsSectionNotifications(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(MR.strings.settings_accessibility_header)) },
+                title = { Text(stringResource(MR.strings.settings_appearance_header)) },
                 navigationIcon = {
                     IconButton(
                         onClick = onNavigateUp,

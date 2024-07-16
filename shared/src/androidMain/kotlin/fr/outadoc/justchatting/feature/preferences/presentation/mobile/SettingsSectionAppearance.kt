@@ -33,7 +33,7 @@ internal fun SettingsSectionAppearance(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(MR.strings.settings_accessibility_header)) },
+                title = { Text(stringResource(MR.strings.settings_appearance_header)) },
                 navigationIcon = {
                     IconButton(
                         onClick = onNavigateUp,
@@ -79,7 +79,7 @@ private fun SettingsSectionAppearanceContent(
                     viewModel.updatePreferences(appPreferences.copy(showTimestamps = checked))
                 },
                 title = {
-                    Text(stringResource(MR.strings.settings_accessibility_timestamps_title))
+                    Text(stringResource(MR.strings.settings_appearance_timestamps_title))
                 },
             )
         }
@@ -88,12 +88,12 @@ private fun SettingsSectionAppearanceContent(
             SettingsText(
                 modifier = Modifier.padding(itemInsets),
                 onClick = onOpenAccessibilityPreferences,
-                onClickLabel = stringResource(MR.strings.settings_accessibility_animations_action),
+                onClickLabel = stringResource(MR.strings.settings_appearance_animations_action),
                 title = {
-                    Text(stringResource(MR.strings.settings_accessibility_animations_title))
+                    Text(stringResource(MR.strings.settings_appearance_animations_title))
                 },
                 subtitle = {
-                    Text(stringResource(MR.strings.settings_accessibility_animations_subtitle))
+                    Text(stringResource(MR.strings.settings_appearance_animations_subtitle))
                 },
                 trailingIcon = {
                     Icon(

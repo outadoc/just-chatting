@@ -188,7 +188,7 @@ internal fun SettingsList(
                     )
                 },
                 headlineContent = {
-                    Text(stringResource(MR.strings.settings_accessibility_header))
+                    Text(stringResource(MR.strings.settings_appearance_header))
                 },
             )
         }

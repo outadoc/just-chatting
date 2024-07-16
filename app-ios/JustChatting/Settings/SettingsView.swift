@@ -124,11 +124,11 @@ private struct InnerSettingsView: View {
             }
 
             Section(
-                header: Text(MR.strings.shared.settings_accessibility_header.desc().localized()),
-                footer: Text(MR.strings.shared.settings_accessibility_animations_subtitle.desc().localized())
+                header: Text(MR.strings.shared.settings_appearance_header.desc().localized()),
+                footer: Text(MR.strings.shared.settings_appearance_animations_subtitle.desc().localized())
             ) {
                 Toggle(isOn: showTimestamps) {
-                    Text(MR.strings.shared.settings_accessibility_timestamps_title.desc().localized())
+                    Text(MR.strings.shared.settings_appearance_timestamps_title.desc().localized())
                 }
             }
 

@@ -31,7 +31,7 @@ import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-internal fun DependencyCreditsScreen(
+internal fun SettingsSectionDependencies(
     modifier: Modifier = Modifier,
     onNavigateUp: () -> Unit,
 ) {
@@ -53,7 +53,7 @@ internal fun DependencyCreditsScreen(
             )
         },
     ) { insets ->
-        DependencyCreditsContent(
+        SettingsSectionDependenciesContent(
             modifier = modifier,
             insets = insets,
             readDependencies = koinInject(),
@@ -62,7 +62,7 @@ internal fun DependencyCreditsScreen(
 }
 
 @Composable
-private fun DependencyCreditsContent(
+private fun SettingsSectionDependenciesContent(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
     itemInsets: PaddingValues = SettingsConstants.ItemInsets,

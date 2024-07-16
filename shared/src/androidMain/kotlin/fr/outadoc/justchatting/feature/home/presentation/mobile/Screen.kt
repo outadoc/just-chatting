@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.home.presentation.mobile
 import kotlinx.serialization.Serializable
 
 internal sealed interface Screen {
+
     @Serializable
     data object Live : Screen
 
@@ -16,19 +17,19 @@ internal sealed interface Screen {
         data object Root : Settings
 
         @Serializable
-        data object ThirdParties : Settings
-
-        @Serializable
         data object About : Settings
 
         @Serializable
         data object Appearance : Settings
 
         @Serializable
+        data object DependencyCredits : Settings
+
+        @Serializable
         data object Notifications : Settings
 
         @Serializable
-        data object DependencyCredits : Settings
+        data object ThirdParties : Settings
     }
 }
 

@@ -30,7 +30,6 @@ internal fun SettingsContent(
     onNavigate: (Screen) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
-    onOpenAccessibilityPreferences: () -> Unit,
 ) {
     val viewModel: SettingsViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
@@ -71,17 +70,17 @@ internal fun SettingsContent(
         content = { insets ->
             SettingsList(
                 appPreferences = state.appPreferences,
-                loggedInUser = state.user,
                 onAppPreferencesChange = { updated ->
                     viewModel.updatePreferences(updated)
                 },
+                loggedInUser = state.user,
                 onOpenNotificationPreferences = onOpenNotificationPreferences,
                 onOpenBubblePreferences = onOpenBubblePreferences,
-                onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
                 onLogoutClick = viewModel::logout,
                 onOpenDependencyCredits = { onNavigate(Screen.Settings.DependencyCredits) },
                 onOpenThirdPartiesSection = { onNavigate(Screen.Settings.ThirdParties) },
                 onOpenAboutSection = { onNavigate(Screen.Settings.About) },
+                onOpenAppearanceSection = { onNavigate(Screen.Settings.Appearance) },
                 insets = insets,
             )
         },

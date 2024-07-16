@@ -285,7 +285,7 @@
     <string name="settings_dependencies_cd">Voir le site web</string>
     <string name="settings_dependencies_header">Logiciels libres</string>
     <string name="settings_dependencies_title">Dépendances libres</string>
-    <string name="settings_accessibility_header">Accessibilité</string>
+    <string name="settings_accessibility_header">Apparence</string>
     <string name="settings_accessibility_animations_title">Émotes animées</string>
     <string name="settings_accessibility_animations_subtitle">Vous pouvez désactiver l\'animation des émotes en activant l\'option de "Suppression des animations" dans les réglages de votre appareil.</string>
     <string name="settings_accessibility_animations_action">Ouvrir les réglages d\'accessibilité du système</string>

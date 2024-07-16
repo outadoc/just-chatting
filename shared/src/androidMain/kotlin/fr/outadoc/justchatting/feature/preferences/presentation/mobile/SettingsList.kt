@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
+import androidx.compose.material.icons.filled.Brush
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FormatPaint
 import androidx.compose.material.icons.filled.ImagesearchRoller
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.AlertDialog
@@ -48,19 +50,19 @@ internal fun SettingsListPreview() {
     AppTheme {
         SettingsList(
             appPreferences = AppPreferences(),
+            onAppPreferencesChange = {},
             loggedInUser = User(
                 id = "123",
                 displayName = "Maghla",
                 login = "maghla",
                 profileImageUrl = null,
             ),
-            onAppPreferencesChange = {},
             onOpenNotificationPreferences = {},
             onOpenBubblePreferences = {},
-            onOpenAccessibilityPreferences = {},
             onLogoutClick = {},
             onOpenDependencyCredits = {},
             onOpenThirdPartiesSection = {},
+            onOpenAppearanceSection = {},
             onOpenAboutSection = {},
         )
     }
@@ -75,11 +77,11 @@ internal fun SettingsList(
     loggedInUser: User?,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
-    onOpenAccessibilityPreferences: () -> Unit,
     onLogoutClick: () -> Unit,
     onOpenDependencyCredits: () -> Unit,
     onOpenThirdPartiesSection: () -> Unit,
     onOpenAboutSection: () -> Unit,
+    onOpenAppearanceSection: () -> Unit,
     itemInsets: PaddingValues = SettingsConstants.ItemInsets,
     insets: PaddingValues = PaddingValues(),
 ) {
@@ -157,7 +159,7 @@ internal fun SettingsList(
                 modifier = Modifier.clickable { onOpenThirdPartiesSection() },
                 leadingContent = {
                     Icon(
-                        imageVector = Icons.Default.ImagesearchRoller,
+                        imageVector = Icons.Default.FormatPaint,
                         contentDescription = null,
                     )
                 },
@@ -243,44 +245,16 @@ internal fun SettingsList(
         }
 
         item {
-            SettingsHeader(
-                modifier = Modifier
-                    .padding(itemInsets)
-                    .padding(top = 8.dp),
-            ) {
-                Text(stringResource(MR.strings.settings_accessibility_header))
-            }
-        }
-
-        item {
-            SettingsSwitch(
-                modifier = Modifier.padding(itemInsets),
-                checked = appPreferences.showTimestamps,
-                onCheckedChange = { checked ->
-                    onAppPreferencesChange(appPreferences.copy(showTimestamps = checked))
-                },
-                title = {
-                    Text(stringResource(MR.strings.settings_accessibility_timestamps_title))
-                },
-            )
-        }
-
-        item {
-            SettingsText(
-                modifier = Modifier.padding(itemInsets),
-                onClick = onOpenAccessibilityPreferences,
-                onClickLabel = stringResource(MR.strings.settings_accessibility_animations_action),
-                title = {
-                    Text(stringResource(MR.strings.settings_accessibility_animations_title))
-                },
-                subtitle = {
-                    Text(stringResource(MR.strings.settings_accessibility_animations_subtitle))
-                },
-                trailingIcon = {
+            ListItem(
+                modifier = Modifier.clickable { onOpenAppearanceSection() },
+                leadingContent = {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                        imageVector = Icons.Default.Brush,
                         contentDescription = null,
                     )
+                },
+                headlineContent = {
+                    Text(stringResource(MR.strings.settings_accessibility_header))
                 },
             )
         }

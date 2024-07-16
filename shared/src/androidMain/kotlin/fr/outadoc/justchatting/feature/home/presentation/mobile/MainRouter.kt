@@ -9,6 +9,7 @@ import androidx.navigation.compose.rememberNavController
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.DependencyCreditsScreen
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsContent
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAbout
+import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionAppearance
 import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsSectionThirdParties
 
 @Composable
@@ -49,7 +50,6 @@ internal fun MainRouter(
                 onNavigate = { navController.navigate(it) },
                 onOpenNotificationPreferences = onOpenNotificationPreferences,
                 onOpenBubblePreferences = onOpenBubblePreferences,
-                onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
             )
         }
 
@@ -68,6 +68,13 @@ internal fun MainRouter(
         composable<Screen.Settings.About> {
             SettingsSectionAbout(
                 onNavigateUp = { navController.popBackStack() },
+            )
+        }
+
+        composable<Screen.Settings.Appearance> {
+            SettingsSectionAppearance(
+                onNavigateUp = { navController.popBackStack() },
+                onOpenAccessibilityPreferences = onOpenAccessibilityPreferences,
             )
         }
     }

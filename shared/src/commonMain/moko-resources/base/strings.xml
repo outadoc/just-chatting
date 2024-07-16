@@ -284,7 +284,7 @@
     <string name="settings_dependencies_title">Open-source dependencies</string>
     <string name="settings_dependencies_subtitle">Find all the great software that makes %1$s possible.</string>
     <string name="settings_dependencies_cd">Show website</string>
-    <string name="settings_accessibility_header">Accessibility</string>
+    <string name="settings_accessibility_header">Appearance</string>
     <string name="settings_accessibility_animations_title">Show animated emotes</string>
     <string name="settings_accessibility_animations_subtitle">You can disable animated emotes by enabling "Reduce motion" in your device\'s accessibility settings.</string>
     <string name="settings_accessibility_animations_action">Open system accessibility settings</string>

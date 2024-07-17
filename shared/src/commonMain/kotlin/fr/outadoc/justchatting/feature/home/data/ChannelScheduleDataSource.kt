@@ -10,12 +10,12 @@ import fr.outadoc.justchatting.utils.logging.logError
 internal class ChannelScheduleDataSource(
     private val channelId: String,
     private val twitchClient: TwitchClient,
-) : PagingSource<Pagination, List<ChannelScheduleSegment>>() {
+) : PagingSource<Pagination, ChannelScheduleSegment>() {
 
-    override fun getRefreshKey(state: PagingState<Pagination, List<ChannelScheduleSegment>>): Pagination? =
+    override fun getRefreshKey(state: PagingState<Pagination, ChannelScheduleSegment>): Pagination? =
         null
 
-    override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, List<ChannelScheduleSegment>> {
+    override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, ChannelScheduleSegment> {
         return twitchClient
             .getChannelSchedule(
                 channelId = channelId,
@@ -32,23 +32,21 @@ internal class ChannelScheduleDataSource(
                         }
 
                     LoadResult.Page(
-                        data = listOf(
-                            response.data.segments.map { schedule ->
-                                ChannelScheduleSegment(
-                                    id = schedule.id,
-                                    title = schedule.title,
-                                    startTime = schedule.startTime,
-                                    endTime = schedule.endTime,
-                                    category = schedule.category?.let { category ->
-                                        StreamCategory(
-                                            id = category.id,
-                                            name = category.name,
-                                        )
-                                    },
-                                    isRecurring = schedule.isRecurring,
-                                )
-                            },
-                        ),
+                        data = response.data.segments.map { schedule ->
+                            ChannelScheduleSegment(
+                                id = schedule.id,
+                                title = schedule.title,
+                                startTime = schedule.startTime,
+                                endTime = schedule.endTime,
+                                category = schedule.category?.let { category ->
+                                    StreamCategory(
+                                        id = category.id,
+                                        name = category.name,
+                                    )
+                                },
+                                isRecurring = schedule.isRecurring,
+                            )
+                        },
                         prevKey = null,
                         nextKey = response.pagination.cursor?.let { cursor -> Pagination.Next(cursor) },
                         itemsAfter = itemsAfter,

@@ -7,7 +7,6 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.home.domain.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
@@ -32,7 +31,7 @@ internal class TwitchApiImpl(
                             login = stream.userLogin,
                             displayName = stream.userName,
 
-                            ),
+                        ),
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
@@ -55,7 +54,7 @@ internal class TwitchApiImpl(
                             login = stream.userLogin,
                             displayName = stream.userName,
 
-                            ),
+                        ),
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
@@ -232,8 +231,8 @@ internal class TwitchApiImpl(
     override suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleSegment>> {
         val pager = Pager(
             config = PagingConfig(
-                pageSize = 30,
-                initialLoadSize = 30,
+                pageSize = 25,
+                initialLoadSize = 10,
                 prefetchDistance = 10,
                 enablePlaceholders = true,
             ),

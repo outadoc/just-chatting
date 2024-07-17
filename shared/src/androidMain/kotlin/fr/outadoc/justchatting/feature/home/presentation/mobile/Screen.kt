@@ -11,6 +11,9 @@ internal sealed interface Screen {
     data object Followed : Screen
 
     @Serializable
+    data object Epg : Screen
+
+    @Serializable
     sealed interface Settings : Screen {
 
         @Serializable

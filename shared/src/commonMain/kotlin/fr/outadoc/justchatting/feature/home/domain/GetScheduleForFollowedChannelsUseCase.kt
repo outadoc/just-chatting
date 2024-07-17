@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 internal class GetScheduleForFollowedChannelsUseCase(
-    private val twitchRepository: TwitchRepository
+    private val twitchRepository: TwitchRepository,
 ) {
     suspend operator fun invoke(): Flow<PagingData<ChannelSchedule>> {
         return twitchRepository
@@ -17,7 +17,7 @@ internal class GetScheduleForFollowedChannelsUseCase(
                     ChannelSchedule(
                         user = channel.user,
                         segments = twitchRepository.getChannelSchedule(
-                            channelId = channel.user.id
+                            channelId = channel.user.id,
                         ),
                     )
                 }

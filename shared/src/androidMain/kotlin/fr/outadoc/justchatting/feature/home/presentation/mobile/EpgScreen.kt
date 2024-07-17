@@ -22,13 +22,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import app.cash.paging.compose.collectAsLazyPagingItems
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
+import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.presentation.EpgViewModel
+import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.Instant
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -124,7 +129,7 @@ private fun EpgRow(
     val segments = channelSchedule.segments.collectAsLazyPagingItems()
 
     LazyRow(modifier = modifier) {
-        item(key = channelSchedule.user.id) {
+        item(key = channelSchedule.user.login) {
             Text(channelSchedule.user.displayName)
         }
 
@@ -153,5 +158,61 @@ private fun EpgSegment(
     Column(modifier = modifier) {
         Text("${segment.startTime} ‑ ${segment.endTime}")
         Text(segment.title)
+    }
+}
+
+@Preview
+@Composable
+private fun EpgSegmentPreview() {
+    AppTheme {
+        EpgSegment(
+            segment = ChannelScheduleSegment(
+                id = "1",
+                title = "Title",
+                startTime = Instant.parse("2022-01-01T12:00:00Z"),
+                endTime = Instant.parse("2022-01-01T13:00:00Z"),
+                category = null,
+                isRecurring = false,
+            ),
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EpgRowPreview() {
+    AppTheme {
+        EpgRow(
+            channelSchedule = ChannelSchedule(
+                user = User(
+                    id = "1",
+                    login = "login",
+                    displayName = "Display Name",
+                    profileImageUrl = "https://example.com/image.jpg",
+                ),
+                segments = flowOf(
+                    PagingData.from(
+                        listOf(
+                            ChannelScheduleSegment(
+                                id = "1",
+                                title = "Title",
+                                startTime = Instant.parse("2022-01-01T12:00:00Z"),
+                                endTime = Instant.parse("2022-01-01T13:00:00Z"),
+                                category = null,
+                                isRecurring = false,
+                            ),
+                            ChannelScheduleSegment(
+                                id = "2",
+                                title = "Title",
+                                startTime = Instant.parse("2022-01-01T13:00:00Z"),
+                                endTime = Instant.parse("2022-01-01T14:00:00Z"),
+                                category = null,
+                                isRecurring = false,
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        )
     }
 }

@@ -1,12 +1,15 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import androidx.paging.map
 import fr.outadoc.justchatting.feature.home.domain.GetScheduleForFollowedChannelsUseCase
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 internal class EpgViewModel(
@@ -27,7 +30,15 @@ internal class EpgViewModel(
         viewModelScope.launch {
             _state.value = State.Loading
             _state.value = State.Loaded(
-                pagingData = getScheduleForFollowedChannels(),
+                pagingData = getScheduleForFollowedChannels()
+                    .map { pagingData ->
+                        pagingData.map { schedule ->
+                            schedule.copy(
+                                segments = schedule.segments.cachedIn(viewModelScope)
+                            )
+                        }
+                    }
+                    .cachedIn(viewModelScope),
             )
         }
     }

@@ -34,9 +34,9 @@ internal interface TwitchApi {
         after: String?,
     ): Result<ChannelSchedule>
 
-    suspend fun getFollowedChannels(userId: String): Flow<PagingData<ChannelFollow>>
+    suspend fun getFollowedChannels(userId: String): Flow<PagingData<List<ChannelFollow>>>
 
-    suspend fun getFollowedStreams(userId: String): Flow<PagingData<Stream>>
+    suspend fun getFollowedStreams(userId: String): Flow<PagingData<List<Stream>>>
 
-    suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>>
+    suspend fun searchChannels(query: String): Flow<PagingData<List<ChannelSearchResult>>>
 }

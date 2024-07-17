@@ -35,12 +35,4 @@ internal class UsersMemoryCacheImpl : UsersMemoryCache {
             userCacheByLogin = userCacheByLogin.putAll(users.associateBy { it.login })
         }
     }
-
-    override suspend fun put(user: User) {
-        withContext(DispatchersProvider.default) {
-            logDebug<UsersMemoryCacheImpl> { "put: writing $user to cache" }
-            userCacheById = userCacheById.put(user.id, user)
-            userCacheByLogin = userCacheByLogin.put(user.login, user)
-        }
-    }
 }

@@ -9,6 +9,4 @@ internal interface UsersMemoryCache {
     suspend fun getUsersByLogin(logins: List<String>): List<User>
 
     suspend fun put(users: List<User>)
-
-    suspend fun put(user: User)
 }

@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.home.domain
 
 import androidx.paging.PagingData
+import androidx.paging.flatMap
 import androidx.paging.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
@@ -16,11 +17,12 @@ import fr.outadoc.justchatting.feature.recent.domain.model.RecentChannel
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
@@ -36,7 +38,22 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
         withContext(DispatchersProvider.io) {
-            twitchApi.searchChannels(query)
+            twitchApi
+                .searchChannels(query)
+                .map { pagingData ->
+                    pagingData.flatMap { results ->
+                        val fullUsersById: Map<String, User> =
+                            getUsersById(ids = results.map { result -> result.user.id })
+                                .last()
+                                .getOrNull()
+                                .orEmpty()
+                                .associateBy { user -> user.id }
+
+                        results.map { result ->
+                            result.copy(user = fullUsersById[result.user.id] ?: result.user)
+                        }
+                    }
+                }
         }
 
     override suspend fun getFollowedStreams(): Flow<PagingData<Stream>> =
@@ -47,15 +64,23 @@ internal class TwitchRepositoryImpl(
                     twitchApi
                         .getFollowedStreams(userId = prefs.appUser.userId)
                         .map { pagingData ->
-                            pagingData.map { stream ->
-                                usersMemoryCache.put(stream.user)
-                                stream
+                            pagingData.flatMap { follows ->
+                                val fullUsersById: Map<String, User> =
+                                    getUsersById(ids = follows.map { follow -> follow.user.id })
+                                        .last()
+                                        .getOrNull()
+                                        .orEmpty()
+                                        .associateBy { user -> user.id }
+
+                                follows.map { follow ->
+                                    follow.copy(user = fullUsersById[follow.user.id] ?: follow.user)
+                                }
                             }
                         }
                 }
 
                 else -> {
-                    emptyFlow()
+                    flowOf(PagingData.empty())
                 }
             }
         }
@@ -68,15 +93,23 @@ internal class TwitchRepositoryImpl(
                     twitchApi
                         .getFollowedChannels(userId = prefs.appUser.userId)
                         .map { pagingData ->
-                            pagingData.map { follow ->
-                                usersMemoryCache.put(follow.user)
-                                follow
+                            pagingData.flatMap { follows ->
+                                val fullUsersById: Map<String, User> =
+                                    getUsersById(ids = follows.map { follow -> follow.user.id })
+                                        .last()
+                                        .getOrNull()
+                                        .orEmpty()
+                                        .associateBy { user -> user.id }
+
+                                follows.map { follow ->
+                                    follow.copy(user = fullUsersById[follow.user.id] ?: follow.user)
+                                }
                             }
                         }
                 }
 
                 else -> {
-                    emptyFlow()
+                    flowOf(PagingData.empty())
                 }
             }
         }

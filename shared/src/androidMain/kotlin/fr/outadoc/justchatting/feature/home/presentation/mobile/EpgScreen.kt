@@ -5,12 +5,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -44,8 +46,15 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.todayIn
 import org.koin.androidx.compose.koinViewModel
+import java.time.format.TextStyle
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -100,6 +109,7 @@ internal fun EpgScreen(
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun EpgContent(
     modifier: Modifier = Modifier,
@@ -112,6 +122,10 @@ private fun EpgContent(
         modifier = modifier,
         contentPadding = contentPadding,
     ) {
+        stickyHeader("timeline") {
+            Timeline()
+        }
+
         items(
             count = items.itemCount,
             key = { index -> items[index]?.user?.id ?: index },
@@ -135,6 +149,43 @@ private fun EpgContent(
     }
 }
 
+@Composable
+private fun Timeline(
+    modifier: Modifier = Modifier,
+    clock: Clock = Clock.System,
+    tz: TimeZone = TimeZone.currentSystemDefault(),
+) {
+    val today = clock.todayIn(tz)
+    val nextMonth = buildList {
+        for (i in 0..30) {
+            add(today.plus(i, DateTimeUnit.DAY))
+        }
+    }
+
+    LazyColumn(modifier = modifier) {
+        item {
+            Spacer(modifier = Modifier.height(HeaderHeight))
+        }
+
+        items(nextMonth) { date ->
+            Column(
+                modifier = Modifier
+                    .height(DayHeight)
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
+                Text(
+                    date.dayOfWeek.getDisplayName(
+                        TextStyle.FULL,
+                        Locale.getDefault()
+                    )
+                )
+
+                Text(date.dayOfMonth.toString())
+            }
+        }
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun EpgChannelEntry(
@@ -145,6 +196,7 @@ private fun EpgChannelEntry(
     LazyColumn(modifier = modifier) {
         stickyHeader(key = user.login) {
             Column(
+                modifier = Modifier.height(HeaderHeight),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
@@ -248,3 +300,6 @@ private fun EpgChannelPreview() {
         )
     }
 }
+
+private val DayHeight = 100.dp
+private val HeaderHeight = 100.dp

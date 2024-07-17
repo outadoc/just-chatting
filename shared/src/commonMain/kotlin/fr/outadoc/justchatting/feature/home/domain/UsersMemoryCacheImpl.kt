@@ -20,12 +20,22 @@ internal class UsersMemoryCacheImpl : UsersMemoryCache {
             }
     }
 
+    override suspend fun getUserById(id: String): User {
+        return userCacheById[id]
+            ?: throw NoSuchElementException("User with ID $id not found in cache")
+    }
+
     override suspend fun getUsersByLogin(logins: List<String>): List<User> {
         return logins
             .mapNotNull { login -> userCacheByLogin[login] }
             .onEach { user ->
                 logDebug<UsersMemoryCacheImpl> { "got $user from cache" }
             }
+    }
+
+    override suspend fun getUserByLogin(login: String): User {
+        return userCacheByLogin[login]
+            ?: throw NoSuchElementException("User with login $login not found in cache")
     }
 
     override suspend fun put(users: List<User>) {

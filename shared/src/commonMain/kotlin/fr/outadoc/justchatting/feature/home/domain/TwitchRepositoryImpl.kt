@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -36,7 +37,16 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
         withContext(DispatchersProvider.io) {
-            twitchApi.searchChannels(query)
+            twitchApi
+                .searchChannels(query)
+                .map { pagingData ->
+                    pagingData.map { result ->
+                        val fullUser = getUserById(result.user.id).first()
+                        result.copy(
+                            user = fullUser.getOrNull() ?: result.user,
+                        )
+                    }
+                }
         }
 
     override suspend fun getFollowedStreams(): Flow<PagingData<Stream>> =
@@ -48,14 +58,16 @@ internal class TwitchRepositoryImpl(
                         .getFollowedStreams(userId = prefs.appUser.userId)
                         .map { pagingData ->
                             pagingData.map { stream ->
-                                usersMemoryCache.put(stream.user)
-                                stream
+                                val fullUser = getUserById(stream.user.id).first()
+                                stream.copy(
+                                    user = fullUser.getOrNull() ?: stream.user,
+                                )
                             }
                         }
                 }
 
                 else -> {
-                    emptyFlow()
+                    flowOf(PagingData.empty())
                 }
             }
         }
@@ -69,14 +81,16 @@ internal class TwitchRepositoryImpl(
                         .getFollowedChannels(userId = prefs.appUser.userId)
                         .map { pagingData ->
                             pagingData.map { follow ->
-                                usersMemoryCache.put(follow.user)
-                                follow
+                                val fullUser = getUserById(follow.user.id).first()
+                                follow.copy(
+                                    user = fullUser.getOrNull() ?: follow.user,
+                                )
                             }
                         }
                 }
 
                 else -> {
-                    emptyFlow()
+                    flowOf(PagingData.empty())
                 }
             }
         }

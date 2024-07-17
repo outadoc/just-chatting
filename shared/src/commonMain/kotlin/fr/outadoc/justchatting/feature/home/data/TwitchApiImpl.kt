@@ -7,12 +7,9 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.home.domain.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleVacation
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
-import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.collections.immutable.toPersistentList
@@ -34,7 +31,7 @@ internal class TwitchApiImpl(
                             login = stream.userLogin,
                             displayName = stream.userName,
 
-                        ),
+                            ),
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
@@ -57,7 +54,7 @@ internal class TwitchApiImpl(
                             login = stream.userLogin,
                             displayName = stream.userName,
 
-                        ),
+                            ),
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
@@ -235,41 +232,22 @@ internal class TwitchApiImpl(
         channelId: String,
         limit: Int,
         after: String?,
-    ): Result<ChannelSchedule> {
-        return twitchClient
-            .getChannelSchedule(
-                channelId = channelId,
-                limit = limit,
-                after = after,
-            )
-            .mapCatching { response ->
-                ChannelSchedule(
-                    segments = response.data.segments.map { segment ->
-                        ChannelScheduleSegment(
-                            id = segment.id,
-                            startTime = segment.startTime,
-                            endTime = segment.endTime,
-                            title = segment.title,
-                            canceledUntil = segment.canceledUntil,
-                            category = segment.category?.let {
-                                StreamCategory(
-                                    id = segment.category.id,
-                                    name = segment.category.name,
-                                )
-                            },
-                            isRecurring = segment.isRecurring,
-                        )
-                    },
-                    userId = response.data.userId,
-                    userLogin = response.data.userLogin,
-                    userDisplayName = response.data.userDisplayName,
-                    vacation = response.data.vacation?.let { vacation ->
-                        ChannelScheduleVacation(
-                            startTime = vacation.startTime,
-                            endTime = vacation.endTime,
-                        )
-                    },
+    ): Flow<PagingData<List<ChannelScheduleSegment>>> {
+        val pager = Pager(
+            config = PagingConfig(
+                pageSize = 30,
+                initialLoadSize = 30,
+                prefetchDistance = 10,
+                enablePlaceholders = true,
+            ),
+            pagingSourceFactory = {
+                ChannelScheduleDataSource(
+                    channelId = channelId,
+                    twitchClient = twitchClient,
                 )
-            }
+            },
+        )
+
+        return pager.flow
     }
 }

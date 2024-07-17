@@ -2,10 +2,9 @@ package fr.outadoc.justchatting.feature.home.domain
 
 import androidx.paging.PagingData
 import androidx.paging.flatMap
-import androidx.paging.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
@@ -271,13 +270,17 @@ internal class TwitchRepositoryImpl(
         }
     }
 
-    override suspend fun getChannelSchedule(channelId: String): Result<ChannelSchedule> =
+    override suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleSegment>> =
         withContext(DispatchersProvider.io) {
-            twitchApi.getChannelSchedule(
-                channelId = channelId,
-                limit = 10,
-                after = null,
-            )
+            twitchApi
+                .getChannelSchedule(
+                    channelId = channelId,
+                    limit = 10,
+                    after = null,
+                )
+                .map { pagingData ->
+                    pagingData.flatMap { segments -> segments }
+                }
         }
 
     override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> =

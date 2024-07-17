@@ -4,6 +4,7 @@ import androidx.paging.PagingData
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
@@ -32,7 +33,7 @@ internal interface TwitchApi {
         channelId: String,
         limit: Int,
         after: String?,
-    ): Result<ChannelSchedule>
+    ): Flow<PagingData<List<ChannelScheduleSegment>>>
 
     suspend fun getFollowedChannels(userId: String): Flow<PagingData<List<ChannelFollow>>>
 

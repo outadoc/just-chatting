@@ -20,11 +20,6 @@ internal class UsersMemoryCacheImpl : UsersMemoryCache {
             }
     }
 
-    override suspend fun getUserById(id: String): User {
-        return userCacheById[id]
-            ?: throw NoSuchElementException("User with ID $id not found in cache")
-    }
-
     override suspend fun getUsersByLogin(logins: List<String>): List<User> {
         return logins
             .mapNotNull { login -> userCacheByLogin[login] }
@@ -33,24 +28,11 @@ internal class UsersMemoryCacheImpl : UsersMemoryCache {
             }
     }
 
-    override suspend fun getUserByLogin(login: String): User {
-        return userCacheByLogin[login]
-            ?: throw NoSuchElementException("User with login $login not found in cache")
-    }
-
     override suspend fun put(users: List<User>) {
         withContext(DispatchersProvider.default) {
             logDebug<UsersMemoryCacheImpl> { "put: writing $users to cache" }
             userCacheById = userCacheById.putAll(users.associateBy { it.id })
             userCacheByLogin = userCacheByLogin.putAll(users.associateBy { it.login })
-        }
-    }
-
-    override suspend fun put(user: User) {
-        withContext(DispatchersProvider.default) {
-            logDebug<UsersMemoryCacheImpl> { "put: writing $user to cache" }
-            userCacheById = userCacheById.put(user.id, user)
-            userCacheByLogin = userCacheByLogin.put(user.login, user)
         }
     }
 }

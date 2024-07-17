@@ -10,12 +10,12 @@ import fr.outadoc.justchatting.utils.logging.logError
 internal class SearchChannelsDataSource(
     private val query: String,
     private val twitchClient: TwitchClient,
-) : PagingSource<Pagination, ChannelSearchResult>() {
+) : PagingSource<Pagination, List<ChannelSearchResult>>() {
 
-    override fun getRefreshKey(state: PagingState<Pagination, ChannelSearchResult>): Pagination? =
+    override fun getRefreshKey(state: PagingState<Pagination, List<ChannelSearchResult>>): Pagination? =
         null
 
-    override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, ChannelSearchResult> {
+    override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, List<ChannelSearchResult>> {
         if (query.isBlank()) {
             return LoadResult.Page(
                 data = emptyList(),
@@ -41,22 +41,24 @@ internal class SearchChannelsDataSource(
                         }
 
                     LoadResult.Page(
-                        data = response.data.map { search ->
-                            ChannelSearchResult(
-                                title = search.title,
-                                user = User(
-                                    id = search.userId,
-                                    login = search.userLogin,
-                                    displayName = search.userDisplayName,
-                                ),
-                                language = search.broadcasterLanguage,
-                                gameId = search.gameId,
-                                gameName = search.gameName,
-                                isLive = search.isLive,
-                                thumbnailUrl = search.thumbnailUrl,
-                                tags = search.tags,
-                            )
-                        },
+                        data = listOf(
+                            response.data.map { search ->
+                                ChannelSearchResult(
+                                    title = search.title,
+                                    user = User(
+                                        id = search.userId,
+                                        login = search.userLogin,
+                                        displayName = search.userDisplayName,
+                                    ),
+                                    language = search.broadcasterLanguage,
+                                    gameId = search.gameId,
+                                    gameName = search.gameName,
+                                    isLive = search.isLive,
+                                    thumbnailUrl = search.thumbnailUrl,
+                                    tags = search.tags,
+                                )
+                            },
+                        ),
                         prevKey = null,
                         nextKey = response.pagination.cursor?.let { cursor ->
                             Pagination.Next(

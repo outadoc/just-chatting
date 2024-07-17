@@ -68,7 +68,7 @@ internal class TwitchApiImpl(
             }
     }
 
-    override suspend fun getFollowedStreams(userId: String): Flow<PagingData<Stream>> {
+    override suspend fun getFollowedStreams(userId: String): Flow<PagingData<List<Stream>>> {
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 30,
@@ -127,7 +127,7 @@ internal class TwitchApiImpl(
 
     override suspend fun searchChannels(
         query: String,
-    ): Flow<PagingData<ChannelSearchResult>> {
+    ): Flow<PagingData<List<ChannelSearchResult>>> {
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 15,
@@ -146,7 +146,7 @@ internal class TwitchApiImpl(
         return pager.flow
     }
 
-    override suspend fun getFollowedChannels(userId: String): Flow<PagingData<ChannelFollow>> {
+    override suspend fun getFollowedChannels(userId: String): Flow<PagingData<List<ChannelFollow>>> {
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 40,

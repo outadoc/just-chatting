@@ -114,7 +114,7 @@ internal fun CompactNavigation(
 
                 NavigationBarItem(
                     selected = selectedScreen == Screen.Epg,
-                    label = { Text("Guide") },
+                    label = { Text(stringResource(MR.strings.epg_title)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Schedule,
@@ -194,7 +194,7 @@ internal fun MediumNavigation(
                     selected = selectedScreen == Screen.Epg,
                     label = {
                         AnimatedVisibility(visible = selectedScreen == Screen.Followed) {
-                            Text("Guide")
+                            Text(stringResource(MR.strings.epg_title))
                         }
                     },
                     icon = {
@@ -281,7 +281,7 @@ internal fun ExpandedNavigation(
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
                     selected = selectedScreen == Screen.Epg,
-                    label = { Text("Guide") },
+                    label = { Text(stringResource(MR.strings.epg_title)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Schedule,

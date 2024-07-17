@@ -26,10 +26,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import app.cash.paging.compose.collectAsLazyPagingItems
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.presentation.EpgViewModel
+import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -59,7 +61,7 @@ internal fun EpgScreen(
         onSelectedTabChange = onNavigate,
         topBar = {
             TopAppBar(
-                title = { Text("Guide") },
+                title = { Text(stringResource(MR.strings.epg_title)) },
                 scrollBehavior = scrollBehavior,
             )
         },

@@ -78,7 +78,10 @@ internal fun MainRouter(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            EpgScreen()
+            EpgScreen(
+                sizeClass = sizeClass,
+                onNavigate = { navController.navigate(it) },
+            )
         }
 
         composable<Screen.Settings.Root>(

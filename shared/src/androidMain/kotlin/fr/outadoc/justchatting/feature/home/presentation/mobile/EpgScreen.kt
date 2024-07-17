@@ -1,19 +1,23 @@
 package fr.outadoc.justchatting.feature.home.presentation.mobile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -22,12 +26,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
+import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
+import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.User
@@ -100,7 +108,7 @@ private fun EpgContent(
 ) {
     val items = pagingData.collectAsLazyPagingItems()
 
-    LazyColumn(
+    LazyRow(
         modifier = modifier,
         contentPadding = contentPadding,
     ) {
@@ -110,32 +118,51 @@ private fun EpgContent(
         ) { index ->
             val item: ChannelSchedule? = items[index]
 
-            if (item == null) {
-                CircularProgressIndicator()
-            } else {
-                EpgRow(
-                    modifier = Modifier.height(100.dp),
-                    channelSchedule = item,
-                )
-            }
+            if (item != null) {
+                val segments = item.segments.collectAsLazyPagingItems()
 
-            if (index < items.itemCount - 1) {
-                HorizontalDivider()
+                EpgChannelEntry(
+                    modifier = Modifier.height(100.dp),
+                    user = item.user,
+                    segments = segments
+                )
+
+                if (index < items.itemCount - 1) {
+                    VerticalDivider()
+                }
             }
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun EpgRow(
+private fun EpgChannelEntry(
     modifier: Modifier = Modifier,
-    channelSchedule: ChannelSchedule,
+    user: User,
+    segments: LazyPagingItems<ChannelScheduleSegment>
 ) {
-    val segments = channelSchedule.segments.collectAsLazyPagingItems()
+    LazyColumn(modifier = modifier) {
+        stickyHeader(key = user.login) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                AsyncImage(
+                    modifier = Modifier
+                        .padding(end = 8.dp)
+                        .size(56.dp)
+                        .clip(MaterialTheme.shapes.medium)
+                        .background(MaterialTheme.colorScheme.surface),
+                    model = remoteImageModel(user.profileImageUrl),
+                    contentDescription = null,
+                )
 
-    LazyRow(modifier = modifier) {
-        item(key = channelSchedule.user.login) {
-            Text(channelSchedule.user.displayName)
+                Text(
+                    user.displayName,
+                    style = MaterialTheme.typography.labelMedium,
+                )
+            }
         }
 
         items(
@@ -185,39 +212,39 @@ private fun EpgSegmentPreview() {
 
 @Preview
 @Composable
-private fun EpgRowPreview() {
+private fun EpgChannelPreview() {
     AppTheme {
-        EpgRow(
-            channelSchedule = ChannelSchedule(
-                user = User(
-                    id = "1",
-                    login = "login",
-                    displayName = "Display Name",
-                    profileImageUrl = "https://example.com/image.jpg",
-                ),
-                segments = flowOf(
-                    PagingData.from(
-                        listOf(
-                            ChannelScheduleSegment(
-                                id = "1",
-                                title = "Title",
-                                startTime = Instant.parse("2022-01-01T12:00:00Z"),
-                                endTime = Instant.parse("2022-01-01T13:00:00Z"),
-                                category = null,
-                                isRecurring = false,
-                            ),
-                            ChannelScheduleSegment(
-                                id = "2",
-                                title = "Title",
-                                startTime = Instant.parse("2022-01-01T13:00:00Z"),
-                                endTime = Instant.parse("2022-01-01T14:00:00Z"),
-                                category = null,
-                                isRecurring = false,
-                            ),
-                        ),
+        val items = flowOf(
+            PagingData.from(
+                listOf(
+                    ChannelScheduleSegment(
+                        id = "1",
+                        title = "Title",
+                        startTime = Instant.parse("2022-01-01T12:00:00Z"),
+                        endTime = Instant.parse("2022-01-01T13:00:00Z"),
+                        category = null,
+                        isRecurring = false,
+                    ),
+                    ChannelScheduleSegment(
+                        id = "2",
+                        title = "Title",
+                        startTime = Instant.parse("2022-01-01T13:00:00Z"),
+                        endTime = Instant.parse("2022-01-01T14:00:00Z"),
+                        category = null,
+                        isRecurring = false,
                     ),
                 ),
             ),
+        )
+
+        EpgChannelEntry(
+            user = User(
+                id = "1",
+                login = "login",
+                displayName = "Display Name",
+                profileImageUrl = "https://example.com/image.jpg",
+            ),
+            segments = items.collectAsLazyPagingItems(),
         )
     }
 }

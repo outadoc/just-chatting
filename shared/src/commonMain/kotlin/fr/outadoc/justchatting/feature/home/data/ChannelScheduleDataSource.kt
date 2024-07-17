@@ -32,21 +32,23 @@ internal class ChannelScheduleDataSource(
                         }
 
                     LoadResult.Page(
-                        data = response.data.segments.map { schedule ->
-                            ChannelScheduleSegment(
-                                id = schedule.id,
-                                title = schedule.title,
-                                startTime = schedule.startTime,
-                                endTime = schedule.endTime,
-                                category = schedule.category?.let { category ->
-                                    StreamCategory(
-                                        id = category.id,
-                                        name = category.name,
-                                    )
-                                },
-                                isRecurring = schedule.isRecurring,
-                            )
-                        },
+                        data = response.data.segments
+                            .orEmpty()
+                            .map { schedule ->
+                                ChannelScheduleSegment(
+                                    id = schedule.id,
+                                    title = schedule.title,
+                                    startTime = schedule.startTime,
+                                    endTime = schedule.endTime,
+                                    category = schedule.category?.let { category ->
+                                        StreamCategory(
+                                            id = category.id,
+                                            name = category.name,
+                                        )
+                                    },
+                                    isRecurring = schedule.isRecurring,
+                                )
+                            },
                         prevKey = null,
                         nextKey = response.pagination.cursor?.let { cursor -> Pagination.Next(cursor) },
                         itemsAfter = itemsAfter,

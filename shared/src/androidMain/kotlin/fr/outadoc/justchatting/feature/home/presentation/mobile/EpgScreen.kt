@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.home.presentation.mobile
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -69,7 +70,9 @@ internal fun EpgScreen(
             when (val currentState = state) {
                 is EpgViewModel.State.Loading -> {
                     Column(
-                        modifier = Modifier.padding(insets),
+                        modifier = Modifier
+                            .padding(insets)
+                            .fillMaxSize(),
                         verticalArrangement = Arrangement.Center,
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {

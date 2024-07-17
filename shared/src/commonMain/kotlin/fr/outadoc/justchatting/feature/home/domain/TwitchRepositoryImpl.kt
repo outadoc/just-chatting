@@ -273,11 +273,7 @@ internal class TwitchRepositoryImpl(
     override suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleSegment>> =
         withContext(DispatchersProvider.io) {
             twitchApi
-                .getChannelSchedule(
-                    channelId = channelId,
-                    limit = 10,
-                    after = null,
-                )
+                .getChannelSchedule(channelId = channelId)
                 .map { pagingData ->
                     pagingData.flatMap { segments -> segments }
                 }

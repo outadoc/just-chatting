@@ -29,11 +29,7 @@ internal interface TwitchApi {
 
     suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>>
 
-    suspend fun getChannelSchedule(
-        channelId: String,
-        limit: Int,
-        after: String?,
-    ): Flow<PagingData<List<ChannelScheduleSegment>>>
+    suspend fun getChannelSchedule(channelId: String, ): Flow<PagingData<List<ChannelScheduleSegment>>>
 
     suspend fun getFollowedChannels(userId: String): Flow<PagingData<List<ChannelFollow>>>
 

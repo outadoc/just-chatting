@@ -228,11 +228,7 @@ internal class TwitchApiImpl(
             }
     }
 
-    override suspend fun getChannelSchedule(
-        channelId: String,
-        limit: Int,
-        after: String?,
-    ): Flow<PagingData<List<ChannelScheduleSegment>>> {
+    override suspend fun getChannelSchedule(channelId: String): Flow<PagingData<List<ChannelScheduleSegment>>> {
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 30,

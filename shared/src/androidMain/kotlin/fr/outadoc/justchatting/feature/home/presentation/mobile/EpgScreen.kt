@@ -57,7 +57,7 @@ import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
-import kotlinx.datetime.todayIn
+import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.TextStyle
 import java.util.Locale
@@ -173,10 +173,10 @@ private fun EpgContent(
 @Composable
 private fun Timeline(
     modifier: Modifier = Modifier,
-    clock: Clock = Clock.System,
+    currentTime: Instant = Clock.System.now(),
     tz: TimeZone = TimeZone.currentSystemDefault(),
 ) {
-    val today = clock.todayIn(tz)
+    val today = currentTime.toLocalDateTime(tz).date
     val nextMonth = buildList {
         for (i in 0..30) {
             add(today.plus(i, DateTimeUnit.DAY))

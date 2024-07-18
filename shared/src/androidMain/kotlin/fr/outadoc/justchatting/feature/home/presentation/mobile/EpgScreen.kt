@@ -35,7 +35,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.times
 import androidx.paging.PagingData
 import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
@@ -59,6 +61,9 @@ import kotlinx.datetime.todayIn
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.TextStyle
 import java.util.Locale
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.days
+import kotlin.time.DurationUnit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -131,7 +136,7 @@ private fun EpgContent(
                 modifier = Modifier
                     .padding(end = 8.dp)
                     .background(
-                        MaterialTheme.colorScheme.surface
+                        MaterialTheme.colorScheme.surface,
                     ),
             )
 
@@ -191,7 +196,7 @@ private fun Timeline(
         ) { date ->
             Column(
                 modifier = Modifier
-                    .height(DayHeight)
+                    .height(heightForDuration(1.days))
                     .fillMaxWidth(),
             ) {
                 Text(
@@ -213,6 +218,7 @@ private fun EpgChannelEntry(
     modifier: Modifier = Modifier,
     user: User,
     segments: LazyPagingItems<ChannelScheduleSegment>,
+    currentTime: Instant = Clock.System.now(),
 ) {
     LazyColumn(
         modifier = modifier
@@ -254,11 +260,24 @@ private fun EpgChannelEntry(
             val item = segments[index]
 
             if (item == null) {
-                Spacer(modifier = Modifier.height(DayHeight))
+                Spacer(modifier = Modifier.height(48.dp))
             } else {
+                val previousEndTime: Instant =
+                    if (index > 0) {
+                        segments[index - 1]?.endTime ?: currentTime
+                    } else {
+                        currentTime
+                    }
+
+                Spacer(
+                    modifier = Modifier
+                        .height(heightForDuration(item.startTime - previousEndTime))
+                        .fillMaxWidth(),
+                )
+
                 EpgSegment(
                     modifier = Modifier
-                        .height(DayHeight)
+                        .height(heightForDuration(item.endTime - item.startTime))
                         .fillMaxWidth(),
                     segment = item,
                 )
@@ -336,7 +355,10 @@ private fun EpgChannelPreview() {
     }
 }
 
-private val DayHeight = 100.dp
+private fun heightForDuration(duration: Duration): Dp {
+    return duration.toDouble(DurationUnit.HOURS) * HourHeight
+}
+
+private val HourHeight = 10.dp
 private val HeaderHeight = 100.dp
 private val ColumnWidth = 200.dp
-private val TimelineWidth = 56.dp

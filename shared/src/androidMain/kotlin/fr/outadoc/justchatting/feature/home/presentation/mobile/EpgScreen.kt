@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -126,7 +127,11 @@ private fun EpgContent(
         contentPadding = contentPadding,
     ) {
         stickyHeader("timeline") {
-            Timeline()
+            Timeline(
+                modifier = Modifier.background(
+                    MaterialTheme.colorScheme.surface
+                ),
+            )
         }
 
         items(
@@ -140,6 +145,7 @@ private fun EpgContent(
                 val segments = item.segments.collectAsLazyPagingItems()
 
                 EpgChannelEntry(
+                    modifier = Modifier.width(ColumnWidth),
                     user = item.user,
                     segments = segments,
                 )
@@ -180,7 +186,7 @@ private fun Timeline(
             Column(
                 modifier = Modifier
                     .height(DayHeight)
-                    .background(MaterialTheme.colorScheme.surface),
+                    .fillMaxWidth(),
             ) {
                 Text(
                     date.dayOfWeek.getDisplayName(
@@ -211,7 +217,9 @@ private fun EpgChannelEntry(
             contentType = "user",
         ) {
             Column(
-                modifier = Modifier.height(HeaderHeight),
+                modifier = Modifier
+                    .height(HeaderHeight)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
@@ -243,7 +251,9 @@ private fun EpgChannelEntry(
                 Spacer(modifier = Modifier.height(DayHeight))
             } else {
                 EpgSegment(
-                    modifier = Modifier.height(DayHeight),
+                    modifier = Modifier
+                        .height(DayHeight)
+                        .fillMaxWidth(),
                     segment = item,
                 )
             }
@@ -322,3 +332,5 @@ private fun EpgChannelPreview() {
 
 private val DayHeight = 100.dp
 private val HeaderHeight = 100.dp
+private val ColumnWidth = 200.dp
+private val TimelineWidth = 56.dp

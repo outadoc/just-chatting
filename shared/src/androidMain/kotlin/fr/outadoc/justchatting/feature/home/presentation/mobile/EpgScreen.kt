@@ -6,13 +6,16 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -119,7 +122,7 @@ private fun EpgContent(
     val items = pagingData.collectAsLazyPagingItems()
 
     LazyRow(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth(),
         contentPadding = contentPadding,
     ) {
         stickyHeader("timeline") {
@@ -129,6 +132,7 @@ private fun EpgContent(
         items(
             count = items.itemCount,
             key = { index -> items[index]?.user?.id ?: index },
+            contentType = { "channel" }
         ) { index ->
             val item: ChannelSchedule? = items[index]
 
@@ -162,12 +166,18 @@ private fun Timeline(
         }
     }
 
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = modifier.fillMaxHeight(),
+    ) {
         item {
             Spacer(modifier = Modifier.height(HeaderHeight))
         }
 
-        items(nextMonth) { date ->
+        items(
+            items = nextMonth,
+            key = { date -> date.toEpochDays() },
+            contentType = { "date" }
+        ) { date ->
             Column(
                 modifier = Modifier
                     .height(DayHeight)
@@ -193,8 +203,11 @@ private fun EpgChannelEntry(
     user: User,
     segments: LazyPagingItems<ChannelScheduleSegment>
 ) {
-    LazyColumn(modifier = modifier) {
-        stickyHeader(key = user.login) {
+    LazyColumn(modifier = modifier.fillMaxHeight()) {
+        stickyHeader(
+            key = user.login,
+            contentType = "user"
+        ) {
             Column(
                 modifier = Modifier.height(HeaderHeight),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -220,13 +233,15 @@ private fun EpgChannelEntry(
         items(
             count = segments.itemCount,
             key = { index -> segments[index]?.id ?: index },
+            contentType = { "segment" }
         ) { index ->
             val item = segments[index]
 
             if (item == null) {
-                CircularProgressIndicator()
+                Spacer(modifier = Modifier.height(DayHeight))
             } else {
                 EpgSegment(
+                    modifier = Modifier.height(DayHeight),
                     segment = item,
                 )
             }
@@ -239,9 +254,11 @@ private fun EpgSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
 ) {
-    Column(modifier = modifier) {
-        Text("${segment.startTime} ‑ ${segment.endTime}")
-        Text(segment.title)
+    Card(modifier = modifier) {
+        Column {
+            Text("${segment.startTime} ‑ ${segment.endTime}")
+            Text(segment.title)
+        }
     }
 }
 

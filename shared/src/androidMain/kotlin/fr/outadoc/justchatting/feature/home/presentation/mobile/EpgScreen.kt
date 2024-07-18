@@ -132,7 +132,7 @@ private fun EpgContent(
         items(
             count = items.itemCount,
             key = { index -> items[index]?.user?.id ?: index },
-            contentType = { "channel" }
+            contentType = { "channel" },
         ) { index ->
             val item: ChannelSchedule? = items[index]
 
@@ -140,9 +140,8 @@ private fun EpgContent(
                 val segments = item.segments.collectAsLazyPagingItems()
 
                 EpgChannelEntry(
-                    modifier = Modifier.height(100.dp),
                     user = item.user,
-                    segments = segments
+                    segments = segments,
                 )
 
                 if (index < items.itemCount - 1) {
@@ -176,18 +175,18 @@ private fun Timeline(
         items(
             items = nextMonth,
             key = { date -> date.toEpochDays() },
-            contentType = { "date" }
+            contentType = { "date" },
         ) { date ->
             Column(
                 modifier = Modifier
                     .height(DayHeight)
-                    .background(MaterialTheme.colorScheme.surface)
+                    .background(MaterialTheme.colorScheme.surface),
             ) {
                 Text(
                     date.dayOfWeek.getDisplayName(
                         TextStyle.FULL,
-                        Locale.getDefault()
-                    )
+                        Locale.getDefault(),
+                    ),
                 )
 
                 Text(date.dayOfMonth.toString())
@@ -201,17 +200,20 @@ private fun Timeline(
 private fun EpgChannelEntry(
     modifier: Modifier = Modifier,
     user: User,
-    segments: LazyPagingItems<ChannelScheduleSegment>
+    segments: LazyPagingItems<ChannelScheduleSegment>,
 ) {
-    LazyColumn(modifier = modifier.fillMaxHeight()) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxHeight(),
+    ) {
         stickyHeader(
             key = user.login,
-            contentType = "user"
+            contentType = "user",
         ) {
             Column(
-                //modifier = Modifier.height(HeaderHeight),
+                modifier = Modifier.height(HeaderHeight),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 AsyncImage(
                     modifier = Modifier
@@ -233,7 +235,7 @@ private fun EpgChannelEntry(
         items(
             count = segments.itemCount,
             key = { index -> segments[index]?.id ?: index },
-            contentType = { "segment" }
+            contentType = { "segment" },
         ) { index ->
             val item = segments[index]
 

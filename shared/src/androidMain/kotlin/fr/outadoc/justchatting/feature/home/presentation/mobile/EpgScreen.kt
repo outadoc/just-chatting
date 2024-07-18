@@ -149,7 +149,9 @@ private fun EpgContent(
                 val segments = item.segments.collectAsLazyPagingItems()
 
                 EpgChannelEntry(
-                    modifier = Modifier.width(ColumnWidth),
+                    modifier = Modifier
+                        .padding(horizontal = 8.dp)
+                        .width(ColumnWidth),
                     user = item.user,
                     segments = segments,
                 )

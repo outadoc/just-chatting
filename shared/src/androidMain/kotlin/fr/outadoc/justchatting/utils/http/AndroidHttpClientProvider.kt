@@ -3,8 +3,8 @@ package fr.outadoc.justchatting.utils.http
 import fr.outadoc.justchatting.utils.logging.logDebug
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
-import io.ktor.client.engine.cio.CIO
-import io.ktor.client.engine.cio.endpoint
+import io.ktor.client.engine.okhttp.OkHttp
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.cache.HttpCache
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.plugins.logging.LogLevel
@@ -21,8 +21,13 @@ internal class AndroidHttpClientProvider(
 ) : BaseHttpClientProvider {
 
     override fun get(block: HttpClientConfig<*>.() -> Unit): HttpClient {
-        return HttpClient(CIO) {
+        return HttpClient(OkHttp) {
             install(HttpCache)
+
+            install(HttpTimeout) {
+                requestTimeoutMillis = 30.seconds.inWholeMilliseconds
+                connectTimeoutMillis = 10.seconds.inWholeMilliseconds
+            }
 
             install(ContentNegotiation) {
                 json(json)
@@ -46,10 +51,8 @@ internal class AndroidHttpClientProvider(
             expectSuccess = true
 
             engine {
-                requestTimeout = 30.seconds.inWholeMilliseconds
-
-                endpoint {
-                    connectTimeout = 10.seconds.inWholeMilliseconds
+                config {
+                    followRedirects(true)
                 }
             }
 

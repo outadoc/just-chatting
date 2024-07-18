@@ -134,6 +134,7 @@ private fun EpgContent(
         stickyHeader("timeline") {
             Timeline(
                 modifier = Modifier
+                    .width(48.dp)
                     .background(
                         MaterialTheme.colorScheme.surface,
                     )
@@ -201,7 +202,7 @@ private fun Timeline(
             ) {
                 Text(
                     date.dayOfWeek.getDisplayName(
-                        TextStyle.FULL,
+                        TextStyle.SHORT,
                         Locale.getDefault(),
                     ),
                 )

@@ -16,23 +16,28 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.VerticalDivider
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -49,6 +54,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.presentation.EpgViewModel
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
@@ -79,17 +85,13 @@ internal fun EpgScreen(
         viewModel.load()
     }
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-
     MainNavigation(
-        modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
         sizeClass = sizeClass,
         selectedScreen = Screen.Epg,
         onSelectedTabChange = onNavigate,
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(MR.strings.epg_title)) },
-                scrollBehavior = scrollBehavior,
             )
         },
         content = { insets ->
@@ -126,6 +128,7 @@ private fun EpgContent(
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     val items = pagingData.collectAsLazyPagingItems()
+    var scrollDelta by remember { mutableFloatStateOf(0f) }
 
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -139,6 +142,8 @@ private fun EpgContent(
                         MaterialTheme.colorScheme.surface,
                     )
                     .padding(end = 8.dp),
+                scrollDelta = scrollDelta,
+                onScrollDeltaChange = { delta -> scrollDelta = delta },
             )
 
             VerticalDivider()
@@ -160,6 +165,8 @@ private fun EpgContent(
                         .width(ColumnWidth),
                     user = item.user,
                     segments = segments,
+                    scrollDelta = scrollDelta,
+                    onScrollDeltaChange = { delta -> scrollDelta = delta },
                 )
 
                 if (index < items.itemCount - 1) {
@@ -175,6 +182,8 @@ private fun Timeline(
     modifier: Modifier = Modifier,
     currentTime: Instant = Clock.System.now(),
     tz: TimeZone = TimeZone.currentSystemDefault(),
+    scrollDelta: Float = 0f,
+    onScrollDeltaChange: (Float) -> Unit = {},
 ) {
     val today = currentTime.toLocalDateTime(tz).date
     val nextMonth = buildList {
@@ -183,8 +192,30 @@ private fun Timeline(
         }
     }
 
+    val scrollState = rememberLazyListState()
+
+    LaunchedEffect(scrollDelta) {
+        scrollState.dispatchRawDelta(-scrollDelta)
+    }
+
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                logDebug<Screen.Epg> { "onPostScroll($consumed, $available, $source)" }
+                onScrollDeltaChange(consumed.y)
+                return super.onPostScroll(consumed, available, source)
+            }
+        }
+    }
+
     LazyColumn(
-        modifier = modifier.fillMaxHeight(),
+        modifier = modifier
+            .fillMaxHeight()
+            .nestedScroll(nestedScrollConnection),
     ) {
         item {
             Spacer(modifier = Modifier.height(HeaderHeight))
@@ -220,10 +251,34 @@ private fun EpgChannelEntry(
     user: User,
     segments: LazyPagingItems<ChannelScheduleSegment>,
     currentTime: Instant = Clock.System.now(),
+    scrollDelta: Float = 0f,
+    onScrollDeltaChange: (Float) -> Unit = {},
 ) {
+    val scrollState = rememberLazyListState()
+
+    LaunchedEffect(scrollDelta) {
+        logDebug<Screen.Epg> { "LaunchedEffect: $scrollDelta" }
+        scrollState.dispatchRawDelta(-scrollDelta)
+    }
+
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPostScroll(
+                consumed: Offset,
+                available: Offset,
+                source: NestedScrollSource
+            ): Offset {
+                onScrollDeltaChange(consumed.y)
+                return super.onPostScroll(consumed, available, source)
+            }
+        }
+    }
+
     LazyColumn(
         modifier = modifier
-            .fillMaxHeight(),
+            .fillMaxHeight()
+            .nestedScroll(nestedScrollConnection),
+        state = scrollState,
     ) {
         stickyHeader(
             key = user.login,

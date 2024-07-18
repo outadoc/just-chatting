@@ -292,10 +292,7 @@ private fun EpgSegment(
     segment: ChannelScheduleSegment,
 ) {
     Card(modifier = modifier) {
-        Column {
-            Text("${segment.startTime} ‑ ${segment.endTime}")
-            Text(segment.title)
-        }
+        Text(segment.title)
     }
 }
 
@@ -359,6 +356,6 @@ private fun heightForDuration(duration: Duration): Dp {
     return duration.toDouble(DurationUnit.HOURS) * HourHeight
 }
 
-private val HourHeight = 10.dp
+private val HourHeight = 15.dp
 private val HeaderHeight = 100.dp
 private val ColumnWidth = 200.dp

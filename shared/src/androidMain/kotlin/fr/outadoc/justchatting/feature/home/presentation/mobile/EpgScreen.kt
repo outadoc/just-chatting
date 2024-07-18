@@ -134,10 +134,10 @@ private fun EpgContent(
         stickyHeader("timeline") {
             Timeline(
                 modifier = Modifier
-                    .padding(end = 8.dp)
                     .background(
                         MaterialTheme.colorScheme.surface,
-                    ),
+                    )
+                    .padding(end = 8.dp),
             )
 
             VerticalDivider()

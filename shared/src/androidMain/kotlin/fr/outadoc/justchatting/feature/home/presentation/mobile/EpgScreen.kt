@@ -209,7 +209,7 @@ private fun EpgChannelEntry(
             contentType = "user"
         ) {
             Column(
-                modifier = Modifier.height(HeaderHeight),
+                //modifier = Modifier.height(HeaderHeight),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {

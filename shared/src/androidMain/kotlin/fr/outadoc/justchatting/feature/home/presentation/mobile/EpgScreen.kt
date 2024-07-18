@@ -128,10 +128,14 @@ private fun EpgContent(
     ) {
         stickyHeader("timeline") {
             Timeline(
-                modifier = Modifier.background(
-                    MaterialTheme.colorScheme.surface
-                ),
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .background(
+                        MaterialTheme.colorScheme.surface
+                    ),
             )
+
+            VerticalDivider()
         }
 
         items(

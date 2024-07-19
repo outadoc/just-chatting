@@ -34,7 +34,7 @@ internal class EpgViewModel(
                     .map { pagingData ->
                         pagingData.map { schedule ->
                             schedule.copy(
-                                segments = schedule.segments.cachedIn(viewModelScope),
+                                scheduleFlow = schedule.scheduleFlow.cachedIn(viewModelScope),
                             )
                         }
                     }

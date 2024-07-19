@@ -2,25 +2,47 @@ package fr.outadoc.justchatting.feature.home.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
-import fr.outadoc.justchatting.feature.home.domain.model.Pagination
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.utils.logging.logError
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 internal class ChannelScheduleDataSource(
     private val channelId: String,
     private val twitchClient: TwitchClient,
-) : PagingSource<Pagination, ChannelScheduleSegment>() {
+    private val clock: Clock,
+) : PagingSource<ChannelScheduleDataSource.Pagination, ChannelScheduleForDay>() {
 
-    override fun getRefreshKey(state: PagingState<Pagination, ChannelScheduleSegment>): Pagination? =
+    internal sealed class Pagination {
+        data class Next(
+            val cursor: String,
+            val lastTimeSlotOfPreviousPage: Instant? = null,
+        ) : Pagination()
+    }
+
+    override fun getRefreshKey(state: PagingState<Pagination, ChannelScheduleForDay>): Pagination? =
         null
 
-    override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, ChannelScheduleSegment> {
+    override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, ChannelScheduleForDay> {
+        val pagination = params.key as? Pagination.Next
+
+        val tz = TimeZone.currentSystemDefault()
+        val lastTimeSlotOfPreviousPage: LocalDate =
+            (
+                pagination?.lastTimeSlotOfPreviousPage
+                    ?: clock.now()
+                ).toLocalDateTime(tz).date
+
         return twitchClient
             .getChannelSchedule(
                 channelId = channelId,
                 limit = params.loadSize,
-                after = (params.key as? Pagination.Next)?.cursor,
+                after = pagination?.cursor,
             )
             .fold(
                 onSuccess = { response ->
@@ -31,9 +53,8 @@ internal class ChannelScheduleDataSource(
                             LoadResult.Page.COUNT_UNDEFINED
                         }
 
-                    LoadResult.Page(
-                        data = response.data.segments
-                            .orEmpty()
+                    val data: List<ChannelScheduleSegment> =
+                        response.data.segments.orEmpty()
                             .map { schedule ->
                                 ChannelScheduleSegment(
                                     id = schedule.id,
@@ -48,9 +69,39 @@ internal class ChannelScheduleDataSource(
                                     },
                                     isRecurring = schedule.isRecurring,
                                 )
-                            },
+                            }
+
+                    val groupedData: Map<LocalDate, List<ChannelScheduleSegment>> = data
+                        .groupBy { it.startTime.toLocalDateTime(tz).date }
+
+                    val lastTimeSlotOfPage: LocalDate? = groupedData.maxOfOrNull { it.key }
+
+                    val expectedDaysInPage: List<LocalDate> =
+                        if (lastTimeSlotOfPage != null) {
+                            IntRange(
+                                start = lastTimeSlotOfPreviousPage.toEpochDays(),
+                                endInclusive = lastTimeSlotOfPage.toEpochDays(),
+                            ).map { epochDays ->
+                                LocalDate.fromEpochDays(epochDays)
+                            }
+                        } else {
+                            emptyList()
+                        }
+
+                    LoadResult.Page(
+                        data = expectedDaysInPage.map { date ->
+                            ChannelScheduleForDay(
+                                date = date,
+                                segments = groupedData[date].orEmpty(),
+                            )
+                        },
                         prevKey = null,
-                        nextKey = response.pagination.cursor?.let { cursor -> Pagination.Next(cursor) },
+                        nextKey = response.pagination.cursor?.let { cursor ->
+                            Pagination.Next(
+                                cursor = cursor,
+                                lastTimeSlotOfPreviousPage = data.lastOrNull()?.endTime,
+                            )
+                        },
                         itemsAfter = itemsAfter,
                     )
                 },

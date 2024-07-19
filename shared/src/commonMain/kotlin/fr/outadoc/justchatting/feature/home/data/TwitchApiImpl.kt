@@ -7,16 +7,18 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.home.domain.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Clock
 
 internal class TwitchApiImpl(
     private val twitchClient: TwitchClient,
+    private val clock: Clock,
 ) : TwitchApi {
 
     override suspend fun getStreamsByUserId(ids: List<String>): Result<List<Stream>> {
@@ -228,7 +230,7 @@ internal class TwitchApiImpl(
             }
     }
 
-    override suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleSegment>> {
+    override suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleForDay>> {
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 15,
@@ -240,6 +242,7 @@ internal class TwitchApiImpl(
                 ChannelScheduleDataSource(
                     channelId = channelId,
                     twitchClient = twitchClient,
+                    clock = clock,
                 )
             },
         )

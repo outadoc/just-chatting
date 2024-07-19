@@ -4,6 +4,6 @@ import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 
 internal data class ChannelSchedule(
-    val segments: Flow<PagingData<ChannelScheduleSegment>>,
+    val scheduleFlow: Flow<PagingData<ChannelScheduleForDay>>,
     val user: User,
 )

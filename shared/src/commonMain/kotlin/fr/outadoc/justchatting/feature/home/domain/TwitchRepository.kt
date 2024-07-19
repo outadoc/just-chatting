@@ -3,7 +3,7 @@ package fr.outadoc.justchatting.feature.home.domain
 import androidx.paging.PagingData
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
@@ -39,7 +39,7 @@ internal interface TwitchRepository {
 
     suspend fun insertRecentChannel(channel: User, usedAt: Instant)
 
-    suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleSegment>>
+    suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleForDay>>
 
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 

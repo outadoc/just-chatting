@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -29,16 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -50,14 +44,13 @@ import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.presentation.EpgViewModel
 import fr.outadoc.justchatting.shared.MR
-import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
@@ -127,8 +120,7 @@ private fun EpgContent(
     pagingData: Flow<PagingData<ChannelSchedule>>,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
-    val items = pagingData.collectAsLazyPagingItems()
-    var scrollDelta by remember { mutableFloatStateOf(0f) }
+    val channels: LazyPagingItems<ChannelSchedule> = pagingData.collectAsLazyPagingItems()
 
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -142,34 +134,30 @@ private fun EpgContent(
                         MaterialTheme.colorScheme.surface,
                     )
                     .padding(end = 8.dp),
-                scrollDelta = scrollDelta,
-                onScrollDeltaChange = { delta -> scrollDelta = delta },
             )
 
             VerticalDivider()
         }
 
         items(
-            count = items.itemCount,
-            key = { index -> items[index]?.user?.id ?: index },
+            count = channels.itemCount,
+            key = { index -> channels[index]?.user?.id ?: index },
             contentType = { "channel" },
         ) { index ->
-            val item: ChannelSchedule? = items[index]
+            val channel: ChannelSchedule? = channels[index]
 
-            if (item != null) {
-                val segments = item.segments.collectAsLazyPagingItems()
+            if (channel != null) {
+                val days = channel.scheduleFlow.collectAsLazyPagingItems()
 
                 EpgChannelEntry(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .width(ColumnWidth),
-                    user = item.user,
-                    segments = segments,
-                    scrollDelta = scrollDelta,
-                    onScrollDeltaChange = { delta -> scrollDelta = delta },
+                    user = channel.user,
+                    days = days,
                 )
 
-                if (index < items.itemCount - 1) {
+                if (index < channels.itemCount - 1) {
                     VerticalDivider()
                 }
             }
@@ -182,8 +170,6 @@ private fun Timeline(
     modifier: Modifier = Modifier,
     currentTime: Instant = Clock.System.now(),
     tz: TimeZone = TimeZone.currentSystemDefault(),
-    scrollDelta: Float = 0f,
-    onScrollDeltaChange: (Float) -> Unit = {},
 ) {
     val today = currentTime.toLocalDateTime(tz).date
     val nextMonth = buildList {
@@ -192,30 +178,8 @@ private fun Timeline(
         }
     }
 
-    val scrollState = rememberLazyListState()
-
-    LaunchedEffect(scrollDelta) {
-        scrollState.dispatchRawDelta(-scrollDelta)
-    }
-
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPostScroll(
-                consumed: Offset,
-                available: Offset,
-                source: NestedScrollSource
-            ): Offset {
-                logDebug<Screen.Epg> { "onPostScroll($consumed, $available, $source)" }
-                onScrollDeltaChange(consumed.y)
-                return super.onPostScroll(consumed, available, source)
-            }
-        }
-    }
-
     LazyColumn(
-        modifier = modifier
-            .fillMaxHeight()
-            .nestedScroll(nestedScrollConnection),
+        modifier = modifier.fillMaxHeight(),
     ) {
         item {
             Spacer(modifier = Modifier.height(HeaderHeight))
@@ -240,6 +204,8 @@ private fun Timeline(
 
                 Text(date.dayOfMonth.toString())
             }
+
+            HorizontalDivider()
         }
     }
 }
@@ -249,35 +215,12 @@ private fun Timeline(
 private fun EpgChannelEntry(
     modifier: Modifier = Modifier,
     user: User,
-    segments: LazyPagingItems<ChannelScheduleSegment>,
-    currentTime: Instant = Clock.System.now(),
-    scrollDelta: Float = 0f,
-    onScrollDeltaChange: (Float) -> Unit = {},
+    days: LazyPagingItems<ChannelScheduleForDay>,
 ) {
     val scrollState = rememberLazyListState()
 
-    LaunchedEffect(scrollDelta) {
-        logDebug<Screen.Epg> { "LaunchedEffect: $scrollDelta" }
-        scrollState.dispatchRawDelta(-scrollDelta)
-    }
-
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPostScroll(
-                consumed: Offset,
-                available: Offset,
-                source: NestedScrollSource
-            ): Offset {
-                onScrollDeltaChange(consumed.y)
-                return super.onPostScroll(consumed, available, source)
-            }
-        }
-    }
-
     LazyColumn(
-        modifier = modifier
-            .fillMaxHeight()
-            .nestedScroll(nestedScrollConnection),
+        modifier = modifier.fillMaxHeight(),
         state = scrollState,
     ) {
         stickyHeader(
@@ -309,34 +252,27 @@ private fun EpgChannelEntry(
         }
 
         items(
-            count = segments.itemCount,
-            key = { index -> segments[index]?.id ?: index },
-            contentType = { "segment" },
+            count = days.itemCount,
+            key = { index -> days[index]?.date?.toEpochDays() ?: index },
+            contentType = { "day" },
         ) { index ->
-            val item = segments[index]
+            val day = days[index]
 
-            if (item == null) {
+            if (day == null) {
                 Spacer(modifier = Modifier.height(48.dp))
             } else {
-                val previousEndTime: Instant =
-                    if (index > 0) {
-                        segments[index - 1]?.endTime ?: currentTime
-                    } else {
-                        currentTime
+                Column(
+                    modifier = Modifier.height(heightForDuration(1.days)),
+                ) {
+                    day.segments.forEach { segment ->
+                        EpgSegment(
+                            modifier = Modifier.fillMaxWidth(),
+                            segment = segment,
+                        )
                     }
+                }
 
-                Spacer(
-                    modifier = Modifier
-                        .height(heightForDuration(item.startTime - previousEndTime))
-                        .fillMaxWidth(),
-                )
-
-                EpgSegment(
-                    modifier = Modifier
-                        .height(heightForDuration(item.endTime - item.startTime))
-                        .fillMaxWidth(),
-                    segment = item,
-                )
+                HorizontalDivider()
             }
         }
     }
@@ -365,45 +301,6 @@ private fun EpgSegmentPreview() {
                 category = null,
                 isRecurring = false,
             ),
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun EpgChannelPreview() {
-    AppTheme {
-        val items = flowOf(
-            PagingData.from(
-                listOf(
-                    ChannelScheduleSegment(
-                        id = "1",
-                        title = "Title",
-                        startTime = Instant.parse("2022-01-01T12:00:00Z"),
-                        endTime = Instant.parse("2022-01-01T13:00:00Z"),
-                        category = null,
-                        isRecurring = false,
-                    ),
-                    ChannelScheduleSegment(
-                        id = "2",
-                        title = "Title",
-                        startTime = Instant.parse("2022-01-01T13:00:00Z"),
-                        endTime = Instant.parse("2022-01-01T14:00:00Z"),
-                        category = null,
-                        isRecurring = false,
-                    ),
-                ),
-            ),
-        )
-
-        EpgChannelEntry(
-            user = User(
-                id = "1",
-                login = "login",
-                displayName = "Display Name",
-                profileImageUrl = "https://example.com/image.jpg",
-            ),
-            segments = items.collectAsLazyPagingItems(),
         )
     }
 }

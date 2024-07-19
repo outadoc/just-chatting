@@ -16,7 +16,7 @@ internal class GetScheduleForFollowedChannelsUseCase(
                 channels.map { channel ->
                     ChannelSchedule(
                         user = channel.user,
-                        segments = twitchRepository.getChannelSchedule(
+                        scheduleFlow = twitchRepository.getChannelSchedule(
                             channelId = channel.user.id,
                         ),
                     )

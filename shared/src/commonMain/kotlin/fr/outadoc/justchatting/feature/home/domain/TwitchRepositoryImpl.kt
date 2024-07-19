@@ -4,7 +4,7 @@ import androidx.paging.PagingData
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
@@ -270,7 +270,7 @@ internal class TwitchRepositoryImpl(
         }
     }
 
-    override suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleSegment>> =
+    override suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleForDay>> =
         withContext(DispatchersProvider.io) {
             twitchApi.getChannelSchedule(channelId = channelId)
         }

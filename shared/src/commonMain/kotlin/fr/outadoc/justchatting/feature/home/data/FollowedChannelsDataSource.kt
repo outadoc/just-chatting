@@ -24,6 +24,13 @@ internal class FollowedChannelsDataSource(
             )
             .fold(
                 onSuccess = { response ->
+                    val itemsAfter: Int =
+                        if (response.pagination.cursor == null) {
+                            0
+                        } else {
+                            LoadResult.Page.COUNT_UNDEFINED
+                        }
+
                     LoadResult.Page(
                         data = listOf(
                             response.data.map { follow ->
@@ -38,8 +45,8 @@ internal class FollowedChannelsDataSource(
                             },
                         ),
                         prevKey = null,
-                        nextKey = response.pagination.nextKey,
-                        itemsAfter = response.pagination.itemsAfter,
+                        nextKey = response.pagination.cursor?.let { cursor -> Pagination.Next(cursor) },
+                        itemsAfter = itemsAfter,
                     )
                 },
                 onFailure = { exception ->

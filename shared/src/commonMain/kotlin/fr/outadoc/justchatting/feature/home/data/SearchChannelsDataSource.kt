@@ -33,13 +33,6 @@ internal class SearchChannelsDataSource(
             )
             .fold(
                 onSuccess = { response ->
-                    val itemsAfter: Int =
-                        if (response.pagination.cursor == null) {
-                            0
-                        } else {
-                            LoadResult.Page.COUNT_UNDEFINED
-                        }
-
                     LoadResult.Page(
                         data = listOf(
                             response.data.map { search ->
@@ -60,12 +53,8 @@ internal class SearchChannelsDataSource(
                             },
                         ),
                         prevKey = null,
-                        nextKey = response.pagination.cursor?.let { cursor ->
-                            Pagination.Next(
-                                cursor,
-                            )
-                        },
-                        itemsAfter = itemsAfter,
+                        nextKey = response.pagination.nextKey,
+                        itemsAfter = response.pagination.itemsAfter,
                     )
                 },
                 onFailure = { exception ->

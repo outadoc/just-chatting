@@ -203,7 +203,7 @@ private fun Timeline(
             override fun onPostScroll(
                 consumed: Offset,
                 available: Offset,
-                source: NestedScrollSource
+                source: NestedScrollSource,
             ): Offset {
                 logDebug<Screen.Epg> { "onPostScroll($consumed, $available, $source)" }
                 onScrollDeltaChange(consumed.y)
@@ -266,7 +266,7 @@ private fun EpgChannelEntry(
             override fun onPostScroll(
                 consumed: Offset,
                 available: Offset,
-                source: NestedScrollSource
+                source: NestedScrollSource,
             ): Offset {
                 onScrollDeltaChange(consumed.y)
                 return super.onPostScroll(consumed, available, source)

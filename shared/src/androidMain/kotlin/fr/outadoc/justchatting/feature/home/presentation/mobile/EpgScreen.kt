@@ -33,6 +33,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -50,6 +51,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.presentation.EpgViewModel
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
+import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
@@ -284,6 +286,14 @@ private fun EpgSegment(
     segment: ChannelScheduleSegment,
 ) {
     Card(modifier = modifier) {
+        Text(
+            buildAnnotatedString {
+                append(segment.startTime.formatTimestamp())
+                append(" - ")
+                append(segment.endTime.formatTimestamp())
+            },
+            style = MaterialTheme.typography.labelSmall,
+        )
         Text(segment.title)
     }
 }

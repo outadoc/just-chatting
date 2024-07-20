@@ -10,6 +10,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
 
 internal interface TwitchRepository {
 
@@ -39,7 +40,11 @@ internal interface TwitchRepository {
 
     suspend fun insertRecentChannel(channel: User, usedAt: Instant)
 
-    suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleForDay>>
+    suspend fun getChannelSchedule(
+        channelId: String,
+        currentTime: Instant,
+        timeZone: TimeZone
+    ): Flow<PagingData<ChannelScheduleForDay>>
 
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 

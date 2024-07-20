@@ -48,7 +48,6 @@ import app.cash.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
-import fr.outadoc.justchatting.feature.home.domain.EpgConfig
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
@@ -59,12 +58,8 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
-import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.TextStyle
 import java.util.Locale
@@ -113,6 +108,7 @@ internal fun EpgScreen(
                     EpgContent(
                         modifier = modifier,
                         pagingData = currentState.pagingData,
+                        days = currentState.days,
                         contentPadding = insets,
                     )
                 }
@@ -126,6 +122,7 @@ internal fun EpgScreen(
 private fun EpgContent(
     modifier: Modifier = Modifier,
     pagingData: Flow<PagingData<ChannelSchedule>>,
+    days: List<LocalDate>,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     val channels: LazyPagingItems<ChannelSchedule> = pagingData.collectAsLazyPagingItems()
@@ -147,6 +144,7 @@ private fun EpgContent(
                         MaterialTheme.colorScheme.surface,
                     )
                     .padding(end = 8.dp),
+                days = days,
                 sharedListState = sharedListState,
                 updateSharedListState = { sharedListState = it },
             )
@@ -162,14 +160,14 @@ private fun EpgContent(
             val channel: ChannelSchedule? = channels[index]
 
             if (channel != null) {
-                val days = channel.scheduleFlow.collectAsLazyPagingItems()
+                val dayItems = channel.scheduleFlow.collectAsLazyPagingItems()
 
                 EpgChannelEntry(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                         .width(ColumnWidth),
                     user = channel.user,
-                    days = days,
+                    days = dayItems,
                     sharedListState = sharedListState,
                     updateSharedListState = { sharedListState = it },
                 )
@@ -187,20 +185,10 @@ private fun EpgContent(
 @Composable
 private fun Timeline(
     modifier: Modifier = Modifier,
-    currentTime: Instant = Clock.System.now(),
-    tz: TimeZone = TimeZone.currentSystemDefault(),
+    days: List<LocalDate>,
     sharedListState: SharedListState = SharedListState(),
     updateSharedListState: (SharedListState) -> Unit = {},
 ) {
-    // TODO move all this stuff to the VM
-    // Build a list of all days between today and the maximum number of days ahead
-    val today = currentTime.toLocalDateTime(tz).date
-    val end = today.plus(EpgConfig.MaxDaysAhead)
-
-    val days: List<LocalDate> =
-        (today.toEpochDays()..end.toEpochDays())
-            .map { LocalDate.fromEpochDays(it) }
-
     val listState = rememberLazyListState(
         initialFirstVisibleItemIndex = sharedListState.firstVisibleItemIndex,
         initialFirstVisibleItemScrollOffset = sharedListState.firstVisibleItemScrollOffset,

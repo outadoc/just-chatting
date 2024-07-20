@@ -7,7 +7,6 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.utils.logging.logError
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -17,7 +16,8 @@ import kotlinx.datetime.toLocalDateTime
 internal class ChannelScheduleDataSource(
     private val channelId: String,
     private val twitchClient: TwitchClient,
-    private val clock: Clock,
+    private val currentTime: Instant,
+    private val timeZone: TimeZone,
 ) : PagingSource<ChannelScheduleDataSource.Pagination, ChannelScheduleForDay>() {
 
     internal sealed class Pagination {
@@ -33,10 +33,9 @@ internal class ChannelScheduleDataSource(
     override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, ChannelScheduleForDay> {
         val pagination = params.key as? Pagination.Next
 
-        val tz = TimeZone.currentSystemDefault()
-        val today = clock.now().toLocalDateTime(tz).date
+        val today = currentTime.toLocalDateTime(timeZone).date
         val lastTimeSlotOfPreviousPage: LocalDate =
-            pagination?.lastTimeSlotOfPreviousPage?.toLocalDateTime(tz)?.date
+            pagination?.lastTimeSlotOfPreviousPage?.toLocalDateTime(timeZone)?.date
                 ?: today
 
         return twitchClient
@@ -73,7 +72,7 @@ internal class ChannelScheduleDataSource(
                             }
 
                     val groupedData: Map<LocalDate, List<ChannelScheduleSegment>> = data
-                        .groupBy { it.startTime.toLocalDateTime(tz).date }
+                        .groupBy { it.startTime.toLocalDateTime(timeZone).date }
 
                     val lastTimeSlotOfPage: LocalDate? = groupedData.maxOfOrNull { it.key }
 

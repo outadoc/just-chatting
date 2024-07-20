@@ -13,7 +13,7 @@ public val homeModule: Module = module {
     viewModel { ChannelSearchViewModel(get()) }
     viewModel { FollowedChannelsViewModel(get()) }
     viewModel { FollowedStreamsViewModel(get()) }
-    viewModel { EpgViewModel(get()) }
+    viewModel { EpgViewModel(get(), get()) }
 
     factory { GetScheduleForFollowedChannelsUseCase(get()) }
 }

@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class TwitchRepositoryImpl(
@@ -270,9 +271,17 @@ internal class TwitchRepositoryImpl(
         }
     }
 
-    override suspend fun getChannelSchedule(channelId: String): Flow<PagingData<ChannelScheduleForDay>> =
+    override suspend fun getChannelSchedule(
+        channelId: String,
+        currentTime: Instant,
+        timeZone: TimeZone,
+    ): Flow<PagingData<ChannelScheduleForDay>> =
         withContext(DispatchersProvider.io) {
-            twitchApi.getChannelSchedule(channelId = channelId)
+            twitchApi.getChannelSchedule(
+                channelId = channelId,
+                currentTime = currentTime,
+                timeZone = timeZone,
+            )
         }
 
     override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> =

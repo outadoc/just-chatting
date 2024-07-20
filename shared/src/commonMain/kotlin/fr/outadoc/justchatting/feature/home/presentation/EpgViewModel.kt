@@ -28,6 +28,7 @@ internal class EpgViewModel(
         data class Loaded(
             val pagingData: Flow<PagingData<ChannelSchedule>>,
             val days: List<LocalDate>,
+            val timeZone: TimeZone,
         ) : State()
     }
 
@@ -65,6 +66,7 @@ internal class EpgViewModel(
             _state.value = State.Loaded(
                 pagingData = pagingData.cachedIn(viewModelScope),
                 days = days,
+                timeZone = tz,
             )
         }
     }

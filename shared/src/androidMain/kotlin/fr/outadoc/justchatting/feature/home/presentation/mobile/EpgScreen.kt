@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -61,6 +62,8 @@ import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.TextStyle
 import java.util.Locale
@@ -110,6 +113,7 @@ internal fun EpgScreen(
                         modifier = modifier,
                         pagingData = currentState.pagingData,
                         days = currentState.days,
+                        timeZone = currentState.timeZone,
                         contentPadding = insets,
                     )
                 }
@@ -124,6 +128,7 @@ private fun EpgContent(
     modifier: Modifier = Modifier,
     pagingData: Flow<PagingData<ChannelSchedule>>,
     days: List<LocalDate>,
+    timeZone: TimeZone,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     val channels: LazyPagingItems<ChannelSchedule> = pagingData.collectAsLazyPagingItems()
@@ -169,6 +174,7 @@ private fun EpgContent(
                         .width(ColumnWidth),
                     user = channel.user,
                     days = dayItems,
+                    timeZone = timeZone,
                     sharedListState = sharedListState,
                     updateSharedListState = { sharedListState = it },
                 )
@@ -238,6 +244,7 @@ private fun Timeline(
                 modifier = Modifier
                     .height(heightForDuration(1.days))
                     .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
                     date.dayOfWeek.getDisplayName(
@@ -260,6 +267,7 @@ private fun EpgChannelEntry(
     modifier: Modifier = Modifier,
     user: User,
     days: LazyPagingItems<ChannelScheduleForDay>,
+    timeZone: TimeZone,
     sharedListState: SharedListState = SharedListState(),
     updateSharedListState: (SharedListState) -> Unit = {},
 ) {
@@ -303,6 +311,7 @@ private fun EpgChannelEntry(
     LazyColumn(
         modifier = modifier.fillMaxHeight(),
         state = listState,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         stickyHeader(
             key = "header",
@@ -348,10 +357,27 @@ private fun EpgChannelEntry(
             } else {
                 Column(
                     modifier = Modifier.height(heightForDuration(1.days)),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    day.segments.forEach { segment ->
+                    for (segmentIndex in day.segments.indices) {
+                        val previousSegment: ChannelScheduleSegment? =
+                            if (segmentIndex - 1 in day.segments.indices) {
+                                day.segments[segmentIndex - 1]
+                            } else {
+                                null
+                            }
+
+                        val segment: ChannelScheduleSegment = day.segments[segmentIndex]
+
+                        val gap: Duration = segment.startTime -
+                                (previousSegment?.endTime ?: day.date.atStartOfDayIn(timeZone))
+
+                        // Spacer(modifier = Modifier.height(heightForDuration(gap)))
+
                         EpgSegment(
-                            modifier = Modifier.fillMaxWidth(),
+                            modifier = Modifier
+                                //.height(heightForDuration(segment.endTime - segment.startTime))
+                                .fillMaxWidth(),
                             segment = segment,
                         )
                     }
@@ -369,24 +395,30 @@ private fun EpgSegment(
     segment: ChannelScheduleSegment,
 ) {
     Card(modifier = modifier) {
-        Text(
-            buildAnnotatedString {
-                append(segment.startTime.formatTimestamp())
-                append(" - ")
-                append(segment.endTime.formatTimestamp())
-            },
-            style = MaterialTheme.typography.labelSmall,
-        )
-
-        segment.category?.let { category ->
+        Column(
+            modifier = Modifier.padding(4.dp)
+        ) {
             Text(
-                category.name,
-                style = MaterialTheme.typography.labelMedium,
-            )
-        }
+                buildAnnotatedString {
+                    append(segment.startTime.formatTimestamp())
+                    append(" - ")
+                    append(segment.endTime.formatTimestamp())
 
-        if (segment.title.isNotEmpty()) {
-            Text(segment.title)
+                    segment.category?.let { category ->
+                        append(" · ")
+                        append(category.name)
+                    }
+                },
+                style = MaterialTheme.typography.labelSmall,
+            )
+
+            if (segment.title.isNotEmpty()) {
+                Text(
+                    segment.title,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
         }
     }
 }
@@ -412,7 +444,7 @@ private fun heightForDuration(duration: Duration): Dp {
     return duration.toDouble(DurationUnit.HOURS) * HourHeight
 }
 
-private val HourHeight = 15.dp
+private val HourHeight = 8.dp
 private val HeaderHeight = 100.dp
 private val ColumnWidth = 200.dp
 

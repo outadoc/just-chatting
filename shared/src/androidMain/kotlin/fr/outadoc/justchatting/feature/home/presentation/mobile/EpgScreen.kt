@@ -48,6 +48,7 @@ import app.cash.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
+import fr.outadoc.justchatting.feature.home.domain.EpgConfig
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
@@ -58,8 +59,8 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Clock
-import kotlinx.datetime.DateTimeUnit
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
@@ -184,12 +185,14 @@ private fun Timeline(
     sharedListState: SharedListState = SharedListState(),
     updateSharedListState: (SharedListState) -> Unit = {},
 ) {
+    // TODO move all this stuff to the VM
+    // Build a list of all days between today and the maximum number of days ahead
     val today = currentTime.toLocalDateTime(tz).date
-    val nextMonth = buildList {
-        for (i in 0..30) {
-            add(today.plus(i, DateTimeUnit.DAY))
-        }
-    }
+    val end = today.plus(EpgConfig.MaxDaysAhead)
+
+    val days: List<LocalDate> =
+        (today.toEpochDays()..end.toEpochDays())
+            .map { LocalDate.fromEpochDays(it) }
 
     val listState = rememberLazyListState(
         initialFirstVisibleItemIndex = sharedListState.firstVisibleItemIndex,
@@ -199,7 +202,7 @@ private fun Timeline(
     LaunchedEffect(sharedListState) {
         listState.scrollToItem(
             index = sharedListState.firstVisibleItemIndex,
-            scrollOffset = sharedListState.firstVisibleItemScrollOffset
+            scrollOffset = sharedListState.firstVisibleItemScrollOffset,
         )
     }
 
@@ -207,12 +210,13 @@ private fun Timeline(
         snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
             .collect { (index, scrollOffset) ->
                 if (sharedListState.firstVisibleItemIndex != index ||
-                    sharedListState.firstVisibleItemScrollOffset != scrollOffset) {
+                    sharedListState.firstVisibleItemScrollOffset != scrollOffset
+                ) {
                     updateSharedListState(
                         SharedListState(
                             firstVisibleItemIndex = index,
                             firstVisibleItemScrollOffset = scrollOffset,
-                        )
+                        ),
                     )
                 }
             }
@@ -227,7 +231,7 @@ private fun Timeline(
         }
 
         items(
-            items = nextMonth,
+            items = days,
             key = { date -> date.toEpochDays() },
             contentType = { "date" },
         ) { date ->
@@ -268,7 +272,7 @@ private fun EpgChannelEntry(
     LaunchedEffect(sharedListState) {
         listState.scrollToItem(
             index = sharedListState.firstVisibleItemIndex,
-            scrollOffset = sharedListState.firstVisibleItemScrollOffset
+            scrollOffset = sharedListState.firstVisibleItemScrollOffset,
         )
     }
 
@@ -276,12 +280,13 @@ private fun EpgChannelEntry(
         snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
             .collect { (index, scrollOffset) ->
                 if (sharedListState.firstVisibleItemIndex != index ||
-                    sharedListState.firstVisibleItemScrollOffset != scrollOffset) {
+                    sharedListState.firstVisibleItemScrollOffset != scrollOffset
+                ) {
                     updateSharedListState(
                         SharedListState(
                             firstVisibleItemIndex = index,
                             firstVisibleItemScrollOffset = scrollOffset,
-                        )
+                        ),
                     )
                 }
             }

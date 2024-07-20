@@ -48,13 +48,6 @@ internal class ChannelScheduleDataSource(
             )
             .fold(
                 onSuccess = { response ->
-                    val itemsAfter: Int =
-                        if (response.pagination.cursor == null) {
-                            0
-                        } else {
-                            LoadResult.Page.COUNT_UNDEFINED
-                        }
-
                     val data: List<ChannelScheduleSegment> =
                         response.data.segments.orEmpty()
                             .map { schedule ->
@@ -76,12 +69,23 @@ internal class ChannelScheduleDataSource(
                     val groupedData: Map<LocalDate, List<ChannelScheduleSegment>> = data
                         .groupBy { it.startTime.toLocalDateTime(timeZone).date }
 
+                    val lastDateOnPage: LocalDate? = groupedData.maxOfOrNull { it.key }
+
+                    val nextKey: Pagination.Next? =
+                        response.pagination.cursor
+                            ?.takeIf { lastDateOnPage != null && lastDateOnPage < endDate }
+                            ?.let { cursor ->
+                                Pagination.Next(
+                                    cursor = cursor,
+                                    lastTimeSlotOfPreviousPage = data.lastOrNull()?.endTime,
+                                )
+                            }
+
                     // Either this will be the start date for the last item in the page,
-                    // or if there is no next page, this will be the end date.
+                    // or if there is no next page, or we are going out of the range, then
+                    // this will be the end date.
                     val lastTimeSlotOfPage: LocalDate =
-                        groupedData.maxOfOrNull { it.key }
-                            ?.takeIf { pagination?.cursor != null }
-                            ?: endDate
+                        lastDateOnPage?.takeIf { nextKey != null } ?: endDate
 
                     // We need to return an entry for each day in the range,
                     // even if there is no data for that day.
@@ -101,13 +105,12 @@ internal class ChannelScheduleDataSource(
                             )
                         },
                         prevKey = null,
-                        nextKey = response.pagination.cursor?.let { cursor ->
-                            Pagination.Next(
-                                cursor = cursor,
-                                lastTimeSlotOfPreviousPage = data.lastOrNull()?.endTime,
-                            )
+                        nextKey = nextKey,
+                        itemsAfter = if (nextKey != null) {
+                            LoadResult.Page.COUNT_UNDEFINED
+                        } else {
+                            0
                         },
-                        itemsAfter = itemsAfter,
                     )
                 },
                 onFailure = { exception ->

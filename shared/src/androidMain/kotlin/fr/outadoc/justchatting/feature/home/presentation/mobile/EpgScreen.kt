@@ -30,6 +30,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -123,6 +127,7 @@ private fun EpgContent(
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     val channels: LazyPagingItems<ChannelSchedule> = pagingData.collectAsLazyPagingItems()
+    var sharedListState by remember { mutableStateOf(SharedListState()) }
 
     LazyRow(
         modifier = modifier.fillMaxWidth(),
@@ -136,6 +141,8 @@ private fun EpgContent(
                         MaterialTheme.colorScheme.surface,
                     )
                     .padding(end = 8.dp),
+                sharedListState = sharedListState,
+                updateSharedListState = { sharedListState = it },
             )
 
             VerticalDivider()
@@ -157,6 +164,8 @@ private fun EpgContent(
                         .width(ColumnWidth),
                     user = channel.user,
                     days = days,
+                    sharedListState = sharedListState,
+                    updateSharedListState = { sharedListState = it },
                 )
 
                 if (index < channels.itemCount - 1) {
@@ -172,6 +181,8 @@ private fun Timeline(
     modifier: Modifier = Modifier,
     currentTime: Instant = Clock.System.now(),
     tz: TimeZone = TimeZone.currentSystemDefault(),
+    sharedListState: SharedListState = SharedListState(),
+    updateSharedListState: (SharedListState) -> Unit = {},
 ) {
     val today = currentTime.toLocalDateTime(tz).date
     val nextMonth = buildList {
@@ -180,8 +191,36 @@ private fun Timeline(
         }
     }
 
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = sharedListState.firstVisibleItemIndex,
+        initialFirstVisibleItemScrollOffset = sharedListState.firstVisibleItemScrollOffset,
+    )
+
+    LaunchedEffect(sharedListState) {
+        listState.scrollToItem(
+            index = sharedListState.firstVisibleItemIndex,
+            scrollOffset = sharedListState.firstVisibleItemScrollOffset
+        )
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
+            .collect { (index, scrollOffset) ->
+                if (sharedListState.firstVisibleItemIndex != index ||
+                    sharedListState.firstVisibleItemScrollOffset != scrollOffset) {
+                    updateSharedListState(
+                        SharedListState(
+                            firstVisibleItemIndex = index,
+                            firstVisibleItemScrollOffset = scrollOffset,
+                        )
+                    )
+                }
+            }
+    }
+
     LazyColumn(
         modifier = modifier.fillMaxHeight(),
+        state = listState,
     ) {
         item {
             Spacer(modifier = Modifier.height(HeaderHeight))
@@ -218,12 +257,39 @@ private fun EpgChannelEntry(
     modifier: Modifier = Modifier,
     user: User,
     days: LazyPagingItems<ChannelScheduleForDay>,
+    sharedListState: SharedListState = SharedListState(),
+    updateSharedListState: (SharedListState) -> Unit = {},
 ) {
-    val scrollState = rememberLazyListState()
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = sharedListState.firstVisibleItemIndex,
+        initialFirstVisibleItemScrollOffset = sharedListState.firstVisibleItemScrollOffset,
+    )
+
+    LaunchedEffect(sharedListState) {
+        listState.scrollToItem(
+            index = sharedListState.firstVisibleItemIndex,
+            scrollOffset = sharedListState.firstVisibleItemScrollOffset
+        )
+    }
+
+    LaunchedEffect(listState) {
+        snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
+            .collect { (index, scrollOffset) ->
+                if (sharedListState.firstVisibleItemIndex != index ||
+                    sharedListState.firstVisibleItemScrollOffset != scrollOffset) {
+                    updateSharedListState(
+                        SharedListState(
+                            firstVisibleItemIndex = index,
+                            firstVisibleItemScrollOffset = scrollOffset,
+                        )
+                    )
+                }
+            }
+    }
 
     LazyColumn(
         modifier = modifier.fillMaxHeight(),
-        state = scrollState,
+        state = listState,
     ) {
         stickyHeader(
             key = user.login,
@@ -322,3 +388,8 @@ private fun heightForDuration(duration: Duration): Dp {
 private val HourHeight = 15.dp
 private val HeaderHeight = 100.dp
 private val ColumnWidth = 200.dp
+
+private data class SharedListState(
+    val firstVisibleItemIndex: Int = 0,
+    val firstVisibleItemScrollOffset: Int = 0,
+)

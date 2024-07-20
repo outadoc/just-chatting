@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.home.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import fr.outadoc.justchatting.feature.home.domain.EpgConfig
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
@@ -10,6 +11,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 
 internal class ChannelScheduleDataSource(
@@ -32,11 +34,10 @@ internal class ChannelScheduleDataSource(
         val pagination = params.key as? Pagination.Next
 
         val tz = TimeZone.currentSystemDefault()
+        val today = clock.now().toLocalDateTime(tz).date
         val lastTimeSlotOfPreviousPage: LocalDate =
-            (
-                pagination?.lastTimeSlotOfPreviousPage
-                    ?: clock.now()
-                ).toLocalDateTime(tz).date
+            pagination?.lastTimeSlotOfPreviousPage?.toLocalDateTime(tz)?.date
+                ?: today
 
         return twitchClient
             .getChannelSchedule(
@@ -85,7 +86,13 @@ internal class ChannelScheduleDataSource(
                                 LocalDate.fromEpochDays(epochDays)
                             }
                         } else {
-                            emptyList()
+                            // Pad with empty days if there is no data
+                            IntRange(
+                                start = lastTimeSlotOfPreviousPage.toEpochDays(),
+                                endInclusive = today.plus(EpgConfig.MaxDaysAhead).toEpochDays(),
+                            ).map { epochDays ->
+                                LocalDate.fromEpochDays(epochDays)
+                            }
                         }
 
                     LoadResult.Page(
@@ -107,7 +114,26 @@ internal class ChannelScheduleDataSource(
                 },
                 onFailure = { exception ->
                     logError<ChannelScheduleDataSource>(exception) { "Error while fetching channel EPG" }
-                    LoadResult.Error(exception)
+
+                    val emptyTimeline: List<LocalDate> =
+                        IntRange(
+                            start = today.toEpochDays(),
+                            endInclusive = today.plus(EpgConfig.MaxDaysAhead).toEpochDays(),
+                        ).map { epochDays ->
+                            LocalDate.fromEpochDays(epochDays)
+                        }
+
+                    LoadResult.Page(
+                        data = emptyTimeline.map { date ->
+                            ChannelScheduleForDay(
+                                date = date,
+                                segments = emptyList(),
+                            )
+                        },
+                        prevKey = null,
+                        nextKey = null,
+                        itemsAfter = 0,
+                    )
                 },
             )
     }

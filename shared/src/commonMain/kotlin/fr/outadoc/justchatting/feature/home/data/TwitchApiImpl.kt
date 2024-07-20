@@ -236,7 +236,7 @@ internal class TwitchApiImpl(
         channelId: String,
         start: Instant,
         end: Instant,
-        timeZone: TimeZone
+        timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>> {
         val pager = Pager(
             config = PagingConfig(

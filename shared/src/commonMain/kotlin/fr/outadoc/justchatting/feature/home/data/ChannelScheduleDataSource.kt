@@ -76,24 +76,21 @@ internal class ChannelScheduleDataSource(
                     val groupedData: Map<LocalDate, List<ChannelScheduleSegment>> = data
                         .groupBy { it.startTime.toLocalDateTime(timeZone).date }
 
-                    val lastTimeSlotOfPage: LocalDate? = groupedData.maxOfOrNull { it.key }
+                    // Either this will be the start date for the last item in the page,
+                    // or if there is no next page, this will be the end date.
+                    val lastTimeSlotOfPage: LocalDate =
+                        groupedData.maxOfOrNull { it.key }
+                            ?.takeIf { pagination?.cursor != null }
+                            ?: endDate
 
+                    // We need to return an entry for each day in the range,
+                    // even if there is no data for that day.
                     val expectedDaysInPage: List<LocalDate> =
-                        if (lastTimeSlotOfPage != null) {
-                            IntRange(
-                                start = lastTimeSlotOfPreviousPage.toEpochDays(),
-                                endInclusive = lastTimeSlotOfPage.toEpochDays(),
-                            ).map { epochDays ->
-                                LocalDate.fromEpochDays(epochDays)
-                            }
-                        } else {
-                            // Pad with empty days if there is no data
-                            IntRange(
-                                start = lastTimeSlotOfPreviousPage.toEpochDays(),
-                                endInclusive = endDate.toEpochDays(),
-                            ).map { epochDays ->
-                                LocalDate.fromEpochDays(epochDays)
-                            }
+                        IntRange(
+                            start = lastTimeSlotOfPreviousPage.toEpochDays(),
+                            endInclusive = lastTimeSlotOfPage.toEpochDays(),
+                        ).map { epochDays ->
+                            LocalDate.fromEpochDays(epochDays)
                         }
 
                     LoadResult.Page(

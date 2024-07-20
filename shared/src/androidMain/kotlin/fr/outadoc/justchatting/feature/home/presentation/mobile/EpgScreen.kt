@@ -22,6 +22,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.VerticalDivider
@@ -304,27 +305,31 @@ private fun EpgChannelEntry(
             key = user.login,
             contentType = "user",
         ) {
-            Column(
-                modifier = Modifier
-                    .height(HeaderHeight)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+            Surface(
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
             ) {
-                AsyncImage(
+                Column(
                     modifier = Modifier
-                        .padding(end = 8.dp)
-                        .size(56.dp)
-                        .clip(MaterialTheme.shapes.medium)
-                        .background(MaterialTheme.colorScheme.surface),
-                    model = remoteImageModel(user.profileImageUrl),
-                    contentDescription = null,
-                )
+                        .height(HeaderHeight)
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .size(56.dp)
+                            .clip(MaterialTheme.shapes.medium)
+                            .background(MaterialTheme.colorScheme.surface),
+                        model = remoteImageModel(user.profileImageUrl),
+                        contentDescription = null,
+                    )
 
-                Text(
-                    user.displayName,
-                    style = MaterialTheme.typography.labelMedium,
-                )
+                    Text(
+                        user.displayName,
+                        style = MaterialTheme.typography.labelMedium,
+                    )
+                }
             }
         }
 

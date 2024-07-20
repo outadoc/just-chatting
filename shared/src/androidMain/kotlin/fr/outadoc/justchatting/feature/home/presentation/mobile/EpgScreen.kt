@@ -63,7 +63,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.TextStyle
 import java.util.Locale
@@ -359,25 +358,9 @@ private fun EpgChannelEntry(
                     modifier = Modifier.height(heightForDuration(1.days)),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
-                    for (segmentIndex in day.segments.indices) {
-                        val previousSegment: ChannelScheduleSegment? =
-                            if (segmentIndex - 1 in day.segments.indices) {
-                                day.segments[segmentIndex - 1]
-                            } else {
-                                null
-                            }
-
-                        val segment: ChannelScheduleSegment = day.segments[segmentIndex]
-
-                        val gap: Duration = segment.startTime -
-                                (previousSegment?.endTime ?: day.date.atStartOfDayIn(timeZone))
-
-                        // Spacer(modifier = Modifier.height(heightForDuration(gap)))
-
+                    for (segment in day.segments) {
                         EpgSegment(
-                            modifier = Modifier
-                                //.height(heightForDuration(segment.endTime - segment.startTime))
-                                .fillMaxWidth(),
+                            modifier = Modifier.fillMaxWidth(),
                             segment = segment,
                         )
                     }

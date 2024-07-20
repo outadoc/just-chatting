@@ -55,6 +55,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.presentation.EpgViewModel
 import fr.outadoc.justchatting.shared.MR
+import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.coroutines.flow.Flow
@@ -130,6 +131,10 @@ private fun EpgContent(
     val channels: LazyPagingItems<ChannelSchedule> = pagingData.collectAsLazyPagingItems()
     var sharedListState by remember { mutableStateOf(SharedListState()) }
 
+    LaunchedEffect(sharedListState) {
+        logDebug<Screen.Epg> { "sharedListState: $sharedListState" }
+    }
+
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         contentPadding = contentPadding,
@@ -172,6 +177,8 @@ private fun EpgContent(
                 if (index < channels.itemCount - 1) {
                     VerticalDivider()
                 }
+            } else {
+                Spacer(modifier = Modifier.width(ColumnWidth))
             }
         }
     }
@@ -264,24 +271,33 @@ private fun EpgChannelEntry(
     sharedListState: SharedListState = SharedListState(),
     updateSharedListState: (SharedListState) -> Unit = {},
 ) {
+    var hasSettled by remember { mutableStateOf(false) }
+
+    logDebug<Screen.Epg> { "sharedListState: $sharedListState" }
+
     val listState = rememberLazyListState(
         initialFirstVisibleItemIndex = sharedListState.firstVisibleItemIndex,
         initialFirstVisibleItemScrollOffset = sharedListState.firstVisibleItemScrollOffset,
     )
 
-    LaunchedEffect(sharedListState) {
-        listState.scrollToItem(
-            index = sharedListState.firstVisibleItemIndex,
-            scrollOffset = sharedListState.firstVisibleItemScrollOffset,
-        )
+    if (days.loadState.isIdle) {
+        LaunchedEffect(sharedListState) {
+            logDebug<Screen.Epg> { "shared state for ${user.displayName}: $sharedListState" }
+            listState.scrollToItem(
+                index = sharedListState.firstVisibleItemIndex,
+                scrollOffset = sharedListState.firstVisibleItemScrollOffset,
+            )
+        }
     }
 
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
             .collect { (index, scrollOffset) ->
-                if (sharedListState.firstVisibleItemIndex != index ||
-                    sharedListState.firstVisibleItemScrollOffset != scrollOffset
-                ) {
+                if (sharedListState.firstVisibleItemIndex == index && sharedListState.firstVisibleItemScrollOffset == scrollOffset) {
+                    logDebug<Screen.Epg> { "${user.displayName} has settled ($sharedListState)" }
+                    hasSettled = true
+                } else if (hasSettled && index > 0 && scrollOffset > 0) {
+                    logDebug<Screen.Epg> { "updating shared state from ${user.displayName} to ($index, $scrollOffset), was $sharedListState" }
                     updateSharedListState(
                         SharedListState(
                             firstVisibleItemIndex = index,
@@ -332,7 +348,7 @@ private fun EpgChannelEntry(
             val day = days[index]
 
             if (day == null) {
-                Spacer(modifier = Modifier.height(48.dp))
+                Spacer(modifier = Modifier.height(heightForDuration(1.days)))
             } else {
                 Column(
                     modifier = Modifier.height(heightForDuration(1.days)),

@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.feature.home.data
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import fr.outadoc.justchatting.feature.home.domain.EpgConfig
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
@@ -10,7 +9,6 @@ import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 
 internal class ChannelScheduleDataSource(
@@ -18,6 +16,7 @@ internal class ChannelScheduleDataSource(
     private val twitchClient: TwitchClient,
     private val start: Instant,
     private val timeZone: TimeZone,
+    private val end: Instant,
 ) : PagingSource<ChannelScheduleDataSource.Pagination, ChannelScheduleForDay>() {
 
     internal sealed class Pagination {
@@ -34,6 +33,8 @@ internal class ChannelScheduleDataSource(
         val pagination = params.key as? Pagination.Next
 
         val startDate = start.toLocalDateTime(timeZone).date
+        val endDate = end.toLocalDateTime(timeZone).date
+
         val lastTimeSlotOfPreviousPage: LocalDate =
             pagination?.lastTimeSlotOfPreviousPage?.toLocalDateTime(timeZone)?.date
                 ?: startDate
@@ -89,7 +90,7 @@ internal class ChannelScheduleDataSource(
                             // Pad with empty days if there is no data
                             IntRange(
                                 start = lastTimeSlotOfPreviousPage.toEpochDays(),
-                                endInclusive = startDate.plus(EpgConfig.MaxDaysAhead).toEpochDays(),
+                                endInclusive = endDate.toEpochDays(),
                             ).map { epochDays ->
                                 LocalDate.fromEpochDays(epochDays)
                             }
@@ -118,7 +119,7 @@ internal class ChannelScheduleDataSource(
                     val emptyTimeline: List<LocalDate> =
                         IntRange(
                             start = startDate.toEpochDays(),
-                            endInclusive = startDate.plus(EpgConfig.MaxDaysAhead).toEpochDays(),
+                            endInclusive = endDate.toEpochDays(),
                         ).map { epochDays ->
                             LocalDate.fromEpochDays(epochDays)
                         }

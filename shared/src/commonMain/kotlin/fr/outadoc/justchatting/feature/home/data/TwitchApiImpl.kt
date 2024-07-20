@@ -235,7 +235,8 @@ internal class TwitchApiImpl(
     override suspend fun getChannelSchedule(
         channelId: String,
         start: Instant,
-        timeZone: TimeZone,
+        end: Instant,
+        timeZone: TimeZone
     ): Flow<PagingData<ChannelScheduleForDay>> {
         val pager = Pager(
             config = PagingConfig(
@@ -249,6 +250,7 @@ internal class TwitchApiImpl(
                     channelId = channelId,
                     twitchClient = twitchClient,
                     start = start,
+                    end = end,
                     timeZone = timeZone,
                 )
             },

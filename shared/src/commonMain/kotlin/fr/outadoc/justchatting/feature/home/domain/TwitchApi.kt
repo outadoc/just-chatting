@@ -33,6 +33,7 @@ internal interface TwitchApi {
     suspend fun getChannelSchedule(
         channelId: String,
         start: Instant,
+        end: Instant,
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>>
 

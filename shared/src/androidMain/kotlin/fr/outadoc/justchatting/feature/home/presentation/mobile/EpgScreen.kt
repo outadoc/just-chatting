@@ -222,7 +222,10 @@ private fun Timeline(
         modifier = modifier.fillMaxHeight(),
         state = listState,
     ) {
-        item {
+        item(
+            key = "header",
+            contentType = "header",
+        ) {
             Spacer(modifier = Modifier.height(HeaderHeight))
         }
 
@@ -302,8 +305,8 @@ private fun EpgChannelEntry(
         state = listState,
     ) {
         stickyHeader(
-            key = user.login,
-            contentType = "user",
+            key = "header",
+            contentType = "header",
         ) {
             Surface(
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
@@ -374,7 +377,17 @@ private fun EpgSegment(
             },
             style = MaterialTheme.typography.labelSmall,
         )
-        Text(segment.title)
+
+        segment.category?.let { category ->
+            Text(
+                category.name,
+                style = MaterialTheme.typography.labelMedium,
+            )
+        }
+
+        if (segment.title.isNotEmpty()) {
+            Text(segment.title)
+        }
     }
 }
 

@@ -273,13 +273,13 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getChannelSchedule(
         channelId: String,
-        currentTime: Instant,
+        start: Instant,
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>> =
         withContext(DispatchersProvider.io) {
             twitchApi.getChannelSchedule(
                 channelId = channelId,
-                currentTime = currentTime,
+                start = start,
                 timeZone = timeZone,
             )
         }

@@ -23,7 +23,7 @@ internal class GetScheduleForFollowedChannelsUseCase(
                         user = channel.user,
                         scheduleFlow = twitchRepository.getChannelSchedule(
                             channelId = channel.user.id,
-                            currentTime = currentTime,
+                            start = currentTime,
                             timeZone = timeZone,
                         ),
                     )

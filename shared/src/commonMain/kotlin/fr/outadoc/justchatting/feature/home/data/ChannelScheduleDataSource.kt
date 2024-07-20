@@ -16,7 +16,7 @@ import kotlinx.datetime.toLocalDateTime
 internal class ChannelScheduleDataSource(
     private val channelId: String,
     private val twitchClient: TwitchClient,
-    private val currentTime: Instant,
+    private val start: Instant,
     private val timeZone: TimeZone,
 ) : PagingSource<ChannelScheduleDataSource.Pagination, ChannelScheduleForDay>() {
 
@@ -33,14 +33,15 @@ internal class ChannelScheduleDataSource(
     override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, ChannelScheduleForDay> {
         val pagination = params.key as? Pagination.Next
 
-        val today = currentTime.toLocalDateTime(timeZone).date
+        val startDate = start.toLocalDateTime(timeZone).date
         val lastTimeSlotOfPreviousPage: LocalDate =
             pagination?.lastTimeSlotOfPreviousPage?.toLocalDateTime(timeZone)?.date
-                ?: today
+                ?: startDate
 
         return twitchClient
             .getChannelSchedule(
                 channelId = channelId,
+                start = start,
                 limit = params.loadSize,
                 after = pagination?.cursor,
             )
@@ -88,7 +89,7 @@ internal class ChannelScheduleDataSource(
                             // Pad with empty days if there is no data
                             IntRange(
                                 start = lastTimeSlotOfPreviousPage.toEpochDays(),
-                                endInclusive = today.plus(EpgConfig.MaxDaysAhead).toEpochDays(),
+                                endInclusive = startDate.plus(EpgConfig.MaxDaysAhead).toEpochDays(),
                             ).map { epochDays ->
                                 LocalDate.fromEpochDays(epochDays)
                             }
@@ -116,8 +117,8 @@ internal class ChannelScheduleDataSource(
 
                     val emptyTimeline: List<LocalDate> =
                         IntRange(
-                            start = today.toEpochDays(),
-                            endInclusive = today.plus(EpgConfig.MaxDaysAhead).toEpochDays(),
+                            start = startDate.toEpochDays(),
+                            endInclusive = startDate.plus(EpgConfig.MaxDaysAhead).toEpochDays(),
                         ).map { epochDays ->
                             LocalDate.fromEpochDays(epochDays)
                         }

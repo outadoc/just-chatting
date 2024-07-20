@@ -15,6 +15,7 @@ import io.ktor.client.plugins.defaultRequest
 import io.ktor.client.request.get
 import io.ktor.client.request.parameter
 import io.ktor.http.path
+import kotlinx.datetime.Instant
 
 internal class TwitchClient(httpClient: HttpClient) {
 
@@ -159,6 +160,7 @@ internal class TwitchClient(httpClient: HttpClient) {
 
     suspend fun getChannelSchedule(
         channelId: String,
+        start: Instant,
         limit: Int,
         after: String?,
     ): Result<ChannelScheduleResponse> =
@@ -168,6 +170,7 @@ internal class TwitchClient(httpClient: HttpClient) {
                     path("schedule")
                     parameter("broadcaster_id", channelId)
                     parameter("first", limit)
+                    parameter("start_time", start.toString())
                     after?.let { parameter("after", after) }
                 }
             }

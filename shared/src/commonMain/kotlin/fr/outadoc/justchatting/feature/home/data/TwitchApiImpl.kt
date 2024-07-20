@@ -35,7 +35,7 @@ internal class TwitchApiImpl(
                             login = stream.userLogin,
                             displayName = stream.userName,
 
-                            ),
+                        ),
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
@@ -58,7 +58,7 @@ internal class TwitchApiImpl(
                             login = stream.userLogin,
                             displayName = stream.userName,
 
-                            ),
+                        ),
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
@@ -234,7 +234,7 @@ internal class TwitchApiImpl(
 
     override suspend fun getChannelSchedule(
         channelId: String,
-        currentTime: Instant,
+        start: Instant,
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>> {
         val pager = Pager(
@@ -248,8 +248,8 @@ internal class TwitchApiImpl(
                 ChannelScheduleDataSource(
                     channelId = channelId,
                     twitchClient = twitchClient,
-                    currentTime = currentTime,
-                    timeZone = timeZone
+                    start = start,
+                    timeZone = timeZone,
                 )
             },
         )

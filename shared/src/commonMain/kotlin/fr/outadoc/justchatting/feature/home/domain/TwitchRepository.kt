@@ -42,8 +42,8 @@ internal interface TwitchRepository {
 
     suspend fun getChannelSchedule(
         channelId: String,
-        currentTime: Instant,
-        timeZone: TimeZone
+        start: Instant,
+        timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>>
 
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>

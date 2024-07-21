@@ -2,7 +2,6 @@ package fr.outadoc.justchatting.feature.chat.presentation.mobile
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,7 +24,6 @@ import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.datetime.Instant
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun StreamInfo(
     modifier: Modifier = Modifier,

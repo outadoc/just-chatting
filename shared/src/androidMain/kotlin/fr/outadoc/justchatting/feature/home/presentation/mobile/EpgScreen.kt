@@ -62,7 +62,6 @@ import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.TimeZone
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.TextStyle
 import java.util.Locale
@@ -112,7 +111,6 @@ internal fun EpgScreen(
                         modifier = modifier,
                         pagingData = currentState.pagingData,
                         days = currentState.days,
-                        timeZone = currentState.timeZone,
                         contentPadding = insets,
                     )
                 }
@@ -127,7 +125,6 @@ private fun EpgContent(
     modifier: Modifier = Modifier,
     pagingData: Flow<PagingData<ChannelSchedule>>,
     days: List<LocalDate>,
-    timeZone: TimeZone,
     contentPadding: PaddingValues = PaddingValues(),
 ) {
     val channels: LazyPagingItems<ChannelSchedule> = pagingData.collectAsLazyPagingItems()
@@ -173,7 +170,6 @@ private fun EpgContent(
                         .width(ColumnWidth),
                     user = channel.user,
                     days = dayItems,
-                    timeZone = timeZone,
                     sharedListState = sharedListState,
                     updateSharedListState = { sharedListState = it },
                 )
@@ -266,7 +262,6 @@ private fun EpgChannelEntry(
     modifier: Modifier = Modifier,
     user: User,
     days: LazyPagingItems<ChannelScheduleForDay>,
-    timeZone: TimeZone,
     sharedListState: SharedListState = SharedListState(),
     updateSharedListState: (SharedListState) -> Unit = {},
 ) {

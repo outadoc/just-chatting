@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class ChannelSchedule(
     @SerialName("segments")
-    val segments: List<ChannelScheduleSegment>,
+    val segments: List<ChannelScheduleSegment>?,
     @SerialName("broadcaster_id")
     val userId: String,
     @SerialName("broadcaster_login")

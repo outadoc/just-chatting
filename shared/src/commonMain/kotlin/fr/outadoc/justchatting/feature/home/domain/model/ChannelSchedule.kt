@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.feature.home.domain.model
 
+import androidx.paging.PagingData
+import kotlinx.coroutines.flow.Flow
+
 internal data class ChannelSchedule(
-    val segments: List<ChannelScheduleSegment>,
-    val userId: String,
-    val userLogin: String,
-    val userDisplayName: String,
-    val vacation: ChannelScheduleVacation? = null,
+    val scheduleFlow: Flow<PagingData<ChannelScheduleForDay>>,
+    val user: User,
 )

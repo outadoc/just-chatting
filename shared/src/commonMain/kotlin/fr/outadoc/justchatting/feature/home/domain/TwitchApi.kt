@@ -3,12 +3,14 @@ package fr.outadoc.justchatting.feature.home.domain
 import androidx.paging.PagingData
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
 
 internal interface TwitchApi {
 
@@ -30,9 +32,10 @@ internal interface TwitchApi {
 
     suspend fun getChannelSchedule(
         channelId: String,
-        limit: Int,
-        after: String?,
-    ): Result<ChannelSchedule>
+        start: Instant,
+        end: Instant,
+        timeZone: TimeZone,
+    ): Flow<PagingData<ChannelScheduleForDay>>
 
     suspend fun getFollowedChannels(userId: String): Flow<PagingData<List<ChannelFollow>>>
 

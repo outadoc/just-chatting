@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.LiveTv
+import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -112,6 +113,18 @@ internal fun CompactNavigation(
                 )
 
                 NavigationBarItem(
+                    selected = selectedScreen == Screen.Epg,
+                    label = { Text(stringResource(MR.strings.epg_title)) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Schedule,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Epg) },
+                )
+
+                NavigationBarItem(
                     selected = selectedScreen == Screen.Settings.Root,
                     label = { Text(stringResource(MR.strings.settings)) },
                     icon = {
@@ -175,6 +188,22 @@ internal fun MediumNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Screen.Followed) },
+                )
+
+                NavigationRailItem(
+                    selected = selectedScreen == Screen.Epg,
+                    label = {
+                        AnimatedVisibility(visible = selectedScreen == Screen.Followed) {
+                            Text(stringResource(MR.strings.epg_title))
+                        }
+                    },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Schedule,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Epg) },
                 )
 
                 NavigationRailItem(
@@ -247,6 +276,19 @@ internal fun ExpandedNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Screen.Followed) },
+                )
+
+                NavigationDrawerItem(
+                    modifier = Modifier.padding(4.dp),
+                    selected = selectedScreen == Screen.Epg,
+                    label = { Text(stringResource(MR.strings.epg_title)) },
+                    icon = {
+                        Icon(
+                            imageVector = Icons.Filled.Schedule,
+                            contentDescription = null,
+                        )
+                    },
+                    onClick = { onSelectedTabChange(Screen.Epg) },
                 )
 
                 NavigationDrawerItem(

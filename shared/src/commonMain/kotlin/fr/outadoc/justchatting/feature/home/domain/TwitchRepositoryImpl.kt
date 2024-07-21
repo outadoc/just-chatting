@@ -2,10 +2,9 @@ package fr.outadoc.justchatting.feature.home.domain
 
 import androidx.paging.PagingData
 import androidx.paging.flatMap
-import androidx.paging.map
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
@@ -27,6 +26,8 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class TwitchRepositoryImpl(
@@ -271,12 +272,17 @@ internal class TwitchRepositoryImpl(
         }
     }
 
-    override suspend fun getChannelSchedule(channelId: String): Result<ChannelSchedule> =
+    override suspend fun getChannelSchedule(
+        channelId: String,
+        start: Instant,
+        timeZone: TimeZone,
+    ): Flow<PagingData<ChannelScheduleForDay>> =
         withContext(DispatchersProvider.io) {
             twitchApi.getChannelSchedule(
                 channelId = channelId,
-                limit = 10,
-                after = null,
+                start = start,
+                end = start.plus(EpgConfig.MaxDaysAhead, timeZone),
+                timeZone = timeZone,
             )
         }
 

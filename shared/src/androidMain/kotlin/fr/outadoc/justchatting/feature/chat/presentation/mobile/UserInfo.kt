@@ -48,6 +48,7 @@ internal fun UserInfo(
             Text(
                 text = user.displayName,
                 style = MaterialTheme.typography.titleLarge,
+                maxLines = 1,
             )
         }
 

@@ -7,19 +7,20 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.home.domain.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleVacation
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
-import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
 
 internal class TwitchApiImpl(
     private val twitchClient: TwitchClient,
+    private val clock: Clock,
 ) : TwitchApi {
 
     override suspend fun getStreamsByUserId(ids: List<String>): Result<List<Stream>> {
@@ -233,43 +234,28 @@ internal class TwitchApiImpl(
 
     override suspend fun getChannelSchedule(
         channelId: String,
-        limit: Int,
-        after: String?,
-    ): Result<ChannelSchedule> {
-        return twitchClient
-            .getChannelSchedule(
-                channelId = channelId,
-                limit = limit,
-                after = after,
-            )
-            .mapCatching { response ->
-                ChannelSchedule(
-                    segments = response.data.segments.map { segment ->
-                        ChannelScheduleSegment(
-                            id = segment.id,
-                            startTime = segment.startTime,
-                            endTime = segment.endTime,
-                            title = segment.title,
-                            canceledUntil = segment.canceledUntil,
-                            category = segment.category?.let {
-                                StreamCategory(
-                                    id = segment.category.id,
-                                    name = segment.category.name,
-                                )
-                            },
-                            isRecurring = segment.isRecurring,
-                        )
-                    },
-                    userId = response.data.userId,
-                    userLogin = response.data.userLogin,
-                    userDisplayName = response.data.userDisplayName,
-                    vacation = response.data.vacation?.let { vacation ->
-                        ChannelScheduleVacation(
-                            startTime = vacation.startTime,
-                            endTime = vacation.endTime,
-                        )
-                    },
+        start: Instant,
+        end: Instant,
+        timeZone: TimeZone,
+    ): Flow<PagingData<ChannelScheduleForDay>> {
+        val pager = Pager(
+            config = PagingConfig(
+                pageSize = 15,
+                initialLoadSize = 25,
+                prefetchDistance = 10,
+                enablePlaceholders = true,
+            ),
+            pagingSourceFactory = {
+                ChannelScheduleDataSource(
+                    channelId = channelId,
+                    twitchClient = twitchClient,
+                    start = start,
+                    end = end,
+                    timeZone = timeZone,
                 )
-            }
+            },
+        )
+
+        return pager.flow
     }
 }

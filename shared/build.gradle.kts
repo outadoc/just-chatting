@@ -98,9 +98,10 @@ kotlin {
             implementation(libs.androidx.splashscreen)
             implementation(libs.coil.compose)
             implementation(libs.koin.compose)
-            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.okhttp)
             implementation(libs.material.core)
             implementation(libs.moko.resources.compose)
+            implementation(libs.okhttp)
 
             api(libs.sqldelight.driver.android)
         }

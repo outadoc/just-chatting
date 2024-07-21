@@ -28,7 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
-import fr.outadoc.justchatting.feature.chat.presentation.mobile.StreamAndUserInfo
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.UserInfo
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
@@ -80,13 +80,14 @@ internal fun SettingsList(
                 modifier = Modifier.padding(itemInsets),
             ) {
                 AnimatedVisibility(visible = loggedInUser != null) {
-                    StreamAndUserInfo(
-                        modifier = Modifier
-                            .padding(itemInsets)
-                            .padding(top = 16.dp),
-                        user = loggedInUser,
-                        stream = null,
-                    )
+                    if (loggedInUser != null) {
+                        UserInfo(
+                            modifier = Modifier
+                                .padding(itemInsets)
+                                .padding(top = 16.dp),
+                            user = loggedInUser,
+                        )
+                    }
                 }
 
                 SettingsText(

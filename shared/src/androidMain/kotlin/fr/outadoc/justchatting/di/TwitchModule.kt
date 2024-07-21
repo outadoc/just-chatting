@@ -34,7 +34,7 @@ public val twitchModule: Module = module {
 
     single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get(), get()) }
     single<UsersMemoryCache> { UsersMemoryCacheImpl() }
-    single<TwitchApi> { TwitchApiImpl(get()) }
+    single<TwitchApi> { TwitchApiImpl(get(), get()) }
     single { TwitchClient(get(named("twitch"))) }
 
     single<AuthApi> { TwitchAuthApi(get(named("twitch"))) }

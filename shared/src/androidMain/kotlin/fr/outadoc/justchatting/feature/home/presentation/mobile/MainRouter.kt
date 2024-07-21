@@ -74,6 +74,17 @@ internal fun MainRouter(
             )
         }
 
+        composable<Screen.Epg>(
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+        ) {
+            EpgScreen(
+                sizeClass = sizeClass,
+                onNavigate = { navController.navigate(it) },
+                onChannelClick = onChannelClick,
+            )
+        }
+
         composable<Screen.Settings.Root>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },

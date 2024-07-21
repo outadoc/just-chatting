@@ -265,6 +265,7 @@
     <string name="app_repo_name">outadoc/just-chatting</string>
     <string name="app_repo_url">https://github.com/outadoc/just-chatting</string>
     <string name="all_goBack">Retour</string>
+    <string name="epg_title">Schedule</string>
     <string name="logout_msg">You are currently logged in as %s.</string>
     <string name="logout_title">Log out?</string>
     <string name="message_limit">Message limit</string>

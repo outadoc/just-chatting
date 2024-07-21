@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -75,6 +76,7 @@ internal fun EpgScreen(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
+    onChannelClick: (login: String) -> Unit,
 ) {
     val viewModel: EpgViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
@@ -112,6 +114,7 @@ internal fun EpgScreen(
                         pagingData = currentState.pagingData,
                         days = currentState.days,
                         contentPadding = insets,
+                        onChannelClick = onChannelClick,
                     )
                 }
             }
@@ -126,6 +129,7 @@ private fun EpgContent(
     pagingData: Flow<PagingData<ChannelSchedule>>,
     days: List<LocalDate>,
     contentPadding: PaddingValues = PaddingValues(),
+    onChannelClick: (login: String) -> Unit,
 ) {
     val channels: LazyPagingItems<ChannelSchedule> = pagingData.collectAsLazyPagingItems()
     var sharedListState by remember { mutableStateOf(SharedListState()) }
@@ -172,6 +176,7 @@ private fun EpgContent(
                     days = dayItems,
                     sharedListState = sharedListState,
                     updateSharedListState = { sharedListState = it },
+                    onChannelClick = onChannelClick,
                 )
 
                 if (index < channels.itemCount - 1) {
@@ -264,6 +269,7 @@ private fun EpgChannelEntry(
     days: LazyPagingItems<ChannelScheduleForDay>,
     sharedListState: SharedListState = SharedListState(),
     updateSharedListState: (SharedListState) -> Unit = {},
+    onChannelClick: (login: String) -> Unit,
 ) {
     var hasSettled by remember { mutableStateOf(false) }
 
@@ -312,12 +318,11 @@ private fun EpgChannelEntry(
             contentType = "header",
         ) {
             Surface(
+                modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
             ) {
                 Column(
-                    modifier = Modifier
-                        .height(HeaderHeight)
-                        .fillMaxWidth(),
+                    modifier = Modifier.height(HeaderHeight),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
@@ -326,7 +331,8 @@ private fun EpgChannelEntry(
                             .padding(end = 8.dp)
                             .size(56.dp)
                             .clip(MaterialTheme.shapes.medium)
-                            .background(MaterialTheme.colorScheme.surface),
+                            .background(MaterialTheme.colorScheme.surface)
+                            .clickable { onChannelClick(user.login) },
                         model = remoteImageModel(user.profileImageUrl),
                         contentDescription = null,
                     )
@@ -374,7 +380,7 @@ private fun EpgSegment(
 ) {
     Card(modifier = modifier) {
         Column(
-            modifier = Modifier.padding(4.dp)
+            modifier = Modifier.padding(4.dp),
         ) {
             Text(
                 buildAnnotatedString {

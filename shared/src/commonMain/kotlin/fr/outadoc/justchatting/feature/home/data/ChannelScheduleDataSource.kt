@@ -6,6 +6,8 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.utils.logging.logError
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toPersistentList
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -101,7 +103,9 @@ internal class ChannelScheduleDataSource(
                         data = expectedDaysInPage.map { date ->
                             ChannelScheduleForDay(
                                 date = date,
-                                segments = groupedData[date].orEmpty(),
+                                segments = groupedData[date]
+                                    .orEmpty()
+                                    .toPersistentList(),
                             )
                         },
                         prevKey = null,
@@ -128,7 +132,7 @@ internal class ChannelScheduleDataSource(
                         data = emptyTimeline.map { date ->
                             ChannelScheduleForDay(
                                 date = date,
-                                segments = emptyList(),
+                                segments = persistentListOf(),
                             )
                         },
                         prevKey = null,

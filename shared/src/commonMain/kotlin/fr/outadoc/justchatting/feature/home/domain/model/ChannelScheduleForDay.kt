@@ -1,10 +1,11 @@
 package fr.outadoc.justchatting.feature.home.domain.model
 
-import androidx.compose.runtime.Stable
+import androidx.compose.runtime.Immutable
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.datetime.LocalDate
 
-@Stable
+@Immutable
 internal data class ChannelScheduleForDay(
     val date: LocalDate,
-    val segments: List<ChannelScheduleSegment>,
+    val segments: ImmutableList<ChannelScheduleSegment>,
 )

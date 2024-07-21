@@ -227,6 +227,7 @@ private fun Timeline(
     LazyColumn(
         modifier = modifier.fillMaxHeight(),
         state = listState,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item(
             key = "header",
@@ -244,7 +245,6 @@ private fun Timeline(
                 modifier = Modifier
                     .height(heightForDuration(1.days))
                     .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Text(
                     date.dayOfWeek.getDisplayName(

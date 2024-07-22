@@ -314,7 +314,7 @@ private fun EpgChannelEntry(
                 if (sharedListState.firstVisibleItemIndex == index && sharedListState.firstVisibleItemScrollOffset == scrollOffset) {
                     logDebug<Screen.Epg> { "${user.displayName} has settled ($sharedListState)" }
                     hasSettled = true
-                } else if (hasSettled && index > 0 && scrollOffset > 0) {
+                } else if (hasSettled && (index > 0 || scrollOffset > 0)) {
                     logDebug<Screen.Epg> { "updating shared state from ${user.displayName} to ($index, $scrollOffset), was $sharedListState" }
                     updateSharedListState(
                         SharedListState(

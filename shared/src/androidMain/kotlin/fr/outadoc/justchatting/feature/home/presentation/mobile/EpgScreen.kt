@@ -21,6 +21,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
@@ -472,6 +474,14 @@ private fun EpgSegmentDetails(
                 modifier = Modifier.padding(8.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
+                if (segment.title.isNotEmpty()) {
+                    Text(
+                        segment.title,
+                        style = MaterialTheme.typography.titleMedium,
+                        maxLines = 5,
+                    )
+                }
+
                 val date = remember(segment.startTime) {
                     segment.startTime
                         .toLocalDateTime(tz)
@@ -482,21 +492,33 @@ private fun EpgSegmentDetails(
                         )
                 }
 
-                Text(date)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(end = 8.dp),
+                        imageVector = Icons.Default.CalendarToday,
+                        contentDescription = null,
+                    )
 
-                Text(
-                    buildAnnotatedString {
-                        append(segment.startTime.formatTimestamp())
-                        append(" - ")
-                        append(segment.endTime.formatTimestamp())
-                    },
-                )
+                    Text(date)
+                }
 
-                if (segment.title.isNotEmpty()) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        modifier = Modifier
+                            .size(24.dp)
+                            .padding(end = 8.dp),
+                        imageVector = Icons.Default.AccessTime,
+                        contentDescription = null,
+                    )
+
                     Text(
-                        segment.title,
-                        style = MaterialTheme.typography.titleMedium,
-                        maxLines = 5,
+                        buildAnnotatedString {
+                            append(segment.startTime.formatTimestamp())
+                            append(" - ")
+                            append(segment.endTime.formatTimestamp())
+                        },
                     )
                 }
 

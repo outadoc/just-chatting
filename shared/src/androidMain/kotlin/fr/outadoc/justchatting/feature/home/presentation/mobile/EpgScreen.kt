@@ -420,12 +420,14 @@ private fun EpgSegment(
                     }
                 },
                 style = MaterialTheme.typography.labelSmall,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
 
             if (segment.title.isNotEmpty()) {
                 Text(
                     segment.title,
-                    maxLines = 3,
+                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
@@ -572,21 +574,26 @@ private fun EpgSegmentDetailsPreview(
 
 @Preview
 @Composable
-private fun EpgSegmentPreview() {
+private fun EpgSegmentPreview(
+    @PreviewParameter(LoremIpsum::class) lorem: String,
+) {
     AppTheme {
         EpgSegment(
             segment = ChannelScheduleSegment(
                 id = "1",
-                title = "Title",
+                title = lorem,
                 startTime = Instant.parse("2022-01-01T12:00:00Z"),
                 endTime = Instant.parse("2022-01-01T13:00:00Z"),
-                category = null,
+                category = StreamCategory(
+                    id = "1",
+                    name = lorem,
+                ),
                 isRecurring = false,
             ),
             user = User(
                 id = "1",
                 login = "user",
-                displayName = "User",
+                displayName = lorem,
             ),
         )
     }

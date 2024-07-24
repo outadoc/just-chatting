@@ -11,12 +11,13 @@
         android:name=".MainApplication"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_launcher_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.App.Starting"
-        tools:targetApi="s">
+        tools:targetApi="tiramisu">
 
         <activity
             android:name=".feature.home.presentation.mobile.MainActivity"

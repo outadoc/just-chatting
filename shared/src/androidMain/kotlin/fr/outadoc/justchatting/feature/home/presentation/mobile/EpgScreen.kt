@@ -272,6 +272,13 @@ private fun Timeline(
                 )
 
                 Text(date.dayOfMonth.toString())
+
+                Text(
+                    date.month.getDisplayName(
+                        TextStyle.SHORT,
+                        Locale.getDefault(),
+                    ),
+                )
             }
 
             HorizontalDivider()

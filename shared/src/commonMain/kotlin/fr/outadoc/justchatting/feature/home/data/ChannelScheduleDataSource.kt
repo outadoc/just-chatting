@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
+import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
@@ -76,6 +77,10 @@ internal class ChannelScheduleDataSource(
         val startDate = start.toLocalDateTime(timeZone).date
         val endDate = startDate - pastRange
 
+        logDebug<ChannelScheduleDataSource> {
+            "Loading past channel videos from $startDate to $endDate"
+        }
+
         val lastTimeSlotOfPreviousPage: LocalDate =
             pagination.lastTimeSlotOfPreviousPage
                 ?.toLocalDateTime(timeZone)?.date
@@ -97,7 +102,7 @@ internal class ChannelScheduleDataSource(
                                     id = schedule.id,
                                     title = schedule.title,
                                     startTime = schedule.createdAt,
-                                    endTime = schedule.publishedAt,
+                                    endTime = schedule.createdAt + schedule.duration.parseTwitchDuration(),
                                     category = null,
                                 )
                             }
@@ -105,11 +110,11 @@ internal class ChannelScheduleDataSource(
                     val groupedData: Map<LocalDate, List<ChannelScheduleSegment>> = data
                         .groupBy { it.startTime.toLocalDateTime(timeZone).date }
 
-                    val lastDateOnPage: LocalDate? = groupedData.maxOfOrNull { it.key }
+                    val lastDateOnPage: LocalDate? = groupedData.minOfOrNull { it.key }
 
                     val nextKey: Pagination? =
                         response.pagination.cursor
-                            ?.takeIf { lastDateOnPage != null && lastDateOnPage < endDate }
+                            ?.takeIf { lastDateOnPage != null && lastDateOnPage > endDate }
                             ?.let { cursor ->
                                 Pagination.Past(
                                     cursor = cursor,
@@ -127,11 +132,13 @@ internal class ChannelScheduleDataSource(
                     // even if there is no data for that day.
                     val expectedDaysInPage: List<LocalDate> =
                         IntRange(
-                            start = lastTimeSlotOfPreviousPage.toEpochDays(),
-                            endInclusive = lastTimeSlotOfPage.toEpochDays(),
-                        ).map { epochDays ->
-                            LocalDate.fromEpochDays(epochDays)
-                        }
+                            start = lastTimeSlotOfPage.toEpochDays(),
+                            endInclusive = lastTimeSlotOfPreviousPage.toEpochDays(),
+                        )
+                            .reversed()
+                            .map { epochDays ->
+                                LocalDate.fromEpochDays(epochDays)
+                            }
 
                     LoadResult.Page(
                         data = expectedDaysInPage.map { date ->
@@ -153,7 +160,7 @@ internal class ChannelScheduleDataSource(
                         } else {
                             0
                         },
-                        itemsAfter = LoadResult.Page.COUNT_UNDEFINED
+                        itemsAfter = LoadResult.Page.COUNT_UNDEFINED,
                     )
                 },
                 onFailure = { exception ->

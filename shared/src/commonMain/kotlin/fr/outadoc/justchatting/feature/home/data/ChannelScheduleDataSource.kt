@@ -22,8 +22,13 @@ internal class ChannelScheduleDataSource(
 ) : PagingSource<ChannelScheduleDataSource.Pagination, ChannelScheduleForDay>() {
 
     internal sealed class Pagination {
-        data class Next(
-            val cursor: String,
+
+        data class Past(
+            val cursor: String? = null,
+        ) : Pagination()
+
+        data class Future(
+            val cursor: String? = null,
             val lastTimeSlotOfPreviousPage: Instant? = null,
         ) : Pagination()
     }
@@ -32,21 +37,68 @@ internal class ChannelScheduleDataSource(
         null
 
     override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, ChannelScheduleForDay> {
-        val pagination = params.key as? Pagination.Next
-
         val startDate = start.toLocalDateTime(timeZone).date
         val endDate = end.toLocalDateTime(timeZone).date
 
+        return when (val pagination = params.key) {
+            is Pagination.Past -> {
+                // Load previous videos
+                loadPast(
+                    loadSize = params.loadSize,
+                    pagination = params.key as Pagination.Past,
+                    startDate = startDate,
+                    endDate = endDate,
+                )
+            }
+
+            is Pagination.Future -> {
+                // Load EPG data
+                loadFuture(
+                    loadSize = params.loadSize,
+                    pagination = pagination,
+                    startDate = startDate,
+                    endDate = endDate,
+                )
+            }
+
+            null -> {
+                // Initial load
+                loadFuture(
+                    loadSize = params.loadSize,
+                    pagination = Pagination.Future(),
+                    startDate = startDate,
+                    endDate = endDate,
+                )
+            }
+        }
+    }
+
+    private fun loadPast(
+        loadSize: Int,
+        pagination: Pagination.Past,
+        startDate: LocalDate,
+        endDate: LocalDate
+    ): LoadResult<Pagination, ChannelScheduleForDay> {
+        TODO("not implemented")
+    }
+
+    private suspend fun loadFuture(
+        loadSize: Int,
+        pagination: Pagination.Future,
+        startDate: LocalDate,
+        endDate: LocalDate,
+    ): LoadResult<Pagination, ChannelScheduleForDay> {
         val lastTimeSlotOfPreviousPage: LocalDate =
-            pagination?.lastTimeSlotOfPreviousPage?.toLocalDateTime(timeZone)?.date
+            pagination.lastTimeSlotOfPreviousPage
+                ?.toLocalDateTime(timeZone)?.date
                 ?: startDate
 
         return twitchClient
             .getChannelSchedule(
                 channelId = channelId,
                 start = start,
-                limit = params.loadSize,
-                after = pagination?.cursor,
+                limit = loadSize,
+                after = pagination.cursor,
             )
             .fold(
                 onSuccess = { response ->
@@ -73,11 +125,11 @@ internal class ChannelScheduleDataSource(
 
                     val lastDateOnPage: LocalDate? = groupedData.maxOfOrNull { it.key }
 
-                    val nextKey: Pagination.Next? =
+                    val nextKey: Pagination.Future? =
                         response.pagination.cursor
                             ?.takeIf { lastDateOnPage != null && lastDateOnPage < endDate }
                             ?.let { cursor ->
-                                Pagination.Next(
+                                Pagination.Future(
                                     cursor = cursor,
                                     lastTimeSlotOfPreviousPage = data.lastOrNull()?.endTime,
                                 )

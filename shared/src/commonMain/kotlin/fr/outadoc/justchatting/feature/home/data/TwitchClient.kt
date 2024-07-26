@@ -9,6 +9,7 @@ import fr.outadoc.justchatting.feature.home.data.model.FollowResponse
 import fr.outadoc.justchatting.feature.home.data.model.StreamsResponse
 import fr.outadoc.justchatting.feature.home.data.model.TwitchBadgesResponse
 import fr.outadoc.justchatting.feature.home.data.model.UsersResponse
+import fr.outadoc.justchatting.feature.home.data.model.VideoResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.plugins.defaultRequest
@@ -181,5 +182,26 @@ internal class TwitchClient(httpClient: HttpClient) {
             } else {
                 response.body()
             }
+        }
+
+    suspend fun getChannelVideos(
+        channelId: String,
+        limit: Int,
+        after: String?,
+        before: String?
+    ): Result<VideoResponse> =
+        runCatching {
+            client.get {
+                url {
+                    path("videos")
+                    parameter("user_id", channelId)
+                    parameter("first", limit)
+                    parameter("type", "archive")
+                    parameter("sort", "time")
+                    parameter("period", "month")
+                    after?.let { parameter("after", after) }
+                    before?.let { parameter("before", before) }
+                }
+            }.body()
         }
 }

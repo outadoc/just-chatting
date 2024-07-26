@@ -131,6 +131,7 @@ internal fun EpgScreen(
                         modifier = modifier,
                         pagingData = currentState.pagingData,
                         days = currentState.days,
+                        initialListIndex = currentState.initialListIndex,
                         contentPadding = insets,
                         onChannelClick = onChannelClick,
                     )
@@ -146,11 +147,18 @@ private fun EpgContent(
     modifier: Modifier = Modifier,
     pagingData: Flow<PagingData<ChannelSchedule>>,
     days: List<LocalDate>,
+    initialListIndex: Int = 0,
     contentPadding: PaddingValues = PaddingValues(),
     onChannelClick: (login: String) -> Unit,
 ) {
     val channels: LazyPagingItems<ChannelSchedule> = pagingData.collectAsLazyPagingItems()
-    var sharedListState by remember { mutableStateOf(SharedListState()) }
+    var sharedListState by remember {
+        mutableStateOf(
+            SharedListState(
+                firstVisibleItemIndex = initialListIndex,
+            ),
+        )
+    }
 
     LaunchedEffect(sharedListState) {
         logDebug<Screen.Epg> { "sharedListState: $sharedListState" }
@@ -272,6 +280,13 @@ private fun Timeline(
                 )
 
                 Text(date.dayOfMonth.toString())
+
+                Text(
+                    date.month.getDisplayName(
+                        TextStyle.SHORT,
+                        Locale.getDefault(),
+                    ),
+                )
             }
 
             HorizontalDivider()
@@ -561,7 +576,6 @@ private fun EpgSegmentDetailsPreview(
                     id = "1",
                     name = lorem,
                 ),
-                isRecurring = false,
             ),
             user = User(
                 id = "1",
@@ -588,7 +602,6 @@ private fun EpgSegmentPreview(
                     id = "1",
                     name = lorem,
                 ),
-                isRecurring = false,
             ),
             user = User(
                 id = "1",

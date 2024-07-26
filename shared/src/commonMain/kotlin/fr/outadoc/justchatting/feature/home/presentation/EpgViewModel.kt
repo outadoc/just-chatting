@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 
@@ -27,6 +28,7 @@ internal class EpgViewModel(
         data object Loading : State()
         data class Loaded(
             val pagingData: Flow<PagingData<ChannelSchedule>>,
+            val initialListIndex: Int,
             val days: List<LocalDate>,
             val timeZone: TimeZone,
         ) : State()
@@ -57,16 +59,19 @@ internal class EpgViewModel(
             // Build a list of all days between today and the maximum number of days ahead
             val now = clock.now()
             val today = now.toLocalDateTime(tz).date
-            val end = today.plus(EpgConfig.MaxDaysAhead)
+
+            val start = today - EpgConfig.MaxDaysAhead
+            val end = today + EpgConfig.MaxDaysAhead
 
             val days: List<LocalDate> =
-                (today.toEpochDays()..end.toEpochDays())
+                (start.toEpochDays()..end.toEpochDays())
                     .map { LocalDate.fromEpochDays(it) }
 
             _state.value = State.Loaded(
                 pagingData = pagingData.cachedIn(viewModelScope),
                 days = days,
                 timeZone = tz,
+                initialListIndex = days.indexOf(today),
             )
         }
     }

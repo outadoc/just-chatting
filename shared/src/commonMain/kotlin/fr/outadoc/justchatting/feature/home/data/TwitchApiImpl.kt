@@ -15,6 +15,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 
@@ -235,7 +236,8 @@ internal class TwitchApiImpl(
     override suspend fun getChannelSchedule(
         channelId: String,
         start: Instant,
-        end: Instant,
+        pastRange: DatePeriod,
+        futureRange: DatePeriod,
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>> {
         val pager = Pager(
@@ -250,7 +252,8 @@ internal class TwitchApiImpl(
                     channelId = channelId,
                     twitchClient = twitchClient,
                     start = start,
-                    end = end,
+                    pastRange = pastRange,
+                    futureRange = futureRange,
                     timeZone = timeZone,
                 )
             },

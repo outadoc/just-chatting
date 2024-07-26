@@ -11,5 +11,4 @@ internal data class ChannelScheduleSegment(
     val title: String,
     val canceledUntil: Instant? = null,
     val category: StreamCategory? = null,
-    val isRecurring: Boolean,
 )

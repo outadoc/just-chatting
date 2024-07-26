@@ -9,6 +9,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.coroutines.flow.Flow
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 
@@ -33,7 +34,8 @@ internal interface TwitchApi {
     suspend fun getChannelSchedule(
         channelId: String,
         start: Instant,
-        end: Instant,
+        pastRange: DatePeriod,
+        futureRange: DatePeriod,
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>>
 

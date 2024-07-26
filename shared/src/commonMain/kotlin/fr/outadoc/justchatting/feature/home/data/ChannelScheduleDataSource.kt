@@ -8,9 +8,12 @@ import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toLocalDateTime
 
 internal class ChannelScheduleDataSource(
@@ -18,7 +21,8 @@ internal class ChannelScheduleDataSource(
     private val twitchClient: TwitchClient,
     private val start: Instant,
     private val timeZone: TimeZone,
-    private val end: Instant,
+    private val pastRange: DatePeriod,
+    private val futureRange: DatePeriod,
 ) : PagingSource<ChannelScheduleDataSource.Pagination, ChannelScheduleForDay>() {
 
     internal sealed class Pagination {
@@ -37,17 +41,12 @@ internal class ChannelScheduleDataSource(
         null
 
     override suspend fun load(params: LoadParams<Pagination>): LoadResult<Pagination, ChannelScheduleForDay> {
-        val startDate = start.toLocalDateTime(timeZone).date
-        val endDate = end.toLocalDateTime(timeZone).date
-
         return when (val pagination = params.key) {
             is Pagination.Past -> {
                 // Load previous videos
                 loadPast(
                     loadSize = params.loadSize,
                     pagination = params.key as Pagination.Past,
-                    startDate = startDate,
-                    endDate = endDate,
                 )
             }
 
@@ -56,8 +55,6 @@ internal class ChannelScheduleDataSource(
                 loadFuture(
                     loadSize = params.loadSize,
                     pagination = pagination,
-                    startDate = startDate,
-                    endDate = endDate,
                 )
             }
 
@@ -66,8 +63,6 @@ internal class ChannelScheduleDataSource(
                 loadFuture(
                     loadSize = params.loadSize,
                     pagination = Pagination.Future(),
-                    startDate = startDate,
-                    endDate = endDate,
                 )
             }
         }
@@ -76,18 +71,20 @@ internal class ChannelScheduleDataSource(
     private fun loadPast(
         loadSize: Int,
         pagination: Pagination.Past,
-        startDate: LocalDate,
-        endDate: LocalDate
     ): LoadResult<Pagination, ChannelScheduleForDay> {
+        val startDate = start.toLocalDateTime(timeZone).date
+        val endDate = startDate - pastRange
+
         TODO("not implemented")
     }
 
     private suspend fun loadFuture(
         loadSize: Int,
         pagination: Pagination.Future,
-        startDate: LocalDate,
-        endDate: LocalDate,
     ): LoadResult<Pagination, ChannelScheduleForDay> {
+        val startDate = start.toLocalDateTime(timeZone).date
+        val endDate = startDate + futureRange
+
         val lastTimeSlotOfPreviousPage: LocalDate =
             pagination.lastTimeSlotOfPreviousPage
                 ?.toLocalDateTime(timeZone)?.date

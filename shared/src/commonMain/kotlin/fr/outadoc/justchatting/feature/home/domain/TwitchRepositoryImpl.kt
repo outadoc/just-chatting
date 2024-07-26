@@ -27,7 +27,6 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.plus
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class TwitchRepositoryImpl(
@@ -281,7 +280,8 @@ internal class TwitchRepositoryImpl(
             twitchApi.getChannelSchedule(
                 channelId = channelId,
                 start = start,
-                end = start.plus(EpgConfig.MaxDaysAhead, timeZone),
+                pastRange = EpgConfig.MaxDaysAhead,
+                futureRange = EpgConfig.MaxDaysAhead,
                 timeZone = timeZone,
             )
         }

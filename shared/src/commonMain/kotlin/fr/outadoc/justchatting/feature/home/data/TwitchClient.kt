@@ -188,7 +188,7 @@ internal class TwitchClient(httpClient: HttpClient) {
         channelId: String,
         limit: Int,
         after: String?,
-        before: String?
+        before: String?,
     ): Result<VideoResponse> =
         runCatching {
             client.get {

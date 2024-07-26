@@ -30,7 +30,7 @@ internal class ChannelScheduleDataSource(
 
         data class Past(
             val cursor: String? = null,
-            val lastTimeSlotOfPreviousPage: Instant? = null,
+            val lastDayOfPreviousPage: LocalDate? = null,
         ) : Pagination()
 
         data class Future(
@@ -81,10 +81,8 @@ internal class ChannelScheduleDataSource(
             "Loading past channel videos from $startDate to $endDate"
         }
 
-        val lastTimeSlotOfPreviousPage: LocalDate =
-            pagination.lastTimeSlotOfPreviousPage
-                ?.toLocalDateTime(timeZone)?.date
-                ?: startDate
+        val actualStartDate: LocalDate =
+            pagination.lastDayOfPreviousPage ?: startDate
 
         return twitchClient
             .getChannelVideos(
@@ -118,7 +116,8 @@ internal class ChannelScheduleDataSource(
                             ?.let { cursor ->
                                 Pagination.Past(
                                     cursor = cursor,
-                                    lastTimeSlotOfPreviousPage = data.lastOrNull()?.endTime,
+                                    lastDayOfPreviousPage = data.minOfOrNull { it.startTime }
+                                        ?.toLocalDateTime(timeZone)?.date,
                                 )
                             }
 
@@ -133,12 +132,10 @@ internal class ChannelScheduleDataSource(
                     val expectedDaysInPage: List<LocalDate> =
                         IntRange(
                             start = lastTimeSlotOfPage.toEpochDays(),
-                            endInclusive = lastTimeSlotOfPreviousPage.toEpochDays(),
-                        )
-                            .reversed()
-                            .map { epochDays ->
-                                LocalDate.fromEpochDays(epochDays)
-                            }
+                            endInclusive = actualStartDate.toEpochDays() - 1,
+                        ).map { epochDays ->
+                            LocalDate.fromEpochDays(epochDays)
+                        }
 
                     LoadResult.Page(
                         data = expectedDaysInPage.map { date ->
@@ -239,7 +236,7 @@ internal class ChannelScheduleDataSource(
                             ?.let { cursor ->
                                 Pagination.Future(
                                     cursor = cursor,
-                                    lastTimeSlotOfPreviousPage = data.lastOrNull()?.endTime,
+                                    lastTimeSlotOfPreviousPage = data.maxOfOrNull { it.startTime },
                                 )
                             }
 

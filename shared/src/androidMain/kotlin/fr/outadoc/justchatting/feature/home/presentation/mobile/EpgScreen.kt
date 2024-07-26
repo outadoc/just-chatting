@@ -561,7 +561,6 @@ private fun EpgSegmentDetailsPreview(
                     id = "1",
                     name = lorem,
                 ),
-                isRecurring = false,
             ),
             user = User(
                 id = "1",
@@ -588,7 +587,6 @@ private fun EpgSegmentPreview(
                     id = "1",
                     name = lorem,
                 ),
-                isRecurring = false,
             ),
             user = User(
                 id = "1",

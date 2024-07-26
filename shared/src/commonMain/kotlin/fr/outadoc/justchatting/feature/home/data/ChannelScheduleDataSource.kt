@@ -29,6 +29,7 @@ internal class ChannelScheduleDataSource(
 
         data class Past(
             val cursor: String? = null,
+            val lastTimeSlotOfPreviousPage: Instant? = null,
         ) : Pagination()
 
         data class Future(
@@ -68,14 +69,112 @@ internal class ChannelScheduleDataSource(
         }
     }
 
-    private fun loadPast(
+    private suspend fun loadPast(
         loadSize: Int,
         pagination: Pagination.Past,
     ): LoadResult<Pagination, ChannelScheduleForDay> {
         val startDate = start.toLocalDateTime(timeZone).date
         val endDate = startDate - pastRange
 
-        TODO("not implemented")
+        val lastTimeSlotOfPreviousPage: LocalDate =
+            pagination.lastTimeSlotOfPreviousPage
+                ?.toLocalDateTime(timeZone)?.date
+                ?: startDate
+
+        return twitchClient
+            .getChannelVideos(
+                channelId = channelId,
+                limit = loadSize,
+                after = pagination.cursor,
+                before = null,
+            )
+            .fold(
+                onSuccess = { response ->
+                    val data: List<ChannelScheduleSegment> =
+                        response.data
+                            .map { schedule ->
+                                ChannelScheduleSegment(
+                                    id = schedule.id,
+                                    title = schedule.title,
+                                    startTime = schedule.createdAt,
+                                    endTime = schedule.publishedAt,
+                                    category = null,
+                                )
+                            }
+
+                    val groupedData: Map<LocalDate, List<ChannelScheduleSegment>> = data
+                        .groupBy { it.startTime.toLocalDateTime(timeZone).date }
+
+                    val lastDateOnPage: LocalDate? = groupedData.maxOfOrNull { it.key }
+
+                    val nextKey: Pagination? =
+                        response.pagination.cursor
+                            ?.takeIf { lastDateOnPage != null && lastDateOnPage < endDate }
+                            ?.let { cursor ->
+                                Pagination.Past(
+                                    cursor = cursor,
+                                    lastTimeSlotOfPreviousPage = data.lastOrNull()?.endTime,
+                                )
+                            }
+
+                    // Either this will be the start date for the last item in the page,
+                    // or if there is no next page, or we are going out of the range, then
+                    // this will be the end date.
+                    val lastTimeSlotOfPage: LocalDate =
+                        lastDateOnPage?.takeIf { nextKey != null } ?: endDate
+
+                    // We need to return an entry for each day in the range,
+                    // even if there is no data for that day.
+                    val expectedDaysInPage: List<LocalDate> =
+                        IntRange(
+                            start = lastTimeSlotOfPreviousPage.toEpochDays(),
+                            endInclusive = lastTimeSlotOfPage.toEpochDays(),
+                        ).map { epochDays ->
+                            LocalDate.fromEpochDays(epochDays)
+                        }
+
+                    LoadResult.Page(
+                        data = expectedDaysInPage.map { date ->
+                            ChannelScheduleForDay(
+                                date = date,
+                                segments = groupedData[date]
+                                    .orEmpty()
+                                    .toPersistentList(),
+                            )
+                        },
+                        prevKey = null,
+                        nextKey = nextKey,
+                        itemsAfter = if (nextKey != null) {
+                            LoadResult.Page.COUNT_UNDEFINED
+                        } else {
+                            0
+                        },
+                    )
+                },
+                onFailure = { exception ->
+                    logError<ChannelScheduleDataSource>(exception) { "Error while fetching past channel videos" }
+
+                    val emptyTimeline: List<LocalDate> =
+                        IntRange(
+                            start = startDate.toEpochDays(),
+                            endInclusive = endDate.toEpochDays(),
+                        ).map { epochDays ->
+                            LocalDate.fromEpochDays(epochDays)
+                        }
+
+                    LoadResult.Page(
+                        data = emptyTimeline.map { date ->
+                            ChannelScheduleForDay(
+                                date = date,
+                                segments = persistentListOf(),
+                            )
+                        },
+                        prevKey = null,
+                        nextKey = null,
+                        itemsAfter = 0,
+                    )
+                },
+            )
     }
 
     private suspend fun loadFuture(
@@ -113,7 +212,6 @@ internal class ChannelScheduleDataSource(
                                             name = category.name,
                                         )
                                     },
-                                    isRecurring = schedule.isRecurring,
                                 )
                             }
 
@@ -122,7 +220,7 @@ internal class ChannelScheduleDataSource(
 
                     val lastDateOnPage: LocalDate? = groupedData.maxOfOrNull { it.key }
 
-                    val nextKey: Pagination.Future? =
+                    val nextKey: Pagination? =
                         response.pagination.cursor
                             ?.takeIf { lastDateOnPage != null && lastDateOnPage < endDate }
                             ?.let { cursor ->

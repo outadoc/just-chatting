@@ -47,7 +47,7 @@ internal class ChannelScheduleDataSource(
                 // Load previous videos
                 loadPast(
                     loadSize = params.loadSize,
-                    pagination = params.key as Pagination.Past,
+                    pagination = pagination,
                 )
             }
 

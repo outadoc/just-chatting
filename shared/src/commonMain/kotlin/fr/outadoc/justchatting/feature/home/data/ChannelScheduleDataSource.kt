@@ -142,13 +142,18 @@ internal class ChannelScheduleDataSource(
                                     .toPersistentList(),
                             )
                         },
-                        prevKey = null,
-                        nextKey = nextKey,
-                        itemsAfter = if (nextKey != null) {
+                        prevKey = nextKey,
+                        nextKey = if (nextKey == null) {
+                            Pagination.Future()
+                        } else {
+                            null
+                        },
+                        itemsBefore = if (nextKey != null) {
                             LoadResult.Page.COUNT_UNDEFINED
                         } else {
                             0
                         },
+                        itemsAfter = LoadResult.Page.COUNT_UNDEFINED
                     )
                 },
                 onFailure = { exception ->
@@ -170,8 +175,9 @@ internal class ChannelScheduleDataSource(
                             )
                         },
                         prevKey = null,
-                        nextKey = null,
-                        itemsAfter = 0,
+                        nextKey = Pagination.Future(),
+                        itemsBefore = 0,
+                        itemsAfter = LoadResult.Page.COUNT_UNDEFINED,
                     )
                 },
             )
@@ -255,8 +261,13 @@ internal class ChannelScheduleDataSource(
                                     .toPersistentList(),
                             )
                         },
-                        prevKey = null,
+                        prevKey = if (nextKey == null) {
+                            Pagination.Past()
+                        } else {
+                            null
+                        },
                         nextKey = nextKey,
+                        itemsBefore = LoadResult.Page.COUNT_UNDEFINED,
                         itemsAfter = if (nextKey != null) {
                             LoadResult.Page.COUNT_UNDEFINED
                         } else {
@@ -282,8 +293,9 @@ internal class ChannelScheduleDataSource(
                                 segments = persistentListOf(),
                             )
                         },
-                        prevKey = null,
+                        prevKey = Pagination.Past(),
                         nextKey = null,
+                        itemsBefore = LoadResult.Page.COUNT_UNDEFINED,
                         itemsAfter = 0,
                     )
                 },

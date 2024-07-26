@@ -265,7 +265,7 @@ internal class ChannelScheduleDataSource(
                                     .toPersistentList(),
                             )
                         },
-                        prevKey = if (nextKey == null) {
+                        prevKey = if (pagination.cursor == null) {
                             Pagination.Past()
                         } else {
                             null

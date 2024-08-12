@@ -78,7 +78,7 @@ multiplatformResources {
 
 android {
     namespace = "fr.outadoc.justchatting"
-    compileSdkVersion = "android-34"
+    compileSdkVersion = "android-35"
 
     defaultConfig {
         applicationId = "fr.outadoc.justchatting"

@@ -126,7 +126,7 @@ multiplatformResources {
 
 android {
     namespace = "fr.outadoc.justchatting.shared"
-    compileSdkVersion = "android-34"
+    compileSdkVersion = "android-35"
 
     defaultConfig {
         minSdk = 21

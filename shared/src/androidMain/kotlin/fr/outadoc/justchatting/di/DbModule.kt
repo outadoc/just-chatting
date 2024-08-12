@@ -3,8 +3,6 @@ package fr.outadoc.justchatting.di
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import fr.outadoc.justchatting.data.db.AppDatabase
-import fr.outadoc.justchatting.data.db.RecentChannelQueries
-import fr.outadoc.justchatting.data.db.RecentEmoteQueries
 import fr.outadoc.justchatting.feature.recent.data.RecentChannelsDb
 import fr.outadoc.justchatting.feature.recent.data.RecentEmotesDb
 import fr.outadoc.justchatting.feature.recent.domain.RecentChannelsApi

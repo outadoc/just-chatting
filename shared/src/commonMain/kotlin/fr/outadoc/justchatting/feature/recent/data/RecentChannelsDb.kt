@@ -2,7 +2,7 @@ package fr.outadoc.justchatting.feature.recent.data
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
-import fr.outadoc.justchatting.data.db.RecentChannelQueries
+import fr.outadoc.justchatting.data.db.UserQueries
 import fr.outadoc.justchatting.feature.recent.domain.RecentChannelsApi
 import fr.outadoc.justchatting.feature.recent.domain.model.RecentChannel
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.datetime.Instant
 
 internal class RecentChannelsDb(
-    private val recentChannelQueries: RecentChannelQueries,
+    private val recentChannelQueries: UserQueries,
 ) : RecentChannelsApi {
 
     override fun getAll(): Flow<List<RecentChannel>> {
@@ -35,11 +35,6 @@ internal class RecentChannelsDb(
                 id = channel.id,
                 used_at = channel.usedAt.toEpochMilliseconds(),
             )
-            recentChannelQueries.cleanUp(limit = MAX_RECENT_CHANNELS)
         }
-    }
-
-    private companion object {
-        const val MAX_RECENT_CHANNELS: Long = 50
     }
 }

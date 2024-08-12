@@ -1,0 +1,22 @@
+CREATE TABLE User (
+    `id` TEXT NOT NULL,
+    `login` TEXT,
+    `display_name` TEXT,
+    `profile_image_url` TEXT,
+    `description` TEXT,
+    `created_at` INTEGER,
+    `followed_at` INTEGER,
+    `used_at` INTEGER,
+    `updated_at` INTEGER NOT NULL,
+    PRIMARY KEY(`id`)
+);
+
+getAll:
+SELECT * FROM User
+ORDER BY used_at DESC, display_name;
+
+-- add methods to get complete or incomplete users
+
+insert:
+INSERT OR REPLACE INTO User (id, used_at, login, display_name, profile_image_url, description, created_at, followed_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);

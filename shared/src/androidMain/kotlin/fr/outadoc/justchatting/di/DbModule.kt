@@ -3,6 +3,8 @@ package fr.outadoc.justchatting.di
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import fr.outadoc.justchatting.data.db.AppDatabase
+import fr.outadoc.justchatting.data.db.RecentEmoteQueries
+import fr.outadoc.justchatting.data.db.UserQueries
 import fr.outadoc.justchatting.feature.recent.data.LocalUsersDb
 import fr.outadoc.justchatting.feature.recent.data.RecentEmotesDb
 import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
@@ -25,6 +27,6 @@ public val dbModule: Module = module {
     single<RecentEmoteQueries> { get<AppDatabase>().recentEmoteQueries }
     single<RecentEmotesApi> { RecentEmotesDb(get()) }
 
-    single<RecentChannelQueries> { get<AppDatabase>().recentChannelQueries }
+    single<UserQueries> { get<AppDatabase>().userQueries }
     single<LocalUsersApi> { LocalUsersDb(get()) }
 }

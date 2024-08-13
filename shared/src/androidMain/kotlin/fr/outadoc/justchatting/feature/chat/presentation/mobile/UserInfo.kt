@@ -21,7 +21,6 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.formatDate
-import kotlinx.datetime.Instant
 
 @Composable
 internal fun UserInfo(
@@ -56,9 +55,7 @@ internal fun UserInfo(
             Text(text = user.description)
         }
 
-        val createdAt = user.createdAt?.let {
-            Instant.parse(user.createdAt).formatDate()
-        }
+        val createdAt = user.createdAt?.formatDate()
 
         if (createdAt != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {

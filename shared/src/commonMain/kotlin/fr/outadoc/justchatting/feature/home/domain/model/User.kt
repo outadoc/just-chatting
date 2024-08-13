@@ -6,7 +6,6 @@ import fr.outadoc.justchatting.utils.parcel.Parcelize
 import kotlinx.datetime.Instant
 
 @Immutable
-@Parcelize
 internal data class User(
     val id: String,
     val login: String,
@@ -15,4 +14,4 @@ internal data class User(
     val profileImageUrl: String? = null,
     val createdAt: Instant? = null,
     val usedAt: Instant? = null,
-) : Parcelable
+)

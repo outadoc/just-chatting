@@ -7,7 +7,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
-@Parcelize
 internal data class ChannelSearchResult(
     val title: String,
     val user: User,
@@ -17,4 +16,4 @@ internal data class ChannelSearchResult(
     val isLive: Boolean = false,
     val thumbnailUrl: String? = null,
     val tags: ImmutableList<String> = persistentListOf(),
-) : Parcelable
+)

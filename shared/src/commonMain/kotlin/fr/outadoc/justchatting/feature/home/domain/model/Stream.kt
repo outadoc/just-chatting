@@ -7,7 +7,6 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
-@Parcelize
 internal data class Stream(
     val id: String,
     val user: User,
@@ -16,4 +15,4 @@ internal data class Stream(
     val viewerCount: Int,
     val startedAt: String,
     val tags: ImmutableList<String> = persistentListOf(),
-) : Parcelable
+)

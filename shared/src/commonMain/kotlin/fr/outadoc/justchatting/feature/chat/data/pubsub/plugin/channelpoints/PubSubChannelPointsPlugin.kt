@@ -6,7 +6,6 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Reward
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 
 internal class PubSubChannelPointsPlugin(

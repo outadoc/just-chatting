@@ -17,7 +17,6 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import kotlinx.collections.immutable.persistentListOf
-import kotlinx.datetime.Instant
 
 @Composable
 internal fun StreamAndUserInfo(

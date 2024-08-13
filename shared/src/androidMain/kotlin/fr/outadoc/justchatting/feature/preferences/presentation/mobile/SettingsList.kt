@@ -36,7 +36,6 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.plus
-import kotlinx.datetime.Instant
 
 @ThemePreviews
 @Composable

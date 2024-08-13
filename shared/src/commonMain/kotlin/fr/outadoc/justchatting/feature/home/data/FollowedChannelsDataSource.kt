@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.Pagination
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logError
+import kotlinx.datetime.Instant
 
 internal class FollowedChannelsDataSource(
     private val userId: String?,
@@ -39,6 +40,7 @@ internal class FollowedChannelsDataSource(
                                         id = follow.userId,
                                         login = follow.userLogin,
                                         displayName = follow.userDisplayName,
+                                        usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
                                     ),
                                     followedAt = follow.followedAt,
                                 )

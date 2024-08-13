@@ -17,6 +17,7 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import kotlinx.collections.immutable.persistentListOf
+import kotlinx.datetime.Instant
 
 @Composable
 internal fun StreamAndUserInfo(
@@ -61,9 +62,10 @@ internal fun StreamInfoPreviewFull() {
             user = User(
                 id = "",
                 login = "",
-                description = "Lorem ipsum dolor sit amet",
                 displayName = "outadoc",
+                description = "Lorem ipsum dolor sit amet",
                 createdAt = "2022-01-01T00:00:00.00Z",
+                usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
             ),
             stream = Stream(
                 id = "",
@@ -71,6 +73,7 @@ internal fun StreamInfoPreviewFull() {
                     id = "",
                     login = "",
                     displayName = "",
+                    usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
                 ),
                 gameName = "Powerwash Simulator",
                 title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
@@ -93,6 +96,7 @@ internal fun StreamInfoPreviewOffline() {
                 displayName = "outadoc",
                 description = "Lorem ipsum dolor sit amet",
                 createdAt = "2022-01-01T00:00:00.00Z",
+                usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
             ),
             stream = null,
         )

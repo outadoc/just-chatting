@@ -581,6 +581,7 @@ private fun EpgSegmentDetailsPreview(
                 id = "1",
                 login = "user",
                 displayName = lorem,
+                usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
             ),
         )
     }
@@ -607,6 +608,7 @@ private fun EpgSegmentPreview(
                 id = "1",
                 login = "user",
                 displayName = lorem,
+                usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
             ),
         )
     }

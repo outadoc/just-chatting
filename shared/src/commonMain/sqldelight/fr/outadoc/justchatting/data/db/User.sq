@@ -1,5 +1,5 @@
 CREATE TABLE User (
-    `id` TEXT NOT NULL,
+    `id` TEXT NOT NULL PRIMARY KEY,
     `login` TEXT,
     `display_name` TEXT,
     `profile_image_url` TEXT,
@@ -7,16 +7,25 @@ CREATE TABLE User (
     `created_at` INTEGER,
     `followed_at` INTEGER,
     `used_at` INTEGER,
-    `updated_at` INTEGER NOT NULL,
-    PRIMARY KEY(`id`)
+    `updated_at` INTEGER NOT NULL DEFAULT 0
 );
 
-getAll:
+CREATE INDEX index_User_login ON User (login);
+
+getAllComplete:
 SELECT * FROM User
-ORDER BY used_at DESC, display_name;
+WHERE login IS NOT NULL AND display_name IS NOT NULL
+ORDER BY used_at DESC, login ASC;
 
--- add methods to get complete or incomplete users
+getAllToUpdate:
+SELECT * FROM User
+WHERE login IS NULL OR display_name IS NULL OR profile_image_url IS NULL OR updated_at < :minUpdatedAtTimestamp
+ORDER BY used_at DESC, login ASC;
 
-insert:
+updateOrInsert:
 INSERT OR REPLACE INTO User (id, used_at, login, display_name, profile_image_url, description, created_at, followed_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateVisitedAt:
+INSERT OR REPLACE INTO User (id, used_at)
+VALUES (?, ?);

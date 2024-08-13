@@ -8,3 +8,5 @@ ALTER TABLE User ADD COLUMN `description` TEXT;
 ALTER TABLE User ADD COLUMN `created_at` INTEGER;
 ALTER TABLE User ADD COLUMN `followed_at` INTEGER;
 ALTER TABLE User ADD COLUMN `updated_at` INTEGER NOT NULL DEFAULT 0;
+
+CREATE INDEX index_User_login ON User (login);

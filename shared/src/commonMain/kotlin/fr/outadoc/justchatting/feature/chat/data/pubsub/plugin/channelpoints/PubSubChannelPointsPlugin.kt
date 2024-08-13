@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.Reward
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.serialization.json.Json
 
 internal class PubSubChannelPointsPlugin(
@@ -28,6 +29,7 @@ internal class PubSubChannelPointsPlugin(
                                 id = message.data.redemption.user.id,
                                 login = message.data.redemption.user.login,
                                 displayName = message.data.redemption.user.displayName,
+                                usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
                             ),
                             userAddedMessage = message.data.redemption.userAddedMessage,
                             redeemedAt = message.data.redemption.redeemedAt,

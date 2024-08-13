@@ -11,8 +11,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.feature.recent.domain.RecentChannelsApi
-import fr.outadoc.justchatting.feature.recent.domain.model.RecentChannel
+import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -33,7 +32,7 @@ internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
     private val usersMemoryCache: UsersMemoryCache,
     private val preferencesRepository: PreferenceRepository,
-    private val recentChannelsApi: RecentChannelsApi,
+    private val localUsersApi: LocalUsersApi,
 ) : TwitchRepository {
 
     override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
@@ -220,7 +219,7 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?> =
         withContext(DispatchersProvider.io) {
-            recentChannelsApi
+            localUsersApi
                 .getAll()
                 .flatMapLatest { channels ->
                     val ids = channels.map { channel -> channel.id }
@@ -250,7 +249,10 @@ internal class TwitchRepositoryImpl(
                                     id = user.id,
                                     login = user.login,
                                     displayName = user.displayName,
+                                    description = user.description,
                                     profileImageUrl = user.profileImageUrl,
+                                    createdAt = user.createdAt,
+                                    usedAt = user.usedAt,
                                 ),
                             )
                         }
@@ -262,11 +264,9 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun insertRecentChannel(channel: User, usedAt: Instant) {
         withContext(DispatchersProvider.io) {
-            recentChannelsApi.insert(
-                RecentChannel(
-                    id = channel.id,
-                    usedAt = usedAt,
-                ),
+            localUsersApi.markAsVisited(
+                userId = channel.id,
+                usedAt = usedAt,
             )
         }
     }

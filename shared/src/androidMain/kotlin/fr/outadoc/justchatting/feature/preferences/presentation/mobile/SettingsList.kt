@@ -45,9 +45,10 @@ internal fun SettingsListPreview() {
         SettingsList(
             loggedInUser = User(
                 id = "123",
-                displayName = "Maghla",
                 login = "maghla",
+                displayName = "Maghla",
                 profileImageUrl = null,
+                usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
             ),
             onLogoutClick = {},
             onOpenDependencyCredits = {},
@@ -85,10 +86,11 @@ internal fun SettingsList(
                 val placeholderUser = remember {
                     User(
                         id = "",
-                        displayName = "",
                         login = "",
+                        displayName = "",
                         profileImageUrl = null,
                         createdAt = Instant.DISTANT_PAST.toString(),
+                        usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
                     )
                 }
 

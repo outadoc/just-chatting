@@ -41,7 +41,6 @@ internal class FollowedStreamsDataSource(
                                         id = stream.userId,
                                         login = stream.userLogin,
                                         displayName = stream.userName,
-                                        usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
                                     ),
                                     gameName = stream.gameName,
                                     title = stream.title,

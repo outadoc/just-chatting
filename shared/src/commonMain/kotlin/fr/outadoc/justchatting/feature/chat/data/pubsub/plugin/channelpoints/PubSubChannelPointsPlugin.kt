@@ -29,7 +29,6 @@ internal class PubSubChannelPointsPlugin(
                                 id = message.data.redemption.user.id,
                                 login = message.data.redemption.user.login,
                                 displayName = message.data.redemption.user.displayName,
-                                usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
                             ),
                             userAddedMessage = message.data.redemption.userAddedMessage,
                             redeemedAt = message.data.redemption.redeemedAt,

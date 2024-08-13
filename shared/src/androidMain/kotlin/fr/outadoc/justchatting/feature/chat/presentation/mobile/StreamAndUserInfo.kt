@@ -64,8 +64,6 @@ internal fun StreamInfoPreviewFull() {
                 login = "",
                 displayName = "outadoc",
                 description = "Lorem ipsum dolor sit amet",
-                createdAt = "2022-01-01T00:00:00.00Z",
-                usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
             ),
             stream = Stream(
                 id = "",
@@ -73,7 +71,6 @@ internal fun StreamInfoPreviewFull() {
                     id = "",
                     login = "",
                     displayName = "",
-                    usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
                 ),
                 gameName = "Powerwash Simulator",
                 title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
@@ -95,8 +92,6 @@ internal fun StreamInfoPreviewOffline() {
                 login = "",
                 displayName = "outadoc",
                 description = "Lorem ipsum dolor sit amet",
-                createdAt = "2022-01-01T00:00:00.00Z",
-                usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
             ),
             stream = null,
         )

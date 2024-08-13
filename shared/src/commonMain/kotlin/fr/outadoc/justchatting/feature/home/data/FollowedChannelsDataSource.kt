@@ -40,7 +40,6 @@ internal class FollowedChannelsDataSource(
                                         id = follow.userId,
                                         login = follow.userLogin,
                                         displayName = follow.userDisplayName,
-                                        usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
                                     ),
                                     followedAt = follow.followedAt,
                                 )

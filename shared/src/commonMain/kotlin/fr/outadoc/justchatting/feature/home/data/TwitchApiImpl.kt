@@ -35,8 +35,6 @@ internal class TwitchApiImpl(
                             id = stream.userId,
                             login = stream.userLogin,
                             displayName = stream.userName,
-                            usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
-
                         ),
                         gameName = stream.gameName,
                         title = stream.title,
@@ -59,8 +57,6 @@ internal class TwitchApiImpl(
                             id = stream.userId,
                             login = stream.userLogin,
                             displayName = stream.userName,
-                            usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
-
                         ),
                         gameName = stream.gameName,
                         title = stream.title,
@@ -102,8 +98,7 @@ internal class TwitchApiImpl(
                         displayName = user.displayName,
                         description = user.description,
                         profileImageUrl = user.profileImageUrl,
-                        createdAt = user.createdAt,
-                        usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
+                        createdAt = Instant.parse(user.createdAt),
                     )
                 }
             }
@@ -124,8 +119,7 @@ internal class TwitchApiImpl(
                         displayName = user.displayName,
                         description = user.description,
                         profileImageUrl = user.profileImageUrl,
-                        createdAt = user.createdAt,
-                        usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
+                        createdAt = Instant.parse(user.createdAt),
                     )
                 }
             }

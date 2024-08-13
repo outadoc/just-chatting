@@ -51,7 +51,6 @@ internal class SearchChannelsDataSource(
                                         id = search.userId,
                                         login = search.userLogin,
                                         displayName = search.userDisplayName,
-                                        usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
                                     ),
                                     language = search.broadcasterLanguage,
                                     gameId = search.gameId,

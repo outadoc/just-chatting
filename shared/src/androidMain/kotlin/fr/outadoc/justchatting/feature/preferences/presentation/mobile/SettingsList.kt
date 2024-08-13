@@ -47,8 +47,6 @@ internal fun SettingsListPreview() {
                 id = "123",
                 login = "maghla",
                 displayName = "Maghla",
-                profileImageUrl = null,
-                usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
             ),
             onLogoutClick = {},
             onOpenDependencyCredits = {},
@@ -88,9 +86,6 @@ internal fun SettingsList(
                         id = "",
                         login = "",
                         displayName = "",
-                        profileImageUrl = null,
-                        createdAt = Instant.DISTANT_PAST.toString(),
-                        usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
                     )
                 }
 

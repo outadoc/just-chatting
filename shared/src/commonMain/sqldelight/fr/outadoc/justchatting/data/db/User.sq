@@ -1,11 +1,11 @@
-CREATE TABLE "User" (
+CREATE TABLE User (
     `id` TEXT NOT NULL,
     `used_at` INTEGER NOT NULL,
     `followed_at` INTEGER NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE "UserInfo" (
+CREATE TABLE UserInfo (
     `id` TEXT NOT NULL,
     `login` TEXT NOT NULL,
     `display_name` TEXT NOT NULL,

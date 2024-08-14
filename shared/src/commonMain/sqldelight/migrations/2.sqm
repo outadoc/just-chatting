@@ -1,7 +1,7 @@
 ALTER TABLE recent_emotes RENAME TO RecentEmote;
 ALTER TABLE recent_channels RENAME TO User;
 
-ALTER TABLE User ADD COLUMN `followed_at` INTEGER DEFAULT NULL;
+ALTER TABLE User ADD COLUMN `followed_at` INTEGER NOT NULL DEFAULT 0;
 
 CREATE TABLE UserInfo (
     `id` TEXT NOT NULL,
@@ -16,4 +16,3 @@ CREATE TABLE UserInfo (
 );
 
 CREATE INDEX index_UserInfo_login ON UserInfo (login);
-

@@ -37,6 +37,7 @@ internal class LocalUsersDb(
     override fun rememberUser(userId: String, usedAt: Instant?, followedAt: Instant?) {
         userQueries.transaction {
             userQueries.createUser(userId)
+
             usedAt?.let { usedAt ->
                 userQueries.updateVisitedAt(
                     id = userId,

@@ -1,7 +1,7 @@
 ALTER TABLE recent_emotes RENAME TO RecentEmote;
 ALTER TABLE recent_channels RENAME TO User;
 
-ALTER TABLE User ADD COLUMN `followed_at` INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE User ADD COLUMN `followed_at` INTEGER NOT NULL;
 
 CREATE TABLE UserInfo (
     `id` TEXT NOT NULL,

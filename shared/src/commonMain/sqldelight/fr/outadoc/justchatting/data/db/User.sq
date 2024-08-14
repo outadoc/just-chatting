@@ -1,17 +1,19 @@
 CREATE TABLE User (
-    `id` TEXT NOT NULL PRIMARY KEY,
+    `id` TEXT NOT NULL,
     `followed_at` INTEGER DEFAULT NULL,
-    `used_at` INTEGER DEFAULT NULL
+    `used_at` INTEGER DEFAULT NULL,
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE UserInfo (
-    `id` TEXT NOT NULL PRIMARY KEY,
+    `id` TEXT NOT NULL,
     `login` TEXT NOT NULL,
     `display_name` TEXT NOT NULL,
     `profile_image_url` TEXT NOT NULL,
     `description` TEXT NOT NULL,
     `created_at` INTEGER NOT NULL,
     `updated_at` INTEGER NOT NULL,
+    PRIMARY KEY (id),
     FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE
 );
 

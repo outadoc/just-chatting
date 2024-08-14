@@ -2,7 +2,7 @@ CREATE TABLE User (
     `id` TEXT NOT NULL,
     `used_at` INTEGER NOT NULL,
     `followed_at` INTEGER NOT NULL,
-    PRIMARY KEY (id)
+    PRIMARY KEY (`id`)
 );
 
 CREATE TABLE UserInfo (
@@ -13,8 +13,8 @@ CREATE TABLE UserInfo (
     `description` TEXT NOT NULL,
     `created_at` INTEGER NOT NULL,
     `updated_at` INTEGER NOT NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (id) REFERENCES User (id) ON DELETE CASCADE
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`id`) REFERENCES User (`id`) ON DELETE CASCADE
 );
 
 CREATE INDEX index_UserInfo_login ON UserInfo (login);

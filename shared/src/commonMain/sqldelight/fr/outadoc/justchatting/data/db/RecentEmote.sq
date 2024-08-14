@@ -2,7 +2,7 @@ CREATE TABLE RecentEmote (
     `name` TEXT NOT NULL,
     `url` TEXT NOT NULL,
     `used_at` INTEGER NOT NULL,
-    PRIMARY KEY (name)
+    PRIMARY KEY (`name`)
 );
 
 getAll:

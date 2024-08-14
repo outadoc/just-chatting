@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.datetime.Instant
 
 internal class LocalUsersDb(
@@ -15,20 +16,67 @@ internal class LocalUsersDb(
 ) : LocalUsersApi {
 
     override fun getRecentChannels(): Flow<List<User>> {
-        return userQueries
-            .getRecent()
+        return userQueries.getRecent()
             .asFlow()
             .mapToList(DispatchersProvider.io)
-            .map { channels ->
-                channels.map { channel ->
+            .map { users ->
+                users.map { userInfo ->
                     User(
-                        id = channel.id,
-                        login = channel.id,
-                        displayName = channel.id,
-                        profileImageUrl = channel.profile_image_url,
-                        description = channel.description,
-                        createdAt = Instant.fromEpochMilliseconds(channel.created_at),
-                        usedAt = Instant.fromEpochMilliseconds(channel.used_at),
+                        id = userInfo.id,
+                        login = userInfo.login,
+                        displayName = userInfo.display_name,
+                        profileImageUrl = userInfo.profile_image_url,
+                        description = userInfo.description,
+                        createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
+                        usedAt = Instant.fromEpochMilliseconds(userInfo.used_at),
+                    )
+                }
+            }
+    }
+
+    override fun getUserById(id: String): Flow<User> {
+        return getUsersById(listOf(id))
+            .mapNotNull { user -> user.firstOrNull() }
+    }
+
+    override fun getUsersById(ids: List<String>): Flow<List<User>> {
+        return userQueries.getByIds(ids)
+            .asFlow()
+            .mapToList(DispatchersProvider.io)
+            .map { users ->
+                users.map { userInfo ->
+                    User(
+                        id = userInfo.id,
+                        login = userInfo.login,
+                        displayName = userInfo.display_name,
+                        profileImageUrl = userInfo.profile_image_url,
+                        description = userInfo.description,
+                        createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
+                        usedAt = Instant.fromEpochMilliseconds(userInfo.used_at),
+                    )
+                }
+            }
+    }
+
+    override fun getUserByLogin(login: String): Flow<User> {
+        return getUsersByLogin(listOf(login))
+            .mapNotNull { user -> user.firstOrNull() }
+    }
+
+    override fun getUsersByLogin(logins: List<String>): Flow<List<User>> {
+        return userQueries.getByLogins(logins)
+            .asFlow()
+            .mapToList(DispatchersProvider.io)
+            .mapNotNull { users ->
+                users.map { userInfo ->
+                    User(
+                        id = userInfo.id,
+                        login = userInfo.login,
+                        displayName = userInfo.display_name,
+                        profileImageUrl = userInfo.profile_image_url,
+                        description = userInfo.description,
+                        createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
+                        usedAt = Instant.fromEpochMilliseconds(userInfo.used_at),
                     )
                 }
             }

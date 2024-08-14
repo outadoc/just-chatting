@@ -5,6 +5,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 
 internal interface LocalUsersApi {
-    fun getAll(): Flow<List<User>>
-    fun markAsVisited(userId: String, usedAt: Instant)
+    fun getRecentChannels(): Flow<List<User>>
+    fun rememberUser(userId: String, usedAt: Instant? = null, followedAt: Instant? = null)
 }

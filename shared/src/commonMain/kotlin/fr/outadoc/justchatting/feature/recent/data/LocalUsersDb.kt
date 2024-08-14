@@ -14,9 +14,9 @@ internal class LocalUsersDb(
     private val userQueries: UserQueries,
 ) : LocalUsersApi {
 
-    override fun getAll(): Flow<List<User>> {
+    override fun getRecentChannels(): Flow<List<User>> {
         return userQueries
-            .getAllComplete()
+            .getRecent()
             .asFlow()
             .mapToList(DispatchersProvider.io)
             .map { channels ->
@@ -27,19 +27,29 @@ internal class LocalUsersDb(
                         displayName = channel.id,
                         profileImageUrl = channel.profile_image_url,
                         description = channel.description,
-                        createdAt = channel.created_at?.let { Instant.fromEpochMilliseconds(it) },
-                        usedAt = channel.used_at?.let { Instant.fromEpochMilliseconds(it) },
+                        createdAt = Instant.fromEpochMilliseconds(channel.created_at),
+                        usedAt = Instant.fromEpochMilliseconds(channel.used_at),
                     )
                 }
             }
     }
 
-    override fun markAsVisited(userId: String, usedAt: Instant) {
+    override fun rememberUser(userId: String, usedAt: Instant?, followedAt: Instant?) {
         userQueries.transaction {
-            userQueries.updateVisitedAt(
-                id = userId,
-                used_at = usedAt.toEpochMilliseconds(),
-            )
+            userQueries.createUser(userId)
+            usedAt?.let { usedAt ->
+                userQueries.updateVisitedAt(
+                    id = userId,
+                    used_at = usedAt.toEpochMilliseconds(),
+                )
+            }
+
+            followedAt?.let { followedAt ->
+                userQueries.updateFollowedAt(
+                    id = userId,
+                    followed_at = followedAt.toEpochMilliseconds(),
+                )
+            }
         }
     }
 }

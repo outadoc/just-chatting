@@ -220,7 +220,7 @@ internal class TwitchRepositoryImpl(
     override suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?> =
         withContext(DispatchersProvider.io) {
             localUsersApi
-                .getAll()
+                .getRecentChannels()
                 .flatMapLatest { channels ->
                     val ids = channels.map { channel -> channel.id }
                     flow {
@@ -264,7 +264,7 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun insertRecentChannel(channel: User, usedAt: Instant) {
         withContext(DispatchersProvider.io) {
-            localUsersApi.markAsVisited(
+            localUsersApi.rememberUser(
                 userId = channel.id,
                 usedAt = usedAt,
             )

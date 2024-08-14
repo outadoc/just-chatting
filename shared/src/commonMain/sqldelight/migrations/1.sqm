@@ -1,5 +1,4 @@
 CREATE TABLE recent_channels (
-    `id` TEXT NOT NULL,
-    `used_at` INTEGER NOT NULL,
-    PRIMARY KEY(`id`)
+    `id` TEXT NOT NULL PRIMARY KEY,
+    `used_at` INTEGER NOT NULL
 );

@@ -66,7 +66,7 @@ internal class LocalUsersDb(
                                 null
                             },
                         ),
-                        followedAt = Instant.fromEpochMilliseconds(userInfo.followed_at)
+                        followedAt = Instant.fromEpochMilliseconds(userInfo.followed_at),
                     )
                 }
             }
@@ -179,7 +179,7 @@ internal class LocalUsersDb(
 
         return userQueries
             .getAllToUpdate(
-                minUpdatedAtTimestamp = minAcceptableCacheDate.toEpochMilliseconds()
+                minUpdatedAtTimestamp = minAcceptableCacheDate.toEpochMilliseconds(),
             )
             .asFlow()
             .mapToList(DispatchersProvider.io)

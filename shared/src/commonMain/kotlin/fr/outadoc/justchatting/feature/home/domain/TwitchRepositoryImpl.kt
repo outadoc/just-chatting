@@ -20,7 +20,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.sync.Mutex
@@ -263,7 +262,7 @@ internal class TwitchRepositoryImpl(
             logDebug<TwitchRepositoryImpl> { "syncLocalUserInfo: updating ${ids.size} users" }
 
             localUsersApi.updateUserInfo(
-                users = twitchApi.getUsersById(ids)
+                users = twitchApi.getUsersById(ids),
             )
         }
     }

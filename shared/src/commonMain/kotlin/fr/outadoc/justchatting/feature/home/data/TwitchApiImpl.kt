@@ -123,7 +123,7 @@ internal class TwitchApiImpl(
                                 "Error while fetching users by ID: bad chunk"
                             }
                             emptyList()
-                        }
+                        },
                     )
             }
             .also { users ->
@@ -159,7 +159,7 @@ internal class TwitchApiImpl(
                                 "Error while fetching users by login: bad chunk"
                             }
                             emptyList()
-                        }
+                        },
                     )
             }
             .also { users ->
@@ -222,7 +222,7 @@ internal class TwitchApiImpl(
                                         ),
                                         followedAt = Instant.parse(follow.followedAt),
                                     )
-                                }
+                                },
                             )
                         }
                 } while (cursor != null)

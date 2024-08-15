@@ -4,7 +4,6 @@ import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -16,7 +15,7 @@ internal class FollowedChannelsViewModel(
     sealed class State {
         data object Loading : State()
         data class Content(
-            val data: List<ChannelFollow>
+            val data: List<ChannelFollow>,
         ) : State()
     }
 

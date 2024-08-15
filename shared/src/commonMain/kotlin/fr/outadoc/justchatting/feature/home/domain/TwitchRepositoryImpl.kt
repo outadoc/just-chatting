@@ -128,18 +128,6 @@ internal class TwitchRepositoryImpl(
             )
         }.flowOn(DispatchersProvider.io)
 
-    override suspend fun getStreamByUserLogin(userLogin: String): Flow<Result<Stream>> =
-        flow {
-            emit(
-                twitchApi
-                    .getStreamsByUserLogin(logins = listOf(userLogin))
-                    .mapCatching { response ->
-                        response.firstOrNull()
-                            ?: error("Stream for userLogin $userLogin not found")
-                    },
-            )
-        }.flowOn(DispatchersProvider.io)
-
     override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
         localUsersApi
             .getUsersById(ids)
@@ -154,24 +142,6 @@ internal class TwitchRepositoryImpl(
                     result.mapCatching { users ->
                         users.firstOrNull()
                             ?: error("No user found for id: $id")
-                    }
-                }
-        }
-
-    override suspend fun getUsersByLogin(logins: List<String>): Flow<Result<List<User>>> =
-        localUsersApi
-            .getUsersByLogin(logins)
-            .map { users -> Result.success(users) }
-            .onStart { syncLocalUserInfo() }
-            .flowOn(DispatchersProvider.io)
-
-    override suspend fun getUserByLogin(login: String): Flow<Result<User>> =
-        withContext(DispatchersProvider.io) {
-            getUsersByLogin(logins = listOf(login))
-                .map { result ->
-                    result.mapCatching { users ->
-                        users.firstOrNull()
-                            ?: error("No user found for login: $login")
                     }
                 }
         }

@@ -97,31 +97,6 @@ internal class LocalUsersDb(
             }
     }
 
-    override fun getUserByLogin(login: String): Flow<User> {
-        return getUsersByLogin(listOf(login))
-            .mapNotNull { user -> user.firstOrNull() }
-    }
-
-    override fun getUsersByLogin(logins: List<String>): Flow<List<User>> {
-        return userQueries.getByLogins(logins)
-            .asFlow()
-            .distinctUntilChanged()
-            .mapToList(DispatchersProvider.io)
-            .mapNotNull { users ->
-                users.map { userInfo ->
-                    User(
-                        id = userInfo.id,
-                        login = userInfo.login,
-                        displayName = userInfo.display_name,
-                        profileImageUrl = userInfo.profile_image_url,
-                        description = userInfo.description,
-                        createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
-                        usedAt = Instant.fromEpochMilliseconds(userInfo.used_at),
-                    )
-                }
-            }
-    }
-
     override fun updateUserInfo(users: List<User>) {
         val updatedAt = clock.now()
         userQueries.transaction {

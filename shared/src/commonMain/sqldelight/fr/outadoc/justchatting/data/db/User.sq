@@ -41,11 +41,6 @@ SELECT * FROM User
 JOIN UserInfo ON User.id = UserInfo.id
 WHERE User.id IN ?;
 
-getByLogins:
-SELECT * FROM User
-JOIN UserInfo ON User.id = UserInfo.id
-WHERE UserInfo.login IN ?;
-
 updateUserInfo:
 INSERT OR REPLACE INTO UserInfo (id, login, display_name, profile_image_url, description, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?);

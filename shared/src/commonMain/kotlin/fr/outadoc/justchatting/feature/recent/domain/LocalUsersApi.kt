@@ -9,8 +9,6 @@ internal interface LocalUsersApi {
 
     fun getUserById(id: String): Flow<User>
     fun getUsersById(ids: List<String>): Flow<List<User>>
-    fun getUserByLogin(login: String): Flow<User>
-    fun getUsersByLogin(logins: List<String>): Flow<List<User>>
 
     fun getRecentChannels(): Flow<List<User>>
     fun getFollowedChannels(): Flow<List<ChannelFollow>>

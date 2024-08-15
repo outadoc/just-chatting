@@ -17,7 +17,6 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -114,28 +113,44 @@ internal class TwitchRepositoryImpl(
         }
 
     override suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>> =
-        flow {
-            emit(
-                twitchApi
-                    .getStreamsByUserId(ids = listOf(userId))
-                    .mapCatching { response ->
-                        response.firstOrNull()
-                            ?: error("Stream for userId $userId not found")
+        getUserById(userId)
+            .map { userResult ->
+                userResult.fold(
+                    onSuccess = { user ->
+                        twitchApi
+                            .getStreamsByUserId(listOf(userId))
+                            .mapCatching { streams ->
+                                streams.firstOrNull()
+                                    ?.copy(user = user)
+                                    ?: error("Stream for userId $userId not found")
+                            }
                     },
-            )
-        }.flowOn(DispatchersProvider.io)
+                    onFailure = { error ->
+                        Result.failure(error)
+                    },
+                )
+            }
+            .flowOn(DispatchersProvider.io)
 
     override suspend fun getStreamByUserLogin(userLogin: String): Flow<Result<Stream>> =
-        flow {
-            emit(
-                twitchApi
-                    .getStreamsByUserLogin(logins = listOf(userLogin))
-                    .mapCatching { response ->
-                        response.firstOrNull()
-                            ?: error("Stream for userLogin $userLogin not found")
+        getUserByLogin(userLogin)
+            .map { userResult ->
+                userResult.fold(
+                    onSuccess = { user ->
+                        twitchApi
+                            .getStreamsByUserLogin(listOf(userLogin))
+                            .mapCatching { streams ->
+                                streams.firstOrNull()
+                                    ?.copy(user = user)
+                                    ?: error("Stream for userLogin $userLogin not found")
+                            }
                     },
-            )
-        }.flowOn(DispatchersProvider.io)
+                    onFailure = { error ->
+                        Result.failure(error)
+                    },
+                )
+            }
+            .flowOn(DispatchersProvider.io)
 
     override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
         localUsersApi

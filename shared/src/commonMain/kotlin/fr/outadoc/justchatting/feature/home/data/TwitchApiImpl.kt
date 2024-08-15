@@ -35,7 +35,6 @@ internal class TwitchApiImpl(
                             id = stream.userId,
                             login = stream.userLogin,
                             displayName = stream.userName,
-                            // TODO return flow
                             description = "",
                             profileImageUrl = "",
                             createdAt = Instant.DISTANT_PAST,
@@ -62,7 +61,6 @@ internal class TwitchApiImpl(
                             id = stream.userId,
                             login = stream.userLogin,
                             displayName = stream.userName,
-                            // TODO return flow
                             description = "",
                             profileImageUrl = "",
                             createdAt = Instant.DISTANT_PAST,

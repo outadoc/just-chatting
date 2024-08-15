@@ -1,14 +1,18 @@
-name: Build iOS app
+name: Check DB migrations
 
 on:
   pull_request:
+    paths:
+      - 'shared/src/commonMain/sqldelight/**'
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
+
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
+
     steps:
       - uses: actions/checkout@v4
 
@@ -24,8 +28,5 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Build iOS targets
-        run: ./gradlew iosX64Binaries
-
-      - name: Run iOS unit tests
-        run: ./gradlew iosX64Test
+      - name: Check SQLDelight migrations
+        run: ./gradlew shared:verifySqlDelightMigration

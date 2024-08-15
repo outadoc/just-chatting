@@ -7,6 +7,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.Pagination
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.datetime.Instant
 
 internal class SearchChannelsDataSource(
     private val query: String,
@@ -50,6 +51,10 @@ internal class SearchChannelsDataSource(
                                         id = search.userId,
                                         login = search.userLogin,
                                         displayName = search.userDisplayName,
+                                        description = "",
+                                        profileImageUrl = "",
+                                        createdAt = Instant.DISTANT_PAST,
+                                        usedAt = Instant.DISTANT_PAST,
                                     ),
                                     language = search.broadcasterLanguage,
                                     gameId = search.gameId,

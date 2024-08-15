@@ -20,7 +20,7 @@ import fr.outadoc.justchatting.feature.preferences.presentation.mobile.SettingsS
 internal fun MainRouter(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
     onOpenNotificationPreferences: () -> Unit,
     onOpenBubblePreferences: () -> Unit,
     onOpenAccessibilityPreferences: () -> Unit,

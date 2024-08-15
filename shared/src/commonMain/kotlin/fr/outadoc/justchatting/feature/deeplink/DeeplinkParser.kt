@@ -10,8 +10,8 @@ internal data class DeeplinkParser(
         val parsed: Uri = Uri.parse(uri)
         when {
             parsed.isViewChannelUrl() -> {
-                parsed.pathSegments.firstOrNull()?.let { login ->
-                    return Deeplink.ViewChannel(login = login)
+                parsed.pathSegments.firstOrNull()?.let { userId ->
+                    return Deeplink.ViewChannel(userId = userId)
                 }
             }
 

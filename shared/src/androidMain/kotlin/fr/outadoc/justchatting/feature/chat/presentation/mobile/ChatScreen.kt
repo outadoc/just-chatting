@@ -15,7 +15,7 @@ internal fun ChatScreen(
     showTimestamps: Boolean,
     onMessageLongClick: (ChatListItem.Message) -> Unit,
     onReplyToMessage: (ChatListItem.Message) -> Unit,
-    onShowUserInfoForLogin: (String) -> Unit,
+    onShowInfoForUserId: (String) -> Unit,
     insets: PaddingValues,
 ) {
     val hasMessages: Boolean =
@@ -41,7 +41,7 @@ internal fun ChatScreen(
                     showTimestamps = showTimestamps,
                     onMessageLongClick = onMessageLongClick,
                     onReplyToMessage = onReplyToMessage,
-                    onShowUserInfoForLogin = onShowUserInfoForLogin,
+                    onShowInfoForUserId = onShowInfoForUserId,
                     insets = insets,
                 )
             }

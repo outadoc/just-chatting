@@ -26,14 +26,14 @@ public class UserProfileImageContentProvider : ContentProvider() {
 
     internal companion object {
 
-        private const val PATH_LOGIN = "login"
+        private const val PATH_ID = "id"
 
-        fun createForUser(context: Context, userLogin: String): Uri {
+        fun createForUser(context: Context, userId: String): Uri {
             return Uri.Builder()
                 .scheme(ContentResolver.SCHEME_CONTENT)
                 .authority("${context.applicationContext.packageName}.user-image-provider")
-                .appendPath(PATH_LOGIN)
-                .appendPath(userLogin)
+                .appendPath(PATH_ID)
+                .appendPath(userId)
                 .build()
         }
     }
@@ -56,18 +56,17 @@ public class UserProfileImageContentProvider : ContentProvider() {
 
         val segments = uri.pathSegments.toList()
         return when (segments.getOrNull(0)) {
-            PATH_LOGIN -> {
-                val userLogin: String = segments.getOrNull(1)
-                    ?: throw FileNotFoundException("User login was null.")
+            PATH_ID -> {
+                val userId: String = segments.getOrNull(1)
+                    ?: throw FileNotFoundException("User id was null.")
 
                 runBlocking(DispatchersProvider.io) {
                     val profileImageUrl: String =
-                        apiRepository.getUsersByLogin(listOf(userLogin))
+                        apiRepository.getUserById(userId)
                             .firstOrNull()
                             ?.getOrNull()
-                            ?.firstOrNull()
                             ?.profileImageUrl
-                            ?: throw FileNotFoundException("Could not retrieve user info from Twitch API.")
+                            ?: throw FileNotFoundException("User not found: $userId")
 
                     val response: ImageResult =
                         context.imageLoader.execute(

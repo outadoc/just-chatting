@@ -1,0 +1,57 @@
+CREATE TABLE User (
+    `id` TEXT NOT NULL,
+    `used_at` INTEGER NOT NULL,
+    `followed_at` INTEGER NOT NULL,
+    `inserted_at` INTEGER NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE UserInfo (
+    `id` TEXT NOT NULL,
+    `login` TEXT NOT NULL,
+    `display_name` TEXT NOT NULL,
+    `profile_image_url` TEXT NOT NULL,
+    `description` TEXT NOT NULL,
+    `created_at` INTEGER NOT NULL,
+    `updated_at` INTEGER NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`id`) REFERENCES User (`id`) ON DELETE CASCADE
+);
+
+CREATE INDEX index_UserInfo_login ON UserInfo (login);
+
+getRecent:
+SELECT * FROM User
+JOIN UserInfo ON User.id = UserInfo.id
+WHERE used_at > 0
+ORDER BY used_at DESC;
+
+getFollowed:
+SELECT * FROM User
+JOIN UserInfo ON User.id = UserInfo.id
+WHERE followed_at > 0
+ORDER BY login ASC;
+
+getAllToUpdate:
+SELECT User.id FROM User
+LEFT JOIN UserInfo ON User.id = UserInfo.id
+WHERE UserInfo.id IS NULL OR updated_at < :minUpdatedAtTimestamp;
+
+getByIds:
+SELECT * FROM User
+JOIN UserInfo ON User.id = UserInfo.id
+WHERE User.id IN ?;
+
+updateUserInfo:
+INSERT OR REPLACE INTO UserInfo (id, login, display_name, profile_image_url, description, created_at, updated_at)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+ensureCreated:
+INSERT OR IGNORE INTO User (id, used_at, followed_at, inserted_at)
+VALUES (?, 0, 0, ?);
+
+updateVisitedAt:
+UPDATE User SET used_at = :used_at WHERE id = :id;
+
+updateFollowedAt:
+UPDATE User SET followed_at = :followed_at WHERE id = :id;

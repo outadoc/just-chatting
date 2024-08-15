@@ -13,7 +13,7 @@ internal class MobileCreateShortcutForChannelUseCase(
 ) : CreateShortcutForChannelUseCase {
 
     override operator fun invoke(user: User) {
-        val intent = ChatActivity.createIntent(context, user.login)
+        val intent = ChatActivity.createIntent(context, user.id)
         val person: Person =
             Person.Builder()
                 .setKey(user.id)

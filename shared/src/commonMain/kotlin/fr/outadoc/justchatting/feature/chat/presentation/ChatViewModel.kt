@@ -119,10 +119,10 @@ internal class ChatViewModel(
         ) : Action()
 
         data class LoadEmotes(val channelId: String) : Action()
-        data class LoadChat(val channelLogin: String) : Action()
+        data class LoadChat(val userId: String) : Action()
         data class UpdateChatterPronouns(val pronouns: Map<Chatter, Pronoun?>) : Action()
         data class UpdateStreamDetails(val stream: Stream) : Action()
-        data class ShowUserInfo(val userLogin: String?) : Action()
+        data class ShowUserInfo(val userId: String?) : Action()
         data class UpdateUser(val user: User) : Action()
     }
 
@@ -131,7 +131,7 @@ internal class ChatViewModel(
         data object Initial : State()
 
         data class Loading(
-            val userLogin: String,
+            val userId: String,
             val appUser: AppUser.LoggedIn,
             val maxAdapterCount: Int,
         ) : State()
@@ -158,7 +158,7 @@ internal class ChatViewModel(
             val removedContent: PersistentList<ChatListItem.RemoveContent> = persistentListOf(),
             val connectionStatus: ConnectionStatus = ConnectionStatus(),
             val maxAdapterCount: Int,
-            val showInfoForUserLogin: String? = null,
+            val showInfoForUserId: String? = null,
         ) : State() {
 
             val allEmotesMap: ImmutableMap<String, Emote>
@@ -269,23 +269,23 @@ internal class ChatViewModel(
         state
             .mapNotNull { state ->
                 when (state) {
-                    is State.Chatting -> state.user.login
-                    is State.Loading -> state.userLogin
+                    is State.Chatting -> state.user.id
+                    is State.Loading -> state.userId
                     else -> null
                 }
             }
             .distinctUntilChanged()
-            .flatMapLatest { userLogin ->
-                twitchRepository.getUserByLogin(userLogin)
+            .flatMapLatest { userId ->
+                twitchRepository.getUserById(userId)
             }
             .onEach { result ->
                 result
                     .onSuccess { user ->
                         actions.emit(Action.UpdateUser(user))
 
-                        twitchRepository.insertRecentChannel(
+                        twitchRepository.markChannelAsVisited(
                             channel = user,
-                            usedAt = clock.now(),
+                            visitedAt = clock.now(),
                         )
 
                         createShortcutForChannel(user)
@@ -474,21 +474,21 @@ internal class ChatViewModel(
         }
     }
 
-    fun loadChat(channelLogin: String) {
+    fun loadChat(userId: String) {
         defaultScope.launch {
-            actions.emit(Action.LoadChat(channelLogin))
+            actions.emit(Action.LoadChat(userId))
         }
     }
 
-    fun onShowUserInfo(userLogin: String) {
+    fun onShowUserInfo(userId: String) {
         defaultScope.launch {
-            actions.emit(Action.ShowUserInfo(userLogin = userLogin))
+            actions.emit(Action.ShowUserInfo(userId = userId))
         }
     }
 
     fun onDismissUserInfo() {
         defaultScope.launch {
-            actions.emit(Action.ShowUserInfo(userLogin = null))
+            actions.emit(Action.ShowUserInfo(userId = null))
         }
     }
 
@@ -572,12 +572,12 @@ internal class ChatViewModel(
     }
 
     private suspend fun Action.LoadChat.reduce(state: State): State {
-        if (state is State.Chatting && state.user.login == channelLogin) return state
+        if (state is State.Chatting && state.user.id == userId) return state
 
         val prefs = preferencesRepository.currentPreferences.first()
 
         return State.Loading(
-            userLogin = channelLogin,
+            userId = userId,
             appUser = prefs.appUser as AppUser.LoggedIn,
             maxAdapterCount = AppPreferences.Defaults.ChatBufferLimit,
         )
@@ -849,7 +849,7 @@ internal class ChatViewModel(
     private fun Action.ShowUserInfo.reduce(state: State): State {
         if (state !is State.Chatting) return state
         return state.copy(
-            showInfoForUserLogin = userLogin,
+            showInfoForUserId = userId,
         )
     }
 

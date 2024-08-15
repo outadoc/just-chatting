@@ -56,7 +56,6 @@ import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
-import androidx.paging.PagingData
 import app.cash.paging.compose.LazyPagingItems
 import app.cash.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
@@ -73,7 +72,6 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
-import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -94,7 +92,7 @@ internal fun EpgScreen(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
 ) {
     val viewModel: EpgViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
@@ -129,7 +127,7 @@ internal fun EpgScreen(
                 is EpgViewModel.State.Loaded -> {
                     EpgContent(
                         modifier = modifier,
-                        pagingData = currentState.pagingData,
+                        channels = currentState.channels,
                         days = currentState.days,
                         initialListIndex = currentState.initialListIndex,
                         contentPadding = insets,
@@ -145,13 +143,12 @@ internal fun EpgScreen(
 @Composable
 private fun EpgContent(
     modifier: Modifier = Modifier,
-    pagingData: Flow<PagingData<ChannelSchedule>>,
+    channels: List<ChannelSchedule>,
     days: List<LocalDate>,
     initialListIndex: Int = 0,
     contentPadding: PaddingValues = PaddingValues(),
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
 ) {
-    val channels: LazyPagingItems<ChannelSchedule> = pagingData.collectAsLazyPagingItems()
     var sharedListState by remember {
         mutableStateOf(
             SharedListState(
@@ -185,32 +182,24 @@ private fun EpgContent(
         }
 
         items(
-            count = channels.itemCount,
-            key = { index -> channels[index]?.user?.id ?: index },
+            channels,
+            key = { channel -> channel.user.id },
             contentType = { "channel" },
-        ) { index ->
-            val channel: ChannelSchedule? = channels[index]
+        ) { channel ->
+            val dayItems = channel.scheduleFlow.collectAsLazyPagingItems()
 
-            if (channel != null) {
-                val dayItems = channel.scheduleFlow.collectAsLazyPagingItems()
+            EpgChannelEntry(
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+                    .width(ColumnWidth),
+                user = channel.user,
+                days = dayItems,
+                sharedListState = sharedListState,
+                updateSharedListState = { sharedListState = it },
+                onChannelClick = onChannelClick,
+            )
 
-                EpgChannelEntry(
-                    modifier = Modifier
-                        .padding(horizontal = 8.dp)
-                        .width(ColumnWidth),
-                    user = channel.user,
-                    days = dayItems,
-                    sharedListState = sharedListState,
-                    updateSharedListState = { sharedListState = it },
-                    onChannelClick = onChannelClick,
-                )
-
-                if (index < channels.itemCount - 1) {
-                    VerticalDivider()
-                }
-            } else {
-                Spacer(modifier = Modifier.width(ColumnWidth))
-            }
+            VerticalDivider()
         }
     }
 }
@@ -302,7 +291,7 @@ private fun EpgChannelEntry(
     days: LazyPagingItems<ChannelScheduleForDay>,
     sharedListState: SharedListState = SharedListState(),
     updateSharedListState: (SharedListState) -> Unit = {},
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
 ) {
     var hasSettled by remember { mutableStateOf(false) }
 
@@ -365,7 +354,7 @@ private fun EpgChannelEntry(
                             .size(56.dp)
                             .clip(MaterialTheme.shapes.medium)
                             .background(MaterialTheme.colorScheme.surface)
-                            .clickable { onChannelClick(user.login) },
+                            .clickable { onChannelClick(user.id) },
                         model = remoteImageModel(user.profileImageUrl),
                         contentDescription = null,
                     )
@@ -581,6 +570,10 @@ private fun EpgSegmentDetailsPreview(
                 id = "1",
                 login = "user",
                 displayName = lorem,
+                description = "",
+                profileImageUrl = "",
+                createdAt = Instant.DISTANT_PAST,
+                usedAt = Instant.DISTANT_PAST,
             ),
         )
     }
@@ -607,6 +600,10 @@ private fun EpgSegmentPreview(
                 id = "1",
                 login = "user",
                 displayName = lorem,
+                description = "",
+                profileImageUrl = "",
+                createdAt = Instant.DISTANT_PAST,
+                usedAt = Instant.DISTANT_PAST,
             ),
         )
     }

@@ -19,27 +19,21 @@ jobs:
           distribution: 'temurin'
 
       - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v3
+        uses: gradle/actions/wrapper-validation@v4
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build app bundle
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: |
-            bundleQa
+        run: |
+            ./gradlew bundleQa \
             "-PexternalVersionName=pr-${{ steps.date.outputs.date }}-${{ github.event.pull_request.number }}-${{ github.sha }}"
 
-      - name: Lint
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: lint
+      - name: Run linter
+        run: ./gradlew lint
 
       - name: Run unit tests
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: testDebugUnitTest
+        run: ./gradlew testDebugUnitTest
 
       - name: Upload app bundle to GitHub
         uses: actions/upload-artifact@v4.3.6

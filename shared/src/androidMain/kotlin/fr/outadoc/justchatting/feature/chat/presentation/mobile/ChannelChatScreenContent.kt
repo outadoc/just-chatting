@@ -57,7 +57,6 @@ internal fun ChannelChatScreenLoadingPreview() {
         ChannelChatScreenContent(
             state = ChatViewModel.State.Initial,
             inputState = ChatViewModel.InputState(),
-            channelLogin = "outadoc",
             showTimestamps = true,
         )
     }
@@ -69,7 +68,6 @@ internal fun ChannelChatScreenContent(
     modifier: Modifier = Modifier,
     state: ChatViewModel.State,
     inputState: ChatViewModel.InputState,
-    channelLogin: String,
     isEmotePickerOpen: Boolean = false,
     showTimestamps: Boolean,
     onWatchLiveClicked: () -> Unit = {},
@@ -83,7 +81,7 @@ internal fun ChannelChatScreenContent(
     onSubmit: () -> Unit = {},
     onReplyToMessage: (ChatListItem.Message) -> Unit = {},
     onDismissUserInfo: () -> Unit = {},
-    onShowUserInfoForLogin: (String) -> Unit = {},
+    onShowInfoForUserId: (String) -> Unit = {},
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val clipboard = LocalClipboardManager.current
@@ -113,10 +111,9 @@ internal fun ChannelChatScreenContent(
             ChatTopAppBar(
                 modifier = Modifier
                     .clickable(
-                        onClick = { onShowUserInfoForLogin(channelLogin) },
+                        onClick = { user?.id?.let(onShowInfoForUserId) },
                         onClickLabel = stringResource(MR.strings.stream_info),
                     ),
-                channelLogin = channelLogin,
                 user = user,
                 stream = stream,
                 onWatchLiveClicked = onWatchLiveClicked,
@@ -136,7 +133,7 @@ internal fun ChannelChatScreenContent(
                     }
                 },
                 onReplyToMessage = onReplyToMessage,
-                onShowUserInfoForLogin = onShowUserInfoForLogin,
+                onShowInfoForUserId = onShowInfoForUserId,
                 insets = insets,
             )
         },
@@ -224,10 +221,10 @@ internal fun ChannelChatScreenContent(
 
     val userInfoBottomSheetState = rememberModalBottomSheetState()
 
-    val showInfoForUserLogin: String? =
-        (state as? ChatViewModel.State.Chatting)?.showInfoForUserLogin
+    val showInfoForUserId: String? =
+        (state as? ChatViewModel.State.Chatting)?.showInfoForUserId
 
-    if (showInfoForUserLogin != null) {
+    if (showInfoForUserId != null) {
         ModalBottomSheet(
             onDismissRequest = { onDismissUserInfo() },
             sheetState = userInfoBottomSheetState,
@@ -240,7 +237,7 @@ internal fun ChannelChatScreenContent(
                         end = 24.dp,
                         bottom = 24.dp,
                     ),
-                userLogin = showInfoForUserLogin,
+                userId = showInfoForUserId,
             )
         }
     }

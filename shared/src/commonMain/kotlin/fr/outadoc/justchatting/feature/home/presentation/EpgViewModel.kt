@@ -1,12 +1,11 @@
 package fr.outadoc.justchatting.feature.home.presentation
 
-import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.map
 import fr.outadoc.justchatting.feature.home.domain.EpgConfig
 import fr.outadoc.justchatting.feature.home.domain.GetScheduleForFollowedChannelsUseCase
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.utils.presentation.ViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -27,7 +26,7 @@ internal class EpgViewModel(
     sealed class State {
         data object Loading : State()
         data class Loaded(
-            val pagingData: Flow<PagingData<ChannelSchedule>>,
+            val channels: List<ChannelSchedule>,
             val initialListIndex: Int,
             val days: List<LocalDate>,
             val timeZone: TimeZone,
@@ -37,13 +36,16 @@ internal class EpgViewModel(
     private val _state = MutableStateFlow<State>(State.Loading)
     val state = _state.asStateFlow()
 
+    private var job: Job? = null
+
     fun load() {
-        viewModelScope.launch {
+        job?.cancel()
+        job = viewModelScope.launch {
             _state.value = State.Loading
 
             val tz = TimeZone.currentSystemDefault()
 
-            val pagingData: Flow<PagingData<ChannelSchedule>> =
+            val content: Flow<List<ChannelSchedule>> =
                 getScheduleForFollowedChannels(
                     currentTime = clock.now(),
                     timeZone = tz,
@@ -67,12 +69,14 @@ internal class EpgViewModel(
                 (start.toEpochDays()..end.toEpochDays())
                     .map { LocalDate.fromEpochDays(it) }
 
-            _state.value = State.Loaded(
-                pagingData = pagingData.cachedIn(viewModelScope),
-                days = days,
-                timeZone = tz,
-                initialListIndex = days.indexOf(today),
-            )
+            content.collect { channels ->
+                _state.value = State.Loaded(
+                    channels = channels,
+                    days = days,
+                    timeZone = tz,
+                    initialListIndex = days.indexOf(today),
+                )
+            }
         }
     }
 }

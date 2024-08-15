@@ -1,22 +1,22 @@
-CREATE TABLE recent_emotes (
+CREATE TABLE RecentEmote (
     `name` TEXT NOT NULL,
     `url` TEXT NOT NULL,
     `used_at` INTEGER NOT NULL,
-    PRIMARY KEY(`name`)
+    PRIMARY KEY (`name`)
 );
 
 getAll:
-SELECT * FROM recent_emotes
+SELECT * FROM RecentEmote
 ORDER BY used_at DESC;
 
 insert:
-INSERT OR REPLACE INTO recent_emotes (name, url, used_at)
+INSERT OR REPLACE INTO RecentEmote (name, url, used_at)
 VALUES (?, ?, ?);
 
 cleanUp:
-DELETE FROM recent_emotes
+DELETE FROM RecentEmote
 WHERE name NOT IN (
-    SELECT name FROM recent_emotes
+    SELECT name FROM RecentEmote
     ORDER BY used_at DESC
     LIMIT :limit
  );

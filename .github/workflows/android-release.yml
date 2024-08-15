@@ -29,10 +29,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Validate Gradle wrapper
-        uses: gradle/wrapper-validation-action@v3
+        uses: gradle/actions/wrapper-validation@v4
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Get current date
         id: date
@@ -43,13 +43,11 @@ jobs:
         run: echo "::set-output name=version::$(git rev-list HEAD --count)"
 
       - name: Build app bundle
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: |
-            bundleRelease
-            "-PreleaseKeystorePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}"
-            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
-            "-PexternalVersionCode=${{ steps.version.outputs.version }}"
+        run: |
+            ./gradlew bundleRelease \
+            "-PreleaseKeystorePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" \
+            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
+            "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
             "-PenableLogging=false"
 
       - name: Upload app bundle to GitHub

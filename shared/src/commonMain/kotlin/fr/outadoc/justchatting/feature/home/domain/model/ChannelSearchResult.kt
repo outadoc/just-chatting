@@ -1,13 +1,10 @@
 package fr.outadoc.justchatting.feature.home.domain.model
 
 import androidx.compose.runtime.Immutable
-import fr.outadoc.justchatting.utils.parcel.Parcelable
-import fr.outadoc.justchatting.utils.parcel.Parcelize
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Immutable
-@Parcelize
 internal data class ChannelSearchResult(
     val title: String,
     val user: User,
@@ -17,4 +14,4 @@ internal data class ChannelSearchResult(
     val isLive: Boolean = false,
     val thumbnailUrl: String? = null,
     val tags: ImmutableList<String> = persistentListOf(),
-) : Parcelable
+)

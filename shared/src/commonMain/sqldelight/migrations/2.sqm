@@ -1,0 +1,21 @@
+ALTER TABLE recent_emotes RENAME TO RecentEmote;
+ALTER TABLE recent_channels RENAME TO User;
+
+ALTER TABLE User ADD COLUMN `followed_at` INTEGER NOT NULL;
+ALTER TABLE User ADD COLUMN `inserted_at` INTEGER NOT NULL;
+
+UPDATE User SET inserted_at = strftime('%s', 'now');
+
+CREATE TABLE UserInfo (
+    `id` TEXT NOT NULL,
+    `login` TEXT NOT NULL,
+    `display_name` TEXT NOT NULL,
+    `profile_image_url` TEXT NOT NULL,
+    `description` TEXT NOT NULL,
+    `created_at` INTEGER NOT NULL,
+    `updated_at` INTEGER NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`id`) REFERENCES User (`id`) ON DELETE CASCADE
+);
+
+CREATE INDEX index_UserInfo_login ON UserInfo (login);

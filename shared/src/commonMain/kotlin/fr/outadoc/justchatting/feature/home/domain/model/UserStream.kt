@@ -1,10 +1,9 @@
 package fr.outadoc.justchatting.feature.home.domain.model
 
 import androidx.compose.runtime.Immutable
-import kotlinx.datetime.Instant
 
 @Immutable
-internal data class ChannelFollow(
+internal data class UserStream(
     val user: User,
-    val followedAt: Instant,
+    val stream: Stream,
 )

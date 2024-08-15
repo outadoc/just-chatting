@@ -38,7 +38,6 @@ import org.koin.compose.koinInject
 @Composable
 internal fun ChatTopAppBar(
     modifier: Modifier = Modifier,
-    channelLogin: String,
     user: User?,
     stream: Stream?,
     onWatchLiveClicked: () -> Unit,
@@ -50,11 +49,15 @@ internal fun ChatTopAppBar(
         modifier = modifier,
         title = {
             Column {
-                Text(
-                    text = user?.displayName ?: channelLogin,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
+                AnimatedVisibility(visible = user != null) {
+                    if (user != null) {
+                        Text(
+                            text = user.displayName,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                        )
+                    }
+                }
 
                 AnimatedVisibility(visible = stream?.gameName != null) {
                     stream?.gameName?.let { gameName ->

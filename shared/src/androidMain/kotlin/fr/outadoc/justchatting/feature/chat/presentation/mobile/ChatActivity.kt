@@ -15,15 +15,15 @@ import fr.outadoc.justchatting.utils.presentation.AppTheme
 public class ChatActivity : AppCompatActivity() {
 
     internal companion object {
-        private const val CHANNEL_LOGIN = "channel_login"
+        private const val CHANNEL_USER_ID = "channel_user_id"
 
-        fun createIntent(context: Context, channelLogin: String): Intent {
+        fun createIntent(context: Context, userId: String): Intent {
             return Intent(context, ChatActivity::class.java).apply {
-                data = createChannelDeeplink(channelLogin).toUri()
+                data = createChannelDeeplink(userId).toUri()
                 action = Intent.ACTION_VIEW
                 flags = Intent.FLAG_ACTIVITY_NEW_DOCUMENT
 
-                putExtra(CHANNEL_LOGIN, channelLogin)
+                putExtra(CHANNEL_USER_ID, userId)
             }
         }
     }
@@ -44,7 +44,7 @@ public class ChatActivity : AppCompatActivity() {
         setContent {
             AppTheme {
                 ChannelChatScreen(
-                    channelLogin = intent.getStringExtra(CHANNEL_LOGIN)!!,
+                    userId = intent.getStringExtra(CHANNEL_USER_ID)!!,
                 )
             }
         }

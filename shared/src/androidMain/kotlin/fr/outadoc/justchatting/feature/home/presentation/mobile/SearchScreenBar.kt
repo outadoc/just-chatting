@@ -29,7 +29,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun SearchScreenBar(
     modifier: Modifier = Modifier,
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
     sizeClass: WindowSizeClass,
 ) {
     val viewModel = koinViewModel<ChannelSearchViewModel>()
@@ -64,7 +64,7 @@ private fun CompactSearchBar(
     modifier: Modifier,
     state: ChannelSearchViewModel.State,
     viewModel: ChannelSearchViewModel,
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
 ) {
     DockedSearchBar(
         modifier = modifier.padding(16.dp),
@@ -110,7 +110,7 @@ private fun CompactSearchBar(
         content = {
             SearchResultsList(
                 onItemClick = { stream ->
-                    onChannelClick(stream.user.login)
+                    onChannelClick(stream.user.id)
                 },
                 viewModel = viewModel,
             )
@@ -124,7 +124,7 @@ private fun FullHeightSearchBar(
     state: ChannelSearchViewModel.State,
     modifier: Modifier,
     viewModel: ChannelSearchViewModel,
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
 ) {
     val padding by animateDpAsState(
         targetValue = if (state.isActive) 0.dp else 16.dp,
@@ -175,7 +175,7 @@ private fun FullHeightSearchBar(
         content = {
             SearchResultsList(
                 onItemClick = { stream ->
-                    onChannelClick(stream.user.login)
+                    onChannelClick(stream.user.id)
                 },
                 viewModel = viewModel,
             )

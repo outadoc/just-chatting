@@ -19,9 +19,9 @@ internal interface TwitchApi {
 
     suspend fun getStreamsByUserLogin(logins: List<String>): Result<List<Stream>>
 
-    suspend fun getUsersById(ids: List<String>): Result<List<User>>
+    suspend fun getUsersById(ids: List<String>): List<User>
 
-    suspend fun getUsersByLogin(logins: List<String>): Result<List<User>>
+    suspend fun getUsersByLogin(logins: List<String>): List<User>
 
     suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>>
 
@@ -39,7 +39,7 @@ internal interface TwitchApi {
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>>
 
-    suspend fun getFollowedChannels(userId: String): Flow<PagingData<List<ChannelFollow>>>
+    suspend fun getFollowedChannels(userId: String): Result<List<ChannelFollow>>
 
     suspend fun getFollowedStreams(userId: String): Flow<PagingData<List<Stream>>>
 

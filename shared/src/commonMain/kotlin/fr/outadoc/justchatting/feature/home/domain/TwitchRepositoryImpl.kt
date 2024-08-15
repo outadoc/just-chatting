@@ -9,32 +9,33 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.feature.home.domain.model.UserStream
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
-import fr.outadoc.justchatting.feature.recent.domain.RecentChannelsApi
-import fr.outadoc.justchatting.feature.recent.domain.model.RecentChannel
+import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import fr.outadoc.justchatting.utils.logging.logDebug
+import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
-    private val usersMemoryCache: UsersMemoryCache,
     private val preferencesRepository: PreferenceRepository,
-    private val recentChannelsApi: RecentChannelsApi,
+    private val localUsersApi: LocalUsersApi,
 ) : TwitchRepository {
+
+    private val userSyncLock = Mutex()
 
     override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
         withContext(DispatchersProvider.io) {
@@ -42,9 +43,13 @@ internal class TwitchRepositoryImpl(
                 .searchChannels(query)
                 .map { pagingData ->
                     pagingData.flatMap { results ->
+                        results.forEach { result ->
+                            localUsersApi.rememberUser(userId = result.user.id)
+                        }
+
                         val fullUsersById: Map<String, User> =
                             getUsersById(ids = results.map { result -> result.user.id })
-                                .last()
+                                .first()
                                 .getOrNull()
                                 .orEmpty()
                                 .associateBy { user -> user.id }
@@ -56,7 +61,7 @@ internal class TwitchRepositoryImpl(
                 }
         }
 
-    override suspend fun getFollowedStreams(): Flow<PagingData<Stream>> =
+    override suspend fun getFollowedStreams(): Flow<PagingData<UserStream>> =
         withContext(DispatchersProvider.io) {
             val prefs = preferencesRepository.currentPreferences.first()
             when (prefs.appUser) {
@@ -64,16 +69,22 @@ internal class TwitchRepositoryImpl(
                     twitchApi
                         .getFollowedStreams(userId = prefs.appUser.userId)
                         .map { pagingData ->
-                            pagingData.flatMap { follows ->
+                            pagingData.flatMap { streams ->
+                                streams.forEach { stream ->
+                                    localUsersApi.rememberUser(userId = stream.userId)
+                                }
+
                                 val fullUsersById: Map<String, User> =
-                                    getUsersById(ids = follows.map { follow -> follow.user.id })
-                                        .last()
+                                    getUsersById(ids = streams.map { stream -> stream.userId })
+                                        .first()
                                         .getOrNull()
                                         .orEmpty()
                                         .associateBy { user -> user.id }
 
-                                follows.map { follow ->
-                                    follow.copy(user = fullUsersById[follow.user.id] ?: follow.user)
+                                streams.mapNotNull { stream ->
+                                    fullUsersById[stream.userId]?.let { user ->
+                                        UserStream(stream = stream, user = user)
+                                    }
                                 }
                             }
                         }
@@ -85,31 +96,21 @@ internal class TwitchRepositoryImpl(
             }
         }
 
-    override suspend fun getFollowedChannels(): Flow<PagingData<ChannelFollow>> =
+    override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> =
         withContext(DispatchersProvider.io) {
             val prefs = preferencesRepository.currentPreferences.first()
             when (prefs.appUser) {
                 is AppUser.LoggedIn -> {
-                    twitchApi
-                        .getFollowedChannels(userId = prefs.appUser.userId)
-                        .map { pagingData ->
-                            pagingData.flatMap { follows ->
-                                val fullUsersById: Map<String, User> =
-                                    getUsersById(ids = follows.map { follow -> follow.user.id })
-                                        .last()
-                                        .getOrNull()
-                                        .orEmpty()
-                                        .associateBy { user -> user.id }
-
-                                follows.map { follow ->
-                                    follow.copy(user = fullUsersById[follow.user.id] ?: follow.user)
-                                }
-                            }
+                    localUsersApi
+                        .getFollowedChannels()
+                        .onStart {
+                            syncLocalFollows(appUserId = prefs.appUser.userId)
+                            syncLocalUserInfo()
                         }
                 }
 
                 else -> {
-                    flowOf(PagingData.empty())
+                    flowOf(emptyList())
                 }
             }
         }
@@ -126,41 +127,17 @@ internal class TwitchRepositoryImpl(
             )
         }.flowOn(DispatchersProvider.io)
 
-    override suspend fun getStreamByUserLogin(userLogin: String): Flow<Result<Stream>> =
-        flow {
-            emit(
-                twitchApi
-                    .getStreamsByUserLogin(logins = listOf(userLogin))
-                    .mapCatching { response ->
-                        response.firstOrNull()
-                            ?: error("Stream for userLogin $userLogin not found")
-                    },
-            )
-        }.flowOn(DispatchersProvider.io)
-
     override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
-        flow {
-            if (ids.isEmpty()) {
-                emit(Result.success(emptyList()))
-                return@flow
+        withContext(DispatchersProvider.io) {
+            ids.forEach { id ->
+                localUsersApi.rememberUser(userId = id)
             }
 
-            val cachedUsers = usersMemoryCache.getUsersById(ids = ids)
-            if (cachedUsers.isNotEmpty()) {
-                emit(
-                    Result.success(cachedUsers),
-                )
-            }
-
-            emit(
-                twitchApi
-                    .getUsersById(ids = ids)
-                    .onSuccess { users ->
-                        usersMemoryCache.put(users)
-                    },
-            )
+            localUsersApi
+                .getUsersById(ids)
+                .map { users -> Result.success(users) }
+                .onStart { syncLocalUserInfo() }
         }
-            .flowOn(DispatchersProvider.io)
 
     override suspend fun getUserById(id: String): Flow<Result<User>> =
         withContext(DispatchersProvider.io) {
@@ -169,41 +146,6 @@ internal class TwitchRepositoryImpl(
                     result.mapCatching { users ->
                         users.firstOrNull()
                             ?: error("No user found for id: $id")
-                    }
-                }
-        }
-
-    override suspend fun getUsersByLogin(logins: List<String>): Flow<Result<List<User>>> =
-        flow {
-            if (logins.isEmpty()) {
-                emit(Result.success(emptyList()))
-                return@flow
-            }
-
-            val cachedUsers = usersMemoryCache.getUsersByLogin(logins = logins)
-            if (cachedUsers.isNotEmpty()) {
-                emit(
-                    Result.success(cachedUsers),
-                )
-            }
-
-            emit(
-                twitchApi
-                    .getUsersByLogin(logins = logins)
-                    .onSuccess { users ->
-                        usersMemoryCache.put(users)
-                    },
-            )
-        }
-            .flowOn(DispatchersProvider.io)
-
-    override suspend fun getUserByLogin(login: String): Flow<Result<User>> =
-        withContext(DispatchersProvider.io) {
-            getUsersByLogin(logins = listOf(login))
-                .map { result ->
-                    result.mapCatching { users ->
-                        users.firstOrNull()
-                            ?: error("No user found for login: $login")
                     }
                 }
         }
@@ -220,53 +162,31 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?> =
         withContext(DispatchersProvider.io) {
-            recentChannelsApi
-                .getAll()
-                .flatMapLatest { channels ->
-                    val ids = channels.map { channel -> channel.id }
-                    flow {
-                        val cachedUsers: List<User> =
-                            usersMemoryCache.getUsersById(ids = ids)
-
-                        emit(ids to cachedUsers)
-
-                        val remoteUsers: List<User> =
-                            twitchApi
-                                .getUsersById(ids = ids)
-                                .getOrElse { emptyList() }
-
-                        emit(ids to remoteUsers)
+            localUsersApi
+                .getRecentChannels()
+                .map { users ->
+                    users.map { user ->
+                        ChannelSearchResult(
+                            title = user.displayName,
+                            user = User(
+                                id = user.id,
+                                login = user.login,
+                                displayName = user.displayName,
+                                description = user.description,
+                                profileImageUrl = user.profileImageUrl,
+                                createdAt = user.createdAt,
+                                usedAt = user.usedAt,
+                            ),
+                        )
                     }
-                }
-                .onEach { (_, users) ->
-                    usersMemoryCache.put(users)
-                }
-                .map { (ids, users) ->
-                    users
-                        .map { user ->
-                            ChannelSearchResult(
-                                title = user.displayName,
-                                user = User(
-                                    id = user.id,
-                                    login = user.login,
-                                    displayName = user.displayName,
-                                    profileImageUrl = user.profileImageUrl,
-                                ),
-                            )
-                        }
-                        .sortedBy { result ->
-                            ids.indexOf(result.user.id)
-                        }
                 }
         }
 
-    override suspend fun insertRecentChannel(channel: User, usedAt: Instant) {
+    override suspend fun markChannelAsVisited(channel: User, visitedAt: Instant) {
         withContext(DispatchersProvider.io) {
-            recentChannelsApi.insert(
-                RecentChannel(
-                    id = channel.id,
-                    usedAt = usedAt,
-                ),
+            localUsersApi.rememberUser(
+                userId = channel.id,
+                visitedAt = visitedAt,
             )
         }
     }
@@ -295,4 +215,32 @@ internal class TwitchRepositoryImpl(
         withContext(DispatchersProvider.io) {
             twitchApi.getChannelBadges(channelId)
         }
+
+    private suspend fun syncLocalFollows(appUserId: String): Result<Unit> =
+        userSyncLock.withLock {
+            twitchApi
+                .getFollowedChannels(userId = appUserId)
+                .onFailure { exception ->
+                    logError<TwitchRepositoryImpl>(exception) {
+                        "Error while fetching followed channels"
+                    }
+                }
+                .map { follows ->
+                    localUsersApi.replaceFollowedChannels(follows = follows)
+                }
+        }
+
+    private suspend fun syncLocalUserInfo() {
+        userSyncLock.withLock {
+            val ids = localUsersApi
+                .getUserIdsToUpdate()
+                .first()
+
+            logDebug<TwitchRepositoryImpl> { "syncLocalUserInfo: updating ${ids.size} users" }
+
+            localUsersApi.updateUserInfo(
+                users = twitchApi.getUsersById(ids),
+            )
+        }
+    }
 }

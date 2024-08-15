@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
-import fr.outadoc.justchatting.feature.home.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.UserStream
 import fr.outadoc.justchatting.feature.home.presentation.FollowedStreamsViewModel
 import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.collections.immutable.toImmutableList
@@ -34,10 +34,10 @@ internal fun LiveChannelsList(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
-    onItemClick: (login: String) -> Unit,
+    onItemClick: (userId: String) -> Unit,
 ) {
     val viewModel: FollowedStreamsViewModel = koinViewModel()
-    val items: LazyPagingItems<Stream> = viewModel.pagingData.collectAsLazyPagingItems()
+    val items: LazyPagingItems<UserStream> = viewModel.pagingData.collectAsLazyPagingItems()
     val isRefreshing = items.loadState.refresh is LoadState.Loading
 
     val pullRefreshState = rememberPullRefreshState(
@@ -73,7 +73,7 @@ internal fun LiveChannelsList(
                     items = items,
                     isRefreshing = isRefreshing,
                     onItemClick = { stream ->
-                        onItemClick(stream.user.login)
+                        onItemClick(stream.user.id)
                     },
                 )
 
@@ -92,9 +92,9 @@ internal fun LiveChannelsList(
 private fun InnerLiveChannelsList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    items: LazyPagingItems<Stream>,
+    items: LazyPagingItems<UserStream>,
     isRefreshing: Boolean,
-    onItemClick: (Stream) -> Unit,
+    onItemClick: (UserStream) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -119,17 +119,17 @@ private fun InnerLiveChannelsList(
             }
         } else {
             items(items.itemCount) { index ->
-                val item: Stream? = items[index]
+                val item: UserStream? = items[index]
                 if (item != null) {
                     LiveStreamCard(
                         modifier = Modifier.fillMaxWidth(),
-                        title = item.title,
+                        title = item.stream.title,
                         userName = item.user.displayName,
-                        viewerCount = item.viewerCount,
-                        gameName = item.gameName,
-                        startedAt = Instant.parse(item.startedAt),
+                        viewerCount = item.stream.viewerCount,
+                        gameName = item.stream.gameName,
+                        startedAt = Instant.parse(item.stream.startedAt),
                         profileImageURL = item.user.profileImageUrl,
-                        tags = item.tags.toImmutableList(),
+                        tags = item.stream.tags.toImmutableList(),
                         onClick = { onItemClick(item) },
                     )
                 } else {

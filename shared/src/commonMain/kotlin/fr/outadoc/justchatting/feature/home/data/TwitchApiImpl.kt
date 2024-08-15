@@ -102,23 +102,25 @@ internal class TwitchApiImpl(
             .flatMap { chunkOfIds ->
                 twitchClient
                     .getUsersById(chunkOfIds)
-                    .onFailure { e ->
-                        logError<TwitchApiImpl>(e) { "Error while fetching users by ID: bad chunk" }
-                    }
-                    .getOrNull()
-                    ?.data
-                    ?.map { user ->
-                        User(
-                            id = user.id,
-                            login = user.login,
-                            displayName = user.displayName,
-                            description = user.description,
-                            profileImageUrl = user.profileImageUrl.orEmpty(),
-                            createdAt = Instant.parse(user.createdAt),
-                            usedAt = null,
-                        )
-                    }
-                    .orEmpty()
+                    .fold(
+                        onSuccess = { response ->
+                            response.data.map { user ->
+                                User(
+                                    id = user.id,
+                                    login = user.login,
+                                    displayName = user.displayName,
+                                    description = user.description,
+                                    profileImageUrl = user.profileImageUrl.orEmpty(),
+                                    createdAt = Instant.parse(user.createdAt),
+                                    usedAt = null,
+                                )
+                            }
+                        },
+                        onFailure = { e ->
+                            logError<TwitchApiImpl>(e) { "Error while fetching users by ID: bad chunk" }
+                            emptyList()
+                        }
+                    )
             }
             .also { users ->
                 if (users.size != ids.size) {
@@ -133,27 +135,29 @@ internal class TwitchApiImpl(
             .flatMap { chunkOfLogins ->
                 twitchClient
                     .getUsersById(chunkOfLogins)
-                    .onFailure { e ->
-                        logError<TwitchApiImpl>(e) { "Error while fetching users by login: bad chunk" }
-                    }
-                    .getOrNull()
-                    ?.data
-                    ?.map { user ->
-                        User(
-                            id = user.id,
-                            login = user.login,
-                            displayName = user.displayName,
-                            description = user.description,
-                            profileImageUrl = user.profileImageUrl.orEmpty(),
-                            createdAt = Instant.parse(user.createdAt),
-                            usedAt = null,
-                        )
-                    }
-                    .orEmpty()
+                    .fold(
+                        onSuccess = { response ->
+                            response.data.map { user ->
+                                User(
+                                    id = user.id,
+                                    login = user.login,
+                                    displayName = user.displayName,
+                                    description = user.description,
+                                    profileImageUrl = user.profileImageUrl.orEmpty(),
+                                    createdAt = Instant.parse(user.createdAt),
+                                    usedAt = null,
+                                )
+                            }
+                        },
+                        onFailure = { e ->
+                            logError<TwitchApiImpl>(e) { "Error while fetching users by login: bad chunk" }
+                            emptyList()
+                        }
+                    )
             }
             .also { users ->
                 if (users.size != logins.size) {
-                    logError<TwitchApiImpl> { "Error while fetching users by ID: missing users" }
+                    logError<TwitchApiImpl> { "Error while fetching users by login: missing users" }
                 }
             }
     }

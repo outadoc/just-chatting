@@ -51,7 +51,6 @@ internal class SearchChannelsDataSource(
                                         id = search.userId,
                                         login = search.userLogin,
                                         displayName = search.userDisplayName,
-                                        // TODO replace paging with db
                                         description = "",
                                         profileImageUrl = "",
                                         createdAt = Instant.DISTANT_PAST,

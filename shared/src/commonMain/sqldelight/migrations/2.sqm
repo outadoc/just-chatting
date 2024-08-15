@@ -2,6 +2,9 @@ ALTER TABLE recent_emotes RENAME TO RecentEmote;
 ALTER TABLE recent_channels RENAME TO User;
 
 ALTER TABLE User ADD COLUMN `followed_at` INTEGER NOT NULL;
+ALTER TABLE User ADD COLUMN `inserted_at` INTEGER NOT NULL;
+
+UPDATE User SET inserted_at = strftime('%s', 'now');
 
 CREATE TABLE UserInfo (
     `id` TEXT NOT NULL,

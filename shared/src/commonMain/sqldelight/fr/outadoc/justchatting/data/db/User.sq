@@ -2,6 +2,7 @@ CREATE TABLE User (
     `id` TEXT NOT NULL,
     `used_at` INTEGER NOT NULL,
     `followed_at` INTEGER NOT NULL,
+    `inserted_at` INTEGER NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -46,8 +47,8 @@ INSERT OR REPLACE INTO UserInfo (id, login, display_name, profile_image_url, des
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
 ensureCreated:
-INSERT OR IGNORE INTO User (id, used_at, followed_at)
-VALUES (?, 0, 0);
+INSERT OR IGNORE INTO User (id, used_at, followed_at, inserted_at)
+VALUES (?, 0, 0, ?);
 
 updateVisitedAt:
 UPDATE User SET used_at = :used_at WHERE id = :id;

@@ -19,9 +19,9 @@ internal interface TwitchApi {
 
     suspend fun getStreamsByUserLogin(logins: List<String>): Result<List<Stream>>
 
-    suspend fun getUsersById(ids: List<String>): Result<List<User>>
+    suspend fun getUsersById(ids: List<String>): List<User>
 
-    suspend fun getUsersByLogin(logins: List<String>): Result<List<User>>
+    suspend fun getUsersByLogin(logins: List<String>): List<User>
 
     suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>>
 

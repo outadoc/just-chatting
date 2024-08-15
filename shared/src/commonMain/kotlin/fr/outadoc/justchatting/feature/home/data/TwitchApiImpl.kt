@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.DatePeriod
@@ -95,42 +96,64 @@ internal class TwitchApiImpl(
         return pager.flow
     }
 
-    override suspend fun getUsersById(ids: List<String>): Result<List<User>> {
-        return twitchClient
-            .getUsersById(ids)
-            .map { response ->
-                response.data.map { user ->
-                    User(
-                        id = user.id,
-                        login = user.login,
-                        displayName = user.displayName,
-                        description = user.description,
-                        profileImageUrl = user.profileImageUrl.orEmpty(),
-                        createdAt = Instant.parse(user.createdAt),
-                        usedAt = null,
-                    )
+    override suspend fun getUsersById(ids: List<String>): List<User> {
+        return ids
+            .chunked(100)
+            .flatMap { chunkOfIds ->
+                twitchClient
+                    .getUsersById(chunkOfIds)
+                    .onFailure { e ->
+                        logError<TwitchApiImpl>(e) { "Error while fetching users by ID: bad chunk" }
+                    }
+                    .getOrNull()
+                    ?.data
+                    ?.map { user ->
+                        User(
+                            id = user.id,
+                            login = user.login,
+                            displayName = user.displayName,
+                            description = user.description,
+                            profileImageUrl = user.profileImageUrl.orEmpty(),
+                            createdAt = Instant.parse(user.createdAt),
+                            usedAt = null,
+                        )
+                    }
+                    .orEmpty()
+            }
+            .also { users ->
+                if (users.size != ids.size) {
+                    logError<TwitchApiImpl> { "Error while fetching users by ID: missing users" }
                 }
             }
     }
 
-    override suspend fun getUsersByLogin(logins: List<String>): Result<List<User>> {
-        return twitchClient
-            .getUsersByLogin(logins)
-            .mapCatching { response ->
-                if (response.data.isEmpty()) {
-                    error("No users found for logins: $logins")
-                }
-
-                response.data.map { user ->
-                    User(
-                        id = user.id,
-                        login = user.login,
-                        displayName = user.displayName,
-                        description = user.description,
-                        profileImageUrl = user.profileImageUrl.orEmpty(),
-                        createdAt = Instant.parse(user.createdAt),
-                        usedAt = null,
-                    )
+    override suspend fun getUsersByLogin(logins: List<String>): List<User> {
+        return logins
+            .chunked(100)
+            .flatMap { chunkOfLogins ->
+                twitchClient
+                    .getUsersById(chunkOfLogins)
+                    .onFailure { e ->
+                        logError<TwitchApiImpl>(e) { "Error while fetching users by login: bad chunk" }
+                    }
+                    .getOrNull()
+                    ?.data
+                    ?.map { user ->
+                        User(
+                            id = user.id,
+                            login = user.login,
+                            displayName = user.displayName,
+                            description = user.description,
+                            profileImageUrl = user.profileImageUrl.orEmpty(),
+                            createdAt = Instant.parse(user.createdAt),
+                            usedAt = null,
+                        )
+                    }
+                    .orEmpty()
+            }
+            .also { users ->
+                if (users.size != logins.size) {
+                    logError<TwitchApiImpl> { "Error while fetching users by ID: missing users" }
                 }
             }
     }

@@ -239,21 +239,21 @@ internal class TwitchRepositoryImpl(
             twitchApi.getChannelBadges(channelId)
         }
 
-    private suspend fun syncLocalFollows(appUserId: String): Result<Unit> =
+    private suspend fun syncLocalFollows(appUserId: String) {
         userSyncLock.withLock {
             TODO("sync from all pages of followed users")
         }
+    }
 
-    private suspend fun syncLocalUserInfo(): Result<Unit> =
+    private suspend fun syncLocalUserInfo() {
         userSyncLock.withLock {
             val ids = localUsersApi
                 .getUserIdsToUpdate()
                 .first()
 
-            twitchApi
-                .getUsersById(ids)
-                .map { users ->
-                    localUsersApi.updateUserInfo(users)
-                }
+            localUsersApi.updateUserInfo(
+                users = twitchApi.getUsersById(ids)
+            )
         }
+    }
 }

@@ -98,6 +98,7 @@ internal class TwitchApiImpl(
     }
 
     override suspend fun getUsersById(ids: List<String>): List<User> {
+        if (ids.isEmpty()) return emptyList()
         return ids
             .chunked(MAX_PAGE_SIZE)
             .flatMap { chunkOfIds ->
@@ -133,6 +134,7 @@ internal class TwitchApiImpl(
     }
 
     override suspend fun getUsersByLogin(logins: List<String>): List<User> {
+        if (logins.isEmpty()) return emptyList()
         return logins
             .chunked(MAX_PAGE_SIZE)
             .flatMap { chunkOfLogins ->

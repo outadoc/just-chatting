@@ -13,6 +13,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
+import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
@@ -258,6 +259,8 @@ internal class TwitchRepositoryImpl(
             val ids = localUsersApi
                 .getUserIdsToUpdate()
                 .first()
+
+            logDebug<TwitchRepositoryImpl> { "syncLocalUserInfo: updating ${ids.size} users" }
 
             localUsersApi.updateUserInfo(
                 users = twitchApi.getUsersById(ids)

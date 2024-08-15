@@ -41,6 +41,10 @@ internal class TwitchRepositoryImpl(
                 .searchChannels(query)
                 .map { pagingData ->
                     pagingData.flatMap { results ->
+                        results.forEach { result ->
+                            localUsersApi.rememberUser(userId = result.user.id)
+                        }
+
                         val fullUsersById: Map<String, User> =
                             getUsersById(ids = results.map { result -> result.user.id })
                                 .last()
@@ -64,6 +68,10 @@ internal class TwitchRepositoryImpl(
                         .getFollowedStreams(userId = prefs.appUser.userId)
                         .map { pagingData ->
                             pagingData.flatMap { follows ->
+                                follows.forEach { follow ->
+                                    localUsersApi.rememberUser(userId = follow.user.id)
+                                }
+
                                 val fullUsersById: Map<String, User> =
                                     getUsersById(ids = follows.map { follow -> follow.user.id })
                                         .last()
@@ -93,6 +101,13 @@ internal class TwitchRepositoryImpl(
                         .getFollowedChannels(userId = prefs.appUser.userId)
                         .map { pagingData ->
                             pagingData.flatMap { follows ->
+                                follows.forEach { follow ->
+                                    localUsersApi.rememberUser(
+                                        userId = follow.user.id,
+                                        followedAt = Instant.parse(follow.followedAt),
+                                    )
+                                }
+
                                 val fullUsersById: Map<String, User> =
                                     getUsersById(ids = follows.map { follow -> follow.user.id })
                                         .last()

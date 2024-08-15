@@ -20,6 +20,9 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
@@ -29,6 +32,8 @@ internal class TwitchRepositoryImpl(
     private val preferencesRepository: PreferenceRepository,
     private val localUsersApi: LocalUsersApi,
 ) : TwitchRepository {
+
+    private val userSyncLock = Mutex()
 
     override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
         withContext(DispatchersProvider.io) {
@@ -133,18 +138,10 @@ internal class TwitchRepositoryImpl(
         }.flowOn(DispatchersProvider.io)
 
     override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
-        flow<Result<List<User>>> {
-            if (ids.isEmpty()) {
-                emit(Result.success(emptyList()))
-                return@flow
-            }
-
-            // TODO Trigger DB sync
-
-            localUsersApi
-                .getUsersById(ids)
-                .map { users -> Result.success(users) }
-        }
+        localUsersApi
+            .getUsersById(ids)
+            .map { users -> Result.success(users) }
+            .onStart { syncLocalUsers() }
             .flowOn(DispatchersProvider.io)
 
     override suspend fun getUserById(id: String): Flow<Result<User>> =
@@ -159,18 +156,10 @@ internal class TwitchRepositoryImpl(
         }
 
     override suspend fun getUsersByLogin(logins: List<String>): Flow<Result<List<User>>> =
-        flow<Result<List<User>>> {
-            if (logins.isEmpty()) {
-                emit(Result.success(emptyList()))
-                return@flow
-            }
-
-            // TODO Trigger DB sync
-
-            localUsersApi
-                .getUsersByLogin(logins)
-                .map { users -> Result.success(users) }
-        }
+        localUsersApi
+            .getUsersByLogin(logins)
+            .map { users -> Result.success(users) }
+            .onStart { syncLocalUsers() }
             .flowOn(DispatchersProvider.io)
 
     override suspend fun getUserByLogin(login: String): Flow<Result<User>> =
@@ -248,5 +237,18 @@ internal class TwitchRepositoryImpl(
     override suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>> =
         withContext(DispatchersProvider.io) {
             twitchApi.getChannelBadges(channelId)
+        }
+
+    private suspend fun syncLocalUsers(): Result<Unit> =
+        userSyncLock.withLock {
+            val ids = localUsersApi
+                .getUserIdsToUpdate()
+                .first()
+
+            twitchApi
+                .getUsersById(ids)
+                .map { users ->
+                    localUsersApi.updateUserInfo(users)
+                }
         }
 }

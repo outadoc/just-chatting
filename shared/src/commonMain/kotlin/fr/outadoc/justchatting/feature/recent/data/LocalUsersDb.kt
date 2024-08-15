@@ -6,13 +6,17 @@ import fr.outadoc.justchatting.data.db.UserQueries
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
+import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.days
 
 internal class LocalUsersDb(
     private val userQueries: UserQueries,
+    private val clock: Clock,
 ) : LocalUsersApi {
 
     override fun getRecentChannels(): Flow<List<User>> {
@@ -86,19 +90,21 @@ internal class LocalUsersDb(
             }
     }
 
-    override fun updateUserInfo(user: User, updatedAt: Instant) {
+    override fun updateUserInfo(users: List<User>) {
+        val updatedAt = clock.now()
         userQueries.transaction {
-            userQueries.ensureCreated(user.id)
-
-            userQueries.updateUserInfo(
-                id = user.id,
-                login = user.login,
-                display_name = user.displayName,
-                profile_image_url = user.profileImageUrl,
-                description = user.description,
-                created_at = user.createdAt.toEpochMilliseconds(),
-                updated_at = updatedAt.toEpochMilliseconds(),
-            )
+            users.forEach { user ->
+                userQueries.ensureCreated(user.id)
+                userQueries.updateUserInfo(
+                    id = user.id,
+                    login = user.login,
+                    display_name = user.displayName,
+                    profile_image_url = user.profileImageUrl,
+                    description = user.description,
+                    created_at = user.createdAt.toEpochMilliseconds(),
+                    updated_at = updatedAt.toEpochMilliseconds(),
+                )
+            }
         }
     }
 
@@ -120,5 +126,22 @@ internal class LocalUsersDb(
                 )
             }
         }
+    }
+
+    override fun getUserIdsToUpdate(): Flow<List<String>> {
+        val minAcceptableCacheDate = clock.now() - MaxUserCacheLife
+
+        logDebug<LocalUsersDb> { "Updating users not updated after $minAcceptableCacheDate" }
+
+        return userQueries
+            .getAllToUpdate(
+                minUpdatedAtTimestamp = minAcceptableCacheDate.toEpochMilliseconds()
+            )
+            .asFlow()
+            .mapToList(DispatchersProvider.io)
+    }
+
+    private companion object {
+        val MaxUserCacheLife = 1.days
     }
 }

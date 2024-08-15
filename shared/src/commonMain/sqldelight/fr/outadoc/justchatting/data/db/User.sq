@@ -26,7 +26,7 @@ WHERE used_at > 0
 ORDER BY used_at DESC;
 
 getAllToUpdate:
-SELECT * FROM User
+SELECT User.id FROM User
 LEFT JOIN UserInfo ON User.id = UserInfo.id
 WHERE UserInfo.id IS NULL OR updated_at < :minUpdatedAtTimestamp;
 

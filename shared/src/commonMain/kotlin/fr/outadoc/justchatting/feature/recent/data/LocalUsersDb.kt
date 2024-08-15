@@ -9,6 +9,7 @@ import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.datetime.Clock
@@ -23,6 +24,7 @@ internal class LocalUsersDb(
     override fun getRecentChannels(): Flow<List<User>> {
         return userQueries.getRecent()
             .asFlow()
+            .distinctUntilChanged()
             .mapToList(DispatchersProvider.io)
             .map { users ->
                 users.map { userInfo ->
@@ -46,6 +48,7 @@ internal class LocalUsersDb(
     override fun getFollowedChannels(): Flow<List<ChannelFollow>> {
         return userQueries.getFollowed()
             .asFlow()
+            .distinctUntilChanged()
             .mapToList(DispatchersProvider.io)
             .map { users ->
                 users.map { userInfo ->
@@ -77,6 +80,7 @@ internal class LocalUsersDb(
     override fun getUsersById(ids: List<String>): Flow<List<User>> {
         return userQueries.getByIds(ids)
             .asFlow()
+            .distinctUntilChanged()
             .mapToList(DispatchersProvider.io)
             .map { users ->
                 users.map { userInfo ->
@@ -101,6 +105,7 @@ internal class LocalUsersDb(
     override fun getUsersByLogin(logins: List<String>): Flow<List<User>> {
         return userQueries.getByLogins(logins)
             .asFlow()
+            .distinctUntilChanged()
             .mapToList(DispatchersProvider.io)
             .mapNotNull { users ->
                 users.map { userInfo ->

@@ -26,7 +26,7 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version = "2.0.10-1.0.24" }
-licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.8" }
+licenseReport = { id = "com.github.jk1.dependency-license-report", version = "2.9" }
 moko-resources = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko" }
 skie = { id = "co.touchlab.skie", version = "0.8.4" }
 spotless = { id = "com.diffplug.spotless", version = "6.25.0" }

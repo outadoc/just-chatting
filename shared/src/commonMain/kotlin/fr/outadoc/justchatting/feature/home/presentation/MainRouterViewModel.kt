@@ -37,7 +37,7 @@ internal class MainRouterViewModel(
     }
 
     sealed class Event {
-        data class ViewChannel(val login: String) : Event()
+        data class ViewChannel(val userId: String) : Event()
         data class OpenInBrowser(val uri: String) : Event()
     }
 
@@ -123,7 +123,7 @@ internal class MainRouterViewModel(
 
             is Deeplink.ViewChannel -> {
                 _events.emit(
-                    Event.ViewChannel(login = deeplink.login),
+                    Event.ViewChannel(userId = deeplink.userId),
                 )
             }
 

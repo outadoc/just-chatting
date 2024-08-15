@@ -23,7 +23,7 @@ import org.koin.androidx.compose.getViewModel
 import org.koin.compose.koinInject
 
 @Composable
-internal fun ChannelChatScreen(channelLogin: String) {
+internal fun ChannelChatScreen(userId: String) {
     val viewModel: ChatViewModel = getViewModel()
     val state by viewModel.state.collectAsState()
     val inputState by viewModel.inputState.collectAsState()
@@ -41,8 +41,8 @@ internal fun ChannelChatScreen(channelLogin: String) {
 
     var isEmotePickerOpen by remember { mutableStateOf(false) }
 
-    LaunchedEffect(channelLogin) {
-        viewModel.loadChat(channelLogin)
+    LaunchedEffect(userId) {
+        viewModel.loadChat(userId)
     }
 
     BackHandler(isEmotePickerOpen) {
@@ -76,11 +76,12 @@ internal fun ChannelChatScreen(channelLogin: String) {
         ChannelChatScreenContent(
             state = state,
             inputState = inputState,
-            channelLogin = channelLogin,
             isEmotePickerOpen = isEmotePickerOpen,
             showTimestamps = prefs.showTimestamps,
             onWatchLiveClicked = {
-                uriHandler.openUri(createChannelExternalLink(channelLogin))
+                (state as? ChatViewModel.State.Chatting)?.user?.login?.let { userLogin ->
+                    uriHandler.openUri(createChannelExternalLink(userLogin))
+                }
             },
             onMessageChange = { textFieldValue ->
                 viewModel.onMessageInputChanged(
@@ -122,7 +123,7 @@ internal fun ChannelChatScreen(channelLogin: String) {
             },
             onReplyToMessage = viewModel::onReplyToMessage,
             onDismissUserInfo = viewModel::onDismissUserInfo,
-            onShowUserInfoForLogin = viewModel::onShowUserInfo,
+            onShowInfoForUserId = viewModel::onShowUserInfo,
         )
     }
 }

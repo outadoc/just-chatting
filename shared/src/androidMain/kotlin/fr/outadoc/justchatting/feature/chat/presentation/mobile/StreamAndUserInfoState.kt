@@ -20,7 +20,6 @@ internal fun StreamAndUserInfoState(
         label = "bottom sheet state changes",
     ) { currentState ->
         when (currentState) {
-            StreamAndUserInfoViewModel.State.Initial -> {}
             is StreamAndUserInfoViewModel.State.Loading -> {
                 Column(
                     modifier = modifier,
@@ -46,6 +45,6 @@ internal fun StreamAndUserInfoState(
 @Composable
 private fun StreamAndUserInfoInitial() {
     StreamAndUserInfoState(
-        state = StreamAndUserInfoViewModel.State.Initial,
+        state = StreamAndUserInfoViewModel.State.Loading,
     )
 }

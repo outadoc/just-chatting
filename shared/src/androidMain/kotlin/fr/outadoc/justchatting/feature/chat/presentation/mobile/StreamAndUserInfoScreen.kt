@@ -11,13 +11,13 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 internal fun StreamAndUserInfoScreen(
     modifier: Modifier = Modifier,
-    userLogin: String,
+    userId: String,
 ) {
     val viewModel: StreamAndUserInfoViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
 
-    LaunchedEffect(userLogin) {
-        viewModel.loadFromLogin(userLogin)
+    LaunchedEffect(userId) {
+        viewModel.load(userId)
     }
 
     StreamAndUserInfoState(

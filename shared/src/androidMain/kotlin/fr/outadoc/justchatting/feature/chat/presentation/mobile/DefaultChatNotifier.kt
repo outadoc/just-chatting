@@ -89,7 +89,7 @@ internal class DefaultChatNotifier(
     @RequiresPermission("android.permission.POST_NOTIFICATIONS")
     private fun createNotificationForUser(context: Context, user: User) {
         val nm = NotificationManagerCompat.from(context)
-        val intent = ChatActivity.createIntent(context, user.login)
+        val intent = ChatActivity.createIntent(context, user.id)
 
         val person = Person.Builder()
             .setKey(user.id)

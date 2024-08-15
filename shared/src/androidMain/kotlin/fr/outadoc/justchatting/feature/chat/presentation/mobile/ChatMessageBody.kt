@@ -58,7 +58,7 @@ internal fun ChatMessageBody(
     backgroundHint: Color,
     richEmbed: ChatListItem.RichEmbed?,
     maxLines: Int = Int.MAX_VALUE,
-    onShowUserInfoForLogin: (String) -> Unit = {},
+    onShowInfoForUserId: (String) -> Unit = {},
 ) {
     val uriHandler = LocalUriHandler.current
     val layoutResult = remember { mutableStateOf<TextLayoutResult?>(null) }
@@ -118,11 +118,11 @@ internal fun ChatMessageBody(
                                             }
                                         }
 
-                                        CHATTER_LOGIN_ANNOTATION_TAG -> {
+                                        CHATTER_ID_ANNOTATION_TAG -> {
                                             down.consume()
                                             waitForUpOrCancellation()?.also { up ->
                                                 up.consume()
-                                                onShowUserInfoForLogin(annotation.item)
+                                                onShowInfoForUserId(annotation.item)
                                             }
                                         }
                                     }
@@ -197,8 +197,8 @@ internal fun ChatListItem.Message.Body.toAnnotatedString(
         withStyle(SpanStyle(color = color)) {
             withStyle(SpanStyle(fontWeight = FontWeight.Bold)) {
                 withAnnotation(
-                    tag = CHATTER_LOGIN_ANNOTATION_TAG,
-                    annotation = chatter.login,
+                    tag = CHATTER_ID_ANNOTATION_TAG,
+                    annotation = chatter.id,
                 ) {
                     append(chatter.displayName)
                 }
@@ -293,4 +293,4 @@ private val Badge.inlineContentId: String
 private val urlRegex = Patterns.WEB_URL.toRegex()
 
 private const val URL_ANNOTATION_TAG = "URL"
-private const val CHATTER_LOGIN_ANNOTATION_TAG = "CHATTER_LOGIN"
+private const val CHATTER_ID_ANNOTATION_TAG = "CHATTER_LOGIN"

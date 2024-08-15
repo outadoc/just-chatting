@@ -35,7 +35,7 @@ internal fun LiveChannelsList(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
-    onItemClick: (login: String) -> Unit,
+    onItemClick: (userId: String) -> Unit,
 ) {
     val viewModel: FollowedStreamsViewModel = koinViewModel()
     val items: LazyPagingItems<UserStream> = viewModel.pagingData.collectAsLazyPagingItems()
@@ -74,7 +74,7 @@ internal fun LiveChannelsList(
                     items = items,
                     isRefreshing = isRefreshing,
                     onItemClick = { stream ->
-                        onItemClick(stream.user.login)
+                        onItemClick(stream.user.id)
                     },
                 )
 

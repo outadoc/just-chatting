@@ -60,7 +60,7 @@ internal class MainActivity : AppCompatActivity() {
             viewModel.events.collectLatest { event ->
                 when (event) {
                     is MainRouterViewModel.Event.ViewChannel -> {
-                        viewChannel(event.login)
+                        viewChannel(event.userId)
                     }
 
                     is MainRouterViewModel.Event.OpenInBrowser -> {
@@ -112,8 +112,8 @@ internal class MainActivity : AppCompatActivity() {
                 is MainRouterViewModel.State.LoggedIn -> {
                     MainRouter(
                         sizeClass = sizeClass,
-                        onChannelClick = { login ->
-                            viewChannel(login)
+                        onChannelClick = { userId ->
+                            viewChannel(userId)
                         },
                         onOpenNotificationPreferences = {
                             openSettingsIntent(action = "android.settings.APP_NOTIFICATION_SETTINGS")
@@ -155,11 +155,11 @@ internal class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun viewChannel(login: String) {
+    private fun viewChannel(userId: String) {
         startActivity(
             ChatActivity.createIntent(
                 context = this,
-                channelLogin = login,
+                userId = userId,
             ),
         )
     }

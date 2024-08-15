@@ -17,33 +17,27 @@ internal class StreamAndUserInfoViewModel(
 ) : ViewModel() {
 
     sealed class State {
-        data object Initial : State()
-
-        data class Loading(
-            val userLogin: String,
-        ) : State()
-
+        data object Loading : State()
         data class Loaded(
-            val userLogin: String,
             val user: User?,
             val stream: Stream?,
         ) : State()
     }
 
-    private val _state = MutableStateFlow<State>(State.Initial)
+    private val _state = MutableStateFlow<State>(State.Loading)
     val state = _state.asStateFlow()
 
-    fun loadFromLogin(login: String) {
+    fun load(userId: String) {
         viewModelScope.launch {
             combine(
-                twitchRepository.getUserByLogin(login),
-                twitchRepository.getStreamByUserLogin(login),
+                twitchRepository.getUserById(userId),
+                twitchRepository.getStreamByUserId(userId),
             ) { user, stream -> user to stream }
                 .map { (userResult, streamResult) ->
                     val user: User? = userResult
                         .onFailure { exception ->
                             logError<StreamAndUserInfoViewModel>(exception) {
-                                "Error while loading user ${login}: $exception"
+                                "Error while loading user ${userId}: $exception"
                             }
                         }
                         .getOrNull()
@@ -51,19 +45,18 @@ internal class StreamAndUserInfoViewModel(
                     val stream: Stream? = streamResult
                         .onFailure { exception ->
                             logError<StreamAndUserInfoViewModel>(exception) {
-                                "Error while loading stream for ${login}: $exception"
+                                "Error while loading stream for user ${userId}: $exception"
                             }
                         }
                         .getOrNull()
 
                     State.Loaded(
-                        userLogin = login,
                         user = user,
                         stream = stream,
                     )
                 }
                 .onStart<State> {
-                    emit(State.Loading(userLogin = login))
+                    emit(State.Loading)
                 }
                 .collect { state ->
                     _state.emit(state)

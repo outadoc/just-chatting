@@ -44,7 +44,7 @@ updateUserInfo:
 INSERT OR REPLACE INTO UserInfo (id, login, display_name, profile_image_url, description, created_at, updated_at)
 VALUES (?, ?, ?, ?, ?, ?, ?);
 
-createUser:
+ensureCreated:
 INSERT OR IGNORE INTO User (id, used_at, followed_at)
 VALUES (?, 0, 0);
 

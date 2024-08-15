@@ -82,9 +82,25 @@ internal class LocalUsersDb(
             }
     }
 
+    override fun updateUserInfo(user: User, updatedAt: Instant) {
+        userQueries.transaction {
+            userQueries.ensureCreated(user.id)
+
+            userQueries.updateUserInfo(
+                id = user.id,
+                login = user.login,
+                display_name = user.displayName,
+                profile_image_url = user.profileImageUrl,
+                description = user.description,
+                created_at = user.createdAt.toEpochMilliseconds(),
+                updated_at = updatedAt.toEpochMilliseconds(),
+            )
+        }
+    }
+
     override fun rememberUser(userId: String, usedAt: Instant?, followedAt: Instant?) {
         userQueries.transaction {
-            userQueries.createUser(userId)
+            userQueries.ensureCreated(userId)
 
             usedAt?.let { usedAt ->
                 userQueries.updateVisitedAt(

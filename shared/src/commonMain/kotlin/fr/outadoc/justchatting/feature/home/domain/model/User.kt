@@ -8,8 +8,8 @@ internal data class User(
     val id: String,
     val login: String,
     val displayName: String,
-    val description: String? = null,
-    val profileImageUrl: String? = null,
-    val createdAt: Instant? = null,
-    val usedAt: Instant? = null,
+    val description: String,
+    val profileImageUrl: String,
+    val createdAt: Instant,
+    val usedAt: Instant,
 )

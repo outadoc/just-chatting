@@ -93,15 +93,13 @@ internal class TwitchRepositoryImpl(
             }
         }
 
-    // TODO remove PagingData from the signature
-    override suspend fun getFollowedChannels(): Flow<PagingData<ChannelFollow>> =
+    override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> =
         withContext(DispatchersProvider.io) {
             val prefs = preferencesRepository.currentPreferences.first()
             when (prefs.appUser) {
                 is AppUser.LoggedIn -> {
                     localUsersApi
                         .getFollowedChannels()
-                        .map { follows -> PagingData.from(follows) }
                         .onStart {
                             syncLocalFollows(appUserId = prefs.appUser.userId)
                             syncLocalUserInfo()
@@ -110,7 +108,7 @@ internal class TwitchRepositoryImpl(
                 }
 
                 else -> {
-                    flowOf(PagingData.empty())
+                    flowOf(emptyList())
                 }
             }
         }

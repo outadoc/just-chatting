@@ -18,7 +18,7 @@ internal interface TwitchRepository {
 
     suspend fun getFollowedStreams(): Flow<PagingData<Stream>>
 
-    suspend fun getFollowedChannels(): Flow<PagingData<ChannelFollow>>
+    suspend fun getFollowedChannels(): Flow<List<ChannelFollow>>
 
     suspend fun getStreamByUserId(userId: String): Flow<Result<Stream>>
 

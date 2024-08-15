@@ -1,7 +1,5 @@
 package fr.outadoc.justchatting.feature.home.domain
 
-import androidx.paging.PagingData
-import androidx.paging.map
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -14,7 +12,7 @@ internal class GetScheduleForFollowedChannelsUseCase(
     suspend operator fun invoke(
         currentTime: Instant,
         timeZone: TimeZone,
-    ): Flow<PagingData<ChannelSchedule>> {
+    ): Flow<List<ChannelSchedule>> {
         return twitchRepository
             .getFollowedChannels()
             .map { channels ->

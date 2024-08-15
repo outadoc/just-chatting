@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -18,19 +19,18 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
-import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
-import androidx.paging.compose.collectAsLazyPagingItems
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.presentation.FollowedChannelsViewModel
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.plus
-import kotlinx.datetime.Instant
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
@@ -42,15 +42,19 @@ internal fun FollowedChannelsList(
     onItemClick: (login: String) -> Unit,
 ) {
     val viewModel: FollowedChannelsViewModel = koinViewModel()
-    val items: LazyPagingItems<ChannelFollow> = viewModel.pagingData.collectAsLazyPagingItems()
-    val isRefreshing = items.loadState.refresh is LoadState.Loading
+    val state by viewModel.state.collectAsState()
+    val isRefreshing = state is FollowedChannelsViewModel.State.Loading
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isRefreshing,
-        onRefresh = { items.refresh() },
+        onRefresh = viewModel::refresh,
     )
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+
+    LaunchedEffect(Unit) {
+        viewModel.refresh()
+    }
 
     MainNavigation(
         modifier = modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
@@ -73,7 +77,7 @@ internal fun FollowedChannelsList(
                 InnerFollowedChannelsList(
                     modifier = Modifier.fillMaxSize(),
                     insets = insets,
-                    items = items,
+                    items = (state as? FollowedChannelsViewModel.State.Content)?.data.orEmpty(),
                     isRefreshing = isRefreshing,
                     onItemClick = { channel ->
                         onItemClick(channel.user.login)
@@ -95,7 +99,7 @@ internal fun FollowedChannelsList(
 private fun InnerFollowedChannelsList(
     modifier: Modifier = Modifier,
     insets: PaddingValues = PaddingValues(),
-    items: LazyPagingItems<ChannelFollow>,
+    items: List<ChannelFollow>,
     isRefreshing: Boolean,
     onItemClick: (ChannelFollow) -> Unit,
 ) {
@@ -108,7 +112,7 @@ private fun InnerFollowedChannelsList(
             bottom = 16.dp,
         ),
     ) {
-        if (items.itemCount == 0) {
+        if (items.isEmpty()) {
             if (!isRefreshing) {
                 item(key = "_noContent") {
                     NoContent(modifier = Modifier.fillParentMaxSize())
@@ -121,21 +125,14 @@ private fun InnerFollowedChannelsList(
                 }
             }
         } else {
-            items(items.itemCount) { index ->
-                val item: ChannelFollow? = items[index]
-                if (item != null) {
-                    UserItemCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        displayName = item.user.displayName,
-                        profileImageUrl = item.user.profileImageUrl,
-                        followedAt = item.followedAt,
-                        onClick = { onItemClick(item) },
-                    )
-                } else {
-                    UserItemCardPlaceholder(
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                }
+            items(items) { item ->
+                UserItemCard(
+                    modifier = Modifier.fillMaxWidth(),
+                    displayName = item.user.displayName,
+                    profileImageUrl = item.user.profileImageUrl,
+                    followedAt = item.followedAt,
+                    onClick = { onItemClick(item) },
+                )
             }
         }
     }

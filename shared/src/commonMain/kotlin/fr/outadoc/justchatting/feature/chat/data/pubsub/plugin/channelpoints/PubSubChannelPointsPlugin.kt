@@ -24,6 +24,8 @@ internal class PubSubChannelPointsPlugin(
                         redemption = Redemption(
                             id = message.data.redemption.id,
                             userId = message.data.redemption.user.id,
+                            userLogin = message.data.redemption.user.login,
+                            userDisplayName = message.data.redemption.user.displayName,
                             userAddedMessage = message.data.redemption.userAddedMessage,
                             redeemedAt = message.data.redemption.redeemedAt,
                             reward = Reward(

@@ -5,6 +5,8 @@ import kotlinx.datetime.Instant
 internal data class Redemption(
     val id: String,
     val userId: String,
+    val userLogin: String,
+    val userDisplayName: String,
     val userAddedMessage: String? = null,
     val redeemedAt: Instant? = null,
     val reward: Reward,

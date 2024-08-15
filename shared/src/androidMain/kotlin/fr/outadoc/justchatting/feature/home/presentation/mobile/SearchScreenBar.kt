@@ -64,7 +64,7 @@ private fun CompactSearchBar(
     modifier: Modifier,
     state: ChannelSearchViewModel.State,
     viewModel: ChannelSearchViewModel,
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
 ) {
     DockedSearchBar(
         modifier = modifier.padding(16.dp),
@@ -110,7 +110,7 @@ private fun CompactSearchBar(
         content = {
             SearchResultsList(
                 onItemClick = { stream ->
-                    onChannelClick(stream.user.login)
+                    onChannelClick(stream.user.id)
                 },
                 viewModel = viewModel,
             )

@@ -92,7 +92,7 @@ internal fun EpgScreen(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
 ) {
     val viewModel: EpgViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
@@ -147,7 +147,7 @@ private fun EpgContent(
     days: List<LocalDate>,
     initialListIndex: Int = 0,
     contentPadding: PaddingValues = PaddingValues(),
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
 ) {
     var sharedListState by remember {
         mutableStateOf(
@@ -291,7 +291,7 @@ private fun EpgChannelEntry(
     days: LazyPagingItems<ChannelScheduleForDay>,
     sharedListState: SharedListState = SharedListState(),
     updateSharedListState: (SharedListState) -> Unit = {},
-    onChannelClick: (login: String) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
 ) {
     var hasSettled by remember { mutableStateOf(false) }
 
@@ -354,7 +354,7 @@ private fun EpgChannelEntry(
                             .size(56.dp)
                             .clip(MaterialTheme.shapes.medium)
                             .background(MaterialTheme.colorScheme.surface)
-                            .clickable { onChannelClick(user.login) },
+                            .clickable { onChannelClick(user.id) },
                         model = remoteImageModel(user.profileImageUrl),
                         contentDescription = null,
                     )

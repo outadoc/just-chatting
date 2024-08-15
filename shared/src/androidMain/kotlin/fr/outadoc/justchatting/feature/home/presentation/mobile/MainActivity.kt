@@ -112,9 +112,7 @@ internal class MainActivity : AppCompatActivity() {
                 is MainRouterViewModel.State.LoggedIn -> {
                     MainRouter(
                         sizeClass = sizeClass,
-                        onChannelClick = { userId ->
-                            viewChannel(userId)
-                        },
+                        onChannelClick = ::viewChannel,
                         onOpenNotificationPreferences = {
                             openSettingsIntent(action = "android.settings.APP_NOTIFICATION_SETTINGS")
                         },

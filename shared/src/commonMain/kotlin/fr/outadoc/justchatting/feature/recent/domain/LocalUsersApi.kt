@@ -15,7 +15,7 @@ internal interface LocalUsersApi {
 
     fun getUserIdsToUpdate(): Flow<List<String>>
 
-    fun rememberUser(userId: String, visitedAt: Instant? = null)
-    fun replaceFollowedChannels(follows: List<ChannelFollow>)
-    fun updateUserInfo(users: List<User>)
+    suspend fun rememberUser(userId: String, visitedAt: Instant? = null)
+    suspend fun replaceFollowedChannels(follows: List<ChannelFollow>)
+    suspend fun updateUserInfo(users: List<User>)
 }

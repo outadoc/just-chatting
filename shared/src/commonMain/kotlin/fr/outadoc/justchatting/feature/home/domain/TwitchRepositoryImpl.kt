@@ -107,7 +107,6 @@ internal class TwitchRepositoryImpl(
                             syncLocalFollows(appUserId = prefs.appUser.userId)
                             syncLocalUserInfo()
                         }
-                        .flowOn(DispatchersProvider.io)
                 }
 
                 else -> {
@@ -128,17 +127,17 @@ internal class TwitchRepositoryImpl(
             )
         }.flowOn(DispatchersProvider.io)
 
-    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> {
-        ids.forEach { id ->
-            localUsersApi.rememberUser(userId = id)
-        }
+    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
+        withContext(DispatchersProvider.io) {
+            ids.forEach { id ->
+                localUsersApi.rememberUser(userId = id)
+            }
 
-        return localUsersApi
-            .getUsersById(ids)
-            .map { users -> Result.success(users) }
-            .onStart { syncLocalUserInfo() }
-            .flowOn(DispatchersProvider.io)
-    }
+            localUsersApi
+                .getUsersById(ids)
+                .map { users -> Result.success(users) }
+                .onStart { syncLocalUserInfo() }
+        }
 
     override suspend fun getUserById(id: String): Flow<Result<User>> =
         withContext(DispatchersProvider.io) {

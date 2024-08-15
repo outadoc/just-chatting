@@ -13,24 +13,19 @@ import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
-    private val usersMemoryCache: UsersMemoryCache,
     private val preferencesRepository: PreferenceRepository,
     private val localUsersApi: LocalUsersApi,
 ) : TwitchRepository {
@@ -138,26 +133,17 @@ internal class TwitchRepositoryImpl(
         }.flowOn(DispatchersProvider.io)
 
     override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
-        flow {
+        flow<Result<List<User>>> {
             if (ids.isEmpty()) {
                 emit(Result.success(emptyList()))
                 return@flow
             }
 
-            val cachedUsers = usersMemoryCache.getUsersById(ids = ids)
-            if (cachedUsers.isNotEmpty()) {
-                emit(
-                    Result.success(cachedUsers),
-                )
-            }
+            // TODO Trigger DB sync
 
-            emit(
-                twitchApi
-                    .getUsersById(ids = ids)
-                    .onSuccess { users ->
-                        usersMemoryCache.put(users)
-                    },
-            )
+            localUsersApi
+                .getUsersById(ids)
+                .map { users -> Result.success(users) }
         }
             .flowOn(DispatchersProvider.io)
 
@@ -173,26 +159,17 @@ internal class TwitchRepositoryImpl(
         }
 
     override suspend fun getUsersByLogin(logins: List<String>): Flow<Result<List<User>>> =
-        flow {
+        flow<Result<List<User>>> {
             if (logins.isEmpty()) {
                 emit(Result.success(emptyList()))
                 return@flow
             }
 
-            val cachedUsers = usersMemoryCache.getUsersByLogin(logins = logins)
-            if (cachedUsers.isNotEmpty()) {
-                emit(
-                    Result.success(cachedUsers),
-                )
-            }
+            // TODO Trigger DB sync
 
-            emit(
-                twitchApi
-                    .getUsersByLogin(logins = logins)
-                    .onSuccess { users ->
-                        usersMemoryCache.put(users)
-                    },
-            )
+            localUsersApi
+                .getUsersByLogin(logins)
+                .map { users -> Result.success(users) }
         }
             .flowOn(DispatchersProvider.io)
 
@@ -221,44 +198,21 @@ internal class TwitchRepositoryImpl(
         withContext(DispatchersProvider.io) {
             localUsersApi
                 .getRecentChannels()
-                .flatMapLatest { channels ->
-                    val ids = channels.map { channel -> channel.id }
-                    flow {
-                        val cachedUsers: List<User> =
-                            usersMemoryCache.getUsersById(ids = ids)
-
-                        emit(ids to cachedUsers)
-
-                        val remoteUsers: List<User> =
-                            twitchApi
-                                .getUsersById(ids = ids)
-                                .getOrElse { emptyList() }
-
-                        emit(ids to remoteUsers)
+                .map { users ->
+                    users.map { user ->
+                        ChannelSearchResult(
+                            title = user.displayName,
+                            user = User(
+                                id = user.id,
+                                login = user.login,
+                                displayName = user.displayName,
+                                description = user.description,
+                                profileImageUrl = user.profileImageUrl,
+                                createdAt = user.createdAt,
+                                usedAt = user.usedAt,
+                            ),
+                        )
                     }
-                }
-                .onEach { (_, users) ->
-                    usersMemoryCache.put(users)
-                }
-                .map { (ids, users) ->
-                    users
-                        .map { user ->
-                            ChannelSearchResult(
-                                title = user.displayName,
-                                user = User(
-                                    id = user.id,
-                                    login = user.login,
-                                    displayName = user.displayName,
-                                    description = user.description,
-                                    profileImageUrl = user.profileImageUrl,
-                                    createdAt = user.createdAt,
-                                    usedAt = user.usedAt,
-                                ),
-                            )
-                        }
-                        .sortedBy { result ->
-                            ids.indexOf(result.user.id)
-                        }
                 }
         }
 

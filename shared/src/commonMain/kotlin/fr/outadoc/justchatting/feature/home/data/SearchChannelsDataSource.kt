@@ -5,6 +5,7 @@ import androidx.paging.PagingState
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Pagination
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.datetime.Instant
@@ -12,6 +13,7 @@ import kotlinx.datetime.Instant
 internal class SearchChannelsDataSource(
     private val query: String,
     private val twitchClient: TwitchClient,
+    private val localUsersApi: LocalUsersApi,
 ) : PagingSource<Pagination, List<ChannelSearchResult>>() {
 
     override fun getRefreshKey(state: PagingState<Pagination, List<ChannelSearchResult>>): Pagination? =
@@ -41,6 +43,11 @@ internal class SearchChannelsDataSource(
                         } else {
                             LoadResult.Page.COUNT_UNDEFINED
                         }
+
+                    // Remember users in local db
+                    response.data.forEach { follow ->
+                        localUsersApi.rememberUser(userId = follow.userId)
+                    }
 
                     LoadResult.Page(
                         data = listOf(

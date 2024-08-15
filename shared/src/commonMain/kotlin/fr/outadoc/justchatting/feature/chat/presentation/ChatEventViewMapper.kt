@@ -407,7 +407,9 @@ internal class ChatEventViewMapper {
                         title = MR.plurals.user_redeemed
                             .format(
                                 number = redemption.reward.cost,
-                                redemption.user.displayName,
+                                // TODO replace this with the actual user display name
+                                // redemption.user.displayName,
+                                redemption.userId,
                                 redemption.reward.title,
                                 redemption.reward.cost,
                             ),

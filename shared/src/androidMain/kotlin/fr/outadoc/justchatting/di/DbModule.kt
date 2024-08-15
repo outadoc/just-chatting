@@ -28,5 +28,5 @@ public val dbModule: Module = module {
     single<RecentEmotesApi> { RecentEmotesDb(get()) }
 
     single<UserQueries> { get<AppDatabase>().userQueries }
-    single<LocalUsersApi> { LocalUsersDb(get()) }
+    single<LocalUsersApi> { LocalUsersDb(get(), get()) }
 }

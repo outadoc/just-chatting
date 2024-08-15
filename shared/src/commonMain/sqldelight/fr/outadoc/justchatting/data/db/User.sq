@@ -25,6 +25,12 @@ JOIN UserInfo ON User.id = UserInfo.id
 WHERE used_at > 0
 ORDER BY used_at DESC;
 
+getFollowed:
+SELECT * FROM User
+JOIN UserInfo ON User.id = UserInfo.id
+WHERE followed_at > 0
+ORDER BY login ASC;
+
 getAllToUpdate:
 SELECT User.id FROM User
 LEFT JOIN UserInfo ON User.id = UserInfo.id

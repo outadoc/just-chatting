@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.recent.data
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
 import fr.outadoc.justchatting.data.db.UserQueries
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
@@ -37,6 +38,32 @@ internal class LocalUsersDb(
                         } else {
                             null
                         },
+                    )
+                }
+            }
+    }
+
+    override fun getFollowedChannels(): Flow<List<ChannelFollow>> {
+        return userQueries.getFollowed()
+            .asFlow()
+            .mapToList(DispatchersProvider.io)
+            .map { users ->
+                users.map { userInfo ->
+                    ChannelFollow(
+                        user = User(
+                            id = userInfo.id,
+                            login = userInfo.login,
+                            displayName = userInfo.display_name,
+                            profileImageUrl = userInfo.profile_image_url,
+                            description = userInfo.description,
+                            createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
+                            usedAt = if (userInfo.used_at > 0) {
+                                Instant.fromEpochMilliseconds(userInfo.used_at)
+                            } else {
+                                null
+                            },
+                        ),
+                        followedAt = Instant.fromEpochMilliseconds(userInfo.followed_at)
                     )
                 }
             }

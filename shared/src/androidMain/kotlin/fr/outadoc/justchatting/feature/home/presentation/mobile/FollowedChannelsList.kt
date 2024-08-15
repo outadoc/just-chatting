@@ -128,7 +128,7 @@ private fun InnerFollowedChannelsList(
                         modifier = Modifier.fillMaxWidth(),
                         displayName = item.user.displayName,
                         profileImageUrl = item.user.profileImageUrl,
-                        followedAt = Instant.parse(item.followedAt),
+                        followedAt = item.followedAt,
                         onClick = { onItemClick(item) },
                     )
                 } else {

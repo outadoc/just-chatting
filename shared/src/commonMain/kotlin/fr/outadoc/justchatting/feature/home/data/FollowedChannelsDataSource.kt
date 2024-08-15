@@ -5,7 +5,6 @@ import androidx.paging.PagingState
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.Pagination
 import fr.outadoc.justchatting.feature.home.domain.model.User
-import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.datetime.Instant
 
@@ -47,7 +46,7 @@ internal class FollowedChannelsDataSource(
                                         createdAt = Instant.DISTANT_PAST,
                                         usedAt = Instant.DISTANT_PAST,
                                     ),
-                                    followedAt = follow.followedAt,
+                                    followedAt = Instant.parse(follow.followedAt),
                                 )
                             },
                         ),

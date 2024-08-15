@@ -97,29 +97,14 @@ internal class TwitchRepositoryImpl(
             val prefs = preferencesRepository.currentPreferences.first()
             when (prefs.appUser) {
                 is AppUser.LoggedIn -> {
-                    twitchApi
-                        .getFollowedChannels(userId = prefs.appUser.userId)
-                        .map { pagingData ->
-                            pagingData.flatMap { follows ->
-                                follows.forEach { follow ->
-                                    localUsersApi.rememberUser(
-                                        userId = follow.user.id,
-                                        followedAt = Instant.parse(follow.followedAt),
-                                    )
-                                }
-
-                                val fullUsersById: Map<String, User> =
-                                    getUsersById(ids = follows.map { follow -> follow.user.id })
-                                        .last()
-                                        .getOrNull()
-                                        .orEmpty()
-                                        .associateBy { user -> user.id }
-
-                                follows.map { follow ->
-                                    follow.copy(user = fullUsersById[follow.user.id] ?: follow.user)
-                                }
-                            }
+                    localUsersApi
+                        .getFollowedChannels()
+                        .map { follows -> PagingData.from(follows) }
+                        .onStart {
+                            syncLocalFollows(appUserId = prefs.appUser.userId)
+                            syncLocalUserInfo()
                         }
+                        .flowOn(DispatchersProvider.io)
                 }
 
                 else -> {
@@ -156,7 +141,7 @@ internal class TwitchRepositoryImpl(
         localUsersApi
             .getUsersById(ids)
             .map { users -> Result.success(users) }
-            .onStart { syncLocalUsers() }
+            .onStart { syncLocalUserInfo() }
             .flowOn(DispatchersProvider.io)
 
     override suspend fun getUserById(id: String): Flow<Result<User>> =
@@ -174,7 +159,7 @@ internal class TwitchRepositoryImpl(
         localUsersApi
             .getUsersByLogin(logins)
             .map { users -> Result.success(users) }
-            .onStart { syncLocalUsers() }
+            .onStart { syncLocalUserInfo() }
             .flowOn(DispatchersProvider.io)
 
     override suspend fun getUserByLogin(login: String): Flow<Result<User>> =
@@ -254,7 +239,12 @@ internal class TwitchRepositoryImpl(
             twitchApi.getChannelBadges(channelId)
         }
 
-    private suspend fun syncLocalUsers(): Result<Unit> =
+    private suspend fun syncLocalFollows(appUserId: String): Result<Unit> =
+        userSyncLock.withLock {
+            TODO("sync from all pages of followed users")
+        }
+
+    private suspend fun syncLocalUserInfo(): Result<Unit> =
         userSyncLock.withLock {
             val ids = localUsersApi
                 .getUserIdsToUpdate()

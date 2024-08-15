@@ -44,10 +44,10 @@ jobs:
 
       - name: Build app bundle
         run: |
-            ./gradlew bundleRelease
-            "-PreleaseKeystorePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}"
-            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}"
-            "-PexternalVersionCode=${{ steps.version.outputs.version }}"
+            ./gradlew bundleRelease \
+            "-PreleaseKeystorePassword=${{ secrets.RELEASE_KEYSTORE_PASSWORD }}" \
+            "-PexternalVersionName=${{ steps.date.outputs.date }}.${{ steps.version.outputs.version }}" \
+            "-PexternalVersionCode=${{ steps.version.outputs.version }}" \
             "-PenableLogging=false"
 
       - name: Upload app bundle to GitHub

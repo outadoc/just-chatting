@@ -26,7 +26,7 @@ jobs:
 
       - name: Build app bundle
         run: |
-            ./gradlew bundleQa
+            ./gradlew bundleQa \
             "-PexternalVersionName=pr-${{ steps.date.outputs.date }}-${{ github.event.pull_request.number }}-${{ github.sha }}"
 
       - name: Run linter

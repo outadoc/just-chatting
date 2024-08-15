@@ -36,6 +36,7 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.plus
+import kotlinx.datetime.Instant
 
 @ThemePreviews
 @Composable
@@ -46,6 +47,10 @@ internal fun SettingsListPreview() {
                 id = "123",
                 login = "maghla",
                 displayName = "Maghla",
+                description = "",
+                profileImageUrl = "",
+                createdAt = Instant.DISTANT_PAST,
+                usedAt = Instant.DISTANT_PAST,
             ),
             onLogoutClick = {},
             onOpenDependencyCredits = {},
@@ -85,6 +90,10 @@ internal fun SettingsList(
                         id = "",
                         login = "",
                         displayName = "",
+                        description = "",
+                        profileImageUrl = "",
+                        createdAt = Instant.DISTANT_PAST,
+                        usedAt = Instant.DISTANT_PAST,
                     )
                 }
 

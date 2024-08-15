@@ -4,7 +4,6 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.Redemption
 import fr.outadoc.justchatting.feature.chat.domain.model.Reward
 import fr.outadoc.justchatting.feature.chat.domain.pubsub.PubSubPlugin
-import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.datetime.Clock
 import kotlinx.serialization.json.Json
 
@@ -24,11 +23,7 @@ internal class PubSubChannelPointsPlugin(
                         timestamp = message.data.redemption.redeemedAt ?: clock.now(),
                         redemption = Redemption(
                             id = message.data.redemption.id,
-                            user = User(
-                                id = message.data.redemption.user.id,
-                                login = message.data.redemption.user.login,
-                                displayName = message.data.redemption.user.displayName,
-                            ),
+                            userId = message.data.redemption.user.id,
                             userAddedMessage = message.data.redemption.userAddedMessage,
                             redeemedAt = message.data.redemption.redeemedAt,
                             reward = Reward(

@@ -7,6 +7,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.datetime.Instant
 
 internal class FollowedStreamsDataSource(
     private val userId: String?,
@@ -40,6 +41,11 @@ internal class FollowedStreamsDataSource(
                                         id = stream.userId,
                                         login = stream.userLogin,
                                         displayName = stream.userName,
+                                        // TODO replace paging with db
+                                        description = "",
+                                        profileImageUrl = "",
+                                        createdAt = Instant.DISTANT_PAST,
+                                        usedAt = Instant.DISTANT_PAST,
                                     ),
                                     gameName = stream.gameName,
                                     title = stream.title,

@@ -581,6 +581,10 @@ private fun EpgSegmentDetailsPreview(
                 id = "1",
                 login = "user",
                 displayName = lorem,
+                description = "",
+                profileImageUrl = "",
+                createdAt = Instant.DISTANT_PAST,
+                usedAt = Instant.DISTANT_PAST,
             ),
         )
     }
@@ -607,6 +611,10 @@ private fun EpgSegmentPreview(
                 id = "1",
                 login = "user",
                 displayName = lorem,
+                description = "",
+                profileImageUrl = "",
+                createdAt = Instant.DISTANT_PAST,
+                usedAt = Instant.DISTANT_PAST,
             ),
         )
     }

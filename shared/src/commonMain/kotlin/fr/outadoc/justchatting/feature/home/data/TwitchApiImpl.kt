@@ -14,14 +14,12 @@ import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 
 internal class TwitchApiImpl(
     private val twitchClient: TwitchClient,
-    private val clock: Clock,
 ) : TwitchApi {
 
     override suspend fun getStreamsByUserId(ids: List<String>): Result<List<Stream>> {
@@ -35,6 +33,11 @@ internal class TwitchApiImpl(
                             id = stream.userId,
                             login = stream.userLogin,
                             displayName = stream.userName,
+                            // TODO return flow
+                            description = "",
+                            profileImageUrl = "",
+                            createdAt = Instant.DISTANT_PAST,
+                            usedAt = Instant.DISTANT_PAST,
                         ),
                         gameName = stream.gameName,
                         title = stream.title,
@@ -57,6 +60,11 @@ internal class TwitchApiImpl(
                             id = stream.userId,
                             login = stream.userLogin,
                             displayName = stream.userName,
+                            // TODO return flow
+                            description = "",
+                            profileImageUrl = "",
+                            createdAt = Instant.DISTANT_PAST,
+                            usedAt = Instant.DISTANT_PAST,
                         ),
                         gameName = stream.gameName,
                         title = stream.title,
@@ -97,8 +105,9 @@ internal class TwitchApiImpl(
                         login = user.login,
                         displayName = user.displayName,
                         description = user.description,
-                        profileImageUrl = user.profileImageUrl,
+                        profileImageUrl = user.profileImageUrl.orEmpty(),
                         createdAt = Instant.parse(user.createdAt),
+                        usedAt = null,
                     )
                 }
             }
@@ -118,8 +127,9 @@ internal class TwitchApiImpl(
                         login = user.login,
                         displayName = user.displayName,
                         description = user.description,
-                        profileImageUrl = user.profileImageUrl,
+                        profileImageUrl = user.profileImageUrl.orEmpty(),
                         createdAt = Instant.parse(user.createdAt),
+                        usedAt = null,
                     )
                 }
             }

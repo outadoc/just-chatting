@@ -28,7 +28,11 @@ internal class LocalUsersDb(
                         profileImageUrl = userInfo.profile_image_url,
                         description = userInfo.description,
                         createdAt = Instant.fromEpochMilliseconds(userInfo.created_at),
-                        usedAt = Instant.fromEpochMilliseconds(userInfo.used_at),
+                        usedAt = if (userInfo.used_at > 0) {
+                            Instant.fromEpochMilliseconds(userInfo.used_at)
+                        } else {
+                            null
+                        },
                     )
                 }
             }

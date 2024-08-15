@@ -11,5 +11,5 @@ internal data class User(
     val description: String,
     val profileImageUrl: String,
     val createdAt: Instant,
-    val usedAt: Instant,
+    val usedAt: Instant?,
 )

@@ -128,12 +128,17 @@ internal class TwitchRepositoryImpl(
             )
         }.flowOn(DispatchersProvider.io)
 
-    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
-        localUsersApi
+    override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> {
+        ids.forEach { id ->
+            localUsersApi.rememberUser(userId = id)
+        }
+
+        return localUsersApi
             .getUsersById(ids)
             .map { users -> Result.success(users) }
             .onStart { syncLocalUserInfo() }
             .flowOn(DispatchersProvider.io)
+    }
 
     override suspend fun getUserById(id: String): Flow<Result<User>> =
         withContext(DispatchersProvider.io) {
@@ -178,11 +183,11 @@ internal class TwitchRepositoryImpl(
                 }
         }
 
-    override suspend fun insertRecentChannel(channel: User, usedAt: Instant) {
+    override suspend fun markChannelAsVisited(channel: User, visitedAt: Instant) {
         withContext(DispatchersProvider.io) {
             localUsersApi.rememberUser(
                 userId = channel.id,
-                usedAt = usedAt,
+                visitedAt = visitedAt,
             )
         }
     }

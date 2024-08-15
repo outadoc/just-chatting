@@ -33,7 +33,7 @@ internal interface TwitchRepository {
 
     suspend fun getRecentChannels(): Flow<List<ChannelSearchResult>?>
 
-    suspend fun insertRecentChannel(channel: User, usedAt: Instant)
+    suspend fun markChannelAsVisited(channel: User, visitedAt: Instant)
 
     suspend fun getChannelSchedule(
         channelId: String,

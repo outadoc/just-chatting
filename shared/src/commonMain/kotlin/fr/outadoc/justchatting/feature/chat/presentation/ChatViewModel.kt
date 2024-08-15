@@ -283,9 +283,9 @@ internal class ChatViewModel(
                     .onSuccess { user ->
                         actions.emit(Action.UpdateUser(user))
 
-                        twitchRepository.insertRecentChannel(
+                        twitchRepository.markChannelAsVisited(
                             channel = user,
-                            usedAt = clock.now(),
+                            visitedAt = clock.now(),
                         )
 
                         createShortcutForChannel(user)

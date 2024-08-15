@@ -115,21 +115,14 @@ internal class LocalUsersDb(
         }
     }
 
-    override fun rememberUser(userId: String, usedAt: Instant?, followedAt: Instant?) {
+    override fun rememberUser(userId: String, visitedAt: Instant?) {
         userQueries.transaction {
             userQueries.ensureCreated(userId)
 
-            usedAt?.let { usedAt ->
+            visitedAt?.let { usedAt ->
                 userQueries.updateVisitedAt(
                     id = userId,
                     used_at = usedAt.toEpochMilliseconds(),
-                )
-            }
-
-            followedAt?.let { followedAt ->
-                userQueries.updateFollowedAt(
-                    id = userId,
-                    followed_at = followedAt.toEpochMilliseconds(),
                 )
             }
         }

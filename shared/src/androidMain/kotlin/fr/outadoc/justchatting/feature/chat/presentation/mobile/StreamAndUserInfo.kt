@@ -70,15 +70,7 @@ internal fun StreamInfoPreviewFull() {
             ),
             stream = Stream(
                 id = "",
-                user = User(
-                    id = "",
-                    login = "",
-                    displayName = "",
-                    description = "",
-                    profileImageUrl = "",
-                    createdAt = Instant.DISTANT_PAST,
-                    usedAt = Instant.DISTANT_PAST,
-                ),
+                userId = "",
                 gameName = "Powerwash Simulator",
                 title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
                 viewerCount = 10_000,

@@ -31,15 +31,7 @@ internal class TwitchApiImpl(
                 response.data.map { stream ->
                     Stream(
                         id = stream.id,
-                        user = User(
-                            id = stream.userId,
-                            login = stream.userLogin,
-                            displayName = stream.userName,
-                            description = "",
-                            profileImageUrl = "",
-                            createdAt = Instant.DISTANT_PAST,
-                            usedAt = Instant.DISTANT_PAST,
-                        ),
+                        userId = stream.userId,
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,
@@ -57,15 +49,7 @@ internal class TwitchApiImpl(
                 response.data.map { stream ->
                     Stream(
                         id = stream.id,
-                        user = User(
-                            id = stream.userId,
-                            login = stream.userLogin,
-                            displayName = stream.userName,
-                            description = "",
-                            profileImageUrl = "",
-                            createdAt = Instant.DISTANT_PAST,
-                            usedAt = Instant.DISTANT_PAST,
-                        ),
+                        userId = stream.userId,
                         gameName = stream.gameName,
                         title = stream.title,
                         viewerCount = stream.viewerCount,

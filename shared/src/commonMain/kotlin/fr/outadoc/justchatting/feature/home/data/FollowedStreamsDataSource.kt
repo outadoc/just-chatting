@@ -4,10 +4,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import fr.outadoc.justchatting.feature.home.domain.model.Pagination
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
-import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
-import kotlinx.datetime.Instant
 
 internal class FollowedStreamsDataSource(
     private val userId: String?,
@@ -37,16 +35,7 @@ internal class FollowedStreamsDataSource(
                             response.data.map { stream ->
                                 Stream(
                                     id = stream.id,
-                                    user = User(
-                                        id = stream.userId,
-                                        login = stream.userLogin,
-                                        displayName = stream.userName,
-                                        // TODO replace paging with db
-                                        description = "",
-                                        profileImageUrl = "",
-                                        createdAt = Instant.DISTANT_PAST,
-                                        usedAt = Instant.DISTANT_PAST,
-                                    ),
+                                    userId = stream.userId,
                                     gameName = stream.gameName,
                                     title = stream.title,
                                     viewerCount = stream.viewerCount,

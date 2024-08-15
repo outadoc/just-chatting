@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.persistentListOf
 @Immutable
 internal data class Stream(
     val id: String,
-    val user: User,
+    val userId: String,
     val gameName: String? = null,
     val title: String,
     val viewerCount: Int,

@@ -49,7 +49,7 @@ internal class TwitchRepositoryImpl(
 
                         val fullUsersById: Map<String, User> =
                             getUsersById(ids = results.map { result -> result.user.id })
-                                .last()
+                                .first()
                                 .getOrNull()
                                 .orEmpty()
                                 .associateBy { user -> user.id }
@@ -76,7 +76,7 @@ internal class TwitchRepositoryImpl(
 
                                 val fullUsersById: Map<String, User> =
                                     getUsersById(ids = follows.map { follow -> follow.user.id })
-                                        .last()
+                                        .first()
                                         .getOrNull()
                                         .orEmpty()
                                         .associateBy { user -> user.id }

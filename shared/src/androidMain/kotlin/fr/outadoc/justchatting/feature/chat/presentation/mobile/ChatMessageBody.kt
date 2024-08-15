@@ -293,4 +293,4 @@ private val Badge.inlineContentId: String
 private val urlRegex = Patterns.WEB_URL.toRegex()
 
 private const val URL_ANNOTATION_TAG = "URL"
-private const val CHATTER_ID_ANNOTATION_TAG = "CHATTER_LOGIN"
+private const val CHATTER_ID_ANNOTATION_TAG = "USER_ID"

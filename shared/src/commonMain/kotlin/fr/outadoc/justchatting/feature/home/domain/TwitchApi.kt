@@ -39,7 +39,7 @@ internal interface TwitchApi {
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>>
 
-    suspend fun getFollowedChannels(userId: String): Flow<PagingData<List<ChannelFollow>>>
+    suspend fun getFollowedChannels(userId: String): Result<List<ChannelFollow>>
 
     suspend fun getFollowedStreams(userId: String): Flow<PagingData<List<Stream>>>
 

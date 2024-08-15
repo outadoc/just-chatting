@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
 import kotlinx.coroutines.flow.Flow
@@ -98,7 +99,7 @@ internal class TwitchApiImpl(
 
     override suspend fun getUsersById(ids: List<String>): List<User> {
         return ids
-            .chunked(100)
+            .chunked(MAX_PAGE_SIZE)
             .flatMap { chunkOfIds ->
                 twitchClient
                     .getUsersById(chunkOfIds)
@@ -116,8 +117,10 @@ internal class TwitchApiImpl(
                                 )
                             }
                         },
-                        onFailure = { e ->
-                            logError<TwitchApiImpl>(e) { "Error while fetching users by ID: bad chunk" }
+                        onFailure = { exception ->
+                            logError<TwitchApiImpl>(exception) {
+                                "Error while fetching users by ID: bad chunk"
+                            }
                             emptyList()
                         }
                     )
@@ -131,7 +134,7 @@ internal class TwitchApiImpl(
 
     override suspend fun getUsersByLogin(logins: List<String>): List<User> {
         return logins
-            .chunked(100)
+            .chunked(MAX_PAGE_SIZE)
             .flatMap { chunkOfLogins ->
                 twitchClient
                     .getUsersById(chunkOfLogins)
@@ -149,8 +152,10 @@ internal class TwitchApiImpl(
                                 )
                             }
                         },
-                        onFailure = { e ->
-                            logError<TwitchApiImpl>(e) { "Error while fetching users by login: bad chunk" }
+                        onFailure = { exception ->
+                            logError<TwitchApiImpl>(exception) {
+                                "Error while fetching users by login: bad chunk"
+                            }
                             emptyList()
                         }
                     )
@@ -183,24 +188,44 @@ internal class TwitchApiImpl(
         return pager.flow
     }
 
-    override suspend fun getFollowedChannels(userId: String): Flow<PagingData<List<ChannelFollow>>> {
-        val pager = Pager(
-            config = PagingConfig(
-                pageSize = 40,
-                initialLoadSize = 40,
-                prefetchDistance = 10,
-                enablePlaceholders = true,
-            ),
-            pagingSourceFactory = {
-                FollowedChannelsDataSource(
-                    userId = userId,
-                    twitchClient = twitchClient,
-                )
-            },
-        )
+    override suspend fun getFollowedChannels(userId: String): Result<List<ChannelFollow>> =
+        runCatching {
+            buildList {
+                var cursor: String? = null
+                do {
+                    twitchClient
+                        .getFollowedChannels(
+                            userId = userId,
+                            limit = MAX_PAGE_SIZE,
+                            after = cursor,
+                        )
+                        .onSuccess { response ->
+                            logDebug<TwitchApiImpl> {
+                                "getFollowedChannels: loaded ${response.data.size} more items"
+                            }
 
-        return pager.flow
-    }
+                            cursor = response.pagination.cursor
+
+                            addAll(
+                                response.data.map { follow ->
+                                    ChannelFollow(
+                                        user = User(
+                                            id = follow.userId,
+                                            login = follow.userLogin,
+                                            displayName = follow.userDisplayName,
+                                            description = "",
+                                            profileImageUrl = "",
+                                            createdAt = Instant.DISTANT_PAST,
+                                            usedAt = Instant.DISTANT_PAST,
+                                        ),
+                                        followedAt = Instant.parse(follow.followedAt),
+                                    )
+                                }
+                            )
+                        }
+                } while (cursor != null)
+            }
+        }
 
     override suspend fun getEmotesFromSet(setIds: List<String>): Result<List<Emote>> {
         return twitchClient
@@ -295,5 +320,9 @@ internal class TwitchApiImpl(
         )
 
         return pager.flow
+    }
+
+    private companion object {
+        const val MAX_PAGE_SIZE = 100
     }
 }

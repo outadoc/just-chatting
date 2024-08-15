@@ -155,6 +155,18 @@ internal class LocalUsersDb(
         }
     }
 
+    override fun replaceFollowedChannels(follows: List<ChannelFollow>) {
+        userQueries.transaction {
+            follows.forEach { channelFollow ->
+                userQueries.ensureCreated(channelFollow.user.id)
+                userQueries.updateFollowedAt(
+                    id = channelFollow.user.id,
+                    followed_at = channelFollow.followedAt.toEpochMilliseconds(),
+                )
+            }
+        }
+    }
+
     override fun getUserIdsToUpdate(): Flow<List<String>> {
         val minAcceptableCacheDate = clock.now() - MaxUserCacheLife
 

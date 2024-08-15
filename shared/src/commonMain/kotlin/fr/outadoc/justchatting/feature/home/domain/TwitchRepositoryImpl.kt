@@ -13,6 +13,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
+import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
@@ -92,6 +93,7 @@ internal class TwitchRepositoryImpl(
             }
         }
 
+    // TODO remove PagingData from the signature
     override suspend fun getFollowedChannels(): Flow<PagingData<ChannelFollow>> =
         withContext(DispatchersProvider.io) {
             val prefs = preferencesRepository.currentPreferences.first()
@@ -239,11 +241,19 @@ internal class TwitchRepositoryImpl(
             twitchApi.getChannelBadges(channelId)
         }
 
-    private suspend fun syncLocalFollows(appUserId: String) {
+    private suspend fun syncLocalFollows(appUserId: String): Result<Unit> =
         userSyncLock.withLock {
-            TODO("sync from all pages of followed users")
+            twitchApi
+                .getFollowedChannels(userId = appUserId)
+                .onFailure { exception ->
+                    logError<TwitchRepositoryImpl>(exception) {
+                        "Error while fetching followed channels"
+                    }
+                }
+                .map { follows ->
+                    localUsersApi.replaceFollowedChannels(follows = follows)
+                }
         }
-    }
 
     private suspend fun syncLocalUserInfo() {
         userSyncLock.withLock {

@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.chat.presentation
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.utils.logging.logError
 import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,8 +40,21 @@ internal class StreamAndUserInfoViewModel(
                 twitchRepository.getStreamByUserLogin(login),
             ) { user, stream -> user to stream }
                 .map { (userResult, streamResult) ->
-                    val user: User? = userResult.getOrNull()
-                    val stream: Stream? = streamResult.getOrNull()
+                    val user: User? = userResult
+                        .onFailure { exception ->
+                            logError<StreamAndUserInfoViewModel>(exception) {
+                                "Error while loading user ${login}: $exception"
+                            }
+                        }
+                        .getOrNull()
+
+                    val stream: Stream? = streamResult
+                        .onFailure { exception ->
+                            logError<StreamAndUserInfoViewModel>(exception) {
+                                "Error while loading stream for ${login}: $exception"
+                            }
+                        }
+                        .getOrNull()
 
                     State.Loaded(
                         userLogin = login,

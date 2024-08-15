@@ -3,7 +3,6 @@ package fr.outadoc.justchatting.feature.home.presentation
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
-import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.UserStream
 import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi

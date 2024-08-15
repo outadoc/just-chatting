@@ -37,7 +37,7 @@ internal class StreamAndUserInfoViewModel(
                     val user: User? = userResult
                         .onFailure { exception ->
                             logError<StreamAndUserInfoViewModel>(exception) {
-                                "Error while loading user ${userId}: $exception"
+                                "Error while loading user $userId: $exception"
                             }
                         }
                         .getOrNull()
@@ -45,7 +45,7 @@ internal class StreamAndUserInfoViewModel(
                     val stream: Stream? = streamResult
                         .onFailure { exception ->
                             logError<StreamAndUserInfoViewModel>(exception) {
-                                "Error while loading stream for user ${userId}: $exception"
+                                "Error while loading stream for user $userId: $exception"
                             }
                         }
                         .getOrNull()

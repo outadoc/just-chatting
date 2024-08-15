@@ -5,5 +5,5 @@ import androidx.compose.runtime.Immutable
 @Immutable
 internal data class UserStream(
     val user: User,
-    val stream: Stream
+    val stream: Stream,
 )

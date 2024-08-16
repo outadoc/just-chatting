@@ -1,8 +1,8 @@
 CREATE TABLE User (
     `id` TEXT NOT NULL,
     `used_at` INTEGER NOT NULL,
-    `followed_at` INTEGER NOT NULL,
-    `inserted_at` INTEGER NOT NULL,
+    `followed_at` INTEGER NOT NULL DEFAULT 0,
+    `inserted_at` INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (`id`)
 );
 

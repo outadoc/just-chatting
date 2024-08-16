@@ -6,5 +6,5 @@ import fr.outadoc.justchatting.feature.home.domain.model.User
 
 internal fun User.getProfileImageIcon(context: Context): IconCompat =
     IconCompat.createWithContentUri(
-        UserProfileImageContentProvider.createForUser(context, login).toString(),
+        UserProfileImageContentProvider.createForUser(context, id).toString(),
     )

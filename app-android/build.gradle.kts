@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.moko.resources)
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 kotlin {
@@ -56,6 +58,7 @@ kotlin {
             implementation(libs.compose.runtime.livedata)
             implementation(libs.compose.ui.core)
             implementation(libs.compose.ui.tooling)
+            implementation(libs.firebase.crashlytics)
             implementation(libs.koin.android)
             implementation(libs.koin.compose)
             implementation(libs.koin.core)
@@ -177,6 +180,7 @@ tasks.named("generateLicenseReport") {
 }
 
 dependencies {
+    implementation(platform(libs.firebase.bom))
     implementation(platform(libs.kotlin.bom))
     coreLibraryDesugaring(libs.desugar)
 }

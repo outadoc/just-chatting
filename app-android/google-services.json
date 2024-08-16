@@ -1,0 +1,28 @@
+{
+  "client": [
+    {
+      "client_info": {
+        "android_client_info": {"package_name": "fr.outadoc.justchatting"},
+        "mobilesdk_app_id": "1:328745020021:android:7909836b43acea3ed8663c"
+      },
+      "api_key": [{"current_key": "AIzaSyBchL4hZEKQb4wXrNWhSlTJ1MnBwBg-y1w"}],
+      "services": {"appinvite_service": {"other_platform_oauth_client": []}},
+      "oauth_client": []
+    },
+    {
+      "client_info": {
+        "android_client_info": {"package_name": "fr.outadoc.justchatting.debug"},
+        "mobilesdk_app_id": "1:328745020021:android:70dc5beb4273584dd8663c"
+      },
+      "api_key": [{"current_key": "AIzaSyBchL4hZEKQb4wXrNWhSlTJ1MnBwBg-y1w"}],
+      "services": {"appinvite_service": {"other_platform_oauth_client": []}},
+      "oauth_client": []
+    }
+  ],
+  "configuration_version": "1",
+  "project_info": {
+    "storage_bucket": "just-chatting-90127.appspot.com",
+    "project_number": "328745020021",
+    "project_id": "just-chatting-90127"
+  }
+}

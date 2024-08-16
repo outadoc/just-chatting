@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "328745020021",
+    "project_id": "just-chatting-90127",
+    "storage_bucket": "just-chatting-90127.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:328745020021:android:7909836b43acea3ed8663c",
+        "android_client_info": {
+          "package_name": "fr.outadoc.justchatting"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBchL4hZEKQb4wXrNWhSlTJ1MnBwBg-y1w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -63,9 +63,7 @@ WHERE user_id = :userId AND start_time >= :notBefore AND start_time <= :notAfter
 
 cleanup:
 DELETE FROM PastStream WHERE start_time < :notBefore OR start_time > :notAfter;
-DELETE FROM LiveStream WHERE start_time < :notBefore OR start_time > :notAfter;
 DELETE FROM FutureStream WHERE start_time < :notBefore OR start_time > :notAfter;
-
 DELETE FROM Category
 WHERE id NOT IN (
     SELECT category_id FROM PastStream
@@ -86,3 +84,6 @@ VALUES (?, ?, ?, ?, ?, ?, ?);
 addFutureStream:
 INSERT OR REPLACE INTO FutureStream (id, title, user_id, start_time, end_time, category_id)
 VALUES (?, ?, ?, ?, ?, ?);
+
+cleanupAllLiveStreams:
+DELETE FROM LiveStream;

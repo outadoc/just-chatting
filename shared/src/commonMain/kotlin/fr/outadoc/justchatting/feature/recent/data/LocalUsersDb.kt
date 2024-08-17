@@ -107,11 +107,7 @@ internal class LocalUsersDb(
             val updatedAt = clock.now()
             userQueries.transaction {
                 users.forEach { user ->
-                    userQueries.ensureCreated(
-                        id = user.id,
-                        inserted_at = updatedAt.toEpochMilliseconds(),
-                    )
-
+                    userQueries.ensureCreated(id = user.id)
                     userQueries.updateUserInfo(
                         id = user.id,
                         login = user.login,
@@ -127,13 +123,8 @@ internal class LocalUsersDb(
 
     override suspend fun rememberUser(userId: String, visitedAt: Instant?) =
         withContext(DispatchersProvider.io) {
-            val updatedAt = clock.now()
             userQueries.transaction {
-                userQueries.ensureCreated(
-                    id = userId,
-                    inserted_at = updatedAt.toEpochMilliseconds(),
-                )
-
+                userQueries.ensureCreated(id = userId)
                 visitedAt?.let { usedAt ->
                     userQueries.updateVisitedAt(
                         id = userId,
@@ -145,14 +136,9 @@ internal class LocalUsersDb(
 
     override suspend fun replaceFollowedChannels(follows: List<ChannelFollow>) =
         withContext(DispatchersProvider.io) {
-            val updatedAt = clock.now()
             userQueries.transaction {
                 follows.forEach { channelFollow ->
-                    userQueries.ensureCreated(
-                        id = channelFollow.user.id,
-                        inserted_at = updatedAt.toEpochMilliseconds(),
-                    )
-
+                    userQueries.ensureCreated(id = channelFollow.user.id)
                     userQueries.updateFollowedAt(
                         id = channelFollow.user.id,
                         followed_at = channelFollow.followedAt.toEpochMilliseconds(),

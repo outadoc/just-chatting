@@ -72,3 +72,15 @@ WHERE id NOT IN (
     UNION
     SELECT category_id FROM FutureStream
 );
+
+addPastStream:
+INSERT OR REPLACE INTO PastStream (id, title, user_id, start_time, end_time, category_id)
+VALUES (?, ?, ?, ?, ?, ?);
+
+addLiveStream:
+INSERT OR REPLACE INTO LiveStream (id, title, user_id, start_time, category_id, tags, viewer_count)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+addFutureStream:
+INSERT OR REPLACE INTO FutureStream (id, title, user_id, start_time, end_time, category_id)
+VALUES (?, ?, ?, ?, ?, ?);

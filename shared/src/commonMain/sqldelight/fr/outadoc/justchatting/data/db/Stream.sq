@@ -1,0 +1,25 @@
+CREATE TABLE PastStream (
+    `id` TEXT NOT NULL,
+    `title` TEXT NOT NULL,
+    `user_id` TEXT NOT NULL,
+    `start_time` INTEGER NOT NULL,
+    `end_time` INTEGER NOT NULL,
+    `category_id` TEXT,
+    `category_name` TEXT,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE FutureStream (
+    `id` TEXT NOT NULL,
+    `title` TEXT NOT NULL,
+    `user_id` TEXT NOT NULL,
+    `started_at` INTEGER NOT NULL,
+    `ended_at` INTEGER NOT NULL,
+    `category_id` TEXT,
+    `category_name` TEXT,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE CurrentStream (
+
+);

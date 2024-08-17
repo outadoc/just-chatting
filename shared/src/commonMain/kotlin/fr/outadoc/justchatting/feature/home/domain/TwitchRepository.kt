@@ -5,6 +5,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
+import fr.outadoc.justchatting.feature.home.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
@@ -35,11 +36,16 @@ internal interface TwitchRepository {
 
     suspend fun markChannelAsVisited(channel: User, visitedAt: Instant)
 
-    suspend fun getChannelSchedule(
+    suspend fun getChannelScheduleLegacy(
         channelId: String,
         start: Instant,
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>>
+
+    suspend fun getChannelSchedule(
+        start: Instant,
+        timeZone: TimeZone,
+    ): Flow<FullSchedule>
 
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 

@@ -6,12 +6,14 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
+import fr.outadoc.justchatting.feature.home.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.domain.model.UserStream
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
+import fr.outadoc.justchatting.feature.recent.domain.LocalStreamsApi
 import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -33,6 +35,7 @@ internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
     private val preferencesRepository: PreferenceRepository,
     private val localUsersApi: LocalUsersApi,
+    private val localStreamsApi: LocalStreamsApi,
 ) : TwitchRepository {
 
     private val userSyncLock = Mutex()
@@ -191,7 +194,7 @@ internal class TwitchRepositoryImpl(
         }
     }
 
-    override suspend fun getChannelSchedule(
+    override suspend fun getChannelScheduleLegacy(
         channelId: String,
         start: Instant,
         timeZone: TimeZone,
@@ -204,6 +207,14 @@ internal class TwitchRepositoryImpl(
                 futureRange = EpgConfig.MaxDaysAhead,
                 timeZone = timeZone,
             )
+        }
+
+    override suspend fun getChannelSchedule(
+        start: Instant,
+        timeZone: TimeZone
+    ): Flow<FullSchedule> =
+        withContext(DispatchersProvider.io) {
+
         }
 
     override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> =

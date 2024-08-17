@@ -30,7 +30,7 @@ public val twitchModule: Module = module {
         )
     }
 
-    single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get()) }
+    single<TwitchRepository> { TwitchRepositoryImpl(get(), get(), get(), get()) }
     single<TwitchApi> { TwitchApiImpl(get()) }
     single { TwitchClient(get(named("twitch"))) }
 

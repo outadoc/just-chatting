@@ -53,8 +53,22 @@ WHERE user_id = :userId AND start_time >= :notBefore AND start_time <= :notAfter
 UNION
 SELECT 'live' AS type, LiveStream.id, title, start_time, NULL, Category.id, Category.name, tags, viewer_count FROM LiveStream
 JOIN Category ON LiveStream.category_id = Category.id
-WHERE user_id = :userId AND start_time >= :notBefore AND start_time <= :notAfter
+WHERE user_id = :userId
 UNION
 SELECT 'future' AS type, FutureStream.id, title, start_time, end_time, Category.id, Category.name, NULL, NULL FROM FutureStream
 JOIN Category ON FutureStream.category_id = Category.id
 WHERE user_id = :userId AND start_time >= :notBefore AND start_time <= :notAfter;
+
+cleanup:
+DELETE FROM PastStream WHERE start_time < :notBefore OR start_time > :notAfter;
+DELETE FROM LiveStream WHERE start_time < :notBefore OR start_time > :notAfter;
+DELETE FROM FutureStream WHERE start_time < :notBefore OR start_time > :notAfter;
+
+DELETE FROM Category
+WHERE id NOT IN (
+    SELECT category_id FROM PastStream
+    UNION
+    SELECT category_id FROM LiveStream
+    UNION
+    SELECT category_id FROM FutureStream
+);

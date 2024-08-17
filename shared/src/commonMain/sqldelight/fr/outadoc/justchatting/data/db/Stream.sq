@@ -5,8 +5,9 @@ CREATE TABLE PastStream (
     `start_time` INTEGER NOT NULL,
     `end_time` INTEGER NOT NULL,
     `category_id` TEXT,
-    `category_name` TEXT,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`category_id`) REFERENCES Category(`id`) ON DELETE SET NULL
 );
 
 CREATE TABLE FutureStream (
@@ -16,10 +17,31 @@ CREATE TABLE FutureStream (
     `started_at` INTEGER NOT NULL,
     `ended_at` INTEGER NOT NULL,
     `category_id` TEXT,
-    `category_name` TEXT,
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`category_id`) REFERENCES Category(`id`) ON DELETE SET NULL
 );
 
 CREATE TABLE CurrentStream (
-
+    `id` TEXT NOT NULL,
+    `title` TEXT NOT NULL,
+    `user_id` TEXT NOT NULL,
+    `started_at` INTEGER NOT NULL,
+    `category_id` TEXT,
+    `tags` TEXT NOT NULL,
+    `viewer_count` INTEGER NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`category_id`) REFERENCES Category(`id`) ON DELETE SET NULL
 );
+
+CREATE TABLE Category (
+    `id` TEXT NOT NULL,
+    `name` TEXT NOT NULL,
+    `inserted_at` INTEGER NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+addCategory:
+INSERT OR IGNORE INTO Category (id, name, inserted_at)
+VALUES (?, ?, strftime('%s', 'now'));

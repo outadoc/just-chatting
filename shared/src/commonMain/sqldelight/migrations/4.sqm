@@ -41,7 +41,3 @@ CREATE TABLE LiveStream (
     FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`category_id`) REFERENCES Category(`id`) ON DELETE SET NULL
 );
-
-addCategory:
-INSERT OR IGNORE INTO Category (id, name, inserted_at)
-VALUES (?, ?, strftime('%s', 'now'));

@@ -22,7 +22,7 @@ CREATE TABLE FutureStream (
     FOREIGN KEY (`category_id`) REFERENCES Category(`id`) ON DELETE SET NULL
 );
 
-CREATE TABLE CurrentStream (
+CREATE TABLE LiveStream (
     `id` TEXT NOT NULL,
     `title` TEXT NOT NULL,
     `user_id` TEXT NOT NULL,

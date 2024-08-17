@@ -1,0 +1,3 @@
+-- Fix issue where we mistakenly inserted logins instead of IDs
+-- Delete all non-numeric IDs
+DELETE FROM User WHERE lower(id) != upper(id);

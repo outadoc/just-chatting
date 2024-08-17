@@ -46,16 +46,18 @@ addCategory:
 INSERT OR IGNORE INTO Category (id, name, inserted_at)
 VALUES (?, ?, strftime('%s', 'now'));
 
-getFullSchedule:
-SELECT 'past' AS type, PastStream.id, title, start_time, end_time, Category.id, Category.name, NULL, NULL FROM PastStream
+getPastStreams:
+SELECT * FROM PastStream
 JOIN Category ON PastStream.category_id = Category.id
-WHERE user_id = :userId AND start_time >= :notBefore AND start_time <= :notAfter
-UNION
-SELECT 'live' AS type, LiveStream.id, title, start_time, NULL, Category.id, Category.name, tags, viewer_count FROM LiveStream
+WHERE user_id = :userId AND start_time >= :notBefore AND start_time <= :notAfter;
+
+getLiveStreams:
+SELECT * FROM LiveStream
 JOIN Category ON LiveStream.category_id = Category.id
-WHERE user_id = :userId
-UNION
-SELECT 'future' AS type, FutureStream.id, title, start_time, end_time, Category.id, Category.name, NULL, NULL FROM FutureStream
+WHERE user_id = :userId;
+
+getFutureStreams:
+SELECT * FROM FutureStream
 JOIN Category ON FutureStream.category_id = Category.id
 WHERE user_id = :userId AND start_time >= :notBefore AND start_time <= :notAfter;
 

@@ -16,6 +16,8 @@ internal data class Stream(
     val userLogin: String,
     @SerialName("user_name")
     val userName: String,
+    @SerialName("game_id")
+    val gameId: String? = null,
     @SerialName("game_name")
     val gameName: String? = null,
     @SerialName("title")

@@ -138,7 +138,8 @@ internal sealed interface ChatEvent {
         data class BroadcastSettingsUpdate(
             override val timestamp: Instant,
             val streamTitle: String,
-            val gameName: String,
+            val categoryId: String,
+            val categoryName: String,
         ) : Message
 
         data class ViewerCountUpdate(

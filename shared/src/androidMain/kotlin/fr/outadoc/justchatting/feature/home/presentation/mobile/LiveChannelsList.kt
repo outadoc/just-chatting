@@ -126,7 +126,7 @@ private fun InnerLiveChannelsList(
                         title = item.stream.title,
                         userName = item.user.displayName,
                         viewerCount = item.stream.viewerCount,
-                        gameName = item.stream.gameName,
+                        category = item.stream.category,
                         startedAt = Instant.parse(item.stream.startedAt),
                         profileImageURL = item.user.profileImageUrl,
                         tags = item.stream.tags.toImmutableList(),

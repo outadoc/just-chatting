@@ -20,7 +20,8 @@ internal class PubSubBroadcastSettingsPlugin(
                     ChatEvent.Message.BroadcastSettingsUpdate(
                         timestamp = clock.now(),
                         streamTitle = message.status,
-                        gameName = message.game,
+                        categoryId = message.gameId.toString(),
+                        categoryName = message.game,
                     ),
                 )
             }

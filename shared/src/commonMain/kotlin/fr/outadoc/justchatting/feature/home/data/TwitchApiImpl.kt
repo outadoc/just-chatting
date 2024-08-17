@@ -10,6 +10,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logDebug
@@ -32,7 +33,14 @@ internal class TwitchApiImpl(
                     Stream(
                         id = stream.id,
                         userId = stream.userId,
-                        gameName = stream.gameName,
+                        category = if (stream.gameId != null && stream.gameName != null) {
+                            StreamCategory(
+                                id = stream.gameId,
+                                name = stream.gameName,
+                            )
+                        } else {
+                            null
+                        },
                         title = stream.title,
                         viewerCount = stream.viewerCount,
                         startedAt = stream.startedAt,
@@ -50,7 +58,14 @@ internal class TwitchApiImpl(
                     Stream(
                         id = stream.id,
                         userId = stream.userId,
-                        gameName = stream.gameName,
+                        category = if (stream.gameId != null && stream.gameName != null) {
+                            StreamCategory(
+                                id = stream.gameId,
+                                name = stream.gameName,
+                            )
+                        } else {
+                            null
+                        },
                         title = stream.title,
                         viewerCount = stream.viewerCount,
                         startedAt = stream.startedAt,

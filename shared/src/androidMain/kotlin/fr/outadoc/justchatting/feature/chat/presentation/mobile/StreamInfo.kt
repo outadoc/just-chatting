@@ -35,7 +35,7 @@ internal fun StreamInfo(
     ) {
         Text(text = stream.title)
 
-        stream.gameName
+        stream.category?.name
             .takeUnless { it.isNullOrEmpty() }
             ?.let { gameName ->
                 Row(verticalAlignment = Alignment.CenterVertically) {

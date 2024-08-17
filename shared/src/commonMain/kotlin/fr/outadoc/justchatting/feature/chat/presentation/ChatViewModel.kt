@@ -17,6 +17,7 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteSetItem
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
@@ -115,7 +116,7 @@ internal class ChatViewModel(
         data class UpdateStreamMetadata(
             val viewerCount: Int? = null,
             val streamTitle: String? = null,
-            val gameName: String? = null,
+            val streamCategory: StreamCategory? = null,
         ) : Action()
 
         data class LoadEmotes(val channelId: String) : Action()
@@ -354,7 +355,7 @@ internal class ChatViewModel(
                             is ChatListItem.BroadcastSettingsUpdate -> {
                                 Action.UpdateStreamMetadata(
                                     streamTitle = event.streamTitle,
-                                    gameName = event.gameName,
+                                    streamCategory = event.streamCategory,
                                 )
                             }
 
@@ -784,7 +785,7 @@ internal class ChatViewModel(
         return state.copy(
             stream = state.stream?.copy(
                 title = streamTitle ?: state.stream.title,
-                gameName = gameName ?: state.stream.gameName,
+                category = streamCategory ?: state.stream.category,
                 viewerCount = viewerCount ?: state.stream.viewerCount,
             ),
         )

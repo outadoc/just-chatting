@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
+import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.formatNumber
@@ -36,7 +37,10 @@ internal fun LiveStreamPreview() {
         LiveStreamCard(
             modifier = Modifier.padding(8.dp),
             userName = "Maghla",
-            gameName = "Just Chatting",
+            category = StreamCategory(
+                id = "1",
+                name = "Powerwash Simulator",
+            ),
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
@@ -61,7 +65,10 @@ internal fun LiveStreamLongPreview() {
                 .width(250.dp)
                 .padding(8.dp),
             userName = "Maghla",
-            gameName = "The Dark Pictures Anthology: The Devil in Me",
+            category = StreamCategory(
+                id = "1",
+                name = "Powerwash Simulator",
+            ),
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
@@ -76,7 +83,7 @@ internal fun LiveStreamCard(
     title: String? = null,
     userName: String? = null,
     viewerCount: Int? = null,
-    gameName: String? = null,
+    category: StreamCategory? = null,
     startedAt: Instant? = null,
     profileImageURL: String? = null,
     tags: ImmutableList<String> = persistentListOf(),
@@ -94,7 +101,7 @@ internal fun LiveStreamCard(
                     title = title,
                     userName = userName,
                     viewerCount = viewerCount,
-                    gameName = gameName,
+                    category = category,
                     startedAt = startedAt,
                     profileImageURL = profileImageURL,
                 )
@@ -121,7 +128,7 @@ private fun LiveStream(
     title: String?,
     userName: String?,
     viewerCount: Int?,
-    gameName: String?,
+    category: StreamCategory?,
     startedAt: Instant?,
     profileImageURL: String?,
 ) {
@@ -180,12 +187,12 @@ private fun LiveStream(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                 ) {
-                    gameName?.let { gameName ->
+                    category?.let { category ->
                         Text(
                             modifier = Modifier
                                 .weight(1f, fill = true)
                                 .alignByBaseline(),
-                            text = gameName,
+                            text = category.name,
                             maxLines = 1,
                             style = MaterialTheme.typography.bodyMedium,
                         )

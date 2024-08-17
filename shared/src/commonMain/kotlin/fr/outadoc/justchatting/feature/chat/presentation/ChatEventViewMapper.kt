@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ChatEvent
 import fr.outadoc.justchatting.feature.chat.domain.model.ChatListItem
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
 import fr.outadoc.justchatting.feature.chat.domain.model.Icon
+import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.formatCurrency
 import fr.outadoc.justchatting.utils.presentation.formatNumber
@@ -372,7 +373,10 @@ internal class ChatEventViewMapper {
             is ChatEvent.Message.BroadcastSettingsUpdate -> {
                 ChatListItem.BroadcastSettingsUpdate(
                     streamTitle = streamTitle,
-                    gameName = gameName,
+                    streamCategory = StreamCategory(
+                        id = categoryId,
+                        name = categoryName,
+                    ),
                 )
             }
 

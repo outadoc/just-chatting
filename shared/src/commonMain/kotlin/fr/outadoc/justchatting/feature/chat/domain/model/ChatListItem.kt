@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.chat.domain.model
 import androidx.compose.runtime.Immutable
 import dev.icerock.moko.resources.desc.StringDesc
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
+import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.datetime.Instant
@@ -108,7 +109,7 @@ internal sealed interface ChatListItem {
     @Immutable
     data class BroadcastSettingsUpdate(
         val streamTitle: String,
-        val gameName: String,
+        val streamCategory: StreamCategory,
     ) : ChatListItem
 
     @Immutable

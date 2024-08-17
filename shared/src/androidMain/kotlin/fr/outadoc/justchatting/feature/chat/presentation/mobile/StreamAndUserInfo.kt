@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
@@ -71,7 +72,10 @@ internal fun StreamInfoPreviewFull() {
             stream = Stream(
                 id = "",
                 userId = "",
-                gameName = "Powerwash Simulator",
+                category = StreamCategory(
+                    id = "1",
+                    name = "Powerwash Simulator",
+                ),
                 title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
                 viewerCount = 10_000,
                 startedAt = "2022-09-01T00:00:00.00Z",

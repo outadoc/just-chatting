@@ -59,10 +59,10 @@ internal fun ChatTopAppBar(
                     }
                 }
 
-                AnimatedVisibility(visible = stream?.gameName != null) {
-                    stream?.gameName?.let { gameName ->
+                AnimatedVisibility(visible = stream?.category != null) {
+                    stream?.category?.let { category ->
                         Text(
-                            text = gameName,
+                            text = category.name,
                             style = MaterialTheme.typography.titleSmall,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis,

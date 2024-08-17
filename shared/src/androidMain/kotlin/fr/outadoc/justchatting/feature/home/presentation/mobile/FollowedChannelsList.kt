@@ -80,7 +80,7 @@ internal fun FollowedChannelsList(
                     items = (state as? FollowedChannelsViewModel.State.Content)?.data.orEmpty(),
                     isRefreshing = isRefreshing,
                     onItemClick = { channel ->
-                        onItemClick(channel.user.login)
+                        onItemClick(channel.user.id)
                     },
                 )
 

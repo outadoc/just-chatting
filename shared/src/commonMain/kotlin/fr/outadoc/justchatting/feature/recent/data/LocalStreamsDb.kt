@@ -11,6 +11,7 @@ import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 
@@ -106,5 +107,15 @@ internal class LocalStreamsDb(
                     )
                 }
             }
+    }
+
+    suspend fun cleanup(
+        notBefore: Instant,
+        notAfter: Instant,
+    ) = withContext(DispatchersProvider.io) {
+        streamQueries.cleanup(
+            notBefore = notBefore.toEpochMilliseconds(),
+            notAfter = notAfter.toEpochMilliseconds(),
+        )
     }
 }

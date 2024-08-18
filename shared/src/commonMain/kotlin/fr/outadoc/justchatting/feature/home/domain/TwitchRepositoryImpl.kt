@@ -20,6 +20,7 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -44,6 +45,7 @@ internal class TwitchRepositoryImpl(
 ) : TwitchRepository {
 
     private val userSyncLock = Mutex()
+    private val streamSyncLock = Mutex()
 
     override suspend fun searchChannels(query: String): Flow<PagingData<ChannelSearchResult>> =
         withContext(DispatchersProvider.io) {
@@ -219,27 +221,45 @@ internal class TwitchRepositoryImpl(
         timeZone: TimeZone,
     ): Flow<FullSchedule> =
         withContext(DispatchersProvider.io) {
-            val today = start.toLocalDateTime(timeZone).date
+            val prefs = preferencesRepository.currentPreferences.first()
+            when (prefs.appUser) {
+                is AppUser.LoggedIn -> {
+                    val today = start.toLocalDateTime(timeZone).date
 
-            val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
-            val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+                    val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+                    val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 
-            combine(
-                localStreamsApi.getPastStreams(
-                    notBefore = notBefore,
-                    notAfter = notAfter,
-                ),
-                localStreamsApi.getLiveStreams(),
-                localStreamsApi.getFutureStreams(
-                    notBefore = notBefore,
-                    notAfter = notAfter,
-                ),
-            ) { past, live, future ->
-                FullSchedule(
-                    past = past,
-                    live = live,
-                    future = future,
-                )
+                    combine(
+                        localStreamsApi.getPastStreams(
+                            notBefore = notBefore,
+                            notAfter = notAfter,
+                        ),
+                        localStreamsApi.getLiveStreams(),
+                        localStreamsApi.getFutureStreams(
+                            notBefore = notBefore,
+                            notAfter = notAfter,
+                        ),
+                    ) { past, live, future ->
+                        FullSchedule(
+                            past = past,
+                            live = live,
+                            future = future,
+                        )
+                    }
+                        .onStart {
+                            syncLocalFollows(
+                                appUserId = prefs.appUser.userId
+                            )
+                            syncFullSchedule(
+                                notBefore = notBefore,
+                                notAfter = notAfter,
+                            )
+                        }
+                }
+
+                else -> {
+                    emptyFlow()
+                }
             }
         }
 
@@ -280,4 +300,33 @@ internal class TwitchRepositoryImpl(
             )
         }
     }
+
+    private suspend fun syncFullSchedule(
+        notBefore: Instant,
+        notAfter: Instant,
+    ) = streamSyncLock.withLock {
+        syncPastStreams()
+        syncLiveStreams()
+        syncFutureStreams()
+
+        localStreamsApi.cleanup(
+            notBefore = notBefore,
+            notAfter = notAfter,
+        )
+    }
+
+    private suspend fun syncPastStreams() =
+        withContext(DispatchersProvider.io) {
+            // TODO
+        }
+
+    private suspend fun syncLiveStreams() =
+        withContext(DispatchersProvider.io) {
+            // TODO
+        }
+
+    private suspend fun syncFutureStreams() =
+        withContext(DispatchersProvider.io) {
+            // TODO
+        }
 }

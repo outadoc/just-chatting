@@ -18,4 +18,9 @@ internal interface LocalStreamsApi {
         notBefore: Instant,
         notAfter: Instant,
     ): Flow<List<ChannelScheduleSegment>>
+
+    suspend fun cleanup(
+        notBefore: Instant,
+        notAfter: Instant,
+    )
 }

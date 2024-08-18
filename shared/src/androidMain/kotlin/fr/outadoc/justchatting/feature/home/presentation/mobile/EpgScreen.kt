@@ -23,15 +23,19 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -226,18 +230,20 @@ private fun DateHeader(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun EpgSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
-    onClick: () -> Unit = {},
 ) {
+    var isExpanded by remember { mutableStateOf(false) }
+
     OutlinedCard(
         modifier = modifier,
     ) {
         Column {
             Card(
-                onClick = onClick,
+                onClick = { isExpanded = true },
             ) {
                 EpgSegmentContent(
                     modifier = Modifier.padding(8.dp),
@@ -248,14 +254,43 @@ internal fun EpgSegment(
                 )
             }
 
-            Text(
+            Row(
                 modifier = Modifier.padding(8.dp),
-                text = buildAnnotatedString {
-                    append(segment.startTime.formatTimestamp())
-                    append(" - ")
-                    append(segment.endTime.formatTimestamp())
-                },
-                style = MaterialTheme.typography.bodyMedium,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .padding(end = 8.dp),
+                    imageVector = Icons.Default.AccessTime,
+                    contentDescription = null,
+                )
+
+                Text(
+                    buildAnnotatedString {
+                        append(segment.startTime.formatTimestamp())
+                        append(" - ")
+                        append(segment.endTime.formatTimestamp())
+                    },
+                )
+            }
+        }
+    }
+
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true,
+    )
+
+    if (isExpanded) {
+        ModalBottomSheet(
+            onDismissRequest = { isExpanded = false },
+            sheetState = sheetState,
+        ) {
+            EpgSegmentDetails(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                segment = segment,
             )
         }
     }

@@ -342,7 +342,10 @@ internal class TwitchRepositoryImpl(
             }
 
             twitchApi
-                .getChannelVideos(channelId = user.id)
+                .getChannelVideos(
+                    channelId = user.id,
+                    notBefore = notBefore,
+                )
                 .onSuccess { videos ->
                     logDebug<TwitchRepositoryImpl> {
                         "Loaded ${videos.size} past videos for ${user.displayName}"

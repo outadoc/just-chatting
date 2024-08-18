@@ -41,7 +41,10 @@ internal interface TwitchApi {
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>>
 
-    suspend fun getChannelVideos(channelId: String): Result<List<Video>>
+    suspend fun getChannelVideos(
+        channelId: String,
+        notBefore: Instant,
+    ): Result<List<Video>>
 
     suspend fun getChannelSchedule(
         userId: String,

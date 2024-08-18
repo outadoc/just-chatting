@@ -323,10 +323,15 @@ internal class TwitchApiImpl(
         return pager.flow
     }
 
-    override suspend fun getChannelVideos(channelId: String): Result<List<Video>> =
+    override suspend fun getChannelVideos(
+        channelId: String,
+        notBefore: Instant,
+    ): Result<List<Video>> =
         runCatching {
             buildList {
                 var cursor: String? = null
+                var currentMinInstant: Instant? = null
+
                 do {
                     twitchClient
                         .getChannelVideos(
@@ -340,6 +345,7 @@ internal class TwitchApiImpl(
                             }
 
                             cursor = response.pagination.cursor
+                            currentMinInstant = response.data.minOfOrNull { it.createdAt }
 
                             addAll(
                                 response.data.map { video ->
@@ -359,7 +365,10 @@ internal class TwitchApiImpl(
                                 },
                             )
                         }
-                } while (cursor != null)
+                } while (
+                    cursor != null &&
+                    ((currentMinInstant ?: Instant.DISTANT_FUTURE) > notBefore)
+                )
             }
         }
 
@@ -372,6 +381,7 @@ internal class TwitchApiImpl(
             buildList {
                 var cursor: String? = null
                 var currentMaxInstant: Instant? = null
+
                 do {
                     twitchClient
                         .getChannelSchedule(
@@ -408,7 +418,10 @@ internal class TwitchApiImpl(
                                 },
                             )
                         }
-                } while (cursor != null && ((currentMaxInstant ?: Instant.DISTANT_PAST) < notAfter))
+                } while (
+                    cursor != null &&
+                    ((currentMaxInstant ?: Instant.DISTANT_PAST) < notAfter)
+                )
             }
         }
 

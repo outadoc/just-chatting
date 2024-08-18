@@ -113,7 +113,21 @@ internal class LocalStreamsDb(
     }
 
     override suspend fun addPastStreams(videos: List<Video>) {
-        TODO("not implemented")
+        withContext(DispatchersProvider.io) {
+            streamQueries.transaction {
+                videos.forEach { video ->
+                    streamQueries.addPastStream(
+                        id = video.id,
+                        user_id = video.userId,
+                        // TODO check that this is correct
+                        start_time = (video.createdAt - video.duration).toEpochMilliseconds(),
+                        end_time = video.createdAt.toEpochMilliseconds(),
+                        title = video.title,
+                        category_id = null,
+                    )
+                }
+            }
+        }
     }
 
     override suspend fun addFutureStreams(segments: List<ChannelScheduleSegment>) {

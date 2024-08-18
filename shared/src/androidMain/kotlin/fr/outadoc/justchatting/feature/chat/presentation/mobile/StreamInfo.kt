@@ -63,13 +63,13 @@ internal fun StreamInfo(
             Text(
                 text = pluralStringResource(
                     R.plurals.viewers,
-                    stream.viewerCount,
+                    stream.viewerCount.toInt(),
                     stream.viewerCount.formatNumber(),
                 ),
             )
         }
 
-        val startedAt = Instant.parse(stream.startedAt).formatTimestamp()
+        val startedAt = stream.startedAt.formatTimestamp()
         if (startedAt != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(

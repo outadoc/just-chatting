@@ -25,6 +25,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.UserStream
 import fr.outadoc.justchatting.feature.home.presentation.FollowedStreamsViewModel
 import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.collections.immutable.toImmutableList
+import kotlinx.collections.immutable.toImmutableSet
 import kotlinx.datetime.Instant
 import org.koin.androidx.compose.koinViewModel
 
@@ -127,9 +128,9 @@ private fun InnerLiveChannelsList(
                         userName = item.user.displayName,
                         viewerCount = item.stream.viewerCount,
                         category = item.stream.category,
-                        startedAt = Instant.parse(item.stream.startedAt),
+                        startedAt = item.stream.startedAt,
                         profileImageURL = item.user.profileImageUrl,
-                        tags = item.stream.tags.toImmutableList(),
+                        tags = item.stream.tags.toImmutableSet(),
                         onClick = { onItemClick(item) },
                     )
                 } else {

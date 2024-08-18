@@ -23,7 +23,7 @@ internal data class Stream(
     @SerialName("title")
     val title: String,
     @SerialName("viewer_count")
-    val viewerCount: Int,
+    val viewerCount: Long,
     @SerialName("started_at")
     val startedAt: String,
     @SerialName("tags")

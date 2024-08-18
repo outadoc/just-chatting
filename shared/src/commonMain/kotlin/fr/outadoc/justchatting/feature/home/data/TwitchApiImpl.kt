@@ -16,6 +16,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
@@ -43,8 +44,8 @@ internal class TwitchApiImpl(
                         },
                         title = stream.title,
                         viewerCount = stream.viewerCount,
-                        startedAt = stream.startedAt,
-                        tags = stream.tags.toPersistentList(),
+                        startedAt = Instant.parse(stream.startedAt),
+                        tags = stream.tags.toPersistentSet(),
                     )
                 }
             }
@@ -68,8 +69,8 @@ internal class TwitchApiImpl(
                         },
                         title = stream.title,
                         viewerCount = stream.viewerCount,
-                        startedAt = stream.startedAt,
-                        tags = stream.tags.toPersistentList(),
+                        startedAt = Instant.parse(stream.startedAt),
+                        tags = stream.tags.toPersistentSet(),
                     )
                 }
             }

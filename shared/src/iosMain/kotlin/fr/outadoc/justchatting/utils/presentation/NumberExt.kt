@@ -23,6 +23,12 @@ internal actual fun Int.formatNumber(): String =
         NSNumberFormatterDecimalStyle,
     )
 
+internal actual fun Long.formatNumber(): String =
+    NSNumberFormatter.localizedStringFromNumber(
+        NSNumber(this),
+        NSNumberFormatterDecimalStyle,
+    )
+
 internal actual fun BigDecimal.formatCurrency(currency: Currency): String {
     val amount = NSNumber(this.floatValue(exactRequired = false))
     val currentLocale = NSLocale.currentLocale().localeIdentifier()

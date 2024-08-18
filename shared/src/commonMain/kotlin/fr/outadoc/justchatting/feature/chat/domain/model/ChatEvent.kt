@@ -144,7 +144,7 @@ internal sealed interface ChatEvent {
 
         data class ViewerCountUpdate(
             override val timestamp: Instant,
-            val viewerCount: Int,
+            val viewerCount: Long,
         ) : Message
 
         data class PredictionUpdate(

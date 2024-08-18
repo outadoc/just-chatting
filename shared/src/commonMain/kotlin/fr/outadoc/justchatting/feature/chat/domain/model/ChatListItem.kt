@@ -114,7 +114,7 @@ internal sealed interface ChatListItem {
 
     @Immutable
     data class ViewerCountUpdate(
-        val viewerCount: Int,
+        val viewerCount: Long,
     ) : ChatListItem
 
     @Immutable

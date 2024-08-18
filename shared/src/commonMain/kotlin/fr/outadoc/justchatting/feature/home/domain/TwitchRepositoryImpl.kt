@@ -181,9 +181,8 @@ internal class TwitchRepositoryImpl(
                     val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 
                     launch {
-                        syncLocalFollows(
-                            appUserId = prefs.appUser.userId,
-                        )
+                        syncLocalFollows(appUserId = prefs.appUser.userId)
+                        syncLocalUserInfo()
 
                         syncFullSchedule(
                             notBefore = notBefore,

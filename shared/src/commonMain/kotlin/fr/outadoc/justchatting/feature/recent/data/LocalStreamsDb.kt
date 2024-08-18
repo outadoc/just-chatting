@@ -169,6 +169,13 @@ internal class LocalStreamsDb(
         streamQueries.transaction {
             streamQueries.cleanupAllLiveStreams()
             streams.forEach { stream ->
+                stream.category?.let { category ->
+                    streamQueries.addCategory(
+                        id = category.id,
+                        name = category.name,
+                    )
+                }
+
                 streamQueries.addLiveStream(
                     id = stream.id,
                     user_id = stream.userId,

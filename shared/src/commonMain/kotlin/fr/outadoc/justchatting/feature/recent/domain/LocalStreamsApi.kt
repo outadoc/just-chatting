@@ -2,6 +2,7 @@ package fr.outadoc.justchatting.feature.recent.domain
 
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
+import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.domain.model.Video
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
@@ -25,7 +26,10 @@ internal interface LocalStreamsApi {
         notAfter: Instant,
     )
 
-    suspend fun addPastStreams(videos: List<Video>)
+    suspend fun addPastStreams(user: User, videos: List<Video>)
 
-    suspend fun addFutureStreams(segments: List<ChannelScheduleSegment>)
+    suspend fun addFutureStreams(
+        user: User,
+        segments: List<ChannelScheduleSegment>
+    )
 }

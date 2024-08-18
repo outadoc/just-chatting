@@ -340,6 +340,7 @@ internal class TwitchRepositoryImpl(
                     }
 
                     localStreamsApi.addPastStreams(
+                        user = user,
                         videos = videos,
                     )
                 }
@@ -381,6 +382,7 @@ internal class TwitchRepositoryImpl(
                     }
 
                     localStreamsApi.addFutureStreams(
+                        user = user,
                         segments = segments.map { segment -> segment.copy(user = user) },
                     )
                 }

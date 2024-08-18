@@ -42,6 +42,13 @@ CREATE TABLE FutureStream (
     FOREIGN KEY (`category_id`) REFERENCES Category(`id`) ON DELETE SET NULL
 );
 
+CREATE TABLE StreamCacheInfo (
+    `user_id` TEXT NOT NULL,
+    `last_updated` INTEGER NOT NULL,
+    PRIMARY KEY (`user_id`),
+    FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE
+);
+
 addCategory:
 INSERT OR IGNORE INTO Category (id, name, inserted_at)
 VALUES (?, ?, strftime('%s', 'now'));
@@ -102,3 +109,7 @@ WHERE id NOT IN (
 
 cleanupAllLiveStreams:
 DELETE FROM LiveStream;
+
+rememberUserUpdated:
+INSERT OR REPLACE INTO StreamCacheInfo (user_id, last_updated)
+VALUES (?, strftime('%s', 'now'));

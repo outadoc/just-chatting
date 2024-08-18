@@ -137,7 +137,10 @@ internal class LocalStreamsDb(
             }
     }
 
-    override suspend fun addPastStreams(videos: List<Video>) {
+    override suspend fun addPastStreams(
+        user: User,
+        videos: List<Video>
+    ) {
         withContext(DispatchersProvider.io) {
             streamQueries.transaction {
                 videos.forEach { video ->
@@ -151,11 +154,18 @@ internal class LocalStreamsDb(
                         category_id = null,
                     )
                 }
+
+                streamQueries.rememberUserUpdated(
+                    user_id = user.id
+                )
             }
         }
     }
 
-    override suspend fun addFutureStreams(segments: List<ChannelScheduleSegment>) {
+    override suspend fun addFutureStreams(
+        user: User,
+        segments: List<ChannelScheduleSegment>
+    ) {
         withContext(DispatchersProvider.io) {
             streamQueries.transaction {
                 segments.forEach { segment ->
@@ -173,6 +183,10 @@ internal class LocalStreamsDb(
                         end_time = segment.endTime.toEpochMilliseconds(),
                         title = segment.title,
                         category_id = segment.category?.id,
+                    )
+
+                    streamQueries.rememberUserUpdated(
+                        user_id = user.id
                     )
                 }
             }

@@ -1,0 +1,6 @@
+CREATE TABLE StreamCacheInfo (
+    `user_id` TEXT NOT NULL,
+    `last_updated` INTEGER NOT NULL,
+    PRIMARY KEY (`user_id`),
+    FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE
+);

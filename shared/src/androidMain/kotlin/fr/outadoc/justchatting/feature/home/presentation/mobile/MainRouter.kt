@@ -52,17 +52,6 @@ internal fun MainRouter(
             )
         },
     ) {
-        composable<Screen.Live>(
-            enterTransition = { EnterTransition.None },
-            exitTransition = { ExitTransition.None },
-        ) {
-            LiveChannelsList(
-                sizeClass = sizeClass,
-                onNavigate = { navController.navigate(it) },
-                onItemClick = onChannelClick,
-            )
-        }
-
         composable<Screen.Followed>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },

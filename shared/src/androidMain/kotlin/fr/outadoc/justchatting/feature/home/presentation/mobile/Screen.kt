@@ -5,9 +5,6 @@ import kotlinx.serialization.Serializable
 internal sealed interface Screen {
 
     @Serializable
-    data object Live : Screen
-
-    @Serializable
     data object Followed : Screen
 
     @Serializable
@@ -36,4 +33,4 @@ internal sealed interface Screen {
     }
 }
 
-internal val DefaultScreen = Screen.Live
+internal val DefaultScreen = Screen.Epg

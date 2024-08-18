@@ -89,15 +89,15 @@ internal fun CompactNavigation(
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(
-                    selected = selectedScreen == Screen.Live,
-                    label = { Text(stringResource(MR.strings.live)) },
+                    selected = selectedScreen == Screen.Epg,
+                    label = { Text(stringResource(MR.strings.epg_title)) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.LiveTv,
+                            imageVector = Icons.Filled.Schedule,
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Screen.Live) },
+                    onClick = { onSelectedTabChange(Screen.Epg) },
                 )
 
                 NavigationBarItem(
@@ -110,18 +110,6 @@ internal fun CompactNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Screen.Followed) },
-                )
-
-                NavigationBarItem(
-                    selected = selectedScreen == Screen.Epg,
-                    label = { Text(stringResource(MR.strings.epg_title)) },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Schedule,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = { onSelectedTabChange(Screen.Epg) },
                 )
 
                 NavigationBarItem(
@@ -159,19 +147,19 @@ internal fun MediumNavigation(
                 ),
             ) {
                 NavigationRailItem(
-                    selected = selectedScreen == Screen.Live,
+                    selected = selectedScreen == Screen.Epg,
                     label = {
-                        AnimatedVisibility(visible = selectedScreen == Screen.Live) {
-                            Text(stringResource(MR.strings.live))
+                        AnimatedVisibility(visible = selectedScreen == Screen.Followed) {
+                            Text(stringResource(MR.strings.epg_title))
                         }
                     },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.LiveTv,
+                            imageVector = Icons.Filled.Schedule,
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Screen.Live) },
+                    onClick = { onSelectedTabChange(Screen.Epg) },
                 )
 
                 NavigationRailItem(
@@ -188,22 +176,6 @@ internal fun MediumNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Screen.Followed) },
-                )
-
-                NavigationRailItem(
-                    selected = selectedScreen == Screen.Epg,
-                    label = {
-                        AnimatedVisibility(visible = selectedScreen == Screen.Followed) {
-                            Text(stringResource(MR.strings.epg_title))
-                        }
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Schedule,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = { onSelectedTabChange(Screen.Epg) },
                 )
 
                 NavigationRailItem(
@@ -254,15 +226,15 @@ internal fun ExpandedNavigation(
             ) {
                 NavigationDrawerItem(
                     modifier = Modifier.padding(4.dp),
-                    selected = selectedScreen == Screen.Live,
-                    label = { Text(stringResource(MR.strings.live)) },
+                    selected = selectedScreen == Screen.Epg,
+                    label = { Text(stringResource(MR.strings.epg_title)) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Default.LiveTv,
+                            imageVector = Icons.Filled.Schedule,
                             contentDescription = null,
                         )
                     },
-                    onClick = { onSelectedTabChange(Screen.Live) },
+                    onClick = { onSelectedTabChange(Screen.Epg) },
                 )
 
                 NavigationDrawerItem(
@@ -276,19 +248,6 @@ internal fun ExpandedNavigation(
                         )
                     },
                     onClick = { onSelectedTabChange(Screen.Followed) },
-                )
-
-                NavigationDrawerItem(
-                    modifier = Modifier.padding(4.dp),
-                    selected = selectedScreen == Screen.Epg,
-                    label = { Text(stringResource(MR.strings.epg_title)) },
-                    icon = {
-                        Icon(
-                            imageVector = Icons.Filled.Schedule,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = { onSelectedTabChange(Screen.Epg) },
                 )
 
                 NavigationDrawerItem(

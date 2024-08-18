@@ -71,41 +71,6 @@ internal class TwitchRepositoryImpl(
                 }
         }
 
-    override suspend fun getFollowedStreams(): Flow<PagingData<UserStream>> =
-        withContext(DispatchersProvider.io) {
-            val prefs = preferencesRepository.currentPreferences.first()
-            when (prefs.appUser) {
-                is AppUser.LoggedIn -> {
-                    twitchApi
-                        .getFollowedStreamsOnline(userId = prefs.appUser.userId)
-                        .map { pagingData ->
-                            pagingData.flatMap { streams ->
-                                streams.forEach { stream ->
-                                    localUsersApi.saveUser(userId = stream.userId)
-                                }
-
-                                val fullUsersById: Map<String, User> =
-                                    getUsersById(ids = streams.map { stream -> stream.userId })
-                                        .first()
-                                        .getOrNull()
-                                        .orEmpty()
-                                        .associateBy { user -> user.id }
-
-                                streams.mapNotNull { stream ->
-                                    fullUsersById[stream.userId]?.let { user ->
-                                        UserStream(stream = stream, user = user)
-                                    }
-                                }
-                            }
-                        }
-                }
-
-                else -> {
-                    flowOf(PagingData.empty())
-                }
-            }
-        }
-
     override suspend fun getFollowedChannels(): Flow<List<ChannelFollow>> =
         withContext(DispatchersProvider.io) {
             val prefs = preferencesRepository.currentPreferences.first()

@@ -54,7 +54,7 @@ internal class TwitchRepositoryImpl(
                 .map { pagingData ->
                     pagingData.flatMap { results ->
                         results.forEach { result ->
-                            localUsersApi.rememberUser(userId = result.user.id)
+                            localUsersApi.saveUser(userId = result.user.id)
                         }
 
                         val fullUsersById: Map<String, User> =
@@ -77,11 +77,11 @@ internal class TwitchRepositoryImpl(
             when (prefs.appUser) {
                 is AppUser.LoggedIn -> {
                     twitchApi
-                        .getFollowedStreams(userId = prefs.appUser.userId)
+                        .getFollowedStreamsOnline(userId = prefs.appUser.userId)
                         .map { pagingData ->
                             pagingData.flatMap { streams ->
                                 streams.forEach { stream ->
-                                    localUsersApi.rememberUser(userId = stream.userId)
+                                    localUsersApi.saveUser(userId = stream.userId)
                                 }
 
                                 val fullUsersById: Map<String, User> =
@@ -141,7 +141,7 @@ internal class TwitchRepositoryImpl(
         withContext(DispatchersProvider.io) {
             launch {
                 ids.forEach { id ->
-                    localUsersApi.rememberUser(userId = id)
+                    localUsersApi.saveUser(userId = id)
                 }
 
                 syncLocalUserInfo()
@@ -197,7 +197,7 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun markChannelAsVisited(channel: User, visitedAt: Instant) {
         withContext(DispatchersProvider.io) {
-            localUsersApi.rememberUser(
+            localUsersApi.saveUser(
                 userId = channel.id,
                 visitedAt = visitedAt,
             )
@@ -219,9 +219,11 @@ internal class TwitchRepositoryImpl(
                         syncLocalFollows(
                             appUserId = prefs.appUser.userId,
                         )
+
                         syncFullSchedule(
                             notBefore = notBefore,
                             notAfter = notAfter,
+                            appUserId = prefs.appUser.userId,
                         )
                     }
 
@@ -281,7 +283,7 @@ internal class TwitchRepositoryImpl(
                     }
                 }
                 .map { follows ->
-                    localUsersApi.replaceFollowedChannels(follows = follows)
+                    localUsersApi.saveAndReplaceFollowedChannels(follows = follows)
                 }
         }
 
@@ -293,7 +295,7 @@ internal class TwitchRepositoryImpl(
 
             logDebug<TwitchRepositoryImpl> { "syncLocalUserInfo: updating ${ids.size} users" }
 
-            localUsersApi.updateUserInfo(
+            localUsersApi.saveUserInfo(
                 users = twitchApi.getUsersById(ids),
             )
         }
@@ -302,6 +304,7 @@ internal class TwitchRepositoryImpl(
     private suspend fun syncFullSchedule(
         notBefore: Instant,
         notAfter: Instant,
+        appUserId: String,
     ) = withContext(DispatchersProvider.io) {
         streamSyncLock.withLock {
             val userIdsToSync: List<String> =
@@ -320,7 +323,7 @@ internal class TwitchRepositoryImpl(
             )
 
             syncLiveStreams(
-                followedUsers = followedUsers,
+                appUserId = appUserId
             )
 
             syncFutureStreams(
@@ -358,7 +361,7 @@ internal class TwitchRepositoryImpl(
                         "Loaded ${videos.size} past videos for ${user.displayName}"
                     }
 
-                    localStreamsApi.addPastStreams(
+                    localStreamsApi.savePastStreams(
                         user = user,
                         videos = videos,
                     )
@@ -372,9 +375,24 @@ internal class TwitchRepositoryImpl(
     }
 
     private suspend fun syncLiveStreams(
-        followedUsers: List<User>,
+        appUserId: String,
     ) = withContext(DispatchersProvider.io) {
-        // TODO
+        logDebug<TwitchRepositoryImpl> { "Loading followed live streams" }
+
+        twitchApi
+            .getFollowedStreams(userId = appUserId)
+            .onSuccess { streams ->
+                logDebug<TwitchRepositoryImpl> {
+                    "Loaded ${streams.size} live streams"
+                }
+
+                localStreamsApi.saveAndReplaceLiveStreams(streams)
+            }
+            .onFailure { exception ->
+                logError<TwitchRepositoryImpl>(exception) {
+                    "Error while fetching followed live streams"
+                }
+            }
     }
 
     private suspend fun syncFutureStreams(
@@ -400,7 +418,7 @@ internal class TwitchRepositoryImpl(
                         "Loaded ${segments.size} schedule segments for ${user.displayName}"
                     }
 
-                    localStreamsApi.addFutureStreams(
+                    localStreamsApi.saveFutureStreams(
                         user = user,
                         segments = segments.map { segment -> segment.copy(user = user) },
                     )

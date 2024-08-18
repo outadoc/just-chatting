@@ -26,9 +26,11 @@ internal interface LocalStreamsApi {
         notAfter: Instant,
     )
 
-    suspend fun addPastStreams(user: User, videos: List<Video>)
+    suspend fun savePastStreams(user: User, videos: List<Video>)
 
-    suspend fun addFutureStreams(
+    suspend fun saveAndReplaceLiveStreams(streams: List<Stream>)
+
+    suspend fun saveFutureStreams(
         user: User,
         segments: List<ChannelScheduleSegment>,
     )

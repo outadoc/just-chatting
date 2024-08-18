@@ -140,7 +140,7 @@ internal class LocalStreamsDb(
             }
     }
 
-    override suspend fun addPastStreams(
+    override suspend fun savePastStreams(
         user: User,
         videos: List<Video>,
     ) {
@@ -165,7 +165,24 @@ internal class LocalStreamsDb(
         }
     }
 
-    override suspend fun addFutureStreams(
+    override suspend fun saveAndReplaceLiveStreams(streams: List<Stream>) {
+        streamQueries.transaction {
+            streamQueries.cleanupAllLiveStreams()
+            streams.forEach { stream ->
+                streamQueries.addLiveStream(
+                    id = stream.id,
+                    user_id = stream.userId,
+                    start_time = stream.startedAt.toEpochMilliseconds(),
+                    title = stream.title,
+                    viewer_count = stream.viewerCount,
+                    category_id = stream.category?.id,
+                    tags = stream.tags.joinToString(","),
+                )
+            }
+        }
+    }
+
+    override suspend fun saveFutureStreams(
         user: User,
         segments: List<ChannelScheduleSegment>,
     ) {
@@ -216,8 +233,6 @@ internal class LocalStreamsDb(
     ) = withContext(DispatchersProvider.io) {
         val now = clock.now()
         streamQueries.transaction {
-            streamQueries.cleanupAllLiveStreams()
-
             streamQueries.cleanupPastStreams(
                 notBefore = notBefore.toEpochMilliseconds(),
             )

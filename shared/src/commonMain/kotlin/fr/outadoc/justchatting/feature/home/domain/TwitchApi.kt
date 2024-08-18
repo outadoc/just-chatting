@@ -8,6 +8,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.feature.home.domain.model.UserStream
 import fr.outadoc.justchatting.feature.home.domain.model.Video
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
@@ -43,7 +44,9 @@ internal interface TwitchApi {
 
     suspend fun getFollowedChannels(userId: String): Result<List<ChannelFollow>>
 
-    suspend fun getFollowedStreams(userId: String): Flow<PagingData<List<Stream>>>
+    suspend fun getFollowedStreamsOnline(userId: String): Flow<PagingData<List<Stream>>>
+
+    suspend fun getFollowedStreams(userId: String): Result<List<Stream>>
 
     suspend fun searchChannels(query: String): Flow<PagingData<List<ChannelSearchResult>>>
 }

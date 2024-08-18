@@ -74,7 +74,7 @@ internal class TwitchApiImpl(
             }
     }
 
-    override suspend fun getFollowedStreams(userId: String): Flow<PagingData<List<Stream>>> {
+    override suspend fun getFollowedStreamsOnline(userId: String): Flow<PagingData<List<Stream>>> {
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 30,
@@ -92,6 +92,49 @@ internal class TwitchApiImpl(
 
         return pager.flow
     }
+
+    override suspend fun getFollowedStreams(userId: String): Result<List<Stream>> =
+        runCatching {
+            buildList {
+                var cursor: String? = null
+                do {
+                    twitchClient
+                        .getFollowedStreams(
+                            userId = userId,
+                            limit = MAX_PAGE_SIZE_DEFAULT,
+                            after = cursor,
+                        )
+                        .onSuccess { response ->
+                            logDebug<TwitchApiImpl> {
+                                "getFollowedStreams: loaded ${response.data.size} more items"
+                            }
+
+                            cursor = response.pagination.cursor
+
+                            addAll(
+                                response.data.map { stream ->
+                                    Stream(
+                                        id = stream.id,
+                                        userId = stream.userId,
+                                        category = if (stream.gameId != null && stream.gameName != null) {
+                                            StreamCategory(
+                                                id = stream.gameId,
+                                                name = stream.gameName,
+                                            )
+                                        } else {
+                                            null
+                                        },
+                                        title = stream.title,
+                                        viewerCount = stream.viewerCount,
+                                        startedAt = Instant.parse(stream.startedAt),
+                                        tags = stream.tags.toPersistentSet(),
+                                    )
+                                },
+                            )
+                        }
+                } while (cursor != null)
+            }
+        }
 
     override suspend fun getUsersById(ids: List<String>): List<User> {
         if (ids.isEmpty()) return emptyList()

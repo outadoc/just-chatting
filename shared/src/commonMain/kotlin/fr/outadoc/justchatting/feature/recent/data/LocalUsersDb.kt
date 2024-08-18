@@ -102,7 +102,7 @@ internal class LocalUsersDb(
             .flowOn(DispatchersProvider.io)
     }
 
-    override suspend fun updateUserInfo(users: List<User>) =
+    override suspend fun saveUserInfo(users: List<User>) =
         withContext(DispatchersProvider.io) {
             val updatedAt = clock.now()
             userQueries.transaction {
@@ -121,7 +121,7 @@ internal class LocalUsersDb(
             }
         }
 
-    override suspend fun rememberUser(userId: String, visitedAt: Instant?) =
+    override suspend fun saveUser(userId: String, visitedAt: Instant?) =
         withContext(DispatchersProvider.io) {
             userQueries.transaction {
                 userQueries.ensureCreated(id = userId)
@@ -134,7 +134,7 @@ internal class LocalUsersDb(
             }
         }
 
-    override suspend fun replaceFollowedChannels(follows: List<ChannelFollow>) =
+    override suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>) =
         withContext(DispatchersProvider.io) {
             userQueries.transaction {
                 follows.forEach { channelFollow ->

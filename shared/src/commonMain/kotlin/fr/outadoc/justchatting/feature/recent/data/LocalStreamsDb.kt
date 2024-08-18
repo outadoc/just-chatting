@@ -21,12 +21,12 @@ internal class LocalStreamsDb(
 
     override fun getPastStreams(
         notBefore: Instant,
-        notAfter: Instant
+        notAfter: Instant,
     ): Flow<List<ChannelScheduleSegment>> {
         return streamQueries
             .getPastStreams(
                 notBefore = notBefore.toEpochMilliseconds(),
-                notAfter = notAfter.toEpochMilliseconds()
+                notAfter = notAfter.toEpochMilliseconds(),
             )
             .asFlow()
             .mapToList(DispatchersProvider.io)
@@ -40,7 +40,7 @@ internal class LocalStreamsDb(
                         category = if (stream.category_id != null && stream.category_name != null) {
                             StreamCategory(
                                 id = stream.category_id,
-                                name = stream.category_name
+                                name = stream.category_name,
                             )
                         } else {
                             null
@@ -66,12 +66,12 @@ internal class LocalStreamsDb(
                         category = if (stream.category_id != null && stream.category_name != null) {
                             StreamCategory(
                                 id = stream.category_id,
-                                name = stream.category_name
+                                name = stream.category_name,
                             )
                         } else {
                             null
                         },
-                        tags = stream.tags.split(',').toPersistentSet()
+                        tags = stream.tags.split(',').toPersistentSet(),
                     )
                 }
             }
@@ -79,12 +79,12 @@ internal class LocalStreamsDb(
 
     override fun getFutureStreams(
         notBefore: Instant,
-        notAfter: Instant
+        notAfter: Instant,
     ): Flow<List<ChannelScheduleSegment>> {
         return streamQueries
             .getFutureStreams(
                 notBefore = notBefore.toEpochMilliseconds(),
-                notAfter = notAfter.toEpochMilliseconds()
+                notAfter = notAfter.toEpochMilliseconds(),
             )
             .asFlow()
             .mapToList(DispatchersProvider.io)
@@ -98,7 +98,7 @@ internal class LocalStreamsDb(
                         category = if (stream.category_id != null && stream.category_name != null) {
                             StreamCategory(
                                 id = stream.category_id,
-                                name = stream.category_name
+                                name = stream.category_name,
                             )
                         } else {
                             null

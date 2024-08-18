@@ -22,7 +22,6 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
-import kotlinx.datetime.Instant
 
 @Composable
 internal fun StreamInfo(

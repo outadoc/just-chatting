@@ -24,9 +24,7 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import fr.outadoc.justchatting.feature.home.domain.model.UserStream
 import fr.outadoc.justchatting.feature.home.presentation.FollowedStreamsViewModel
 import fr.outadoc.justchatting.utils.presentation.plus
-import kotlinx.collections.immutable.toImmutableList
 import kotlinx.collections.immutable.toImmutableSet
-import kotlinx.datetime.Instant
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterialApi::class)

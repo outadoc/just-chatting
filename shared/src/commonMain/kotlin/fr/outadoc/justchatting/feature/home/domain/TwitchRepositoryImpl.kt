@@ -216,7 +216,7 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getChannelSchedule(
         start: Instant,
-        timeZone: TimeZone
+        timeZone: TimeZone,
     ): Flow<FullSchedule> =
         withContext(DispatchersProvider.io) {
             val today = start.toLocalDateTime(timeZone).date
@@ -227,13 +227,13 @@ internal class TwitchRepositoryImpl(
             combine(
                 localStreamsApi.getPastStreams(
                     notBefore = notBefore,
-                    notAfter = notAfter
+                    notAfter = notAfter,
                 ),
                 localStreamsApi.getLiveStreams(),
                 localStreamsApi.getFutureStreams(
                     notBefore = notBefore,
-                    notAfter = notAfter
-                )
+                    notAfter = notAfter,
+                ),
             ) { past, live, future ->
                 FullSchedule(
                     past = past,

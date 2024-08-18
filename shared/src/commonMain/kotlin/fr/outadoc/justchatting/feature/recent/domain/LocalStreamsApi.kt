@@ -9,13 +9,13 @@ internal interface LocalStreamsApi {
 
     fun getPastStreams(
         notBefore: Instant,
-        notAfter: Instant
+        notAfter: Instant,
     ): Flow<List<ChannelScheduleSegment>>
 
     fun getLiveStreams(): Flow<List<Stream>>
 
     fun getFutureStreams(
         notBefore: Instant,
-        notAfter: Instant
+        notAfter: Instant,
     ): Flow<List<ChannelScheduleSegment>>
 }

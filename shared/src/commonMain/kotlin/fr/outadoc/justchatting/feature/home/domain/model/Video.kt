@@ -6,7 +6,7 @@ import kotlin.time.Duration
 internal data class Video(
     val id: String,
     val streamId: String?,
-    val user: User,
+    val userId: String,
     val title: String,
     val description: String,
     val createdAt: Instant,

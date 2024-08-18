@@ -8,11 +8,13 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.home.domain.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.feature.home.domain.model.Video
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentSet
@@ -97,7 +99,7 @@ internal class TwitchApiImpl(
     override suspend fun getUsersById(ids: List<String>): List<User> {
         if (ids.isEmpty()) return emptyList()
         return ids
-            .chunked(MAX_PAGE_SIZE)
+            .chunked(MAX_PAGE_SIZE_DEFAULT)
             .flatMap { chunkOfIds ->
                 twitchClient
                     .getUsersById(chunkOfIds)
@@ -133,7 +135,7 @@ internal class TwitchApiImpl(
     override suspend fun getUsersByLogin(logins: List<String>): List<User> {
         if (logins.isEmpty()) return emptyList()
         return logins
-            .chunked(MAX_PAGE_SIZE)
+            .chunked(MAX_PAGE_SIZE_DEFAULT)
             .flatMap { chunkOfLogins ->
                 twitchClient
                     .getUsersById(chunkOfLogins)
@@ -195,7 +197,7 @@ internal class TwitchApiImpl(
                     twitchClient
                         .getFollowedChannels(
                             userId = userId,
-                            limit = MAX_PAGE_SIZE,
+                            limit = MAX_PAGE_SIZE_DEFAULT,
                             after = cursor,
                         )
                         .onSuccess { response ->
@@ -321,7 +323,97 @@ internal class TwitchApiImpl(
         return pager.flow
     }
 
+    override suspend fun getChannelVideos(channelId: String): Result<List<Video>> =
+        runCatching {
+            buildList {
+                var cursor: String? = null
+                do {
+                    twitchClient
+                        .getChannelVideos(
+                            userId = channelId,
+                            limit = MAX_PAGE_SIZE_DEFAULT,
+                            after = cursor,
+                        )
+                        .onSuccess { response ->
+                            logDebug<TwitchApiImpl> {
+                                "getChannelVideos: loaded ${response.data.size} more items"
+                            }
+
+                            cursor = response.pagination.cursor
+
+                            addAll(
+                                response.data.map { video ->
+                                    Video(
+                                        id = video.id,
+                                        title = video.title,
+                                        thumbnailUrl = video.thumbnailUrl,
+                                        publishedAt = video.publishedAt,
+                                        duration = video.duration.parseTwitchDuration(),
+                                        streamId = video.streamId,
+                                        viewCount = video.viewCount,
+                                        videoUrl = video.videoUrl,
+                                        userId = video.userId,
+                                        createdAt = video.createdAt,
+                                        description = video.description,
+                                    )
+                                },
+                            )
+                        }
+                } while (cursor != null)
+            }
+        }
+
+    override suspend fun getChannelSchedule(
+        userId: String,
+        notBefore: Instant,
+        notAfter: Instant,
+    ): Result<List<ChannelScheduleSegment>> =
+        runCatching {
+            buildList {
+                var cursor: String? = null
+                var currentMaxInstant: Instant? = null
+                do {
+                    twitchClient
+                        .getChannelSchedule(
+                            userId = userId,
+                            limit = MAX_PAGE_SIZE_GET_SCHEDULE,
+                            start = notBefore,
+                            after = cursor,
+                        )
+                        .onSuccess { response ->
+                            val segments = response.data.segments.orEmpty()
+
+                            logDebug<TwitchApiImpl> {
+                                "getChannelSchedule: loaded ${segments.size} more items"
+                            }
+
+                            cursor = response.pagination.cursor
+                            currentMaxInstant = segments.maxOfOrNull { it.startTime }
+
+                            addAll(
+                                segments.map { segment ->
+                                    ChannelScheduleSegment(
+                                        id = segment.id,
+                                        userId = response.data.userId,
+                                        title = segment.title,
+                                        startTime = segment.startTime,
+                                        endTime = segment.endTime,
+                                        category = segment.category?.let { category ->
+                                            StreamCategory(
+                                                id = category.id,
+                                                name = category.name,
+                                            )
+                                        },
+                                    )
+                                },
+                            )
+                        }
+                } while (cursor != null && ((currentMaxInstant ?: Instant.DISTANT_PAST) < notAfter))
+            }
+        }
+
     private companion object {
-        const val MAX_PAGE_SIZE = 100
+        const val MAX_PAGE_SIZE_DEFAULT = 100
+        const val MAX_PAGE_SIZE_GET_SCHEDULE = 25
     }
 }

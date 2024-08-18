@@ -4,10 +4,12 @@ import androidx.paging.PagingData
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.feature.home.domain.model.Video
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
@@ -38,6 +40,14 @@ internal interface TwitchApi {
         futureRange: DatePeriod,
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>>
+
+    suspend fun getChannelVideos(channelId: String): Result<List<Video>>
+
+    suspend fun getChannelSchedule(
+        userId: String,
+        notBefore: Instant,
+        notAfter: Instant,
+    ): Result<List<ChannelScheduleSegment>>
 
     suspend fun getFollowedChannels(userId: String): Result<List<ChannelFollow>>
 

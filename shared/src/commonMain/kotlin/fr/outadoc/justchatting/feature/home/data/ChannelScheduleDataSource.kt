@@ -86,7 +86,7 @@ internal class ChannelScheduleDataSource(
 
         return twitchClient
             .getChannelVideos(
-                channelId = channelId,
+                userId = channelId,
                 limit = loadSize,
                 after = pagination.cursor,
                 before = null,
@@ -98,6 +98,7 @@ internal class ChannelScheduleDataSource(
                             .map { schedule ->
                                 ChannelScheduleSegment(
                                     id = schedule.id,
+                                    userId = channelId,
                                     title = schedule.title,
                                     startTime = schedule.createdAt,
                                     endTime = schedule.createdAt + schedule.duration.parseTwitchDuration(),
@@ -201,7 +202,7 @@ internal class ChannelScheduleDataSource(
 
         return twitchClient
             .getChannelSchedule(
-                channelId = channelId,
+                userId = channelId,
                 start = start,
                 limit = loadSize,
                 after = pagination.cursor,
@@ -213,6 +214,7 @@ internal class ChannelScheduleDataSource(
                             .map { schedule ->
                                 ChannelScheduleSegment(
                                     id = schedule.id,
+                                    userId = channelId,
                                     title = schedule.title,
                                     startTime = schedule.startTime,
                                     endTime = schedule.endTime,

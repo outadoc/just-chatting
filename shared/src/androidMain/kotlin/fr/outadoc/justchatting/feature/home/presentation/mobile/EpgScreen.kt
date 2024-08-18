@@ -558,6 +558,7 @@ private fun EpgSegmentDetailsPreview(
         EpgSegmentDetails(
             segment = ChannelScheduleSegment(
                 id = "1",
+                userId = "1",
                 title = lorem,
                 startTime = Instant.parse("2022-01-01T12:00:00Z"),
                 endTime = Instant.parse("2022-01-01T13:00:00Z"),
@@ -588,6 +589,7 @@ private fun EpgSegmentPreview(
         EpgSegment(
             segment = ChannelScheduleSegment(
                 id = "1",
+                userId = "1",
                 title = lorem,
                 startTime = Instant.parse("2022-01-01T12:00:00Z"),
                 endTime = Instant.parse("2022-01-01T13:00:00Z"),

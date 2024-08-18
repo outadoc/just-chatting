@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.data.db.StreamQueries
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
+import fr.outadoc.justchatting.feature.home.domain.model.Video
 import fr.outadoc.justchatting.feature.recent.domain.LocalStreamsApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import kotlinx.collections.immutable.toPersistentSet
@@ -35,6 +36,7 @@ internal class LocalStreamsDb(
                 streams.map { stream ->
                     ChannelScheduleSegment(
                         id = stream.id,
+                        userId = stream.user_id,
                         startTime = Instant.fromEpochMilliseconds(stream.start_time),
                         endTime = Instant.fromEpochMilliseconds(stream.end_time),
                         title = stream.title,
@@ -93,6 +95,7 @@ internal class LocalStreamsDb(
                 streams.map { stream ->
                     ChannelScheduleSegment(
                         id = stream.id,
+                        userId = stream.user_id,
                         startTime = Instant.fromEpochMilliseconds(stream.start_time),
                         endTime = Instant.fromEpochMilliseconds(stream.end_time),
                         title = stream.title,
@@ -109,13 +112,50 @@ internal class LocalStreamsDb(
             }
     }
 
-    suspend fun cleanup(
+    override suspend fun addPastStreams(videos: List<Video>) {
+        TODO("not implemented")
+    }
+
+    override suspend fun addFutureStreams(segments: List<ChannelScheduleSegment>) {
+        withContext(DispatchersProvider.io) {
+            streamQueries.transaction {
+                segments.forEach { segment ->
+                    segment.category?.let { category ->
+                        streamQueries.addCategory(
+                            id = category.id,
+                            name = category.name,
+                        )
+                    }
+
+                    streamQueries.addFutureStream(
+                        id = segment.id,
+                        user_id = segment.userId,
+                        start_time = segment.startTime.toEpochMilliseconds(),
+                        end_time = segment.endTime.toEpochMilliseconds(),
+                        title = segment.title,
+                        category_id = segment.category?.id,
+                    )
+                }
+            }
+        }
+    }
+
+    override suspend fun cleanup(
         notBefore: Instant,
         notAfter: Instant,
     ) = withContext(DispatchersProvider.io) {
-        streamQueries.cleanup(
-            notBefore = notBefore.toEpochMilliseconds(),
-            notAfter = notAfter.toEpochMilliseconds(),
-        )
+        val now = clock.now()
+        streamQueries.transaction {
+            streamQueries.cleanupAllLiveStreams()
+            streamQueries.cleanupPastStreams(
+                notBefore = notBefore.toEpochMilliseconds(),
+            )
+            streamQueries.cleanupFutureStreams(
+                notBefore = notBefore.toEpochMilliseconds(),
+                notAfter = notAfter.toEpochMilliseconds(),
+                now = now.toEpochMilliseconds(),
+            )
+            streamQueries.cleanupCategories()
+        }
     }
 }

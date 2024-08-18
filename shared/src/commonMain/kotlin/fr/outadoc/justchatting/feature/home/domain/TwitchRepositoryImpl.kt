@@ -5,12 +5,14 @@ import androidx.paging.flatMap
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.domain.model.UserStream
+import fr.outadoc.justchatting.feature.home.domain.model.Video
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.recent.domain.LocalStreamsApi
@@ -248,7 +250,7 @@ internal class TwitchRepositoryImpl(
                     }
                         .onStart {
                             syncLocalFollows(
-                                appUserId = prefs.appUser.userId
+                                appUserId = prefs.appUser.userId,
                             )
                             syncFullSchedule(
                                 notBefore = notBefore,
@@ -304,29 +306,112 @@ internal class TwitchRepositoryImpl(
     private suspend fun syncFullSchedule(
         notBefore: Instant,
         notAfter: Instant,
-    ) = streamSyncLock.withLock {
-        syncPastStreams()
-        syncLiveStreams()
-        syncFutureStreams()
+    ) = withContext(DispatchersProvider.io) {
+        streamSyncLock.withLock {
+            val followedUsers = getFollowedChannels().first().map { it.user }
 
-        localStreamsApi.cleanup(
-            notBefore = notBefore,
-            notAfter = notAfter,
+            syncPastStreams(
+                followedUsers = followedUsers,
+                notBefore = notBefore,
+                notAfter = notAfter,
+            )
+
+            syncLiveStreams(
+                followedUsers = followedUsers,
+            )
+
+            syncFutureStreams(
+                followedUsers = followedUsers,
+                notBefore = notBefore,
+                notAfter = notAfter,
+            )
+
+            localStreamsApi.cleanup(
+                notBefore = notBefore,
+                notAfter = notAfter,
+            )
+        }
+    }
+
+    private suspend fun syncPastStreams(
+        followedUsers: List<User>,
+        notBefore: Instant,
+        notAfter: Instant,
+    ) = withContext(DispatchersProvider.io) {
+        logDebug<TwitchRepositoryImpl> { "Loading past channel videos from $notBefore to $notAfter" }
+
+        val videos: List<Video> =
+            followedUsers
+                .flatMap { user ->
+                    logDebug<TwitchRepositoryImpl> {
+                        "Loading past channel videos for ${user.displayName}"
+                    }
+
+                    twitchApi
+                        .getChannelVideos(channelId = user.id)
+                        .onSuccess { videos ->
+                            logDebug<TwitchRepositoryImpl> {
+                                "Loaded ${videos.size} past videos for ${user.displayName}"
+                            }
+                        }
+                        .getOrElse { exception ->
+                            logError<TwitchRepositoryImpl>(exception) {
+                                "Error while fetching channel videos for ${user.displayName}"
+                            }
+                            emptyList()
+                        }
+                }
+
+        logDebug<TwitchRepositoryImpl> { "Loaded ${videos.size} past videos in total" }
+
+        localStreamsApi.addPastStreams(
+            videos = videos,
         )
     }
 
-    private suspend fun syncPastStreams() =
-        withContext(DispatchersProvider.io) {
-            // TODO
-        }
+    private suspend fun syncLiveStreams(
+        followedUsers: List<User>,
+    ) = withContext(DispatchersProvider.io) {
+        // TODO
+    }
 
-    private suspend fun syncLiveStreams() =
-        withContext(DispatchersProvider.io) {
-            // TODO
-        }
+    private suspend fun syncFutureStreams(
+        followedUsers: List<User>,
+        notBefore: Instant,
+        notAfter: Instant,
+    ) = withContext(DispatchersProvider.io) {
+        logDebug<TwitchRepositoryImpl> { "Loading channel schedule from $notBefore to $notAfter" }
 
-    private suspend fun syncFutureStreams() =
-        withContext(DispatchersProvider.io) {
-            // TODO
-        }
+        val segments: List<ChannelScheduleSegment> =
+            followedUsers
+                .flatMap { user ->
+                    logDebug<TwitchRepositoryImpl> {
+                        "Loading channel schedule for ${user.displayName}"
+                    }
+
+                    twitchApi
+                        .getChannelSchedule(
+                            userId = user.id,
+                            notBefore = notBefore,
+                            notAfter = notAfter,
+                        )
+                        .onSuccess { segments ->
+                            logDebug<TwitchRepositoryImpl> {
+                                "Loaded ${segments.size} schedule segments for ${user.displayName}"
+                            }
+                        }
+                        .getOrElse { exception ->
+                            logError<TwitchRepositoryImpl>(exception) {
+                                "Error while fetching channel schedule for ${user.displayName}"
+                            }
+                            emptyList()
+                        }
+                }
+
+        logDebug<TwitchRepositoryImpl> { "Loaded ${segments.size} schedule segments in total" }
+
+        localStreamsApi.addFutureStreams(
+            segments = segments,
+        )
+    }
 }

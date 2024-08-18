@@ -4,7 +4,6 @@ import androidx.paging.PagingData
 import androidx.paging.flatMap
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
@@ -200,21 +199,6 @@ internal class TwitchRepositoryImpl(
             )
         }
     }
-
-    override suspend fun getChannelScheduleLegacy(
-        channelId: String,
-        start: Instant,
-        timeZone: TimeZone,
-    ): Flow<PagingData<ChannelScheduleForDay>> =
-        withContext(DispatchersProvider.io) {
-            twitchApi.getChannelSchedule(
-                channelId = channelId,
-                start = start,
-                pastRange = EpgConfig.MaxDaysAhead,
-                futureRange = EpgConfig.MaxDaysAhead,
-                timeZone = timeZone,
-            )
-        }
 
     override suspend fun getFollowedChannelsSchedule(
         today: LocalDate,

@@ -7,7 +7,6 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.home.domain.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
@@ -19,9 +18,7 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
 
 internal class TwitchApiImpl(
     private val twitchClient: TwitchClient,
@@ -292,35 +289,6 @@ internal class TwitchApiImpl(
                     }
                 }
             }
-    }
-
-    override suspend fun getChannelSchedule(
-        channelId: String,
-        start: Instant,
-        pastRange: DatePeriod,
-        futureRange: DatePeriod,
-        timeZone: TimeZone,
-    ): Flow<PagingData<ChannelScheduleForDay>> {
-        val pager = Pager(
-            config = PagingConfig(
-                pageSize = 15,
-                initialLoadSize = 25,
-                prefetchDistance = 10,
-                enablePlaceholders = true,
-            ),
-            pagingSourceFactory = {
-                ChannelScheduleDataSource(
-                    channelId = channelId,
-                    twitchClient = twitchClient,
-                    start = start,
-                    pastRange = pastRange,
-                    futureRange = futureRange,
-                    timeZone = timeZone,
-                )
-            },
-        )
-
-        return pager.flow
     }
 
     override suspend fun getChannelVideos(

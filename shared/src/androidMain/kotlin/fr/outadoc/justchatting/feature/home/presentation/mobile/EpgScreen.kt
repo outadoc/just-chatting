@@ -1,6 +1,7 @@
 package fr.outadoc.justchatting.feature.home.presentation.mobile
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,31 +21,30 @@ import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.datasource.LoremIpsum
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.UserInfo
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
@@ -169,18 +169,11 @@ private fun EpgVerticalContent(
                 key = { segment -> segment.id },
                 contentType = { "segment" },
             ) { segment ->
-                LiveStreamCard(
+                EpgSegment(
                     modifier = Modifier.fillMaxWidth(),
-                    title = segment.title,
-                    userName = segment.user.displayName,
-                    profileImageUrl = segment.user.profileImageUrl,
-                    category = segment.category,
+                    segment = segment,
                 )
             }
-        }
-
-        item(contentType = "separator") {
-            HorizontalDivider()
         }
 
         items(
@@ -199,12 +192,6 @@ private fun EpgVerticalContent(
             )
         }
 
-        if (schedule.live.isNotEmpty()) {
-            item(contentType = "separator") {
-                HorizontalDivider()
-            }
-        }
-
         schedule.future.keys.forEach { date ->
             stickyHeader(
                 key = "future-${date.toEpochDays()}",
@@ -218,12 +205,9 @@ private fun EpgVerticalContent(
                 key = { segment -> segment.id },
                 contentType = { "segment" },
             ) { segment ->
-                LiveStreamCard(
+                EpgSegment(
                     modifier = Modifier.fillMaxWidth(),
-                    title = segment.title,
-                    userName = segment.user.displayName,
-                    profileImageUrl = segment.user.profileImageUrl,
-                    category = segment.category,
+                    segment = segment,
                 )
             }
         }
@@ -242,62 +226,107 @@ private fun DateHeader(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun EpgSegment(
+internal fun EpgSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
+    onClick: () -> Unit = {},
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
-
-    Card(
+    OutlinedCard(
         modifier = modifier,
-        onClick = { isExpanded = true },
     ) {
-        Column(
-            modifier = Modifier.padding(4.dp),
-        ) {
+        Column {
+            Card(
+                onClick = onClick,
+            ) {
+                EpgSegmentContent(
+                    modifier = Modifier.padding(8.dp),
+                    title = segment.title,
+                    userName = segment.user.displayName,
+                    category = segment.category,
+                    profileImageUrl = segment.user.profileImageUrl,
+                )
+            }
+
             Text(
-                buildAnnotatedString {
+                modifier = Modifier.padding(8.dp),
+                text = buildAnnotatedString {
                     append(segment.startTime.formatTimestamp())
                     append(" - ")
                     append(segment.endTime.formatTimestamp())
-
-                    segment.category?.let { category ->
-                        append(" · ")
-                        append(category.name)
-                    }
                 },
-                style = MaterialTheme.typography.labelSmall,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+                style = MaterialTheme.typography.bodyMedium,
             )
-
-            if (segment.title.isNotEmpty()) {
-                Text(
-                    segment.title,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
         }
     }
+}
 
-    val sheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
-
-    if (isExpanded) {
-        ModalBottomSheet(
-            onDismissRequest = { isExpanded = false },
-            sheetState = sheetState,
+@Composable
+private fun EpgSegmentContent(
+    modifier: Modifier = Modifier,
+    title: String,
+    userName: String,
+    category: StreamCategory?,
+    profileImageUrl: String?,
+) {
+    Column(
+        modifier = modifier,
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            EpgSegmentDetails(
+            AsyncImage(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                segment = segment,
+                    .padding(end = 8.dp)
+                    .size(56.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.surface),
+                model = remoteImageModel(profileImageUrl),
+                contentDescription = null,
             )
+
+            Column {
+                if (title.isNotEmpty()) {
+                    Text(
+                        text = title,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        style = MaterialTheme.typography.titleMedium,
+                    )
+                }
+
+                if (userName.isNotEmpty()) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .weight(1f, fill = true)
+                                .alignByBaseline(),
+                            text = userName,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+
+                category?.let { category ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .weight(1f, fill = true)
+                                .alignByBaseline(),
+                            text = category.name,
+                            maxLines = 1,
+                            style = MaterialTheme.typography.bodyMedium,
+                        )
+                    }
+                }
+            }
         }
     }
 }

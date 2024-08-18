@@ -25,7 +25,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -110,12 +110,12 @@ internal class TwitchRepositoryImpl(
             val prefs = preferencesRepository.currentPreferences.first()
             when (prefs.appUser) {
                 is AppUser.LoggedIn -> {
-                    localUsersApi
-                        .getFollowedChannels()
-                        .onStart {
-                            syncLocalFollows(appUserId = prefs.appUser.userId)
-                            syncLocalUserInfo()
-                        }
+                    launch {
+                        syncLocalFollows(appUserId = prefs.appUser.userId)
+                        syncLocalUserInfo()
+                    }
+
+                    localUsersApi.getFollowedChannels()
                 }
 
                 else -> {
@@ -138,14 +138,17 @@ internal class TwitchRepositoryImpl(
 
     override suspend fun getUsersById(ids: List<String>): Flow<Result<List<User>>> =
         withContext(DispatchersProvider.io) {
-            ids.forEach { id ->
-                localUsersApi.rememberUser(userId = id)
+            launch {
+                ids.forEach { id ->
+                    localUsersApi.rememberUser(userId = id)
+                }
+
+                syncLocalUserInfo()
             }
 
             localUsersApi
                 .getUsersById(ids)
                 .map { users -> Result.success(users) }
-                .onStart { syncLocalUserInfo() }
         }
 
     override suspend fun getUserById(id: String): Flow<Result<User>> =
@@ -211,6 +214,16 @@ internal class TwitchRepositoryImpl(
                     val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
                     val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 
+                    launch {
+                        syncLocalFollows(
+                            appUserId = prefs.appUser.userId,
+                        )
+                        syncFullSchedule(
+                            notBefore = notBefore,
+                            notAfter = notAfter,
+                        )
+                    }
+
                     combine(
                         localStreamsApi.getPastStreams(
                             notBefore = notBefore,
@@ -228,15 +241,6 @@ internal class TwitchRepositoryImpl(
                             future = future,
                         )
                     }
-                        .onStart {
-                            syncLocalFollows(
-                                appUserId = prefs.appUser.userId,
-                            )
-                            syncFullSchedule(
-                                notBefore = notBefore,
-                                notAfter = notAfter,
-                            )
-                        }
                 }
 
                 else -> {

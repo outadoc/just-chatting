@@ -4,7 +4,6 @@ import fr.outadoc.justchatting.feature.home.domain.TwitchRepository
 import fr.outadoc.justchatting.feature.home.domain.model.FullSchedule
 import fr.outadoc.justchatting.utils.presentation.ViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -40,20 +39,18 @@ internal class EpgViewModel(
             val tz = TimeZone.currentSystemDefault()
             val today = now.toLocalDateTime(tz).date
 
-            val scheduleFlow: Flow<FullSchedule> =
-                twitchRepository
-                    .getFollowedChannelsSchedule(
-                        today = today,
-                        timeZone = tz,
-                    )
-
-            scheduleFlow.collect { schedule ->
-                _state.value = State.Loaded(
-                    schedule = schedule,
+            twitchRepository
+                .getFollowedChannelsSchedule(
+                    today = today,
                     timeZone = tz,
-                    initialListIndex = schedule.past.size,
                 )
-            }
+                .collect { schedule ->
+                    _state.value = State.Loaded(
+                        schedule = schedule,
+                        timeZone = tz,
+                        initialListIndex = schedule.past.size,
+                    )
+                }
         }
     }
 }

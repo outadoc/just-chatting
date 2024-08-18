@@ -22,6 +22,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedCard
@@ -30,6 +31,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -160,9 +162,11 @@ private fun EpgVerticalContent(
         schedule.past.keys.forEach { date ->
             stickyHeader(
                 key = "past-${date.toEpochDays()}",
-                contentType = "date",
+                contentType = "header",
             ) {
-                DateHeader(date = date)
+                SectionHeader(
+                    title = { Text(date.format()) },
+                )
             }
 
             items(
@@ -177,28 +181,42 @@ private fun EpgVerticalContent(
             }
         }
 
+        stickyHeader(
+            key = "live",
+            contentType = "header",
+        ) {
+            if (schedule.live.isNotEmpty()) {
+                SectionHeader(
+                    title = { Text(stringResource(MR.strings.live)) },
+                )
+            }
+        }
+
         items(
             schedule.live,
-            key = { stream -> stream.id },
+            key = { userStream -> userStream.stream.id },
             contentType = { "stream" },
-        ) { stream ->
+        ) { userStream ->
             LiveStreamCard(
                 modifier = Modifier.fillMaxWidth(),
-                title = stream.title,
-                userName = stream.userId,
-                viewerCount = stream.viewerCount,
-                category = stream.category,
-                startedAt = stream.startedAt,
-                tags = stream.tags,
+                title = userStream.stream.title,
+                userName = userStream.user.displayName,
+                viewerCount = userStream.stream.viewerCount,
+                category = userStream.stream.category,
+                startedAt = userStream.stream.startedAt,
+                tags = userStream.stream.tags,
+                profileImageUrl = userStream.user.profileImageUrl,
             )
         }
 
         schedule.future.keys.forEach { date ->
             stickyHeader(
                 key = "future-${date.toEpochDays()}",
-                contentType = "date",
+                contentType = "header",
             ) {
-                DateHeader(date = date)
+                SectionHeader(
+                    title = { Text(date.format()) },
+                )
             }
 
             items(
@@ -216,20 +234,24 @@ private fun EpgVerticalContent(
 }
 
 @Composable
-private fun DateHeader(
+private fun SectionHeader(
     modifier: Modifier = Modifier,
-    date: LocalDate,
+    title: @Composable () -> Unit = {},
 ) {
     Column(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface)
             .fillMaxWidth(),
     ) {
-        Text(
-            date.format(),
-            style = MaterialTheme.typography.headlineSmall,
-            modifier = modifier.padding(top = 16.dp),
-        )
+        Column(
+            modifier = Modifier.padding(top = 16.dp),
+        ) {
+            CompositionLocalProvider(
+                LocalTextStyle provides MaterialTheme.typography.headlineSmall
+            ) {
+                title()
+            }
+        }
     }
 }
 

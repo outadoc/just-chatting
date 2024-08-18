@@ -6,7 +6,7 @@ import kotlinx.datetime.LocalDate
 @Immutable
 internal data class FullSchedule(
     val past: Map<LocalDate, List<ChannelScheduleSegment>>,
-    val live: List<Stream>,
+    val live: List<UserStream>,
     val future: Map<LocalDate, List<ChannelScheduleSegment>>,
     val initialListIndex: Int,
 )

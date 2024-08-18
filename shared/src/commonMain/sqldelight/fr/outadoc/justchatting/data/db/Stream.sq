@@ -68,7 +68,7 @@ LEFT JOIN Category ON LiveStream.category_id = Category.id
 JOIN User ON LiveStream.user_id = User.id
 JOIN UserInfo ON LiveStream.user_id = UserInfo.id
 WHERE user_id IN (SELECT id FROM User WHERE followed_at > 0)
-ORDER BY start_time;
+ORDER BY viewer_count DESC;
 
 getFutureStreams:
 SELECT *, Category.name AS category_name FROM FutureStream

@@ -228,6 +228,7 @@ internal class TwitchRepositoryImpl(
                     }
 
                     combine(
+                        localUsersApi.getFollowedChannels(),
                         localStreamsApi.getPastStreams(
                             notBefore = notBefore,
                             notAfter = notAfter,
@@ -237,7 +238,7 @@ internal class TwitchRepositoryImpl(
                             notBefore = notBefore,
                             notAfter = notAfter,
                         ),
-                    ) { past, live, future ->
+                    ) { followed, past, live, future ->
                         val groupedPast = past.groupBy { segment ->
                             segment.startTime.toLocalDateTime(timeZone).date
                         }
@@ -248,11 +249,21 @@ internal class TwitchRepositoryImpl(
 
                         FullSchedule(
                             past = groupedPast,
-                            live = live,
+                            live = live
+                                .mapNotNull { stream ->
+                                    followed
+                                        .firstOrNull { follow -> follow.user.id == stream.userId }
+                                        ?.let { follow ->
+                                            UserStream(
+                                                stream = stream,
+                                                user = follow.user,
+                                            )
+                                        }
+                                },
                             future = groupedFuture,
                             // We want to scroll to "today", so skip the number of past segments
                             // + the number of days, used as headers
-                            initialListIndex = past.size + groupedPast.keys.size + 1,
+                            initialListIndex = past.size + groupedPast.keys.size,
                         )
                     }
                 }

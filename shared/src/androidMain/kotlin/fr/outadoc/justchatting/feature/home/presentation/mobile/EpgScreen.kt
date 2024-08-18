@@ -74,7 +74,6 @@ internal fun EpgScreen(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
-    onChannelClick: (userId: String) -> Unit,
 ) {
     val viewModel: EpgViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
@@ -111,7 +110,6 @@ internal fun EpgScreen(
                         modifier = modifier,
                         schedule = currentState.schedule,
                         insets = insets,
-                        onChannelClick = onChannelClick,
                     )
                 }
             }
@@ -124,7 +122,6 @@ private fun EpgContent(
     modifier: Modifier = Modifier,
     schedule: FullSchedule,
     insets: PaddingValues = PaddingValues(),
-    onChannelClick: (userId: String) -> Unit,
 ) {
     val listState = rememberLazyListState(
         initialFirstVisibleItemIndex = schedule.initialListIndex,

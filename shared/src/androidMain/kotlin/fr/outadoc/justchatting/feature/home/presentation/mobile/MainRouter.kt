@@ -81,7 +81,6 @@ internal fun MainRouter(
             EpgScreen(
                 sizeClass = sizeClass,
                 onNavigate = { navController.navigate(it) },
-                onChannelClick = onChannelClick,
             )
         }
 

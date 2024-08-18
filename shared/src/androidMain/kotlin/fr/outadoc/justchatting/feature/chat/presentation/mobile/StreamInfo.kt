@@ -63,7 +63,7 @@ internal fun StreamInfo(
                 text = pluralStringResource(
                     R.plurals.viewers,
                     stream.viewerCount.toInt(),
-                    stream.viewerCount.formatNumber(),
+                    stream.viewerCount.toInt().formatNumber(),
                 ),
             )
         }

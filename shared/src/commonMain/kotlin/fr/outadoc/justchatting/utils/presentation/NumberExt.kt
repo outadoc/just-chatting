@@ -7,6 +7,4 @@ internal expect fun Float.formatPercent(): String
 
 internal expect fun Int.formatNumber(): String
 
-internal expect fun Long.formatNumber(): String
-
 internal expect fun BigDecimal.formatCurrency(currency: Currency): String

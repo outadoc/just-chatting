@@ -11,8 +11,6 @@ internal actual fun Float.formatPercent(): String =
 
 internal actual fun Int.formatNumber(): String = "%,d".format(this)
 
-internal actual fun Long.formatNumber(): String = "%,d".format(this)
-
 internal actual fun BigDecimal.formatCurrency(currency: Currency): String =
     NumberFormat.getCurrencyInstance()
         .apply { this.currency = currency.toPlatform() }

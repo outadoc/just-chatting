@@ -176,7 +176,7 @@ private fun LiveStream(
                     viewerCount?.let { viewerCount ->
                         Text(
                             modifier = Modifier.alignByBaseline(),
-                            text = viewerCount.formatNumber(),
+                            text = viewerCount.toInt().formatNumber(),
                             maxLines = 1,
                             style = MaterialTheme.typography.labelMedium,
                         )

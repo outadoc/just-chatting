@@ -32,4 +32,6 @@ internal interface LocalStreamsApi {
         user: User,
         segments: List<ChannelScheduleSegment>
     )
+
+    fun getUserIdsToSync(): Flow<List<String>>
 }

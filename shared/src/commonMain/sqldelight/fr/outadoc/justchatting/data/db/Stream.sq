@@ -113,3 +113,8 @@ DELETE FROM LiveStream;
 rememberUserUpdated:
 INSERT OR REPLACE INTO StreamCacheInfo (user_id, last_updated)
 VALUES (?, strftime('%s', 'now'));
+
+getUserIdsToUpdate:
+SELECT id AS user_id FROM User WHERE followed_at > 0
+EXCEPT
+SELECT user_id FROM StreamCacheInfo WHERE last_updated < :minUpdatedAtTimestamp;

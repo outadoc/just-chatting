@@ -292,7 +292,14 @@ internal class TwitchRepositoryImpl(
         notAfter: Instant,
     ) = withContext(DispatchersProvider.io) {
         streamSyncLock.withLock {
-            val followedUsers = getFollowedChannels().first().map { it.user }
+            val userIdsToSync: List<String> =
+                localStreamsApi.getUserIdsToSync().first()
+
+            val followedUsers: List<User> =
+                getFollowedChannels()
+                    .first()
+                    .map { follow -> follow.user }
+                    .filter { user -> user.id in userIdsToSync }
 
             syncPastStreams(
                 followedUsers = followedUsers,

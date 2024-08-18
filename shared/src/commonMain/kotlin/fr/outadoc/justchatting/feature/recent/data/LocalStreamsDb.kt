@@ -10,12 +10,15 @@ import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.domain.model.Video
 import fr.outadoc.justchatting.feature.recent.domain.LocalStreamsApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
+import fr.outadoc.justchatting.utils.logging.logDebug
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlin.time.Duration.Companion.hours
 
 internal class LocalStreamsDb(
     private val streamQueries: StreamQueries,
@@ -193,6 +196,20 @@ internal class LocalStreamsDb(
         }
     }
 
+    override fun getUserIdsToSync(): Flow<List<String>> {
+        val minAcceptableCacheDate = clock.now() - MaxStreamSyncCacheLife
+
+        logDebug<LocalStreamsDb> { "Updating schedule for users not updated after $minAcceptableCacheDate" }
+
+        return streamQueries
+            .getUserIdsToUpdate(
+                minUpdatedAtTimestamp = minAcceptableCacheDate.toEpochMilliseconds(),
+            )
+            .asFlow()
+            .mapToList(DispatchersProvider.io)
+            .flowOn(DispatchersProvider.io)
+    }
+
     override suspend fun cleanup(
         notBefore: Instant,
         notAfter: Instant,
@@ -200,15 +217,22 @@ internal class LocalStreamsDb(
         val now = clock.now()
         streamQueries.transaction {
             streamQueries.cleanupAllLiveStreams()
+
             streamQueries.cleanupPastStreams(
                 notBefore = notBefore.toEpochMilliseconds(),
             )
+
             streamQueries.cleanupFutureStreams(
                 notBefore = notBefore.toEpochMilliseconds(),
                 notAfter = notAfter.toEpochMilliseconds(),
                 now = now.toEpochMilliseconds(),
             )
+
             streamQueries.cleanupCategories()
         }
+    }
+
+    private companion object {
+        val MaxStreamSyncCacheLife = 1.hours
     }
 }

@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -145,6 +144,7 @@ private fun EpgVerticalContent(
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
         contentPadding = contentPadding,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         state = listState,
     ) {
         items(
@@ -153,20 +153,9 @@ private fun EpgVerticalContent(
             contentType = { "segment" },
         ) { segment ->
             EpgSegment(
-                segment = segment,
-                user = User(
-                    // TODO get user from db
-                    id = segment.userId,
-                    login = "user",
-                    displayName = "User",
-                    description = "",
-                    profileImageUrl = "",
-                    createdAt = Instant.DISTANT_PAST,
-                    usedAt = Instant.DISTANT_PAST,
-                ),
+                modifier = Modifier.fillMaxWidth(),
+                segment = segment
             )
-
-            HorizontalDivider()
         }
 
         items(
@@ -191,20 +180,9 @@ private fun EpgVerticalContent(
             contentType = { "segment" },
         ) { segment ->
             EpgSegment(
-                segment = segment,
-                user = User(
-                    // TODO get user from db
-                    id = segment.userId,
-                    login = "user",
-                    displayName = "User",
-                    description = "",
-                    profileImageUrl = "",
-                    createdAt = Instant.DISTANT_PAST,
-                    usedAt = Instant.DISTANT_PAST,
-                ),
+                modifier = Modifier.fillMaxWidth(),
+                segment = segment
             )
-
-            HorizontalDivider()
         }
     }
 }
@@ -214,7 +192,6 @@ private fun EpgVerticalContent(
 private fun EpgSegment(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
-    user: User,
 ) {
     var isExpanded by remember { mutableStateOf(false) }
 
@@ -265,7 +242,6 @@ private fun EpgSegment(
                     .fillMaxWidth()
                     .padding(16.dp),
                 segment = segment,
-                user = user,
             )
         }
     }
@@ -275,7 +251,6 @@ private fun EpgSegment(
 private fun EpgSegmentDetails(
     modifier: Modifier = Modifier,
     segment: ChannelScheduleSegment,
-    user: User,
     tz: TimeZone = TimeZone.currentSystemDefault(),
 ) {
     Column(
@@ -283,7 +258,7 @@ private fun EpgSegmentDetails(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         UserInfo(
-            user = user,
+            user = segment.user,
         )
 
         Card(
@@ -371,7 +346,15 @@ private fun EpgSegmentDetailsPreview(
         EpgSegmentDetails(
             segment = ChannelScheduleSegment(
                 id = "1",
-                userId = "1",
+                user = User(
+                    id = "1",
+                    login = "user",
+                    displayName = lorem,
+                    description = "",
+                    profileImageUrl = "",
+                    createdAt = Instant.DISTANT_PAST,
+                    usedAt = Instant.DISTANT_PAST,
+                ),
                 title = lorem,
                 startTime = Instant.parse("2022-01-01T12:00:00Z"),
                 endTime = Instant.parse("2022-01-01T13:00:00Z"),
@@ -379,15 +362,6 @@ private fun EpgSegmentDetailsPreview(
                     id = "1",
                     name = lorem,
                 ),
-            ),
-            user = User(
-                id = "1",
-                login = "user",
-                displayName = lorem,
-                description = "",
-                profileImageUrl = "",
-                createdAt = Instant.DISTANT_PAST,
-                usedAt = Instant.DISTANT_PAST,
             ),
         )
     }
@@ -402,7 +376,15 @@ private fun EpgSegmentPreview(
         EpgSegment(
             segment = ChannelScheduleSegment(
                 id = "1",
-                userId = "1",
+                user = User(
+                    id = "1",
+                    login = "user",
+                    displayName = lorem,
+                    description = "",
+                    profileImageUrl = "",
+                    createdAt = Instant.DISTANT_PAST,
+                    usedAt = Instant.DISTANT_PAST,
+                ),
                 title = lorem,
                 startTime = Instant.parse("2022-01-01T12:00:00Z"),
                 endTime = Instant.parse("2022-01-01T13:00:00Z"),
@@ -410,15 +392,6 @@ private fun EpgSegmentPreview(
                     id = "1",
                     name = lorem,
                 ),
-            ),
-            user = User(
-                id = "1",
-                login = "user",
-                displayName = lorem,
-                description = "",
-                profileImageUrl = "",
-                createdAt = Instant.DISTANT_PAST,
-                usedAt = Instant.DISTANT_PAST,
             ),
         )
     }

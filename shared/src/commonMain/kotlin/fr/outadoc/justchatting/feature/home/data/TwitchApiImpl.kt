@@ -372,7 +372,15 @@ internal class TwitchApiImpl(
                                 segments.map { segment ->
                                     ChannelScheduleSegment(
                                         id = segment.id,
-                                        userId = response.data.userId,
+                                        user = User(
+                                            id = userId,
+                                            login = "",
+                                            displayName = "",
+                                            description = "",
+                                            profileImageUrl = "",
+                                            createdAt = Instant.DISTANT_PAST,
+                                            usedAt = Instant.DISTANT_PAST,
+                                        ),
                                         title = segment.title,
                                         startTime = segment.startTime,
                                         endTime = segment.endTime,

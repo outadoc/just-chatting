@@ -6,6 +6,7 @@ import fr.outadoc.justchatting.data.db.StreamQueries
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
+import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.domain.model.Video
 import fr.outadoc.justchatting.feature.recent.domain.LocalStreamsApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
@@ -36,7 +37,19 @@ internal class LocalStreamsDb(
                 streams.map { stream ->
                     ChannelScheduleSegment(
                         id = stream.id,
-                        userId = stream.user_id,
+                        user = User(
+                            id = stream.user_id,
+                            login = stream.login,
+                            displayName = stream.display_name,
+                            profileImageUrl = stream.profile_image_url,
+                            description = stream.description,
+                            createdAt = Instant.fromEpochMilliseconds(stream.created_at),
+                            usedAt = if (stream.used_at > 0) {
+                                Instant.fromEpochMilliseconds(stream.used_at)
+                            } else {
+                                null
+                            },
+                        ),
                         startTime = Instant.fromEpochMilliseconds(stream.start_time),
                         endTime = Instant.fromEpochMilliseconds(stream.end_time),
                         title = stream.title,
@@ -95,7 +108,19 @@ internal class LocalStreamsDb(
                 streams.map { stream ->
                     ChannelScheduleSegment(
                         id = stream.id,
-                        userId = stream.user_id,
+                        user = User(
+                            id = stream.user_id,
+                            login = stream.login,
+                            displayName = stream.display_name,
+                            profileImageUrl = stream.profile_image_url,
+                            description = stream.description,
+                            createdAt = Instant.fromEpochMilliseconds(stream.created_at),
+                            usedAt = if (stream.used_at > 0) {
+                                Instant.fromEpochMilliseconds(stream.used_at)
+                            } else {
+                                null
+                            },
+                        ),
                         startTime = Instant.fromEpochMilliseconds(stream.start_time),
                         endTime = Instant.fromEpochMilliseconds(stream.end_time),
                         title = stream.title,
@@ -143,7 +168,7 @@ internal class LocalStreamsDb(
 
                     streamQueries.addFutureStream(
                         id = segment.id,
-                        user_id = segment.userId,
+                        user_id = segment.user.id,
                         start_time = segment.startTime.toEpochMilliseconds(),
                         end_time = segment.endTime.toEpochMilliseconds(),
                         title = segment.title,

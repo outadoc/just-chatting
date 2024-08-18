@@ -381,7 +381,7 @@ internal class TwitchRepositoryImpl(
                     }
 
                     localStreamsApi.addFutureStreams(
-                        segments = segments,
+                        segments = segments.map { segment -> segment.copy(user = user) },
                     )
                 }
                 .onFailure { exception ->

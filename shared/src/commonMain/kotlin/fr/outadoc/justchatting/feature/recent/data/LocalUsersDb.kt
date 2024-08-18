@@ -161,7 +161,7 @@ internal class LocalUsersDb(
                 }
 
                 userQueries.setFollowedUsersUpdated(
-                    last_updated = now.toEpochMilliseconds()
+                    last_updated = now.toEpochMilliseconds(),
                 )
             }
         }

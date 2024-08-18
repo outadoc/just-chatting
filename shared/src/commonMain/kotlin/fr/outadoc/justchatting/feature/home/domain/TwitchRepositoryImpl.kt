@@ -77,7 +77,10 @@ internal class TwitchRepositoryImpl(
             when (prefs.appUser) {
                 is AppUser.LoggedIn -> {
                     launch {
-                        syncLocalFollows(appUserId = prefs.appUser.userId)
+                        if (localUsersApi.isFollowedUsersCacheExpired()) {
+                            syncLocalFollows(appUserId = prefs.appUser.userId)
+                        }
+
                         syncLocalUserInfo()
                     }
 
@@ -181,7 +184,10 @@ internal class TwitchRepositoryImpl(
                     val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 
                     launch {
-                        syncLocalFollows(appUserId = prefs.appUser.userId)
+                        if (localUsersApi.isFollowedUsersCacheExpired()) {
+                            syncLocalFollows(appUserId = prefs.appUser.userId)
+                        }
+
                         syncLocalUserInfo()
 
                         syncFullSchedule(

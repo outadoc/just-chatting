@@ -51,7 +51,7 @@ CREATE TABLE StreamCacheInfo (
 
 addCategory:
 INSERT OR IGNORE INTO Category (id, name, inserted_at)
-VALUES (?, ?, strftime('%s', 'now'));
+VALUES (?, ?, ?);
 
 getPastStreams:
 SELECT *, Category.name AS category_name FROM PastStream
@@ -112,7 +112,7 @@ DELETE FROM LiveStream;
 
 rememberUserUpdated:
 INSERT OR REPLACE INTO StreamCacheInfo (user_id, last_updated)
-VALUES (?, strftime('%s', 'now'));
+VALUES (?, ?);
 
 getUserIdsToUpdate:
 SELECT id AS user_id FROM User WHERE followed_at > 0

@@ -17,6 +17,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
 
 internal class LocalUsersDb(
     private val userQueries: UserQueries,
@@ -107,7 +108,11 @@ internal class LocalUsersDb(
             val updatedAt = clock.now()
             userQueries.transaction {
                 users.forEach { user ->
-                    userQueries.ensureCreated(id = user.id)
+                    userQueries.ensureCreated(
+                        id = user.id,
+                        inserted_at = updatedAt.toEpochMilliseconds(),
+                    )
+
                     userQueries.updateUserInfo(
                         id = user.id,
                         login = user.login,
@@ -123,8 +128,13 @@ internal class LocalUsersDb(
 
     override suspend fun saveUser(userId: String, visitedAt: Instant?) =
         withContext(DispatchersProvider.io) {
+            val now = clock.now()
             userQueries.transaction {
-                userQueries.ensureCreated(id = userId)
+                userQueries.ensureCreated(
+                    id = userId,
+                    inserted_at = now.toEpochMilliseconds(),
+                )
+
                 visitedAt?.let { usedAt ->
                     userQueries.updateVisitedAt(
                         id = userId,
@@ -136,14 +146,23 @@ internal class LocalUsersDb(
 
     override suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>) =
         withContext(DispatchersProvider.io) {
+            val now = clock.now()
             userQueries.transaction {
                 follows.forEach { channelFollow ->
-                    userQueries.ensureCreated(id = channelFollow.user.id)
+                    userQueries.ensureCreated(
+                        id = channelFollow.user.id,
+                        inserted_at = now.toEpochMilliseconds(),
+                    )
+
                     userQueries.updateFollowedAt(
                         id = channelFollow.user.id,
                         followed_at = channelFollow.followedAt.toEpochMilliseconds(),
                     )
                 }
+
+                userQueries.setFollowedUsersUpdated(
+                    last_updated = now.toEpochMilliseconds()
+                )
             }
         }
 
@@ -161,7 +180,18 @@ internal class LocalUsersDb(
             .flowOn(DispatchersProvider.io)
     }
 
+    override suspend fun isFollowedUsersCacheExpired(): Boolean =
+        withContext(DispatchersProvider.io) {
+            val minAcceptableCacheDate = clock.now() - MaxFollowedUsersCacheLife
+            val updatedAt = userQueries
+                .getFollowedUsersUpdatedAt()
+                .executeAsOneOrNull()
+
+            updatedAt == null || updatedAt < minAcceptableCacheDate.toEpochMilliseconds()
+        }
+
     private companion object {
         val MaxUserCacheLife = 1.days
+        val MaxFollowedUsersCacheLife = 2.hours
     }
 }

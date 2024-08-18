@@ -18,6 +18,12 @@ CREATE TABLE UserInfo (
     FOREIGN KEY (`id`) REFERENCES User (`id`) ON DELETE CASCADE
 );
 
+CREATE TABLE UserCacheInfo(
+    `feature_id` TEXT NOT NULL,
+    `last_updated` INTEGER NOT NULL,
+    PRIMARY KEY (`feature_id`)
+);
+
 CREATE INDEX index_UserInfo_login ON UserInfo (login);
 
 getRecent:
@@ -48,10 +54,17 @@ VALUES (?, ?, ?, ?, ?, ?, ?);
 
 ensureCreated:
 INSERT OR IGNORE INTO User (id, used_at, followed_at, inserted_at)
-VALUES (?, 0, 0, strftime('%s', 'now'));
+VALUES (?, 0, 0, ?);
 
 updateVisitedAt:
 UPDATE User SET used_at = :used_at WHERE id = :id;
 
 updateFollowedAt:
 UPDATE User SET followed_at = :followed_at WHERE id = :id;
+
+setFollowedUsersUpdated:
+INSERT OR REPLACE INTO UserCacheInfo (feature_id, last_updated)
+VALUES ('followed_users', ?);
+
+getFollowedUsersUpdatedAt:
+SELECT last_updated FROM UserCacheInfo WHERE feature_id = 'followed_users';

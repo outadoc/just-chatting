@@ -20,7 +20,6 @@ internal class EpgViewModel(
         data object Loading : State()
         data class Loaded(
             val schedule: FullSchedule,
-            val initialListIndex: Int,
             val timeZone: TimeZone,
         ) : State()
     }
@@ -48,7 +47,6 @@ internal class EpgViewModel(
                     _state.value = State.Loaded(
                         schedule = schedule,
                         timeZone = tz,
-                        initialListIndex = schedule.past.size,
                     )
                 }
         }

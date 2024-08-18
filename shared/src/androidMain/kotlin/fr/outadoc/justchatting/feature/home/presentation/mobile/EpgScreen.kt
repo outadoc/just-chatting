@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.home.presentation.mobile
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.filled.Gamepad
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -53,6 +55,7 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toLocalDateTime
@@ -102,7 +105,6 @@ internal fun EpgScreen(
                     EpgContent(
                         modifier = modifier,
                         schedule = currentState.schedule,
-                        initialListIndex = currentState.initialListIndex,
                         contentPadding = insets,
                         onChannelClick = onChannelClick,
                     )
@@ -116,11 +118,12 @@ internal fun EpgScreen(
 private fun EpgContent(
     modifier: Modifier = Modifier,
     schedule: FullSchedule,
-    initialListIndex: Int = 0,
     contentPadding: PaddingValues = PaddingValues(),
     onChannelClick: (userId: String) -> Unit,
 ) {
-    val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialListIndex)
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = schedule.initialListIndex,
+    )
 
     LaunchedEffect(listState) {
         logDebug<Screen.Epg> { "sharedListState: $listState" }
@@ -128,12 +131,13 @@ private fun EpgContent(
 
     EpgVerticalContent(
         modifier = modifier.fillMaxWidth(),
+        schedule = schedule,
         listState = listState,
         contentPadding = contentPadding,
-        schedule = schedule,
     )
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 private fun EpgVerticalContent(
     modifier: Modifier = Modifier,
@@ -147,15 +151,32 @@ private fun EpgVerticalContent(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         state = listState,
     ) {
-        items(
-            schedule.past,
-            key = { segment -> segment.id },
-            contentType = { "segment" },
-        ) { segment ->
-            EpgSegment(
-                modifier = Modifier.fillMaxWidth(),
-                segment = segment,
-            )
+        schedule.past.keys.forEach { date ->
+            stickyHeader(
+                key = "past-${date.toEpochDays()}",
+                contentType = "date",
+            ) {
+                Text(
+                    date.format(),
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(8.dp),
+                )
+            }
+
+            items(
+                items = schedule.past[date].orEmpty(),
+                key = { segment -> segment.id },
+                contentType = { "segment" },
+            ) { segment ->
+                EpgSegment(
+                    modifier = Modifier.fillMaxWidth(),
+                    segment = segment,
+                )
+            }
+        }
+
+        item(contentType = "separator") {
+            HorizontalDivider()
         }
 
         items(
@@ -174,15 +195,34 @@ private fun EpgVerticalContent(
             )
         }
 
-        items(
-            schedule.future,
-            key = { segment -> segment.id },
-            contentType = { "segment" },
-        ) { segment ->
-            EpgSegment(
-                modifier = Modifier.fillMaxWidth(),
-                segment = segment,
-            )
+        if (schedule.live.isNotEmpty()) {
+            item(contentType = "separator") {
+                HorizontalDivider()
+            }
+        }
+
+        schedule.future.keys.forEach { date ->
+            stickyHeader(
+                key = "future-${date.toEpochDays()}",
+                contentType = "date",
+            ) {
+                Text(
+                    date.format(),
+                    style = MaterialTheme.typography.labelSmall,
+                    modifier = Modifier.padding(8.dp),
+                )
+            }
+
+            items(
+                items = schedule.future[date].orEmpty(),
+                key = { segment -> segment.id },
+                contentType = { "segment" },
+            ) { segment ->
+                EpgSegment(
+                    modifier = Modifier.fillMaxWidth(),
+                    segment = segment,
+                )
+            }
         }
     }
 }
@@ -276,15 +316,8 @@ private fun EpgSegmentDetails(
                     )
                 }
 
-                val date = remember(segment.startTime) {
-                    segment.startTime
-                        .toLocalDateTime(tz)
-                        .date
-                        .toJavaLocalDate()
-                        .format(
-                            DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL),
-                        )
-                }
+                val date: String =
+                    segment.startTime.toLocalDateTime(tz).date.format()
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -336,6 +369,12 @@ private fun EpgSegmentDetails(
         }
     }
 }
+
+@Composable
+private fun LocalDate.format(): String =
+    remember(this) {
+        toJavaLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))
+    }
 
 @Preview
 @Composable

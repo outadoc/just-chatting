@@ -35,6 +35,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 
 internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
@@ -235,10 +236,21 @@ internal class TwitchRepositoryImpl(
                             notAfter = notAfter,
                         ),
                     ) { past, live, future ->
+                        val groupedPast = past.groupBy { segment ->
+                            segment.startTime.toLocalDateTime(timeZone).date
+                        }
+
+                        val groupedFuture = future.groupBy { segment ->
+                            segment.startTime.toLocalDateTime(timeZone).date
+                        }
+
                         FullSchedule(
-                            past = past,
+                            past = groupedPast,
                             live = live,
-                            future = future,
+                            future = groupedFuture,
+                            // We want to scroll to "today", so skip the number of past segments
+                            // + the number of days, used as headers
+                            initialListIndex = past.size + groupedFuture.keys.size + 2,
                         )
                     }
                 }

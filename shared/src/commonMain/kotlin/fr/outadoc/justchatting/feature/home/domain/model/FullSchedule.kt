@@ -8,5 +8,5 @@ internal data class FullSchedule(
     val past: Map<LocalDate, List<ChannelScheduleSegment>>,
     val live: List<UserStream>,
     val future: Map<LocalDate, List<ChannelScheduleSegment>>,
-    val initialListIndex: Int,
+    val todayListIndex: Int,
 )

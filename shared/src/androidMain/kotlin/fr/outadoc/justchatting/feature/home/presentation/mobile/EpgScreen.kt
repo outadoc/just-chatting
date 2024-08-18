@@ -18,10 +18,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Gamepad
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
@@ -91,6 +93,16 @@ internal fun EpgScreen(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(MR.strings.epg_title)) },
+                actions = {
+                    IconButton(
+                        onClick = { viewModel.load() },
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = stringResource(MR.strings.refresh),
+                        )
+                    }
+                }
             )
         },
         content = { insets ->
@@ -126,7 +138,7 @@ private fun EpgContent(
     insets: PaddingValues = PaddingValues(),
 ) {
     val listState = rememberLazyListState(
-        initialFirstVisibleItemIndex = schedule.initialListIndex,
+        initialFirstVisibleItemIndex = schedule.todayListIndex,
     )
 
     LaunchedEffect(listState) {

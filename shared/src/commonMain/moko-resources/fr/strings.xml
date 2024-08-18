@@ -270,6 +270,7 @@
     <string name="logout_title">Se déconnecter ?</string>
     <string name="message_limit">Limite de messages</string>
     <string name="no">Non</string>
+    <string name="refresh">Rafraîchir</string>
     <string name="settings">Réglages</string>
     <string name="settings_about_header">À propos</string>
     <string name="settings_about_version">Version %1$s</string>

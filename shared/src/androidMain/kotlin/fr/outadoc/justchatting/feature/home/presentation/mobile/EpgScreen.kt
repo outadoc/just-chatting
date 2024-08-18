@@ -154,7 +154,7 @@ private fun EpgVerticalContent(
         ) { segment ->
             EpgSegment(
                 modifier = Modifier.fillMaxWidth(),
-                segment = segment
+                segment = segment,
             )
         }
 
@@ -181,7 +181,7 @@ private fun EpgVerticalContent(
         ) { segment ->
             EpgSegment(
                 modifier = Modifier.fillMaxWidth(),
-                segment = segment
+                segment = segment,
             )
         }
     }

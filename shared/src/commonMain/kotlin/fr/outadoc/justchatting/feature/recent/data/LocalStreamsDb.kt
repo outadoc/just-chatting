@@ -142,7 +142,7 @@ internal class LocalStreamsDb(
 
     override suspend fun addPastStreams(
         user: User,
-        videos: List<Video>
+        videos: List<Video>,
     ) {
         withContext(DispatchersProvider.io) {
             streamQueries.transaction {
@@ -159,7 +159,7 @@ internal class LocalStreamsDb(
                 }
 
                 streamQueries.rememberUserUpdated(
-                    user_id = user.id
+                    user_id = user.id,
                 )
             }
         }
@@ -167,7 +167,7 @@ internal class LocalStreamsDb(
 
     override suspend fun addFutureStreams(
         user: User,
-        segments: List<ChannelScheduleSegment>
+        segments: List<ChannelScheduleSegment>,
     ) {
         withContext(DispatchersProvider.io) {
             streamQueries.transaction {
@@ -189,7 +189,7 @@ internal class LocalStreamsDb(
                     )
 
                     streamQueries.rememberUserUpdated(
-                        user_id = user.id
+                        user_id = user.id,
                     )
                 }
             }

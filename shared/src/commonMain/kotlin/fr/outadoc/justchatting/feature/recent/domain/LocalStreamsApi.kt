@@ -30,7 +30,7 @@ internal interface LocalStreamsApi {
 
     suspend fun addFutureStreams(
         user: User,
-        segments: List<ChannelScheduleSegment>
+        segments: List<ChannelScheduleSegment>,
     )
 
     fun getUserIdsToSync(): Flow<List<String>>

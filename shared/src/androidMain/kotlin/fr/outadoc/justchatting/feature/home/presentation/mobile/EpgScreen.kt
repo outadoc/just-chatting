@@ -14,9 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
@@ -34,7 +33,6 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -57,14 +55,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
 import app.cash.paging.compose.LazyPagingItems
-import app.cash.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import dev.icerock.moko.resources.compose.stringResource
+import fr.outadoc.justchatting.feature.chat.presentation.mobile.StreamInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.UserInfo
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
+import fr.outadoc.justchatting.feature.home.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.presentation.EpgViewModel
@@ -73,15 +71,12 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
-import java.time.format.TextStyle
-import java.util.Locale
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.DurationUnit
@@ -127,8 +122,7 @@ internal fun EpgScreen(
                 is EpgViewModel.State.Loaded -> {
                     EpgContent(
                         modifier = modifier,
-                        channels = currentState.channels,
-                        days = currentState.days,
+                        schedule = currentState.schedule,
                         initialListIndex = currentState.initialListIndex,
                         contentPadding = insets,
                         onChannelClick = onChannelClick,
@@ -143,140 +137,93 @@ internal fun EpgScreen(
 @Composable
 private fun EpgContent(
     modifier: Modifier = Modifier,
-    channels: List<ChannelSchedule>,
-    days: List<LocalDate>,
+    schedule: FullSchedule,
     initialListIndex: Int = 0,
     contentPadding: PaddingValues = PaddingValues(),
     onChannelClick: (userId: String) -> Unit,
 ) {
-    var sharedListState by remember {
-        mutableStateOf(
-            SharedListState(
-                firstVisibleItemIndex = initialListIndex,
-            ),
-        )
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialListIndex)
+
+    LaunchedEffect(listState) {
+        logDebug<Screen.Epg> { "sharedListState: $listState" }
     }
 
-    LaunchedEffect(sharedListState) {
-        logDebug<Screen.Epg> { "sharedListState: $sharedListState" }
-    }
-
-    LazyRow(
+    EpgVerticalContent(
         modifier = modifier.fillMaxWidth(),
+        listState = listState,
         contentPadding = contentPadding,
-    ) {
-        stickyHeader("timeline") {
-            Timeline(
-                modifier = Modifier
-                    .width(48.dp)
-                    .background(
-                        MaterialTheme.colorScheme.surface,
-                    )
-                    .padding(end = 8.dp),
-                days = days,
-                sharedListState = sharedListState,
-                updateSharedListState = { sharedListState = it },
-            )
-
-            VerticalDivider()
-        }
-
-        items(
-            channels,
-            key = { channel -> channel.user.id },
-            contentType = { "channel" },
-        ) { channel ->
-            val dayItems = channel.scheduleFlow.collectAsLazyPagingItems()
-
-            EpgChannelEntry(
-                modifier = Modifier
-                    .padding(horizontal = 8.dp)
-                    .width(ColumnWidth),
-                user = channel.user,
-                days = dayItems,
-                sharedListState = sharedListState,
-                updateSharedListState = { sharedListState = it },
-                onChannelClick = onChannelClick,
-            )
-
-            VerticalDivider()
-        }
-    }
+        schedule = schedule,
+    )
 }
 
 @Composable
-private fun Timeline(
+private fun EpgVerticalContent(
     modifier: Modifier = Modifier,
-    days: List<LocalDate>,
-    sharedListState: SharedListState = SharedListState(),
-    updateSharedListState: (SharedListState) -> Unit = {},
+    schedule: FullSchedule,
+    listState: LazyListState = rememberLazyListState(),
+    contentPadding: PaddingValues = PaddingValues(),
 ) {
-    val listState = rememberLazyListState(
-        initialFirstVisibleItemIndex = sharedListState.firstVisibleItemIndex,
-        initialFirstVisibleItemScrollOffset = sharedListState.firstVisibleItemScrollOffset,
-    )
-
-    LaunchedEffect(sharedListState) {
-        listState.scrollToItem(
-            index = sharedListState.firstVisibleItemIndex,
-            scrollOffset = sharedListState.firstVisibleItemScrollOffset,
-        )
-    }
-
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset }
-            .collect { (index, scrollOffset) ->
-                if (sharedListState.firstVisibleItemIndex != index ||
-                    sharedListState.firstVisibleItemScrollOffset != scrollOffset
-                ) {
-                    updateSharedListState(
-                        SharedListState(
-                            firstVisibleItemIndex = index,
-                            firstVisibleItemScrollOffset = scrollOffset,
-                        ),
-                    )
-                }
-            }
-    }
-
     LazyColumn(
-        modifier = modifier.fillMaxHeight(),
+        modifier = modifier.fillMaxWidth(),
+        contentPadding = contentPadding,
         state = listState,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        item(
-            key = "header",
-            contentType = "header",
-        ) {
-            Spacer(modifier = Modifier.height(HeaderHeight))
+        items(
+            schedule.past,
+            key = { segment -> segment.id },
+            contentType = { "segment" },
+        ) { segment ->
+            EpgSegment(
+                segment = segment,
+                user = User(
+                    // TODO get user from db
+                    id = segment.userId,
+                    login = "user",
+                    displayName = "User",
+                    description = "",
+                    profileImageUrl = "",
+                    createdAt = Instant.DISTANT_PAST,
+                    usedAt = Instant.DISTANT_PAST,
+                ),
+            )
+
+            HorizontalDivider()
         }
 
         items(
-            items = days,
-            key = { date -> date.toEpochDays() },
-            contentType = { "date" },
-        ) { date ->
-            Column(
-                modifier = Modifier
-                    .height(heightForDuration(1.days))
-                    .fillMaxWidth(),
-            ) {
-                Text(
-                    date.dayOfWeek.getDisplayName(
-                        TextStyle.SHORT,
-                        Locale.getDefault(),
-                    ),
-                )
+            schedule.live,
+            key = { stream -> stream.id },
+            contentType = { "stream" },
+        ) { stream ->
+            LiveStreamCard(
+                modifier = Modifier.fillMaxWidth(),
+                title = stream.title,
+                userName = stream.userId,
+                viewerCount = stream.viewerCount,
+                category = stream.category,
+                startedAt = stream.startedAt,
+                tags = stream.tags,
+            )
+        }
 
-                Text(date.dayOfMonth.toString())
-
-                Text(
-                    date.month.getDisplayName(
-                        TextStyle.SHORT,
-                        Locale.getDefault(),
-                    ),
-                )
-            }
+        items(
+            schedule.future,
+            key = { segment -> segment.id },
+            contentType = { "segment" },
+        ) { segment ->
+            EpgSegment(
+                segment = segment,
+                user = User(
+                    // TODO get user from db
+                    id = segment.userId,
+                    login = "user",
+                    displayName = "User",
+                    description = "",
+                    profileImageUrl = "",
+                    createdAt = Instant.DISTANT_PAST,
+                    usedAt = Instant.DISTANT_PAST,
+                ),
+            )
 
             HorizontalDivider()
         }

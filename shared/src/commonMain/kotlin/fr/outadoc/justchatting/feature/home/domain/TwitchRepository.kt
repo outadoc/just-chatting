@@ -12,6 +12,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.domain.model.UserStream
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 
 internal interface TwitchRepository {
@@ -42,9 +43,9 @@ internal interface TwitchRepository {
         timeZone: TimeZone,
     ): Flow<PagingData<ChannelScheduleForDay>>
 
-    suspend fun getChannelSchedule(
-        start: Instant,
-        timeZone: TimeZone,
+    suspend fun getFollowedChannelsSchedule(
+        today: LocalDate,
+        timeZone: TimeZone
     ): Flow<FullSchedule>
 
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>

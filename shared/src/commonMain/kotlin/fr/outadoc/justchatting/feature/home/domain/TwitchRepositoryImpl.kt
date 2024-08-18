@@ -33,6 +33,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.minus
@@ -218,16 +219,14 @@ internal class TwitchRepositoryImpl(
             )
         }
 
-    override suspend fun getChannelSchedule(
-        start: Instant,
+    override suspend fun getFollowedChannelsSchedule(
+        today: LocalDate,
         timeZone: TimeZone,
     ): Flow<FullSchedule> =
         withContext(DispatchersProvider.io) {
             val prefs = preferencesRepository.currentPreferences.first()
             when (prefs.appUser) {
                 is AppUser.LoggedIn -> {
-                    val today = start.toLocalDateTime(timeZone).date
-
                     val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
                     val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
 

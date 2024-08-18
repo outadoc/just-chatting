@@ -17,17 +17,15 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Gamepad
-import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
@@ -41,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,7 +70,6 @@ import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun EpgScreen(
     modifier: Modifier = Modifier,
@@ -91,19 +89,14 @@ internal fun EpgScreen(
         selectedScreen = Screen.Epg,
         onSelectedTabChange = onNavigate,
         topBar = {
-            TopAppBar(
-                title = { Text(stringResource(MR.strings.epg_title)) },
-                actions = {
-                    IconButton(
-                        onClick = { viewModel.load() },
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Refresh,
-                            contentDescription = stringResource(MR.strings.refresh),
-                        )
-                    }
-                },
-            )
+            Surface(
+                color = MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+            ) {
+                SearchBar(
+                    onChannelClick = onChannelClick,
+                    sizeClass = sizeClass,
+                )
+            }
         },
         content = { insets ->
             when (val currentState = state) {
@@ -172,8 +165,10 @@ private fun EpgVerticalContent(
     onChannelClick: (userId: String) -> Unit,
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxWidth(),
-        contentPadding = insets + PaddingValues(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(insets),
+        contentPadding = PaddingValues(
             start = 16.dp,
             end = 16.dp,
             bottom = 16.dp,
@@ -263,17 +258,19 @@ private fun SectionHeader(
 ) {
     Column(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.surface)
+            .background(
+                Brush.verticalGradient(
+                    0f to MaterialTheme.colorScheme.surface,
+                    1f to MaterialTheme.colorScheme.surface.copy(alpha = 0.8f),
+                ),
+            )
+            .padding(vertical = 8.dp)
             .fillMaxWidth(),
     ) {
-        Column(
-            modifier = Modifier.padding(top = 16.dp),
+        CompositionLocalProvider(
+            LocalTextStyle provides MaterialTheme.typography.headlineSmall,
         ) {
-            CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.headlineSmall,
-            ) {
-                title()
-            }
+            title()
         }
     }
 }

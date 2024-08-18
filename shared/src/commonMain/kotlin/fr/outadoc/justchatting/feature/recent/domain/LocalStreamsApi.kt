@@ -8,15 +8,13 @@ import kotlinx.datetime.Instant
 internal interface LocalStreamsApi {
 
     fun getPastStreams(
-        userId: String,
         notBefore: Instant,
         notAfter: Instant
     ): Flow<List<ChannelScheduleSegment>>
 
-    fun getLiveStreams(userId: String, notBefore: Instant, notAfter: Instant): Flow<List<Stream>>
+    fun getLiveStreams(): Flow<List<Stream>>
 
     fun getFutureStreams(
-        userId: String,
         notBefore: Instant,
         notAfter: Instant
     ): Flow<List<ChannelScheduleSegment>>

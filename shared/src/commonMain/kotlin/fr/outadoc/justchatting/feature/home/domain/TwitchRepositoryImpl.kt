@@ -19,6 +19,7 @@ import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -30,6 +31,10 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
+import kotlinx.datetime.toLocalDateTime
 
 internal class TwitchRepositoryImpl(
     private val twitchApi: TwitchApi,
@@ -214,7 +219,28 @@ internal class TwitchRepositoryImpl(
         timeZone: TimeZone
     ): Flow<FullSchedule> =
         withContext(DispatchersProvider.io) {
-            TODO()
+            val today = start.toLocalDateTime(timeZone).date
+
+            val notBefore = (today - EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+            val notAfter = (today + EpgConfig.MaxDaysAhead).atStartOfDayIn(timeZone)
+
+            combine(
+                localStreamsApi.getPastStreams(
+                    notBefore = notBefore,
+                    notAfter = notAfter
+                ),
+                localStreamsApi.getLiveStreams(),
+                localStreamsApi.getFutureStreams(
+                    notBefore = notBefore,
+                    notAfter = notAfter
+                )
+            ) { past, live, future ->
+                FullSchedule(
+                    past = past,
+                    live = live,
+                    future = future,
+                )
+            }
         }
 
     override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> =

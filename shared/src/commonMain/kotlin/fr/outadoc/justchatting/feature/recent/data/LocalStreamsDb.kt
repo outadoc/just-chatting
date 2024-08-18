@@ -20,13 +20,11 @@ internal class LocalStreamsDb(
 ) : LocalStreamsApi {
 
     override fun getPastStreams(
-        userId: String,
         notBefore: Instant,
         notAfter: Instant
     ): Flow<List<ChannelScheduleSegment>> {
         return streamQueries
             .getPastStreams(
-                userId = userId,
                 notBefore = notBefore.toEpochMilliseconds(),
                 notAfter = notAfter.toEpochMilliseconds()
             )
@@ -52,13 +50,9 @@ internal class LocalStreamsDb(
             }
     }
 
-    override fun getLiveStreams(
-        userId: String,
-        notBefore: Instant,
-        notAfter: Instant
-    ): Flow<List<Stream>> {
+    override fun getLiveStreams(): Flow<List<Stream>> {
         return streamQueries
-            .getLiveStreams(userId = userId)
+            .getLiveStreams()
             .asFlow()
             .mapToList(DispatchersProvider.io)
             .map { streams ->
@@ -84,13 +78,11 @@ internal class LocalStreamsDb(
     }
 
     override fun getFutureStreams(
-        userId: String,
         notBefore: Instant,
         notAfter: Instant
     ): Flow<List<ChannelScheduleSegment>> {
         return streamQueries
             .getFutureStreams(
-                userId = userId,
                 notBefore = notBefore.toEpochMilliseconds(),
                 notAfter = notAfter.toEpochMilliseconds()
             )

@@ -214,7 +214,7 @@ internal class TwitchRepositoryImpl(
         timeZone: TimeZone
     ): Flow<FullSchedule> =
         withContext(DispatchersProvider.io) {
-
+            TODO()
         }
 
     override suspend fun getGlobalBadges(): Result<List<TwitchBadge>> =

@@ -251,6 +251,7 @@
     <string name="channels">Followed</string>
     <string name="followed_at">Following since %s</string>
     <string name="live">Live</string>
+    <string name="live_tag">🔴 Live</string>
     <string name="nothing_here">Nothing to see here</string>
     <string name="onboarding_login_action">Continue with Twitch</string>
     <string name="onboarding_message">In order to browse your followed channels and post in chat, you will need to link your Twitch account.</string>

@@ -19,9 +19,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
+import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.formatNumber
@@ -115,7 +117,8 @@ internal fun LiveStreamCard(
                         top = 4.dp,
                         bottom = 8.dp,
                     ),
-                    tags = tags,
+                    tags = persistentSetOf(stringResource(MR.strings.live_tag))
+                        .addAll(tags),
                 )
             }
         }

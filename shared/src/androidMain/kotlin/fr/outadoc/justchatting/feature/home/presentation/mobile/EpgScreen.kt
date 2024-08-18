@@ -61,6 +61,7 @@ import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import fr.outadoc.justchatting.utils.presentation.plus
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -101,7 +102,7 @@ internal fun EpgScreen(
                             contentDescription = stringResource(MR.strings.refresh),
                         )
                     }
-                }
+                },
             )
         },
         content = { insets ->
@@ -226,7 +227,7 @@ private fun EpgVerticalContent(
                 viewerCount = userStream.stream.viewerCount,
                 category = userStream.stream.category,
                 startedAt = userStream.stream.startedAt,
-                tags = userStream.stream.tags,
+                tags = userStream.stream.tags.toPersistentSet(),
                 profileImageUrl = userStream.user.profileImageUrl,
             )
         }
@@ -269,7 +270,7 @@ private fun SectionHeader(
             modifier = Modifier.padding(top = 16.dp),
         ) {
             CompositionLocalProvider(
-                LocalTextStyle provides MaterialTheme.typography.headlineSmall
+                LocalTextStyle provides MaterialTheme.typography.headlineSmall,
             ) {
                 title()
             }

@@ -263,7 +263,7 @@ internal class TwitchRepositoryImpl(
                             future = groupedFuture,
                             // We want to scroll to "today", so skip the number of past segments
                             // + the number of days, used as headers
-                            todayListIndex = past.size + groupedPast.keys.size,
+                            todayListIndex = past.size + groupedPast.keys.size + 1,
                         )
                     }
                 }
@@ -334,7 +334,7 @@ internal class TwitchRepositoryImpl(
             )
 
             syncLiveStreams(
-                appUserId = appUserId
+                appUserId = appUserId,
             )
 
             syncFutureStreams(

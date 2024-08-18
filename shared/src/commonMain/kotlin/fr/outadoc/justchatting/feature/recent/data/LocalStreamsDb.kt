@@ -145,6 +145,7 @@ internal class LocalStreamsDb(
         videos: List<Video>,
     ) {
         withContext(DispatchersProvider.io) {
+            val now = clock.now()
             streamQueries.transaction {
                 videos.forEach { video ->
                     streamQueries.addPastStream(
@@ -160,12 +161,14 @@ internal class LocalStreamsDb(
 
                 streamQueries.rememberUserUpdated(
                     user_id = user.id,
+                    last_updated = now.toEpochMilliseconds(),
                 )
             }
         }
     }
 
     override suspend fun saveAndReplaceLiveStreams(streams: List<Stream>) {
+        val now = clock.now()
         streamQueries.transaction {
             streamQueries.cleanupAllLiveStreams()
             streams.forEach { stream ->
@@ -173,6 +176,7 @@ internal class LocalStreamsDb(
                     streamQueries.addCategory(
                         id = category.id,
                         name = category.name,
+                        inserted_at = now.toEpochMilliseconds(),
                     )
                 }
 
@@ -194,12 +198,14 @@ internal class LocalStreamsDb(
         segments: List<ChannelScheduleSegment>,
     ) {
         withContext(DispatchersProvider.io) {
+            val now = clock.now()
             streamQueries.transaction {
                 segments.forEach { segment ->
                     segment.category?.let { category ->
                         streamQueries.addCategory(
                             id = category.id,
                             name = category.name,
+                            inserted_at = now.toEpochMilliseconds(),
                         )
                     }
 
@@ -214,6 +220,7 @@ internal class LocalStreamsDb(
 
                     streamQueries.rememberUserUpdated(
                         user_id = user.id,
+                        last_updated = now.toEpochMilliseconds(),
                     )
                 }
             }

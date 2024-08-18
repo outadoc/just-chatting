@@ -18,4 +18,5 @@ internal interface LocalUsersApi {
     suspend fun saveUser(userId: String, visitedAt: Instant? = null)
     suspend fun saveAndReplaceFollowedChannels(follows: List<ChannelFollow>)
     suspend fun saveUserInfo(users: List<User>)
+    suspend fun isFollowedUsersCacheExpired(): Boolean
 }

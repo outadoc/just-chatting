@@ -1,0 +1,5 @@
+CREATE TABLE UserCacheInfo(
+    `feature_id` TEXT NOT NULL,
+    `last_updated` INTEGER NOT NULL,
+    PRIMARY KEY (`feature_id`)
+);

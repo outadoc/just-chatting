@@ -74,25 +74,6 @@ internal class TwitchApiImpl(
             }
     }
 
-    override suspend fun getFollowedStreamsOnline(userId: String): Flow<PagingData<List<Stream>>> {
-        val pager = Pager(
-            config = PagingConfig(
-                pageSize = 30,
-                initialLoadSize = 30,
-                prefetchDistance = 10,
-                enablePlaceholders = true,
-            ),
-            pagingSourceFactory = {
-                FollowedStreamsDataSource(
-                    userId = userId,
-                    twitchClient = twitchClient,
-                )
-            },
-        )
-
-        return pager.flow
-    }
-
     override suspend fun getFollowedStreams(userId: String): Result<List<Stream>> =
         runCatching {
             buildList {

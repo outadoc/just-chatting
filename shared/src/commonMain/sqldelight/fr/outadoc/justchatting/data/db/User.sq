@@ -48,7 +48,7 @@ VALUES (?, ?, ?, ?, ?, ?, ?);
 
 ensureCreated:
 INSERT OR IGNORE INTO User (id, used_at, followed_at, inserted_at)
-VALUES (?, 0, 0, ?);
+VALUES (?, 0, 0, strftime('%s', 'now'));
 
 updateVisitedAt:
 UPDATE User SET used_at = :used_at WHERE id = :id;

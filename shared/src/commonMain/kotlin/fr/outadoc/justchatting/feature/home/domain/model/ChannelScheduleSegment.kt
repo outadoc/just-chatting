@@ -6,6 +6,7 @@ import kotlinx.datetime.Instant
 @Immutable
 internal data class ChannelScheduleSegment(
     val id: String,
+    val user: User,
     val startTime: Instant,
     val endTime: Instant,
     val title: String,

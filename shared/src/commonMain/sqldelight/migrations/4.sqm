@@ -1,0 +1,43 @@
+CREATE TABLE Category (
+    `id` TEXT NOT NULL,
+    `name` TEXT NOT NULL,
+    `inserted_at` INTEGER NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE PastStream (
+    `id` TEXT NOT NULL,
+    `title` TEXT NOT NULL,
+    `user_id` TEXT NOT NULL,
+    `start_time` INTEGER NOT NULL,
+    `end_time` INTEGER NOT NULL,
+    `category_id` TEXT,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`category_id`) REFERENCES Category(`id`) ON DELETE SET NULL
+);
+
+CREATE TABLE LiveStream (
+    `id` TEXT NOT NULL,
+    `title` TEXT NOT NULL,
+    `user_id` TEXT NOT NULL,
+    `start_time` INTEGER NOT NULL,
+    `category_id` TEXT,
+    `tags` TEXT NOT NULL,
+    `viewer_count` INTEGER NOT NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`category_id`) REFERENCES Category(`id`) ON DELETE SET NULL
+);
+
+CREATE TABLE FutureStream (
+    `id` TEXT NOT NULL,
+    `title` TEXT NOT NULL,
+    `user_id` TEXT NOT NULL,
+    `start_time` INTEGER NOT NULL,
+    `end_time` INTEGER NOT NULL,
+    `category_id` TEXT,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`category_id`) REFERENCES Category(`id`) ON DELETE SET NULL
+);

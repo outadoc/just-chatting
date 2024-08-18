@@ -17,7 +17,7 @@ import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.datetime.Instant
 
 @Composable
@@ -78,8 +78,8 @@ internal fun StreamInfoPreviewFull() {
                 ),
                 title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
                 viewerCount = 10_000,
-                startedAt = "2022-09-01T00:00:00.00Z",
-                tags = persistentListOf("French"),
+                startedAt = Instant.parse("2022-09-01T00:00:00.00Z"),
+                tags = persistentSetOf("French"),
             ),
         )
     }

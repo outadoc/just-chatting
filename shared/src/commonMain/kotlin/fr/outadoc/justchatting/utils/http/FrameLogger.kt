@@ -29,6 +29,7 @@ internal class FrameLogger : WebSocketExtension<FrameLogger.Config> {
                 is Frame.Ping -> "received ping frame"
                 is Frame.Pong -> "received pong frame"
                 is Frame.Text -> "received text frame: ${frame.readText()}"
+                else -> "!!! unknown frame type: $frame"
             }
         }
 
@@ -43,6 +44,7 @@ internal class FrameLogger : WebSocketExtension<FrameLogger.Config> {
                 is Frame.Ping -> "sending ping frame"
                 is Frame.Pong -> "sending pong frame"
                 is Frame.Text -> "sending text frame: ${frame.readText()}"
+                else -> "!!! unknown frame type: $frame"
             }
         }
 

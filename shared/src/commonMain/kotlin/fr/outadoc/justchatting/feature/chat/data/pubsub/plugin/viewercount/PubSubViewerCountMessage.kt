@@ -10,6 +10,6 @@ internal sealed class PubSubViewerCountMessage {
     @SerialName("viewcount")
     data class ViewCount(
         @SerialName("viewers")
-        val viewers: Int,
+        val viewers: Long,
     ) : PubSubViewerCountMessage()
 }

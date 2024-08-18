@@ -160,7 +160,7 @@ internal class TwitchClient(httpClient: HttpClient) {
         }
 
     suspend fun getChannelSchedule(
-        channelId: String,
+        userId: String,
         start: Instant,
         limit: Int,
         after: String?,
@@ -169,7 +169,7 @@ internal class TwitchClient(httpClient: HttpClient) {
             val response = client.get {
                 url {
                     path("schedule")
-                    parameter("broadcaster_id", channelId)
+                    parameter("broadcaster_id", userId)
                     parameter("first", limit)
                     parameter("start_time", start.toString())
                     after?.let { parameter("after", after) }
@@ -185,16 +185,16 @@ internal class TwitchClient(httpClient: HttpClient) {
         }
 
     suspend fun getChannelVideos(
-        channelId: String,
+        userId: String,
         limit: Int,
         after: String?,
-        before: String?,
+        before: String? = null,
     ): Result<VideoResponse> =
         runCatching {
             client.get {
                 url {
                     path("videos")
-                    parameter("user_id", channelId)
+                    parameter("user_id", userId)
                     parameter("first", limit)
                     parameter("type", "archive")
                     parameter("sort", "time")

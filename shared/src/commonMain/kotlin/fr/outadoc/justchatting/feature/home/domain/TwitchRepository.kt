@@ -3,14 +3,15 @@ package fr.outadoc.justchatting.feature.home.domain
 import androidx.paging.PagingData
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
+import fr.outadoc.justchatting.feature.home.domain.model.FullSchedule
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.feature.home.domain.model.UserStream
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 
 internal interface TwitchRepository {
@@ -35,11 +36,10 @@ internal interface TwitchRepository {
 
     suspend fun markChannelAsVisited(channel: User, visitedAt: Instant)
 
-    suspend fun getChannelSchedule(
-        channelId: String,
-        start: Instant,
+    suspend fun getFollowedChannelsSchedule(
+        today: LocalDate,
         timeZone: TimeZone,
-    ): Flow<PagingData<ChannelScheduleForDay>>
+    ): Flow<FullSchedule>
 
     suspend fun getGlobalBadges(): Result<List<TwitchBadge>>
 

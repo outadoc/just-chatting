@@ -7,19 +7,18 @@ import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.emotes.domain.model.EmoteUrls
 import fr.outadoc.justchatting.feature.home.domain.TwitchApi
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.feature.home.domain.model.Video
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
 
 internal class TwitchApiImpl(
     private val twitchClient: TwitchClient,
@@ -43,8 +42,8 @@ internal class TwitchApiImpl(
                         },
                         title = stream.title,
                         viewerCount = stream.viewerCount,
-                        startedAt = stream.startedAt,
-                        tags = stream.tags.toPersistentList(),
+                        startedAt = Instant.parse(stream.startedAt),
+                        tags = stream.tags.toPersistentSet(),
                     )
                 }
             }
@@ -68,14 +67,14 @@ internal class TwitchApiImpl(
                         },
                         title = stream.title,
                         viewerCount = stream.viewerCount,
-                        startedAt = stream.startedAt,
-                        tags = stream.tags.toPersistentList(),
+                        startedAt = Instant.parse(stream.startedAt),
+                        tags = stream.tags.toPersistentSet(),
                     )
                 }
             }
     }
 
-    override suspend fun getFollowedStreams(userId: String): Flow<PagingData<List<Stream>>> {
+    override suspend fun getFollowedStreamsOnline(userId: String): Flow<PagingData<List<Stream>>> {
         val pager = Pager(
             config = PagingConfig(
                 pageSize = 30,
@@ -94,10 +93,53 @@ internal class TwitchApiImpl(
         return pager.flow
     }
 
+    override suspend fun getFollowedStreams(userId: String): Result<List<Stream>> =
+        runCatching {
+            buildList {
+                var cursor: String? = null
+                do {
+                    twitchClient
+                        .getFollowedStreams(
+                            userId = userId,
+                            limit = MAX_PAGE_SIZE_DEFAULT,
+                            after = cursor,
+                        )
+                        .onSuccess { response ->
+                            logDebug<TwitchApiImpl> {
+                                "getFollowedStreams: loaded ${response.data.size} more items"
+                            }
+
+                            cursor = response.pagination.cursor
+
+                            addAll(
+                                response.data.map { stream ->
+                                    Stream(
+                                        id = stream.id,
+                                        userId = stream.userId,
+                                        category = if (stream.gameId != null && stream.gameName != null) {
+                                            StreamCategory(
+                                                id = stream.gameId,
+                                                name = stream.gameName,
+                                            )
+                                        } else {
+                                            null
+                                        },
+                                        title = stream.title,
+                                        viewerCount = stream.viewerCount,
+                                        startedAt = Instant.parse(stream.startedAt),
+                                        tags = stream.tags.toPersistentSet(),
+                                    )
+                                },
+                            )
+                        }
+                } while (cursor != null)
+            }
+        }
+
     override suspend fun getUsersById(ids: List<String>): List<User> {
         if (ids.isEmpty()) return emptyList()
         return ids
-            .chunked(MAX_PAGE_SIZE)
+            .chunked(MAX_PAGE_SIZE_DEFAULT)
             .flatMap { chunkOfIds ->
                 twitchClient
                     .getUsersById(chunkOfIds)
@@ -133,7 +175,7 @@ internal class TwitchApiImpl(
     override suspend fun getUsersByLogin(logins: List<String>): List<User> {
         if (logins.isEmpty()) return emptyList()
         return logins
-            .chunked(MAX_PAGE_SIZE)
+            .chunked(MAX_PAGE_SIZE_DEFAULT)
             .flatMap { chunkOfLogins ->
                 twitchClient
                     .getUsersById(chunkOfLogins)
@@ -195,7 +237,7 @@ internal class TwitchApiImpl(
                     twitchClient
                         .getFollowedChannels(
                             userId = userId,
-                            limit = MAX_PAGE_SIZE,
+                            limit = MAX_PAGE_SIZE_DEFAULT,
                             after = cursor,
                         )
                         .onSuccess { response ->
@@ -292,36 +334,118 @@ internal class TwitchApiImpl(
             }
     }
 
-    override suspend fun getChannelSchedule(
+    override suspend fun getChannelVideos(
         channelId: String,
-        start: Instant,
-        pastRange: DatePeriod,
-        futureRange: DatePeriod,
-        timeZone: TimeZone,
-    ): Flow<PagingData<ChannelScheduleForDay>> {
-        val pager = Pager(
-            config = PagingConfig(
-                pageSize = 15,
-                initialLoadSize = 25,
-                prefetchDistance = 10,
-                enablePlaceholders = true,
-            ),
-            pagingSourceFactory = {
-                ChannelScheduleDataSource(
-                    channelId = channelId,
-                    twitchClient = twitchClient,
-                    start = start,
-                    pastRange = pastRange,
-                    futureRange = futureRange,
-                    timeZone = timeZone,
-                )
-            },
-        )
+        notBefore: Instant,
+    ): Result<List<Video>> =
+        runCatching {
+            buildList {
+                var cursor: String? = null
+                var currentMinInstant: Instant? = null
 
-        return pager.flow
-    }
+                do {
+                    twitchClient
+                        .getChannelVideos(
+                            userId = channelId,
+                            limit = MAX_PAGE_SIZE_DEFAULT,
+                            after = cursor,
+                        )
+                        .onSuccess { response ->
+                            logDebug<TwitchApiImpl> {
+                                "getChannelVideos: loaded ${response.data.size} more items"
+                            }
+
+                            cursor = response.pagination.cursor
+                            currentMinInstant = response.data.minOfOrNull { it.createdAt }
+
+                            addAll(
+                                response.data.map { video ->
+                                    Video(
+                                        id = video.id,
+                                        title = video.title,
+                                        thumbnailUrl = video.thumbnailUrl,
+                                        publishedAt = video.publishedAt,
+                                        duration = video.duration.parseTwitchDuration(),
+                                        streamId = video.streamId,
+                                        viewCount = video.viewCount,
+                                        videoUrl = video.videoUrl,
+                                        userId = video.userId,
+                                        createdAt = video.createdAt,
+                                        description = video.description,
+                                    )
+                                },
+                            )
+                        }
+                } while (
+                    cursor != null &&
+                    ((currentMinInstant ?: Instant.DISTANT_FUTURE) > notBefore)
+                )
+            }
+        }
+
+    override suspend fun getChannelSchedule(
+        userId: String,
+        notBefore: Instant,
+        notAfter: Instant,
+    ): Result<List<ChannelScheduleSegment>> =
+        runCatching {
+            buildList {
+                var cursor: String? = null
+                var currentMaxInstant: Instant? = null
+
+                do {
+                    twitchClient
+                        .getChannelSchedule(
+                            userId = userId,
+                            limit = MAX_PAGE_SIZE_GET_SCHEDULE,
+                            start = notBefore,
+                            after = cursor,
+                        )
+                        .onSuccess { response ->
+                            val segments = response.data.segments.orEmpty()
+
+                            logDebug<TwitchApiImpl> {
+                                "getChannelSchedule: loaded ${segments.size} more items"
+                            }
+
+                            cursor = response.pagination.cursor
+                            currentMaxInstant = segments.maxOfOrNull { it.startTime }
+
+                            addAll(
+                                segments.map { segment ->
+                                    ChannelScheduleSegment(
+                                        id = segment.id,
+                                        user = User(
+                                            id = userId,
+                                            login = "",
+                                            displayName = "",
+                                            description = "",
+                                            profileImageUrl = "",
+                                            createdAt = Instant.DISTANT_PAST,
+                                            usedAt = Instant.DISTANT_PAST,
+                                        ),
+                                        title = segment.title,
+                                        startTime = segment.startTime,
+                                        endTime = segment.endTime,
+                                        category = segment.category?.let { category ->
+                                            StreamCategory(
+                                                id = category.id,
+                                                name = category.name,
+                                            )
+                                        },
+                                    )
+                                },
+                            )
+                        }
+                } while (
+                    cursor != null &&
+                    ((currentMaxInstant ?: Instant.DISTANT_PAST) < notAfter)
+                )
+            }
+        }
 
     private companion object {
-        const val MAX_PAGE_SIZE = 100
+        const val MAX_PAGE_SIZE_DEFAULT = 100
+        const val MAX_PAGE_SIZE_GET_SCHEDULE = 25
     }
 }

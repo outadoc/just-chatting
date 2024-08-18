@@ -3,15 +3,14 @@ package fr.outadoc.justchatting.feature.home.domain
 import androidx.paging.PagingData
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelFollow
-import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleForDay
+import fr.outadoc.justchatting.feature.home.domain.model.ChannelScheduleSegment
 import fr.outadoc.justchatting.feature.home.domain.model.ChannelSearchResult
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.TwitchBadge
 import fr.outadoc.justchatting.feature.home.domain.model.User
+import fr.outadoc.justchatting.feature.home.domain.model.Video
 import kotlinx.coroutines.flow.Flow
-import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
 
 internal interface TwitchApi {
 
@@ -31,17 +30,22 @@ internal interface TwitchApi {
 
     suspend fun getChannelBadges(channelId: String): Result<List<TwitchBadge>>
 
-    suspend fun getChannelSchedule(
+    suspend fun getChannelVideos(
         channelId: String,
-        start: Instant,
-        pastRange: DatePeriod,
-        futureRange: DatePeriod,
-        timeZone: TimeZone,
-    ): Flow<PagingData<ChannelScheduleForDay>>
+        notBefore: Instant,
+    ): Result<List<Video>>
+
+    suspend fun getChannelSchedule(
+        userId: String,
+        notBefore: Instant,
+        notAfter: Instant,
+    ): Result<List<ChannelScheduleSegment>>
 
     suspend fun getFollowedChannels(userId: String): Result<List<ChannelFollow>>
 
-    suspend fun getFollowedStreams(userId: String): Flow<PagingData<List<Stream>>>
+    suspend fun getFollowedStreamsOnline(userId: String): Flow<PagingData<List<Stream>>>
+
+    suspend fun getFollowedStreams(userId: String): Result<List<Stream>>
 
     suspend fun searchChannels(query: String): Flow<PagingData<List<ChannelSearchResult>>>
 }

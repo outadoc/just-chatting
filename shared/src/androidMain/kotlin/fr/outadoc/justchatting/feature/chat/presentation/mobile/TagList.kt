@@ -8,13 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.outadoc.justchatting.feature.home.presentation.mobile.StreamTagChip
-import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.ImmutableSet
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun TagList(
     modifier: Modifier = Modifier,
-    tags: ImmutableList<String>,
+    tags: ImmutableSet<String>,
 ) {
     FlowRow(
         modifier = modifier.padding(top = 4.dp),

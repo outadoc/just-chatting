@@ -22,7 +22,6 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
-import kotlinx.datetime.Instant
 
 @Composable
 internal fun StreamInfo(
@@ -63,13 +62,13 @@ internal fun StreamInfo(
             Text(
                 text = pluralStringResource(
                     R.plurals.viewers,
-                    stream.viewerCount,
-                    stream.viewerCount.formatNumber(),
+                    stream.viewerCount.toInt(),
+                    stream.viewerCount.toInt().formatNumber(),
                 ),
             )
         }
 
-        val startedAt = Instant.parse(stream.startedAt).formatTimestamp()
+        val startedAt = stream.startedAt.formatTimestamp()
         if (startedAt != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(

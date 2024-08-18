@@ -19,15 +19,17 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.TagList
 import fr.outadoc.justchatting.feature.chat.presentation.mobile.remoteImageModel
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
+import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
 import fr.outadoc.justchatting.utils.presentation.formatNumber
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.datetime.Instant
 
 @ThemePreviews
@@ -44,8 +46,8 @@ internal fun LiveStreamPreview() {
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
-            profileImageURL = null,
-            tags = persistentListOf(
+            profileImageUrl = null,
+            tags = persistentSetOf(
                 "French",
                 "Test",
                 "Sponsored",
@@ -72,7 +74,7 @@ internal fun LiveStreamLongPreview() {
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
-            profileImageURL = null,
+            profileImageUrl = null,
         )
     }
 }
@@ -82,11 +84,11 @@ internal fun LiveStreamCard(
     modifier: Modifier = Modifier,
     title: String? = null,
     userName: String? = null,
-    viewerCount: Int? = null,
+    viewerCount: Long? = null,
     category: StreamCategory? = null,
     startedAt: Instant? = null,
-    profileImageURL: String? = null,
-    tags: ImmutableList<String> = persistentListOf(),
+    profileImageUrl: String? = null,
+    tags: ImmutableSet<String> = persistentSetOf(),
     onClick: () -> Unit = {},
 ) {
     OutlinedCard(
@@ -103,7 +105,7 @@ internal fun LiveStreamCard(
                     viewerCount = viewerCount,
                     category = category,
                     startedAt = startedAt,
-                    profileImageURL = profileImageURL,
+                    profileImageURL = profileImageUrl,
                 )
             }
 
@@ -115,7 +117,8 @@ internal fun LiveStreamCard(
                         top = 4.dp,
                         bottom = 8.dp,
                     ),
-                    tags = tags,
+                    tags = persistentSetOf(stringResource(MR.strings.live_tag))
+                        .addAll(tags),
                 )
             }
         }
@@ -127,7 +130,7 @@ private fun LiveStream(
     modifier: Modifier = Modifier,
     title: String?,
     userName: String?,
-    viewerCount: Int?,
+    viewerCount: Long?,
     category: StreamCategory?,
     startedAt: Instant?,
     profileImageURL: String?,
@@ -176,7 +179,7 @@ private fun LiveStream(
                     viewerCount?.let { viewerCount ->
                         Text(
                             modifier = Modifier.alignByBaseline(),
-                            text = viewerCount.formatNumber(),
+                            text = viewerCount.toInt().formatNumber(),
                             maxLines = 1,
                             style = MaterialTheme.typography.labelMedium,
                         )

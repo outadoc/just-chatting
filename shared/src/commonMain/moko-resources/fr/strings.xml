@@ -251,6 +251,7 @@
     <string name="channels">Suivies</string>
     <string name="followed_at">Suivi·e depuis le %s</string>
     <string name="live">En direct</string>
+    <string name="live_tag">🔴 Direct</string>
     <string name="nothing_here">Rien à voir ici</string>
     <string name="onboarding_login_action">Continuer avec Twitch</string>
     <string name="onboarding_message">Pour parcourir vos chaînes suivies et poster dans le tchat, vous devez lier votre compte Twitch.</string>
@@ -264,12 +265,13 @@
     <string name="app_pronouns_url">https://pronouns.alejo.io</string>
     <string name="app_repo_name">outadoc/just-chatting</string>
     <string name="app_repo_url">https://github.com/outadoc/just-chatting</string>
-    <string name="all_goBack">Go back</string>
-    <string name="epg_title">Guide</string>
+    <string name="all_goBack">Retour</string>
+    <string name="epg_title">Timeline</string>
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %s.</string>
     <string name="logout_title">Se déconnecter ?</string>
     <string name="message_limit">Limite de messages</string>
     <string name="no">Non</string>
+    <string name="refresh">Rafraîchir</string>
     <string name="settings">Réglages</string>
     <string name="settings_about_header">À propos</string>
     <string name="settings_about_version">Version %1$s</string>

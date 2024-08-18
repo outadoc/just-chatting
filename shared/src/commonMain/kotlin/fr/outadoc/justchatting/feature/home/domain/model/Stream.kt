@@ -1,8 +1,9 @@
 package fr.outadoc.justchatting.feature.home.domain.model
 
 import androidx.compose.runtime.Immutable
-import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.ImmutableSet
+import kotlinx.collections.immutable.persistentSetOf
+import kotlinx.datetime.Instant
 
 @Immutable
 internal data class Stream(
@@ -10,7 +11,7 @@ internal data class Stream(
     val userId: String,
     val category: StreamCategory?,
     val title: String,
-    val viewerCount: Int,
-    val startedAt: String,
-    val tags: ImmutableList<String> = persistentListOf(),
+    val viewerCount: Long,
+    val startedAt: Instant,
+    val tags: ImmutableSet<String> = persistentSetOf(),
 )

@@ -6,7 +6,8 @@ import fr.outadoc.justchatting.feature.home.domain.model.Pagination
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.utils.logging.logError
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toPersistentSet
+import kotlinx.datetime.Instant
 
 internal class FollowedStreamsDataSource(
     private val userId: String?,
@@ -47,8 +48,8 @@ internal class FollowedStreamsDataSource(
                                     },
                                     title = stream.title,
                                     viewerCount = stream.viewerCount,
-                                    startedAt = stream.startedAt,
-                                    tags = stream.tags.toPersistentList(),
+                                    startedAt = Instant.parse(stream.startedAt),
+                                    tags = stream.tags.toPersistentSet(),
                                 )
                             },
                         ),

@@ -114,7 +114,7 @@ internal class ChatViewModel(
         data class UpdatePinnedMessage(val pinnedMessage: PinnedMessage?) : Action()
         data class AddRichEmbed(val richEmbed: ChatListItem.RichEmbed) : Action()
         data class UpdateStreamMetadata(
-            val viewerCount: Int? = null,
+            val viewerCount: Long? = null,
             val streamTitle: String? = null,
             val streamCategory: StreamCategory? = null,
         ) : Action()

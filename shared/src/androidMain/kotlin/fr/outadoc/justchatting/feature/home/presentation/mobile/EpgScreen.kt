@@ -78,6 +78,7 @@ internal fun EpgScreen(
     modifier: Modifier = Modifier,
     sizeClass: WindowSizeClass,
     onNavigate: (Screen) -> Unit,
+    onChannelClick: (userId: String) -> Unit,
 ) {
     val viewModel: EpgViewModel = koinViewModel()
     val state by viewModel.state.collectAsState()
@@ -124,6 +125,7 @@ internal fun EpgScreen(
                         modifier = modifier,
                         schedule = currentState.schedule,
                         insets = insets,
+                        onChannelClick = onChannelClick,
                     )
                 }
             }
@@ -136,6 +138,7 @@ private fun EpgContent(
     modifier: Modifier = Modifier,
     schedule: FullSchedule,
     insets: PaddingValues = PaddingValues(),
+    onChannelClick: (userId: String) -> Unit,
 ) {
     val listState = rememberLazyListState(
         initialFirstVisibleItemIndex = schedule.todayListIndex,
@@ -148,6 +151,7 @@ private fun EpgContent(
     EpgVerticalContent(
         modifier = modifier.fillMaxWidth(),
         schedule = schedule,
+        onChannelClick = onChannelClick,
         listState = listState,
         insets = insets,
     )
@@ -160,6 +164,7 @@ private fun EpgVerticalContent(
     schedule: FullSchedule,
     listState: LazyListState = rememberLazyListState(),
     insets: PaddingValues = PaddingValues(),
+    onChannelClick: (userId: String) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
@@ -211,6 +216,7 @@ private fun EpgVerticalContent(
         ) { userStream ->
             LiveStreamCard(
                 modifier = Modifier.fillMaxWidth(),
+                onClick = { onChannelClick(userStream.user.id) },
                 title = userStream.stream.title,
                 userName = userStream.user.displayName,
                 viewerCount = userStream.stream.viewerCount,

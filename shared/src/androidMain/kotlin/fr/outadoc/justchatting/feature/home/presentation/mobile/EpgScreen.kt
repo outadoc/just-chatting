@@ -54,6 +54,7 @@ import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.formatTimestamp
+import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -105,7 +106,7 @@ internal fun EpgScreen(
                     EpgContent(
                         modifier = modifier,
                         schedule = currentState.schedule,
-                        contentPadding = insets,
+                        insets = insets,
                         onChannelClick = onChannelClick,
                     )
                 }
@@ -118,7 +119,7 @@ internal fun EpgScreen(
 private fun EpgContent(
     modifier: Modifier = Modifier,
     schedule: FullSchedule,
-    contentPadding: PaddingValues = PaddingValues(),
+    insets: PaddingValues = PaddingValues(),
     onChannelClick: (userId: String) -> Unit,
 ) {
     val listState = rememberLazyListState(
@@ -133,7 +134,7 @@ private fun EpgContent(
         modifier = modifier.fillMaxWidth(),
         schedule = schedule,
         listState = listState,
-        contentPadding = contentPadding,
+        insets = insets,
     )
 }
 
@@ -143,11 +144,15 @@ private fun EpgVerticalContent(
     modifier: Modifier = Modifier,
     schedule: FullSchedule,
     listState: LazyListState = rememberLazyListState(),
-    contentPadding: PaddingValues = PaddingValues(),
+    insets: PaddingValues = PaddingValues(),
 ) {
     LazyColumn(
         modifier = modifier.fillMaxWidth(),
-        contentPadding = contentPadding,
+        contentPadding = insets + PaddingValues(
+            start = 16.dp,
+            end = 16.dp,
+            bottom = 16.dp,
+        ),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         state = listState,
     ) {
@@ -156,11 +161,7 @@ private fun EpgVerticalContent(
                 key = "past-${date.toEpochDays()}",
                 contentType = "date",
             ) {
-                Text(
-                    date.format(),
-                    style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier.padding(8.dp),
-                )
+                DateHeader(date = date)
             }
 
             items(
@@ -168,9 +169,12 @@ private fun EpgVerticalContent(
                 key = { segment -> segment.id },
                 contentType = { "segment" },
             ) { segment ->
-                EpgSegment(
+                LiveStreamCard(
                     modifier = Modifier.fillMaxWidth(),
-                    segment = segment,
+                    title = segment.title,
+                    userName = segment.user.displayName,
+                    profileImageUrl = segment.user.profileImageUrl,
+                    category = segment.category,
                 )
             }
         }
@@ -206,11 +210,7 @@ private fun EpgVerticalContent(
                 key = "future-${date.toEpochDays()}",
                 contentType = "date",
             ) {
-                Text(
-                    date.format(),
-                    style = MaterialTheme.typography.labelSmall,
-                    modifier = Modifier.padding(8.dp),
-                )
+                DateHeader(date = date)
             }
 
             items(
@@ -218,13 +218,28 @@ private fun EpgVerticalContent(
                 key = { segment -> segment.id },
                 contentType = { "segment" },
             ) { segment ->
-                EpgSegment(
+                LiveStreamCard(
                     modifier = Modifier.fillMaxWidth(),
-                    segment = segment,
+                    title = segment.title,
+                    userName = segment.user.displayName,
+                    profileImageUrl = segment.user.profileImageUrl,
+                    category = segment.category,
                 )
             }
         }
     }
+}
+
+@Composable
+private fun DateHeader(
+    modifier: Modifier = Modifier,
+    date: LocalDate,
+) {
+    Text(
+        date.format(),
+        style = MaterialTheme.typography.headlineSmall,
+        modifier = modifier.padding(top = 16.dp),
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

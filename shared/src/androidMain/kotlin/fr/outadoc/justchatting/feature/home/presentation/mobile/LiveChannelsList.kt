@@ -127,7 +127,7 @@ private fun InnerLiveChannelsList(
                         viewerCount = item.stream.viewerCount,
                         category = item.stream.category,
                         startedAt = item.stream.startedAt,
-                        profileImageURL = item.user.profileImageUrl,
+                        profileImageUrl = item.user.profileImageUrl,
                         tags = item.stream.tags.toImmutableSet(),
                         onClick = { onItemClick(item) },
                     )

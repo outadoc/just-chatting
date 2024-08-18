@@ -44,7 +44,7 @@ internal fun LiveStreamPreview() {
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
-            profileImageURL = null,
+            profileImageUrl = null,
             tags = persistentSetOf(
                 "French",
                 "Test",
@@ -72,7 +72,7 @@ internal fun LiveStreamLongPreview() {
             title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque at arcu at neque tempus sollicitudin.",
             viewerCount = 5_305,
             startedAt = Instant.parse("2022-01-01T13:45:04.00Z"),
-            profileImageURL = null,
+            profileImageUrl = null,
         )
     }
 }
@@ -85,7 +85,7 @@ internal fun LiveStreamCard(
     viewerCount: Long? = null,
     category: StreamCategory? = null,
     startedAt: Instant? = null,
-    profileImageURL: String? = null,
+    profileImageUrl: String? = null,
     tags: ImmutableSet<String> = persistentSetOf(),
     onClick: () -> Unit = {},
 ) {
@@ -103,7 +103,7 @@ internal fun LiveStreamCard(
                     viewerCount = viewerCount,
                     category = category,
                     startedAt = startedAt,
-                    profileImageURL = profileImageURL,
+                    profileImageURL = profileImageUrl,
                 )
             }
 

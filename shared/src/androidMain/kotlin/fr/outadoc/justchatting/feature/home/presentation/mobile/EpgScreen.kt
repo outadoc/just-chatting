@@ -253,12 +253,11 @@ internal fun EpgSegment(
 
             Row(
                 modifier = Modifier.padding(8.dp),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
+                    modifier = Modifier.size(16.dp),
                     imageVector = Icons.Default.AccessTime,
                     contentDescription = null,
                 )
@@ -321,7 +320,7 @@ private fun EpgSegmentContent(
                 if (title.isNotEmpty()) {
                     Text(
                         text = title,
-                        maxLines = 1,
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis,
                         style = MaterialTheme.typography.titleMedium,
                     )

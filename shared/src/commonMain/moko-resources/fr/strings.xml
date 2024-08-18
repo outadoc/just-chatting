@@ -264,8 +264,8 @@
     <string name="app_pronouns_url">https://pronouns.alejo.io</string>
     <string name="app_repo_name">outadoc/just-chatting</string>
     <string name="app_repo_url">https://github.com/outadoc/just-chatting</string>
-    <string name="all_goBack">Go back</string>
-    <string name="epg_title">Guide</string>
+    <string name="all_goBack">Retour</string>
+    <string name="epg_title">Timeline</string>
     <string name="logout_msg">Vous êtes actuellement connecté·e en tant que %s.</string>
     <string name="logout_title">Se déconnecter ?</string>
     <string name="message_limit">Limite de messages</string>

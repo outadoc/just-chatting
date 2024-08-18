@@ -220,11 +220,17 @@ private fun DateHeader(
     modifier: Modifier = Modifier,
     date: LocalDate,
 ) {
-    Text(
-        date.format(),
-        style = MaterialTheme.typography.headlineSmall,
-        modifier = modifier.padding(top = 16.dp),
-    )
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.surface)
+            .fillMaxWidth(),
+    ) {
+        Text(
+            date.format(),
+            style = MaterialTheme.typography.headlineSmall,
+            modifier = modifier.padding(top = 16.dp),
+        )
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

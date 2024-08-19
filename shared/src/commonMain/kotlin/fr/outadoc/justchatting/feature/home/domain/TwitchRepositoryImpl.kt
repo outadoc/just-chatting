@@ -17,6 +17,8 @@ import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi
 import fr.outadoc.justchatting.utils.core.DispatchersProvider
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.logging.logError
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.emptyFlow
@@ -297,25 +299,32 @@ internal class TwitchRepositoryImpl(
                     .map { follow -> follow.user }
                     .filter { user -> user.id in userIdsToSync }
 
-            syncPastStreams(
-                followedUsers = followedUsers,
-                notBefore = notBefore,
-                notAfter = notAfter,
-            )
-
-            syncLiveStreams(
-                appUserId = appUserId,
-            )
-
-            syncFutureStreams(
-                followedUsers = followedUsers,
-                notBefore = notBefore,
-                notAfter = notAfter,
-            )
-
-            localStreamsApi.cleanup(
-                notBefore = notBefore,
-                notAfter = notAfter,
+            awaitAll(
+                async {
+                    syncPastStreams(
+                        followedUsers = followedUsers,
+                        notBefore = notBefore,
+                        notAfter = notAfter,
+                    )
+                },
+                async {
+                    syncLiveStreams(
+                        appUserId = appUserId,
+                    )
+                },
+                async {
+                    syncFutureStreams(
+                        followedUsers = followedUsers,
+                        notBefore = notBefore,
+                        notAfter = notAfter,
+                    )
+                },
+                async {
+                    localStreamsApi.cleanup(
+                        notBefore = notBefore,
+                        notAfter = notAfter,
+                    )
+                },
             )
         }
     }
@@ -327,32 +336,36 @@ internal class TwitchRepositoryImpl(
     ) = withContext(DispatchersProvider.io) {
         logDebug<TwitchRepositoryImpl> { "Loading past channel videos from $notBefore to $notAfter" }
 
-        followedUsers.forEach { user ->
-            logDebug<TwitchRepositoryImpl> {
-                "Loading past channel videos for ${user.displayName}"
-            }
-
-            twitchApi
-                .getChannelVideos(
-                    channelId = user.id,
-                    notBefore = notBefore,
-                )
-                .onSuccess { videos ->
+        followedUsers
+            .map { user ->
+                async {
                     logDebug<TwitchRepositoryImpl> {
-                        "Loaded ${videos.size} past videos for ${user.displayName}"
+                        "Loading past channel videos for ${user.displayName}"
                     }
 
-                    localStreamsApi.savePastStreams(
-                        user = user,
-                        videos = videos,
-                    )
+                    twitchApi
+                        .getChannelVideos(
+                            channelId = user.id,
+                            notBefore = notBefore,
+                        )
+                        .onSuccess { videos ->
+                            logDebug<TwitchRepositoryImpl> {
+                                "Loaded ${videos.size} past videos for ${user.displayName}"
+                            }
+
+                            localStreamsApi.savePastStreams(
+                                user = user,
+                                videos = videos,
+                            )
+                        }
+                        .onFailure { exception ->
+                            logError<TwitchRepositoryImpl>(exception) {
+                                "Error while fetching channel videos for ${user.displayName}"
+                            }
+                        }
                 }
-                .onFailure { exception ->
-                    logError<TwitchRepositoryImpl>(exception) {
-                        "Error while fetching channel videos for ${user.displayName}"
-                    }
-                }
-        }
+            }
+            .awaitAll()
     }
 
     private suspend fun syncLiveStreams(
@@ -383,32 +396,36 @@ internal class TwitchRepositoryImpl(
     ) = withContext(DispatchersProvider.io) {
         logDebug<TwitchRepositoryImpl> { "Loading channel schedule from $notBefore to $notAfter" }
 
-        followedUsers.forEach { user ->
-            logDebug<TwitchRepositoryImpl> {
-                "Loading channel schedule for ${user.displayName}"
-            }
-
-            twitchApi
-                .getChannelSchedule(
-                    userId = user.id,
-                    notBefore = notBefore,
-                    notAfter = notAfter,
-                )
-                .onSuccess { segments ->
+        followedUsers
+            .map { user ->
+                async {
                     logDebug<TwitchRepositoryImpl> {
-                        "Loaded ${segments.size} schedule segments for ${user.displayName}"
+                        "Loading channel schedule for ${user.displayName}"
                     }
 
-                    localStreamsApi.saveFutureStreams(
-                        user = user,
-                        segments = segments.map { segment -> segment.copy(user = user) },
-                    )
+                    twitchApi
+                        .getChannelSchedule(
+                            userId = user.id,
+                            notBefore = notBefore,
+                            notAfter = notAfter,
+                        )
+                        .onSuccess { segments ->
+                            logDebug<TwitchRepositoryImpl> {
+                                "Loaded ${segments.size} schedule segments for ${user.displayName}"
+                            }
+
+                            localStreamsApi.saveFutureStreams(
+                                user = user,
+                                segments = segments.map { segment -> segment.copy(user = user) },
+                            )
+                        }
+                        .onFailure { exception ->
+                            logError<TwitchRepositoryImpl>(exception) {
+                                "Error while fetching channel schedule for ${user.displayName}"
+                            }
+                        }
                 }
-                .onFailure { exception ->
-                    logError<TwitchRepositoryImpl>(exception) {
-                        "Error while fetching channel schedule for ${user.displayName}"
-                    }
-                }
-        }
+            }
+            .awaitAll()
     }
 }

@@ -1,0 +1,13 @@
+CREATE TABLE Pronoun (
+    `id` TEXT NOT NULL,
+    `display_en` TEXT NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+CREATE TABLE UserPronoun (
+    `user_id` TEXT NOT NULL,
+    `pronoun_id` TEXT,
+    PRIMARY KEY (`user_id`),
+    FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE,
+    FOREIGN KEY (`pronoun_id`) REFERENCES Pronoun(`id`) ON DELETE CASCADE
+);

@@ -6,8 +6,8 @@ import fr.outadoc.justchatting.data.db.AppDatabase
 import fr.outadoc.justchatting.data.db.RecentEmoteQueries
 import fr.outadoc.justchatting.data.db.StreamQueries
 import fr.outadoc.justchatting.data.db.UserQueries
-import fr.outadoc.justchatting.feature.recent.data.LocalStreamsDb
-import fr.outadoc.justchatting.feature.recent.data.LocalUsersDb
+import fr.outadoc.justchatting.feature.home.data.db.LocalStreamsDb
+import fr.outadoc.justchatting.feature.home.data.db.LocalUsersDb
 import fr.outadoc.justchatting.feature.recent.data.RecentEmotesDb
 import fr.outadoc.justchatting.feature.recent.domain.LocalStreamsApi
 import fr.outadoc.justchatting.feature.recent.domain.LocalUsersApi

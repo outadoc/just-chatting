@@ -1,4 +1,4 @@
-package fr.outadoc.justchatting.feature.recent.data
+package fr.outadoc.justchatting.feature.home.data.db
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList

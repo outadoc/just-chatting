@@ -324,7 +324,7 @@ internal class TwitchRepositoryImpl(
                         notBefore = notBefore,
                         notAfter = notAfter,
                     )
-                }
+                },
             )
         }
     }

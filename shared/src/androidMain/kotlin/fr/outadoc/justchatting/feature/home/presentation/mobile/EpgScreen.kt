@@ -1,5 +1,6 @@
 package fr.outadoc.justchatting.feature.home.presentation.mobile
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -96,32 +97,37 @@ internal fun EpgScreen(
             }
         },
         content = { insets ->
-            when (val currentState = state) {
-                is EpgViewModel.State.Loading -> {
-                    LazyColumn(
-                        modifier = modifier.fillMaxWidth(),
-                        contentPadding = insets + PaddingValues(
-                            start = 16.dp,
-                            end = 16.dp,
-                            bottom = 16.dp,
-                        ),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                    ) {
-                        items(50) {
-                            UserItemCardPlaceholder(
-                                modifier = Modifier.fillMaxWidth(),
-                            )
+            Crossfade(
+                targetState = state,
+                label = "epg state crossfade",
+            ) { state ->
+                when (val currentState = state) {
+                    is EpgViewModel.State.Loading -> {
+                        LazyColumn(
+                            modifier = modifier.fillMaxWidth(),
+                            contentPadding = insets + PaddingValues(
+                                start = 16.dp,
+                                end = 16.dp,
+                                bottom = 16.dp,
+                            ),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                        ) {
+                            items(50) {
+                                UserItemCardPlaceholder(
+                                    modifier = Modifier.fillMaxWidth(),
+                                )
+                            }
                         }
                     }
-                }
 
-                is EpgViewModel.State.Loaded -> {
-                    EpgContent(
-                        modifier = modifier,
-                        schedule = currentState.schedule,
-                        insets = insets,
-                        onChannelClick = onChannelClick,
-                    )
+                    is EpgViewModel.State.Loaded -> {
+                        EpgContent(
+                            modifier = modifier,
+                            schedule = currentState.schedule,
+                            insets = insets,
+                            onChannelClick = onChannelClick,
+                        )
+                    }
                 }
             }
         },

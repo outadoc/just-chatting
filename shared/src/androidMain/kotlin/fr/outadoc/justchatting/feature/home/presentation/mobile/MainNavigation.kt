@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CalendarToday
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -89,10 +89,9 @@ internal fun CompactNavigation(
             NavigationBar {
                 NavigationBarItem(
                     selected = selectedScreen == Screen.Epg,
-                    label = { Text(stringResource(MR.strings.epg_title)) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.Schedule,
+                            imageVector = Icons.Filled.CalendarToday,
                             contentDescription = null,
                         )
                     },
@@ -101,7 +100,6 @@ internal fun CompactNavigation(
 
                 NavigationBarItem(
                     selected = selectedScreen == Screen.Followed,
-                    label = { Text(stringResource(MR.strings.channels)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Filled.Favorite,
@@ -113,7 +111,6 @@ internal fun CompactNavigation(
 
                 NavigationBarItem(
                     selected = selectedScreen == Screen.Settings.Root,
-                    label = { Text(stringResource(MR.strings.settings)) },
                     icon = {
                         Icon(
                             imageVector = Icons.Default.Settings,
@@ -154,7 +151,7 @@ internal fun MediumNavigation(
                     },
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.Schedule,
+                            imageVector = Icons.Filled.CalendarToday,
                             contentDescription = null,
                         )
                     },
@@ -229,7 +226,7 @@ internal fun ExpandedNavigation(
                     label = { Text(stringResource(MR.strings.epg_title)) },
                     icon = {
                         Icon(
-                            imageVector = Icons.Filled.Schedule,
+                            imageVector = Icons.Filled.CalendarToday,
                             contentDescription = null,
                         )
                     },

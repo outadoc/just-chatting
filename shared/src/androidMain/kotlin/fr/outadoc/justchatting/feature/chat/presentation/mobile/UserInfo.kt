@@ -21,11 +21,16 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.domain.model.User
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.formatDate
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
 
 @Composable
 internal fun UserInfo(
     modifier: Modifier = Modifier,
     user: User,
+    tz: TimeZone = TimeZone.currentSystemDefault(),
+    now: Instant = Clock.System.now(),
 ) {
     Column(
         modifier = modifier,
@@ -51,26 +56,23 @@ internal fun UserInfo(
             )
         }
 
-        if (!user.description.isNullOrEmpty()) {
+        if (user.description.isNotEmpty()) {
             Text(text = user.description)
         }
 
-        val createdAt = user.createdAt?.formatDate()
+        val createdAt = user.createdAt.formatDate()
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .padding(end = 8.dp),
+                imageVector = Icons.Default.Cake,
+                contentDescription = null,
+            )
 
-        if (createdAt != null) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    modifier = Modifier
-                        .size(24.dp)
-                        .padding(end = 8.dp),
-                    imageVector = Icons.Default.Cake,
-                    contentDescription = null,
-                )
-
-                Text(
-                    text = stringResource(MR.strings.created_at, createdAt),
-                )
-            }
+            Text(
+                text = stringResource(MR.strings.created_at, createdAt),
+            )
         }
     }
 }

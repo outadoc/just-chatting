@@ -26,8 +26,8 @@ import fr.outadoc.justchatting.feature.home.domain.model.StreamCategory
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
+import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import fr.outadoc.justchatting.utils.presentation.formatNumber
-import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 import kotlinx.collections.immutable.ImmutableSet
 import kotlinx.collections.immutable.persistentSetOf
 import kotlinx.datetime.Instant
@@ -202,7 +202,7 @@ private fun LiveStream(
                     }
 
                     startedAt
-                        ?.formatTimestamp()
+                        ?.formatHourMinute()
                         ?.let { startedAt ->
                             Text(
                                 modifier = Modifier.alignByBaseline(),

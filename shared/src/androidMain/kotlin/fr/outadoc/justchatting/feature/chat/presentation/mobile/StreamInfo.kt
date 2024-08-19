@@ -20,8 +20,8 @@ import dev.icerock.moko.resources.compose.stringResource
 import fr.outadoc.justchatting.feature.home.domain.model.Stream
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.shared.R
+import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import fr.outadoc.justchatting.utils.presentation.formatNumber
-import fr.outadoc.justchatting.utils.presentation.formatTimestamp
 
 @Composable
 internal fun StreamInfo(
@@ -68,7 +68,7 @@ internal fun StreamInfo(
             )
         }
 
-        val startedAt = stream.startedAt.formatTimestamp()
+        val startedAt = stream.startedAt.formatHourMinute()
         if (startedAt != null) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(

@@ -58,17 +58,14 @@ import fr.outadoc.justchatting.feature.home.presentation.EpgViewModel
 import fr.outadoc.justchatting.shared.MR
 import fr.outadoc.justchatting.utils.logging.logDebug
 import fr.outadoc.justchatting.utils.presentation.AppTheme
-import fr.outadoc.justchatting.utils.presentation.formatTimestamp
+import fr.outadoc.justchatting.utils.presentation.formatDate
+import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import fr.outadoc.justchatting.utils.presentation.plus
 import kotlinx.collections.immutable.toPersistentSet
 import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toLocalDateTime
 import org.koin.androidx.compose.koinViewModel
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
 @Composable
 internal fun EpgScreen(
@@ -182,7 +179,7 @@ private fun EpgVerticalContent(
                 contentType = "header",
             ) {
                 SectionHeader(
-                    title = { Text(date.format()) },
+                    title = { Text(date.formatDate()) },
                 )
             }
 
@@ -233,7 +230,7 @@ private fun EpgVerticalContent(
                 contentType = "header",
             ) {
                 SectionHeader(
-                    title = { Text(date.format()) },
+                    title = { Text(date.formatDate()) },
                 )
             }
 
@@ -312,9 +309,9 @@ internal fun EpgSegment(
 
                 Text(
                     buildAnnotatedString {
-                        append(segment.startTime.formatTimestamp())
+                        append(segment.startTime.formatHourMinute())
                         append(" - ")
-                        append(segment.endTime.formatTimestamp())
+                        append(segment.endTime.formatHourMinute())
                     },
                 )
             }
@@ -440,7 +437,7 @@ private fun EpgSegmentDetails(
                 }
 
                 val date: String =
-                    segment.startTime.toLocalDateTime(tz).date.format()
+                    segment.startTime.toLocalDateTime(tz).date.formatDate()
 
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
@@ -465,9 +462,9 @@ private fun EpgSegmentDetails(
 
                     Text(
                         buildAnnotatedString {
-                            append(segment.startTime.formatTimestamp())
+                            append(segment.startTime.formatHourMinute())
                             append(" - ")
-                            append(segment.endTime.formatTimestamp())
+                            append(segment.endTime.formatHourMinute())
                         },
                     )
                 }
@@ -492,12 +489,6 @@ private fun EpgSegmentDetails(
         }
     }
 }
-
-@Composable
-private fun LocalDate.format(): String =
-    remember(this) {
-        toJavaLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.FULL))
-    }
 
 @Preview
 @Composable

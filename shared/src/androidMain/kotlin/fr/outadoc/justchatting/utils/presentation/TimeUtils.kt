@@ -2,22 +2,35 @@ package fr.outadoc.justchatting.utils.presentation
 
 import android.content.Context
 import android.text.format.DateFormat
-import android.text.format.DateUtils
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import dev.icerock.moko.resources.compose.stringResource
 import dev.icerock.moko.resources.format
 import fr.outadoc.justchatting.shared.MR
+import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.toJavaInstant
+import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toLocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.Date
+import java.util.Locale
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 
 @Composable
-internal fun Instant.formatTimestamp(): String? {
+internal fun Instant.formatHourMinute(): String? {
     val context = LocalContext.current
     val format = remember { DateFormat.getTimeFormat(context) }
     return remember(this) {
@@ -32,20 +45,64 @@ internal fun Instant.formatTimestamp(): String? {
 @Composable
 internal fun Instant.formatDate(
     tz: TimeZone = TimeZone.currentSystemDefault(),
+): String {
+    return toLocalDateTime(tz).date.formatDate()
+}
+
+@Composable
+internal fun LocalDate.formatDate(
+    tz: TimeZone = TimeZone.currentSystemDefault(),
     clock: Clock = Clock.System,
-): String? {
-    val context = LocalContext.current
-    return remember(this, tz, clock) {
-        val isCurrentYear = toLocalDateTime(tz).year == clock.now().toLocalDateTime(tz).year
-        DateUtils.formatDateTime(
-            context,
-            toEpochMilliseconds(),
-            if (isCurrentYear) {
-                DateUtils.FORMAT_NO_YEAR
-            } else {
-                DateUtils.FORMAT_SHOW_DATE
-            },
-        )
+): String {
+    var today by remember { mutableStateOf(clock.now().toLocalDateTime(tz).date) }
+
+    LaunchedEffect(clock) {
+        today = clock.now().toLocalDateTime(tz).date
+        delay(1.minutes)
+    }
+
+    return formatDate(today)
+}
+
+/**
+ * Format a date in a human-readable way.
+ *
+ * If the date is today, return "Today".
+ * If the date is yesterday, return "Yesterday".
+ * Otherwise, if the date is within the current year, return the date without the year.
+ * Otherwise, return the full date.
+ */
+@Composable
+private fun LocalDate.formatDate(today: LocalDate): String {
+    val isToday = this == today
+    val isYesterday = this == (today - DatePeriod(days = 1))
+    val isTomorrow = this == (today + DatePeriod(days = 1))
+    val isCurrentYear = year == today.year
+
+    return when {
+        isYesterday -> {
+            stringResource(MR.strings.date_yesterday)
+        }
+
+        isToday -> {
+            stringResource(MR.strings.date_today)
+        }
+
+        isTomorrow -> {
+            stringResource(MR.strings.date_tomorrow)
+        }
+
+        isCurrentYear -> {
+            toJavaLocalDate().format(
+                DateTimeFormatter.ofPattern("eeee d MMM", Locale.getDefault()),
+            )
+        }
+
+        else -> {
+            toJavaLocalDate().format(
+                DateTimeFormatter.ofPattern("d MMM uuuu", Locale.getDefault()),
+            )
+        }
     }
 }
 

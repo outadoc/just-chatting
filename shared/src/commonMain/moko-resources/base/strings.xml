@@ -266,6 +266,9 @@
     <string name="app_repo_name">outadoc/just-chatting</string>
     <string name="app_repo_url">https://github.com/outadoc/just-chatting</string>
     <string name="all_goBack">Go back</string>
+    <string name="date_today">Today</string>
+    <string name="date_tomorrow">Tomorrow</string>
+    <string name="date_yesterday">Yesterday</string>
     <string name="epg_title">Timeline</string>
     <string name="logout_msg">You are currently logged in as %s.</string>
     <string name="logout_title">Log out?</string>

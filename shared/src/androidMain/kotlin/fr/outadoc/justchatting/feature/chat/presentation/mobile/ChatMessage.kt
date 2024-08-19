@@ -23,7 +23,7 @@ import fr.outadoc.justchatting.feature.chat.presentation.mobile.preview.previewB
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.utils.presentation.AppTheme
 import fr.outadoc.justchatting.utils.presentation.ThemePreviews
-import fr.outadoc.justchatting.utils.presentation.formatTimestamp
+import fr.outadoc.justchatting.utils.presentation.formatHourMinute
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.ImmutableMap
 import kotlinx.collections.immutable.PersistentSet
@@ -86,7 +86,7 @@ internal fun ChatMessage(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         message.timestamp
-            .formatTimestamp()
+            .formatHourMinute()
             ?.takeIf { showTimestamps }
             ?.let { timestamp ->
                 Text(

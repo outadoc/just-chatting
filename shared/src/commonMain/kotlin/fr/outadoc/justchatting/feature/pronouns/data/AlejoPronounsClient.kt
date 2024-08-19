@@ -24,9 +24,9 @@ internal class AlejoPronounsClient(
         }
     }
 
-    suspend fun getPronounsForUser(login: String): Result<List<UserPronounResponse>> {
+    suspend fun getPronounsForUser(login: String): Result<UserPronounResponse> {
         return runCatching {
-            client.get { url { path("v1/users", login) } }.body()
+            client.get { url { path("v1/user", login) } }.body()
         }
     }
 }

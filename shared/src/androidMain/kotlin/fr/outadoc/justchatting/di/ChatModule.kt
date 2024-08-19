@@ -48,7 +48,21 @@ import org.koin.dsl.module
 
 public val chatModule: Module = module {
 
-    viewModel { ChatViewModel(get(), get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    viewModel {
+        ChatViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
     viewModel { StreamAndUserInfoViewModel(get()) }
 
     single<ChatNotifier> { DefaultChatNotifier(get(), get()) }
@@ -105,7 +119,7 @@ public val chatModule: Module = module {
 
     single<PronounsApi> { AlejoPronounsApi(get(), get()) }
     single { AlejoPronounsClient(get()) }
-    single { PronounsRepository(get()) }
+    single { PronounsRepository(get(), get(), get()) }
 
     factory { GetRecentEmotesUseCase(get()) }
     factory { InsertRecentEmotesUseCase(get()) }

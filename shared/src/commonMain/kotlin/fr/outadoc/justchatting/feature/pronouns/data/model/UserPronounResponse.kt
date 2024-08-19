@@ -11,4 +11,6 @@ internal data class UserPronounResponse(
     val login: String,
     @SerialName("pronoun_id")
     val pronounId: String,
+    @SerialName("alt_pronoun_id")
+    val altPronounId: String? = null,
 )

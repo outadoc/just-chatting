@@ -1,7 +1,7 @@
 package fr.outadoc.justchatting.data
 
 internal object ApiEndpoints {
-    const val ALEJO_PRONOUNS = "https://pronouns.alejo.io/api/"
+    const val ALEJO_PRONOUNS = "https://api.pronouns.alejo.io/"
     const val BTTV_BASE = "https://api.betterttv.net/"
     const val BTTV_EMOTE_CDN = "https://cdn.betterttv.net/emote"
     const val RECENT_MESSAGES = "https://recent-messages.robotty.de/api/"

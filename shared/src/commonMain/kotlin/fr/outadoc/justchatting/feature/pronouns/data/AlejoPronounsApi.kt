@@ -3,6 +3,7 @@ package fr.outadoc.justchatting.feature.pronouns.data
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.pronouns.domain.model.UserPronounIds
+import io.ktor.client.plugins.ClientRequestException
 
 internal class AlejoPronounsApi(
     private val alejoPronounsClient: AlejoPronounsClient,
@@ -32,6 +33,17 @@ internal class AlejoPronounsApi(
                     mainPronounId = response.pronounId,
                     altPronounId = response.altPronounId,
                 )
+            }
+            .recoverCatching { exception ->
+                if (exception is ClientRequestException && exception.response.status.value == 404) {
+                    UserPronounIds(
+                        userId = userId,
+                        mainPronounId = null,
+                        altPronounId = null
+                    )
+                } else {
+                    throw exception
+                }
             }
     }
 }

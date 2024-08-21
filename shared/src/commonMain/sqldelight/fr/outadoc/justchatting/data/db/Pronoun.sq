@@ -17,7 +17,7 @@ CREATE TABLE UserPronoun (
 );
 
 getUserPronoun:
-SELECT * FROM UserPronoun
+SELECT user_id, updated_at, pronoun_id, alt_pronoun_id FROM UserPronoun
 LEFT JOIN Pronoun AS MainPronoun ON UserPronoun.pronoun_id = MainPronoun.id
 LEFT JOIN Pronoun AS AltPronoun ON UserPronoun.alt_pronoun_id = AltPronoun.id
 WHERE UserPronoun.user_id = ?;

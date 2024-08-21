@@ -1,5 +1,7 @@
 package fr.outadoc.justchatting.feature.pronouns.data
 
+import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
+import fr.outadoc.justchatting.feature.pronouns.data.model.UserPronounResponse
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsApi
 import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.pronouns.domain.model.UserPronounIds
@@ -13,7 +15,7 @@ internal class AlejoPronounsApi(
         return alejoPronounsClient
             .getPronouns()
             .map { pronouns ->
-                pronouns.values.map { alejoPronoun ->
+                pronouns.map { alejoPronoun ->
                     Pronoun(
                         id = alejoPronoun.id,
                         nominative = alejoPronoun.nominative,
@@ -24,20 +26,21 @@ internal class AlejoPronounsApi(
             }
     }
 
-    override suspend fun getUserPronouns(userId: String): Result<UserPronounIds> {
+    override suspend fun getUserPronouns(chatter: Chatter): Result<UserPronounIds> {
         return alejoPronounsClient
-            .getPronounsForUser(userId)
-            .map { response ->
+            .getPronounsForUser(chatter.login)
+            .map { response: List<UserPronounResponse> ->
+                val data = response.firstOrNull()
                 UserPronounIds(
-                    userId = userId,
-                    mainPronounId = response.pronounId,
-                    altPronounId = response.altPronounId,
+                    userId = chatter.id,
+                    mainPronounId = data?.pronounId,
+                    altPronounId = null,
                 )
             }
             .recoverCatching { exception ->
                 if (exception is ClientRequestException && exception.response.status.value == 404) {
                     UserPronounIds(
-                        userId = userId,
+                        userId = chatter.id,
                         mainPronounId = null,
                         altPronounId = null
                     )

@@ -53,11 +53,15 @@ internal class PronounsRepository(
                             chatter to userPronoun
                         } else {
                             chatter to pronounsApi
-                                .getUserPronouns(chatter.id)
+                                .getUserPronouns(chatter)
                                 .fold(
                                     onSuccess = { userPronoun ->
-                                        localPronounsApi.saveUserPronouns(userPronoun)
-                                        localPronounsApi.getPronounsForUser(chatter.id).firstOrNull()
+                                        localPronounsApi
+                                            .saveUserPronouns(userPronoun)
+
+                                        localPronounsApi
+                                            .getPronounsForUser(chatter.id)
+                                            .firstOrNull()
                                     },
                                     onFailure = { e ->
                                         logError<AlejoPronounsApi>(e) { "Error while fetching pronouns for user ${chatter.id}" }

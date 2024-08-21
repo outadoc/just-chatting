@@ -18,15 +18,15 @@ internal class AlejoPronounsClient(
         }
     }
 
-    suspend fun getPronouns(): Result<Map<String, AlejoPronoun>> {
+    suspend fun getPronouns(): Result<List<AlejoPronoun>> {
         return runCatching {
-            client.get { url { path("v1/pronouns") } }.body()
+            client.get { url { path("pronouns") } }.body()
         }
     }
 
-    suspend fun getPronounsForUser(login: String): Result<UserPronounResponse> {
+    suspend fun getPronounsForUser(login: String): Result<List<UserPronounResponse>> {
         return runCatching {
-            client.get { url { path("v1/user", login) } }.body()
+            client.get { url { path("users", login) } }.body()
         }
     }
 }

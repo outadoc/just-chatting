@@ -9,7 +9,6 @@ import fr.outadoc.justchatting.feature.chat.domain.model.ConnectionStatus
 import fr.outadoc.justchatting.feature.chat.domain.model.PinnedMessage
 import fr.outadoc.justchatting.feature.chat.domain.model.Poll
 import fr.outadoc.justchatting.feature.chat.domain.model.Prediction
-import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.chat.domain.model.Raid
 import fr.outadoc.justchatting.feature.emotes.domain.EmoteListSourcesProvider
 import fr.outadoc.justchatting.feature.emotes.domain.model.Emote
@@ -24,6 +23,7 @@ import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppPreferences
 import fr.outadoc.justchatting.feature.preferences.domain.model.AppUser
 import fr.outadoc.justchatting.feature.pronouns.domain.PronounsRepository
+import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.recent.domain.GetRecentEmotesUseCase
 import fr.outadoc.justchatting.feature.recent.domain.InsertRecentEmotesUseCase
 import fr.outadoc.justchatting.feature.recent.domain.model.RecentEmote

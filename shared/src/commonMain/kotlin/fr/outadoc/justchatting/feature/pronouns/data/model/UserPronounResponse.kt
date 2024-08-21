@@ -5,8 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class UserPronounResponse(
-    @SerialName("id")
-    val id: String,
     @SerialName("login")
     val login: String,
     @SerialName("pronoun_id")

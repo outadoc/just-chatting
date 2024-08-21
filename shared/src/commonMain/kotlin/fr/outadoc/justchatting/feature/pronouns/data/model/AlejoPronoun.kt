@@ -7,6 +7,10 @@ import kotlinx.serialization.Serializable
 internal data class AlejoPronoun(
     @SerialName("name")
     val id: String,
-    @SerialName("display")
-    val display: String,
+    @SerialName("subject")
+    val nominative: String,
+    @SerialName("object")
+    val objective: String,
+    @SerialName("singular")
+    val isSingular: Boolean,
 )

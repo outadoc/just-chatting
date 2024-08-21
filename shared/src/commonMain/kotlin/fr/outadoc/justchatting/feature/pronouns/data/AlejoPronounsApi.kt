@@ -15,7 +15,7 @@ internal class AlejoPronounsApi(
         return alejoPronounsClient
             .getPronouns()
             .map { pronouns ->
-                pronouns.map { alejoPronoun ->
+                pronouns.values.map { alejoPronoun ->
                     Pronoun(
                         id = alejoPronoun.id,
                         nominative = alejoPronoun.nominative,
@@ -42,7 +42,7 @@ internal class AlejoPronounsApi(
                     UserPronounIds(
                         userId = chatter.id,
                         mainPronounId = null,
-                        altPronounId = null
+                        altPronounId = null,
                     )
                 } else {
                     throw exception

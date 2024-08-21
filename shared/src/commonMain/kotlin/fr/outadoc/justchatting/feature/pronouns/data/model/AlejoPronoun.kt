@@ -8,9 +8,9 @@ internal data class AlejoPronoun(
     @SerialName("name")
     val id: String,
     @SerialName("subject")
-    val subject: String,
+    val nominative: String,
     @SerialName("object")
-    val `object`: String,
+    val objective: String,
     @SerialName("singular")
-    val singular: Boolean,
+    val isSingular: Boolean,
 )

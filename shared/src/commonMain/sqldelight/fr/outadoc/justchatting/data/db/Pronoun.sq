@@ -1,7 +1,8 @@
 CREATE TABLE Pronoun (
     `id` TEXT NOT NULL,
-    `subject` TEXT NOT NULL,
-    `object` TEXT NOT NULL,
+    `nominative` TEXT NOT NULL,
+    `objective` TEXT NOT NULL,
+    `singular` INTEGER NOT NULL,
     PRIMARY KEY (`id`)
 );
 
@@ -10,14 +11,14 @@ CREATE TABLE UserPronoun (
     `pronoun_id` TEXT,
     `alt_pronoun_id` TEXT,
     PRIMARY KEY (`user_id`),
-    FOREIGN KEY (`user_id`) REFERENCES User(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`pronoun_id`) REFERENCES Pronoun(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`alt_pronoun_id`) REFERENCES Pronoun(`id`) ON DELETE CASCADE
 );
 
-savePronoun:
-INSERT OR REPLACE INTO Pronoun (id, subject, object)
-VALUES (?, ?, ?);
+getUserPronoun:
+SELECT * FROM Pronoun
+JOIN UserPronoun ON Pronoun.id = UserPronoun.pronoun_id
+WHERE UserPronoun.user_id = ?;
 
 saveUserPronoun:
 INSERT OR REPLACE INTO UserPronoun (user_id, pronoun_id)
@@ -25,3 +26,10 @@ VALUES (?, ?);
 
 getPronouns:
 SELECT * FROM Pronoun;
+
+clearPronouns:
+DELETE FROM Pronoun;
+
+savePronoun:
+INSERT OR REPLACE INTO Pronoun (id, nominative, objective, singular)
+VALUES (?, ?, ?, ?);

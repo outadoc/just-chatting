@@ -60,7 +60,7 @@ public val chatModule: Module = module {
             get(),
             get(),
             get(),
-            get()
+            get(),
         )
     }
     viewModel { StreamAndUserInfoViewModel(get()) }

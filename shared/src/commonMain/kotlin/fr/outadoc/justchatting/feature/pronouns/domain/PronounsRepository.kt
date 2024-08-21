@@ -1,9 +1,9 @@
 package fr.outadoc.justchatting.feature.pronouns.domain
 
 import fr.outadoc.justchatting.feature.chat.domain.model.Chatter
-import fr.outadoc.justchatting.feature.chat.domain.model.Pronoun
 import fr.outadoc.justchatting.feature.preferences.domain.PreferenceRepository
 import fr.outadoc.justchatting.feature.pronouns.data.db.LocalPronounsApi
+import fr.outadoc.justchatting.feature.pronouns.domain.model.Pronoun
 import kotlinx.coroutines.sync.Mutex
 
 internal class PronounsRepository(

@@ -117,7 +117,7 @@ public val chatModule: Module = module {
 
     single { RecentMessagesRepository(get(), get()) }
 
-    single<PronounsApi> { AlejoPronounsApi(get(), get()) }
+    single<PronounsApi> { AlejoPronounsApi(get()) }
     single { AlejoPronounsClient(get()) }
     single { PronounsRepository(get(), get(), get()) }
 

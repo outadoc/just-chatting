@@ -10,22 +10,28 @@ CREATE TABLE UserPronoun (
     `user_id` TEXT NOT NULL,
     `pronoun_id` TEXT,
     `alt_pronoun_id` TEXT,
+    `updated_at` INTEGER NOT NULL,
     PRIMARY KEY (`user_id`),
     FOREIGN KEY (`pronoun_id`) REFERENCES Pronoun(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`alt_pronoun_id`) REFERENCES Pronoun(`id`) ON DELETE CASCADE
 );
 
 getUserPronoun:
-SELECT * FROM Pronoun
-JOIN UserPronoun ON Pronoun.id = UserPronoun.pronoun_id
+SELECT * FROM UserPronoun
+LEFT JOIN Pronoun AS MainPronoun ON UserPronoun.pronoun_id = MainPronoun.id
+LEFT JOIN Pronoun AS AltPronoun ON UserPronoun.alt_pronoun_id = AltPronoun.id
 WHERE UserPronoun.user_id = ?;
 
 saveUserPronoun:
-INSERT OR REPLACE INTO UserPronoun (user_id, pronoun_id)
-VALUES (?, ?);
+INSERT OR REPLACE INTO UserPronoun (user_id, pronoun_id, alt_pronoun_id, updated_at)
+VALUES (?, ?, ?, ?);
 
 getPronouns:
 SELECT * FROM Pronoun;
+
+getPronoun:
+SELECT * FROM Pronoun
+WHERE id = ?;
 
 clearPronouns:
 DELETE FROM Pronoun;

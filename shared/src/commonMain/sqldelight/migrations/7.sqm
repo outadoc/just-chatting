@@ -10,6 +10,7 @@ CREATE TABLE UserPronoun (
     `user_id` TEXT NOT NULL,
     `pronoun_id` TEXT,
     `alt_pronoun_id` TEXT,
+    `updated_at` INTEGER NOT NULL,
     PRIMARY KEY (`user_id`),
     FOREIGN KEY (`pronoun_id`) REFERENCES Pronoun(`id`) ON DELETE CASCADE,
     FOREIGN KEY (`alt_pronoun_id`) REFERENCES Pronoun(`id`) ON DELETE CASCADE

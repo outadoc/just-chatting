@@ -40,5 +40,5 @@ public val dbModule: Module = module {
     single<LocalStreamsApi> { LocalStreamsDb(get(), get()) }
 
     single<PronounQueries> { get<AppDatabase>().pronounQueries }
-    single<LocalPronounsApi> { LocalPronounsDb(get()) }
+    single<LocalPronounsApi> { LocalPronounsDb(get(), get()) }
 }
